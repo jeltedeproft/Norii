@@ -3,23 +3,17 @@ package com.mygdx.game;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Graphics;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.maps.MapLayer;
-import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
-import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Entity;
 import com.mygdx.game.MapManager;
-import com.mygdx.game.InputController;
 
 public class BattleScreen implements Screen {
 	private static final String TAG = BattleScreen.class.getSimpleName();
@@ -49,20 +43,36 @@ public class BattleScreen implements Screen {
 	private int mapHeight;
 	private int tilePixelWidth;
 	private int tilePixelHeight;
-
-	public BattleScreen(){
-		_mapMgr = new MapManager();
-	}
-
 	
+	private InputMultiplexer multiplexer;
+
+	public BattleScreen(Object... params){
+		_mapMgr = new MapManager();
+		//if owners are supplied, initialize them
+		int index = ScreenManager.ScreenParams.ARRAYLIST_OF_OWNERS.ordinal();
+		if(params[index] != null) {
+			_players = (ArrayList<Owner>) params[index];
+		}else _players = new ArrayList<Owner>();
+	}
 
 	@Override
 	public void show() {
-		
 		//setup map stuff
 		tiledMap = _mapMgr.getCurrentMap();
 		prop = tiledMap.getProperties();
-		battlemanager = new BattleManager();
+		
+		//init units
+		for (Owner owner : _players) {
+		    owner.initUnits();
+		}
+		
+		Entity[] playerSortedUnits = Player.getInstance().getUnitsSortedByIni();
+		
+		//multiplexer stuff first the unit then the tiles
+		multiplexer = new InputMultiplexer();
+		battlemanager = new BattleManager(multiplexer);
+		multiplexer.addProcessor(_mapMgr.getTiledMapStage());
+		Gdx.input.setInputProcessor(multiplexer);
 		
 		mapWidth = prop.get("width", Integer.class);
 		mapHeight = prop.get("height", Integer.class);
@@ -80,13 +90,6 @@ public class BattleScreen implements Screen {
 		_mapRenderer.setView(_camera);
 
 		Gdx.app.debug(TAG, "UnitScale value is: " + _mapRenderer.getUnitScale());
-
-		_players = new ArrayList<Owner>();
-		
-		//init units
-		for (Owner owner : _players) {
-		    owner.initUnits();
-		}
 	}
 
 	@Override
@@ -120,12 +123,16 @@ public class BattleScreen implements Screen {
 		for (Owner owner : _players) {
 			ArrayList<Entity> units = owner.getTeam();
 			for (Entity entity : units) {
+				Gdx.app.debug(TAG, "drawing unit at : (" + entity.getFrameSprite().getX() + "," +  entity.getFrameSprite().getY() + ")" );
 				_mapRenderer.getBatch().draw(entity.getFrame(), entity.getFrameSprite().getX(), entity.getFrameSprite().getY(), 1,1);
 			}
 			
 		}
 		//draw grid
-		renderGrid(Gdx.graphics);
+		renderGrid();
+		
+		//highlight tiles if necesary
+		highlightTiles();
 		
 		_mapRenderer.getBatch().end();
 	}
@@ -188,12 +195,18 @@ public class BattleScreen implements Screen {
 		Gdx.app.debug(TAG, "WorldRenderer: physical: (" + VIEWPORT.physicalWidth + "," + VIEWPORT.physicalHeight + ")" );
 	}
 
-	public void renderGrid(Graphics g) {
+	public void renderGrid() {
 		//create a visible grid
-		for(int x = 0; x < mapWidth; x += tilePixelWidth)
+		for(int x = 0; x < mapWidth; x += 1)
 			Utility.DrawDebugLine(new Vector2(x,0), new Vector2(x,mapHeight), _camera.combined);
-		for(int y = 0; y < mapHeight; y += tilePixelHeight)
+		for(int y = 0; y < mapHeight; y += 1)
 			Utility.DrawDebugLine(new Vector2(0,y), new Vector2(mapWidth,y), _camera.combined);
+	}
+	
+	public void highlightTiles() {
+		for(Vector2 vector : _mapMgr.getSpawnPositionsFromScaledUnits()) {
+			Utility.FillSquare(vector.x, vector.y, Color.GOLD, _camera.combined);
+		}
 	}
 
 

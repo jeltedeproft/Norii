@@ -6,12 +6,12 @@ public enum ScreenEnum {
 	 
     MAIN_MENU {
         public Screen getScreen(Object... params) {
-            return new MainMenuScreen();
+            return new MainMenuScreen(params);
         }
     },
     BATTLE {
         public Screen getScreen(Object... params) {
-            return new BattleScreen();
+            return new BattleScreen(params);
         }
     };
  

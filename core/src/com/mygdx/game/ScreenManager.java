@@ -6,16 +6,15 @@ import com.badlogic.gdx.Screen;
 public class ScreenManager {	 
     // Singleton: unique instance
     private static ScreenManager instance;
- 
-    // Reference to game
     private Game game;
  
-    // Singleton: private constructor
+    public static enum ScreenParams {
+    	ARRAYLIST_OF_OWNERS
+    }
     private ScreenManager() {
         super();
     }
  
-    // Singleton: retrieve instance
     public static ScreenManager getInstance() {
         if (instance == null) {
             instance = new ScreenManager();

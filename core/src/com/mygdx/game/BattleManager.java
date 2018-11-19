@@ -1,18 +1,25 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.InputMultiplexer;
 
 public class BattleManager {
 	//this class organizes the flow of battle : unit ordering and action ordering
 	private BattleState battlestate = BattleState.UNIT_PLACEMENT;
 	private InputController _controller;
+	private InputMultiplexer multiplexer;
+	private Entity activeUnit;
 	
 	//TO-DO : at the start of battle decide on unit ordering and initiate the inputprocessor
+	public BattleManager(InputMultiplexer inputmultiplexer) {
+		multiplexer = inputmultiplexer;
+	}
 	
-	public void InitBattleManager(Entity unit) {
-		_controller = new InputController(unit);
-		Gdx.input.setInputProcessor(_controller);
+	private void startNextPhase() {
+		if (battlestate == BattleState.UNIT_PLACEMENT) {
+			battlestate = BattleState.MOVEMENT_PHASE;
+			_controller = new InputController(activeUnit);
+			multiplexer.addProcessor(_controller);
+		}
 	}
 	
 	public BattleState getBattleState() {
@@ -28,10 +35,13 @@ public class BattleManager {
 	}
 	
 	public void updateController(float delta) {
-		//_controller.update(delta);
+		if(_controller != null) {
+			_controller.update(delta);
+		}
 	}
 	
 	public void dispose() {
+		multiplexer.removeProcessor(_controller);
 		_controller.dispose();
 	}
 }

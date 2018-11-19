@@ -3,6 +3,10 @@ package com.mygdx.game;
 import com.badlogic.gdx.Screen;
 
 public class MainMenuScreen implements Screen{
+	
+	public MainMenuScreen(Object... params) {
+		
+	}
 
 	@Override
 	public void show() {

@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+import java.util.Random;
 import java.util.UUID;
 
 import com.badlogic.gdx.Gdx;
@@ -18,6 +19,11 @@ public class Entity {
 
 	private Vector2 _velocity;
 	private String _entityID;
+	
+	//stats
+	private int mp;
+	private int hp;
+	private int ini;
 
 	private Direction _currentDirection = Direction.LEFT;
 	private Direction _previousDirection = Direction.UP;
@@ -57,16 +63,42 @@ public class Entity {
 	
 	public void initEntity(){
 		//Gdx.app.debug(TAG, "Construction" );
-		
 		this._entityID = UUID.randomUUID().toString();
 		this._nextPlayerPosition = new Vector2();
 		this._currentPlayerPosition = new Vector2();
 		this.boundingBox = new Rectangle();
 		this._velocity = new Vector2(2f,2f);
+		this.hp = 10;
+		this.mp = 3;
+		this.ini = Utility.getRandomIntFrom1to(100);
 
 		Utility.loadTextureAsset(_defaultSpritePath);
 		loadDefaultSprite();
 		loadAllAnimations();
+	}
+
+	public int getMp() {
+		return mp;
+	}
+
+	public void setMp(int mp) {
+		this.mp = mp;
+	}
+
+	public int getHp() {
+		return hp;
+	}
+
+	public void setHp(int hp) {
+		this.hp = hp;
+	}
+
+	public int getIni() {
+		return ini;
+	}
+
+	public void setIni(int ini) {
+		this.ini = ini;
 	}
 
 	public void update(float delta){

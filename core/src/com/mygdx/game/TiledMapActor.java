@@ -5,10 +5,13 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class TiledMapActor extends Actor {
+	private static final String TAG = TiledMapActor.class.getSimpleName();
 
     private TiledMap tiledMap;
 
     private TiledMapTileLayer tiledLayer;
+    
+    private Boolean isFreeSpawn;
 
     TiledMapTileLayer.Cell cell;
 
@@ -16,6 +19,7 @@ public class TiledMapActor extends Actor {
         this.tiledMap = tiledMap;
         this.tiledLayer = tiledLayer;
         this.cell = cell;
+        this.isFreeSpawn = false;
     }
 
 }

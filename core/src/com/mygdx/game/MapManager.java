@@ -25,6 +25,7 @@ public class MapManager {
     //Map layers
     private final static String MAP_COLLISION_LAYER = "items";
     private final static String MAP_SPAWNS_LAYER = "Spawn points";
+    private final static String BACKGROUND_LAYER = "background";
     
     private final static String PLAYER_START = "PLAYER_START";
 
@@ -34,6 +35,7 @@ public class MapManager {
     private ArrayList<Vector2> _unitSpawnPositionsScaledUnits;
 
     private TiledMap _currentMap = null;
+    private TiledMapStage tiledmapstage;
     private String _currentMapName;
     private MapLayer _collisionLayer = null;
     private MapLayer _spawnsLayer = null;
@@ -65,12 +67,14 @@ public class MapManager {
 
         if( _currentMap != null ){
             _currentMap.dispose();
+            tiledmapstage.dispose();
         }
 
         Utility.loadMapAsset(mapFullPath);
         if( Utility.isAssetLoaded(mapFullPath) ) {
             _currentMap = Utility.getMapAsset(mapFullPath);
             _currentMapName = mapName;
+            tiledmapstage = new TiledMapStage(_currentMap,BACKGROUND_LAYER);
         }else{
             Gdx.app.debug(TAG, "Map not loaded");
             return;
@@ -91,7 +95,7 @@ public class MapManager {
                 fillSpawnPositions(startPositions,startPositionsScaled);
                 startPositions = _spawnLocationsTable.get(_currentMapName);
             }
-        }
+        }  
 
     }
 
@@ -105,6 +109,10 @@ public class MapManager {
 
     public MapLayer getCollisionLayer(){
         return _collisionLayer;
+    }
+    
+    public TiledMapStage getTiledMapStage(){
+    	return tiledmapstage;
     }
 
 
@@ -120,18 +128,15 @@ public class MapManager {
         for( MapObject object: _spawnsLayer.getObjects()){
             if( object.getName().equalsIgnoreCase(PLAYER_START) ){
                 ((RectangleMapObject)object).getRectangle().getPosition(_playerStartPositionRect);
-                
-                startPositions.add(_playerStartPositionRect);
-                
-                Gdx.app.debug(TAG, "added: " + _playerStartPositionRect.toString() + " for " + _currentMapName);
+                startPositions.add(_playerStartPositionRect.cpy());
                 
                 //scale and add
                 if( UNIT_SCALE > 0 ) {
-                	_convertedUnits.set(_playerStartPositionRect.x/UNIT_SCALE, _playerStartPositionRect.y/UNIT_SCALE);
-                	startPositionsScaled.add(_convertedUnits);
+                	_convertedUnits.set(_playerStartPositionRect.x*UNIT_SCALE, _playerStartPositionRect.y*UNIT_SCALE);
+                	startPositionsScaled.add(_convertedUnits.cpy());
                 }
             }
-        }
+        }        
     }
 }
 

@@ -1,5 +1,7 @@
 package com.mygdx.game;
 
+import java.util.Random;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.TextureLoader;
@@ -14,12 +16,22 @@ import com.badlogic.gdx.math.Vector2;
 
 public final class Utility {
 	public static final AssetManager _assetManager = new AssetManager();
+	
+	public static Random random = new Random();
 
 	private static final String TAG = Utility.class.getSimpleName();
 
 	private static InternalFileHandleResolver _filePathResolver =  new InternalFileHandleResolver();
 	
 	private static ShapeRenderer debugRenderer = new ShapeRenderer();
+	
+	public static void FillSquare(float x, float y , Color color, Matrix4 projectionMatrix) {
+        debugRenderer.setProjectionMatrix(projectionMatrix);
+        debugRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        debugRenderer.setColor(color);
+        debugRenderer.rect(x, y, 1, 1);;
+        debugRenderer.end();
+	}
 
     public static void DrawDebugLine(Vector2 start, Vector2 end, int lineWidth, Color color, Matrix4 projectionMatrix)
     {
@@ -37,7 +49,7 @@ public final class Utility {
         Gdx.gl.glLineWidth(2);
         debugRenderer.setProjectionMatrix(projectionMatrix);
         debugRenderer.begin(ShapeRenderer.ShapeType.Line);
-        debugRenderer.setColor(Color.WHITE);
+        debugRenderer.setColor(Color.DARK_GRAY);
         debugRenderer.line(start, end);
         debugRenderer.end();
         Gdx.gl.glLineWidth(1);
@@ -130,5 +142,9 @@ public final class Utility {
 		return texture;
 	}
 
+	public static int getRandomIntFrom1to(int to) {
+		int result = random.nextInt(to);
+		return result + 1;
+	}
 
 }

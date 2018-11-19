@@ -56,10 +56,10 @@
   <object id="6" name="PLAYER_START" x="96" y="544" width="32" height="32"/>
   <object id="7" name="PLAYER_START" x="224" y="544" width="32" height="32"/>
   <object id="8" name="PLAYER_START" x="480" y="64" width="32" height="32"/>
-  <object id="9" name="PLAYER_START" x="351" y="541" width="32" height="32"/>
-  <object id="10" name="PLAYER_START" x="483" y="543" width="32" height="32"/>
+  <object id="9" name="PLAYER_START" x="352" y="544" width="32" height="32"/>
+  <object id="10" name="PLAYER_START" x="480" y="544" width="32" height="32"/>
   <object id="11" name="PLAYER_START" x="352" y="64" width="32" height="32"/>
   <object id="12" name="PLAYER_START" x="96" y="64" width="32" height="32"/>
-  <object id="13" name="PLAYER_START" x="224" y="62" width="32" height="32"/>
+  <object id="13" name="PLAYER_START" x="224" y="64" width="32" height="32"/>
  </objectgroup>
 </map>
