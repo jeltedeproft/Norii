@@ -41,4 +41,10 @@ public abstract class Owner {
 		});
 		return sortedUnits;
 	}
+	
+	public void dispose() {
+		for (Entity entity : team) {
+			entity.dispose();
+		}
+	}
 }

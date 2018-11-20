@@ -1,6 +1,5 @@
 package com.mygdx.game;
 
-import java.util.Random;
 import java.util.UUID;
 
 import com.badlogic.gdx.Gdx;
@@ -266,7 +265,6 @@ public class Entity {
 		//Gdx.app.debug(TAG, "Setting nextPosition as Current: (" + _nextPlayerPosition.x + "," + _nextPlayerPosition.y + ")");
 	}
 	
-	
 	public void calculateNextPosition(Direction currentDirection, float deltaTime){
 		float testX = _currentPlayerPosition.x;
 		float testY = _currentPlayerPosition.y;
@@ -300,5 +298,4 @@ public class Entity {
 		_velocity.scl(1 / deltaTime);
 	}
 
-	
 }

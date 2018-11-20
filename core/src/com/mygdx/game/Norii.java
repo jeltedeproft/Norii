@@ -35,6 +35,6 @@ public class Norii extends Game {
 	
 	@Override
 	public void dispose () {
-		
+		this.getScreen().dispose();
 	}
 }

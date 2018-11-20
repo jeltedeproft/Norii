@@ -42,6 +42,8 @@ public class BattleManager {
 	
 	public void dispose() {
 		multiplexer.removeProcessor(_controller);
-		_controller.dispose();
+		if(_controller != null) {
+			_controller.dispose();
+		}
 	}
 }

@@ -8,6 +8,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -68,7 +69,7 @@ public class BattleScreen implements Screen {
 		
 		Entity[] playerSortedUnits = Player.getInstance().getUnitsSortedByIni();
 		
-		//multiplexer stuff first the unit then the tiles
+		//multiplexer stuff, first the unit then the tiles
 		multiplexer = new InputMultiplexer();
 		battlemanager = new BattleManager(multiplexer);
 		multiplexer.addProcessor(_mapMgr.getTiledMapStage());
@@ -115,7 +116,9 @@ public class BattleScreen implements Screen {
 		//_mapRenderer.getBatch().setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
 		_mapRenderer.setView(_camera);
+		
 		_mapRenderer.render();
+
 
 		_mapRenderer.getBatch().begin();
 		
@@ -123,18 +126,18 @@ public class BattleScreen implements Screen {
 		for (Owner owner : _players) {
 			ArrayList<Entity> units = owner.getTeam();
 			for (Entity entity : units) {
-				Gdx.app.debug(TAG, "drawing unit at : (" + entity.getFrameSprite().getX() + "," +  entity.getFrameSprite().getY() + ")" );
-				_mapRenderer.getBatch().draw(entity.getFrame(), entity.getFrameSprite().getX(), entity.getFrameSprite().getY(), 1,1);
-			}
-			
+				_mapRenderer.getBatch().draw(entity.getFrame(), 5f, 5f, 1f,1f);
+			}	
 		}
+		
+		_mapRenderer.getBatch().end();
+		
 		//draw grid
 		renderGrid();
 		
 		//highlight tiles if necesary
 		highlightTiles();
-		
-		_mapRenderer.getBatch().end();
+			
 	}
 
 	@Override
@@ -153,10 +156,7 @@ public class BattleScreen implements Screen {
 	public void dispose() {
 		//dispose all units
 		for (Owner owner : _players) {
-			ArrayList<Entity> units = owner.getTeam();
-			for (Entity entity : units) {
-				entity.dispose();
-			}	
+			owner.dispose();
 		}
 		battlemanager.dispose();
 		Gdx.input.setInputProcessor(null);
