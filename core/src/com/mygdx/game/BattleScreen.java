@@ -89,6 +89,9 @@ public class BattleScreen implements Screen {
 
 		_mapRenderer = new OrthogonalTiledMapRenderer(_mapMgr.getCurrentMap(), MapManager.UNIT_SCALE);
 		_mapRenderer.setView(_camera);
+		
+		//start ddeploying units
+		battlemanager.startDeploy(playerSortedUnits);
 
 		Gdx.app.debug(TAG, "UnitScale value is: " + _mapRenderer.getUnitScale());
 	}
@@ -126,6 +129,7 @@ public class BattleScreen implements Screen {
 		for (Owner owner : _players) {
 			ArrayList<Entity> units = owner.getTeam();
 			for (Entity entity : units) {
+				if(entity.isInBattle())
 				_mapRenderer.getBatch().draw(entity.getFrame(), 5f, 5f, 1f,1f);
 			}	
 		}

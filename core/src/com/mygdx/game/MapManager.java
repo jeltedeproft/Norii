@@ -130,6 +130,10 @@ public class MapManager {
                 ((RectangleMapObject)object).getRectangle().getPosition(_playerStartPositionRect);
                 startPositions.add(_playerStartPositionRect.cpy());
                 
+                //tag tiles that have spawns above them
+                TiledMapActor tiledactor = (TiledMapActor) tiledmapstage.hit(_playerStartPositionRect.x, _playerStartPositionRect.y, false);
+                tiledactor.setIsFreeSpawn(true);
+                
                 //scale and add
                 if( UNIT_SCALE > 0 ) {
                 	_convertedUnits.set(_playerStartPositionRect.x*UNIT_SCALE, _playerStartPositionRect.y*UNIT_SCALE);

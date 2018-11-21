@@ -13,7 +13,15 @@ public class TiledMapActor extends Actor {
     
     private Boolean isFreeSpawn;
 
-    TiledMapTileLayer.Cell cell;
+    public Boolean getIsFreeSpawn() {
+		return isFreeSpawn;
+	}
+
+	public void setIsFreeSpawn(Boolean isFreeSpawn) {
+		this.isFreeSpawn = isFreeSpawn;
+	}
+
+	TiledMapTileLayer.Cell cell;
 
     public TiledMapActor(TiledMap tiledMap, TiledMapTileLayer tiledLayer, TiledMapTileLayer.Cell cell) {
         this.tiledMap = tiledMap;

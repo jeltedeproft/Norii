@@ -46,4 +46,19 @@ public class BattleManager {
 			_controller.dispose();
 		}
 	}
+
+	public Entity getActiveUnit() {
+		return activeUnit;
+	}
+
+	public void setActiveUnit(Entity activeUnit) {
+		this.activeUnit = activeUnit;
+	}
+	
+	public void startDeploy(Entity[] playerSortedUnits) {
+		for(int i=0; i<playerSortedUnits.length;i++) {
+			Entity _currentUnit = playerSortedUnits[i];
+			
+		}
+	}
 }

@@ -23,6 +23,7 @@ public class Entity {
 	private int mp;
 	private int hp;
 	private int ini;
+	private boolean inBattle;
 
 	private Direction _currentDirection = Direction.LEFT;
 	private Direction _previousDirection = Direction.UP;
@@ -70,10 +71,19 @@ public class Entity {
 		this.hp = 10;
 		this.mp = 3;
 		this.ini = Utility.getRandomIntFrom1to(100);
+		inBattle = false;
 
 		Utility.loadTextureAsset(_defaultSpritePath);
 		loadDefaultSprite();
 		loadAllAnimations();
+	}
+
+	public boolean isInBattle() {
+		return inBattle;
+	}
+
+	public void setInBattle(boolean inBattle) {
+		this.inBattle = inBattle;
 	}
 
 	public int getMp() {
