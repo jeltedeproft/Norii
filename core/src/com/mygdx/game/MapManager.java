@@ -39,10 +39,11 @@ public class MapManager {
     private String _currentMapName;
     private MapLayer _collisionLayer = null;
     private MapLayer _spawnsLayer = null;
+    private BattleManager battlemanager;
 
     public final static float UNIT_SCALE  = 1/32f;
 
-    public MapManager(){
+    public MapManager(BattleManager battlemanager){
     	_unitSpawnPositions = new ArrayList<Vector2>();
     	_unitSpawnPositionsScaledUnits = new ArrayList<Vector2>();
     	
@@ -55,6 +56,7 @@ public class MapManager {
         
         _playerStartPositionRect = new Vector2(0,0);
         _convertedUnits = new Vector2(0,0);
+        this.battlemanager = battlemanager;
     }
 
     public void loadMap(String mapName){
@@ -74,7 +76,7 @@ public class MapManager {
         if( Utility.isAssetLoaded(mapFullPath) ) {
             _currentMap = Utility.getMapAsset(mapFullPath);
             _currentMapName = mapName;
-            tiledmapstage = new TiledMapStage(_currentMap,BACKGROUND_LAYER);
+            tiledmapstage = new TiledMapStage(_currentMap,BACKGROUND_LAYER,battlemanager);
         }else{
             Gdx.app.debug(TAG, "Map not loaded");
             return;

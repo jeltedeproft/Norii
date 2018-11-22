@@ -12,6 +12,8 @@ public class TiledMapActor extends Actor {
     private TiledMapTileLayer tiledLayer;
     
     private Boolean isFreeSpawn;
+    
+    private BattleManager battlemanager;
 
     public Boolean getIsFreeSpawn() {
 		return isFreeSpawn;
@@ -23,11 +25,20 @@ public class TiledMapActor extends Actor {
 
 	TiledMapTileLayer.Cell cell;
 
-    public TiledMapActor(TiledMap tiledMap, TiledMapTileLayer tiledLayer, TiledMapTileLayer.Cell cell) {
+    public TiledMapActor(TiledMap tiledMap, TiledMapTileLayer tiledLayer, TiledMapTileLayer.Cell cell, BattleManager battlemanager) {
         this.tiledMap = tiledMap;
         this.tiledLayer = tiledLayer;
         this.cell = cell;
         this.isFreeSpawn = false;
+        this.battlemanager = battlemanager;
     }
+
+	public BattleManager getBattlemanager() {
+		return battlemanager;
+	}
+
+	public void setBattlemanager(BattleManager battlemanager) {
+		this.battlemanager = battlemanager;
+	}
 
 }

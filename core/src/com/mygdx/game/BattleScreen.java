@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -39,6 +40,8 @@ public class BattleScreen implements Screen {
 	private TiledMap tiledMap;
 	private MapProperties prop;
 	private BattleManager battlemanager;
+	private Entity[] playerSortedUnits;
+	private ArrayList<Vector2> spawnPoints;
 	
 	private int mapWidth;
 	private int mapHeight;
@@ -48,7 +51,13 @@ public class BattleScreen implements Screen {
 	private InputMultiplexer multiplexer;
 
 	public BattleScreen(Object... params){
-		_mapMgr = new MapManager();
+		//initialize battlemanager
+		playerSortedUnits = Player.getInstance().getUnitsSortedByIni();
+		multiplexer = new InputMultiplexer();
+		battlemanager = new BattleManager(multiplexer,playerSortedUnits);
+		
+		_mapMgr = new MapManager(battlemanager);
+
 		//if owners are supplied, initialize them
 		int index = ScreenManager.ScreenParams.ARRAYLIST_OF_OWNERS.ordinal();
 		if(params[index] != null) {
@@ -62,16 +71,16 @@ public class BattleScreen implements Screen {
 		tiledMap = _mapMgr.getCurrentMap();
 		prop = tiledMap.getProperties();
 		
+		//fill spawn points
+		spawnPoints = _mapMgr.getSpawnPositionsFromScaledUnits();
+		battlemanager.setSpawnPoints(spawnPoints);
+		
 		//init units
 		for (Owner owner : _players) {
 		    owner.initUnits();
 		}
 		
-		Entity[] playerSortedUnits = Player.getInstance().getUnitsSortedByIni();
-		
-		//multiplexer stuff, first the unit then the tiles
-		multiplexer = new InputMultiplexer();
-		battlemanager = new BattleManager(multiplexer);
+		//set multiplexer as active one
 		multiplexer.addProcessor(_mapMgr.getTiledMapStage());
 		Gdx.input.setInputProcessor(multiplexer);
 		
@@ -89,9 +98,6 @@ public class BattleScreen implements Screen {
 
 		_mapRenderer = new OrthogonalTiledMapRenderer(_mapMgr.getCurrentMap(), MapManager.UNIT_SCALE);
 		_mapRenderer.setView(_camera);
-		
-		//start ddeploying units
-		battlemanager.startDeploy(playerSortedUnits);
 
 		Gdx.app.debug(TAG, "UnitScale value is: " + _mapRenderer.getUnitScale());
 	}
@@ -130,7 +136,7 @@ public class BattleScreen implements Screen {
 			ArrayList<Entity> units = owner.getTeam();
 			for (Entity entity : units) {
 				if(entity.isInBattle())
-				_mapRenderer.getBatch().draw(entity.getFrame(), 5f, 5f, 1f,1f);
+				_mapRenderer.getBatch().draw(entity.getFrame(), entity.getFrameSprite().getX(), entity.getFrameSprite().getY(), 1f,1f);
 			}	
 		}
 		
@@ -140,7 +146,7 @@ public class BattleScreen implements Screen {
 		renderGrid();
 		
 		//highlight tiles if necesary
-		highlightTiles();
+		if(battlemanager.getBattleState() == BattleState.UNIT_PLACEMENT) highlightTiles();
 			
 	}
 
@@ -208,7 +214,7 @@ public class BattleScreen implements Screen {
 	}
 	
 	public void highlightTiles() {
-		for(Vector2 vector : _mapMgr.getSpawnPositionsFromScaledUnits()) {
+		for(Vector2 vector : spawnPoints) {
 			Utility.FillSquare(vector.x, vector.y, Color.GOLD, _camera.combined);
 		}
 	}
