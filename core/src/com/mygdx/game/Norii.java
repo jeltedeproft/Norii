@@ -3,6 +3,11 @@ package com.mygdx.game;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Game;
+import com.mygdx.game.Entities.Entity;
+import com.mygdx.game.Entities.Owner;
+import com.mygdx.game.Entities.Player;
+import com.mygdx.game.Screen.ScreenEnum;
+import com.mygdx.game.Screen.ScreenManager;
 
 public class Norii extends Game {
 	public static final String GAME_IDENTIFIER = "com.mygdx.game";

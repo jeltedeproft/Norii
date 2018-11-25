@@ -1,8 +1,9 @@
-package com.mygdx.game;
+package com.mygdx.game.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.mygdx.game.Battle.BattleState;
 
 public class TiledMapClickListener extends ClickListener {
 	private static final String TAG = TiledMapClickListener.class.getSimpleName();

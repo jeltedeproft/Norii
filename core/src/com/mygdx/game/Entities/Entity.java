@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.mygdx.game.Entities;
 
 import java.util.UUID;
 
@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.mygdx.game.Utility;
+import com.mygdx.game.Map.MapManager;
 
 public class Entity {
 	

@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.mygdx.game.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.MapLayer;
@@ -6,6 +6,8 @@ import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.*;
+import com.mygdx.game.Utility;
+import com.mygdx.game.Battle.BattleManager;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -20,6 +22,7 @@ public class MapManager {
     //maps
     private final static String BATTLE_MAP = "BATTLE_MAP";
     private static final String BATTLE_MAP_SCALED = "BATTLE_MAP_SCALED";
+    private static final String BATTLE_MAP_PATH = "maps/32x32 rpg battlemap.tmx";
 
 
     //Map layers
@@ -48,7 +51,7 @@ public class MapManager {
     	_unitSpawnPositionsScaledUnits = new ArrayList<Vector2>();
     	
         _mapTable = new Hashtable<String, String>();
-        _mapTable.put(BATTLE_MAP, "maps/32x32 rpg battlemap.tmx");
+        _mapTable.put(BATTLE_MAP, BATTLE_MAP_PATH);
         
         _spawnLocationsTable = new Hashtable<String, ArrayList<Vector2>>();
         _spawnLocationsTable.put(BATTLE_MAP, _unitSpawnPositions);

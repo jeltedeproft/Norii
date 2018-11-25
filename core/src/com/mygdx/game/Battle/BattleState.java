@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.mygdx.game.Battle;
 
 public enum BattleState {
     UNIT_PLACEMENT,

@@ -1,10 +1,12 @@
-package com.mygdx.game;
+package com.mygdx.game.Battle;
 
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.Entities.Entity;
+import com.mygdx.game.Entities.InputController;
 
 public class BattleManager {
 	private static final String TAG = BattleManager.class.getSimpleName();
@@ -81,8 +83,7 @@ public class BattleManager {
 		if((units != null) && activeUnitIndex < units.length) {
 			//deploy unit
 			Vector2 spawn = new Vector2(x,y);
-			units[activeUnitIndex]._nextPlayerPosition = spawn;
-			units[activeUnitIndex].setNextPositionToCurrent();
+			units[activeUnitIndex].setCurrentPosition(x, y);
 			units[activeUnitIndex].setInBattle(true);
 			activeUnit = units[activeUnitIndex];
 			removeSpawnPoint(spawn);

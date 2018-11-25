@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.mygdx.game.Screen;
 
 import java.util.ArrayList;
 
@@ -14,8 +14,13 @@ import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.Entity;
-import com.mygdx.game.MapManager;
+import com.mygdx.game.Utility;
+import com.mygdx.game.Battle.BattleManager;
+import com.mygdx.game.Battle.BattleState;
+import com.mygdx.game.Entities.Entity;
+import com.mygdx.game.Entities.Owner;
+import com.mygdx.game.Entities.Player;
+import com.mygdx.game.Map.MapManager;
 
 public class BattleScreen implements Screen {
 	private static final String TAG = BattleScreen.class.getSimpleName();
