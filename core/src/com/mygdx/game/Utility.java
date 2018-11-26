@@ -8,11 +8,13 @@ import com.badlogic.gdx.assets.loaders.TextureLoader;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public final class Utility {
 	public static final AssetManager _assetManager = new AssetManager();
@@ -24,6 +26,13 @@ public final class Utility {
 	private static InternalFileHandleResolver _filePathResolver =  new InternalFileHandleResolver();
 	
 	private static ShapeRenderer debugRenderer = new ShapeRenderer();
+	
+	//UI
+	private final static String STATUSUI_TEXTURE_ATLAS_PATH = "skins/statusui.atlas";
+	private final static String STATUSUI_SKIN_PATH = "skins/statusui.json";
+	
+	public static TextureAtlas STATUSUI_TEXTUREATLAS = new TextureAtlas(STATUSUI_TEXTURE_ATLAS_PATH);
+	public static Skin STATUSUI_SKIN = new Skin(Gdx.files.internal(STATUSUI_SKIN_PATH),STATUSUI_TEXTUREATLAS);
 	
 	public static void FillSquare(float x, float y , Color color, Matrix4 projectionMatrix) {
         debugRenderer.setProjectionMatrix(projectionMatrix);

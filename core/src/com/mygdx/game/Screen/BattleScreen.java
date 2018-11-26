@@ -19,6 +19,7 @@ import com.mygdx.game.Entities.Player;
 import com.mygdx.game.Map.BattleMap;
 import com.mygdx.game.Map.Map;
 import com.mygdx.game.Map.MapManager;
+import com.mygdx.game.UI.PlayerBattleHUD;
 
 public class BattleScreen implements Screen {
 	private static final String TAG = BattleScreen.class.getSimpleName();
@@ -46,6 +47,10 @@ public class BattleScreen implements Screen {
 	
 	
 	private InputMultiplexer multiplexer;
+	
+	//HUD stuff
+	private OrthographicCamera _hudCamera;
+	private static PlayerBattleHUD _playerBattleHUD;
 
 	public BattleScreen(Object... params){
 		//initialize battlemanager
@@ -56,6 +61,13 @@ public class BattleScreen implements Screen {
 		_mapMgr = new MapManager();
 		map = (BattleMap) _mapMgr.get_currentMap();
 		map.setStage(battlemanager);
+		
+		//init HUD
+		_hudCamera = new OrthographicCamera();
+		_hudCamera.setToOrtho(false, VIEWPORT.physicalWidth, VIEWPORT.physicalHeight);
+		_playerBattleHUD = new PlayerBattleHUD(_hudCamera);
+		
+		multiplexer.addProcessor(_playerBattleHUD.getStage());
 
 		//if owners are supplied, initialize them
 		int index = ScreenManager.ScreenParams.ARRAYLIST_OF_OWNERS.ordinal();

@@ -1,0 +1,19 @@
+
+statusui2.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+items
+  rotate: false
+  xy: 1, 80
+  size: 486, 270
+  orig: 486, 270
+  offset: 0, 0
+  index: -1
+statusui
+  rotate: false
+  xy: 1, 1
+  size: 372, 77
+  orig: 372, 77
+  offset: 0, 0
+  index: -1
