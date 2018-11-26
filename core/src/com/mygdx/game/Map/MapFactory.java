@@ -9,6 +9,14 @@ public class MapFactory {
     public static enum MapType{
         BATTLE_MAP
     }
+    
+	public static enum MapFileNames{
+		BATTLE_MAP_THE_VILLAGE{
+	        public String toString() {
+	            return "maps/32x32 rpg battlemap.tmx";
+	        }
+		}
+	}
 
     static public Map getMap(MapType mapType){
         Map map = null;
@@ -16,7 +24,7 @@ public class MapFactory {
             case BATTLE_MAP:
                 map = _mapTable.get(MapType.BATTLE_MAP);
                 if( map == null ){
-                    map = new BattleMap();
+                    map = new BattleMap(MapFileNames.BATTLE_MAP_THE_VILLAGE.toString());
                     _mapTable.put(MapType.BATTLE_MAP, map);
                 }
                 break;

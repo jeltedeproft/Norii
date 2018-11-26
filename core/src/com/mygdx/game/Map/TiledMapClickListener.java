@@ -19,7 +19,7 @@ public class TiledMapClickListener extends ClickListener {
         Gdx.app.debug(TAG, "(" + actor.getX() + " , " + actor.getY() + ") has been clicked.");
     	BattleState battlestate = actor.getBattlemanager().getBattleState();
         if(actor.getIsFreeSpawn() && battlestate == BattleState.UNIT_PLACEMENT) {
-        	actor.getBattlemanager().deployUnit(actor.getX() * MapManager.UNIT_SCALE,actor.getY() * MapManager.UNIT_SCALE);
+        	actor.getBattlemanager().deployUnit(actor.getX() * Map.UNIT_SCALE,actor.getY() * Map.UNIT_SCALE);
         	actor.setIsFreeSpawn(false);
         }
     }

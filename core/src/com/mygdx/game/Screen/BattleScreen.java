@@ -8,10 +8,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.maps.MapProperties;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Utility;
@@ -20,6 +16,8 @@ import com.mygdx.game.Battle.BattleState;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Entities.Owner;
 import com.mygdx.game.Entities.Player;
+import com.mygdx.game.Map.BattleMap;
+import com.mygdx.game.Map.Map;
 import com.mygdx.game.Map.MapManager;
 
 public class BattleScreen implements Screen {
@@ -41,17 +39,11 @@ public class BattleScreen implements Screen {
 	private OrthographicCamera _camera = null;
 	private static MapManager _mapMgr;
 	
-	//current map stuff
-	private TiledMap tiledMap;
-	private MapProperties prop;
+	private BattleMap map;
 	private BattleManager battlemanager;
 	private Entity[] playerSortedUnits;
 	private ArrayList<Vector2> spawnPoints;
 	
-	private int mapWidth;
-	private int mapHeight;
-	private int tilePixelWidth;
-	private int tilePixelHeight;
 	
 	private InputMultiplexer multiplexer;
 
@@ -61,7 +53,9 @@ public class BattleScreen implements Screen {
 		multiplexer = new InputMultiplexer();
 		battlemanager = new BattleManager(multiplexer,playerSortedUnits);
 		
-		_mapMgr = new MapManager(battlemanager);
+		_mapMgr = new MapManager();
+		map = (BattleMap) _mapMgr.get_currentMap();
+		map.setStage(battlemanager);
 
 		//if owners are supplied, initialize them
 		int index = ScreenManager.ScreenParams.ARRAYLIST_OF_OWNERS.ordinal();
@@ -72,12 +66,10 @@ public class BattleScreen implements Screen {
 
 	@Override
 	public void show() {
-		//setup map stuff
-		tiledMap = _mapMgr.getCurrentMap();
-		prop = tiledMap.getProperties();
+		_mapMgr.getCurrentTiledMap();
 		
 		//fill spawn points
-		spawnPoints = _mapMgr.getSpawnPositionsFromScaledUnits();
+		spawnPoints = map.getSpawnPositionsFromScaledUnits();
 		battlemanager.setSpawnPoints(spawnPoints);
 		
 		//init units
@@ -86,22 +78,19 @@ public class BattleScreen implements Screen {
 		}
 		
 		//set multiplexer as active one
-		multiplexer.addProcessor(_mapMgr.getTiledMapStage());
+		multiplexer.addProcessor(map.getTiledMapStage());
 		Gdx.input.setInputProcessor(multiplexer);
 		
-		mapWidth = prop.get("width", Integer.class);
-		mapHeight = prop.get("height", Integer.class);
-		tilePixelWidth = prop.get("tilewidth", Integer.class);
-		tilePixelHeight = prop.get("tileheight", Integer.class);
+
 		
 		//_camera setup
-		setupViewport(mapWidth, mapHeight);
+		setupViewport(map.getMapWidth(), map.getMapHeight());
 		
 		//get the current size
 		_camera = new OrthographicCamera();
 		_camera.setToOrtho(false, VIEWPORT.viewportWidth, VIEWPORT.viewportHeight);
 
-		_mapRenderer = new OrthogonalTiledMapRenderer(_mapMgr.getCurrentMap(), MapManager.UNIT_SCALE);
+		_mapRenderer = new OrthogonalTiledMapRenderer(_mapMgr.getCurrentTiledMap(), Map.UNIT_SCALE);
 		_mapRenderer.setView(_camera);
 
 		Gdx.app.debug(TAG, "UnitScale value is: " + _mapRenderer.getUnitScale());
@@ -117,7 +106,7 @@ public class BattleScreen implements Screen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		//Preferable to lock and center the _camera to the middle of the field
-		_camera.position.set(mapWidth/2, mapHeight/2, 0f);
+		_camera.position.set(map.getMapWidth()/2, map.getMapHeight()/2, 0f);
 		_camera.update();
 
 		for (Owner owner : _players) {
@@ -212,10 +201,10 @@ public class BattleScreen implements Screen {
 
 	public void renderGrid() {
 		//create a visible grid
-		for(int x = 0; x < mapWidth; x += 1)
-			Utility.DrawDebugLine(new Vector2(x,0), new Vector2(x,mapHeight), _camera.combined);
-		for(int y = 0; y < mapHeight; y += 1)
-			Utility.DrawDebugLine(new Vector2(0,y), new Vector2(mapWidth,y), _camera.combined);
+		for(int x = 0; x < map.getMapWidth(); x += 1)
+			Utility.DrawDebugLine(new Vector2(x,0), new Vector2(x,map.getMapHeight()), _camera.combined);
+		for(int y = 0; y < map.getMapHeight(); y += 1)
+			Utility.DrawDebugLine(new Vector2(0,y), new Vector2(map.getMapWidth(),y), _camera.combined);
 	}
 	
 	public void highlightTiles() {

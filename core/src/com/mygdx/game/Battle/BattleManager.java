@@ -11,7 +11,6 @@ import com.mygdx.game.Entities.InputController;
 public class BattleManager {
 	private static final String TAG = BattleManager.class.getSimpleName();
 	
-	//this class organizes the flow of battle : unit ordering and action ordering
 	private BattleState battlestate = BattleState.UNIT_PLACEMENT;
 	private InputController _controller;
 	private InputMultiplexer multiplexer;
@@ -21,7 +20,7 @@ public class BattleManager {
 	private Entity[] units;
 	private int activeUnitIndex;
 	
-	//TO-DO : at the start of battle decide on unit ordering and initiate the inputprocessor
+
 	public BattleManager(InputMultiplexer inputmultiplexer,Entity[] playerSortedUnits) {
 		this.multiplexer = inputmultiplexer;
 		this.units = playerSortedUnits;
@@ -96,7 +95,6 @@ public class BattleManager {
 		}else {
 			Gdx.app.debug(TAG, "can't deploy unit, units is null or activeunitindex is > the length of units");
 		}
-
 	}
 	
 	private void removeSpawnPoint(Vector2 spawnpoint) {

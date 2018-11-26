@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Utility;
+import com.mygdx.game.Map.Map;
 import com.mygdx.game.Map.MapManager;
 
 public class Entity {
@@ -159,9 +160,9 @@ public class Entity {
 		//Need to account for the unitscale, since the map coordinates will be in pixels
 		float minX;
 		float minY;
-		if( MapManager.UNIT_SCALE > 0 ) {
-			minX = _nextPlayerPosition.x / MapManager.UNIT_SCALE;
-			minY = _nextPlayerPosition.y / MapManager.UNIT_SCALE;
+		if( Map.UNIT_SCALE > 0 ) {
+			minX = _nextPlayerPosition.x / Map.UNIT_SCALE;
+			minY = _nextPlayerPosition.y / Map.UNIT_SCALE;
 		}else{
 			minX = _nextPlayerPosition.x;
 			minY = _nextPlayerPosition.y;
