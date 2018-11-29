@@ -18,6 +18,7 @@ public class PlayerBattleHUD implements Screen, ProfileObserver {
     private Stage _stage;
     private Viewport _viewport;
     private Entity[] SortedUnits;
+    private PortraitsUI _portraits;
     private StatusUI[] _statusUIs;
 //    private InventoryUI _inventoryUI;
     private Camera _camera;
@@ -45,6 +46,19 @@ public class PlayerBattleHUD implements Screen, ProfileObserver {
 	        
 	        _stage.addActor(statusui);
         }
+        
+        //add portraits
+    	_portraits = new PortraitsUI(SortedUnits);
+    	
+        //status window blocks input beneath
+    	_portraits.addListener(new InputListener() {
+        	public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+         		return true;
+         	}
+        });
+    	
+    	_stage.addActor(_portraits);
+        
 
 //        _inventoryUI = new InventoryUI();
 //        _inventoryUI.setMovable(false);

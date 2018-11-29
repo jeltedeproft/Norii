@@ -4,14 +4,20 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.mygdx.game.Utility;
+import com.mygdx.game.Audio.AudioManager;
+import com.mygdx.game.Audio.AudioObserver;
+import com.mygdx.game.Audio.AudioSubject;
 import com.mygdx.game.Battle.BattleManager;
 
-public abstract class Map {
+public abstract class Map implements AudioSubject{
     private static final String TAG = Map.class.getSimpleName();
 
     public final static float UNIT_SCALE  = 1/32f;
+    
+    private Array<AudioObserver> _observers;
 
     //Map layers
     protected final static String MAP_COLLISION_LAYER = "items";
@@ -40,6 +46,7 @@ public abstract class Map {
     Map( MapFactory.MapType mapType, String fullMapPath){
         _json = new Json();
         _currentMapType = mapType;
+        _observers = new Array<AudioObserver>();
 
         if( fullMapPath == null || fullMapPath.isEmpty() ) {
             Gdx.app.debug(TAG, "Map is invalid");
@@ -68,6 +75,9 @@ public abstract class Map {
 		mapHeight = prop.get("height", Integer.class);
 		tilePixelWidth = prop.get("tilewidth", Integer.class);
 		tilePixelHeight = prop.get("tileheight", Integer.class);
+		
+		//Observers
+        this.addObserver(AudioManager.getInstance());
     }
 
     public MapLayer getCollisionLayer(){
@@ -93,5 +103,29 @@ public abstract class Map {
 	public void setMapHeight(int mapHeight) {
 		this.mapHeight = mapHeight;
 	}
-    
+	
+    abstract public void unloadMusic();
+    abstract public void loadMusic();
+
+    @Override
+    public void addObserver(AudioObserver audioObserver) {
+        _observers.add(audioObserver);
+    }
+
+    @Override
+    public void removeObserver(AudioObserver audioObserver) {
+        _observers.removeValue(audioObserver, true);
+    }
+
+    @Override
+    public void removeAllObservers() {
+        _observers.removeAll(_observers, true);
+    }
+
+    @Override
+    public void notify(AudioObserver.AudioCommand command, AudioObserver.AudioTypeEvent event) {
+        for(AudioObserver observer: _observers){
+            observer.onNotify(command, event);
+        }
+    }
 }

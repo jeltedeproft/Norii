@@ -22,7 +22,7 @@ import com.mygdx.game.Map.MapManager;
 import com.mygdx.game.Profile.ProfileManager;
 import com.mygdx.game.UI.PlayerBattleHUD;
 
-public class BattleScreen implements Screen {
+public class BattleScreen extends GameScreen  {
 	private static final String TAG = BattleScreen.class.getSimpleName();
 
 	private static class VIEWPORT {

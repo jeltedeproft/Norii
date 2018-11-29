@@ -3,7 +3,6 @@ package com.mygdx.game.Screen;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -12,11 +11,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.mygdx.game.Utility;
+import com.mygdx.game.Audio.AudioObserver;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Entities.Owner;
 import com.mygdx.game.Entities.Player;
 
-public class MainMenuScreen implements Screen {
+public class MainMenuScreen extends GameScreen {
 	private static final String TAG = MainMenuScreen.class.getSimpleName();
 
 	private Stage _stage;
@@ -65,6 +65,9 @@ public class MainMenuScreen implements Screen {
 				return true;
 			}
 		});
+		
+		//load music
+		notify(AudioObserver.AudioCommand.MUSIC_LOAD, AudioObserver.AudioTypeEvent.MUSIC_TITLE);
 	}
 	
 	@Override
@@ -84,6 +87,7 @@ public class MainMenuScreen implements Screen {
 	@Override
 	public void show() {
 		Gdx.input.setInputProcessor(_stage);
+		notify(AudioObserver.AudioCommand.MUSIC_PLAY_LOOP, AudioObserver.AudioTypeEvent.MUSIC_TITLE);
 	}
 
 	@Override

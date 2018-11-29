@@ -23,6 +23,13 @@ public class MapManager {
             Gdx.app.debug(TAG, "Map does not exist!  ");
             return;
         }
+        
+        if( _currentMap != null ){
+            _currentMap.unloadMusic();
+        }
+
+        map.loadMusic();
+
 
         _currentMap = map;
         _mapChanged = true;
@@ -64,6 +71,14 @@ public class MapManager {
 
     public void setMapChanged(boolean hasMapChanged){
         this._mapChanged = hasMapChanged;
+    }
+    
+    public void disableCurrentmapMusic(){
+        _currentMap.unloadMusic();
+    }
+
+    public void enableCurrentmapMusic(){
+        _currentMap.loadMusic();
     }
 
 }
