@@ -48,7 +48,9 @@ public abstract class Map {
 
         if( _currentMap != null ){
             _currentMap.dispose();
-            tiledmapstage.dispose();
+            if( tiledmapstage != null ){
+            	tiledmapstage.dispose();
+            }
         }
 
         Utility.loadMapAsset(fullMapPath);

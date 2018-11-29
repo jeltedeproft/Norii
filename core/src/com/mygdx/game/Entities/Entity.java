@@ -9,12 +9,14 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Utility;
 import com.mygdx.game.Map.Map;
 import com.mygdx.game.Map.MapManager;
+import com.mygdx.game.UI.StatusUI;
 
-public class Entity {
+public class Entity extends Actor{
 	
 	private static final String TAG = Entity.class.getSimpleName();
 	private static final String _defaultSpritePath = "sprites/characters/Warrior.png";
@@ -22,9 +24,15 @@ public class Entity {
 	private Vector2 _velocity;
 	private String _entityID;
 	
+	private StatusUI statusui;
+	
+	private String name;
+
 	//stats
 	private int mp;
 	private int hp;
+	private int level;
+	private int xp;
 	private int ini;
 	private boolean inBattle;
 
@@ -47,6 +55,7 @@ public class Entity {
 	protected float _frameTime = 0f;
 	protected Sprite _frameSprite = null;
 	protected TextureRegion _currentFrame = null;
+	protected EntityActor entityactor;
 
 	public final int FRAME_WIDTH = 16;
 	public final int FRAME_HEIGHT = 16;
@@ -60,8 +69,9 @@ public class Entity {
 		UP,RIGHT,DOWN,LEFT;
 	}
 	
-	public Entity(){
+	public Entity(String name){
 		initEntity();
+		this.name = name;
 	}
 	
 	public void initEntity(){
@@ -95,6 +105,7 @@ public class Entity {
 
 	public void setMp(int mp) {
 		this.mp = mp;
+		updateStatusUI();
 	}
 
 	public int getHp() {
@@ -103,6 +114,7 @@ public class Entity {
 
 	public void setHp(int hp) {
 		this.hp = hp;
+		updateStatusUI();
 	}
 
 	public int getIni() {
@@ -111,8 +123,27 @@ public class Entity {
 
 	public void setIni(int ini) {
 		this.ini = ini;
+		updateStatusUI();
 	}
 
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
+		updateStatusUI();
+	}
+
+	public int getXp() {
+		return xp;
+	}
+
+	public void setXp(int xp) {
+		this.xp = xp;
+		updateStatusUI();
+	}
+	
 	public void update(float delta){
 		_frameTime = (_frameTime + delta)%5; //Want to avoid overflow
 
@@ -132,6 +163,14 @@ public class Entity {
 		//Gdx.app.debug(TAG, "Calling INIT" );
 	}
 
+	public StatusUI getStatusui() {
+		return statusui;
+	}
+
+	public void setStatusui(StatusUI statusui) {
+		this.statusui = statusui;
+	}
+	
 	public void setBoundingBoxSize(float percentageWidthReduced, float percentageHeightReduced){
 		//Update the current bounding box
 		float width;
@@ -171,6 +210,11 @@ public class Entity {
 		boundingBox.set(minX, minY, width, height);
 		//Gdx.app.debug(TAG, "SETTING Bounding Box: (" + minX + "," + minY + ")  width: " + width + " height: " + height);
 	}
+
+	public Rectangle getBoundingBox() {
+		return boundingBox;
+	}
+
 
 	private void loadDefaultSprite()
 	{
@@ -247,6 +291,12 @@ public class Entity {
 		_frameSprite.setY(currentPositionY);
 		this._currentPlayerPosition.x = currentPositionX;
 		this._currentPlayerPosition.y = currentPositionY;
+
+		//also move the actor linked to this entity
+		this.entityactor.setPos(new Vector2(currentPositionX,currentPositionY));
+		
+		//update the status UI's position
+		updateStatusUI();
 	}
 	
 	public void setDirection(Direction direction,  float deltaTime){
@@ -309,6 +359,22 @@ public class Entity {
 		
 		//velocity
 		_velocity.scl(1 / deltaTime);
+	}
+	
+	public void updateStatusUI() {
+		statusui.update();
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public EntityActor getEntityactor() {
+		return entityactor;
+	}
+
+	public void setEntityactor(EntityActor entityactor) {
+		this.entityactor = entityactor;
 	}
 
 }

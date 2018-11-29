@@ -78,12 +78,11 @@ public class BattleManager {
 	}
 	
 	public void deployUnit(float x, float y) {
-		Gdx.app.debug(TAG, "clicked on : " + x + " , " + y + " )");
 		if((units != null) && activeUnitIndex < units.length) {
 			//deploy unit
+			units[activeUnitIndex].setInBattle(true);
 			Vector2 spawn = new Vector2(x,y);
 			units[activeUnitIndex].setCurrentPosition(x, y);
-			units[activeUnitIndex].setInBattle(true);
 			activeUnit = units[activeUnitIndex];
 			removeSpawnPoint(spawn);
 			

@@ -4,8 +4,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 
+import com.badlogic.gdx.Gdx;
+import com.mygdx.game.Screen.BattleScreen;
+
 public abstract class Owner {
+	private static final String TAG = Owner.class.getSimpleName();
+	
 	private ArrayList<Entity> team;
+	private EntityStage entityStage;
+	
+	public EntityStage getEntityStage() {
+		return entityStage;
+	}
 	
 	public ArrayList<Entity> getTeam() {
 		return team;
@@ -13,6 +23,14 @@ public abstract class Owner {
 
 	public void setTeam(ArrayList<Entity> team) {
 		this.team = team;
+		
+		if(entityStage == null) {
+			this.entityStage = new EntityStage(team);
+		}else {
+			this.entityStage.dispose();
+			this.entityStage = new EntityStage(team);
+		}
+		
 	}
 	
 	public void initUnits() {

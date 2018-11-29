@@ -19,6 +19,7 @@ import com.mygdx.game.Entities.Player;
 import com.mygdx.game.Map.BattleMap;
 import com.mygdx.game.Map.Map;
 import com.mygdx.game.Map.MapManager;
+import com.mygdx.game.Profile.ProfileManager;
 import com.mygdx.game.UI.PlayerBattleHUD;
 
 public class BattleScreen implements Screen {
@@ -53,27 +54,36 @@ public class BattleScreen implements Screen {
 	private static PlayerBattleHUD _playerBattleHUD;
 
 	public BattleScreen(Object... params){
-		//initialize battlemanager
+		//initialize player
 		playerSortedUnits = Player.getInstance().getUnitsSortedByIni();
+		
+		//init HUD
+		_hudCamera = new OrthographicCamera();
+		_hudCamera.setToOrtho(false, VIEWPORT.physicalWidth, VIEWPORT.physicalHeight);
+		_playerBattleHUD = new PlayerBattleHUD(_hudCamera,playerSortedUnits); //voorlopig alleen player units, moet alle units zijn
+		
+
 		multiplexer = new InputMultiplexer();
+		
+		//add 3 inputlisteners
+		multiplexer.addProcessor(Player.getInstance().getEntityStage()); //need to add all units here not just player units
 		battlemanager = new BattleManager(multiplexer,playerSortedUnits);
+		multiplexer.addProcessor(_playerBattleHUD.getStage()); 
+		
 		
 		_mapMgr = new MapManager();
 		map = (BattleMap) _mapMgr.get_currentMap();
 		map.setStage(battlemanager);
 		
-		//init HUD
-		_hudCamera = new OrthographicCamera();
-		_hudCamera.setToOrtho(false, VIEWPORT.physicalWidth, VIEWPORT.physicalHeight);
-		_playerBattleHUD = new PlayerBattleHUD(_hudCamera);
-		
-		multiplexer.addProcessor(_playerBattleHUD.getStage());
 
 		//if owners are supplied, initialize them
 		int index = ScreenManager.ScreenParams.ARRAYLIST_OF_OWNERS.ordinal();
 		if(params[index] != null) {
 			_players = (ArrayList<Owner>) params[index];
 		}else _players = new ArrayList<Owner>();
+		
+		//add HUD as observer
+		ProfileManager.getInstance().addObserver(_playerBattleHUD);
 	}
 
 	@Override
@@ -92,8 +102,6 @@ public class BattleScreen implements Screen {
 		//set multiplexer as active one
 		multiplexer.addProcessor(map.getTiledMapStage());
 		Gdx.input.setInputProcessor(multiplexer);
-		
-
 		
 		//_camera setup
 		setupViewport(map.getMapWidth(), map.getMapHeight());
@@ -116,6 +124,11 @@ public class BattleScreen implements Screen {
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		
+		//act stages
+		Player.getInstance().getEntityStage().act();
+		_playerBattleHUD.getStage().act();
+		map.getTiledMapStage().act();
 
 		//Preferable to lock and center the _camera to the middle of the field
 		_camera.position.set(map.getMapWidth()/2, map.getMapHeight()/2, 0f);
@@ -153,6 +166,9 @@ public class BattleScreen implements Screen {
 		
 		//highlight tiles if necesary
 		if(battlemanager.getBattleState() == BattleState.UNIT_PLACEMENT) highlightTiles();
+		
+		//render HUD
+		_playerBattleHUD.render(delta);
 			
 	}
 

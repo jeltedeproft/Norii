@@ -1,5 +1,7 @@
 package com.mygdx.game.UI;
 
+package com.mygdx.game.UI;
+
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.Align;
@@ -12,38 +14,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
-public class StatusUI extends Window {
+public class PortraitsUI extends Window {
 	private static final String TAG = StatusUI.class.getSimpleName();
 	
-    private Image _hpBar;
-    private Image _mpBar;
-    private Image _xpBar;
-    
-    private Label hp;
-    private Label mp;
-    private Label xp;
-    private Label levelVal;
-    private Label iniVal;
+    private PortraitUI[] portraits;
 
-    private ImageButton _heroButton;
-    private Entity linkedEntity;
-    
-    private Label heroNameLabel;
-    private String heroName = "???";
-    private static String title = "Hero stats";
-    
-	private int statsUIOffsetX = 32;
-	private int statsUIOffsetY = 32;
-
-    //Attributes
-    private int _levelVal;
-    private int _hpVal;
-    private int _mpVal;
-    private int _xpVal;
-    private int _iniVal;
-
-    public StatusUI(Entity entity){
-        super(title, Utility.STATUSUI_SKIN);
+    public PortraitsUI(Entity entity){
+        super("", Utility.STATUSUI_SKIN);
         
         this.linkedEntity = entity;
         entity.setStatusui(this);
@@ -172,4 +149,5 @@ public class StatusUI extends Window {
 
     }
 }
+
 
