@@ -5,6 +5,7 @@ import java.util.Random;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.MusicLoader;
+import com.badlogic.gdx.assets.loaders.ParticleEffectLoader;
 import com.badlogic.gdx.assets.loaders.SoundLoader;
 import com.badlogic.gdx.assets.loaders.TextureLoader;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
@@ -12,6 +13,8 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -44,6 +47,17 @@ public final class Utility {
         debugRenderer.setColor(color);
         debugRenderer.rect(x, y, 1, 1);;
         debugRenderer.end();
+	}
+	public static void FillSquareWithParticle(float x, float y, Matrix4 projectionMatrix, float delta, Batch batch,ParticleEffect particle) {
+		batch.begin();
+
+		//Setting the position of the ParticleEffect
+		particle.setPosition(x, y);
+		particle.update(delta);
+		
+		particle.draw(batch, delta);
+		
+		batch.end();
 	}
 
     public static void DrawDebugLine(Vector2 start, Vector2 end, int lineWidth, Color color, Matrix4 projectionMatrix)
@@ -153,6 +167,36 @@ public final class Utility {
 		}
 
 		return texture;
+	}
+	
+	public static void loadParticleAsset(String particleFilenamePath){
+		if( particleFilenamePath == null || particleFilenamePath.isEmpty() ){
+			return;
+		}
+		//load asset
+		if( _filePathResolver.resolve(particleFilenamePath).exists() ){
+			_assetManager.setLoader(ParticleEffect.class, new ParticleEffectLoader(_filePathResolver));
+			_assetManager.load(particleFilenamePath, ParticleEffect.class);
+			//block until we load the particle
+			_assetManager.finishLoadingAsset(particleFilenamePath);
+		}
+		else{
+			Gdx.app.debug(TAG, "particle doesn't exist!: " + particleFilenamePath );
+		}
+	}
+
+	public static ParticleEffect  getParticleAsset(String particleFilenamePath){
+		ParticleEffect particle = null;
+
+		// once the asset manager is done loading
+		if( _assetManager.isLoaded(particleFilenamePath) ){
+			particle = _assetManager.get(particleFilenamePath,ParticleEffect.class);
+		} else {
+			Gdx.app.debug(TAG, "particle is not loaded: " + particleFilenamePath );
+		}
+		//start particle
+		particle.start();
+		return particle;
 	}
 
 	public static int getRandomIntFrom1to(int to) {

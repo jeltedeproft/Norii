@@ -15,7 +15,7 @@ public class EntityClickListener extends ClickListener {
 
     @Override
     public void clicked(InputEvent event, float x, float y) {
-
+    	
     }
     
     @Override

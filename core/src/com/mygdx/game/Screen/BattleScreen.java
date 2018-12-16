@@ -4,12 +4,17 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
+import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Utility;
 import com.mygdx.game.Battle.BattleManager;
 import com.mygdx.game.Battle.BattleState;
@@ -24,6 +29,9 @@ import com.mygdx.game.UI.PlayerBattleHUD;
 
 public class BattleScreen extends GameScreen  {
 	private static final String TAG = BattleScreen.class.getSimpleName();
+	
+	private final static String SPAWNEFFECT = "particles/myeffect.p";
+	private final static int MAX_PARTICLES_IN_POOL = 50;
 
 	private static class VIEWPORT {
 		static float viewportWidth;
@@ -36,6 +44,8 @@ public class BattleScreen extends GameScreen  {
 	}
 
 	private ArrayList<Owner> _players;
+	private ArrayList<PooledEffect> particles;
+	private ParticleEffectPool spawnEffectPool;
 
 	private OrthogonalTiledMapRenderer _mapRenderer = null;
 	private OrthographicCamera _camera = null;
@@ -56,6 +66,11 @@ public class BattleScreen extends GameScreen  {
 	public BattleScreen(Object... params){
 		//initialize player
 		playerSortedUnits = Player.getInstance().getUnitsSortedByIni();
+		
+		//initialize particles(max is 50)
+		particles = new ArrayList<PooledEffect>();
+		Utility.loadParticleAsset(SPAWNEFFECT);
+		spawnEffectPool =  new ParticleEffectPool(Utility.getParticleAsset(SPAWNEFFECT),1,MAX_PARTICLES_IN_POOL);  
 		
 		//init HUD
 		_hudCamera = new OrthographicCamera();
@@ -93,6 +108,14 @@ public class BattleScreen extends GameScreen  {
 		//fill spawn points
 		spawnPoints = map.getSpawnPositionsFromScaledUnits();
 		battlemanager.setSpawnPoints(spawnPoints);
+		
+		//load spawn particles
+		for(Vector2 vector : spawnPoints) {
+			PooledEffect particle = spawnEffectPool.obtain();
+			particle.setPosition(vector.x, vector.y);
+			particles.add(particle);
+		}
+		
 		
 		//init units
 		for (Owner owner : _players) {
@@ -137,6 +160,11 @@ public class BattleScreen extends GameScreen  {
 		for (Owner owner : _players) {
 		    owner.updateUnits(delta);
 		}
+		
+		//for movement activate this
+//		if( !isCollisionWithMapLayer(_player.boundingBox) ){
+//			_player.setNextPositionToCurrent();
+//		}
 
 		battlemanager.updateController(delta);
 
@@ -165,15 +193,21 @@ public class BattleScreen extends GameScreen  {
 		renderGrid();
 		
 		//highlight tiles if necesary
-		if(battlemanager.getBattleState() == BattleState.UNIT_PLACEMENT) highlightTiles();
+		if(battlemanager.getBattleState() == BattleState.UNIT_PLACEMENT) highlightTiles(delta,_mapRenderer.getBatch());
 		
 		//render HUD
 		_playerBattleHUD.render(delta);
+		
+		//highlight movement tiles if necessary
+		if(battlemanager.getActiveUnit().isInMovementPhase()) highlightCircle(battlemanager.getActiveUnit().getCurrentPosition(), battlemanager.getActiveUnit().getMp());
 			
 	}
 
 	@Override
 	public void resize(int width, int height) {
+		Player.getInstance().getEntityStage().getViewport().update(width, height, true);
+		_playerBattleHUD.getStage().getViewport().update(width, height, true);
+		map.getTiledMapStage().getViewport().update(width, height, true);
 	}
 
 	@Override
@@ -235,9 +269,28 @@ public class BattleScreen extends GameScreen  {
 			Utility.DrawDebugLine(new Vector2(0,y), new Vector2(map.getMapWidth(),y), _camera.combined);
 	}
 	
-	public void highlightTiles() {
-		for(Vector2 vector : spawnPoints) {
-			Utility.FillSquare(vector.x, vector.y, Color.GOLD, _camera.combined);
+	public void highlightTiles(float delta, Batch batch) {	
+		for(PooledEffect particle : particles) {
+			particle.update(delta);
+			SpriteBatch mybatch = new SpriteBatch();
+			mybatch.begin();
+			particle.draw(mybatch, delta);
+			if (particle.isComplete()) {
+				particle.free();
+				//particles.remove(particle);
+			}
+			mybatch.end();
+		}
+	}
+	
+	public void highlightCircle(Vector2 centre, int distance) {	
+		for(int i = 1; i < distance + 1; i++) {
+			for(int j = 0; j < distance; j++) {
+				Utility.FillSquare(centre.x + (i - j), centre.y + j, Color.GOLD, _camera.combined);
+				Utility.FillSquare(centre.x + j, centre.y + (i - j), Color.GOLD, _camera.combined);
+				Utility.FillSquare(centre.x - (i - j), centre.y + j, Color.GOLD, _camera.combined);
+				Utility.FillSquare(centre.x + j, centre.y - (i - j), Color.GOLD, _camera.combined);
+			}
 		}
 	}
 

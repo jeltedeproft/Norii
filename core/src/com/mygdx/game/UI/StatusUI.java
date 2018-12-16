@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.Align;
 import com.mygdx.game.Utility;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Map.Map;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -148,6 +149,7 @@ public class StatusUI extends Window {
     }
     
     public void update() {
+    	Gdx.app.debug(TAG, "updating statuis UI");
         _levelVal = linkedEntity.getLevel();
         _hpVal = linkedEntity.getHp();
         _mpVal = linkedEntity.getMp();

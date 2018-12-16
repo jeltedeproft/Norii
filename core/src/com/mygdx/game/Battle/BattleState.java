@@ -5,6 +5,7 @@ public enum BattleState {
     MOVEMENT_PHASE,
     ACTION_PHASE,
     ENEMY_TURN,
+    ACTION_SELECTION,
     BATTLE_END;
     
     public static void doSomething(){

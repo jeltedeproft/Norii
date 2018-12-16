@@ -13,18 +13,37 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Utility;
 import com.mygdx.game.Map.Map;
-import com.mygdx.game.Map.MapManager;
+import com.mygdx.game.UI.ActionsUI;
 import com.mygdx.game.UI.StatusUI;
 
 public class Entity extends Actor{
 	
+    public static enum EntityFilePath{
+        COMMANDER("sprites/characters/Commander.png"),
+        ICARUS("sprites/characters/Icarus.png"),
+        DEMON("sprites/characters/Demon.png"),
+        SHAMAN("sprites/characters/Shaman.png");
+
+        private String _entityFullFilePath;
+
+        EntityFilePath(String entityFullFilePath){
+            this._entityFullFilePath = entityFullFilePath;
+        }
+
+        public String getValue(){
+            return _entityFullFilePath;
+        }
+    }
+	
 	private static final String TAG = Entity.class.getSimpleName();
-	private static final String _defaultSpritePath = "sprites/characters/Warrior.png";
+	private static final int animationframes = 3;
+	private static String _defaultSpritePath;
 
 	private Vector2 _velocity;
 	private String _entityID;
 	
 	private StatusUI statusui;
+	private ActionsUI actionsui;
 	
 	private String name;
 
@@ -35,6 +54,8 @@ public class Entity extends Actor{
 	private int xp;
 	private int ini;
 	private boolean inBattle;
+	private boolean isActive;
+	private boolean isInMovementPhase;
 
 	private Direction _currentDirection = Direction.LEFT;
 	private Direction _previousDirection = Direction.UP;
@@ -57,8 +78,8 @@ public class Entity extends Actor{
 	protected TextureRegion _currentFrame = null;
 	protected EntityActor entityactor;
 
-	public final int FRAME_WIDTH = 16;
-	public final int FRAME_HEIGHT = 16;
+	public final int FRAME_WIDTH = 32;
+	public final int FRAME_HEIGHT = 32;
 	public static Rectangle boundingBox;
 
 	public enum State {
@@ -69,7 +90,8 @@ public class Entity extends Actor{
 		UP,RIGHT,DOWN,LEFT;
 	}
 	
-	public Entity(String name){
+	public Entity(String name,EntityFilePath entityfilepath){
+		this._defaultSpritePath = entityfilepath.getValue();
 		initEntity();
 		this.name = name;
 	}
@@ -84,7 +106,8 @@ public class Entity extends Actor{
 		this.hp = 10;
 		this.mp = 3;
 		this.ini = Utility.getRandomIntFrom1to(100);
-		inBattle = false;
+		this.inBattle = false;
+		this.isInMovementPhase = false;
 
 		Utility.loadTextureAsset(_defaultSpritePath);
 		loadDefaultSprite();
@@ -171,6 +194,14 @@ public class Entity extends Actor{
 		this.statusui = statusui;
 	}
 	
+	public ActionsUI getActionsui() {
+		return actionsui;
+	}
+
+	public void setActionsui(ActionsUI actionsui) {
+		this.actionsui = actionsui;
+	}
+
 	public void setBoundingBoxSize(float percentageWidthReduced, float percentageHeightReduced){
 		//Update the current bounding box
 		float width;
@@ -215,7 +246,6 @@ public class Entity extends Actor{
 		return boundingBox;
 	}
 
-
 	private void loadDefaultSprite()
 	{
 		Texture texture = Utility.getTextureAsset(_defaultSpritePath);
@@ -229,13 +259,13 @@ public class Entity extends Actor{
 		Texture texture = Utility.getTextureAsset(_defaultSpritePath);
 		TextureRegion[][] textureFrames = TextureRegion.split(texture, FRAME_WIDTH, FRAME_HEIGHT);
 
-		_walkDownFrames = new Array<TextureRegion>(4);
-		_walkLeftFrames = new Array<TextureRegion>(4);
-		_walkRightFrames = new Array<TextureRegion>(4);
-		_walkUpFrames = new Array<TextureRegion>(4);
+		_walkDownFrames = new Array<TextureRegion>(animationframes);
+		_walkLeftFrames = new Array<TextureRegion>(animationframes);
+		_walkRightFrames = new Array<TextureRegion>(animationframes);
+		_walkUpFrames = new Array<TextureRegion>(animationframes);
 
 		for (int i = 0; i < 4; i++) {
-			for (int j = 0; j < 4; j++) {
+			for (int j = 0; j < animationframes; j++) {
 				//Gdx.app.debug(TAG, "Got frame " + i + "," + j + " from " + sourceImage);
 				TextureRegion region = textureFrames[i][j];
 				if( region == null ){
@@ -331,9 +361,6 @@ public class Entity extends Actor{
 	public void calculateNextPosition(Direction currentDirection, float deltaTime){
 		float testX = _currentPlayerPosition.x;
 		float testY = _currentPlayerPosition.y;
-
-		//Gdx.app.debug(TAG, "calculateNextPosition:: Current Position: (" + _currentPlayerPosition.x + "," + _currentPlayerPosition.y + ")"  );
-		//Gdx.app.debug(TAG, "calculateNextPosition:: Current Direction: " + _currentDirection  );
 		
 		_velocity.scl(deltaTime);
 		
@@ -376,5 +403,23 @@ public class Entity extends Actor{
 	public void setEntityactor(EntityActor entityactor) {
 		this.entityactor = entityactor;
 	}
+
+	public boolean isActive() {
+		return isActive;
+	}
+
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
+	}
+
+	public boolean isInMovementPhase() {
+		return isInMovementPhase;
+	}
+
+	public void setInMovementPhase(boolean isInMovementPhase) {
+		this.isInMovementPhase = isInMovementPhase;
+	}
+	
+	
 
 }

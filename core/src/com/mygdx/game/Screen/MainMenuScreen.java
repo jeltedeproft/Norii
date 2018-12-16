@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.mygdx.game.Utility;
 import com.mygdx.game.Audio.AudioObserver;
 import com.mygdx.game.Entities.Entity;
+import com.mygdx.game.Entities.Entity.EntityFilePath;
 import com.mygdx.game.Entities.Owner;
 import com.mygdx.game.Entities.Player;
 
@@ -49,7 +50,10 @@ public class MainMenuScreen extends GameScreen {
 				//add the fighters participating in a battle
 				fighters = new ArrayList<Owner>();
 				monsters = new ArrayList<Entity>();
-				monsters.add(new Entity("Fallia"));
+				monsters.add(new Entity("Fallia",EntityFilePath.COMMANDER));
+				monsters.add(new Entity("Julian",EntityFilePath.DEMON));
+				monsters.add(new Entity("Jelte",EntityFilePath.ICARUS));
+				monsters.add(new Entity("Shaman",EntityFilePath.SHAMAN));
 				Player.getInstance().setTeam(monsters);
 				fighters.add(Player.getInstance());
 				ScreenManager.getInstance().showScreen( ScreenEnum.BATTLE,fighters); 
@@ -93,6 +97,7 @@ public class MainMenuScreen extends GameScreen {
 	@Override
 	public void hide() {
 		Gdx.input.setInputProcessor(null);
+		notify(AudioObserver.AudioCommand.MUSIC_STOP, AudioObserver.AudioTypeEvent.MUSIC_TITLE);
 	}
 
 	@Override

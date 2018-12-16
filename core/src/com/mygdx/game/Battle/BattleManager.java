@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.Utility;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Entities.InputController;
 
@@ -25,6 +26,7 @@ public class BattleManager {
 		this.multiplexer = inputmultiplexer;
 		this.units = playerSortedUnits;
 		this.activeUnitIndex = 0;
+		this.activeUnit = playerSortedUnits[0];
 	}
 	
 	public ArrayList<Vector2> getSpawnPoints() {
@@ -37,10 +39,17 @@ public class BattleManager {
 
 	private void startNextPhase() {
 		if (battlestate == BattleState.UNIT_PLACEMENT) {
-			battlestate = BattleState.MOVEMENT_PHASE;
-			Gdx.app.debug(TAG, "deployment finished, entering movementphase of the first unit (highest initiative)");
+			battlestate = BattleState.ACTION_SELECTION;
+			Gdx.app.debug(TAG, "deployment finished, entering action selection of the first unit (highest initiative)");
 			_controller = new InputController(activeUnit);
 			multiplexer.addProcessor(_controller);
+			
+			//activate actions UI
+			activeUnit.setActive(true);
+			activeUnit.getActionsui().update();
+			
+			//unload spawn particles
+			//Utility.unloadAsset("particles/spawn_effect");
 		}
 	}
 	

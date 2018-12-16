@@ -16,7 +16,6 @@ public class PortraitsUI extends VerticalGroup {
     private int height;
     private final int portraitWidth = 64;
     private final int portraitHeight = 64;
-    
     private final int verticalPadding = 20;
     private final int horizontalPadding = 10;
     
