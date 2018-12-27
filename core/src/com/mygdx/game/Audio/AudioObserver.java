@@ -3,7 +3,7 @@ package com.mygdx.game.Audio;
 public interface AudioObserver {
     public static enum AudioTypeEvent{
         MUSIC_BATTLE("audio/battleTheme3.wav"),
-        MUSIC_TITLE("audio/main.wav"),
+        MUSIC_TITLE("audio/main2.wav"),
         NONE("");
 
         private String _audioFullFilePath;

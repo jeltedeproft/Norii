@@ -111,8 +111,9 @@ public class BattleScreen extends GameScreen  {
 		
 		//load spawn particles
 		for(Vector2 vector : spawnPoints) {
+			Gdx.app.debug(TAG, "placing particle at : " + vector.x / Map.UNIT_SCALE+ " , " + vector.y / Map.UNIT_SCALE);
 			PooledEffect particle = spawnEffectPool.obtain();
-			particle.setPosition(vector.x, vector.y);
+			particle.setPosition(vector.x  / Map.UNIT_SCALE, vector.y / Map.UNIT_SCALE);
 			particles.add(particle);
 		}
 		
@@ -131,10 +132,11 @@ public class BattleScreen extends GameScreen  {
 		
 		//get the current size
 		_camera = new OrthographicCamera();
-		_camera.setToOrtho(false, VIEWPORT.viewportWidth, VIEWPORT.viewportHeight);
+		_camera.setToOrtho(false, map.getMapWidth(), map.getMapHeight());
 
 		_mapRenderer = new OrthogonalTiledMapRenderer(_mapMgr.getCurrentTiledMap(), Map.UNIT_SCALE);
 		_mapRenderer.setView(_camera);
+		
 
 		Gdx.app.debug(TAG, "UnitScale value is: " + _mapRenderer.getUnitScale());
 	}
