@@ -9,7 +9,7 @@ import com.mygdx.game.Norii;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-	      config.title = "Norii a turn based strategy game by Jelte & Julian";
+	      config.title = "Norii a turn based strategy game by Jelte & Julia";
 	      //config.useGL30 = false;
 	      config.width = 640;
 	      config.height = 640;

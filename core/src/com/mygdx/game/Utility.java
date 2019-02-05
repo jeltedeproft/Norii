@@ -1,5 +1,9 @@
 package com.mygdx.game;
 
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
@@ -22,6 +26,12 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.mygdx.game.Entities.Player;
+import com.mygdx.game.Map.Map;
+import java.io.PrintStream;
+
+import static java.lang.String.format;
+import static java.lang.System.out;
 
 public final class Utility {
 	public static final AssetManager _assetManager = new AssetManager();
@@ -45,7 +55,7 @@ public final class Utility {
         debugRenderer.setProjectionMatrix(projectionMatrix);
         debugRenderer.begin(ShapeRenderer.ShapeType.Filled);
         debugRenderer.setColor(color);
-        debugRenderer.rect(x, y, 1, 1);;
+        debugRenderer.rect(x, y, 1, 1);
         debugRenderer.end();
 	}
 	public static void FillSquareWithParticle(float x, float y, Matrix4 projectionMatrix, float delta, Batch batch,ParticleEffect particle) {
@@ -275,5 +285,13 @@ public final class Utility {
 
 		return music;
 	}
+	
 
+	public static List<Point> coordinates(int x, int y, int distance){
+		
+		
+		
+		return null;
+	}
+	
 }

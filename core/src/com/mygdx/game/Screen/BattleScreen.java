@@ -1,6 +1,8 @@
 package com.mygdx.game.Screen;
 
+import java.awt.Point;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -111,12 +113,12 @@ public class BattleScreen extends GameScreen  {
 		
 		//load spawn particles
 		for(Vector2 vector : spawnPoints) {
-			Gdx.app.debug(TAG, "placing particle at : " + vector.x / Map.UNIT_SCALE+ " , " + vector.y / Map.UNIT_SCALE);
 			PooledEffect particle = spawnEffectPool.obtain();
 			particle.setPosition(vector.x  / Map.UNIT_SCALE, vector.y / Map.UNIT_SCALE);
 			particles.add(particle);
 		}
 		
+		battlemanager.setParticles(particles);
 		
 		//init units
 		for (Owner owner : _players) {
@@ -276,7 +278,10 @@ public class BattleScreen extends GameScreen  {
 			particle.update(delta);
 			SpriteBatch mybatch = new SpriteBatch();
 			mybatch.begin();
-			particle.draw(mybatch, delta);
+			if(!(particle.getBoundingBox().getCenterX() > 9000)) {
+				particle.draw(mybatch, delta);
+			}
+			
 			if (particle.isComplete()) {
 				particle.free();
 				//particles.remove(particle);
@@ -285,13 +290,17 @@ public class BattleScreen extends GameScreen  {
 		}
 	}
 	
-	public void highlightCircle(Vector2 centre, int distance) {	
+	public void highlightCircle(Vector2 centre, int distance) {
+		for(Point point : Utility.coordinates((int)centre.x, (int)centre.y, distance)) {
+			Utility.FillSquare(point.x, point.y, Color.GOLD, _camera.combined);
+		}
+
 		for(int i = 1; i < distance + 1; i++) {
 			for(int j = 0; j < distance; j++) {
-				Utility.FillSquare(centre.x + (i - j), centre.y + j, Color.GOLD, _camera.combined);
-				Utility.FillSquare(centre.x + j, centre.y + (i - j), Color.GOLD, _camera.combined);
-				Utility.FillSquare(centre.x - (i - j), centre.y + j, Color.GOLD, _camera.combined);
-				Utility.FillSquare(centre.x + j, centre.y - (i - j), Color.GOLD, _camera.combined);
+				//Utility.FillSquare(centre.x + (i - j), centre.y + j, Color.GOLD, _camera.combined);
+				//Utility.FillSquare(centre.x + j, centre.y + (i - j), Color.GOLD, _camera.combined);
+				//Utility.FillSquare(centre.x - (i - j), centre.y + j, Color.GOLD, _camera.combined);
+				//Utility.FillSquare(centre.x + j, centre.y - (i - j), Color.GOLD, _camera.combined);
 			}
 		}
 	}

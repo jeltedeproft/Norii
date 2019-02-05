@@ -62,6 +62,7 @@ project(":core") {
         compile "com.badlogicgames.box2dlights:box2dlights:$box2DLightsVersion"
         compile "com.badlogicgames.ashley:ashley:$ashleyVersion"
         compile "com.badlogicgames.gdx:gdx-ai:$aiVersion"
+        compile "com.github.xaguzman:pathfinding-gdx-bridge:0.2.6"
         
     }
 }

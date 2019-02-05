@@ -4,10 +4,11 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.Utility;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Entities.InputController;
+import com.mygdx.game.Map.Map;
 
 public class BattleManager {
 	private static final String TAG = BattleManager.class.getSimpleName();
@@ -17,7 +18,16 @@ public class BattleManager {
 	private InputMultiplexer multiplexer;
 	private Entity activeUnit;
 	private ArrayList<Vector2> spawnPoints;
+	private ArrayList<PooledEffect> particles;
 	
+	public ArrayList<PooledEffect> getParticles() {
+		return particles;
+	}
+
+	public void setParticles(ArrayList<PooledEffect> particles) {
+		this.particles = particles;
+	}
+
 	private Entity[] units;
 	private int activeUnitIndex;
 	
@@ -94,6 +104,17 @@ public class BattleManager {
 			units[activeUnitIndex].setCurrentPosition(x, y);
 			activeUnit = units[activeUnitIndex];
 			removeSpawnPoint(spawn);
+			//remove spawn particle
+			for(PooledEffect particle : particles) {
+				float absDiffX = Math.abs(particle.getBoundingBox().getCenterX() - (x / Map.UNIT_SCALE));
+				float absDiffY = Math.abs(particle.getBoundingBox().getCenterY() - (y / Map.UNIT_SCALE));
+				Gdx.app.debug(TAG, "difference X = " + absDiffX);
+				Gdx.app.debug(TAG, "difference Y = " + absDiffY);
+				
+				if((absDiffX < 33) && (absDiffY < 33) ) {
+					particle.setPosition(10000, 10000);
+				}
+			}
 			
 			//check if this is the last unit
 			activeUnitIndex = ++activeUnitIndex;
