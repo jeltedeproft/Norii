@@ -1,9 +1,12 @@
 package com.mygdx.game.Map;
 
+import org.xguzm.pathfinding.gdxbridge.NavigationTiledMapLayer;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.mygdx.game.Utility;
@@ -23,6 +26,7 @@ public abstract class Map implements AudioSubject{
     protected final static String MAP_COLLISION_LAYER = "items";
     protected final static String MAP_SPAWNS_LAYER = "Spawn points";
     protected final static String BACKGROUND_LAYER = "background";
+    protected final static String NAVIGATION_LAYER = "navigation";
     
     protected final static String PLAYER_START = "PLAYER_START";
 
@@ -32,8 +36,18 @@ public abstract class Map implements AudioSubject{
     protected BattleManager battlemanager;
     protected MapLayer _collisionLayer = null;
     protected MapLayer _spawnsLayer = null;
+    protected MyNavigationTiledMapLayer  _navLayer = null;
 
-    protected MapFactory.MapType _currentMapType;
+
+    public MyNavigationTiledMapLayer  get_navLayer() {
+		return _navLayer;
+	}
+
+	public void set_navLayer(MyNavigationTiledMapLayer  _navLayer) {
+		this._navLayer = _navLayer;
+	}
+
+	protected MapFactory.MapType _currentMapType;
     
     //props
     protected MapProperties prop;

@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import org.xguzm.pathfinding.gdxbridge.NavTmxMapLoader;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.MusicLoader;
@@ -28,6 +30,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.mygdx.game.Entities.Player;
 import com.mygdx.game.Map.Map;
+import com.mygdx.game.Map.MyNavTmxMapLoader;
+
 import java.io.PrintStream;
 
 import static java.lang.String.format;
@@ -125,7 +129,7 @@ public final class Utility {
 
 	   //load asset
 		if( _filePathResolver.resolve(mapFilenamePath).exists() ){
-			_assetManager.setLoader(TiledMap.class, new TmxMapLoader(_filePathResolver));
+			_assetManager.setLoader(TiledMap.class, new MyNavTmxMapLoader(_filePathResolver));
 			_assetManager.load(mapFilenamePath, TiledMap.class);
 			//Until we add loading screen, just block until we load the map
 			_assetManager.finishLoadingAsset(mapFilenamePath);
@@ -284,14 +288,6 @@ public final class Utility {
 		}
 
 		return music;
-	}
-	
-
-	public static List<Point> coordinates(int x, int y, int distance){
-		
-		
-		
-		return null;
 	}
 	
 }

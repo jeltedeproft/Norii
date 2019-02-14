@@ -1,8 +1,7 @@
 package com.mygdx.game.Screen;
 
-import java.awt.Point;
 import java.util.ArrayList;
-import java.util.List;
+import org.xguzm.pathfinding.grid.GridCell;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -10,13 +9,11 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Utility;
 import com.mygdx.game.Battle.BattleManager;
 import com.mygdx.game.Battle.BattleState;
@@ -26,13 +23,14 @@ import com.mygdx.game.Entities.Player;
 import com.mygdx.game.Map.BattleMap;
 import com.mygdx.game.Map.Map;
 import com.mygdx.game.Map.MapManager;
+import com.mygdx.game.Map.MyPathFinder;
 import com.mygdx.game.Profile.ProfileManager;
 import com.mygdx.game.UI.PlayerBattleHUD;
 
 public class BattleScreen extends GameScreen  {
 	private static final String TAG = BattleScreen.class.getSimpleName();
 	
-	private final static String SPAWNEFFECT = "particles/myeffect.p";
+	private final static String SPAWNEFFECT = "particles/mysmalleffect.p";
 	private final static int MAX_PARTICLES_IN_POOL = 50;
 
 	private static class VIEWPORT {
@@ -57,6 +55,7 @@ public class BattleScreen extends GameScreen  {
 	private BattleManager battlemanager;
 	private Entity[] playerSortedUnits;
 	private ArrayList<Vector2> spawnPoints;
+	private MyPathFinder pathfinder;
 	
 	
 	private InputMultiplexer multiplexer;
@@ -91,6 +90,8 @@ public class BattleScreen extends GameScreen  {
 		_mapMgr = new MapManager();
 		map = (BattleMap) _mapMgr.get_currentMap();
 		map.setStage(battlemanager);
+		
+		pathfinder = new MyPathFinder(map.getMapWidth(),map.getMapHeight());
 		
 
 		//if owners are supplied, initialize them
@@ -231,6 +232,7 @@ public class BattleScreen extends GameScreen  {
 		battlemanager.dispose();
 		Gdx.input.setInputProcessor(null);
 		_mapRenderer.dispose();
+		pathfinder.dispose();
 	}
 
 	private void setupViewport(int width, int height){
@@ -291,10 +293,10 @@ public class BattleScreen extends GameScreen  {
 	}
 	
 	public void highlightCircle(Vector2 centre, int distance) {
-		for(Point point : Utility.coordinates((int)centre.x, (int)centre.y, distance)) {
-			Utility.FillSquare(point.x, point.y, Color.GOLD, _camera.combined);
+		for(GridCell cell : pathfinder.getCellsWithin((int)centre.x, (int)centre.y, distance)) {
+			Utility.FillSquare(cell.x, cell.y, Color.GOLD, _camera.combined);
 		}
-
+		
 		for(int i = 1; i < distance + 1; i++) {
 			for(int j = 0; j < distance; j++) {
 				//Utility.FillSquare(centre.x + (i - j), centre.y + j, Color.GOLD, _camera.combined);
