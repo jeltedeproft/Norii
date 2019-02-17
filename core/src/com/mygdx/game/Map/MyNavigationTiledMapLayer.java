@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.xguzm.pathfinding.NavigationNode;
 import org.xguzm.pathfinding.PathFinderOptions;
-import org.xguzm.pathfinding.gdxbridge.NavigationTiledMapLayer;
 import org.xguzm.pathfinding.grid.GridCell;
 import org.xguzm.pathfinding.grid.NavigationGrid;
 import org.xguzm.pathfinding.grid.NavigationGridGraph;

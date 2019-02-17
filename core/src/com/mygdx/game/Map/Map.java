@@ -1,12 +1,9 @@
 package com.mygdx.game.Map;
 
-import org.xguzm.pathfinding.gdxbridge.NavigationTiledMapLayer;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.mygdx.game.Utility;

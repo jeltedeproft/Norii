@@ -1,12 +1,6 @@
 package com.mygdx.game;
 
-import java.awt.Point;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
-
-import org.xguzm.pathfinding.gdxbridge.NavTmxMapLoader;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
@@ -24,18 +18,10 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.mygdx.game.Entities.Player;
-import com.mygdx.game.Map.Map;
 import com.mygdx.game.Map.MyNavTmxMapLoader;
-
-import java.io.PrintStream;
-
-import static java.lang.String.format;
-import static java.lang.System.out;
 
 public final class Utility {
 	public static final AssetManager _assetManager = new AssetManager();

@@ -2,13 +2,9 @@ package com.mygdx.game.Map;
 
 import java.util.ArrayList;
 
-import org.xguzm.pathfinding.gdxbridge.NavigationTiledMapLayer;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.MapObject;
-import com.mygdx.game.Map.MyNavigationTiledMapLayer;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Utility;
 import com.mygdx.game.Audio.AudioObserver;
