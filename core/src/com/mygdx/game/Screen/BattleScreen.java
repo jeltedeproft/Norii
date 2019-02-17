@@ -1,6 +1,8 @@
 package com.mygdx.game.Screen;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import org.xguzm.pathfinding.grid.GridCell;
 
 import com.badlogic.gdx.Gdx;
@@ -31,6 +33,7 @@ public class BattleScreen extends GameScreen  {
 	private static final String TAG = BattleScreen.class.getSimpleName();
 	
 	private final static String SPAWNEFFECT = "particles/mysmalleffect.p";
+	private final static String MOVEEFFECT = "particles/mysmalleffect.p";
 	private final static int MAX_PARTICLES_IN_POOL = 50;
 
 	private static class VIEWPORT {
@@ -45,7 +48,9 @@ public class BattleScreen extends GameScreen  {
 
 	private ArrayList<Owner> _players;
 	private ArrayList<PooledEffect> particles;
+	private ArrayList<PooledEffect> moveparticles;
 	private ParticleEffectPool spawnEffectPool;
+	private ParticleEffectPool moveEffectPool;
 
 	private OrthogonalTiledMapRenderer _mapRenderer = null;
 	private OrthographicCamera _camera = null;
@@ -70,8 +75,11 @@ public class BattleScreen extends GameScreen  {
 		
 		//initialize particles(max is 50)
 		particles = new ArrayList<PooledEffect>();
+		moveparticles = new ArrayList<PooledEffect>();
 		Utility.loadParticleAsset(SPAWNEFFECT);
+		Utility.loadParticleAsset(MOVEEFFECT);
 		spawnEffectPool =  new ParticleEffectPool(Utility.getParticleAsset(SPAWNEFFECT),1,MAX_PARTICLES_IN_POOL);  
+		moveEffectPool =  new ParticleEffectPool(Utility.getParticleAsset(MOVEEFFECT),1,MAX_PARTICLES_IN_POOL);  
 		
 		//init HUD
 		_hudCamera = new OrthographicCamera();
@@ -204,7 +212,7 @@ public class BattleScreen extends GameScreen  {
 		_playerBattleHUD.render(delta);
 		
 		//highlight movement tiles if necessary
-		if(battlemanager.getActiveUnit().isInMovementPhase()) highlightCircle(battlemanager.getActiveUnit().getCurrentPosition(), battlemanager.getActiveUnit().getMp());
+		if(battlemanager.getActiveUnit().isInMovementPhase()) highlightCircle(delta,battlemanager.getActiveUnit().getCurrentPosition(), battlemanager.getActiveUnit().getMp());
 			
 	}
 
@@ -292,11 +300,31 @@ public class BattleScreen extends GameScreen  {
 		}
 	}
 	
-	public void highlightCircle(Vector2 centre, int distance) {
-		for(GridCell cell : pathfinder.getCellsWithin((int)centre.x, (int)centre.y, distance)) {
-			Utility.FillSquare(cell.x, cell.y, Color.GOLD, _camera.combined);
+	public void highlightCircle(float delta,Vector2 centre, int distance) {
+		List<GridCell> path = pathfinder.getCellsWithin((int)centre.x, (int)centre.y, distance);
+		if(moveparticles.isEmpty()) {
+			for(GridCell cell : path) {
+				//load spawn particles
+				PooledEffect particle = moveEffectPool.obtain();
+				particle.setPosition(cell.x  / Map.UNIT_SCALE, cell.y / Map.UNIT_SCALE);
+				moveparticles.add(particle);
+			}
 		}
-		
+
+		for(PooledEffect move : moveparticles) {
+			move.update(delta);
+			SpriteBatch mybatch = new SpriteBatch();
+			mybatch.begin();
+			move.draw(mybatch, delta);
+			if (move.isComplete()) {
+				move.free();
+				//particles.remove(particle);
+			}
+			mybatch.end();
+		}
+		//Utility.FillSquare(cell.x, cell.y, Color.GOLD, _camera.combined);
+
+
 		for(int i = 1; i < distance + 1; i++) {
 			for(int j = 0; j < distance; j++) {
 				//Utility.FillSquare(centre.x + (i - j), centre.y + j, Color.GOLD, _camera.combined);
