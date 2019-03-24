@@ -6,9 +6,4 @@
    <property name="walkable" value="true"/>
   </properties>
  </tile>
- <tile id="33">
-  <properties>
-   <property name="walkable" value="false"/>
-  </properties>
- </tile>
 </tileset>

@@ -56,6 +56,7 @@ public class Entity extends Actor{
 	private boolean inBattle;
 	private boolean isActive;
 	private boolean isInMovementPhase;
+	private boolean isInActionPhase;
 
 	private Direction _currentDirection = Direction.LEFT;
 	private Direction _previousDirection = Direction.UP;
@@ -120,6 +121,14 @@ public class Entity extends Actor{
 
 	public void setInBattle(boolean inBattle) {
 		this.inBattle = inBattle;
+	}
+	
+	public boolean isInActionPhase() {
+		return isInActionPhase;
+	}
+
+	public void setInActionPhase(boolean isInActionPhase) {
+		this.isInActionPhase = isInActionPhase;
 	}
 
 	public int getMp() {

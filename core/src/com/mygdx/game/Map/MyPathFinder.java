@@ -64,7 +64,6 @@ public class MyPathFinder {
 					}
 				}
 			}
-			
 		}
 		return cells;
 	}

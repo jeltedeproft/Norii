@@ -100,6 +100,7 @@ public class BattleScreen extends GameScreen  {
 		map.setStage(battlemanager);
 		
 		pathfinder = new MyPathFinder(map.getMapWidth(),map.getMapHeight());
+		battlemanager.setPathfinder(pathfinder);
 		
 
 		//if owners are supplied, initialize them
@@ -205,14 +206,26 @@ public class BattleScreen extends GameScreen  {
 		//draw grid
 		renderGrid();
 		
-		//highlight tiles if necesary
+		//highlight tiles if necessary
 		if(battlemanager.getBattleState() == BattleState.UNIT_PLACEMENT) highlightTiles(delta,_mapRenderer.getBatch());
 		
 		//render HUD
 		_playerBattleHUD.render(delta);
 		
 		//highlight movement tiles if necessary
-		if(battlemanager.getActiveUnit().isInMovementPhase()) highlightCircle(delta,battlemanager.getActiveUnit().getCurrentPosition(), battlemanager.getActiveUnit().getMp());
+		Entity currentUnit = battlemanager.getActiveUnit();
+		if(currentUnit.isInMovementPhase()) {
+			List<GridCell> path = pathfinder.getCellsWithin((int)currentUnit.getCurrentPosition().x, (int)currentUnit.getCurrentPosition().y, currentUnit.getMp());
+			if(moveparticles.isEmpty()) {
+				for(GridCell cell : path) {
+					//load spawn particles
+					PooledEffect particle = moveEffectPool.obtain();
+					particle.setPosition(cell.x  / Map.UNIT_SCALE, cell.y / Map.UNIT_SCALE);
+					moveparticles.add(particle);
+				}
+			}
+			highlightCircle(delta,path);
+		}
 			
 	}
 
@@ -300,17 +313,7 @@ public class BattleScreen extends GameScreen  {
 		}
 	}
 	
-	public void highlightCircle(float delta,Vector2 centre, int distance) {
-		List<GridCell> path = pathfinder.getCellsWithin((int)centre.x, (int)centre.y, distance);
-		if(moveparticles.isEmpty()) {
-			for(GridCell cell : path) {
-				//load spawn particles
-				PooledEffect particle = moveEffectPool.obtain();
-				particle.setPosition(cell.x  / Map.UNIT_SCALE, cell.y / Map.UNIT_SCALE);
-				moveparticles.add(particle);
-			}
-		}
-
+	public void highlightCircle(float delta, List<GridCell> path) {
 		for(PooledEffect move : moveparticles) {
 			move.update(delta);
 			SpriteBatch mybatch = new SpriteBatch();
@@ -322,19 +325,10 @@ public class BattleScreen extends GameScreen  {
 			}
 			mybatch.end();
 		}
-		//Utility.FillSquare(cell.x, cell.y, Color.GOLD, _camera.combined);
-
-
-		for(int i = 1; i < distance + 1; i++) {
-			for(int j = 0; j < distance; j++) {
-				//Utility.FillSquare(centre.x + (i - j), centre.y + j, Color.GOLD, _camera.combined);
-				//Utility.FillSquare(centre.x + j, centre.y + (i - j), Color.GOLD, _camera.combined);
-				//Utility.FillSquare(centre.x - (i - j), centre.y + j, Color.GOLD, _camera.combined);
-				//Utility.FillSquare(centre.x + j, centre.y - (i - j), Color.GOLD, _camera.combined);
-			}
-		}
 	}
+	
+	public void highlightCircle(float delta,Vector2 centre, int distance) {
 
-
+	}
 }
 

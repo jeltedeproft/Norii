@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Entities.InputController;
 import com.mygdx.game.Map.Map;
+import com.mygdx.game.Map.MyPathFinder;
 
 public class BattleManager {
 	private static final String TAG = BattleManager.class.getSimpleName();
@@ -19,7 +20,16 @@ public class BattleManager {
 	private Entity activeUnit;
 	private ArrayList<Vector2> spawnPoints;
 	private ArrayList<PooledEffect> particles;
+	private MyPathFinder pathfinder;
 	
+	public MyPathFinder getPathfinder() {
+		return pathfinder;
+	}
+
+	public void setPathfinder(MyPathFinder pathfinder) {
+		this.pathfinder = pathfinder;
+	}
+
 	public ArrayList<PooledEffect> getParticles() {
 		return particles;
 	}
@@ -49,7 +59,7 @@ public class BattleManager {
 
 	private void startNextPhase() {
 		if (battlestate == BattleState.UNIT_PLACEMENT) {
-			battlestate = BattleState.ACTION_SELECTION;
+			battlestate = BattleState.MOVEMENT_PHASE;
 			Gdx.app.debug(TAG, "deployment finished, entering action selection of the first unit (highest initiative)");
 			_controller = new InputController(activeUnit);
 			multiplexer.addProcessor(_controller);
@@ -60,6 +70,10 @@ public class BattleManager {
 			
 			//unload spawn particles
 			//Utility.unloadAsset("particles/spawn_effect");
+		}else if(battlestate == BattleState.MOVEMENT_PHASE) {
+			battlestate = BattleState.ACTION_PHASE;
+			Gdx.app.debug(TAG, "deployment finished, entering action selection of the first unit (highest initiative)");
+			
 		}
 	}
 	
@@ -108,8 +122,6 @@ public class BattleManager {
 			for(PooledEffect particle : particles) {
 				float absDiffX = Math.abs(particle.getBoundingBox().getCenterX() - (x / Map.UNIT_SCALE));
 				float absDiffY = Math.abs(particle.getBoundingBox().getCenterY() - (y / Map.UNIT_SCALE));
-				Gdx.app.debug(TAG, "difference X = " + absDiffX);
-				Gdx.app.debug(TAG, "difference Y = " + absDiffY);
 				
 				if((absDiffX < 33) && (absDiffY < 33) ) {
 					particle.setPosition(10000, 10000);
@@ -119,6 +131,7 @@ public class BattleManager {
 			//check if this is the last unit
 			activeUnitIndex = ++activeUnitIndex;
 			if (activeUnitIndex >= units.length) {
+				Gdx.app.debug(TAG, "starting next phase, current phase = " + battlestate);
 				startNextPhase();
 			}
 		}else {
