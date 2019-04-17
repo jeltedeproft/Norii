@@ -114,6 +114,9 @@ public class Entity extends Actor{
 		loadDefaultSprite();
 		loadAllAnimations();
 	}
+	public boolean canMove() {
+		return (this.mp > 0);
+	}
 
 	public boolean isInBattle() {
 		return inBattle;

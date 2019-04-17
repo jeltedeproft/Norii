@@ -28,7 +28,7 @@ public class EntityActor extends Actor {
         entity.setEntityactor(this);
     }
     
-    public void setPos(Vector2 pos) {//bind actor met unit en zorg ervoor dat als unit beweegt, actor meebeweegt!!
+    public void setPos(Vector2 pos) {//bind actor movement with unit
     	this.setPosition(pos.x, pos.y);
     	this.setBounds(entity.getCurrentPosition().x / Map.UNIT_SCALE, entity.getCurrentPosition().y / Map.UNIT_SCALE, 1 / Map.UNIT_SCALE,1 / Map.UNIT_SCALE);
     }

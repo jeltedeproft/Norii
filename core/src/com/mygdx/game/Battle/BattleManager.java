@@ -60,7 +60,7 @@ public class BattleManager {
 	private void startNextPhase() {
 		if (battlestate == BattleState.UNIT_PLACEMENT) {
 			battlestate = BattleState.MOVEMENT_PHASE;
-			Gdx.app.debug(TAG, "deployment finished, entering action selection of the first unit (highest initiative)");
+			Gdx.app.debug(TAG, "deployment finished, entering movement phase of the first unit (highest initiative)");
 			_controller = new InputController(activeUnit);
 			multiplexer.addProcessor(_controller);
 			

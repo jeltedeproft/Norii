@@ -21,6 +21,16 @@ public class MyPathFinder {
 	private AStarGridFinder<GridCell> finder;
 	
 	public MyPathFinder(int length, int height) {
+		initializeClassVariables(length, height);
+		
+		//create pathfinder options
+		opt = new GridFinderOptions();
+		opt.allowDiagonal = false;
+			
+		finder = new AStarGridFinder(GridCell.class, opt);
+	}
+	
+	private void initializeClassVariables(int length, int height) {
 		this.length = length;
 		this.height = height;
 		cells = new GridCell[length][height];
@@ -31,12 +41,6 @@ public class MyPathFinder {
 		
 		//create a navigation grid with the cells you just created
 		navGrid = new NavigationGrid(cells);
-		
-		//or create your own pathfinder options:
-		opt = new GridFinderOptions();
-		opt.allowDiagonal = false;
-			
-		finder = new AStarGridFinder(GridCell.class, opt);
 	}
 
 	public AStarGridFinder<GridCell> getFinder() {

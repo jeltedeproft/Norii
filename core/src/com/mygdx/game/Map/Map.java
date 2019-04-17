@@ -55,21 +55,15 @@ public abstract class Map implements AudioSubject{
     protected int tilePixelHeight;
 
     Map( MapFactory.MapType mapType, String fullMapPath){
-        _json = new Json();
-        _currentMapType = mapType;
-        _observers = new Array<AudioObserver>();
+    	initializeClassVariables(mapType);
 
         if( fullMapPath == null || fullMapPath.isEmpty() ) {
             Gdx.app.debug(TAG, "Map is invalid");
             return;
         }
 
-        if( _currentMap != null ){
-            _currentMap.dispose();
-            if( tiledmapstage != null ){
-            	tiledmapstage.dispose();
-            }
-        }
+        disposeMapAndStage();
+
 
         Utility.loadMapAsset(fullMapPath);
         if( Utility.isAssetLoaded(fullMapPath) ) {
@@ -79,6 +73,13 @@ public abstract class Map implements AudioSubject{
             return;
         }
         
+        setupMapProperties();
+		
+		//Observers
+        this.addObserver(AudioManager.getInstance());
+    }
+    
+    private void setupMapProperties() {
         //setup properties
         prop = _currentMap.getProperties();
         
@@ -86,9 +87,21 @@ public abstract class Map implements AudioSubject{
 		mapHeight = prop.get("height", Integer.class);
 		tilePixelWidth = prop.get("tilewidth", Integer.class);
 		tilePixelHeight = prop.get("tileheight", Integer.class);
-		
-		//Observers
-        this.addObserver(AudioManager.getInstance());
+    }
+    
+    private void disposeMapAndStage() {
+        if( _currentMap != null ){
+            _currentMap.dispose();
+            if( tiledmapstage != null ){
+            	tiledmapstage.dispose();
+            }
+        }
+    }
+    
+    private void initializeClassVariables(MapFactory.MapType mapType) {
+        _json = new Json();
+        _currentMapType = mapType;
+        _observers = new Array<AudioObserver>();
     }
 
     public MapLayer getCollisionLayer(){

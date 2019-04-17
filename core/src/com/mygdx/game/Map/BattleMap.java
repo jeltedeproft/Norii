@@ -25,29 +25,29 @@ public class BattleMap extends Map{
         super(MapFactory.MapType.BATTLE_MAP, mapPath);
         _mapPath = mapPath;
         
-    	//init vars
-    	_unitSpawnPositions = new ArrayList<Vector2>();
-    	_unitSpawnPositionsScaledUnits = new ArrayList<Vector2>();
-    	_playerStartPositionRect = new Vector2(0,0);
-    	_convertedUnits = new Vector2(0,0);
-        
         if( Utility.isAssetLoaded(_mapPath) ) {
         	//do smthg?
         }else{
             Gdx.app.debug(TAG, "Map not loaded");
             return;
-        }
-        
-        
+        }  
         
         _collisionLayer = _currentMap.getLayers().get(MAP_COLLISION_LAYER);
         if( _collisionLayer == null ){
             Gdx.app.debug(TAG, "No collision layer!");
         }
         
+        initializeClassVariables();
+    }
+    
+    private void initializeClassVariables() {
+    	_unitSpawnPositions = new ArrayList<Vector2>();
+    	_unitSpawnPositionsScaledUnits = new ArrayList<Vector2>();
+    	_playerStartPositionRect = new Vector2(0,0);
+    	_convertedUnits = new Vector2(0,0);
+    	
         _spawnsLayer = _currentMap.getLayers().get(MAP_SPAWNS_LAYER);
         _navLayer = (MyNavigationTiledMapLayer) _currentMap.getLayers().get(NAVIGATION_LAYER);
-
     }
     
     public void setStage(BattleManager battlemanager) {
@@ -71,20 +71,19 @@ public class BattleMap extends Map{
     private void fillSpawnPositions(final ArrayList<Vector2> startPositions,final ArrayList<Vector2> startPositionsScaled){
         Gdx.app.debug(TAG, "fillSpawnPositions INPUT: (" + startPositions.toString() + ") ");
 
-        //Go through all player start positions and add them to the arraylist
+        //Get player start positions
         for( MapObject object: _spawnsLayer.getObjects()){
             if( object.getName().equalsIgnoreCase(PLAYER_START) ){
                 ((RectangleMapObject)object).getRectangle().getPosition(_playerStartPositionRect);
                 startPositions.add(_playerStartPositionRect.cpy());
 
-                //tag tiles that have spawns above them
+                //tag tiles that can be used as spawns
                 TiledMapActor tiledactor = (TiledMapActor) tiledmapstage.hit(_playerStartPositionRect.x, _playerStartPositionRect.y, false);
                 tiledactor.setIsFreeSpawn(true);
                 
-                //add positions that are scaled to amount of tiles
+                //scaled version of start positions
                 if( UNIT_SCALE > 0 ) {
-                	_convertedUnits.set(_playerStartPositionRect.x*UNIT_SCALE, _playerStartPositionRect.y*UNIT_SCALE);
-                	startPositionsScaled.add(_convertedUnits.cpy());
+                	startPositionsScaled.add(new Vector2(_playerStartPositionRect.x*UNIT_SCALE, _playerStartPositionRect.y*UNIT_SCALE));
                 }
             }
         }        
