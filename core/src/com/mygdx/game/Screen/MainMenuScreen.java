@@ -16,10 +16,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Array;
-import com.mygdx.game.Utility;
 import com.mygdx.game.Audio.AudioObserver;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Entities.Entity.EntityFilePath;
+
+import Utility.Utility;
+
 import com.mygdx.game.Entities.Owner;
 import com.mygdx.game.Entities.Player;
 
@@ -30,6 +32,11 @@ public class MainMenuScreen extends GameScreen {
 	private static final int FRAME_COLS = 5, FRAME_ROWS = 10;
 
 	private Stage _stage;
+	private Table mainMenuTableOfButtons;
+	private TextButton newGameButton;
+	private TextButton exitButton;
+	private Image title;
+	
 	private ArrayList<Owner> fighters;
 	private ArrayList<Entity> monsters;
 	private Animation<TextureRegion> bganimation;
@@ -39,37 +46,55 @@ public class MainMenuScreen extends GameScreen {
 	protected float _frameTime = 0f;
 	protected Sprite _frameSprite = null;
 	protected TextureRegion _currentFrame = null;
+	private TextureRegion[] bgFrames;
 	
 	public final int FRAME_WIDTH = 2000;
 	public final int FRAME_HEIGHT = 1125;
 
 	public MainMenuScreen(Object... params){
 		
-		//creation
+		initializeClassVariables();
+		
+		createBackground();
+		createButtons();
+		createLayout();
+		
+		addListeners();
+		
+		//load music
+		notify(AudioObserver.AudioCommand.MUSIC_LOAD, AudioObserver.AudioTypeEvent.MUSIC_TITLE);
+	}
+	
+	private void initializeClassVariables() {
 		_stage = new Stage();
-		Table table = new Table();
-		//table.setDebug(true);
-		table.setFillParent(true);
-		
-		
-		//background
+		mainMenuTableOfButtons = new Table();
+		mainMenuTableOfButtons.setDebug(false);
+		mainMenuTableOfButtons.setFillParent(true);
+	}
+	
+	private void createBackground(){
 		backgroundbatch = new SpriteBatch();
 		Utility.loadTextureAsset(_defaultBackgroundPath);
 		loadBackgroundSprites();
-		
-		//buttons
-		Image title = new Image(Utility.STATUSUI_TEXTUREATLAS.findRegion("bludbourne_title"));
-		TextButton newGameButton = new TextButton("New Game", Utility.STATUSUI_SKIN);
-		TextButton exitButton = new TextButton("Exit",Utility.STATUSUI_SKIN);
+		initializeBgAnimation();
+	}
+	
+	private void createButtons() {
+		title = new Image(Utility.STATUSUI_TEXTUREATLAS.findRegion("bludbourne_title"));
+		newGameButton = new TextButton("New Game", Utility.STATUSUI_SKIN);
+		exitButton = new TextButton("Exit",Utility.STATUSUI_SKIN);
+	}
+	
+	private void createLayout() {
+		//mainMenuTableOfButtons.add(title).spaceBottom(75).row();
+		mainMenuTableOfButtons.row();
+		mainMenuTableOfButtons.add(newGameButton).spaceBottom(10).padTop(50).row();
+		mainMenuTableOfButtons.add(exitButton).spaceBottom(10).row();
 
-		//Layout
-		//table.add(title).spaceBottom(75).row();
-		table.row();
-		table.add(newGameButton).spaceBottom(10).padTop(50).row();
-		table.add(exitButton).spaceBottom(10).row();
-
-		_stage.addActor(table);
-
+		_stage.addActor(mainMenuTableOfButtons);
+	}
+	
+	private void addListeners() {
 		//Listeners
 		newGameButton.addListener(new InputListener() {
 			@Override
@@ -96,9 +121,6 @@ public class MainMenuScreen extends GameScreen {
 				return true;
 			}
 		});
-		
-		//load music
-		notify(AudioObserver.AudioCommand.MUSIC_LOAD, AudioObserver.AudioTypeEvent.MUSIC_TITLE);
 	}
 	
 	@Override
@@ -106,11 +128,10 @@ public class MainMenuScreen extends GameScreen {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		//update timer for bg animation
+		//update timer for background animation
 		 updatebg(delta);
 		 
-		 //animate bg
-		 // Get current frame of animation for the current stateTime
+		 //animate background
 		 _currentFrame = bganimation.getKeyFrame(_frameTime, true);
 		 backgroundbatch.begin();
 		 backgroundbatch.draw(_currentFrame, 0, 0,_stage.getViewport().getWorldWidth(),_stage.getViewport().getWorldHeight()); // Draw current frame at (0, 0)
@@ -159,15 +180,16 @@ public class MainMenuScreen extends GameScreen {
 		
 		// Place the regions into a 1D array in the correct order, starting from the top 
 		// left, going across first. The Animation constructor requires a 1D array.
-		TextureRegion[] bgFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
+		bgFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
 		int index = 0;
 		for (int i = 0; i < FRAME_ROWS; i++) {
 			for (int j = 0; j < FRAME_COLS; j++) {
 				bgFrames[index++] = textureFrames[i][j];
 			}
 		}
-
-		// Initialize the Animation with the frame interval and array of frames
+	}
+	
+	private void initializeBgAnimation() {
 		bganimation = new Animation<TextureRegion>(0.050f, bgFrames);
 		//bganimation = new Animation<TextureRegion>(0.25f, bgFrames, Animation.PlayMode.LOOP);
 	}

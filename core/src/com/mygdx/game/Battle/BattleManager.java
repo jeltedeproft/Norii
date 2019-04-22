@@ -21,6 +21,8 @@ public class BattleManager {
 	private ArrayList<Vector2> spawnPoints;
 	private ArrayList<PooledEffect> particles;
 	private MyPathFinder pathfinder;
+	private Entity[] units;
+	private int activeUnitIndex;
 	
 	public MyPathFinder getPathfinder() {
 		return pathfinder;
@@ -37,9 +39,6 @@ public class BattleManager {
 	public void setParticles(ArrayList<PooledEffect> particles) {
 		this.particles = particles;
 	}
-
-	private Entity[] units;
-	private int activeUnitIndex;
 	
 
 	public BattleManager(InputMultiplexer inputmultiplexer,Entity[] playerSortedUnits) {
@@ -112,35 +111,43 @@ public class BattleManager {
 	
 	public void deployUnit(float x, float y) {
 		if((units != null) && activeUnitIndex < units.length) {
-			//deploy unit
-			units[activeUnitIndex].setInBattle(true);
-			Vector2 spawn = new Vector2(x,y);
-			units[activeUnitIndex].setCurrentPosition(x, y);
-			activeUnit = units[activeUnitIndex];
-			removeSpawnPoint(spawn);
-			//remove spawn particle
-			for(PooledEffect particle : particles) {
-				float absDiffX = Math.abs(particle.getBoundingBox().getCenterX() - (x / Map.UNIT_SCALE));
-				float absDiffY = Math.abs(particle.getBoundingBox().getCenterY() - (y / Map.UNIT_SCALE));
-				
-				if((absDiffX < 33) && (absDiffY < 33) ) {
-					particle.setPosition(10000, 10000);
-				}
-			}
-			
-			//check if this is the last unit
+			changeActiveUnit(x,y);
+			removeSpawnParticle(x,y);
+	
 			activeUnitIndex = ++activeUnitIndex;
-			if (activeUnitIndex >= units.length) {
-				Gdx.app.debug(TAG, "starting next phase, current phase = " + battlestate);
-				startNextPhase();
-			}
+			checkIfLastUnit();
 		}else {
 			Gdx.app.debug(TAG, "can't deploy unit, units is null or activeunitindex is > the length of units");
 		}
 	}
 	
+	private void changeActiveUnit(float x,float y) {
+		Entity currentActiveUnit = units[activeUnitIndex];
+		activeUnit.setInBattle(true);
+		currentActiveUnit.setCurrentPosition(x, y);
+		activeUnit = currentActiveUnit;
+	}
+	
+	private void removeSpawnParticle(float x,float y) {
+		for(PooledEffect particle : particles) {
+			float absDiffX = Math.abs(particle.getBoundingBox().getCenterX() - (x / Map.UNIT_SCALE));
+			float absDiffY = Math.abs(particle.getBoundingBox().getCenterY() - (y / Map.UNIT_SCALE));
+			
+			if((absDiffX < 33) && (absDiffY < 33) ) {
+				particle.setPosition(10000, 10000);
+			}
+		}
+		Vector2 spawnPoint = new Vector2(x,y);
+		removeSpawnPoint(spawnPoint);
+	}
+	
+	private void checkIfLastUnit() {
+		if (activeUnitIndex >= units.length) {
+			Gdx.app.debug(TAG, "starting next phase, current phase = " + battlestate);
+			startNextPhase();
+		}
+	}
 	private void removeSpawnPoint(Vector2 spawnpoint) {
-		Gdx.app.debug(TAG, "spawnPoints.size() = " + spawnPoints.size());
 		for(int x = 0; x < spawnPoints.size(); x++) {
 			if((spawnPoints.get(x).x == spawnpoint.x) && (spawnPoints.get(x).y == spawnpoint.y)) {
 				spawnPoints.remove(x);

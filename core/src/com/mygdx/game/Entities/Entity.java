@@ -11,10 +11,11 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
-import com.mygdx.game.Utility;
 import com.mygdx.game.Map.Map;
 import com.mygdx.game.UI.ActionsUI;
 import com.mygdx.game.UI.StatusUI;
+
+import Utility.Utility;
 
 public class Entity extends Actor{
 	

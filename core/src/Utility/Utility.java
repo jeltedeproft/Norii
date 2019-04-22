@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package Utility;
 
 import java.util.Random;
 

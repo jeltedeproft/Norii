@@ -1,8 +1,10 @@
 package com.mygdx.game.UI;
 
-import com.mygdx.game.Utility;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Map.Map;
+
+import Utility.Utility;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;

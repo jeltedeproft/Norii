@@ -1,8 +1,9 @@
 package com.mygdx.game.UI;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.mygdx.game.Utility;
 import com.mygdx.game.Entities.Entity;
+
+import Utility.Utility;
 
 public class PortraitUI {
 	private static final String TAG = PortraitUI.class.getSimpleName();

@@ -16,7 +16,6 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.Utility;
 import com.mygdx.game.Battle.BattleManager;
 import com.mygdx.game.Battle.BattleState;
 import com.mygdx.game.Entities.Entity;
@@ -26,15 +25,15 @@ import com.mygdx.game.Map.BattleMap;
 import com.mygdx.game.Map.Map;
 import com.mygdx.game.Map.MapManager;
 import com.mygdx.game.Map.MyPathFinder;
+import com.mygdx.game.Particles.ParticleMaker;
+import com.mygdx.game.Particles.ParticleMaker.ParticleType;
 import com.mygdx.game.Profile.ProfileManager;
 import com.mygdx.game.UI.PlayerBattleHUD;
 
+import Utility.Utility;
+
 public class BattleScreen extends GameScreen  {
 	private static final String TAG = BattleScreen.class.getSimpleName();
-	
-	private final static String SPAWNEFFECT = "particles/mysmalleffect.p";
-	private final static String MOVEEFFECT = "particles/mysmalleffect.p";
-	private final static int MAX_PARTICLES_IN_POOL = 50;
 
 	private static class VIEWPORT {
 		static float viewportWidth;
@@ -45,12 +44,11 @@ public class BattleScreen extends GameScreen  {
 		static float physicalHeight;
 		static float aspectRatio;
 	}
+	
+	private ParticleMaker particlemaker;
 
 	private ArrayList<Owner> _players;
-	private ArrayList<PooledEffect> particles;
-	private ArrayList<PooledEffect> moveparticles;
-	private ParticleEffectPool spawnEffectPool;
-	private ParticleEffectPool moveEffectPool;
+
 
 	private OrthogonalTiledMapRenderer _mapRenderer = null;
 	private OrthographicCamera _camera = null;
@@ -62,7 +60,6 @@ public class BattleScreen extends GameScreen  {
 	private ArrayList<Vector2> spawnPoints;
 	private MyPathFinder pathfinder;
 	
-	
 	private InputMultiplexer multiplexer;
 	
 	//HUD stuff
@@ -70,16 +67,9 @@ public class BattleScreen extends GameScreen  {
 	private static PlayerBattleHUD _playerBattleHUD;
 
 	public BattleScreen(Object... params){
-		//initialize player
-		playerSortedUnits = Player.getInstance().getUnitsSortedByIni();
+		playerSortedUnits = Player.getInstance().getUnitsSortedByIni(); 
 		
-		//initialize particles(max is 50)
-		particles = new ArrayList<PooledEffect>();
-		moveparticles = new ArrayList<PooledEffect>();
-		Utility.loadParticleAsset(SPAWNEFFECT);
-		Utility.loadParticleAsset(MOVEEFFECT);
-		spawnEffectPool =  new ParticleEffectPool(Utility.getParticleAsset(SPAWNEFFECT),1,MAX_PARTICLES_IN_POOL);  
-		moveEffectPool =  new ParticleEffectPool(Utility.getParticleAsset(MOVEEFFECT),1,MAX_PARTICLES_IN_POOL);  
+		particlemaker.initializeParticles();
 		
 		//init HUD
 		_hudCamera = new OrthographicCamera();
@@ -101,7 +91,6 @@ public class BattleScreen extends GameScreen  {
 		
 		pathfinder = new MyPathFinder(map.getMapWidth(),map.getMapHeight());
 		battlemanager.setPathfinder(pathfinder);
-		
 
 		//if owners are supplied, initialize them
 		int index = ScreenManager.ScreenParams.ARRAYLIST_OF_OWNERS.ordinal();
@@ -121,14 +110,11 @@ public class BattleScreen extends GameScreen  {
 		spawnPoints = map.getSpawnPositionsFromScaledUnits();
 		battlemanager.setSpawnPoints(spawnPoints);
 		
-		//load spawn particles
 		for(Vector2 vector : spawnPoints) {
-			PooledEffect particle = spawnEffectPool.obtain();
-			particle.setPosition(vector.x  / Map.UNIT_SCALE, vector.y / Map.UNIT_SCALE);
-			particles.add(particle);
+			particlemaker.addParticle(ParticleType.SPAWN,vector);
 		}
 		
-		battlemanager.setParticles(particles);
+		battlemanager.setParticles(particlemaker.getParticles(ParticleType.SPAWN));
 		
 		//init units
 		for (Owner owner : _players) {
@@ -216,12 +202,12 @@ public class BattleScreen extends GameScreen  {
 		Entity currentUnit = battlemanager.getActiveUnit();
 		if(currentUnit.isInMovementPhase()) {
 			List<GridCell> path = pathfinder.getCellsWithin((int)currentUnit.getCurrentPosition().x, (int)currentUnit.getCurrentPosition().y, currentUnit.getMp());
-			if(moveparticles.isEmpty()) {
+			if(particlemaker.isParticleTypeEmpty(ParticleType.MOVE)) {
 				for(GridCell cell : path) {
 					//load spawn particles
-					PooledEffect particle = moveEffectPool.obtain();
+					PooledEffect particle = particlemaker.getParticle();
 					particle.setPosition(cell.x  / Map.UNIT_SCALE, cell.y / Map.UNIT_SCALE);
-					moveparticles.add(particle);
+					particlemaker.getParticles(ParticleType.MOVE).add(particle);
 				}
 			}
 			highlightCircle(delta,path);
@@ -297,7 +283,7 @@ public class BattleScreen extends GameScreen  {
 	}
 	
 	public void highlightTiles(float delta, Batch batch) {	
-		for(PooledEffect particle : particles) {
+		for(PooledEffect particle : particlemaker.getParticles(ParticleType.SPAWN)) {
 			particle.update(delta);
 			SpriteBatch mybatch = new SpriteBatch();
 			mybatch.begin();
@@ -314,7 +300,7 @@ public class BattleScreen extends GameScreen  {
 	}
 	
 	public void highlightCircle(float delta, List<GridCell> path) {
-		for(PooledEffect move : moveparticles) {
+		for(PooledEffect move : particlemaker.getParticles(ParticleType.MOVE)) {
 			move.update(delta);
 			SpriteBatch mybatch = new SpriteBatch();
 			mybatch.begin();

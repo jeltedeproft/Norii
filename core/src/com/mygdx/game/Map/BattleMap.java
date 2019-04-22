@@ -6,9 +6,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.Utility;
 import com.mygdx.game.Audio.AudioObserver;
 import com.mygdx.game.Battle.BattleManager;
+
+import Utility.Utility;
 
 public class BattleMap extends Map{
     private static final String TAG = BattleMap.class.getSimpleName();

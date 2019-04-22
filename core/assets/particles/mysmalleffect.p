@@ -149,7 +149,7 @@ scalingCount: 1
 scaling0: 1.0
 timelineCount: 1
 timeline0: 0.0
-- Tint - 
+- Tint -
 colorsCount: 3
 colors0: 1.0
 colors1: 0.57254905
@@ -174,7 +174,7 @@ timeline2: 0.8058985
 timeline3: 0.8957476
 - Options -
 attached: false
-continuous: false
+continuous: true
 aligned: false
 additive: true
 behind: false

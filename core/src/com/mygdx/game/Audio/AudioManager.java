@@ -3,7 +3,8 @@ package com.mygdx.game.Audio;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.mygdx.game.Utility;
+
+import Utility.Utility;
 
 import java.util.Hashtable;
 

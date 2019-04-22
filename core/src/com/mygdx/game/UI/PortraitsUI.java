@@ -1,7 +1,9 @@
 package com.mygdx.game.UI;
 
-import com.mygdx.game.Utility;
 import com.mygdx.game.Entities.Entity;
+
+import Utility.Utility;
+
 import java.util.ArrayList;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
