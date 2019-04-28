@@ -62,6 +62,12 @@ public class ParticleMaker {
 		
 		PooledEffect particle = particlePool.getParticleEffect();
 		Particle newParticle = new Particle(pos, particle, particletype);
+		
+		//check if particletype is in the list, if no add it
+
+
+			allParticles.put(particletype, new ArrayList<Particle>());
+		}
 		allParticles.get(particletype).add(newParticle);
 	}
 	
