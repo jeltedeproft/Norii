@@ -1,6 +1,9 @@
 package com.mygdx.game.Entities;
 
+import java.util.List;
 import java.util.UUID;
+
+import org.xguzm.pathfinding.grid.GridCell;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -8,13 +11,16 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Map.Map;
+import com.mygdx.game.Map.MyPathFinder;
+import com.mygdx.game.Particles.ParticleMaker;
+import com.mygdx.game.Particles.ParticleType;
 import com.mygdx.game.UI.ActionsUI;
 import com.mygdx.game.UI.StatusUI;
 
+import Utility.TiledMapPosition;
 import Utility.Utility;
 
 public class Entity extends Actor{
@@ -40,7 +46,7 @@ public class Entity extends Actor{
 	private static final int animationframes = 3;
 	private static String _defaultSpritePath;
 
-	private Vector2 _velocity;
+	private TiledMapPosition _velocity;
 	private String _entityID;
 	
 	private StatusUI statusui;
@@ -72,8 +78,8 @@ public class Entity extends Actor{
 	private Array<TextureRegion> _walkUpFrames;
 	private Array<TextureRegion> _walkDownFrames;
 
-	protected Vector2 _nextPlayerPosition;
-	protected Vector2 _currentPlayerPosition;
+	protected TiledMapPosition _nextPlayerPosition;
+	protected TiledMapPosition _currentPlayerPosition;
 	protected State _state = State.IDLE;
 	protected float _frameTime = 0f;
 	protected Sprite _frameSprite = null;
@@ -101,10 +107,10 @@ public class Entity extends Actor{
 	public void initEntity(){
 		//Gdx.app.debug(TAG, "Construction" );
 		this._entityID = UUID.randomUUID().toString();
-		this._nextPlayerPosition = new Vector2();
-		this._currentPlayerPosition = new Vector2();
+		this._nextPlayerPosition = new TiledMapPosition(0,0);
+		this._currentPlayerPosition = new TiledMapPosition(0,0);
 		this.boundingBox = new Rectangle();
-		this._velocity = new Vector2(2f,2f);
+		this._velocity = new TiledMapPosition(2f,2f);
 		this.hp = 10;
 		this.mp = 3;
 		this.ini = Utility.getRandomIntFrom1to(100);
@@ -190,13 +196,8 @@ public class Entity extends Actor{
 	}
 
 	public void init(){
-		this._currentPlayerPosition.x = 0;
-		this._currentPlayerPosition.y = 0;
-		
-		this._nextPlayerPosition.x = 0;
-		this._nextPlayerPosition.y = 0;
-
-		//Gdx.app.debug(TAG, "Calling INIT" );
+		this._currentPlayerPosition.setPosition(0, 0);
+		this._nextPlayerPosition.setPosition(0, 0);
 	}
 
 	public StatusUI getStatusui() {
@@ -244,11 +245,11 @@ public class Entity extends Actor{
 		float minX;
 		float minY;
 		if( Map.UNIT_SCALE > 0 ) {
-			minX = _nextPlayerPosition.x / Map.UNIT_SCALE;
-			minY = _nextPlayerPosition.y / Map.UNIT_SCALE;
+			minX = _nextPlayerPosition.getRealX() / Map.UNIT_SCALE;
+			minY = _nextPlayerPosition.getRealY() / Map.UNIT_SCALE;
 		}else{
-			minX = _nextPlayerPosition.x;
-			minY = _nextPlayerPosition.y;
+			minX = _nextPlayerPosition.getRealX();
+			minY = _nextPlayerPosition.getRealY();
 		}
 
 		boundingBox.set(minX, minY, width, height);
@@ -325,18 +326,17 @@ public class Entity extends Actor{
 		return _currentFrame;
 	}
 	
-	public Vector2 getCurrentPosition(){
+	public TiledMapPosition getCurrentPosition(){
 		return _currentPlayerPosition;
 	}
 	
-	public void setCurrentPosition(float currentPositionX, float currentPositionY){
-		_frameSprite.setX(currentPositionX);
-		_frameSprite.setY(currentPositionY);
-		this._currentPlayerPosition.x = currentPositionX;
-		this._currentPlayerPosition.y = currentPositionY;
+	public void setCurrentPosition(TiledMapPosition pos){
+		_frameSprite.setX(pos.getRealX());
+		_frameSprite.setY(pos.getRealY());
+		this._currentPlayerPosition.setPosition(pos.getRealX(), pos.getRealY());
 
 		//also move the actor linked to this entity
-		this.entityactor.setPos(new Vector2(currentPositionX,currentPositionY));
+		this.entityactor.setPos(_currentPlayerPosition);
 		
 		//update the status UI's position
 		updateStatusUI();
@@ -367,35 +367,34 @@ public class Entity extends Actor{
 	}
 	
 	public void setNextPositionToCurrent(){
-		setCurrentPosition(_nextPlayerPosition.x, _nextPlayerPosition.y);
+		setCurrentPosition(_nextPlayerPosition);
 		//Gdx.app.debug(TAG, "Setting nextPosition as Current: (" + _nextPlayerPosition.x + "," + _nextPlayerPosition.y + ")");
 	}
 	
 	public void calculateNextPosition(Direction currentDirection, float deltaTime){
-		float testX = _currentPlayerPosition.x;
-		float testY = _currentPlayerPosition.y;
+		float testX = _currentPlayerPosition.getRealX();
+		float testY = _currentPlayerPosition.getRealY();
 		
 		_velocity.scl(deltaTime);
 		
 		switch (currentDirection) {
 		case LEFT : 
-		testX -=  _velocity.x;
+		testX -=  _velocity.getRealX();
 		break;
 		case RIGHT :
-		testX += _velocity.x;
+		testX += _velocity.getRealX();
 		break;
 		case UP : 
-		testY += _velocity.y;
+		testY += _velocity.getRealY();
 		break;
 		case DOWN : 
-		testY -= _velocity.y;
+		testY -= _velocity.getRealY();
 		break;
 		default:
 			break;
 		}
 		
-		_nextPlayerPosition.x = testX;
-		_nextPlayerPosition.y = testY;
+		_nextPlayerPosition.setPosition(testX, testY);
 		
 		//velocity
 		_velocity.scl(1 / deltaTime);
@@ -431,6 +430,13 @@ public class Entity extends Actor{
 
 	public void setInMovementPhase(boolean isInMovementPhase) {
 		this.isInMovementPhase = isInMovementPhase;
+		MyPathFinder pathfinder = new MyPathFinder(FRAME_HEIGHT, FRAME_HEIGHT);
+
+		List<GridCell> path = pathfinder.getCellsWithin(_currentPlayerPosition.getTileX(), _currentPlayerPosition.getTileY(), mp);
+		for(GridCell cell : path) {
+			TiledMapPosition positionToPutMoveParticle = new TiledMapPosition(cell.x,cell.y);
+			ParticleMaker.addParticle(ParticleType.MOVE,positionToPutMoveParticle );
+		}
 	}
 	
 	

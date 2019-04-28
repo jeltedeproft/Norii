@@ -25,11 +25,13 @@ import com.mygdx.game.Map.BattleMap;
 import com.mygdx.game.Map.Map;
 import com.mygdx.game.Map.MapManager;
 import com.mygdx.game.Map.MyPathFinder;
+import com.mygdx.game.Particles.Particle;
 import com.mygdx.game.Particles.ParticleMaker;
-import com.mygdx.game.Particles.ParticleMaker.ParticleType;
+import com.mygdx.game.Particles.ParticleType;
 import com.mygdx.game.Profile.ProfileManager;
 import com.mygdx.game.UI.PlayerBattleHUD;
 
+import Utility.TiledMapPosition;
 import Utility.Utility;
 
 public class BattleScreen extends GameScreen  {
@@ -44,8 +46,6 @@ public class BattleScreen extends GameScreen  {
 		static float physicalHeight;
 		static float aspectRatio;
 	}
-	
-	private ParticleMaker particlemaker;
 
 	private ArrayList<Owner> _players;
 
@@ -57,8 +57,9 @@ public class BattleScreen extends GameScreen  {
 	private BattleMap map;
 	private BattleManager battlemanager;
 	private Entity[] playerSortedUnits;
-	private ArrayList<Vector2> spawnPoints;
+	private ArrayList<TiledMapPosition> spawnPoints;
 	private MyPathFinder pathfinder;
+	private SpriteBatch spritebatch;
 	
 	private InputMultiplexer multiplexer;
 	
@@ -68,8 +69,6 @@ public class BattleScreen extends GameScreen  {
 
 	public BattleScreen(Object... params){
 		playerSortedUnits = Player.getInstance().getUnitsSortedByIni(); 
-		
-		particlemaker.initializeParticles();
 		
 		//init HUD
 		_hudCamera = new OrthographicCamera();
@@ -100,6 +99,8 @@ public class BattleScreen extends GameScreen  {
 		
 		//add HUD as observer
 		ProfileManager.getInstance().addObserver(_playerBattleHUD);
+		
+		spritebatch = new SpriteBatch();
 	}
 
 	@Override
@@ -110,11 +111,9 @@ public class BattleScreen extends GameScreen  {
 		spawnPoints = map.getSpawnPositionsFromScaledUnits();
 		battlemanager.setSpawnPoints(spawnPoints);
 		
-		for(Vector2 vector : spawnPoints) {
-			particlemaker.addParticle(ParticleType.SPAWN,vector);
+		for(TiledMapPosition tiledMapPosition : spawnPoints) {
+			ParticleMaker.addParticle(ParticleType.SPAWN,tiledMapPosition);
 		}
-		
-		battlemanager.setParticles(particlemaker.getParticles(ParticleType.SPAWN));
 		
 		//init units
 		for (Owner owner : _players) {
@@ -192,26 +191,11 @@ public class BattleScreen extends GameScreen  {
 		//draw grid
 		renderGrid();
 		
-		//highlight tiles if necessary
-		if(battlemanager.getBattleState() == BattleState.UNIT_PLACEMENT) highlightTiles(delta,_mapRenderer.getBatch());
+		//draw particles
+		ParticleMaker.drawAllActiveParticles(spritebatch, delta);
 		
 		//render HUD
 		_playerBattleHUD.render(delta);
-		
-		//highlight movement tiles if necessary
-		Entity currentUnit = battlemanager.getActiveUnit();
-		if(currentUnit.isInMovementPhase()) {
-			List<GridCell> path = pathfinder.getCellsWithin((int)currentUnit.getCurrentPosition().x, (int)currentUnit.getCurrentPosition().y, currentUnit.getMp());
-			if(particlemaker.isParticleTypeEmpty(ParticleType.MOVE)) {
-				for(GridCell cell : path) {
-					//load spawn particles
-					PooledEffect particle = particlemaker.getParticle();
-					particle.setPosition(cell.x  / Map.UNIT_SCALE, cell.y / Map.UNIT_SCALE);
-					particlemaker.getParticles(ParticleType.MOVE).add(particle);
-				}
-			}
-			highlightCircle(delta,path);
-		}
 			
 	}
 
@@ -280,41 +264,6 @@ public class BattleScreen extends GameScreen  {
 			Utility.DrawDebugLine(new Vector2(x,0), new Vector2(x,map.getMapHeight()), _camera.combined);
 		for(int y = 0; y < map.getMapHeight(); y += 1)
 			Utility.DrawDebugLine(new Vector2(0,y), new Vector2(map.getMapWidth(),y), _camera.combined);
-	}
-	
-	public void highlightTiles(float delta, Batch batch) {	
-		for(PooledEffect particle : particlemaker.getParticles(ParticleType.SPAWN)) {
-			particle.update(delta);
-			SpriteBatch mybatch = new SpriteBatch();
-			mybatch.begin();
-			if(!(particle.getBoundingBox().getCenterX() > 9000)) {
-				particle.draw(mybatch, delta);
-			}
-			
-			if (particle.isComplete()) {
-				particle.free();
-				//particles.remove(particle);
-			}
-			mybatch.end();
-		}
-	}
-	
-	public void highlightCircle(float delta, List<GridCell> path) {
-		for(PooledEffect move : particlemaker.getParticles(ParticleType.MOVE)) {
-			move.update(delta);
-			SpriteBatch mybatch = new SpriteBatch();
-			mybatch.begin();
-			move.draw(mybatch, delta);
-			if (move.isComplete()) {
-				move.free();
-				//particles.remove(particle);
-			}
-			mybatch.end();
-		}
-	}
-	
-	public void highlightCircle(float delta,Vector2 centre, int distance) {
-
 	}
 }
 

@@ -9,6 +9,10 @@ public class TiledMapPosition {
 	private Point2D realCoordinates;
 	private Point tileCoordinates;
 	
+	public TiledMapPosition() {
+		
+	}
+	
 	public TiledMapPosition(float x,float y) {
 		realCoordinates = new Point2D.Float(x,y);
 		tileCoordinates = new Point((int) (x * Map.UNIT_SCALE),(int) (y * Map.UNIT_SCALE));
@@ -75,6 +79,32 @@ public class TiledMapPosition {
 		int currentTileX = tileCoordinates.x;
 		int currentTileY = tileCoordinates.y;
 		tileCoordinates.setLocation(currentTileX + steps, currentTileY);
+	}
+	
+	public void scl(float scalingNumber) {
+		float oldRealX = this.getRealX();
+		float oldRealY = this.getRealY();
+		this.setPosition(oldRealX * scalingNumber, oldRealY * scalingNumber);
+	}
+	
+	public boolean isEqualTo(TiledMapPosition pos) {
+		return((pos.tileCoordinates.x == tileCoordinates.x) && (pos.tileCoordinates.y == tileCoordinates.y));
+	}
+	
+	public float getRealX() {
+		return (float) realCoordinates.getX();
+	}
+	
+	public float getRealY() {
+		return (float) realCoordinates.getY();
+	}
+	
+	public int getTileX() {
+		return tileCoordinates.x;
+	}
+	
+	public int getTileY() {
+		return tileCoordinates.y;
 	}
 
 }

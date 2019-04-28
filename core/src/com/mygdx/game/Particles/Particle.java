@@ -3,7 +3,7 @@ package com.mygdx.game.Particles;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.mygdx.game.Particles.ParticleMaker.ParticleType;
+import com.mygdx.game.Particles.ParticleType;
 
 import Utility.TiledMapPosition;
 
@@ -11,15 +11,13 @@ public class Particle {
 	
 	private TiledMapPosition pos;
 	private Boolean Active;
-	private Boolean _hasLinkedEntity;
 	private ParticleType type;
 	private PooledEffect particleEffect;
 	public Body attachedBody;
 	
-	Particle(TiledMapPosition pos, Boolean hasLinkedEntity, PooledEffect pe, Boolean active, ParticleType type){
+	Particle(TiledMapPosition pos, PooledEffect pe, ParticleType type){
 		this.pos = pos;
-		this.Active = active;
-		this._hasLinkedEntity = hasLinkedEntity;
+		this.Active = true;
 		this.type = type;
 		this.particleEffect = pe;
 	}
@@ -28,20 +26,32 @@ public class Particle {
 		return Active;
 	}
 	
+	public void deactivate() {
+		this.Active = false;
+	}
+	
 	public void draw(SpriteBatch spriteBatch, float delta) {
 		particleEffect.draw(spriteBatch, delta);
 	}
 	
-	public void free() {
+	public void delete() {
 		particleEffect.free();
 	}
 	
-	public Boolean getHasLinkedEntity() {
-		return _hasLinkedEntity;
+	public ParticleType getParticleType() {
+		return type;
 	}
-
-	public void setHasLinkedEntity(Boolean hasLinkedEntity) {
-		this._hasLinkedEntity = hasLinkedEntity;
+	
+	public TiledMapPosition getPosition() {
+		return pos;
+	}
+	
+	public void update(float delta) {
+		this.particleEffect.update(delta);
+	}
+	
+	public boolean isComplete() {
+		return this.particleEffect.isComplete();
 	}
 
 }

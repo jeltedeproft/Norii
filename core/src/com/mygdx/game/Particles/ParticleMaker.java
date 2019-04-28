@@ -1,114 +1,101 @@
 package com.mygdx.game.Particles;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.ArrayMap;
-import com.mygdx.game.Map.Map;
+import com.mygdx.game.Screen.BattleScreen;
 
+import Utility.TiledMapPosition;
 import Utility.Utility;
 
 public class ParticleMaker {
-	private final static String SPAWNEFFECT = "particles/mysmalleffect.p";
-	private final static String MOVEEFFECT = "particles/mysmalleffect.p";
+	private static final String TAG = BattleScreen.class.getSimpleName();
 	private final static int MAX_PARTICLES_IN_POOL = 50;
 	
-	private ArrayMap<Object,Particle> particlesLinkedToEntity;
-	private ArrayList<Particle> allParticles;
+	private static HashMap<ParticleType,ParticlePool> particlePools;
+	private static HashMap<ParticleType,ArrayList<Particle>> allParticles;
+	private static boolean ParticlesHaveChanged;
 	
-	private ArrayList<PooledEffect> spawnParticles;
-	private ArrayList<PooledEffect> moveparticles;
-	private ParticleEffectPool spawnEffectPool;
-	private ParticleEffectPool moveEffectPool;
-	
-	public enum ParticleType{
-		SPAWN,
-		MOVE
+
+
+	static{
+		ParticlesHaveChanged = false;
+		particlePools = new HashMap<ParticleType,ParticlePool>();
 	}
 	
-	//getparticle(type)
-	//getpaticles(type)
-	
-	public void drawAllActiveParticles(SpriteBatch spriteBatch, float delta) {
-		for(Particle particle : allParticles) {
-			if(particle.isActive()) {
-				particle.draw(spriteBatch, delta);
-			}
-		}
-	}
-	
-	public void deactivateParticle() {
-		
-	}
-	
-	public void deactivateAllParticlesOfType(ParticleType particletype){
-		
-	}
-	
-	public void linkParticleWithEntity(Object object,Particle particle) {
-		particle.setHasLinkedEntity(true);
-		particlesLinkedToEntity.put(object, particle);
-	}
-	
-	public void initializeParticles() {
-		particlesLinkedToEntity = new ArrayMap<Object, Particle>();
-		//max 50
-		spawnParticles = new ArrayList<PooledEffect>();
-		moveparticles = new ArrayList<PooledEffect>();
-		Utility.loadParticleAsset(SPAWNEFFECT);
-		Utility.loadParticleAsset(MOVEEFFECT);
-		spawnEffectPool =  new ParticleEffectPool(Utility.getParticleAsset(SPAWNEFFECT),1,MAX_PARTICLES_IN_POOL);  
-		moveEffectPool =  new ParticleEffectPool(Utility.getParticleAsset(MOVEEFFECT),1,MAX_PARTICLES_IN_POOL); 
-	}
-	
-	public void addParticle(ParticleType particletype, Vector2 pos) {
-		PooledEffect particle = spawnEffectPool.obtain();
-		particle.setPosition(pos.x  / Map.UNIT_SCALE, pos.y / Map.UNIT_SCALE);
-		spawnParticles.add(particle);
-	}
-	
-	public Particle getParticle() {
-		Particle newParticle = new Particle(null, null, null, null, null);
-		return moveEffectPool.obtain();
-	}
-	
-	public ArrayList<PooledEffect> getParticles(ParticleType particletype){
-		switch(particletype) {
-		  case SPAWN:
-		    // code block
-		    break;
-		  case MOVE:
-		    // code block
-		    break;
-		  default:
-		    // code block
-		}
-	}
-	
-	public boolean isParticleTypeEmpty(ParticleType particletype){
-		switch(particletype) {
-		  case SPAWN:
-		    return spawnParticles.isEmpty();
-		case MOVE:
-		    return moveparticles.isEmpty();
-		default:
-		    return false; //give error
-		}
-	}
-	
-	public void cleanUpUnactiveParticles() {
-		for(Particle particle : allParticles) {
-			if(!particle.isActive()) {
-				if(particle.getHasLinkedEntity()) {
-					particlesLinkedToEntity.removeValue(particle, true);
+	public static void drawAllActiveParticles(SpriteBatch spriteBatch, float delta) {		
+		for (ArrayList<Particle> particleTypeList : allParticles.values()) {
+			spriteBatch.begin();
+			for(Particle particle : particleTypeList) {
+				particle.update(delta);
+				particle.draw(spriteBatch,delta);
+				
+				if (particle.isComplete()) {
+					particle.delete();
+					//particles.remove(particle);
 				}
-				particle.free();
-				allParticles.remove(particle);
-				particle = null;
 			}
+			spriteBatch.end();
+		}
+	}
+	
+	public static void deactivateAllParticlesOfType(ParticleType particletype){
+		for(Particle particle : allParticles.get(particletype)) {
+			particle.deactivate();
+		}
+	}
+	
+	
+	public static void addParticle(ParticleType particletype, TiledMapPosition pos) {
+		ParticlePool particlePool;
+		
+		//if pool exists, reuse, else create one
+		if(particlePools.containsKey(particletype)) {
+			particlePool = particlePools.get(particletype);
+		}else {
+			particlePool = new ParticlePool(particletype);
+		}
+		
+		PooledEffect particle = particlePool.getParticleEffect();
+		Particle newParticle = new Particle(pos, particle, particletype);
+		allParticles.get(particletype).add(newParticle);
+	}
+	
+	
+	public static Particle getParticle(ParticleType particletype, TiledMapPosition pos) {
+		for(Particle particle : allParticles.get(particletype)) {
+			if(particle.getPosition().isEqualTo(pos)) {
+				return particle;
+			}
+		}
+		return null;
+	}
+	
+	public static boolean isParticleTypeEmpty(ParticleType particletype){
+		return particlePools.get(particletype) != null;
+	}
+	
+	public static void deactivateParticle(Particle particle) {
+		ParticlesHaveChanged = true;
+		particle.deactivate();
+	}
+	
+	public static void cleanUpUnactiveParticles() {
+		if(ParticlesHaveChanged) {
+			for(ArrayList<Particle> particleTypeList : allParticles.values()) {
+				for(Particle particle : particleTypeList) {
+					if(!particle.isActive()) {
+						particle.delete();
+						allParticles.get(particle.getParticleType()).remove(particle);
+						particle = null;
+					}
+				}
+			}
+			ParticlesHaveChanged = false;
 		}
 	}
 }

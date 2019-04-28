@@ -9,6 +9,10 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.Battle.BattleState;
 import com.mygdx.game.Entities.Entity;
+import com.mygdx.game.Particles.ParticleMaker;
+import com.mygdx.game.Particles.ParticleType;
+
+import Utility.TiledMapPosition;
 
 public class TiledMapClickListener extends ClickListener {
 	private static final String TAG = TiledMapClickListener.class.getSimpleName();
@@ -38,18 +42,25 @@ public class TiledMapClickListener extends ClickListener {
     
     private void deployUnit(){
         if(actor.getIsFreeSpawn()) {
-        	actor.getBattlemanager().deployUnit(actor.getX() * Map.UNIT_SCALE,actor.getY() * Map.UNIT_SCALE);
+        	TiledMapPosition newPosition = new TiledMapPosition(actor.getX(),actor.getY());
+        	actor.getBattlemanager().deployUnit(newPosition);
         	actor.setIsFreeSpawn(false);
         }
     }
     
     private void possibleMove() {
     	Entity currentUnit = actor.getBattlemanager().getActiveUnit();
-    	List<GridCell> path = actor.getBattlemanager().getPathfinder().getCellsWithin((int)currentUnit.getCurrentPosition().x, (int)currentUnit.getCurrentPosition().y, currentUnit.getMp());
+    	int currentXInTiled = currentUnit.getCurrentPosition().getTileX();
+    	int currentYInTiled = currentUnit.getCurrentPosition().getTileY();
+    	List<GridCell> path = actor.getBattlemanager().getPathfinder().getCellsWithin(currentXInTiled, currentYInTiled, currentUnit.getMp());
     	//test if spot is inside path, then move unit there
     	for(int i = 0;i<path.size();i++) {
-    		if((path.get(i).x == currentUnit.getCurrentPosition().x) && (path.get(i).y == currentUnit.getCurrentPosition().y)) {
-    			currentUnit.setCurrentPosition((int)actor.getX() * Map.UNIT_SCALE, (int)actor.getY() * Map.UNIT_SCALE);
+    		if((path.get(i).x == currentXInTiled) && (path.get(i).y == currentYInTiled)) {
+    			//deactivate particle
+    			ParticleMaker.getParticle(ParticleType.MOVE, currentUnit.getCurrentPosition());
+    			
+    			TiledMapPosition newUnitPos = new TiledMapPosition((int)actor.getX() * Map.UNIT_SCALE, (int)actor.getY() * Map.UNIT_SCALE);
+    			currentUnit.setCurrentPosition(newUnitPos);
     			currentUnit.setInActionPhase(true);
     			currentUnit.setInMovementPhase(false);
     			
