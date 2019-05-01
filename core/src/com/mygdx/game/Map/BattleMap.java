@@ -8,6 +8,8 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Audio.AudioObserver;
 import com.mygdx.game.Battle.BattleManager;
+import com.mygdx.game.Particles.ParticleMaker;
+import com.mygdx.game.Particles.ParticleType;
 
 import Utility.TiledMapPosition;
 import Utility.Utility;
@@ -17,9 +19,8 @@ public class BattleMap extends Map{
 
     private static String _mapPath;
     private ArrayList<TiledMapPosition> _unitSpawnPositions;
-    private ArrayList<TiledMapPosition> _unitSpawnPositionsScaledUnits;
     
-    protected TiledMapPosition _playerStartPositionRect;
+    protected Vector2 _playerStartPositionRect;
     protected TiledMapPosition _convertedUnits;
 
 
@@ -44,8 +45,7 @@ public class BattleMap extends Map{
     
     private void initializeClassVariables() {
     	_unitSpawnPositions = new ArrayList<TiledMapPosition>();
-    	_unitSpawnPositionsScaledUnits = new ArrayList<TiledMapPosition>();
-    	_playerStartPositionRect = new TiledMapPosition(0,0);
+    	_playerStartPositionRect = new Vector2(0,0);
     	_convertedUnits = new TiledMapPosition(0,0);
     	
         _spawnsLayer = _currentMap.getLayers().get(MAP_SPAWNS_LAYER);
@@ -59,34 +59,34 @@ public class BattleMap extends Map{
             Gdx.app.debug(TAG, "No spawn layer!");
         }else{
             if( _unitSpawnPositions.isEmpty() ){
-                fillSpawnPositions(_unitSpawnPositions,_unitSpawnPositionsScaledUnits);
+                fillSpawnPositions(_unitSpawnPositions);
             }
         }
     }
 
-	public ArrayList<TiledMapPosition> getSpawnPositionsFromScaledUnits(){
+	public ArrayList<TiledMapPosition> getSpawnPositions(){
     	@SuppressWarnings("unchecked")
-		ArrayList<TiledMapPosition> scaledUnitSpawns = (ArrayList<TiledMapPosition>) _unitSpawnPositionsScaledUnits.clone();
-        return scaledUnitSpawns;
+		ArrayList<TiledMapPosition> UnitSpawns = (ArrayList<TiledMapPosition>) _unitSpawnPositions.clone();
+        return UnitSpawns;
     }
 
-    private void fillSpawnPositions(final ArrayList<TiledMapPosition> startPositions,final ArrayList<TiledMapPosition> startPositionsScaled){
+    private void fillSpawnPositions(final ArrayList<TiledMapPosition> startPositions){
         Gdx.app.debug(TAG, "fillSpawnPositions INPUT: (" + startPositions.toString() + ") ");
 
         //Get player start positions
         for( MapObject object: _spawnsLayer.getObjects()){
             if( object.getName().equalsIgnoreCase(PLAYER_START) ){
-                ((RectangleMapObject)object).getRectangle().getPosition(new Vector2(_playerStartPositionRect.getRealX(),_playerStartPositionRect.getRealY()));
-                startPositions.add(new TiledMapPosition(_playerStartPositionRect.getRealX(),_playerStartPositionRect.getRealY()));
+            	
+                ((RectangleMapObject)object).getRectangle().getPosition(_playerStartPositionRect);
+                TiledMapPosition newPos = new TiledMapPosition(_playerStartPositionRect.x,_playerStartPositionRect.y);
+                startPositions.add(newPos);
 
                 //tag tiles that can be used as spawns
-                TiledMapActor tiledactor = (TiledMapActor) tiledmapstage.hit(_playerStartPositionRect.getRealX(), _playerStartPositionRect.getRealY(), false);
+                TiledMapActor tiledactor = (TiledMapActor) tiledmapstage.hit(_playerStartPositionRect.x, _playerStartPositionRect.y, false);
                 tiledactor.setIsFreeSpawn(true);
                 
-                //scaled version of start positions
-                if( UNIT_SCALE > 0 ) {
-                	startPositionsScaled.add(_playerStartPositionRect);
-                }
+                //add spawn particle
+                ParticleMaker.addParticle(ParticleType.SPAWN, newPos);
             }
         }        
     }

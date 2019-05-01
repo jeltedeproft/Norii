@@ -4,17 +4,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
-import com.mygdx.game.Screen.BattleScreen;
 
 import Utility.TiledMapPosition;
-import Utility.Utility;
 
 public class ParticleMaker {
-	private static final String TAG = BattleScreen.class.getSimpleName();
-	private final static int MAX_PARTICLES_IN_POOL = 50;
+	private static final String TAG = ParticleMaker.class.getSimpleName();
 	
 	private static HashMap<ParticleType,ParticlePool> particlePools;
 	private static HashMap<ParticleType,ArrayList<Particle>> allParticles;
@@ -25,9 +22,10 @@ public class ParticleMaker {
 	static{
 		ParticlesHaveChanged = false;
 		particlePools = new HashMap<ParticleType,ParticlePool>();
+		allParticles = new HashMap<ParticleType,ArrayList<Particle>>();
 	}
 	
-	public static void drawAllActiveParticles(SpriteBatch spriteBatch, float delta) {		
+	public static void drawAllActiveParticles(SpriteBatch spriteBatch, float delta) {
 		for (ArrayList<Particle> particleTypeList : allParticles.values()) {
 			spriteBatch.begin();
 			for(Particle particle : particleTypeList) {
@@ -52,7 +50,8 @@ public class ParticleMaker {
 	
 	public static void addParticle(ParticleType particletype, TiledMapPosition pos) {
 		ParticlePool particlePool;
-		
+		Gdx.app.debug(TAG, "adding particle with pos : " + pos.getTileX() + " , " + pos.getTileY());
+		Gdx.app.debug(TAG, "adding particle with pos : " + pos.getRealX() + " , " + pos.getRealY());
 		//if pool exists, reuse, else create one
 		if(particlePools.containsKey(particletype)) {
 			particlePool = particlePools.get(particletype);
@@ -61,11 +60,11 @@ public class ParticleMaker {
 		}
 		
 		PooledEffect particle = particlePool.getParticleEffect();
+		particle.setPosition(pos.getRealX(), pos.getRealY());
 		Particle newParticle = new Particle(pos, particle, particletype);
 		
 		//check if particletype is in the list, if no add it
-
-
+		if(allParticles.get(particletype) == null) {
 			allParticles.put(particletype, new ArrayList<Particle>());
 		}
 		allParticles.get(particletype).add(newParticle);
@@ -104,4 +103,6 @@ public class ParticleMaker {
 			ParticlesHaveChanged = false;
 		}
 	}
+	
+	
 }

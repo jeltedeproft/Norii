@@ -78,15 +78,18 @@ public class BattleScreen extends GameScreen  {
 
 		multiplexer = new InputMultiplexer();
 		
-		//add 3 inputlisteners
+		//add inputlisteners
 		multiplexer.addProcessor(Player.getInstance().getEntityStage()); //need to add all units here not just player units
 		battlemanager = new BattleManager(multiplexer,playerSortedUnits);
 		multiplexer.addProcessor(_playerBattleHUD.getStage()); 
 		
-		
 		_mapMgr = new MapManager();
 		map = (BattleMap) _mapMgr.get_currentMap();
 		map.setStage(battlemanager);
+		
+		//fill spawn points
+		this.spawnPoints = map.getSpawnPositions();
+		battlemanager.setSpawnPoints(this.spawnPoints);
 		
 		pathfinder = new MyPathFinder(map.getMapWidth(),map.getMapHeight());
 		battlemanager.setPathfinder(pathfinder);
@@ -106,14 +109,6 @@ public class BattleScreen extends GameScreen  {
 	@Override
 	public void show() {
 		_mapMgr.getCurrentTiledMap();
-		
-		//fill spawn points
-		spawnPoints = map.getSpawnPositionsFromScaledUnits();
-		battlemanager.setSpawnPoints(spawnPoints);
-		
-		for(TiledMapPosition tiledMapPosition : spawnPoints) {
-			ParticleMaker.addParticle(ParticleType.SPAWN,tiledMapPosition);
-		}
 		
 		//init units
 		for (Owner owner : _players) {
@@ -181,8 +176,10 @@ public class BattleScreen extends GameScreen  {
 		for (Owner owner : _players) {
 			ArrayList<Entity> units = owner.getTeam();
 			for (Entity entity : units) {
-				if(entity.isInBattle())
-				_mapRenderer.getBatch().draw(entity.getFrame(), entity.getFrameSprite().getX(), entity.getFrameSprite().getY(), 1f,1f);
+				if(entity.isInBattle()) {
+					_mapRenderer.getBatch().draw(entity.getFrame(), entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY(), 1f,1f);
+					Gdx.app.debug(TAG, "drawing unit " + entity.getName() + " at : " + entity.getFrameSprite().getX() + " , " + entity.getFrameSprite().getY());
+				}
 			}	
 		}
 		
@@ -264,6 +261,6 @@ public class BattleScreen extends GameScreen  {
 			Utility.DrawDebugLine(new Vector2(x,0), new Vector2(x,map.getMapHeight()), _camera.combined);
 		for(int y = 0; y < map.getMapHeight(); y += 1)
 			Utility.DrawDebugLine(new Vector2(0,y), new Vector2(map.getMapWidth(),y), _camera.combined);
-	}
+	}	
 }
 

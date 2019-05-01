@@ -1,11 +1,7 @@
 package com.mygdx.game.Battle;
 
-import com.mygdx.game.Particles.ParticleMaker;
-import com.mygdx.game.Particles.ParticleType;
-
-import Utility.TiledMapPosition;
-
 public class DeploymentBattleState implements BattleStates{
+	private static final String TAG = DeploymentBattleState.class.getSimpleName();
 	
 	private BattleManager battlemanager;
 	
@@ -16,10 +12,7 @@ public class DeploymentBattleState implements BattleStates{
 
 	@Override
 	public void entry() {
-		for(TiledMapPosition spawnPos : battlemanager.getSpawnPoints()) {
-			ParticleMaker.addParticle(ParticleType.SPAWN, spawnPos);
-		}
-		
+
 	}
 
 	@Override

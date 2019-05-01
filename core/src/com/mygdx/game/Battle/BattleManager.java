@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Entities.InputController;
+import com.mygdx.game.Map.BattleMap;
 import com.mygdx.game.Map.Map;
 import com.mygdx.game.Map.MyPathFinder;
 import com.mygdx.game.Particles.ParticleMaker;
@@ -54,6 +55,7 @@ public class BattleManager {
 		this.waitOpponentBattleState = new WaitOpponentBattleState(this);
 		
 		this.currentBattleState = deploymentBattleState;
+		this.currentBattleState.entry();
 	}
 	
 	public ArrayList<TiledMapPosition> getSpawnPoints() {

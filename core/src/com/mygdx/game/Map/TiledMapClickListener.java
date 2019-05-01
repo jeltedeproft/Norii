@@ -28,11 +28,11 @@ public class TiledMapClickListener extends ClickListener {
     	
     	switch(actor.getBattlemanager().getBattleState()) {
     	  case UNIT_PLACEMENT:
-    	    Gdx.app.debug(TAG, "battlestate = UNIT PLACEMENT");
+    	    Gdx.app.debug(TAG, "deploying unit!");
     	    deployUnit();
     	    break;
     	  case MOVEMENT_PHASE:
-    		  Gdx.app.debug(TAG, "battlestate = MOVEMENT PHASE");
+    		  Gdx.app.debug(TAG, "you can move now!");
     	    possibleMove();
     	    break;
     	  default:
