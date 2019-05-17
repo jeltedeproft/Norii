@@ -125,7 +125,7 @@ public class BattleManager {
 			ParticleMaker.deactivateParticle(ParticleMaker.getParticle(ParticleType.SPAWN, pos));
 			removeSpawnPoint(pos);
 	
-			activeUnitIndex = ++activeUnitIndex;
+			activeUnitIndex++;
 			checkIfLastUnit();
 		}else {
 			Gdx.app.debug(TAG, "can't deploy unit, units is null or activeunitindex is > the length of units");
@@ -134,7 +134,7 @@ public class BattleManager {
 	
 	private void changeActiveUnit(TiledMapPosition pos) {
 		Entity currentActiveUnit = units[activeUnitIndex];
-		activeUnit.setInBattle(true);
+		currentActiveUnit.setInBattle(true);
 		currentActiveUnit.setCurrentPosition(pos);
 		activeUnit = currentActiveUnit;
 	}

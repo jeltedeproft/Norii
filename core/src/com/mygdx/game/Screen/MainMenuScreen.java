@@ -18,7 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Audio.AudioObserver;
 import com.mygdx.game.Entities.Entity;
-import com.mygdx.game.Entities.Entity.EntityFilePath;
+import com.mygdx.game.Entities.EntityFilePath;
 
 import Utility.Utility;
 

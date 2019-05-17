@@ -7,6 +7,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector3;
+import com.mygdx.game.Entities.EntityAnimation.Direction;
+import com.mygdx.game.Entities.EntityAnimation.State;
 
 
 public class InputController implements InputProcessor {
@@ -228,28 +230,28 @@ public class InputController implements InputProcessor {
 		//Keyboard input
 		if( keys.get(Keys.LEFT)){
 			//Gdx.app.debug(TAG, "LEFT key");
-			_unit.calculateNextPosition(Entity.Direction.LEFT, delta);
-			_unit.setState(Entity.State.WALKING);
-			_unit.setDirection(Entity.Direction.LEFT, delta);
+			_unit.calculateNextPosition(Direction.LEFT, delta);
+			_unit.setState(State.WALKING);
+			_unit.setDirection(Direction.LEFT, delta);
 		}else if( keys.get(Keys.RIGHT)){
 			//Gdx.app.debug(TAG, "RIGHT key");
-			_unit.calculateNextPosition(Entity.Direction.RIGHT, delta);
-			_unit.setState(Entity.State.WALKING);
-			_unit.setDirection(Entity.Direction.RIGHT, delta);
+			_unit.calculateNextPosition(Direction.RIGHT, delta);
+			_unit.setState(State.WALKING);
+			_unit.setDirection(Direction.RIGHT, delta);
 		}else if( keys.get(Keys.UP)){
 			//Gdx.app.debug(TAG, "UP key");
-			_unit.calculateNextPosition(Entity.Direction.UP, delta);
-			_unit.setState(Entity.State.WALKING);
-			_unit.setDirection(Entity.Direction.UP, delta);
+			_unit.calculateNextPosition(Direction.UP, delta);
+			_unit.setState(State.WALKING);
+			_unit.setDirection(Direction.UP, delta);
 		}else if(keys.get(Keys.DOWN)){
 			//Gdx.app.debug(TAG, "DOWN key");
-			_unit.calculateNextPosition(Entity.Direction.DOWN, delta);
-			_unit.setState(Entity.State.WALKING);
-			_unit.setDirection(Entity.Direction.DOWN, delta);
+			_unit.calculateNextPosition(Direction.DOWN, delta);
+			_unit.setState(State.WALKING);
+			_unit.setDirection(Direction.DOWN, delta);
 		}else if(keys.get(Keys.QUIT)){
 			Gdx.app.exit();
 		}else{
-			_unit.setState(Entity.State.IDLE);
+			_unit.setState(State.IDLE);
 		}
 		
 		//Mouse input

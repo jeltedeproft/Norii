@@ -33,12 +33,6 @@ public abstract class Owner {
 		
 	}
 	
-	public void initUnits() {
-		for(Entity entity : team) {
-			entity.init();
-		}
-	}
-	
 	public void updateUnits(float delta) {
 		for(Entity entity : team) {
 			entity.update(delta);

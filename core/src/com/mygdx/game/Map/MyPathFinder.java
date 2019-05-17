@@ -16,9 +16,9 @@ public class MyPathFinder {
 	private GridCell[][] cells;
 	private int length;
 	private int height;
-	private NavigationGrid<GridCell> navGrid;
+	private static NavigationGrid<GridCell> navGrid;
 	private GridFinderOptions opt;
-	private AStarGridFinder<GridCell> finder;
+	private static AStarGridFinder<GridCell> finder;
 	
 	public MyPathFinder(int length, int height) {
 		initializeClassVariables(length, height);
@@ -56,7 +56,7 @@ public class MyPathFinder {
 		
 	}
 	
-	public List<GridCell> getCellsWithin(int x, int y, int range) {
+	public static List<GridCell> getCellsWithin(int x, int y, int range) {
 		List<GridCell> cells = new ArrayList<GridCell>();
 		GridCell start = navGrid.getCell(x, y);
 		//go over all cells, if distance between start and cell is 3 or less, add it

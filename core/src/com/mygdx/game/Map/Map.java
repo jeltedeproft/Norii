@@ -17,6 +17,8 @@ public abstract class Map implements AudioSubject{
     private static final String TAG = Map.class.getSimpleName();
 
     public final static float UNIT_SCALE  = 1/32f;
+    public final static int TILE_HEIGHT  = 32;
+    public final static int TILE_WIDTH  = 32;
     
     private Array<AudioObserver> _observers;
 

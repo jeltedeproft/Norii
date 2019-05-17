@@ -94,7 +94,7 @@ public class BattleScreen extends GameScreen  {
 		pathfinder = new MyPathFinder(map.getMapWidth(),map.getMapHeight());
 		battlemanager.setPathfinder(pathfinder);
 
-		//if owners are supplied, initialize them
+		//if owners are supplied, initialise them
 		int index = ScreenManager.ScreenParams.ARRAYLIST_OF_OWNERS.ordinal();
 		if(params[index] != null) {
 			_players = (ArrayList<Owner>) params[index];
@@ -109,11 +109,6 @@ public class BattleScreen extends GameScreen  {
 	@Override
 	public void show() {
 		_mapMgr.getCurrentTiledMap();
-		
-		//init units
-		for (Owner owner : _players) {
-		    owner.initUnits();
-		}
 		
 		//set multiplexer as active one
 		multiplexer.addProcessor(map.getTiledMapStage());
@@ -162,14 +157,8 @@ public class BattleScreen extends GameScreen  {
 
 		battlemanager.updateController(delta);
 
-		//_mapRenderer.getBatch().enableBlending();
-		//_mapRenderer.getBatch().setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-
 		_mapRenderer.setView(_camera);
-		
 		_mapRenderer.render();
-
-
 		_mapRenderer.getBatch().begin();
 		
 		//draw all units
@@ -178,7 +167,6 @@ public class BattleScreen extends GameScreen  {
 			for (Entity entity : units) {
 				if(entity.isInBattle()) {
 					_mapRenderer.getBatch().draw(entity.getFrame(), entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY(), 1f,1f);
-					Gdx.app.debug(TAG, "drawing unit " + entity.getName() + " at : " + entity.getFrameSprite().getX() + " , " + entity.getFrameSprite().getY());
 				}
 			}	
 		}

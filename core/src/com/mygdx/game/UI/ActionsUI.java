@@ -1,5 +1,6 @@
 package com.mygdx.game.UI;
 
+import com.mygdx.game.Battle.BattleManager;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Map.Map;
 

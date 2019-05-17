@@ -1,6 +1,5 @@
 package com.mygdx.game.Map;
 
-import org.xguzm.pathfinding.gdxbridge.NavigationTiledMapLayer;
 import org.xguzm.pathfinding.grid.GridCell;
 
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;

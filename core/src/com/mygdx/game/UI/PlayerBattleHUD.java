@@ -62,7 +62,7 @@ public class PlayerBattleHUD implements Screen, ProfileObserver {
         //add portraits
     	_portraits = new PortraitsUI(SortedUnits);
     	
-        //status window blocks input beneath
+        //portrait window blocks input beneath
     	_portraits.addListener(new InputListener() {
         	public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
          		return true;

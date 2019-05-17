@@ -1,22 +1,11 @@
 package com.mygdx.game.Entities;
 
-import java.util.List;
 import java.util.UUID;
 
-import org.xguzm.pathfinding.grid.GridCell;
-
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.utils.Array;
-import com.mygdx.game.Map.Map;
-import com.mygdx.game.Map.MyPathFinder;
-import com.mygdx.game.Particles.ParticleMaker;
-import com.mygdx.game.Particles.ParticleType;
+import com.mygdx.game.Entities.EntityAnimation.Direction;
+import com.mygdx.game.Entities.EntityAnimation.State;
 import com.mygdx.game.UI.ActionsUI;
 import com.mygdx.game.UI.StatusUI;
 
@@ -24,37 +13,11 @@ import Utility.TiledMapPosition;
 import Utility.Utility;
 
 public class Entity extends Actor{
-	
-    public static enum EntityFilePath{
-        COMMANDER("sprites/characters/Commander.png"),
-        ICARUS("sprites/characters/Icarus.png"),
-        DEMON("sprites/characters/Demon.png"),
-        SHAMAN("sprites/characters/Shaman.png");
-
-        private String _entityFullFilePath;
-
-        EntityFilePath(String entityFullFilePath){
-            this._entityFullFilePath = entityFullFilePath;
-        }
-
-        public String getValue(){
-            return _entityFullFilePath;
-        }
-    }
-	
 	private static final String TAG = Entity.class.getSimpleName();
-	private static final int animationframes = 3;
-	private static String _defaultSpritePath;
-
-	private TiledMapPosition _velocity;
-	private String _entityID;
 	
-	private StatusUI statusui;
-	private ActionsUI actionsui;
-	
-	private String name;
-
 	//stats
+	private String _entityID;
+	private String name;
 	private int mp;
 	private int hp;
 	private int level;
@@ -64,42 +27,20 @@ public class Entity extends Actor{
 	private boolean isActive;
 	private boolean isInMovementPhase;
 	private boolean isInActionPhase;
-
-	private Direction _currentDirection = Direction.LEFT;
-	private Direction _previousDirection = Direction.UP;
-
-	private Animation<TextureRegion> _walkLeftAnimation;
-	private Animation<TextureRegion> _walkRightAnimation;
-	private Animation<TextureRegion> _walkUpAnimation;
-	private Animation<TextureRegion> _walkDownAnimation;
-
-	private Array<TextureRegion> _walkLeftFrames;
-	private Array<TextureRegion> _walkRightFrames;
-	private Array<TextureRegion> _walkUpFrames;
-	private Array<TextureRegion> _walkDownFrames;
-
+	
+	private TiledMapPosition _velocity;
 	protected TiledMapPosition _nextPlayerPosition;
 	protected TiledMapPosition _currentPlayerPosition;
 	protected State _state = State.IDLE;
-	protected float _frameTime = 0f;
-	protected Sprite _frameSprite = null;
-	protected TextureRegion _currentFrame = null;
-	protected EntityActor entityactor;
-
-	public final int FRAME_WIDTH = 32;
-	public final int FRAME_HEIGHT = 32;
-	public static Rectangle boundingBox;
-
-	public enum State {
-		IDLE, WALKING
-	}
 	
-	public enum Direction {
-		UP,RIGHT,DOWN,LEFT;
-	}
+	private StatusUI statusui;
+	private ActionsUI actionsui;
+	
+	private EntityAnimation entityAnimation;
+	protected EntityActor entityactor;
 	
 	public Entity(String name,EntityFilePath entityfilepath){
-		this._defaultSpritePath = entityfilepath.getValue();
+		this.entityAnimation = new EntityAnimation(entityfilepath.getValue());
 		initEntity();
 		this.name = name;
 	}
@@ -109,95 +50,16 @@ public class Entity extends Actor{
 		this._entityID = UUID.randomUUID().toString();
 		this._nextPlayerPosition = new TiledMapPosition(0,0);
 		this._currentPlayerPosition = new TiledMapPosition(0,0);
-		this.boundingBox = new Rectangle();
 		this._velocity = new TiledMapPosition(2f,2f);
 		this.hp = 10;
 		this.mp = 3;
 		this.ini = Utility.getRandomIntFrom1to(100);
 		this.inBattle = false;
 		this.isInMovementPhase = false;
-
-		Utility.loadTextureAsset(_defaultSpritePath);
-		loadDefaultSprite();
-		loadAllAnimations();
-	}
-	public boolean canMove() {
-		return (this.mp > 0);
-	}
-
-	public boolean isInBattle() {
-		return inBattle;
-	}
-
-	public void setInBattle(boolean inBattle) {
-		this.inBattle = inBattle;
-	}
-	
-	public boolean isInActionPhase() {
-		return isInActionPhase;
-	}
-
-	public void setInActionPhase(boolean isInActionPhase) {
-		this.isInActionPhase = isInActionPhase;
-	}
-
-	public int getMp() {
-		return mp;
-	}
-
-	public void setMp(int mp) {
-		this.mp = mp;
-		updateStatusUI();
-	}
-
-	public int getHp() {
-		return hp;
-	}
-
-	public void setHp(int hp) {
-		this.hp = hp;
-		updateStatusUI();
-	}
-
-	public int getIni() {
-		return ini;
-	}
-
-	public void setIni(int ini) {
-		this.ini = ini;
-		updateStatusUI();
-	}
-
-	public int getLevel() {
-		return level;
-	}
-
-	public void setLevel(int level) {
-		this.level = level;
-		updateStatusUI();
-	}
-
-	public int getXp() {
-		return xp;
-	}
-
-	public void setXp(int xp) {
-		this.xp = xp;
-		updateStatusUI();
 	}
 	
 	public void update(float delta){
-		_frameTime = (_frameTime + delta)%5; //Want to avoid overflow
-
-		//Gdx.app.debug(TAG, "frametime: " + _frameTime );
-
-		//We want the hitbox to be at the feet for a better feel
-		setBoundingBoxSize(0f, 0.5f);
-	}
-
-	public void init(){
-		this._currentPlayerPosition.setPosition(0, 0);
-		this._nextPlayerPosition.setPosition(0, 0);
+		this.entityAnimation.update(delta);
 	}
 
 	public StatusUI getStatusui() {
@@ -216,123 +78,21 @@ public class Entity extends Actor{
 		this.actionsui = actionsui;
 	}
 
-	public void setBoundingBoxSize(float percentageWidthReduced, float percentageHeightReduced){
-		//Update the current bounding box
-		float width;
-		float height;
-
-		float widthReductionAmount = 1.0f - percentageWidthReduced; //.8f for 20% (1 - .20)
-		float heightReductionAmount = 1.0f - percentageHeightReduced; //.8f for 20% (1 - .20)
-
-		if( widthReductionAmount > 0 && widthReductionAmount < 1){
-			width = FRAME_WIDTH * widthReductionAmount;
-		}else{
-			width = FRAME_WIDTH;
-		}
-
-		if( heightReductionAmount > 0 && heightReductionAmount < 1){
-			height = FRAME_HEIGHT * heightReductionAmount;
-		}else{
-			height = FRAME_HEIGHT;
-		}
-
-
-		if( width == 0 || height == 0){
-			Gdx.app.debug(TAG, "Width and Height are 0!! " + width + ":" + height);
-		}
-
-		//Need to account for the unitscale, since the map coordinates will be in pixels
-		float minX;
-		float minY;
-		if( Map.UNIT_SCALE > 0 ) {
-			minX = _nextPlayerPosition.getRealX() / Map.UNIT_SCALE;
-			minY = _nextPlayerPosition.getRealY() / Map.UNIT_SCALE;
-		}else{
-			minX = _nextPlayerPosition.getRealX();
-			minY = _nextPlayerPosition.getRealY();
-		}
-
-		boundingBox.set(minX, minY, width, height);
-		//Gdx.app.debug(TAG, "SETTING Bounding Box: (" + minX + "," + minY + ")  width: " + width + " height: " + height);
-	}
-
-	public Rectangle getBoundingBox() {
-		return boundingBox;
-	}
-
-	private void loadDefaultSprite()
-	{
-		Texture texture = Utility.getTextureAsset(_defaultSpritePath);
-		TextureRegion[][] textureFrames = TextureRegion.split(texture, FRAME_WIDTH, FRAME_HEIGHT);
-		_frameSprite = new Sprite(textureFrames[0][0].getTexture(), 0,0,FRAME_WIDTH, FRAME_HEIGHT);
-		_currentFrame = textureFrames[0][0];
-	}
-	
-	private void loadAllAnimations(){
-		//Walking animation
-		Texture texture = Utility.getTextureAsset(_defaultSpritePath);
-		TextureRegion[][] textureFrames = TextureRegion.split(texture, FRAME_WIDTH, FRAME_HEIGHT);
-
-		_walkDownFrames = new Array<TextureRegion>(animationframes);
-		_walkLeftFrames = new Array<TextureRegion>(animationframes);
-		_walkRightFrames = new Array<TextureRegion>(animationframes);
-		_walkUpFrames = new Array<TextureRegion>(animationframes);
-
-		for (int i = 0; i < 4; i++) {
-			for (int j = 0; j < animationframes; j++) {
-				//Gdx.app.debug(TAG, "Got frame " + i + "," + j + " from " + sourceImage);
-				TextureRegion region = textureFrames[i][j];
-				if( region == null ){
-					Gdx.app.debug(TAG, "Got null animation frame " + i + "," + j);
-				}
-				switch(i)
-				{
-					case 0:
-						_walkDownFrames.insert(j, region);
-						break;
-					case 1:
-						_walkLeftFrames.insert(j, region);
-						break;
-					case 2:
-						_walkRightFrames.insert(j, region);
-						break;
-					case 3:
-						_walkUpFrames.insert(j, region);
-						break;
-				}
-			}
-		}
-
-
-		_walkDownAnimation = new Animation(0.25f, _walkDownFrames, Animation.PlayMode.LOOP);
-		_walkLeftAnimation = new Animation(0.25f, _walkLeftFrames, Animation.PlayMode.LOOP);
-		_walkRightAnimation = new Animation(0.25f, _walkRightFrames, Animation.PlayMode.LOOP);
-		_walkUpAnimation = new Animation(0.25f, _walkUpFrames, Animation.PlayMode.LOOP);
-	}
-
 	public void dispose(){
-		Utility.unloadAsset(_defaultSpritePath);
+		Utility.unloadAsset(this.entityAnimation.get_spritePath());
 	}
 	
 	public void setState(State state){
 		this._state = state;
 	}
 	
-	public Sprite getFrameSprite(){
-		return _frameSprite;
-	}
 
-	public TextureRegion getFrame(){
-		return _currentFrame;
-	}
-	
 	public TiledMapPosition getCurrentPosition(){
 		return _currentPlayerPosition;
 	}
 	
 	public void setCurrentPosition(TiledMapPosition pos){
-		_frameSprite.setX(pos.getRealX());
-		_frameSprite.setY(pos.getRealY());
+		entityAnimation.setFramePos(pos);
 		this._currentPlayerPosition.setPosition(pos.getRealX(), pos.getRealY());
 
 		//also move the actor linked to this entity
@@ -342,29 +102,7 @@ public class Entity extends Actor{
 		updateStatusUI();
 	}
 	
-	public void setDirection(Direction direction,  float deltaTime){
-		this._previousDirection = this._currentDirection;
-		this._currentDirection = direction;
-		
-		//Look into the appropriate variable when changing position
 
-		switch (_currentDirection) {
-		case DOWN :
-			_currentFrame = _walkDownAnimation.getKeyFrame(_frameTime);
-			break;
-		case LEFT :
-			_currentFrame = _walkLeftAnimation.getKeyFrame(_frameTime);
-			break;
-		case UP :
-			_currentFrame = _walkUpAnimation.getKeyFrame(_frameTime);
-			break;
-		case RIGHT :
-			_currentFrame = _walkRightAnimation.getKeyFrame(_frameTime);
-			break;
-		default:
-			break;
-		}
-	}
 	
 	public void setNextPositionToCurrent(){
 		setCurrentPosition(_nextPlayerPosition);
@@ -430,15 +168,79 @@ public class Entity extends Actor{
 
 	public void setInMovementPhase(boolean isInMovementPhase) {
 		this.isInMovementPhase = isInMovementPhase;
-		MyPathFinder pathfinder = new MyPathFinder(FRAME_HEIGHT, FRAME_HEIGHT);
-
-		List<GridCell> path = pathfinder.getCellsWithin(_currentPlayerPosition.getTileX(), _currentPlayerPosition.getTileY(), mp);
-		for(GridCell cell : path) {
-			TiledMapPosition positionToPutMoveParticle = new TiledMapPosition(cell.x,cell.y);
-			ParticleMaker.addParticle(ParticleType.MOVE,positionToPutMoveParticle );
-		}
 	}
 	
+	public boolean canMove() {
+		return (this.mp > 0);
+	}
+
+	public boolean isInBattle() {
+		return inBattle;
+	}
+
+	public void setInBattle(boolean inBattle) {
+		this.inBattle = inBattle;
+	}
 	
+	public boolean isInActionPhase() {
+		return isInActionPhase;
+	}
+
+	public void setInActionPhase(boolean isInActionPhase) {
+		this.isInActionPhase = isInActionPhase;
+	}
+
+	public int getMp() {
+		return mp;
+	}
+
+	public void setMp(int mp) {
+		this.mp = mp;
+		updateStatusUI();
+	}
+
+	public int getHp() {
+		return hp;
+	}
+
+	public void setHp(int hp) {
+		this.hp = hp;
+		updateStatusUI();
+	}
+
+	public int getIni() {
+		return ini;
+	}
+
+	public void setIni(int ini) {
+		this.ini = ini;
+		updateStatusUI();
+	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
+		updateStatusUI();
+	}
+
+	public int getXp() {
+		return xp;
+	}
+
+	public void setXp(int xp) {
+		this.xp = xp;
+		updateStatusUI();
+	}
+	
+	public TextureRegion getFrame() {
+		return entityAnimation.getFrame();
+	}
+	
+	public void setDirection(Direction direction, float delta) {
+		entityAnimation.setDirection(direction, delta);
+	}
 
 }
