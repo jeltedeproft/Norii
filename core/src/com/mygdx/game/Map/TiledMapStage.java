@@ -9,18 +9,17 @@ import com.mygdx.game.Battle.BattleManager;
 public class TiledMapStage extends Stage {
 	private static final String TAG = TiledMapStage.class.getSimpleName();
 
-    private TiledMap tiledMap;
+    private Map tiledMap;
     private String _layername;
     private BattleManager battlemanager;
 
-    public TiledMapStage(TiledMap tiledMap, String layername, BattleManager battlemanager) {
+    public TiledMapStage(Map tiledMap, String layername, BattleManager battlemanager) {
         this.tiledMap = tiledMap;
         this._layername = layername;
         this.battlemanager = battlemanager;
 
-        TiledMapTileLayer tiledLayer = (TiledMapTileLayer) tiledMap.getLayers().get(layername);
-        createActorsForLayer(tiledLayer);
-        
+        TiledMapTileLayer tiledLayer = (TiledMapTileLayer) tiledMap.getCurrentTiledMap().getLayers().get(layername);
+        createActorsForLayer(tiledLayer);    
     }
 
     public BattleManager getBattlemanager() {

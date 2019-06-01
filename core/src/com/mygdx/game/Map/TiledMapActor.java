@@ -8,7 +8,7 @@ import com.mygdx.game.Battle.BattleManager;
 public class TiledMapActor extends Actor {
 	private static final String TAG = TiledMapActor.class.getSimpleName();
 
-    private TiledMap tiledMap;
+    private Map tiledMap;
 
     private TiledMapTileLayer tiledLayer;
     
@@ -26,7 +26,7 @@ public class TiledMapActor extends Actor {
 
 	TiledMapTileLayer.Cell cell;
 
-    public TiledMapActor(TiledMap tiledMap, TiledMapTileLayer tiledLayer, TiledMapTileLayer.Cell cell, BattleManager battlemanager) {
+    public TiledMapActor(Map tiledMap, TiledMapTileLayer tiledLayer, TiledMapTileLayer.Cell cell, BattleManager battlemanager) {
         this.tiledMap = tiledMap;
         this.tiledLayer = tiledLayer;
         this.cell = cell;
@@ -42,4 +42,7 @@ public class TiledMapActor extends Actor {
 		this.battlemanager = battlemanager;
 	}
 
+	public Map getTiledMap() {
+		return tiledMap;
+	}
 }

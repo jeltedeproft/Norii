@@ -4,21 +4,26 @@ import java.util.UUID;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.utils.Array;
+import com.mygdx.game.Audio.AudioObserver;
 import com.mygdx.game.Entities.EntityAnimation.Direction;
 import com.mygdx.game.Entities.EntityAnimation.State;
+import com.mygdx.game.Entities.EntityObserver.EntityCommand;
+import com.mygdx.game.Particles.ParticleMaker;
 import com.mygdx.game.UI.ActionsUI;
 import com.mygdx.game.UI.StatusUI;
 
 import Utility.TiledMapPosition;
 import Utility.Utility;
 
-public class Entity extends Actor{
+public class Entity extends Actor implements EntitySubject{
 	private static final String TAG = Entity.class.getSimpleName();
 	
 	//stats
 	private String _entityID;
 	private String name;
 	private int mp;
+	private int maxMP;
 	private int hp;
 	private int level;
 	private int xp;
@@ -39,6 +44,8 @@ public class Entity extends Actor{
 	private EntityAnimation entityAnimation;
 	protected EntityActor entityactor;
 	
+	private Array<EntityObserver> _observers;
+	
 	public Entity(String name,EntityFilePath entityfilepath){
 		this.entityAnimation = new EntityAnimation(entityfilepath.getValue());
 		initEntity();
@@ -47,12 +54,14 @@ public class Entity extends Actor{
 	
 	public void initEntity(){
 		//Gdx.app.debug(TAG, "Construction" );
+		this._observers = new Array<EntityObserver>();
 		this._entityID = UUID.randomUUID().toString();
 		this._nextPlayerPosition = new TiledMapPosition(0,0);
 		this._currentPlayerPosition = new TiledMapPosition(0,0);
 		this._velocity = new TiledMapPosition(2f,2f);
 		this.hp = 10;
 		this.mp = 3;
+		this.maxMP = 3;
 		this.ini = Utility.getRandomIntFrom1to(100);
 		this.inBattle = false;
 		this.isInMovementPhase = false;
@@ -168,6 +177,9 @@ public class Entity extends Actor{
 
 	public void setInMovementPhase(boolean isInMovementPhase) {
 		this.isInMovementPhase = isInMovementPhase;
+		if(isInMovementPhase) {
+			this.notify(EntityCommand.IN_MOVEMENT);
+		}
 	}
 	
 	public boolean canMove() {
@@ -242,5 +254,27 @@ public class Entity extends Actor{
 	public void setDirection(Direction direction, float delta) {
 		entityAnimation.setDirection(direction, delta);
 	}
+	
+    @Override
+    public void addObserver(EntityObserver entityObserver) {
+        _observers.add(entityObserver);
+    }
+
+    @Override
+    public void removeObserver(EntityObserver entityObserver) {
+        _observers.removeValue(entityObserver, true);
+    }
+
+    @Override
+    public void removeAllObservers() {
+        _observers.removeAll(_observers, true);
+    }
+
+    @Override
+    public void notify(EntityObserver.EntityCommand command) {
+        for(EntityObserver observer: _observers){
+            observer.onNotify(command,this);
+        }
+    }
 
 }

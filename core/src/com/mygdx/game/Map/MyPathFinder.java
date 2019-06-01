@@ -10,15 +10,13 @@ import org.xguzm.pathfinding.grid.finders.GridFinderOptions;
 
 import com.badlogic.gdx.Gdx;
 
-public class MyPathFinder {
+public class MyPathFinder{
 	private static final String TAG = MyPathFinder.class.getSimpleName();
 	
 	private GridCell[][] cells;
-	private int length;
-	private int height;
 	private static NavigationGrid<GridCell> navGrid;
 	private GridFinderOptions opt;
-	private static AStarGridFinder<GridCell> finder;
+	private AStarGridFinder<GridCell> finder;
 	
 	public MyPathFinder(int length, int height) {
 		initializeClassVariables(length, height);
@@ -27,20 +25,18 @@ public class MyPathFinder {
 		opt = new GridFinderOptions();
 		opt.allowDiagonal = false;
 			
-		finder = new AStarGridFinder(GridCell.class, opt);
+		finder = new AStarGridFinder<GridCell>(GridCell.class, opt); //implement singleton
 	}
 	
 	private void initializeClassVariables(int length, int height) {
-		this.length = length;
-		this.height = height;
 		cells = new GridCell[length][height];
-		
+		Gdx.app.debug(TAG, "look : " + length + " , " + height);
 		for(int y=0; y<height;y++)
 			for(int x=0; x<length; x++)
 				cells[x][y] = new GridCell(x,y);
 		
-		//create a navigation grid with the cells you just created
-		navGrid = new NavigationGrid(cells);
+		//create a navigation grid with the cells we just created
+		navGrid = new NavigationGrid<GridCell>(cells);
 	}
 
 	public AStarGridFinder<GridCell> getFinder() {
@@ -48,27 +44,32 @@ public class MyPathFinder {
 	}
 
 	public void dispose() {
-		// dispose stuff
-		finder = null;
+		//finder = null; static
 		opt = null;
-		navGrid = null;
+		//navGrid = null;  static
 		cells = null;
-		
 	}
 	
-	public static List<GridCell> getCellsWithin(int x, int y, int range) {
+	public List<GridCell> getCellsWithin(int x, int y, int range) {
 		List<GridCell> cells = new ArrayList<GridCell>();
-		GridCell start = navGrid.getCell(x, y);
-		//go over all cells, if distance between start and cell is 3 or less, add it
+		GridCell center = navGrid.getCell(x, y);
+		//go over all cells, if distance between start and cell is 3(range) or less, add it
 		for(GridCell[] gridcells : navGrid.getNodes()) {
 			for(GridCell gridcell : gridcells) {
-				if((Math.abs(start.x - gridcell.x) + (Math.abs(start.y - gridcell.y))) <= range){
-					if((finder.findPath(start.x, start.y, gridcell.x, gridcell.y, navGrid).size() < range)) {
-						cells.add(gridcell);
-					}
+				if (checkIfDistanceIsCloseEnough(center,gridcell,range)) {
+					cells.add(gridcell);
 				}
 			}
 		}
 		return cells;
+	}
+	
+	private boolean checkIfDistanceIsCloseEnough(GridCell center, GridCell gridcell, int range) {
+		if((Math.abs(center.x - gridcell.x) + (Math.abs(center.y - gridcell.y))) <= range){
+			if((finder.findPath(center.x, center.y, gridcell.x, gridcell.y, navGrid).size() < range)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

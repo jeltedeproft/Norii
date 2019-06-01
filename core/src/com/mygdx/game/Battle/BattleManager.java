@@ -31,17 +31,8 @@ public class BattleManager {
 	private InputMultiplexer multiplexer;
 	private Entity activeUnit;
 	private ArrayList<TiledMapPosition> spawnPoints;
-	private MyPathFinder pathfinder;
 	private Entity[] units;
 	private int activeUnitIndex;
-	
-	public MyPathFinder getPathfinder() {
-		return pathfinder;
-	}
-
-	public void setPathfinder(MyPathFinder pathfinder) {
-		this.pathfinder = pathfinder;
-	}
 	
 	public BattleManager(InputMultiplexer inputmultiplexer,Entity[] playerSortedUnits) {
 		this.multiplexer = inputmultiplexer;

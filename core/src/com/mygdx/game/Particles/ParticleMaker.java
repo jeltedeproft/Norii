@@ -2,13 +2,23 @@ package com.mygdx.game.Particles;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
+import org.xguzm.pathfinding.grid.GridCell;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mygdx.game.Audio.AudioManager;
+import com.mygdx.game.Entities.Entity;
+import com.mygdx.game.Entities.EntityObserver;
+import com.mygdx.game.Map.MyPathFinder;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
 
 import Utility.TiledMapPosition;
+import Utility.Utility;
 
 public class ParticleMaker {
 	private static final String TAG = ParticleMaker.class.getSimpleName();
@@ -17,13 +27,21 @@ public class ParticleMaker {
 	private static HashMap<ParticleType,ArrayList<Particle>> allParticles;
 	private static boolean ParticlesHaveChanged;
 	
-
-
+	private static ParticleMaker _instance = null;
+	
 	static{
 		ParticlesHaveChanged = false;
 		particlePools = new HashMap<ParticleType,ParticlePool>();
 		allParticles = new HashMap<ParticleType,ArrayList<Particle>>();
 	}
+	
+    public static ParticleMaker getInstance() {
+        if (_instance == null) {
+            _instance = new ParticleMaker();
+        }
+
+        return _instance;
+    }
 	
 	public static void drawAllActiveParticles(SpriteBatch spriteBatch, float delta) {
 		for (ArrayList<Particle> particleTypeList : allParticles.values()) {
@@ -102,7 +120,5 @@ public class ParticleMaker {
 			}
 			ParticlesHaveChanged = false;
 		}
-	}
-	
-	
+	}	
 }

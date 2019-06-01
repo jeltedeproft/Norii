@@ -81,9 +81,9 @@ public class ProfileManager extends ProfileSubject {
         if( Gdx.files.isLocalStorageAvailable() ) {
             file = Gdx.files.local(fullFilename);
             file.writeString(fileData, !overwrite);
+            
+            _profiles.put(profileName, file);
         }
-
-        _profiles.put(profileName, file);
     }
 
     public void setProperty(String key, Object object){

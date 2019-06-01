@@ -7,25 +7,20 @@ import org.xguzm.pathfinding.grid.GridCell;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
-import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Battle.BattleManager;
-import com.mygdx.game.Battle.BattleState;
 import com.mygdx.game.Entities.Entity;
+import com.mygdx.game.Entities.EntityObserver;
 import com.mygdx.game.Entities.Owner;
 import com.mygdx.game.Entities.Player;
 import com.mygdx.game.Map.BattleMap;
 import com.mygdx.game.Map.Map;
 import com.mygdx.game.Map.MapManager;
 import com.mygdx.game.Map.MyPathFinder;
-import com.mygdx.game.Particles.Particle;
 import com.mygdx.game.Particles.ParticleMaker;
 import com.mygdx.game.Particles.ParticleType;
 import com.mygdx.game.Profile.ProfileManager;
@@ -34,7 +29,7 @@ import com.mygdx.game.UI.PlayerBattleHUD;
 import Utility.TiledMapPosition;
 import Utility.Utility;
 
-public class BattleScreen extends GameScreen  {
+public class BattleScreen extends GameScreen implements EntityObserver {
 	private static final String TAG = BattleScreen.class.getSimpleName();
 
 	private static class VIEWPORT {
@@ -58,7 +53,6 @@ public class BattleScreen extends GameScreen  {
 	private BattleManager battlemanager;
 	private Entity[] playerSortedUnits;
 	private ArrayList<TiledMapPosition> spawnPoints;
-	private MyPathFinder pathfinder;
 	private SpriteBatch spritebatch;
 	
 	private InputMultiplexer multiplexer;
@@ -90,9 +84,6 @@ public class BattleScreen extends GameScreen  {
 		//fill spawn points
 		this.spawnPoints = map.getSpawnPositions();
 		battlemanager.setSpawnPoints(this.spawnPoints);
-		
-		pathfinder = new MyPathFinder(map.getMapWidth(),map.getMapHeight());
-		battlemanager.setPathfinder(pathfinder);
 
 		//if owners are supplied, initialise them
 		int index = ScreenManager.ScreenParams.ARRAYLIST_OF_OWNERS.ordinal();
@@ -102,6 +93,13 @@ public class BattleScreen extends GameScreen  {
 		
 		//add HUD as observer
 		ProfileManager.getInstance().addObserver(_playerBattleHUD);
+		
+		//start observing units
+		for(Owner player : _players) {
+			for(Entity unit : player.getTeam()){
+				unit.addObserver(this);
+			}
+		}
 		
 		spritebatch = new SpriteBatch();
 	}
@@ -208,7 +206,6 @@ public class BattleScreen extends GameScreen  {
 		battlemanager.dispose();
 		Gdx.input.setInputProcessor(null);
 		_mapRenderer.dispose();
-		pathfinder.dispose();
 	}
 
 	private void setupViewport(int width, int height){
@@ -249,6 +246,21 @@ public class BattleScreen extends GameScreen  {
 			Utility.DrawDebugLine(new Vector2(x,0), new Vector2(x,map.getMapHeight()), _camera.combined);
 		for(int y = 0; y < map.getMapHeight(); y += 1)
 			Utility.DrawDebugLine(new Vector2(0,y), new Vector2(map.getMapWidth(),y), _camera.combined);
-	}	
+	}
+
+	@Override
+	public void onNotify(EntityCommand command,Entity unit) {
+		switch(command){
+		case IN_MOVEMENT:
+			List<GridCell> path = map.getPathfinder().getCellsWithin(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getMp());
+			for(GridCell cell : path) {
+				TiledMapPosition positionToPutMoveParticle = new TiledMapPosition(cell.x,cell.y);
+				ParticleMaker.addParticle(ParticleType.MOVE,positionToPutMoveParticle );
+			}
+			break;
+		default:
+			break;
+		}	
+	}
 }
 

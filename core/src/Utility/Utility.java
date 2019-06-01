@@ -191,11 +191,10 @@ public final class Utility {
 		// once the asset manager is done loading
 		if( _assetManager.isLoaded(particleFilenamePath) ){
 			particle = _assetManager.get(particleFilenamePath,ParticleEffect.class);
+			particle.start();
 		} else {
 			Gdx.app.debug(TAG, "particle is not loaded: " + particleFilenamePath );
 		}
-		//start particle
-		particle.start();
 		return particle;
 	}
 

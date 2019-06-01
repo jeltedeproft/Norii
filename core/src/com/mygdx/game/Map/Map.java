@@ -37,15 +37,7 @@ public abstract class Map implements AudioSubject{
     protected MapLayer _collisionLayer = null;
     protected MapLayer _spawnsLayer = null;
     protected MyNavigationTiledMapLayer  _navLayer = null;
-
-
-    public MyNavigationTiledMapLayer  get_navLayer() {
-		return _navLayer;
-	}
-
-	public void set_navLayer(MyNavigationTiledMapLayer  _navLayer) {
-		this._navLayer = _navLayer;
-	}
+	protected MyPathFinder pathfinder;
 
 	protected MapFactory.MapType _currentMapType;
     
@@ -58,8 +50,6 @@ public abstract class Map implements AudioSubject{
     protected int tilePixelHeight;
 
     Map( MapFactory.MapType mapType, String fullMapPath){
-    	initializeClassVariables(mapType);
-
         if( fullMapPath == null || fullMapPath.isEmpty() ) {
             Gdx.app.debug(TAG, "Map is invalid");
             return;
@@ -77,6 +67,7 @@ public abstract class Map implements AudioSubject{
         }
         
         setupMapProperties();
+    	initializeClassVariables(mapType);
 		
 		//Observers
         this.addObserver(AudioManager.getInstance());
@@ -99,13 +90,25 @@ public abstract class Map implements AudioSubject{
             	tiledmapstage.dispose();
             }
         }
+        if( pathfinder != null ){
+        	pathfinder.dispose();
+        }
     }
     
     private void initializeClassVariables(MapFactory.MapType mapType) {
         _json = new Json();
         _currentMapType = mapType;
         _observers = new Array<AudioObserver>();
+		pathfinder = new MyPathFinder(mapWidth,mapHeight);
     }
+    
+    public MyNavigationTiledMapLayer  get_navLayer() {
+		return _navLayer;
+	}
+
+	public void set_navLayer(MyNavigationTiledMapLayer  _navLayer) {
+		this._navLayer = _navLayer;
+	}
 
     public MapLayer getCollisionLayer(){
         return _collisionLayer;
@@ -130,8 +133,12 @@ public abstract class Map implements AudioSubject{
 	public void setMapHeight(int mapHeight) {
 		this.mapHeight = mapHeight;
 	}
-	
-    abstract public void unloadMusic();
+		
+    public MyPathFinder getPathfinder() {
+		return pathfinder;
+	}
+
+	abstract public void unloadMusic();
     abstract public void loadMusic();
 
     @Override

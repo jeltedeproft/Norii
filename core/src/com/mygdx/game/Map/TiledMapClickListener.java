@@ -52,7 +52,7 @@ public class TiledMapClickListener extends ClickListener {
     	Entity currentUnit = actor.getBattlemanager().getActiveUnit();
     	int currentXInTiled = currentUnit.getCurrentPosition().getTileX();
     	int currentYInTiled = currentUnit.getCurrentPosition().getTileY();
-    	List<GridCell> path = actor.getBattlemanager().getPathfinder().getCellsWithin(currentXInTiled, currentYInTiled, currentUnit.getMp());
+    	List<GridCell> path = actor.getTiledMap().getPathfinder().getCellsWithin(currentXInTiled, currentYInTiled, currentUnit.getMp());
     	//test if spot is inside path, then move unit there
     	for(int i = 0;i<path.size();i++) {
     		if((path.get(i).x == currentXInTiled) && (path.get(i).y == currentYInTiled) && path.get(i).isWalkable()) {
