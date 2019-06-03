@@ -21,14 +21,12 @@ public class EntityClickListener extends ClickListener {
     
     @Override
     public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-		Gdx.app.debug(TAG, "entering");
     	actor.setIsHovering(true);
     	actor.getEntity().getStatusui().setVisible(true);
     }
     
     @Override
     public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-		Gdx.app.debug(TAG, "exiting");
     	actor.setIsHovering(false);
     	actor.getEntity().getStatusui().setVisible(false);
     }

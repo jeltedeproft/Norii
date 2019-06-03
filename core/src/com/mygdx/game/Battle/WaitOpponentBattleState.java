@@ -1,6 +1,10 @@
 package com.mygdx.game.Battle;
 
-public class WaitOpponentBattleState implements BattleStates {
+import com.mygdx.game.Map.TiledMapActor;
+
+import Utility.TiledMapPosition;
+
+public class WaitOpponentBattleState implements BattleState {
 	
 	private BattleManager battlemanager;
 	
@@ -25,6 +29,12 @@ public class WaitOpponentBattleState implements BattleStates {
 	public void exit() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void clickedOnTile(TiledMapActor actor) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

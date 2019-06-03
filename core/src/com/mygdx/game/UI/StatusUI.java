@@ -192,8 +192,7 @@ public class StatusUI extends Window {
         levelVal.setText(String.valueOf(_levelVal));
         iniVal.setText(String.valueOf(_iniVal));
         
-        //if unit in battle, set visible
-        if(linkedEntity.isInBattle()) {
+        if(linkedEntity.getEntityactor().getIsHovering()) {
         	this.setVisible(true);
         }
         

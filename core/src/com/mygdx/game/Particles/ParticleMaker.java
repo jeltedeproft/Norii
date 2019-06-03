@@ -47,8 +47,10 @@ public class ParticleMaker {
 		for (ArrayList<Particle> particleTypeList : allParticles.values()) {
 			spriteBatch.begin();
 			for(Particle particle : particleTypeList) {
-				particle.update(delta);
-				particle.draw(spriteBatch,delta);
+				if(particle.isActive()) {
+					particle.update(delta);
+					particle.draw(spriteBatch,delta);
+				}
 				
 				if (particle.isComplete()) {
 					particle.delete();
@@ -63,13 +65,14 @@ public class ParticleMaker {
 		for(Particle particle : allParticles.get(particletype)) {
 			particle.deactivate();
 		}
+		
+		Utility.unloadAsset(particletype.getParticleFileLocation());
 	}
 	
 	
 	public static void addParticle(ParticleType particletype, TiledMapPosition pos) {
 		ParticlePool particlePool;
-		Gdx.app.debug(TAG, "adding particle with pos : " + pos.getTileX() + " , " + pos.getTileY());
-		Gdx.app.debug(TAG, "adding particle with pos : " + pos.getRealX() + " , " + pos.getRealY());
+
 		//if pool exists, reuse, else create one
 		if(particlePools.containsKey(particletype)) {
 			particlePool = particlePools.get(particletype);

@@ -32,7 +32,7 @@ public class EntityAnimation {
 	protected float _frameTime = 0f;
 	protected Sprite _frameSprite = null;
 	protected TextureRegion _currentFrame = null;
-	private Direction _currentDirection = Direction.LEFT;
+	private Direction _currentDirection = Direction.DOWN;
 	private Direction _previousDirection = Direction.UP;
 	
 	public enum State {
@@ -52,6 +52,7 @@ public class EntityAnimation {
 	
 	public void update(float delta){
 		_frameTime = (_frameTime + delta)%5; //Want to avoid overflow
+		updateFrame();
 	}
 	
 	private void loadSprite()
@@ -119,9 +120,10 @@ public class EntityAnimation {
 	public void setDirection(Direction direction,  float deltaTime){
 		this._previousDirection = this._currentDirection;
 		this._currentDirection = direction;
-		
-		//Look into the appropriate variable when changing position
-
+		updateFrame();
+	}
+	
+	public void updateFrame() {
 		switch (_currentDirection) {
 		case DOWN :
 			_currentFrame = _walkDownAnimation.getKeyFrame(_frameTime);

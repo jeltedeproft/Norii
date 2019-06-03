@@ -1,6 +1,8 @@
 package com.mygdx.game.Entities;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.Map.Map;
 
 import Utility.TiledMapPosition;
@@ -26,11 +28,26 @@ public class EntityActor extends Actor {
 
     public EntityActor(Entity entity) {
         this.entity = entity;
+        this.isHovering = false;
         entity.setEntityactor(this);
+        
+        this.addListener(new ClickListener() {
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                setIsHovering(true);
+            }
+            
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                setIsHovering(false);
+            }
+        });
     }
     
     public void setPos(TiledMapPosition _currentPlayerPosition) {//bind actor movement with unit
     	this.setPosition(_currentPlayerPosition.getRealX(), _currentPlayerPosition.getRealY());
-    	this.setBounds(entity.getCurrentPosition().getRealX() / Map.UNIT_SCALE, entity.getCurrentPosition().getRealY() / Map.UNIT_SCALE, 1 / Map.UNIT_SCALE,1 / Map.UNIT_SCALE);
+    	this.setBounds(entity.getCurrentPosition().getRealX(), entity.getCurrentPosition().getRealY(), 1 / Map.UNIT_SCALE,1 / Map.UNIT_SCALE);
     }
+    
+    
 }

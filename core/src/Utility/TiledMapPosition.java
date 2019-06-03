@@ -3,9 +3,13 @@ package Utility;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 
+import com.badlogic.gdx.Gdx;
 import com.mygdx.game.Map.Map;
+import com.mygdx.game.Screen.BattleScreen;
 
 public class TiledMapPosition {
+	private static final String TAG = TiledMapPosition.class.getSimpleName();
+	
 	private Point2D realCoordinates;
 	private Point tileCoordinates;
 	

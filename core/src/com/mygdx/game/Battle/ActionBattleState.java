@@ -1,8 +1,11 @@
 package com.mygdx.game.Battle;
 
 import com.badlogic.gdx.Gdx;
+import com.mygdx.game.Map.TiledMapActor;
 
-public class ActionBattleState implements BattleStates {
+import Utility.TiledMapPosition;
+
+public class ActionBattleState implements BattleState {
 	private static final String TAG = ActionBattleState.class.getSimpleName();
 	
 	private BattleManager battlemanager;
@@ -28,6 +31,12 @@ public class ActionBattleState implements BattleStates {
 	public void exit() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void clickedOnTile(TiledMapActor actor) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

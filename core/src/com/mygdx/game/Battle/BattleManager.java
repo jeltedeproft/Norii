@@ -2,42 +2,30 @@ package com.mygdx.game.Battle;
 
 import java.util.ArrayList;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
-import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Entities.InputController;
-import com.mygdx.game.Map.BattleMap;
-import com.mygdx.game.Map.Map;
-import com.mygdx.game.Map.MyPathFinder;
-import com.mygdx.game.Particles.ParticleMaker;
-import com.mygdx.game.Particles.ParticleType;
 
 import Utility.TiledMapPosition;
 
 public class BattleManager {
 	private static final String TAG = BattleManager.class.getSimpleName();
 	
-	private BattleStates deploymentBattleState;
-	private BattleStates movementBattleState;
-	private BattleStates actionBattleState;
-	private BattleStates waitOpponentBattleState;
+	private BattleState deploymentBattleState;
+	private BattleState movementBattleState;
+	private BattleState actionBattleState;
+	private BattleState waitOpponentBattleState;
+	private BattleState currentBattleState;
 	
-	private BattleStates currentBattleState;
-	
-	private BattleState battlestate = BattleState.UNIT_PLACEMENT;
 	private InputController _controller;
 	private InputMultiplexer multiplexer;
 	private Entity activeUnit;
-	private ArrayList<TiledMapPosition> spawnPoints;
+	
 	private Entity[] units;
-	private int activeUnitIndex;
 	
 	public BattleManager(InputMultiplexer inputmultiplexer,Entity[] playerSortedUnits) {
 		this.multiplexer = inputmultiplexer;
 		this.units = playerSortedUnits;
-		this.activeUnitIndex = 0;
 		this.activeUnit = playerSortedUnits[0];
 		
 		this.deploymentBattleState = new DeploymentBattleState(this);
@@ -47,26 +35,6 @@ public class BattleManager {
 		
 		this.currentBattleState = deploymentBattleState;
 		this.currentBattleState.entry();
-	}
-	
-	public ArrayList<TiledMapPosition> getSpawnPoints() {
-		return spawnPoints;
-	}
-
-	public void setSpawnPoints(ArrayList<TiledMapPosition> spawnPoints2) {
-		this.spawnPoints = spawnPoints2;
-	}
-
-	private void startNextPhase() {
-		currentBattleState.exit();
-	}
-	
-	public BattleState getBattleState() {
-		return battlestate;
-	}
-	
-	public void setBattleState(BattleState battleState) {
-		battlestate = battleState;
 	}
 	
 	public void giveControlToUnit(Entity unit) {
@@ -92,8 +60,17 @@ public class BattleManager {
 
 	public void setActiveUnit(Entity activeUnit) {
 		this.activeUnit = activeUnit;
+		giveControlToUnit(activeUnit);
 	}
 	
+	public void setSpawnPoints(ArrayList<TiledMapPosition> spawnPoints2) {
+		this.deploymentBattleState.se = spawnPoints2;
+	}
+	
+	public Entity[] getUnits() {
+		return units;
+	}
+
 	public InputController get_controller() {
 		return _controller;
 	}
@@ -110,78 +87,44 @@ public class BattleManager {
 		this.multiplexer = multiplexer;
 	}
 
-	public void deployUnit(TiledMapPosition pos) {
-		if((units != null) && activeUnitIndex < units.length) {
-			changeActiveUnit(pos);
-			ParticleMaker.deactivateParticle(ParticleMaker.getParticle(ParticleType.SPAWN, pos));
-			removeSpawnPoint(pos);
-	
-			activeUnitIndex++;
-			checkIfLastUnit();
-		}else {
-			Gdx.app.debug(TAG, "can't deploy unit, units is null or activeunitindex is > the length of units");
-		}
-	}
-	
-	private void changeActiveUnit(TiledMapPosition pos) {
-		Entity currentActiveUnit = units[activeUnitIndex];
-		currentActiveUnit.setInBattle(true);
-		currentActiveUnit.setCurrentPosition(pos);
-		activeUnit = currentActiveUnit;
-	}
-	
-	private void checkIfLastUnit() {
-		if (activeUnitIndex >= units.length) {
-			Gdx.app.debug(TAG, "starting next phase, current phase = " + battlestate);
-			startNextPhase();
-		}
-	}
-	
-	private void removeSpawnPoint(TiledMapPosition pos) {
-		for(int i = 0; i < spawnPoints.size(); i++) {
-			if((spawnPoints.get(i).isEqualTo(pos))) {
-				spawnPoints.remove(i);
-			}
-		}
-	}
 
-	public BattleStates getDeploymentBattleState() {
+	public BattleState getDeploymentBattleState() {
 		return deploymentBattleState;
 	}
 
-	public void setDeploymentBattleState(BattleStates deploymentBattleState) {
+	public void setDeploymentBattleState(BattleState deploymentBattleState) {
 		this.deploymentBattleState = deploymentBattleState;
 	}
 
-	public BattleStates getMovementBattleState() {
+	public BattleState getMovementBattleState() {
 		return movementBattleState;
 	}
 
-	public void setMovementBattleState(BattleStates movementBattleState) {
+	public void setMovementBattleState(BattleState movementBattleState) {
 		this.movementBattleState = movementBattleState;
 	}
 
-	public BattleStates getActionBattleState() {
+	public BattleState getActionBattleState() {
 		return actionBattleState;
 	}
 
-	public void setActionBattleState(BattleStates actionBattleState) {
+	public void setActionBattleState(BattleState actionBattleState) {
 		this.actionBattleState = actionBattleState;
 	}
 
-	public BattleStates getWaitOpponentBattleState() {
+	public BattleState getWaitOpponentBattleState() {
 		return waitOpponentBattleState;
 	}
 
-	public void setWaitOpponentBattleState(BattleStates waitOpponentBattleState) {
+	public void setWaitOpponentBattleState(BattleState waitOpponentBattleState) {
 		this.waitOpponentBattleState = waitOpponentBattleState;
 	}
 
-	public BattleStates getCurrentBattleState() {
+	public BattleState getCurrentBattleState() {
 		return currentBattleState;
 	}
 
-	public void setCurrentBattleState(BattleStates currentBattleState) {
+	public void setCurrentBattleState(BattleState currentBattleState) {
 		this.currentBattleState = currentBattleState;
 	}
 	
