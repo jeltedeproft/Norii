@@ -18,7 +18,8 @@ public class ActionBattleState implements BattleState {
 	@Override
 	public void entry() {
 		Gdx.app.debug(TAG, "deployment finished, entering action selection of the first unit (highest initiative)");
-
+		battlemanager.setCurrentBattleState(battlemanager.getWaitOpponentBattleState());
+		battlemanager.getWaitOpponentBattleState().entry();
 	}
 
 	@Override

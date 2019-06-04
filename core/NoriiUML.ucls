@@ -64,7 +64,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <enumeration id="8" language="java" name="com.mygdx.game.Battle.BattleState" project="Norii-core" 
+  <interface id="8" language="java" name="com.mygdx.game.Battle.BattleState" project="Norii-core" 
     file="/Norii-core/src/com/mygdx/game/Battle/BattleState.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="214" width="226" x="1632" y="3378"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -72,7 +72,7 @@
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
-  </enumeration>  
+  </interface>  
   <class id="9" language="java" name="com.mygdx.game.Entities.EntityClickListener" project="Norii-core" 
     file="/Norii-core/src/com/mygdx/game/Entities/EntityClickListener.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="160" width="258" x="2391" y="2872"/>    
@@ -434,617 +434,617 @@
     </display>  
   </class>  
   <association id="49">    
-    <end type="SOURCE" refId="21" navigable="false">      
-      <attribute id="50" name="battlemanager">        
-        <position height="0" width="0" x="-318" y="-376"/>      
-      </attribute>      
-      <multiplicity id="51" minimum="0" maximum="1">        
-        <position height="0" width="0" x="-318" y="-376"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="7" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="52">    
-    <end type="SOURCE" refId="9" navigable="false">      
-      <attribute id="53" name="actor">        
-        <position height="0" width="0" x="346" y="-76"/>      
-      </attribute>      
-      <multiplicity id="54" minimum="0" maximum="1">        
-        <position height="0" width="0" x="346" y="-76"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="12" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="55">    
     <bendpoint x="3763" y="2330"/>    
     <bendpoint x="3763" y="2872"/>    
     <bendpoint x="3763" y="3378"/>    
     <end type="SOURCE" refId="42" navigable="false">      
-      <attribute id="56" name="SortedUnits">        
+      <attribute id="50" name="SortedUnits">        
         <position height="0" width="0" x="577" y="525"/>      
       </attribute>      
-      <multiplicity id="57" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="577" y="525"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="18" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="58">    
-    <end type="SOURCE" refId="40" navigable="false">      
-      <attribute id="59" name="fighters">        
-        <position height="0" width="0" x="888" y="1161"/>      
-      </attribute>      
-      <multiplicity id="60" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="888" y="1161"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="16" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="61">    
-    <end type="SOURCE" refId="35" navigable="false">      
-      <attribute id="62" name="instance">        
-        <position height="0" width="0" x="409" y="-803"/>      
-      </attribute>      
-      <multiplicity id="63" minimum="0" maximum="1">        
-        <position height="0" width="0" x="409" y="-803"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="35" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="64">    
-    <bendpoint x="4271" y="2872"/>    
-    <bendpoint x="4271" y="3378"/>    
-    <end type="SOURCE" refId="40" navigable="false">      
-      <attribute id="65" name="monsters">        
-        <position height="0" width="0" x="577" y="525"/>      
-      </attribute>      
-      <multiplicity id="66" minimum="0" maximum="2147483647">        
+      <multiplicity id="51" minimum="0" maximum="2147483647">        
         <position height="0" width="0" x="577" y="525"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="18" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <nesting id="67">    
-    <end type="SOURCE" refId="10"/>    
-    <end type="TARGET" refId="13"/>  
-  </nesting>  
-  <association id="68">    
-    <end type="SOURCE" refId="12" navigable="false">      
-      <attribute id="69" name="entity">        
+  <association id="52">    
+    <end type="SOURCE" refId="10" navigable="false">      
+      <attribute id="53" name="_unit">        
         <position height="0" width="0" x="577" y="525"/>      
       </attribute>      
-      <multiplicity id="70" minimum="0" maximum="1">        
+      <multiplicity id="54" minimum="0" maximum="1">        
         <position height="0" width="0" x="577" y="525"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="18" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="71">    
-    <bendpoint x="4049" y="3378"/>    
-    <end type="SOURCE" refId="16" navigable="false">      
-      <attribute id="72" name="team">        
-        <position height="0" width="0" x="577" y="525"/>      
-      </attribute>      
-      <multiplicity id="73" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="577" y="525"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="18" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="74">    
-    <end type="SOURCE" refId="7" navigable="false">      
-      <attribute id="75" name="_controller">        
-        <position height="0" width="0" x="1771" y="876"/>      
-      </attribute>      
-      <multiplicity id="76" minimum="0" maximum="1">        
-        <position height="0" width="0" x="1771" y="876"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="10" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <realization id="77">    
-    <end type="SOURCE" refId="2"/>    
-    <end type="TARGET" refId="5"/>  
-  </realization>  
-  <association id="78">    
-    <end type="SOURCE" refId="11" navigable="false">      
-      <attribute id="79" name="_entities">        
-        <position height="0" width="0" x="577" y="525"/>      
-      </attribute>      
-      <multiplicity id="80" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="577" y="525"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="18" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="81">    
-    <bendpoint x="3399" y="2872"/>    
-    <end type="SOURCE" refId="45" navigable="false">      
-      <attribute id="82" name="_moveActionUIButton">        
-        <position height="0" width="0" x="456" y="-282"/>      
-      </attribute>      
-      <multiplicity id="83" minimum="0" maximum="1">        
-        <position height="0" width="0" x="456" y="-282"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="41" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <nesting id="84">    
-    <end type="SOURCE" refId="10"/>    
-    <end type="TARGET" refId="15"/>  
-  </nesting>  
-  <association id="85">    
-    <end type="SOURCE" refId="45" navigable="false">      
-      <attribute id="86" name="_spell2ActionUIButton">        
-        <position height="0" width="0" x="295" y="-182"/>      
-      </attribute>      
-      <multiplicity id="87" minimum="0" maximum="1">        
-        <position height="0" width="0" x="295" y="-182"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="44" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <nesting id="88">    
-    <end type="SOURCE" refId="35"/>    
-    <end type="TARGET" refId="39"/>  
-  </nesting>  
-  <generalization id="89">    
-    <end type="SOURCE" refId="14"/>    
-    <end type="TARGET" refId="18"/>  
-  </generalization>  
-  <association id="90">    
-    <end type="SOURCE" refId="29" navigable="false">      
-      <attribute id="91" name="_navLayer">        
-        <position height="0" width="0" x="998" y="-402"/>      
-      </attribute>      
-      <multiplicity id="92" minimum="0" maximum="1">        
-        <position height="0" width="0" x="998" y="-402"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="27" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="93">    
-    <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="94" name="_instance">        
-        <position height="0" width="0" x="-609" y="868"/>      
-      </attribute>      
-      <multiplicity id="95" minimum="0" maximum="1">        
-        <position height="0" width="0" x="-609" y="868"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="96">    
-    <bendpoint x="2202" y="3378"/>    
-    <end type="SOURCE" refId="7" navigable="false">      
-      <attribute id="97" name="activeUnit">        
-        <position height="0" width="0" x="577" y="525"/>      
-      </attribute>      
-      <multiplicity id="98" minimum="0" maximum="1">        
-        <position height="0" width="0" x="577" y="525"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="18" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="99">    
-    <bendpoint x="3877" y="1645"/>    
-    <bendpoint x="3877" y="1265"/>    
-    <bendpoint x="3877" y="687"/>    
-    <end type="SOURCE" refId="40"/>    
-    <end type="TARGET" refId="37"/>  
-  </generalization>  
-  <nesting id="100">    
-    <end type="SOURCE" refId="5"/>    
-    <end type="TARGET" refId="3"/>  
-  </nesting>  
-  <association id="101">    
-    <end type="SOURCE" refId="42" navigable="false">      
-      <attribute id="102" name="_actionUIs">        
-        <position height="0" width="0" x="469" y="151"/>      
-      </attribute>      
-      <multiplicity id="103" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="469" y="151"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="45" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="104">    
-    <end type="SOURCE" refId="41" navigable="false">      
-      <attribute id="105" name="linkedUnit">        
-        <position height="0" width="0" x="577" y="525"/>      
-      </attribute>      
-      <multiplicity id="106" minimum="0" maximum="1">        
-        <position height="0" width="0" x="577" y="525"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="18" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="107">    
-    <bendpoint x="3742" y="2330"/>    
-    <bendpoint x="3742" y="2872"/>    
-    <end type="SOURCE" refId="42" navigable="false">      
-      <attribute id="108" name="_statusUIs">        
-        <position height="0" width="0" x="383" y="-23"/>      
-      </attribute>      
-      <multiplicity id="109" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="383" y="-23"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="47" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="110">    
-    <end type="SOURCE" refId="45" navigable="false">      
-      <attribute id="111" name="_attackActionUIButton">        
-        <position height="0" width="0" x="295" y="-182"/>      
-      </attribute>      
-      <multiplicity id="112" minimum="0" maximum="1">        
-        <position height="0" width="0" x="295" y="-182"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="44" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <nesting id="113">    
-    <end type="SOURCE" refId="5"/>    
-    <end type="TARGET" refId="6"/>  
-  </nesting>  
-  <association id="114">    
-    <bendpoint x="2223" y="3378"/>    
-    <end type="SOURCE" refId="7" navigable="false">      
-      <attribute id="115" name="units">        
-        <position height="0" width="0" x="577" y="525"/>      
-      </attribute>      
-      <multiplicity id="116" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="577" y="525"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="18" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="117">    
-    <end type="SOURCE" refId="42" navigable="false">      
-      <attribute id="118" name="_portraits">        
-        <position height="0" width="0" x="259" y="97"/>      
-      </attribute>      
-      <multiplicity id="119" minimum="0" maximum="1">        
-        <position height="0" width="0" x="259" y="97"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="46" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="120">    
-    <end type="SOURCE" refId="45" navigable="false">      
-      <attribute id="121" name="_spell1ActionUIButton">        
-        <position height="0" width="0" x="295" y="-182"/>      
-      </attribute>      
-      <multiplicity id="122" minimum="0" maximum="1">        
-        <position height="0" width="0" x="295" y="-182"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="44" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="123">    
-    <end type="SOURCE" refId="45" navigable="false">      
-      <attribute id="124" name="_skipActionUIButton">        
-        <position height="0" width="0" x="295" y="-182"/>      
-      </attribute>      
-      <multiplicity id="125" minimum="0" maximum="1">        
-        <position height="0" width="0" x="295" y="-182"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="44" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="126">    
-    <end type="SOURCE" refId="47" navigable="false">      
-      <attribute id="127" name="linkedEntity">        
-        <position height="0" width="0" x="577" y="525"/>      
-      </attribute>      
-      <multiplicity id="128" minimum="0" maximum="1">        
-        <position height="0" width="0" x="577" y="525"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="18" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="129">    
-    <bendpoint x="1726" y="2330"/>    
-    <end type="SOURCE" refId="29" navigable="false">      
-      <attribute id="130" name="battlemanager">        
-        <position height="0" width="0" x="-318" y="-376"/>      
-      </attribute>      
-      <multiplicity id="131" minimum="0" maximum="1">        
-        <position height="0" width="0" x="-318" y="-376"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="7" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="132">    
-    <end type="SOURCE" refId="18" navigable="false">      
-      <attribute id="133" name="entityactor">        
-        <position height="0" width="0" x="346" y="-76"/>      
-      </attribute>      
-      <multiplicity id="134" minimum="0" maximum="1">        
-        <position height="0" width="0" x="346" y="-76"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="12" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="135">    
+  <association id="55">    
     <end type="SOURCE" refId="26" navigable="false">      
-      <attribute id="136" name="_currentMap">        
+      <attribute id="56" name="_currentMap">        
         <position height="0" width="0" x="-186" y="-683"/>      
       </attribute>      
-      <multiplicity id="137" minimum="0" maximum="1">        
+      <multiplicity id="57" minimum="0" maximum="1">        
         <position height="0" width="0" x="-186" y="-683"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="29" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="138">    
-    <bendpoint x="3484" y="3378"/>    
-    <bendpoint x="3484" y="2872"/>    
-    <end type="SOURCE" refId="18" navigable="false">      
-      <attribute id="139" name="actionsui">        
-        <position height="0" width="0" x="469" y="151"/>      
-      </attribute>      
-      <multiplicity id="140" minimum="0" maximum="1">        
-        <position height="0" width="0" x="469" y="151"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="45" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="141">    
-    <bendpoint x="3463" y="2872"/>    
-    <bendpoint x="3463" y="3378"/>    
-    <end type="SOURCE" refId="45" navigable="false">      
-      <attribute id="142" name="linkedEntity">        
-        <position height="0" width="0" x="577" y="525"/>      
-      </attribute>      
-      <multiplicity id="143" minimum="0" maximum="1">        
-        <position height="0" width="0" x="577" y="525"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="18" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="144">    
-    <end type="SOURCE" refId="22"/>    
-    <end type="TARGET" refId="29"/>  
-  </generalization>  
-  <generalization id="145">    
-    <end type="SOURCE" refId="17"/>    
-    <end type="TARGET" refId="16"/>  
-  </generalization>  
-  <association id="146">    
-    <end type="SOURCE" refId="29" navigable="false">      
-      <attribute id="147" name="_currentMapType">        
-        <position height="0" width="0" x="-685" y="-902"/>      
-      </attribute>      
-      <multiplicity id="148" minimum="0" maximum="1">        
-        <position height="0" width="0" x="-685" y="-902"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="20" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <nesting id="149">    
-    <bendpoint x="784" y="1645"/>    
-    <end type="SOURCE" refId="25"/>    
-    <end type="TARGET" refId="20"/>  
-  </nesting>  
-  <association id="150">    
-    <end type="SOURCE" refId="29" navigable="false">      
-      <attribute id="151" name="tiledmapstage">        
-        <position height="0" width="0" x="-729" y="-970"/>      
-      </attribute>      
-      <multiplicity id="152" minimum="0" maximum="1">        
-        <position height="0" width="0" x="-729" y="-970"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="21" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="153">    
-    <end type="SOURCE" refId="18" navigable="false">      
-      <attribute id="154" name="statusui">        
-        <position height="0" width="0" x="383" y="-23"/>      
-      </attribute>      
-      <multiplicity id="155" minimum="0" maximum="1">        
-        <position height="0" width="0" x="383" y="-23"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="47" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="156">    
-    <end type="SOURCE" refId="30" navigable="false">      
-      <attribute id="157" name="actor">        
-        <position height="0" width="0" x="1602" y="-448"/>      
-      </attribute>      
-      <multiplicity id="158" minimum="0" maximum="1">        
-        <position height="0" width="0" x="1602" y="-448"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="28" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <nesting id="159">    
+  <nesting id="58">    
     <end type="SOURCE" refId="25"/>    
     <end type="TARGET" refId="23"/>  
   </nesting>  
-  <association id="160">    
-    <end type="SOURCE" refId="25" navigable="false">      
-      <attribute id="161" name="_mapTable">        
-        <position height="0" width="0" x="-186" y="-683"/>      
-      </attribute>      
-      <multiplicity id="162" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="-186" y="-683"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="29" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="163">    
-    <end type="SOURCE" refId="10" navigable="false">      
-      <attribute id="164" name="_unit">        
-        <position height="0" width="0" x="577" y="525"/>      
-      </attribute>      
-      <multiplicity id="165" minimum="0" maximum="1">        
-        <position height="0" width="0" x="577" y="525"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="18" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="166">    
-    <end type="SOURCE" refId="16" navigable="false">      
-      <attribute id="167" name="entityStage">        
-        <position height="0" width="0" x="1583" y="779"/>      
-      </attribute>      
-      <multiplicity id="168" minimum="0" maximum="1">        
-        <position height="0" width="0" x="1583" y="779"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="11" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="169">    
-    <end type="SOURCE" refId="33" navigable="false">      
-      <attribute id="170" name="_profileManager">        
-        <position height="0" width="0" x="1220" y="-306"/>      
-      </attribute>      
-      <multiplicity id="171" minimum="0" maximum="1">        
-        <position height="0" width="0" x="1220" y="-306"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="33" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <realization id="172">    
-    <end type="SOURCE" refId="42"/>    
-    <end type="TARGET" refId="32"/>  
-  </realization>  
-  <generalization id="173">    
-    <end type="SOURCE" refId="33"/>    
-    <end type="TARGET" refId="31"/>  
-  </generalization>  
-  <association id="174">    
-    <end type="SOURCE" refId="45" navigable="false">      
-      <attribute id="175" name="_upgradeActionUIButton">        
-        <position height="0" width="0" x="295" y="-182"/>      
-      </attribute>      
-      <multiplicity id="176" minimum="0" maximum="1">        
-        <position height="0" width="0" x="295" y="-182"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="44" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="177">    
-    <end type="SOURCE" refId="46" navigable="false">      
-      <attribute id="178" name="portraits">        
-        <position height="0" width="0" x="335" y="-253"/>      
-      </attribute>      
-      <multiplicity id="179" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="335" y="-253"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="48" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="180">    
-    <end type="SOURCE" refId="17" navigable="false">      
-      <attribute id="181" name="instance">        
-        <position height="0" width="0" x="1342" y="921"/>      
-      </attribute>      
-      <multiplicity id="182" minimum="0" maximum="1">        
-        <position height="0" width="0" x="1342" y="921"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="17" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="183">    
-    <end type="SOURCE" refId="45" navigable="false">      
-      <attribute id="184" name="_spellActionUIButton">        
-        <position height="0" width="0" x="295" y="-182"/>      
-      </attribute>      
-      <multiplicity id="185" minimum="0" maximum="1">        
-        <position height="0" width="0" x="295" y="-182"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="44" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <realization id="186">    
-    <end type="SOURCE" refId="29"/>    
-    <end type="TARGET" refId="4"/>  
-  </realization>  
-  <generalization id="187">    
-    <end type="SOURCE" refId="41"/>    
-    <end type="TARGET" refId="44"/>  
-  </generalization>  
-  <association id="188">    
-    <bendpoint x="3138" y="3378"/>    
-    <end type="SOURCE" refId="48" navigable="false">      
-      <attribute id="189" name="linkedEntity">        
-        <position height="0" width="0" x="577" y="525"/>      
-      </attribute>      
-      <multiplicity id="190" minimum="0" maximum="1">        
-        <position height="0" width="0" x="577" y="525"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="18" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <nesting id="191">    
-    <end type="SOURCE" refId="32"/>    
-    <end type="TARGET" refId="34"/>  
+  <nesting id="59">    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="15"/>  
   </nesting>  
-  <association id="192">    
-    <end type="SOURCE" refId="45" navigable="false">      
-      <attribute id="193" name="_spell3ActionUIButton">        
-        <position height="0" width="0" x="295" y="-182"/>      
-      </attribute>      
-      <multiplicity id="194" minimum="0" maximum="1">        
-        <position height="0" width="0" x="295" y="-182"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="44" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <realization id="195">    
+  <realization id="60">    
     <bendpoint x="3763" y="687"/>    
     <bendpoint x="3763" y="1265"/>    
     <bendpoint x="3763" y="1645"/>    
     <end type="SOURCE" refId="37"/>    
     <end type="TARGET" refId="4"/>  
   </realization>  
+  <nesting id="61">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="3"/>  
+  </nesting>  
+  <association id="62">    
+    <end type="SOURCE" refId="40" navigable="false">      
+      <attribute id="63" name="fighters">        
+        <position height="0" width="0" x="888" y="1161"/>      
+      </attribute>      
+      <multiplicity id="64" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="888" y="1161"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="16" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="65">    
+    <end type="SOURCE" refId="45" navigable="false">      
+      <attribute id="66" name="_spell2ActionUIButton">        
+        <position height="0" width="0" x="295" y="-182"/>      
+      </attribute>      
+      <multiplicity id="67" minimum="0" maximum="1">        
+        <position height="0" width="0" x="295" y="-182"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="44" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="68">    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="69" name="entityStage">        
+        <position height="0" width="0" x="1583" y="779"/>      
+      </attribute>      
+      <multiplicity id="70" minimum="0" maximum="1">        
+        <position height="0" width="0" x="1583" y="779"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="11" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="71">    
+    <bendpoint x="3484" y="3378"/>    
+    <bendpoint x="3484" y="2872"/>    
+    <end type="SOURCE" refId="18" navigable="false">      
+      <attribute id="72" name="actionsui">        
+        <position height="0" width="0" x="469" y="151"/>      
+      </attribute>      
+      <multiplicity id="73" minimum="0" maximum="1">        
+        <position height="0" width="0" x="469" y="151"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="45" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="74">    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="13"/>  
+  </nesting>  
+  <generalization id="75">    
+    <end type="SOURCE" refId="17"/>    
+    <end type="TARGET" refId="16"/>  
+  </generalization>  
+  <association id="76">    
+    <end type="SOURCE" refId="45" navigable="false">      
+      <attribute id="77" name="_spellActionUIButton">        
+        <position height="0" width="0" x="295" y="-182"/>      
+      </attribute>      
+      <multiplicity id="78" minimum="0" maximum="1">        
+        <position height="0" width="0" x="295" y="-182"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="44" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="79">    
+    <end type="SOURCE" refId="29" navigable="false">      
+      <attribute id="80" name="_navLayer">        
+        <position height="0" width="0" x="998" y="-402"/>      
+      </attribute>      
+      <multiplicity id="81" minimum="0" maximum="1">        
+        <position height="0" width="0" x="998" y="-402"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="27" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="82">    
+    <bendpoint x="3399" y="2872"/>    
+    <end type="SOURCE" refId="45" navigable="false">      
+      <attribute id="83" name="_moveActionUIButton">        
+        <position height="0" width="0" x="456" y="-282"/>      
+      </attribute>      
+      <multiplicity id="84" minimum="0" maximum="1">        
+        <position height="0" width="0" x="456" y="-282"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="41" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="85">    
+    <end type="SOURCE" refId="14"/>    
+    <end type="TARGET" refId="18"/>  
+  </generalization>  
+  <association id="86">    
+    <end type="SOURCE" refId="45" navigable="false">      
+      <attribute id="87" name="_attackActionUIButton">        
+        <position height="0" width="0" x="295" y="-182"/>      
+      </attribute>      
+      <multiplicity id="88" minimum="0" maximum="1">        
+        <position height="0" width="0" x="295" y="-182"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="44" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="89">    
+    <end type="SOURCE" refId="17" navigable="false">      
+      <attribute id="90" name="instance">        
+        <position height="0" width="0" x="1342" y="921"/>      
+      </attribute>      
+      <multiplicity id="91" minimum="0" maximum="1">        
+        <position height="0" width="0" x="1342" y="921"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="17" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="92">    
+    <end type="SOURCE" refId="35" navigable="false">      
+      <attribute id="93" name="instance">        
+        <position height="0" width="0" x="409" y="-803"/>      
+      </attribute>      
+      <multiplicity id="94" minimum="0" maximum="1">        
+        <position height="0" width="0" x="409" y="-803"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="35" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="95">    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="4"/>  
+  </realization>  
+  <association id="96">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="97" name="_instance">        
+        <position height="0" width="0" x="-609" y="868"/>      
+      </attribute>      
+      <multiplicity id="98" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-609" y="868"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="2" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="99">    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="100" name="_controller">        
+        <position height="0" width="0" x="1771" y="876"/>      
+      </attribute>      
+      <multiplicity id="101" minimum="0" maximum="1">        
+        <position height="0" width="0" x="1771" y="876"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="10" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="102">    
+    <end type="SOURCE" refId="9" navigable="false">      
+      <attribute id="103" name="actor">        
+        <position height="0" width="0" x="346" y="-76"/>      
+      </attribute>      
+      <multiplicity id="104" minimum="0" maximum="1">        
+        <position height="0" width="0" x="346" y="-76"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="12" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="105">    
+    <end type="SOURCE" refId="42" navigable="false">      
+      <attribute id="106" name="_actionUIs">        
+        <position height="0" width="0" x="469" y="151"/>      
+      </attribute>      
+      <multiplicity id="107" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="469" y="151"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="45" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="108">    
+    <bendpoint x="2223" y="3378"/>    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="109" name="sortedUnits">        
+        <position height="0" width="0" x="577" y="525"/>      
+      </attribute>      
+      <multiplicity id="110" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="577" y="525"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="18" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="111">    
+    <end type="SOURCE" refId="45" navigable="false">      
+      <attribute id="112" name="_upgradeActionUIButton">        
+        <position height="0" width="0" x="295" y="-182"/>      
+      </attribute>      
+      <multiplicity id="113" minimum="0" maximum="1">        
+        <position height="0" width="0" x="295" y="-182"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="44" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="114">    
+    <end type="SOURCE" refId="29" navigable="false">      
+      <attribute id="115" name="_currentMapType">        
+        <position height="0" width="0" x="-685" y="-902"/>      
+      </attribute>      
+      <multiplicity id="116" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-685" y="-902"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="20" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="117">    
+    <end type="SOURCE" refId="41"/>    
+    <end type="TARGET" refId="44"/>  
+  </generalization>  
+  <association id="118">    
+    <bendpoint x="1726" y="2330"/>    
+    <end type="SOURCE" refId="29" navigable="false">      
+      <attribute id="119" name="battlemanager">        
+        <position height="0" width="0" x="-318" y="-376"/>      
+      </attribute>      
+      <multiplicity id="120" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-318" y="-376"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="7" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="121">    
+    <bendpoint x="3463" y="2872"/>    
+    <bendpoint x="3463" y="3378"/>    
+    <end type="SOURCE" refId="45" navigable="false">      
+      <attribute id="122" name="linkedEntity">        
+        <position height="0" width="0" x="577" y="525"/>      
+      </attribute>      
+      <multiplicity id="123" minimum="0" maximum="1">        
+        <position height="0" width="0" x="577" y="525"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="18" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="124">    
+    <bendpoint x="3138" y="3378"/>    
+    <end type="SOURCE" refId="48" navigable="false">      
+      <attribute id="125" name="linkedEntity">        
+        <position height="0" width="0" x="577" y="525"/>      
+      </attribute>      
+      <multiplicity id="126" minimum="0" maximum="1">        
+        <position height="0" width="0" x="577" y="525"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="18" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="127">    
+    <bendpoint x="784" y="1645"/>    
+    <end type="SOURCE" refId="25"/>    
+    <end type="TARGET" refId="20"/>  
+  </nesting>  
+  <association id="128">    
+    <end type="SOURCE" refId="21" navigable="false">      
+      <attribute id="129" name="battlemanager">        
+        <position height="0" width="0" x="-318" y="-376"/>      
+      </attribute>      
+      <multiplicity id="130" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-318" y="-376"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="7" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="131">    
+    <end type="SOURCE" refId="18" navigable="false">      
+      <attribute id="132" name="entityactor">        
+        <position height="0" width="0" x="346" y="-76"/>      
+      </attribute>      
+      <multiplicity id="133" minimum="0" maximum="1">        
+        <position height="0" width="0" x="346" y="-76"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="12" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="134">    
+    <end type="SOURCE" refId="45" navigable="false">      
+      <attribute id="135" name="_spell3ActionUIButton">        
+        <position height="0" width="0" x="295" y="-182"/>      
+      </attribute>      
+      <multiplicity id="136" minimum="0" maximum="1">        
+        <position height="0" width="0" x="295" y="-182"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="44" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="137">    
+    <bendpoint x="3877" y="1645"/>    
+    <bendpoint x="3877" y="1265"/>    
+    <bendpoint x="3877" y="687"/>    
+    <end type="SOURCE" refId="40"/>    
+    <end type="TARGET" refId="37"/>  
+  </generalization>  
+  <association id="138">    
+    <end type="SOURCE" refId="47" navigable="false">      
+      <attribute id="139" name="linkedEntity">        
+        <position height="0" width="0" x="577" y="525"/>      
+      </attribute>      
+      <multiplicity id="140" minimum="0" maximum="1">        
+        <position height="0" width="0" x="577" y="525"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="18" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="141">    
+    <end type="SOURCE" refId="42" navigable="false">      
+      <attribute id="142" name="_portraits">        
+        <position height="0" width="0" x="259" y="97"/>      
+      </attribute>      
+      <multiplicity id="143" minimum="0" maximum="1">        
+        <position height="0" width="0" x="259" y="97"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="46" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="144">    
+    <bendpoint x="2202" y="3378"/>    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="145" name="activeUnit">        
+        <position height="0" width="0" x="577" y="525"/>      
+      </attribute>      
+      <multiplicity id="146" minimum="0" maximum="1">        
+        <position height="0" width="0" x="577" y="525"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="18" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="147">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="6"/>  
+  </nesting>  
+  <generalization id="148">    
+    <end type="SOURCE" refId="33"/>    
+    <end type="TARGET" refId="31"/>  
+  </generalization>  
+  <association id="149">    
+    <end type="SOURCE" refId="45" navigable="false">      
+      <attribute id="150" name="_spell1ActionUIButton">        
+        <position height="0" width="0" x="295" y="-182"/>      
+      </attribute>      
+      <multiplicity id="151" minimum="0" maximum="1">        
+        <position height="0" width="0" x="295" y="-182"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="44" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="152">    
+    <end type="SOURCE" refId="42"/>    
+    <end type="TARGET" refId="32"/>  
+  </realization>  
+  <realization id="153">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="5"/>  
+  </realization>  
+  <association id="154">    
+    <end type="SOURCE" refId="18" navigable="false">      
+      <attribute id="155" name="statusui">        
+        <position height="0" width="0" x="383" y="-23"/>      
+      </attribute>      
+      <multiplicity id="156" minimum="0" maximum="1">        
+        <position height="0" width="0" x="383" y="-23"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="47" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="157">    
+    <bendpoint x="3742" y="2330"/>    
+    <bendpoint x="3742" y="2872"/>    
+    <end type="SOURCE" refId="42" navigable="false">      
+      <attribute id="158" name="_statusUIs">        
+        <position height="0" width="0" x="383" y="-23"/>      
+      </attribute>      
+      <multiplicity id="159" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="383" y="-23"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="47" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="160">    
+    <end type="SOURCE" refId="32"/>    
+    <end type="TARGET" refId="34"/>  
+  </nesting>  
+  <association id="161">    
+    <end type="SOURCE" refId="41" navigable="false">      
+      <attribute id="162" name="linkedUnit">        
+        <position height="0" width="0" x="577" y="525"/>      
+      </attribute>      
+      <multiplicity id="163" minimum="0" maximum="1">        
+        <position height="0" width="0" x="577" y="525"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="18" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="164">    
+    <bendpoint x="4271" y="2872"/>    
+    <bendpoint x="4271" y="3378"/>    
+    <end type="SOURCE" refId="40" navigable="false">      
+      <attribute id="165" name="monsters">        
+        <position height="0" width="0" x="577" y="525"/>      
+      </attribute>      
+      <multiplicity id="166" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="577" y="525"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="18" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="167">    
+    <end type="SOURCE" refId="11" navigable="false">      
+      <attribute id="168" name="_entities">        
+        <position height="0" width="0" x="577" y="525"/>      
+      </attribute>      
+      <multiplicity id="169" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="577" y="525"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="18" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="170">    
+    <end type="SOURCE" refId="12" navigable="false">      
+      <attribute id="171" name="entity">        
+        <position height="0" width="0" x="577" y="525"/>      
+      </attribute>      
+      <multiplicity id="172" minimum="0" maximum="1">        
+        <position height="0" width="0" x="577" y="525"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="18" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="173">    
+    <end type="SOURCE" refId="33" navigable="false">      
+      <attribute id="174" name="_profileManager">        
+        <position height="0" width="0" x="1220" y="-306"/>      
+      </attribute>      
+      <multiplicity id="175" minimum="0" maximum="1">        
+        <position height="0" width="0" x="1220" y="-306"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="33" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="176">    
+    <bendpoint x="4049" y="3378"/>    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="177" name="team">        
+        <position height="0" width="0" x="577" y="525"/>      
+      </attribute>      
+      <multiplicity id="178" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="577" y="525"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="18" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="179">    
+    <end type="SOURCE" refId="29" navigable="false">      
+      <attribute id="180" name="tiledmapstage">        
+        <position height="0" width="0" x="-729" y="-970"/>      
+      </attribute>      
+      <multiplicity id="181" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-729" y="-970"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="21" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="182">    
+    <end type="SOURCE" refId="25" navigable="false">      
+      <attribute id="183" name="_mapTable">        
+        <position height="0" width="0" x="-186" y="-683"/>      
+      </attribute>      
+      <multiplicity id="184" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="-186" y="-683"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="29" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="185">    
+    <end type="SOURCE" refId="30" navigable="false">      
+      <attribute id="186" name="actor">        
+        <position height="0" width="0" x="1602" y="-448"/>      
+      </attribute>      
+      <multiplicity id="187" minimum="0" maximum="1">        
+        <position height="0" width="0" x="1602" y="-448"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="28" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="188">    
+    <end type="SOURCE" refId="45" navigable="false">      
+      <attribute id="189" name="_skipActionUIButton">        
+        <position height="0" width="0" x="295" y="-182"/>      
+      </attribute>      
+      <multiplicity id="190" minimum="0" maximum="1">        
+        <position height="0" width="0" x="295" y="-182"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="44" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="191">    
+    <end type="SOURCE" refId="35"/>    
+    <end type="TARGET" refId="39"/>  
+  </nesting>  
+  <generalization id="192">    
+    <end type="SOURCE" refId="22"/>    
+    <end type="TARGET" refId="29"/>  
+  </generalization>  
+  <association id="193">    
+    <end type="SOURCE" refId="46" navigable="false">      
+      <attribute id="194" name="portraits">        
+        <position height="0" width="0" x="335" y="-253"/>      
+      </attribute>      
+      <multiplicity id="195" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="335" y="-253"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="48" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     sort-features="false" accessors="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="true" static="true"/>    

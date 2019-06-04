@@ -5,12 +5,9 @@ import java.util.List;
 import org.xguzm.pathfinding.grid.GridCell;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
 import com.mygdx.game.Entities.Entity;
-import com.mygdx.game.Entities.InputController;
 import com.mygdx.game.Map.Map;
 import com.mygdx.game.Map.TiledMapActor;
-import com.mygdx.game.Map.TiledMapStage;
 import com.mygdx.game.Particles.ParticleMaker;
 import com.mygdx.game.Particles.ParticleType;
 
@@ -33,36 +30,23 @@ public class MovementBattleState implements BattleState{
 	@Override
 	public void entry() {
 		Gdx.app.debug(TAG, "entering movement phase");
-		
-//		Entity currentlyActiveUnit = battlemanager.getActiveUnit();
-//		InputController inputcontroller = battlemanager.get_controller();
-//		InputMultiplexer multiplexer = battlemanager.getMultiplexer();
-//		inputcontroller = new InputController(currentlyActiveUnit);
-//		multiplexer.addProcessor(inputcontroller);
-		battlemanager.giveControlToUnit(unit);
-		
-		//activate actions UI
-//		currentlyActiveUnit.setActive(true);
-//		currentlyActiveUnit.getActionsui().update();	
+		battlemanager.giveControlToNextUnit();
 	}
 
 	@Override
 	public void update() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void exit() {
 		battlemanager.setCurrentBattleState(battlemanager.getActionBattleState());
 		battlemanager.getCurrentBattleState().entry();
-		
 	}
 	
     private void possibleMove(TiledMapActor actor) {
     	//CURRENT POS
-    	TiledMapStage stage = (TiledMapStage) actor.getStage();
-    	Entity currentUnit = stage.getBattlemanager().getActiveUnit();
+    	Entity currentUnit = battlemanager.getActiveUnit();
     	int currentXInTiled = currentUnit.getCurrentPosition().getTileX();
     	int currentYInTiled = currentUnit.getCurrentPosition().getTileY();
     	
@@ -77,7 +61,7 @@ public class MovementBattleState implements BattleState{
     			currentUnit.setInActionPhase(true);
     			currentUnit.setInMovementPhase(false);
 
-    			stage.getBattlemanager().getCurrentBattleState().exit();
+    			battlemanager.getCurrentBattleState().exit();
     		}
     	}
     }

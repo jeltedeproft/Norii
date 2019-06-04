@@ -169,6 +169,7 @@ public class Entity extends Actor implements EntitySubject{
 
 	public void setActive(boolean isActive) {
 		this.isActive = isActive;
+		actionsui.update();
 	}
 
 	public boolean isInMovementPhase() {

@@ -1,6 +1,5 @@
 package com.mygdx.game.UI;
 
-import com.mygdx.game.Battle.BattleManager;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Map.Map;
 
@@ -99,6 +98,8 @@ public class ActionsUI extends Table {
         //if unit is active, set visible
         if(linkedEntity.isActive()) {
         	this.setVisible(true);
+        }else {
+        	this.setVisible(false);
         }
         
         //we offset the position a little bit to make it look better

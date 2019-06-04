@@ -15,7 +15,8 @@ public class WaitOpponentBattleState implements BattleState {
 
 	@Override
 	public void entry() {
-		// TODO Auto-generated method stub
+		battlemanager.setCurrentBattleState(battlemanager.getMovementBattleState());
+		battlemanager.getMovementBattleState().entry();
 
 	}
 

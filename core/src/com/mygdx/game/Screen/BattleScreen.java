@@ -44,7 +44,6 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 
 	private ArrayList<Owner> _players;
 
-
 	private OrthogonalTiledMapRenderer _mapRenderer = null;
 	private OrthographicCamera _camera = null;
 	private static MapManager _mapMgr;
@@ -52,7 +51,6 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 	private BattleMap map;
 	private BattleManager battlemanager;
 	private Entity[] playerSortedUnits;
-	private ArrayList<TiledMapPosition> spawnPoints;
 	private SpriteBatch spritebatch;
 	
 	private InputMultiplexer multiplexer;
@@ -80,10 +78,6 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		_mapMgr = new MapManager();
 		map = (BattleMap) _mapMgr.get_currentMap();
 		map.setStage(battlemanager);
-		
-		//fill spawn points
-		this.spawnPoints = map.getSpawnPositions();
-		battlemanager.setSpawnPoints(this.spawnPoints);
 
 		//if owners are supplied, initialise them
 		int index = ScreenManager.ScreenParams.ARRAYLIST_OF_OWNERS.ordinal();
