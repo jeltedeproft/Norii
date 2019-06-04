@@ -45,18 +45,21 @@ public class MovementBattleState implements BattleState{
 	}
 	
     private void possibleMove(TiledMapActor actor) {
-    	//CURRENT POS
+    	//PATH
     	Entity currentUnit = battlemanager.getActiveUnit();
-    	int currentXInTiled = currentUnit.getCurrentPosition().getTileX();
-    	int currentYInTiled = currentUnit.getCurrentPosition().getTileY();
+    	int centreX = currentUnit.getCurrentPosition().getTileX();
+    	int centreY = currentUnit.getCurrentPosition().getTileY();
+    	List<GridCell> path = actor.getTiledMap().getPathfinder().getCellsWithin(centreX, centreY, currentUnit.getMp());
     	
     	//NEW POS
-    	List<GridCell> path = actor.getTiledMap().getPathfinder().getCellsWithin(currentXInTiled, currentYInTiled, currentUnit.getMp());
+    	TiledMapPosition newPos = new TiledMapPosition(actor.getX(),actor.getY());
+    	
+    	//NEW POS IN PATH?
     	for(int i = 0;i<path.size();i++) {
-    		if((path.get(i).x == currentXInTiled) && (path.get(i).y == currentYInTiled) && path.get(i).isWalkable()) {
+    		if((path.get(i).x == newPos.getTileX()) && (path.get(i).y == newPos.getTileY()) && path.get(i).isWalkable()) {
     			ParticleMaker.deactivateAllParticlesOfType(ParticleType.MOVE);
     			
-    			TiledMapPosition newUnitPos = new TiledMapPosition((int)actor.getX() * Map.UNIT_SCALE, (int)actor.getY() * Map.UNIT_SCALE);
+    			TiledMapPosition newUnitPos = new TiledMapPosition(path.get(i).x, path.get(i).y);
     			currentUnit.setCurrentPosition(newUnitPos);
     			currentUnit.setInActionPhase(true);
     			currentUnit.setInMovementPhase(false);
@@ -65,5 +68,4 @@ public class MovementBattleState implements BattleState{
     		}
     	}
     }
-
 }

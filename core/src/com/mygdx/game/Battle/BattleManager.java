@@ -44,7 +44,6 @@ public class BattleManager {
 			_controller = new InputController(activeUnit);
 		}else {
 			activeUnitIndex = (activeUnitIndex+1) % numberOfUnits;
-			Gdx.app.debug(TAG, "number unit = " + activeUnitIndex);
 			activeUnit = sortedUnits[activeUnitIndex];
 			_controller.ChangePlayer(activeUnit);
 			
