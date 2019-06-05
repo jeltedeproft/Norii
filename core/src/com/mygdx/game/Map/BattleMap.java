@@ -50,6 +50,7 @@ public class BattleMap extends Map{
     	
         _spawnsLayer = _currentMap.getLayers().get(MAP_SPAWNS_LAYER);
         _navLayer = (MyNavigationTiledMapLayer) _currentMap.getLayers().get(NAVIGATION_LAYER);
+        pathfinder = new MyPathFinder(this);
     }
     
     public void setStage(BattleManager battlemanager) {
@@ -94,6 +95,10 @@ public class BattleMap extends Map{
     public TiledMapStage getTiledMapStage() {
     	return tiledmapstage;
     }
+    
+    public MyNavigationTiledMapLayer  get_navLayer() {
+		return _navLayer;
+	}
 
 
     @Override

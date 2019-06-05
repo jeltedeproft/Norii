@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.xguzm.pathfinding.grid.GridCell;
 import org.xguzm.pathfinding.grid.NavigationGrid;
+import org.xguzm.pathfinding.grid.NavigationGridGraph;
 import org.xguzm.pathfinding.grid.finders.AStarGridFinder;
 import org.xguzm.pathfinding.grid.finders.GridFinderOptions;
 
@@ -14,40 +15,20 @@ public class MyPathFinder{
 	private static final String TAG = MyPathFinder.class.getSimpleName();
 	
 	private GridCell[][] cells;
-	private static NavigationGrid<GridCell> navGrid;
+	private static NavigationGridGraph<GridCell> navGrid;
 	private GridFinderOptions opt;
 	private AStarGridFinder<GridCell> finder;
+	private Map linkedMap;
 	
-	public MyPathFinder(int length, int height) {
-		initializeClassVariables(length, height);
+	public MyPathFinder(Map map) {
+		linkedMap = map;
+		navGrid = linkedMap.get_navLayer().navGrid;
 		
 		//create pathfinder options
 		opt = new GridFinderOptions();
 		opt.allowDiagonal = false;
 			
 		finder = new AStarGridFinder<GridCell>(GridCell.class, opt); //implement singleton
-	}
-	
-	private void initializeClassVariables(int length, int height) {
-		cells = new GridCell[length][height];
-		Gdx.app.debug(TAG, "look : " + length + " , " + height);
-		for(int y=0; y<height;y++)
-			for(int x=0; x<length; x++)
-				cells[x][y] = new GridCell(x,y);
-		
-		//create a navigation grid with the cells we just created
-		navGrid = new NavigationGrid<GridCell>(cells);
-	}
-
-	public AStarGridFinder<GridCell> getFinder() {
-		return finder;
-	}
-
-	public void dispose() {
-		//finder = null; static
-		opt = null;
-		//navGrid = null;  static
-		cells = null;
 	}
 	
 	public List<GridCell> getCellsWithin(int x, int y, int range) {
@@ -66,10 +47,23 @@ public class MyPathFinder{
 	
 	private boolean checkIfDistanceIsCloseEnough(GridCell center, GridCell gridcell, int range) {
 		if((Math.abs(center.x - gridcell.x) + (Math.abs(center.y - gridcell.y))) <= range){
-			if((finder.findPath(center.x, center.y, gridcell.x, gridcell.y, navGrid).size() < range)) {
+			List<GridCell> path = finder.findPath(center.x, center.y, gridcell.x, gridcell.y, navGrid);
+			if((path != null) && (path.size() < range)) {
 				return true;
 			}
 		}
 		return false;
+	}
+	
+
+	public AStarGridFinder<GridCell> getFinder() {
+		return finder;
+	}
+
+	public void dispose() {
+		//finder = null; static
+		opt = null;
+		//navGrid = null;  static
+		cells = null;
 	}
 }

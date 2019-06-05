@@ -99,7 +99,6 @@ public abstract class Map implements AudioSubject{
         _json = new Json();
         _currentMapType = mapType;
         _observers = new Array<AudioObserver>();
-		pathfinder = new MyPathFinder(mapWidth,mapHeight);
     }
     
     public MyNavigationTiledMapLayer  get_navLayer() {
