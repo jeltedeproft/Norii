@@ -35,6 +35,7 @@ public class DeploymentBattleState implements BattleState{
 
 	@Override
 	public void exit() {
+		ParticleMaker.deactivateAllParticlesOfType(ParticleType.SPAWN);
 		battlemanager.setCurrentBattleState(battlemanager.getMovementBattleState());
 		battlemanager.getMovementBattleState().entry();
 	}
@@ -49,10 +50,13 @@ public class DeploymentBattleState implements BattleState{
         	TiledMapPosition newPosition = new TiledMapPosition(actor.getX(),actor.getY());
         	
     		if((unitsSortedByInitiative != null) && (deployingUnitNumber < unitsSortedByInitiative.length)) {
-    			initiateUnitInBattle(unitsSortedByInitiative[deployingUnitNumber],newPosition);
+    			//UNIT
+    			Entity unitToDeploy = unitsSortedByInitiative[deployingUnitNumber];
+    			initiateUnitInBattle(unitToDeploy,newPosition);
+    			//TILE
     			ParticleMaker.deactivateParticle(ParticleMaker.getParticle(ParticleType.SPAWN, newPosition));
     			actor.setIsFreeSpawn(false);
-    	
+    			//UPDATE FOR NEXT
     			deployingUnitNumber++;
     			checkIfLastUnit();
     		}else {

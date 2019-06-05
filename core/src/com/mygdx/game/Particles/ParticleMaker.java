@@ -45,6 +45,7 @@ public class ParticleMaker {
 	
 	public static void drawAllActiveParticles(SpriteBatch spriteBatch, float delta) {
 		for (ArrayList<Particle> particleTypeList : allParticles.values()) {
+			
 			spriteBatch.begin();
 			for(Particle particle : particleTypeList) {
 				if(particle.isActive()) {
@@ -65,7 +66,7 @@ public class ParticleMaker {
 		for(Particle particle : allParticles.get(particletype)) {
 			particle.deactivate();
 		}
-		
+		ParticlesHaveChanged = true;
 		Utility.unloadAsset(particletype.getParticleFileLocation());
 	}
 	

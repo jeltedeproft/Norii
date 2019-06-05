@@ -1,6 +1,5 @@
 package com.mygdx.game.Battle;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Entities.InputController;
@@ -46,7 +45,6 @@ public class BattleManager {
 			activeUnitIndex = (activeUnitIndex+1) % numberOfUnits;
 			activeUnit = sortedUnits[activeUnitIndex];
 			_controller.ChangePlayer(activeUnit);
-			
 		}
 		//activate actions UI
 		activeUnit.setActive(true);
