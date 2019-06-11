@@ -36,6 +36,7 @@ public class Particle extends Actor{
 	public void draw(SpriteBatch spriteBatch, float delta) {
 		Gdx.app.debug("Particle : ", "spritebatch position = " + spriteBatch.getProjectionMatrix().getScaleX() + " , " + spriteBatch.getProjectionMatrix().getScaleY() + ")"); 
 		particleEffect.draw(spriteBatch, delta);
+		Gdx.app.debug("Particle : ", "particle pos = " + particleEffect.getBoundingBox().getCenterX() + " , " + particleEffect.getBoundingBox().getCenterY());
 	}
 	
 	public void delete() {

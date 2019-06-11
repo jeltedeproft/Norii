@@ -123,7 +123,7 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		_mapRenderer.setView(_camera);
 		
 		spritebatch = new SpriteBatch();
-		//spritebatch.setProjectionMatrix(_camera.combined);
+		spritebatch.setProjectionMatrix(_camera.combined);
 		map.makeSpawnParticles();
 		
 		Gdx.app.debug(TAG, "UnitScale value is: " + _mapRenderer.getUnitScale());
@@ -157,17 +157,18 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		battlemanager.updateController(delta);
 
 		_mapRenderer.setView(_camera);
-		//map.getTiledMapStage().getViewport().apply();
+		map.getTiledMapStage().getViewport().apply();
 		_mapRenderer.render();
 		_mapRenderer.getBatch().begin();
 		
 		//draw all units
-		//Player.getInstance().getEntityStage().getViewport().apply();
+		Player.getInstance().getEntityStage().getViewport().apply();
 		for (Owner owner : _players) {
 			ArrayList<Entity> units = owner.getTeam();
 			for (Entity entity : units) {
 				if(entity.isInBattle()) {
 					_mapRenderer.getBatch().draw(entity.getFrame(), entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY(), 1f,1f);
+					Gdx.app.debug(TAG, "entity pos = " + entity.getCurrentPosition().getRealX() + " , " + entity.getCurrentPosition().getRealY());
 				}
 			}	
 		}
@@ -178,10 +179,12 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		renderGrid();
 		
 		//draw particles
+		_camera.update();
+		spritebatch.setProjectionMatrix(_camera.combined);
 		ParticleMaker.drawAllActiveParticles(spritebatch, delta);
 		
 		//render HUD
-		//_playerBattleHUD.getStage().getViewport().apply();
+		_playerBattleHUD.getStage().getViewport().apply();
 		_playerBattleHUD.render(delta);
 			
 	}
