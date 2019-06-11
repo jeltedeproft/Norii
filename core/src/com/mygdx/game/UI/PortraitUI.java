@@ -1,6 +1,8 @@
 package com.mygdx.game.UI;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.mygdx.game.Entities.Entity;
 
 import Utility.Utility;
@@ -10,13 +12,18 @@ public class PortraitUI {
 	private static final String _portraitSpritePath = "sprites/gui/portraits/knight.png";
 
 	private Image _heroPortrait;
+	private TextureRegionDrawable _heroPortraitScalable;
+
 	private Boolean isActive;
 	private Entity linkedEntity;
 
 	public PortraitUI(Entity entity){
 		this.linkedEntity = entity;
 		Utility.loadTextureAsset(_portraitSpritePath);
-		_heroPortrait = new Image(Utility.getTextureAsset(_portraitSpritePath));
+		TextureRegion tr = new TextureRegion(Utility.getTextureAsset(_portraitSpritePath));
+		_heroPortraitScalable = new TextureRegionDrawable(tr);
+		_heroPortrait = new Image(_heroPortraitScalable);
+
 	}
 
 	public int getIni() {
@@ -41,6 +48,10 @@ public class PortraitUI {
 
 	public Entity getLinkedEntity() {
 		return linkedEntity;
+	}
+	
+	public TextureRegionDrawable get_heroPortraitScalable() {
+		return _heroPortraitScalable;
 	}
 	
 }

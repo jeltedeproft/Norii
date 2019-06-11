@@ -64,6 +64,7 @@ public class StatusUI extends Window {
         super(title, Utility.STATUSUI_SKIN);
         this.setVisible(false); //have to set this false and true on hover
         this.linkedEntity = entity;
+        this.setResizable(true);
         entity.setStatusui(this);
         
         initiateHeroStats();

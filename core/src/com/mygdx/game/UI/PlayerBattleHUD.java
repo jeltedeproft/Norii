@@ -31,7 +31,7 @@ public class PlayerBattleHUD implements Screen, ProfileObserver {
         _camera = camera;
         _viewport = new ScreenViewport(_camera);
         _stage = new Stage(_viewport);
-        _stage.setDebugAll(false);//!!!!!!!!!!!!!!!! on for debug
+        _stage.setDebugAll(true);//!!!!!!!!!!!!!!!! on for debug
         
         //create a status & actions window for every unit
         for (int i = 0; i < SortedUnits.length; i++) {
@@ -94,6 +94,7 @@ public class PlayerBattleHUD implements Screen, ProfileObserver {
     @Override
     public void resize(int width, int height) {
         _stage.getViewport().update(width, height, true);
+        _portraits.updateSizeContainer();
     }
 
     @Override

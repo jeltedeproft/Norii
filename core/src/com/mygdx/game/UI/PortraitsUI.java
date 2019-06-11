@@ -6,61 +6,75 @@ import Utility.Utility;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Scaling;
 
 public class PortraitsUI extends VerticalGroup {
 	private static final String TAG = PortraitsUI.class.getSimpleName();
+
+	private ArrayList<PortraitUI> portraits;
+	private Entity[] entities;
+
+	private final float portraitWidth = 0.1f;
+	private final float portraitHeight = 0.1f;
+	private final int verticalPadding = 5;
+	private final int horizontalPadding = 2;
 	
-    private ArrayList<PortraitUI> portraits;
-    
-    private int width;
-    private int height;
-    private final int portraitWidth = 64;
-    private final int portraitHeight = 64;
-    private final int verticalPadding = 20;
-    private final int horizontalPadding = 10;
-    
+	private int height;
+	private int width;
 
-    public PortraitsUI(Entity[] entities){
-        //super("", Utility.STATUSUI_SKIN);
-        
-        //test
-        Label heroNameLabel = new Label("heroes", Utility.STATUSUI_SKIN, "inventory-item-count");
-        //this.add(heroNameLabel);
-        this.addActor(heroNameLabel);
-        
-        portraits = new ArrayList<PortraitUI>();
 
-        VerticalGroup vg = new VerticalGroup();
-        vg.setFillParent(true);
-        
-        //create PortraitUI for every unit
-        for(Entity entity : entities) {
-        	portraits.add(new PortraitUI(entity));
-        }
-        
-        //display PortraitUI for every unit
-        for(PortraitUI portrait : portraits) {
-        	vg.addActor(portrait.get_heroPortrait());
-        	//this.add(portrait.get_heroPortrait());
-        	this.addActor(portrait.get_heroPortrait());
-        }       
+	public PortraitsUI(Entity[] entities){
+		//super("", Utility.STATUSUI_SKIN);
+		initializeVariables(entities);
+		updateSizeContainer();
+		updateSizePortraits();
+	}
+	
+	private void initializeVariables(Entity[] entities) {
+		this.entities = entities;
+		portraits = new ArrayList<PortraitUI>();
+		this.setTransform(true);
+		this.expand(true);
+		this.fill();
+		createPortraits(entities);
+	}
+	
+	private void createPortraits(Entity[] entities) {
+		for(Entity entity : entities) {
+			PortraitUI portrait = new PortraitUI(entity);
+			portraits.add(portrait);
+			Image portraitImage = portrait.get_heroPortrait();
+			this.addActor(portraitImage);
+		}
+	}
 
-        //this.add(vg);
-        //defaults().expand().fill();
-        
-        //set the size relative to the amount of units
-        height = entities.length * (portraitHeight + verticalPadding);
-        width = portraitWidth + horizontalPadding;
-    	this.setSize(width, height);
+	public void updateSizeContainer() {
+		int scaledHeight = (int) (portraitHeight * Gdx.graphics.getHeight());
+		int scaledWidth = (int) (portraitWidth * Gdx.graphics.getWidth());
+		height = entities.length * (scaledHeight + verticalPadding);
+		width = scaledWidth + horizontalPadding;
+		this.setSize(width, height);
+		
+		updateSizePortraits();
+	}
+	
+	private void updateSizePortraits() {
+		for(PortraitUI portrait : portraits) {
+			int newHeight = height / portraits.size();
+			portrait.get_heroPortraitScalable().setMinHeight(newHeight);
+			portrait.get_heroPortraitScalable().setMinWidth(width);
+		}
+	}
 
-    }
-    
-    
-    public void HighlightUnit(Entity unit) {
-    	//TO-DO
-    }
+	public void HighlightUnit(Entity unit) {
+		//TO-DO
+	}
 }
 
 

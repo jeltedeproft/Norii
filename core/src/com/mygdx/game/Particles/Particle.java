@@ -1,6 +1,7 @@
 package com.mygdx.game.Particles;
 
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -33,6 +34,7 @@ public class Particle extends Actor{
 	}
     
 	public void draw(SpriteBatch spriteBatch, float delta) {
+		Gdx.app.debug("Particle : ", "spritebatch position = " + spriteBatch.getProjectionMatrix().getScaleX() + " , " + spriteBatch.getProjectionMatrix().getScaleY() + ")"); 
 		particleEffect.draw(spriteBatch, delta);
 	}
 	

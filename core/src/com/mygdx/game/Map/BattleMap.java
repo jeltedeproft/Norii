@@ -72,24 +72,24 @@ public class BattleMap extends Map{
     }
 
     private void fillSpawnPositions(final ArrayList<TiledMapPosition> startPositions){
-        Gdx.app.debug(TAG, "fillSpawnPositions INPUT: (" + startPositions.toString() + ") ");
-
-        //Get player start positions
         for( MapObject object: _spawnsLayer.getObjects()){
             if( object.getName().equalsIgnoreCase(PLAYER_START) ){
             	
                 ((RectangleMapObject)object).getRectangle().getPosition(_playerStartPositionRect);
                 TiledMapPosition newPos = new TiledMapPosition(_playerStartPositionRect.x,_playerStartPositionRect.y);
                 startPositions.add(newPos);
-
+                
                 //tag tiles that can be used as spawns
                 TiledMapActor tiledactor = (TiledMapActor) tiledmapstage.hit(_playerStartPositionRect.x, _playerStartPositionRect.y, false);
                 tiledactor.setIsFreeSpawn(true);
-                
-                //add spawn particle
-                ParticleMaker.addParticle(ParticleType.SPAWN, newPos);
             }
         }        
+    }
+    
+    public void makeSpawnParticles() {
+    	for(TiledMapPosition pos : _unitSpawnPositions) {
+            ParticleMaker.addParticle(ParticleType.SPAWN, pos);
+    	}
     }
     
     public TiledMapStage getTiledMapStage() {

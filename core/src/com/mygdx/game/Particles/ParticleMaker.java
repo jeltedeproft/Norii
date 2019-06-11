@@ -45,7 +45,6 @@ public class ParticleMaker {
 	
 	public static void drawAllActiveParticles(SpriteBatch spriteBatch, float delta) {
 		for (ArrayList<Particle> particleTypeList : allParticles.values()) {
-			
 			spriteBatch.begin();
 			for(Particle particle : particleTypeList) {
 				if(particle.isActive()) {
