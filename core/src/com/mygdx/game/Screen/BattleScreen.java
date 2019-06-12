@@ -112,7 +112,7 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		multiplexer.addProcessor(map.getTiledMapStage());
 		Gdx.input.setInputProcessor(multiplexer);
 		
-		//_camera setup
+		//viewport setup
 		setupViewport(map.getMapWidth(), map.getMapHeight());
 		
 		//get the current size
@@ -121,9 +121,10 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		
 		_mapRenderer = new OrthogonalTiledMapRenderer(_mapMgr.getCurrentTiledMap(), Map.UNIT_SCALE);
 		_mapRenderer.setView(_camera);
+		Gdx.app.debug(TAG, "tiled map renderer batch info : " + _hudCamera.combined.getScaleX() + " , " + _mapRenderer.getBatch().getProjectionMatrix().getScaleY() + ")"); 
 		
 		spritebatch = new SpriteBatch();
-		spritebatch.setProjectionMatrix(_camera.combined);
+		spritebatch.setProjectionMatrix(_hudCamera.combined);
 		map.makeSpawnParticles();
 		
 		Gdx.app.debug(TAG, "UnitScale value is: " + _mapRenderer.getUnitScale());
@@ -168,7 +169,6 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 			for (Entity entity : units) {
 				if(entity.isInBattle()) {
 					_mapRenderer.getBatch().draw(entity.getFrame(), entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY(), 1f,1f);
-					Gdx.app.debug(TAG, "entity pos = " + entity.getCurrentPosition().getRealX() + " , " + entity.getCurrentPosition().getRealY());
 				}
 			}	
 		}
@@ -180,8 +180,15 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		
 		//draw particles
 		_camera.update();
-		spritebatch.setProjectionMatrix(_camera.combined);
+		//spritebatch.setProjectionMatrix(_camera.combined);
+		//spritebatch.setTransformMatrix(_camera.view);
+		
+		_playerBattleHUD.getStage().getViewport().apply();
+		Player.getInstance().getEntityStage().getViewport().apply();
+		spritebatch.setProjectionMatrix(Player.getInstance().getEntityStage().getViewport().getCamera().combined);
+		spritebatch.begin();
 		ParticleMaker.drawAllActiveParticles(spritebatch, delta);
+		spritebatch.end();
 		
 		//render HUD
 		_playerBattleHUD.getStage().getViewport().apply();
@@ -191,9 +198,9 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 
 	@Override
 	public void resize(int width, int height) {
-		Player.getInstance().getEntityStage().getViewport().update(width, height, true);
+		Player.getInstance().getEntityStage().getViewport().update(width, height, false);
 		_playerBattleHUD.resize(width, height);
-		map.getTiledMapStage().getViewport().update(width, height, true);
+		map.getTiledMapStage().getViewport().update(width, height, false);
 	}
 
 	@Override

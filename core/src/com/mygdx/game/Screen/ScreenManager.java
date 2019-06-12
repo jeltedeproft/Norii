@@ -27,17 +27,16 @@ public class ScreenManager {
         this.game = game;
     }
  
-    // Show in the game the screen which enum type is received
+
     public void showScreen(ScreenEnum screenEnum, Object... params) {
- 
-        // Get current screen to dispose it
+    	//current
         Screen currentScreen = game.getScreen();
  
-        // Show new screen
+        //new
         Screen newScreen = screenEnum.getScreen(params);
         game.setScreen(newScreen);
  
-        // Dispose previous screen
+        // Dispose old
         if (currentScreen != null) {
             currentScreen.dispose();
         }

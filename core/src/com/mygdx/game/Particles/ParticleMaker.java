@@ -45,7 +45,6 @@ public class ParticleMaker {
 	
 	public static void drawAllActiveParticles(SpriteBatch spriteBatch, float delta) {
 		for (ArrayList<Particle> particleTypeList : allParticles.values()) {
-			spriteBatch.begin();
 			for(Particle particle : particleTypeList) {
 				if(particle.isActive()) {
 					particle.update(delta);
@@ -57,7 +56,6 @@ public class ParticleMaker {
 					//particles.remove(particle);
 				}
 			}
-			spriteBatch.end();
 		}
 	}
 	
@@ -72,7 +70,7 @@ public class ParticleMaker {
 	
 	public static void addParticle(ParticleType particletype, TiledMapPosition pos) {
 		ParticlePool particlePool;
-
+		Gdx.app.debug(TAG, "adding particle at pos : " + pos.getRealX() + " , " + pos.getRealY());
 		//if pool exists, reuse, else create one
 		if(particlePools.containsKey(particletype)) {
 			particlePool = particlePools.get(particletype);

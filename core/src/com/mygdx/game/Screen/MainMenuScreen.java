@@ -27,6 +27,9 @@ import com.mygdx.game.Entities.Player;
 
 public class MainMenuScreen extends GameScreen {
 	private static final String TAG = MainMenuScreen.class.getSimpleName();
+	
+	public final int FRAME_WIDTH = 2000;
+	public final int FRAME_HEIGHT = 1125;
 	private static String _defaultBackgroundPath = "sprites/gui/forest50.png";
 	private static final int bganimationframes = 50;
 	private static final int FRAME_COLS = 5, FRAME_ROWS = 10;
@@ -35,8 +38,6 @@ public class MainMenuScreen extends GameScreen {
 	private Table mainMenuTableOfButtons;
 	private TextButton newGameButton;
 	private TextButton exitButton;
-	private Image title;
-	
 	private ArrayList<Owner> fighters;
 	private ArrayList<Entity> monsters;
 	private Animation<TextureRegion> bganimation;
@@ -47,9 +48,6 @@ public class MainMenuScreen extends GameScreen {
 	protected Sprite _frameSprite = null;
 	protected TextureRegion _currentFrame = null;
 	private TextureRegion[] bgFrames;
-	
-	public final int FRAME_WIDTH = 2000;
-	public final int FRAME_HEIGHT = 1125;
 
 	public MainMenuScreen(Object... params){
 		
@@ -80,13 +78,12 @@ public class MainMenuScreen extends GameScreen {
 	}
 	
 	private void createButtons() {
-		title = new Image(Utility.STATUSUI_TEXTUREATLAS.findRegion("bludbourne_title"));
+		new Image(Utility.STATUSUI_TEXTUREATLAS.findRegion("bludbourne_title"));
 		newGameButton = new TextButton("New Game", Utility.STATUSUI_SKIN);
 		exitButton = new TextButton("Exit",Utility.STATUSUI_SKIN);
 	}
 	
 	private void createLayout() {
-		//mainMenuTableOfButtons.add(title).spaceBottom(75).row();
 		mainMenuTableOfButtons.row();
 		mainMenuTableOfButtons.add(newGameButton).spaceBottom(10).padTop(50).row();
 		mainMenuTableOfButtons.add(exitButton).spaceBottom(10).row();
@@ -99,7 +96,6 @@ public class MainMenuScreen extends GameScreen {
 		newGameButton.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-				//add the fighters participating in a battle
 				fighters = new ArrayList<Owner>();
 				monsters = new ArrayList<Entity>();
 				monsters.add(new Entity("Fallia",EntityFilePath.COMMANDER));
@@ -134,7 +130,7 @@ public class MainMenuScreen extends GameScreen {
 		 //animate background
 		 _currentFrame = bganimation.getKeyFrame(_frameTime, true);
 		 backgroundbatch.begin();
-		 backgroundbatch.draw(_currentFrame, 0, 0,_stage.getViewport().getWorldWidth(),_stage.getViewport().getWorldHeight()); // Draw current frame at (0, 0)
+		 backgroundbatch.draw(_currentFrame, 0, 0,_stage.getViewport().getWorldWidth(),_stage.getViewport().getWorldHeight());
 		 backgroundbatch.end();
 		 
 		_stage.act(delta);
@@ -191,7 +187,6 @@ public class MainMenuScreen extends GameScreen {
 	
 	private void initializeBgAnimation() {
 		bganimation = new Animation<TextureRegion>(0.050f, bgFrames);
-		//bganimation = new Animation<TextureRegion>(0.25f, bgFrames, Animation.PlayMode.LOOP);
 	}
 	
 	public void updatebg(float delta){
