@@ -79,7 +79,8 @@ public class ParticleMaker {
 		}
 		
 		PooledEffect particle = particlePool.getParticleEffect();
-		particle.setPosition(pos.getRealX(), pos.getRealY());
+		//particleparticle.setPosition(pos.getRealX(), pos.getRealY());
+		particle.setPosition(pos.getTileX(), pos.getTileY());
 		Particle newParticle = new Particle(pos, particle, particletype);
 		
 		//check if particletype is in the list, if no add it

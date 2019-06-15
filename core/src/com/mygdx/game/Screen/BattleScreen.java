@@ -186,9 +186,12 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		_playerBattleHUD.getStage().getViewport().apply();
 		Player.getInstance().getEntityStage().getViewport().apply();
 		spritebatch.setProjectionMatrix(Player.getInstance().getEntityStage().getViewport().getCamera().combined);
-		spritebatch.begin();
-		ParticleMaker.drawAllActiveParticles(spritebatch, delta);
-		spritebatch.end();
+		_mapRenderer.getBatch().begin();
+		ParticleMaker.drawAllActiveParticles((SpriteBatch) _mapRenderer.getBatch(), delta);
+		_mapRenderer.getBatch().end();
+		//spritebatch.begin();
+		//ParticleMaker.drawAllActiveParticles(spritebatch, delta);
+		//spritebatch.end();
 		
 		//render HUD
 		_playerBattleHUD.getStage().getViewport().apply();
