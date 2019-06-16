@@ -21,7 +21,7 @@ public class PlayerBattleHUD implements Screen, ProfileObserver {
     private PortraitsUI _portraits;
     private StatusUI[] _statusUIs;
     private ActionsUI[] _actionUIs;
-//    private InventoryUI _inventoryUI;
+//  private InventoryUI _inventoryUI;
     private Camera _camera;
 
     public PlayerBattleHUD(Camera camera,Entity[] SortedUnits) {

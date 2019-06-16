@@ -41,16 +41,16 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		static float aspectRatio;
 	}
 
-	private ArrayList<Owner> _players;
-	private OrthogonalTiledMapRenderer _mapRenderer = null;
-	private OrthographicCamera _camera = null;
-	private static MapManager _mapMgr;
+	private ArrayList<Owner> players;
+	private OrthogonalTiledMapRenderer mapRenderer = null;
+	private OrthographicCamera camera = null;
+	private MapManager mapMgr;
 	private BattleMap map;
 	private BattleManager battlemanager;
 	private Entity[] playerSortedUnits;
 	private InputMultiplexer multiplexer;
-	private OrthographicCamera _hudCamera;
-	private static PlayerBattleHUD _playerBattleHUD;
+	private OrthographicCamera hudCamera;
+	private PlayerBattleHUD playerBattleHUD;
 
 	public BattleScreen(Object... params){
 		initializeVariables();
@@ -66,37 +66,35 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 	}
 	
 	private void initializeHUD() {
-		_hudCamera = new OrthographicCamera();
-		_hudCamera.setToOrtho(false, VIEWPORT.physicalWidth, VIEWPORT.physicalHeight);
-		_playerBattleHUD = new PlayerBattleHUD(_hudCamera,playerSortedUnits); //voorlopig alleen player units, moet alle units zijn
+		hudCamera = new OrthographicCamera();
+		hudCamera.setToOrtho(false, VIEWPORT.physicalWidth, VIEWPORT.physicalHeight);
+		playerBattleHUD = new PlayerBattleHUD(hudCamera,playerSortedUnits);
 	}
 
 	private void initializeInput() {
 		multiplexer = new InputMultiplexer();
-		multiplexer.addProcessor(Player.getInstance().getEntityStage()); //need to add all units here not just player units
+		multiplexer.addProcessor(Player.getInstance().getEntityStage()); 
 		battlemanager = new BattleManager(multiplexer,playerSortedUnits);
-		multiplexer.addProcessor(_playerBattleHUD.getStage());
+		multiplexer.addProcessor(playerBattleHUD.getStage());
 	}
 	
 	private void initializeMap() {
-		_mapMgr = new MapManager();
-		map = (BattleMap) _mapMgr.get_currentMap();
+		mapMgr = new MapManager();
+		map = (BattleMap) mapMgr.get_currentMap();
 		map.setStage(battlemanager);
 	}
 	
 	private void initializeUnits(Object... params) {
 		int index = ScreenManager.ScreenParams.ARRAYLIST_OF_OWNERS.ordinal();
 		if(params[index] != null) {
-			_players = (ArrayList<Owner>) params[index];
-		}else _players = new ArrayList<Owner>();
+			players = (ArrayList<Owner>) params[index];
+		}else players = new ArrayList<Owner>();
 	}
 	
 	private void initializeObservers() {
-		//HUD 
-		ProfileManager.getInstance().addObserver(_playerBattleHUD);
+		ProfileManager.getInstance().addObserver(playerBattleHUD);
 		
-		//UNIT 
-		for(Owner player : _players) {
+		for(Owner player : players) {
 			for(Entity unit : player.getTeam()){
 				unit.addObserver(this);
 			}
@@ -105,26 +103,20 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 
 	@Override
 	public void show() {	
-		_mapMgr.getCurrentTiledMap();
+		mapMgr.getCurrentTiledMap();
 		
-		//set multiplexer as active one
 		multiplexer.addProcessor(map.getTiledMapStage());
 		Gdx.input.setInputProcessor(multiplexer);
 		
-		//viewport setup
 		setupViewport(map.getMapWidth(), map.getMapHeight());
 		
-		//get the current size
-		_camera = new OrthographicCamera();
-		_camera.setToOrtho(false, map.getMapWidth(), map.getMapHeight());
+		camera = new OrthographicCamera();
+		camera.setToOrtho(false, map.getMapWidth(), map.getMapHeight());
 		
-		_mapRenderer = new OrthogonalTiledMapRenderer(_mapMgr.getCurrentTiledMap(), Map.UNIT_SCALE);
-		_mapRenderer.setView(_camera);
-		Gdx.app.debug(TAG, "tiled map renderer batch info : " + _hudCamera.combined.getScaleX() + " , " + _mapRenderer.getBatch().getProjectionMatrix().getScaleY() + ")"); 
+		mapRenderer = new OrthogonalTiledMapRenderer(mapMgr.getCurrentTiledMap(), Map.UNIT_SCALE);
+		mapRenderer.setView(camera);
 		
 		map.makeSpawnParticles();
-		
-		Gdx.app.debug(TAG, "UnitScale value is: " + _mapRenderer.getUnitScale());
 	}
 
 	@Override
@@ -134,67 +126,70 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(1, 1, 1, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
-		//act stages
-		Player.getInstance().getEntityStage().act();
-		_playerBattleHUD.getStage().act();
-		map.getTiledMapStage().act();
-
-		//Preferable to lock and center the _camera to the middle of the field
-		_camera.position.set(map.getMapWidth()/2, map.getMapHeight()/2, 0f);
-		_camera.update();
-		
-		_hudCamera.update();
-
-		for (Owner owner : _players) {
+		/////////////////////////// UPDATE GAME ELEMENTS///////////////////////////////////////////
+		for (Owner owner : players) {
 		    owner.updateUnits(delta);
 		}
 
 		battlemanager.updateController(delta);
+		
+		//act stages
+		Player.getInstance().getEntityStage().act();
+		playerBattleHUD.getStage().act();
+		map.getTiledMapStage().act();
 
-		_mapRenderer.setView(_camera);
+		//lock camera in middle field
+		camera.position.set(map.getMapWidth()/2f, map.getMapHeight()/2f, 0f);
+		camera.update();
+		
+		hudCamera.update();
+		
+		////////////////////////////////RENDERING//////////////////////////////////////////////////
+		Gdx.gl.glClearColor(1, 1, 1, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		
+		mapRenderer.setView(camera);
 		map.getTiledMapStage().getViewport().apply();
-		_mapRenderer.render();
-		_mapRenderer.getBatch().begin();
+		mapRenderer.render();
+		mapRenderer.getBatch().begin();
 		
 		//draw all units
 		Player.getInstance().getEntityStage().getViewport().apply();
-		for (Owner owner : _players) {
+		for (Owner owner : players) {
 			ArrayList<Entity> units = owner.getTeam();
 			for (Entity entity : units) {
 				if(entity.isInBattle()) {
-					_mapRenderer.getBatch().draw(entity.getFrame(), entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY(), 1f,1f);
+					mapRenderer.getBatch().draw(entity.getFrame(), entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY(), 1f,1f);
 				}
 			}	
 		}
 		
-		_mapRenderer.getBatch().end();
+		mapRenderer.getBatch().end();
 		
 		//draw grid
 		renderGrid();
 		
 		//draw particles
-		_camera.update();
+		camera.update();
 		
 		
-		_playerBattleHUD.getStage().getViewport().apply();
+		playerBattleHUD.getStage().getViewport().apply();
 		Player.getInstance().getEntityStage().getViewport().apply();
-		_mapRenderer.getBatch().begin();
-		ParticleMaker.drawAllActiveParticles((SpriteBatch) _mapRenderer.getBatch(), delta);
-		_mapRenderer.getBatch().end();
+		mapRenderer.getBatch().begin();
+		ParticleMaker.drawAllActiveParticles((SpriteBatch) mapRenderer.getBatch(), delta);
+		mapRenderer.getBatch().end();
 		
 		//render HUD
-		_playerBattleHUD.getStage().getViewport().apply();
-		_playerBattleHUD.render(delta);
+		playerBattleHUD.getStage().getViewport().apply();
+		//playerBattleHUD.getStage().getBatch().setProjectionMatrix(mapRenderer.getBatch().getProjectionMatrix());
+		playerBattleHUD.render(delta);
 			
 	}
 
 	@Override
 	public void resize(int width, int height) {
 		Player.getInstance().getEntityStage().getViewport().update(width, height, false);
-		_playerBattleHUD.resize(width, height);
+		playerBattleHUD.resize(width, height);
 		map.getTiledMapStage().getViewport().update(width, height, false);
 	}
 
@@ -209,12 +204,12 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 	@Override
 	public void dispose() {
 		//dispose all units
-		for (Owner owner : _players) {
+		for (Owner owner : players) {
 			owner.dispose();
 		}
 		battlemanager.dispose();
 		Gdx.input.setInputProcessor(null);
-		_mapRenderer.dispose();
+		mapRenderer.dispose();
 	}
 
 	private void setupViewport(int width, int height){
@@ -252,9 +247,9 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 	public void renderGrid() {
 		//create a visible grid
 		for(int x = 0; x < map.getMapWidth(); x += 1)
-			Utility.DrawDebugLine(new Vector2(x,0), new Vector2(x,map.getMapHeight()), _camera.combined);
+			Utility.DrawDebugLine(new Vector2(x,0), new Vector2(x,map.getMapHeight()), camera.combined);
 		for(int y = 0; y < map.getMapHeight(); y += 1)
-			Utility.DrawDebugLine(new Vector2(0,y), new Vector2(map.getMapWidth(),y), _camera.combined);
+			Utility.DrawDebugLine(new Vector2(0,y), new Vector2(map.getMapWidth(),y), camera.combined);
 	}
 
 	@Override

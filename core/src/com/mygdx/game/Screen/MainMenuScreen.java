@@ -30,23 +30,22 @@ public class MainMenuScreen extends GameScreen {
 	
 	public final int FRAME_WIDTH = 2000;
 	public final int FRAME_HEIGHT = 1125;
-	private static String _defaultBackgroundPath = "sprites/gui/forest50.png";
-	private static final int bganimationframes = 50;
-	private static final int FRAME_COLS = 5, FRAME_ROWS = 10;
+	private static String defaultBackgroundPath = "sprites/gui/forest50.png";
+	private static final int FRAME_COLS = 5;
+	private static final int FRAME_ROWS = 10;
 
-	private Stage _stage;
+	private Stage stage;
 	private Table mainMenuTableOfButtons;
 	private TextButton newGameButton;
 	private TextButton exitButton;
 	private ArrayList<Owner> fighters;
 	private ArrayList<Entity> monsters;
 	private Animation<TextureRegion> bganimation;
-	private Array<TextureRegion> _bgframes;
 	private SpriteBatch backgroundbatch;
 	
-	protected float _frameTime = 0f;
-	protected Sprite _frameSprite = null;
-	protected TextureRegion _currentFrame = null;
+	protected float frameTime = 0f;
+	protected Sprite frameSprite = null;
+	protected TextureRegion currentFrame = null;
 	private TextureRegion[] bgFrames;
 
 	public MainMenuScreen(Object... params){
@@ -64,7 +63,7 @@ public class MainMenuScreen extends GameScreen {
 	}
 	
 	private void initializeClassVariables() {
-		_stage = new Stage();
+		stage = new Stage();
 		mainMenuTableOfButtons = new Table();
 		mainMenuTableOfButtons.setDebug(false);
 		mainMenuTableOfButtons.setFillParent(true);
@@ -72,8 +71,8 @@ public class MainMenuScreen extends GameScreen {
 	
 	private void createBackground(){
 		backgroundbatch = new SpriteBatch();
-		Utility.loadTextureAsset(_defaultBackgroundPath);
-		loadBackgroundSprites();
+		Utility.loadTextureAsset(defaultBackgroundPath);
+		loadBackgroundSpritesIntoArray();
 		initializeBgAnimation();
 	}
 	
@@ -88,7 +87,7 @@ public class MainMenuScreen extends GameScreen {
 		mainMenuTableOfButtons.add(newGameButton).spaceBottom(10).padTop(50).row();
 		mainMenuTableOfButtons.add(exitButton).spaceBottom(10).row();
 
-		_stage.addActor(mainMenuTableOfButtons);
+		stage.addActor(mainMenuTableOfButtons);
 	}
 	
 	private void addListeners() {
@@ -96,15 +95,7 @@ public class MainMenuScreen extends GameScreen {
 		newGameButton.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-				fighters = new ArrayList<Owner>();
-				monsters = new ArrayList<Entity>();
-				monsters.add(new Entity("Fallia",EntityFilePath.COMMANDER));
-				monsters.add(new Entity("Julian",EntityFilePath.DEMON));
-				monsters.add(new Entity("Jelte",EntityFilePath.ICARUS));
-				monsters.add(new Entity("Shaman",EntityFilePath.SHAMAN));
-				Player.getInstance().setTeam(monsters);
-				fighters.add(Player.getInstance());
-				ScreenManager.getInstance().showScreen( ScreenEnum.BATTLE,fighters); 
+				addUnitsToPlayer();
 				return true;
 			}
 								  }
@@ -119,6 +110,18 @@ public class MainMenuScreen extends GameScreen {
 		});
 	}
 	
+	private void addUnitsToPlayer() {
+		fighters = new ArrayList<Owner>();
+		monsters = new ArrayList<Entity>();
+		monsters.add(new Entity("Fallia",EntityFilePath.COMMANDER));
+		monsters.add(new Entity("Julian",EntityFilePath.DEMON));
+		monsters.add(new Entity("Jelte",EntityFilePath.ICARUS));
+		monsters.add(new Entity("Shaman",EntityFilePath.SHAMAN));
+		Player.getInstance().setTeam(monsters);
+		fighters.add(Player.getInstance());
+		ScreenManager.getInstance().showScreen( ScreenEnum.BATTLE,fighters); 
+	}
+	
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -128,23 +131,23 @@ public class MainMenuScreen extends GameScreen {
 		 updatebg(delta);
 		 
 		 //animate background
-		 _currentFrame = bganimation.getKeyFrame(_frameTime, true);
+		 currentFrame = bganimation.getKeyFrame(frameTime, true);
 		 backgroundbatch.begin();
-		 backgroundbatch.draw(_currentFrame, 0, 0,_stage.getViewport().getWorldWidth(),_stage.getViewport().getWorldHeight());
+		 backgroundbatch.draw(currentFrame, 0, 0,stage.getViewport().getWorldWidth(),stage.getViewport().getWorldHeight());
 		 backgroundbatch.end();
 		 
-		_stage.act(delta);
-		_stage.draw();
+		stage.act(delta);
+		stage.draw();
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		_stage.getViewport().setScreenSize(width, height);
+		stage.getViewport().setScreenSize(width, height);
 	}
 
 	@Override
 	public void show() {
-		Gdx.input.setInputProcessor(_stage);
+		Gdx.input.setInputProcessor(stage);
 		notify(AudioObserver.AudioCommand.MUSIC_PLAY_LOOP, AudioObserver.AudioTypeEvent.MUSIC_TITLE);
 	}
 
@@ -164,18 +167,16 @@ public class MainMenuScreen extends GameScreen {
 
 	@Override
 	public void dispose() {
-		_stage.dispose();
-		Utility.unloadAsset(_defaultBackgroundPath);
+		stage.dispose();
+		Utility.unloadAsset(defaultBackgroundPath);
 		backgroundbatch.dispose();
 	}
 	
-	private void loadBackgroundSprites()
+	private void loadBackgroundSpritesIntoArray()
 	{
-		Texture texture = Utility.getTextureAsset(_defaultBackgroundPath);
+		Texture texture = Utility.getTextureAsset(defaultBackgroundPath);
 		TextureRegion[][] textureFrames = TextureRegion.split(texture, FRAME_WIDTH, FRAME_HEIGHT);
 		
-		// Place the regions into a 1D array in the correct order, starting from the top 
-		// left, going across first. The Animation constructor requires a 1D array.
 		bgFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
 		int index = 0;
 		for (int i = 0; i < FRAME_ROWS; i++) {
@@ -190,7 +191,7 @@ public class MainMenuScreen extends GameScreen {
 	}
 	
 	public void updatebg(float delta){
-		_frameTime = (_frameTime + delta)%70; //Want to avoid overflow
+		frameTime = (frameTime + delta)%70; //Want to avoid overflow
 	}
 	
 }
