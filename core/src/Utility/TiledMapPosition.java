@@ -22,6 +22,7 @@ public class TiledMapPosition {
 		tileCoordinates = new Point((int) (x * Map.UNIT_SCALE),(int) (y * Map.UNIT_SCALE));
 	}
 	
+	
 	public TiledMapPosition(int x,int y) {
 		realCoordinates = new Point2D.Float((float) (x / Map.UNIT_SCALE),(float) (y / Map.UNIT_SCALE));
 		tileCoordinates = new Point(x,y);
@@ -91,7 +92,7 @@ public class TiledMapPosition {
 		this.setPosition(oldRealX * scalingNumber, oldRealY * scalingNumber);
 	}
 	
-	public boolean isEqualTo(TiledMapPosition pos) {
+	public boolean isTileEqualTo(TiledMapPosition pos) {
 		return((pos.tileCoordinates.x == tileCoordinates.x) && (pos.tileCoordinates.y == tileCoordinates.y));
 	}
 	

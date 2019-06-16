@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.Audio.AudioManager;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Entities.EntityObserver;
+import com.mygdx.game.Map.Map;
 import com.mygdx.game.Map.MyPathFinder;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
@@ -70,7 +71,7 @@ public class ParticleMaker {
 	
 	public static void addParticle(ParticleType particletype, TiledMapPosition pos) {
 		ParticlePool particlePool;
-		Gdx.app.debug(TAG, "adding particle at pos : " + pos.getRealX() + " , " + pos.getRealY());
+		Gdx.app.debug(TAG, "adding particle at pos : " + pos.getTileX() + " , " + pos.getTileY());
 		//if pool exists, reuse, else create one
 		if(particlePools.containsKey(particletype)) {
 			particlePool = particlePools.get(particletype);
@@ -81,6 +82,7 @@ public class ParticleMaker {
 		PooledEffect particle = particlePool.getParticleEffect();
 		//particleparticle.setPosition(pos.getRealX(), pos.getRealY());
 		particle.setPosition(pos.getTileX(), pos.getTileY());
+		particle.scaleEffect(Map.UNIT_SCALE);
 		Particle newParticle = new Particle(pos, particle, particletype);
 		
 		//check if particletype is in the list, if no add it
@@ -93,7 +95,7 @@ public class ParticleMaker {
 	
 	public static Particle getParticle(ParticleType particletype, TiledMapPosition pos) {
 		for(Particle particle : allParticles.get(particletype)) {
-			if(particle.getPosition().isEqualTo(pos)) {
+			if(particle.getPosition().isTileEqualTo(pos)) {
 				return particle;
 			}
 		}

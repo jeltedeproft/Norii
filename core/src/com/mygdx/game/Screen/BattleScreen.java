@@ -48,7 +48,6 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 	private BattleMap map;
 	private BattleManager battlemanager;
 	private Entity[] playerSortedUnits;
-	private SpriteBatch spritebatch;
 	private InputMultiplexer multiplexer;
 	private OrthographicCamera _hudCamera;
 	private static PlayerBattleHUD _playerBattleHUD;
@@ -123,8 +122,6 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		_mapRenderer.setView(_camera);
 		Gdx.app.debug(TAG, "tiled map renderer batch info : " + _hudCamera.combined.getScaleX() + " , " + _mapRenderer.getBatch().getProjectionMatrix().getScaleY() + ")"); 
 		
-		spritebatch = new SpriteBatch();
-		spritebatch.setProjectionMatrix(_hudCamera.combined);
 		map.makeSpawnParticles();
 		
 		Gdx.app.debug(TAG, "UnitScale value is: " + _mapRenderer.getUnitScale());
@@ -180,18 +177,13 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		
 		//draw particles
 		_camera.update();
-		//spritebatch.setProjectionMatrix(_camera.combined);
-		//spritebatch.setTransformMatrix(_camera.view);
+		
 		
 		_playerBattleHUD.getStage().getViewport().apply();
 		Player.getInstance().getEntityStage().getViewport().apply();
-		spritebatch.setProjectionMatrix(Player.getInstance().getEntityStage().getViewport().getCamera().combined);
 		_mapRenderer.getBatch().begin();
 		ParticleMaker.drawAllActiveParticles((SpriteBatch) _mapRenderer.getBatch(), delta);
 		_mapRenderer.getBatch().end();
-		//spritebatch.begin();
-		//ParticleMaker.drawAllActiveParticles(spritebatch, delta);
-		//spritebatch.end();
 		
 		//render HUD
 		_playerBattleHUD.getStage().getViewport().apply();
