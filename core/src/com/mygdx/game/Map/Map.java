@@ -19,6 +19,8 @@ public abstract class Map implements AudioSubject{
     public final static float UNIT_SCALE  = 1/32f;
     public final static int TILE_HEIGHT  = 32;
     public final static int TILE_WIDTH  = 32;
+    public static int TILE_HEIGHT_PIXEL  = 32;
+    public static int TILE_WIDTH_PIXEL  = 32;
     
     private Array<AudioObserver> _observers;
 
@@ -81,6 +83,13 @@ public abstract class Map implements AudioSubject{
 		mapHeight = prop.get("height", Integer.class);
 		tilePixelWidth = prop.get("tilewidth", Integer.class);
 		tilePixelHeight = prop.get("tileheight", Integer.class);
+		
+		updatePixelDimensions();
+    }
+    
+    public void updatePixelDimensions() {
+		TILE_WIDTH_PIXEL = Gdx.graphics.getWidth() / mapWidth;
+		TILE_HEIGHT_PIXEL = Gdx.graphics.getHeight() / mapHeight;
     }
     
     private void disposeMapAndStage() {

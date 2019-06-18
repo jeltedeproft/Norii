@@ -50,13 +50,15 @@ public class DeploymentBattleState implements BattleState{
         	TiledMapPosition newPosition = new TiledMapPosition(actor.getX(),actor.getY());
         	
     		if((unitsSortedByInitiative != null) && (deployingUnitNumber < unitsSortedByInitiative.length)) {
-    			//UNIT
+    			//deploy unit
     			Entity unitToDeploy = unitsSortedByInitiative[deployingUnitNumber];
     			initiateUnitInBattle(unitToDeploy,newPosition);
-    			//TILE
+    			
+    			//adjust tile
     			ParticleMaker.deactivateParticle(ParticleMaker.getParticle(ParticleType.SPAWN, newPosition));
     			actor.setIsFreeSpawn(false);
-    			//UPDATE FOR NEXT
+    			
+    			//update for next
     			deployingUnitNumber++;
     			checkIfLastUnit();
     		}else {

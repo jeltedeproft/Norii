@@ -65,19 +65,15 @@ public class BattleMap extends Map{
         }
     }
 
-	public ArrayList<TiledMapPosition> getSpawnPositions(){
-    	@SuppressWarnings("unchecked")
-		ArrayList<TiledMapPosition> UnitSpawns = (ArrayList<TiledMapPosition>) _unitSpawnPositions.clone();
-        return UnitSpawns;
-    }
-
     private void fillSpawnPositions(final ArrayList<TiledMapPosition> startPositions){
         for( MapObject object: _spawnsLayer.getObjects()){
             if( object.getName().equalsIgnoreCase(PLAYER_START) ){
             	
                 ((RectangleMapObject)object).getRectangle().getPosition(_playerStartPositionRect);
                 TiledMapPosition newPos = new TiledMapPosition(_playerStartPositionRect.x,_playerStartPositionRect.y);
-                startPositions.add(newPos);
+                //because the main menu screen can be resized, we need to adjust the tiledmapcoordinates
+                TiledMapPosition scaledPos = new TiledMapPosition(((_playerStartPositionRect.x / mapWidth) * tilePixelWidth),((_playerStartPositionRect.y / mapHeight) * tilePixelHeight));
+                startPositions.add(scaledPos);
                 
                 //tag tiles that can be used as spawns
                 TiledMapActor tiledactor = (TiledMapActor) tiledmapstage.hit(_playerStartPositionRect.x, _playerStartPositionRect.y, false);
@@ -90,6 +86,12 @@ public class BattleMap extends Map{
     	for(TiledMapPosition pos : _unitSpawnPositions) {
             ParticleMaker.addParticle(ParticleType.SPAWN, pos);
     	}
+    }
+    
+	public ArrayList<TiledMapPosition> getSpawnPositions(){
+    	@SuppressWarnings("unchecked")
+		ArrayList<TiledMapPosition> UnitSpawns = (ArrayList<TiledMapPosition>) _unitSpawnPositions.clone();
+        return UnitSpawns;
     }
     
     public TiledMapStage getTiledMapStage() {

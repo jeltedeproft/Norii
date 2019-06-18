@@ -19,22 +19,22 @@ public class TiledMapPosition {
 	
 	public TiledMapPosition(float x,float y) {
 		realCoordinates = new Point2D.Float(x,y);
-		tileCoordinates = new Point((int) (x * Map.UNIT_SCALE),(int) (y * Map.UNIT_SCALE));
+		tileCoordinates = new Point((int) (x / Map.TILE_WIDTH_PIXEL),(int) (y / Map.TILE_HEIGHT_PIXEL));
 	}
 	
 	
 	public TiledMapPosition(int x,int y) {
-		realCoordinates = new Point2D.Float((float) (x / Map.UNIT_SCALE),(float) (y / Map.UNIT_SCALE));
+		realCoordinates = new Point2D.Float((float) (x * Map.TILE_WIDTH_PIXEL),(float) (y * Map.TILE_HEIGHT_PIXEL));
 		tileCoordinates = new Point(x,y);
 	}
 	
 	public void setPosition(float x, float y) {
 		realCoordinates = new Point2D.Float(x,y);
-		tileCoordinates = new Point((int) (x * Map.UNIT_SCALE),(int) (y * Map.UNIT_SCALE));
+		tileCoordinates = new Point((int) (x / Map.TILE_WIDTH_PIXEL),(int) (y / Map.TILE_HEIGHT_PIXEL));
 	}
 	
 	public void setPosition(int x, int y) {
-		realCoordinates = new Point2D.Float((float) (x / Map.UNIT_SCALE),(float) (y / Map.UNIT_SCALE));
+		realCoordinates = new Point2D.Float((float) (x * Map.TILE_WIDTH_PIXEL),(float) (y * Map.TILE_HEIGHT_PIXEL));
 		tileCoordinates = new Point(x,y);
 	}
 	
@@ -49,7 +49,7 @@ public class TiledMapPosition {
 	public void moveStepsUpward(int steps){
 		float currentRealX = (float) realCoordinates.getX();
 		float currentRealY = (float) realCoordinates.getY();
-		realCoordinates.setLocation(currentRealX, currentRealY + steps / Map.UNIT_SCALE);
+		realCoordinates.setLocation(currentRealX, currentRealY + steps * Map.TILE_HEIGHT_PIXEL);
 		
 		int currentTileX = tileCoordinates.x;
 		int currentTileY = tileCoordinates.y;
@@ -59,7 +59,7 @@ public class TiledMapPosition {
 	public void moveStepsDownward(int steps){
 		float currentRealX = (float) realCoordinates.getX();
 		float currentRealY = (float) realCoordinates.getY();
-		realCoordinates.setLocation(currentRealX, currentRealY - steps / Map.UNIT_SCALE);
+		realCoordinates.setLocation(currentRealX, currentRealY - steps * Map.TILE_HEIGHT_PIXEL);
 		
 		int currentTileX = tileCoordinates.x;
 		int currentTileY = tileCoordinates.y;
@@ -69,7 +69,7 @@ public class TiledMapPosition {
 	public void moveStepsLeft(int steps){
 		float currentRealX = (float) realCoordinates.getX();
 		float currentRealY = (float) realCoordinates.getY();
-		realCoordinates.setLocation(currentRealX - steps / Map.UNIT_SCALE, currentRealY);
+		realCoordinates.setLocation(currentRealX - steps * Map.TILE_WIDTH_PIXEL, currentRealY);
 		
 		int currentTileX = tileCoordinates.x;
 		int currentTileY = tileCoordinates.y;
@@ -79,7 +79,7 @@ public class TiledMapPosition {
 	public void moveStepsRight(int steps){
 		float currentRealX = (float) realCoordinates.getX();
 		float currentRealY = (float) realCoordinates.getY();
-		realCoordinates.setLocation(currentRealX + steps / Map.UNIT_SCALE, currentRealY);
+		realCoordinates.setLocation(currentRealX + steps * Map.TILE_WIDTH_PIXEL, currentRealY);
 		
 		int currentTileX = tileCoordinates.x;
 		int currentTileY = tileCoordinates.y;

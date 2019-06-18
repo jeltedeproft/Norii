@@ -273,6 +273,5 @@ public final class Utility {
 		}
 
 		return music;
-	}
-	
+	}	
 }
