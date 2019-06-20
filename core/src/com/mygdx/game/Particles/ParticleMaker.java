@@ -80,7 +80,6 @@ public class ParticleMaker {
 		}
 		
 		PooledEffect particle = particlePool.getParticleEffect();
-		//particleparticle.setPosition(pos.getRealX(), pos.getRealY());
 		particle.setPosition(pos.getTileX(), pos.getTileY());
 		particle.scaleEffect(Map.UNIT_SCALE);
 		Particle newParticle = new Particle(pos, particle, particletype);

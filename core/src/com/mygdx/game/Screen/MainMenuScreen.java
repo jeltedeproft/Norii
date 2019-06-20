@@ -142,6 +142,7 @@ public class MainMenuScreen extends GameScreen {
 
 	@Override
 	public void resize(int width, int height) {
+		Gdx.app.debug(TAG, "resizing with : (" + width + " , " + height + ")");
 		stage.getViewport().setScreenSize(width, height);
 	}
 

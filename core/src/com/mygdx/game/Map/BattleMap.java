@@ -71,9 +71,7 @@ public class BattleMap extends Map{
             	
                 ((RectangleMapObject)object).getRectangle().getPosition(_playerStartPositionRect);
                 TiledMapPosition newPos = new TiledMapPosition(_playerStartPositionRect.x,_playerStartPositionRect.y);
-                //because the main menu screen can be resized, we need to adjust the tiledmapcoordinates
-                TiledMapPosition scaledPos = new TiledMapPosition(((_playerStartPositionRect.x / mapWidth) * tilePixelWidth),((_playerStartPositionRect.y / mapHeight) * tilePixelHeight));
-                startPositions.add(scaledPos);
+                startPositions.add(newPos);
                 
                 //tag tiles that can be used as spawns
                 TiledMapActor tiledactor = (TiledMapActor) tiledmapstage.hit(_playerStartPositionRect.x, _playerStartPositionRect.y, false);

@@ -12,8 +12,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Battle.BattleManager;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Entities.EntityObserver;
@@ -169,7 +167,7 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		//renderGrid();
 		renderParticles(delta);
 		renderHUD(delta);
-		//map.getTiledMapStage().drawActorsDebug();
+		map.getTiledMapStage().drawActorsDebug();
 	}
 
 	private void renderMap() {
@@ -205,6 +203,7 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 
 	@Override
 	public void resize(int width, int height) {
+		Gdx.app.debug(TAG, "resizing with : (" + width + " , " + height + ")");
 		Player.getInstance().getEntityStage().getViewport().update(width, height, false);
 		playerBattleHUD.resize(width, height);
 		map.getTiledMapStage().getViewport().update(width, height, false);

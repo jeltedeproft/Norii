@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.awt.geom.Point2D;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Map.Map;
 import com.mygdx.game.Screen.BattleScreen;
 
@@ -19,22 +20,27 @@ public class TiledMapPosition {
 	
 	public TiledMapPosition(float x,float y) {
 		realCoordinates = new Point2D.Float(x,y);
-		tileCoordinates = new Point((int) (x / Map.TILE_WIDTH_PIXEL),(int) (y / Map.TILE_HEIGHT_PIXEL));
+		tileCoordinates = new Point((int) (x * Map.UNIT_SCALE),(int) (y * Map.UNIT_SCALE));
 	}
 	
 	
 	public TiledMapPosition(int x,int y) {
-		realCoordinates = new Point2D.Float((float) (x * Map.TILE_WIDTH_PIXEL),(float) (y * Map.TILE_HEIGHT_PIXEL));
+		realCoordinates = new Point2D.Float((float) (x / Map.UNIT_SCALE),(float) (y / Map.UNIT_SCALE));
 		tileCoordinates = new Point(x,y);
 	}
 	
+	public TiledMapPosition(Vector2 pos) {
+		realCoordinates = new Point2D.Float(pos.x,pos.y);
+		tileCoordinates = new Point((int) (pos.x * Map.UNIT_SCALE),(int) (pos.y * Map.UNIT_SCALE));
+	}
+
 	public void setPosition(float x, float y) {
 		realCoordinates = new Point2D.Float(x,y);
-		tileCoordinates = new Point((int) (x / Map.TILE_WIDTH_PIXEL),(int) (y / Map.TILE_HEIGHT_PIXEL));
+		tileCoordinates = new Point((int) (x * Map.UNIT_SCALE),(int) (y * Map.UNIT_SCALE));
 	}
 	
 	public void setPosition(int x, int y) {
-		realCoordinates = new Point2D.Float((float) (x * Map.TILE_WIDTH_PIXEL),(float) (y * Map.TILE_HEIGHT_PIXEL));
+		realCoordinates = new Point2D.Float((float) (x / Map.UNIT_SCALE),(float) (y / Map.UNIT_SCALE));
 		tileCoordinates = new Point(x,y);
 	}
 	
@@ -49,7 +55,7 @@ public class TiledMapPosition {
 	public void moveStepsUpward(int steps){
 		float currentRealX = (float) realCoordinates.getX();
 		float currentRealY = (float) realCoordinates.getY();
-		realCoordinates.setLocation(currentRealX, currentRealY + steps * Map.TILE_HEIGHT_PIXEL);
+		realCoordinates.setLocation(currentRealX, currentRealY + steps / Map.UNIT_SCALE);
 		
 		int currentTileX = tileCoordinates.x;
 		int currentTileY = tileCoordinates.y;
@@ -59,7 +65,7 @@ public class TiledMapPosition {
 	public void moveStepsDownward(int steps){
 		float currentRealX = (float) realCoordinates.getX();
 		float currentRealY = (float) realCoordinates.getY();
-		realCoordinates.setLocation(currentRealX, currentRealY - steps * Map.TILE_HEIGHT_PIXEL);
+		realCoordinates.setLocation(currentRealX, currentRealY - steps / Map.UNIT_SCALE);
 		
 		int currentTileX = tileCoordinates.x;
 		int currentTileY = tileCoordinates.y;
@@ -69,7 +75,7 @@ public class TiledMapPosition {
 	public void moveStepsLeft(int steps){
 		float currentRealX = (float) realCoordinates.getX();
 		float currentRealY = (float) realCoordinates.getY();
-		realCoordinates.setLocation(currentRealX - steps * Map.TILE_WIDTH_PIXEL, currentRealY);
+		realCoordinates.setLocation(currentRealX - steps / Map.UNIT_SCALE, currentRealY);
 		
 		int currentTileX = tileCoordinates.x;
 		int currentTileY = tileCoordinates.y;
@@ -79,7 +85,7 @@ public class TiledMapPosition {
 	public void moveStepsRight(int steps){
 		float currentRealX = (float) realCoordinates.getX();
 		float currentRealY = (float) realCoordinates.getY();
-		realCoordinates.setLocation(currentRealX + steps * Map.TILE_WIDTH_PIXEL, currentRealY);
+		realCoordinates.setLocation(currentRealX + steps / Map.UNIT_SCALE, currentRealY);
 		
 		int currentTileX = tileCoordinates.x;
 		int currentTileY = tileCoordinates.y;
@@ -93,6 +99,16 @@ public class TiledMapPosition {
 	}
 	
 	public boolean isTileEqualTo(TiledMapPosition pos) {
+		Gdx.app.debug(TAG, "testing if positions are equal");
+		Gdx.app.debug(TAG, "x : " + pos.tileCoordinates.x + " , " + tileCoordinates.x);
+		Gdx.app.debug(TAG, "y : " + pos.tileCoordinates.y + " , " + tileCoordinates.y);
+		return((pos.tileCoordinates.x == tileCoordinates.x) && (pos.tileCoordinates.y == tileCoordinates.y));
+	}
+	
+	public boolean isTileEqualToScaled(TiledMapPosition pos) {
+		Gdx.app.debug(TAG, "testing if positions are equal");
+		Gdx.app.debug(TAG, "x : " + pos.tileCoordinates.x + " , " + tileCoordinates.x);
+		Gdx.app.debug(TAG, "y : " + pos.tileCoordinates.y + " , " + tileCoordinates.y);
 		return((pos.tileCoordinates.x == tileCoordinates.x) && (pos.tileCoordinates.y == tileCoordinates.y));
 	}
 	
@@ -111,5 +127,13 @@ public class TiledMapPosition {
 	public int getTileY() {
 		return tileCoordinates.y;
 	}
-
+	
+	public static float getDownScaledX(float coor) {
+		return ((coor / Map.TILE_WIDTH_PIXEL) / Map.UNIT_SCALE);
+	}
+	
+	public static float getDownScaledY(float coor) {
+		return ((coor / Map.TILE_HEIGHT_PIXEL) / Map.UNIT_SCALE);
+	}
 }
+

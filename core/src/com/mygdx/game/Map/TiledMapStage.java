@@ -41,8 +41,8 @@ public class TiledMapStage extends Stage {
                 TiledMapTileLayer.Cell cell = tiledLayer.getCell(x, y);
                 TiledMapActor actor = new TiledMapActor(tiledMap, tiledLayer, cell);
                 
-                float tilewidth = Gdx.graphics.getWidth() / tiledLayer.getWidth();
-                float tileheight = Gdx.graphics.getHeight() / tiledLayer.getHeight();
+                float tilewidth = (float) Gdx.graphics.getWidth() / (float )tiledLayer.getWidth();
+                float tileheight = (float) Gdx.graphics.getHeight() / (float) tiledLayer.getHeight();
                 Gdx.app.debug(TAG, "tilewidth = " + tilewidth + " , and tileheight = " + tileheight);
                 actor.setBounds(x * tilewidth, y * tileheight, tilewidth,tileheight);
                 //actor.setBounds(actor.getX(), actor.getY(), tilewidth,tileheight);
@@ -56,14 +56,14 @@ public class TiledMapStage extends Stage {
 	
 	public void drawActorsDebug() {
 		Array<Actor> actors = this.getActors();
+		ShapeRenderer debugRenderer = new ShapeRenderer();
+        debugRenderer.setProjectionMatrix(this.getCamera().combined);
+        debugRenderer.setColor(Color.RED);
+        debugRenderer.begin(ShapeType.Line);
 		for(Actor actor : actors) {
-	        ShapeRenderer debugRenderer = new ShapeRenderer();
-	        debugRenderer.setProjectionMatrix(this.getCamera().combined);
-	        debugRenderer.setColor(Color.RED);
-	        debugRenderer.begin(ShapeType.Line);
 	        actor.debug();
 	        actor.drawDebug(debugRenderer);
-	        debugRenderer.end();
 		}
+		debugRenderer.end();
 	}
 }
