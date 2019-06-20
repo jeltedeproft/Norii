@@ -3,9 +3,14 @@ package com.mygdx.game.Map;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Audio.AudioObserver;
 import com.mygdx.game.Battle.BattleManager;
 import com.mygdx.game.Particles.ParticleMaker;
@@ -79,6 +84,22 @@ public class BattleMap extends Map{
             }
         }        
     }
+    
+	public void drawActorsDebug() {
+		ShapeRenderer debugRenderer = new ShapeRenderer();
+        debugRenderer.setProjectionMatrix(this.getTiledMapStage().getCamera().combined);
+        debugRenderer.setColor(Color.RED);
+        debugRenderer.begin(ShapeType.Line);
+        for( MapObject object: _spawnsLayer.getObjects()){
+            if( object.getName().equalsIgnoreCase(PLAYER_START) ){
+            	((RectangleMapObject)object).getRectangle().getPosition(_playerStartPositionRect);
+            	TiledMapActor actor = (TiledMapActor) tiledmapstage.hit(TiledMapPosition.getUpScaledX(_playerStartPositionRect.x), TiledMapPosition.getUpScaledY(_playerStartPositionRect.y), false);
+            	actor.debug();
+    	        actor.drawDebug(debugRenderer);
+            }
+        }
+		debugRenderer.end();
+	}
     
     public void makeSpawnParticles() {
     	for(TiledMapPosition pos : _unitSpawnPositions) {
