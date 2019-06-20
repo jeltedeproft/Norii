@@ -129,11 +129,19 @@ public class TiledMapPosition {
 	}
 	
 	public static float getDownScaledX(float coor) {
-		return ((coor / Map.TILE_WIDTH_PIXEL) / Map.UNIT_SCALE);
+		return ((coor / (float) Map.TILE_WIDTH_PIXEL) / (float) Map.UNIT_SCALE);
 	}
 	
 	public static float getDownScaledY(float coor) {
-		return ((coor / Map.TILE_HEIGHT_PIXEL) / Map.UNIT_SCALE);
+		return ((coor / (float) Map.TILE_HEIGHT_PIXEL) / (float) Map.UNIT_SCALE);
+	}
+	
+	public static float getUpScaledX(float coor) {
+		return ((coor * (float) Map.TILE_WIDTH_PIXEL) * (float) Map.UNIT_SCALE);
+	}
+	
+	public static float getUpScaledY(float coor) {
+		return ((coor * (float) Map.TILE_HEIGHT_PIXEL) * (float) Map.UNIT_SCALE);
 	}
 }
 

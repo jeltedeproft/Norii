@@ -47,15 +47,16 @@ public class DeploymentBattleState implements BattleState{
 	
     private void deployUnit(TiledMapActor actor){
         if(actor.getIsFreeSpawn()) {
-        	TiledMapPosition newPosition = new TiledMapPosition(TiledMapPosition.getDownScaledX(actor.getX()),TiledMapPosition.getDownScaledY(actor.getY()));
+        	TiledMapPosition newPosition = new TiledMapPosition(actor.getX(),actor.getY());
+        	TiledMapPosition newPositionScaled = new TiledMapPosition(TiledMapPosition.getDownScaledX(actor.getX()),TiledMapPosition.getDownScaledY(actor.getY()));
         	
     		if((unitsSortedByInitiative != null) && (deployingUnitNumber < unitsSortedByInitiative.length)) {
     			//deploy unit
     			Entity unitToDeploy = unitsSortedByInitiative[deployingUnitNumber];
-    			initiateUnitInBattle(unitToDeploy,newPosition);
+    			initiateUnitInBattle(unitToDeploy,newPositionScaled);
     			
     			//adjust tile
-    			ParticleMaker.deactivateParticle(ParticleMaker.getParticle(ParticleType.SPAWN, newPosition));
+    			ParticleMaker.deactivateParticle(ParticleMaker.getParticle(ParticleType.SPAWN, newPositionScaled));
     			actor.setIsFreeSpawn(false);
     			
     			//update for next
