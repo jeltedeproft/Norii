@@ -53,7 +53,6 @@ public class Entity extends Actor implements EntitySubject{
 	}
 	
 	public void initEntity(){
-		//Gdx.app.debug(TAG, "Construction" );
 		this._observers = new Array<EntityObserver>();
 		this._entityID = UUID.randomUUID().toString();
 		this._nextPlayerPosition = new TiledMapPosition(0,0);
