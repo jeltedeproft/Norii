@@ -23,6 +23,7 @@ In order to play the game, simply fork and clone the repo and then run the deskt
 ## Developing
 
 WIP, I dont have a formalized way of creatting issues yet.
+A [taiga](https://tree.taiga.io/project/jeltedeproft-nori/timeline) is available altough a bit outdated
 
 
 ## Links
