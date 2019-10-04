@@ -33,9 +33,5 @@ A [taiga](https://tree.taiga.io/project/jeltedeproft-nori/timeline) is available
 
 ## Links
 
-* [Game Credits](docs/Credits.md)
 * [Code of Conduct](docs/CODE_OF_CONDUCT.md)
-* [Playing](docs/Playing.md)
-* [Modules](docs/Modules.md)
-* [Developing](https://github.com/jeltedeproft/Norii/wiki)
 * [Discord](https://discord.gg/JadzgDH)
