@@ -1,6 +1,7 @@
 # Norii
 
 [![License(code)](https://img.shields.io/badge/license(code)-Apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
+[![Open Source Helpers](https://www.codetriage.com/jeltedeproft/norii/badges/users.svg)](https://www.codetriage.com/jeltedeproft/norii)
 
 
 Welcome!
