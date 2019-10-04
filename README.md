@@ -19,10 +19,10 @@ Norii requires Java 8 - [download it here](https://www.java.com/en/download/). A
 
 In order to play the game, simply 
 
--fork the repo
--clone the repo 
--import as gradle project
--run the desktoplauncher.java file. (I personally used Eclipse, I haven't yet tested for other IDE's)
+- fork the repo
+- clone the repo 
+- import as gradle project
+- run the desktoplauncher.java file. (I personally used Eclipse, I haven't yet tested for other IDE's)
 
 
 ## Developing
