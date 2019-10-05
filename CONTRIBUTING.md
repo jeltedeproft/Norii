@@ -5,3 +5,11 @@
 ### Design of Norii
 
 ## Packages
+
+![Norii Packages](/docs/Norri Packages.png "Norii packages")
+docs/Norri Packages.png
+
+## Classes
+
+![Norii Classes](/docs/classesWhite.png "Norii classes")
+docs/classesWhite.png
