@@ -35,5 +35,6 @@ A [taiga](https://tree.taiga.io/project/jeltedeproft-nori/timeline) is available
 
 ## Links
 
+* [Contribute](CONTRIBUTING.md)
 * [Code of Conduct](docs/CODE_OF_CONDUCT.md)
 * [Discord](https://discord.gg/JadzgDH)
