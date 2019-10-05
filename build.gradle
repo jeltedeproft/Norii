@@ -1,13 +1,11 @@
 buildscript {
-    
-
     repositories {
         mavenLocal()
         mavenCentral()
         maven { url "https://plugins.gradle.org/m2/" }
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         jcenter()
-        google()
+
     }
     dependencies {
         
@@ -32,7 +30,7 @@ allprojects {
     repositories {
         mavenLocal()
         mavenCentral()
-        google()
+
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
     }
@@ -70,4 +68,8 @@ project(":core") {
 
 tasks.eclipse.doLast {
     delete ".project"
+}
+
+task wrapper(type: Wrapper) {
+   gradleVersion = '5.6.2' //version required
 }
