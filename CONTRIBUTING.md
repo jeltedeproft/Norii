@@ -6,8 +6,8 @@
 
 ## Packages
 
-![Norii Packages](/docs/Norri Packages.png "Norii packages")
-docs/Norri Packages.png
+![Norii Packages](/docs/NorriPackages.png "Norii packages")
+docs/NorriPackages.png
 
 ## Classes
 
