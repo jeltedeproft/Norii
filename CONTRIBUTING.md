@@ -4,6 +4,8 @@
 
 ### Design of Norii
 
+this link shows our Taiga, which keeps track of the project's status : https://tree.taiga.io/project/jeltedeproft-nori/epics
+
 ## Packages
 
 This image shows the different packages and what they contain
