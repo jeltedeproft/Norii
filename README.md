@@ -9,6 +9,8 @@ Welcome!
 
 Norii is a 2d turn based strategy game made with Java and LibGDX. I have been working on this on and off since September 2018. Due to a busy personal life I did not find the time to develop this enough and therefore I decided to go open-source, hoping that this will reignite the development.
 
+The end goal I have in mind is a game with tons of different characters with different abilities. The player then selects a team out of these and makes combinations. Stimulating strategic thinking and creativity. Sort of like chess but with abilities and magic.
+
 
 Norii is fully [open source](https://github.com/jeltedeproft/Norii) and licensed [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
 
