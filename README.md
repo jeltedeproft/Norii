@@ -26,6 +26,7 @@ In order to play the game, simply
 - fork the repo
 - clone the repo 
 - import as gradle project
+- run .\gradlew desktop:run  or gradlew desktop:run (depending on your OS/shell you use)
 - run the desktoplauncher.java file. (I personally used Eclipse, I haven't yet tested for other IDE's)
 
 
