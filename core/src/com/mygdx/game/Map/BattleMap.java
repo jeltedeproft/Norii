@@ -94,8 +94,11 @@ public class BattleMap extends Map{
             if( object.getName().equalsIgnoreCase(PLAYER_START) ){
             	((RectangleMapObject)object).getRectangle().getPosition(_playerStartPositionRect);
             	TiledMapActor actor = (TiledMapActor) tiledmapstage.hit(TiledMapPosition.getUpScaledX(_playerStartPositionRect.x), TiledMapPosition.getUpScaledY(_playerStartPositionRect.y), false);
-            	actor.debug();
-    	        actor.drawDebug(debugRenderer);
+            	// While resizing the screen, the actor wont be available until letting go of the resize.
+            	if ( actor != null ) {
+            	    actor.debug();
+                    actor.drawDebug(debugRenderer);
+                }
             }
         }
 		debugRenderer.end();
