@@ -62,7 +62,7 @@ project(":core") {
         compile "com.badlogicgames.ashley:ashley:$ashleyVersion"
         compile "com.badlogicgames.gdx:gdx-ai:$aiVersion"
         compile "com.github.xaguzman:pathfinding-gdx-bridge:0.2.6"
-        
+        testImplementation 'org.mockito:mockito-core:2.7.22'
     }
 }
 
@@ -70,6 +70,6 @@ tasks.eclipse.doLast {
     delete ".project"
 }
 
-task wrapper(type: Wrapper) {
+wrapper {
    gradleVersion = '5.6.2' //version required
 }
