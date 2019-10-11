@@ -79,8 +79,11 @@ public class BattleMap extends Map{
                 startPositions.add(newPos);
                 
                 //tag tiles that can be used as spawns
-                TiledMapActor tiledactor = (TiledMapActor) tiledmapstage.hit(TiledMapPosition.getUpScaledX(_playerStartPositionRect.x), TiledMapPosition.getUpScaledY(_playerStartPositionRect.y), false);
-                tiledactor.setIsFreeSpawn(true);
+                TiledMapActor tiledactor = (TiledMapActor) tiledmapstage.hit(_playerStartPositionRect.x, _playerStartPositionRect.y, false);
+                
+                if(tiledactor != null) {
+                	tiledactor.setIsFreeSpawn(true);
+                }
             }
         }        
     }
@@ -90,17 +93,27 @@ public class BattleMap extends Map{
         debugRenderer.setProjectionMatrix(this.getTiledMapStage().getCamera().combined);
         debugRenderer.setColor(Color.RED);
         debugRenderer.begin(ShapeType.Line);
-        for( MapObject object: _spawnsLayer.getObjects()){
-            if( object.getName().equalsIgnoreCase(PLAYER_START) ){
-            	((RectangleMapObject)object).getRectangle().getPosition(_playerStartPositionRect);
-            	TiledMapActor actor = (TiledMapActor) tiledmapstage.hit(TiledMapPosition.getUpScaledX(_playerStartPositionRect.x), TiledMapPosition.getUpScaledY(_playerStartPositionRect.y), false);
-            	// While resizing the screen, the actor wont be available until letting go of the resize.
-            	if ( actor != null ) {
-            	    actor.debug();
-                    actor.drawDebug(debugRenderer);
-                }
+//        for( MapObject object: _spawnsLayer.getObjects()){
+//            if( object.getName().equalsIgnoreCase(PLAYER_START) ){
+//            	((RectangleMapObject)object).getRectangle().getPosition(_playerStartPositionRect);
+//            	TiledMapActor actor = (TiledMapActor) tiledmapstage.hit(_playerStartPositionRect.x, _playerStartPositionRect.y, false);
+//            	// While resizing the screen, the actor wont be available until letting go of the resize.
+//            	if ( actor != null ) {
+//            	    actor.debug();
+//                    actor.drawDebug(debugRenderer);
+//                }
+//            }
+//        }
+        
+    	for(TiledMapPosition pos : _unitSpawnPositions) {
+    		this.getTiledMapStage().getCamera().
+    		TiledMapActor actor = (TiledMapActor) tiledmapstage.hit(pos.getRealX(), pos.getRealY(), false);
+        	// While resizing the screen, the actor wont be available until letting go of the resize.
+        	if ( actor != null ) {
+        	    actor.debug();
+                actor.drawDebug(debugRenderer);
             }
-        }
+    	}
 		debugRenderer.end();
 	}
     
