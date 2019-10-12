@@ -178,6 +178,7 @@ public class Entity extends Actor implements EntitySubject{
 	public void setInMovementPhase(boolean isInMovementPhase) {
 		this.isInMovementPhase = isInMovementPhase;
 		if(isInMovementPhase) {
+			actionsui.setVisible(false);			
 			this.notify(EntityCommand.IN_MOVEMENT);
 		}
 	}
