@@ -45,8 +45,8 @@ public class EntityActor extends Actor {
     }
     
     public void setPos(TiledMapPosition _currentPlayerPosition) {//bind actor movement with unit
-    	this.setPosition(_currentPlayerPosition.getRealX(), _currentPlayerPosition.getRealY());
-    	this.setBounds(entity.getCurrentPosition().getRealX(), entity.getCurrentPosition().getRealY(), 1 / Map.UNIT_SCALE,1 / Map.UNIT_SCALE);
+    	this.setPosition(_currentPlayerPosition.getRealStageX(), _currentPlayerPosition.getRealStageY());
+    	this.setBounds(entity.getCurrentPosition().getRealStageX(), entity.getCurrentPosition().getRealStageY(), 1 / Map.UNIT_SCALE,1 / Map.UNIT_SCALE);
     }
     
     

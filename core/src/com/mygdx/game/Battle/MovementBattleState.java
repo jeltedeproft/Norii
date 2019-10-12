@@ -47,8 +47,10 @@ public class MovementBattleState implements BattleState{
     private void possibleMove(TiledMapActor actor) {
     	//PATH
     	Entity currentUnit = battlemanager.getActiveUnit();
-    	int centreX = currentUnit.getCurrentPosition().getTileX();
-    	int centreY = currentUnit.getCurrentPosition().getTileY();
+    	int centreX = currentUnit.getCurrentPosition().getTileStageX();
+    	int centreY = currentUnit.getCurrentPosition().getTileStageY();
+    	int centreXX = currentUnit.getCurrentPosition().getTileX();
+    	int centreYY = currentUnit.getCurrentPosition().getTileY();
     	List<GridCell> path = actor.getTiledMap().getPathfinder().getCellsWithin(centreX, centreY, currentUnit.getMp());
     	
     	//NEW POS

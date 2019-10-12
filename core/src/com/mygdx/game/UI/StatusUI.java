@@ -198,7 +198,7 @@ public class StatusUI extends Window {
         }
         
         //we offset the position a little bit to make it look better
-        this.setPosition((linkedEntity.getCurrentPosition().getRealX()) + statsUIOffsetX, (linkedEntity.getCurrentPosition().getRealY()) + statsUIOffsetY);
+        this.setPosition((linkedEntity.getCurrentPosition().getRealStageX()) + statsUIOffsetX, (linkedEntity.getCurrentPosition().getRealStageY()) + statsUIOffsetY);
 
     }
 }

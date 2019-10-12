@@ -56,7 +56,6 @@ public class DeploymentBattleState implements BattleState{
     			initiateUnitInBattle(unitToDeploy,newPositionScaled);
     			
     			//adjust tile
-    			ParticleMaker.deactivateParticle(ParticleMaker.getParticle(ParticleType.SPAWN, newPositionScaled));
     			actor.setIsFreeSpawn(false);
     			
     			//update for next

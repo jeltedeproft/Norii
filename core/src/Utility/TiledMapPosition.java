@@ -20,7 +20,7 @@ public class TiledMapPosition {
 	
 	public TiledMapPosition(float x,float y) {
 		realCoordinates = new Point2D.Float(x,y);
-		tileCoordinates = new Point((int) (x * Map.UNIT_SCALE),(int) (y * Map.UNIT_SCALE));
+		tileCoordinates = new Point(Math.round(x * Map.UNIT_SCALE),Math.round(y * Map.UNIT_SCALE));
 	}
 	
 	
@@ -31,12 +31,12 @@ public class TiledMapPosition {
 	
 	public TiledMapPosition(Vector2 pos) {
 		realCoordinates = new Point2D.Float(pos.x,pos.y);
-		tileCoordinates = new Point((int) (pos.x * Map.UNIT_SCALE),(int) (pos.y * Map.UNIT_SCALE));
+		tileCoordinates = new Point(Math.round(pos.x * Map.UNIT_SCALE),Math.round(pos.y * Map.UNIT_SCALE));
 	}
 
 	public void setPosition(float x, float y) {
 		realCoordinates = new Point2D.Float(x,y);
-		tileCoordinates = new Point((int) (x * Map.UNIT_SCALE),(int) (y * Map.UNIT_SCALE));
+		tileCoordinates = new Point(Math.round(x * Map.UNIT_SCALE),Math.round(y * Map.UNIT_SCALE));
 	}
 	
 	public void setPosition(int x, int y) {
@@ -126,6 +126,23 @@ public class TiledMapPosition {
 	
 	public int getTileY() {
 		return tileCoordinates.y;
+	}
+	
+	public float getRealStageX() {
+		return (((float) realCoordinates.getX()) * Map.UNIT_SCALE * Map.TILE_WIDTH_PIXEL);
+	}
+	
+	public float getRealStageY() {
+		return (((float) realCoordinates.getY()) * Map.UNIT_SCALE * Map.TILE_HEIGHT_PIXEL);
+	}
+	
+	public int getTileStageX() {
+		return Math.round(tileCoordinates.x / Map.UNIT_SCALE / Map.TILE_WIDTH_PIXEL);
+	}
+	
+	
+	public int getTileStageY() {
+		return Math.round(tileCoordinates.y / Map.UNIT_SCALE / Map.TILE_HEIGHT_PIXEL);
 	}
 	
 	public static float getDownScaledX(float coor) {

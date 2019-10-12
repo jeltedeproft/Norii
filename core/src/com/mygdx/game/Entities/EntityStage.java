@@ -26,8 +26,8 @@ public class EntityStage extends Stage {
 	
 	private void initializeActor(EntityActor actor) {
 		Entity entity = actor.getEntity();
-        //DANGER : I use magic constants here, assuming every entity has a 32x32 size
-        actor.setBounds(entity.getCurrentPosition().getRealX() / Map.UNIT_SCALE, entity.getCurrentPosition().getRealY() / Map.UNIT_SCALE, 1 / Map.UNIT_SCALE,1 / Map.UNIT_SCALE);
+        //DANGER : I assume every entity has a 32x32 size
+        actor.setBounds(entity.getCurrentPosition().getRealStageX() / Map.UNIT_SCALE, entity.getCurrentPosition().getRealStageY() / Map.UNIT_SCALE, 1 / Map.UNIT_SCALE,1 / Map.UNIT_SCALE);
         addActor(actor);
         EventListener eventListener = new EntityClickListener(actor);
         actor.addListener(eventListener);

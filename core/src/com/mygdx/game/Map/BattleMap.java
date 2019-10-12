@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
@@ -24,6 +25,7 @@ public class BattleMap extends Map{
 
     private static String _mapPath;
     private ArrayList<TiledMapPosition> _unitSpawnPositions;
+    private ArrayList<TiledMapPosition> particleSpawnPositions;
     
     protected Vector2 _playerStartPositionRect;
     protected TiledMapPosition _convertedUnits;
@@ -50,6 +52,7 @@ public class BattleMap extends Map{
     
     private void initializeClassVariables() {
     	_unitSpawnPositions = new ArrayList<TiledMapPosition>();
+    	particleSpawnPositions = new ArrayList<TiledMapPosition>();
     	_playerStartPositionRect = new Vector2(0,0);
     	_convertedUnits = new TiledMapPosition(0,0);
     	
@@ -75,11 +78,14 @@ public class BattleMap extends Map{
             if( object.getName().equalsIgnoreCase(PLAYER_START) ){
             	
                 ((RectangleMapObject)object).getRectangle().getPosition(_playerStartPositionRect);
-                TiledMapPosition newPos = new TiledMapPosition(_playerStartPositionRect.x,_playerStartPositionRect.y);
-                startPositions.add(newPos);
+                TiledMapPosition particlePos = new TiledMapPosition(_playerStartPositionRect.x,_playerStartPositionRect.y);
+                particleSpawnPositions.add(particlePos); 
+                
+                TiledMapPosition spawnPos = new TiledMapPosition(particlePos.getRealX(),particlePos.getRealY());
+            	startPositions.add(tiledToStageCoordinates(spawnPos));
                 
                 //tag tiles that can be used as spawns
-                TiledMapActor tiledactor = (TiledMapActor) tiledmapstage.hit(_playerStartPositionRect.x, _playerStartPositionRect.y, false);
+                TiledMapActor tiledactor = (TiledMapActor) tiledmapstage.hit(spawnPos.getRealX(), spawnPos.getRealY(), false);
                 
                 if(tiledactor != null) {
                 	tiledactor.setIsFreeSpawn(true);
@@ -88,25 +94,22 @@ public class BattleMap extends Map{
         }        
     }
     
+    private TiledMapPosition tiledToStageCoordinates(TiledMapPosition pos) {
+		TiledMapTileLayer tiledLayer = (TiledMapTileLayer) this.getCurrentTiledMap().getLayers().get("background");
+		float tilewidth = (float) Gdx.graphics.getWidth() / (float )tiledLayer.getWidth();
+        float tileheight = (float) Gdx.graphics.getHeight() / (float) tiledLayer.getHeight();
+        
+    	pos.setPosition((pos.getRealX() / (float) tilePixelWidth) * tilewidth, (pos.getRealY() / (float) tilePixelHeight) * tileheight);
+		return pos;
+    }
+    
 	public void drawActorsDebug() {
 		ShapeRenderer debugRenderer = new ShapeRenderer();
         debugRenderer.setProjectionMatrix(this.getTiledMapStage().getCamera().combined);
         debugRenderer.setColor(Color.RED);
         debugRenderer.begin(ShapeType.Line);
-//        for( MapObject object: _spawnsLayer.getObjects()){
-//            if( object.getName().equalsIgnoreCase(PLAYER_START) ){
-//            	((RectangleMapObject)object).getRectangle().getPosition(_playerStartPositionRect);
-//            	TiledMapActor actor = (TiledMapActor) tiledmapstage.hit(_playerStartPositionRect.x, _playerStartPositionRect.y, false);
-//            	// While resizing the screen, the actor wont be available until letting go of the resize.
-//            	if ( actor != null ) {
-//            	    actor.debug();
-//                    actor.drawDebug(debugRenderer);
-//                }
-//            }
-//        }
         
     	for(TiledMapPosition pos : _unitSpawnPositions) {
-    		this.getTiledMapStage().getCamera().
     		TiledMapActor actor = (TiledMapActor) tiledmapstage.hit(pos.getRealX(), pos.getRealY(), false);
         	// While resizing the screen, the actor wont be available until letting go of the resize.
         	if ( actor != null ) {
@@ -118,7 +121,7 @@ public class BattleMap extends Map{
 	}
     
     public void makeSpawnParticles() {
-    	for(TiledMapPosition pos : _unitSpawnPositions) {
+    	for(TiledMapPosition pos : particleSpawnPositions) {
             ParticleMaker.addParticle(ParticleType.SPAWN, pos);
     	}
     }
