@@ -59,10 +59,18 @@ public class MovementBattleState implements BattleState{
     		if((path.get(i).x == newPos.getTileX()) && (path.get(i).y == newPos.getTileY()) && path.get(i).isWalkable()) {
     			ParticleMaker.deactivateAllParticlesOfType(ParticleType.MOVE);
     			
+    			// Set previous actor position walkable
+    			actor.getTiledMap().get_navLayer().getCell(centreX,centreY).setWalkable(true);
+    			
     			TiledMapPosition newUnitPos = new TiledMapPosition(path.get(i).x, path.get(i).y);
     			currentUnit.setCurrentPosition(newUnitPos);
     			currentUnit.setInActionPhase(true);
-    			currentUnit.setInMovementPhase(false);
+    			currentUnit.setInMovementPhase(false);   			
+    			
+    			// Set new actor position not walkable
+    			int newCentreX = currentUnit.getCurrentPosition().getTileX();
+    	    	int newCentreY = currentUnit.getCurrentPosition().getTileY();
+    			actor.getTiledMap().get_navLayer().getCell(newCentreX,newCentreY).setWalkable(false);
 
     			battlemanager.getCurrentBattleState().exit();
     		}

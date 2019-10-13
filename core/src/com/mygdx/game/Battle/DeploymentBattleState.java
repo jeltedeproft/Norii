@@ -59,6 +59,11 @@ public class DeploymentBattleState implements BattleState{
     			ParticleMaker.deactivateParticle(ParticleMaker.getParticle(ParticleType.SPAWN, newPositionScaled));
     			actor.setIsFreeSpawn(false);
     			
+    			// Set actor position not walkable
+    			int centreX = unitToDeploy.getCurrentPosition().getTileX();
+    	    	int centreY = unitToDeploy.getCurrentPosition().getTileY();
+    			actor.getTiledMap().get_navLayer().getCell(centreX,centreY).setWalkable(false);
+    			
     			//update for next
     			deployingUnitNumber++;
     			checkIfLastUnit();
