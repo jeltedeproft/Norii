@@ -103,7 +103,7 @@ public class ActionsUI extends Table {
         }
         
         //we offset the position a little bit to make it look better
-        this.setPosition((linkedEntity.getCurrentPosition().getRealStageX()) + actionsUIOffsetX - ( (1 / Map.UNIT_SCALE) / 2), (linkedEntity.getCurrentPosition().getRealStageY()) + actionsUIOffsetY);
+        this.setPosition((linkedEntity.getCurrentPosition().getRealScreenX()) + actionsUIOffsetX - ( Map.TILE_WIDTH_PIXEL / 2), (linkedEntity.getCurrentPosition().getRealScreenY()) + actionsUIOffsetY);
     }
 }
 

@@ -271,7 +271,7 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		case IN_MOVEMENT:
 			List<GridCell> path = map.getPathfinder().getCellsWithin(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getMp());
 			for(GridCell cell : path) {
-				TiledMapPosition positionToPutMoveParticle = new TiledMapPosition(cell.x,cell.y);
+				TiledMapPosition positionToPutMoveParticle = new TiledMapPosition().setPositionFromTiles(cell.x,cell.y);
 				ParticleMaker.addParticle(ParticleType.MOVE,positionToPutMoveParticle );
 			}
 			break;

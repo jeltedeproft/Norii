@@ -11,113 +11,68 @@ import com.mygdx.game.Screen.BattleScreen;
 public class TiledMapPosition {
 	private static final String TAG = TiledMapPosition.class.getSimpleName();
 	
-	private Point2D realCoordinates;
+	private Point2D realScreenCoordinates;
+	private Point2D realTiledCoordinates;
+	
 	private Point tileCoordinates;
 	
+	
 	public TiledMapPosition() {
+		realTiledCoordinates = new Point2D.Float(0, 0);
+		realScreenCoordinates = new Point2D.Float(0,0);
 		
+		tileCoordinates = new Point(0,0);
 	}
 	
-	public TiledMapPosition(float x,float y) {
-		realCoordinates = new Point2D.Float(x,y);
-		tileCoordinates = new Point(Math.round(x * Map.UNIT_SCALE),Math.round(y * Map.UNIT_SCALE));
+	public TiledMapPosition setPositionFromTiled(float x, float y){
+		realTiledCoordinates = new Point2D.Float(x, y);
+		realScreenCoordinates = new Point2D.Float(x / Map.TILE_WIDTH * Map.TILE_WIDTH_PIXEL, y / Map.TILE_HEIGHT * Map.TILE_HEIGHT_PIXEL);
+		
+		tileCoordinates = new Point(Math.round(x  / Map.TILE_WIDTH),Math.round(y / Map.TILE_HEIGHT));
+		return this;
 	}
 	
-	
-	public TiledMapPosition(int x,int y) {
-		realCoordinates = new Point2D.Float((float) (x / Map.UNIT_SCALE),(float) (y / Map.UNIT_SCALE));
+	public TiledMapPosition setPositionFromTiles(int x, int y){
+		realTiledCoordinates = new Point2D.Float((float) (x * Map.TILE_WIDTH),(float) (y * Map.TILE_HEIGHT));
+		realScreenCoordinates = new Point2D.Float(x * Map.TILE_WIDTH_PIXEL, y * Map.TILE_HEIGHT_PIXEL);
+		
 		tileCoordinates = new Point(x,y);
+		return this;
 	}
 	
-	public TiledMapPosition(Vector2 pos) {
-		realCoordinates = new Point2D.Float(pos.x,pos.y);
-		tileCoordinates = new Point(Math.round(pos.x * Map.UNIT_SCALE),Math.round(pos.y * Map.UNIT_SCALE));
-	}
-
-	public void setPosition(float x, float y) {
-		realCoordinates = new Point2D.Float(x,y);
-		tileCoordinates = new Point(Math.round(x * Map.UNIT_SCALE),Math.round(y * Map.UNIT_SCALE));
-	}
-	
-	public void setPosition(int x, int y) {
-		realCoordinates = new Point2D.Float((float) (x / Map.UNIT_SCALE),(float) (y / Map.UNIT_SCALE));
-		tileCoordinates = new Point(x,y);
-	}
-	
-	public Point2D getPositionAsRealCoordinates() {
-		return realCoordinates;
-	}
-	
-	public Point getPositionAsTileCoordinates() {
-		return tileCoordinates;
-	}
-	
-	public void moveStepsUpward(int steps){
-		float currentRealX = (float) realCoordinates.getX();
-		float currentRealY = (float) realCoordinates.getY();
-		realCoordinates.setLocation(currentRealX, currentRealY + steps / Map.UNIT_SCALE);
+	public TiledMapPosition setPositionFromScreen(float x, float y){
+		realScreenCoordinates = new Point2D.Float(x, y);
+		realTiledCoordinates = new Point2D.Float(x / Map.TILE_WIDTH_PIXEL * Map.TILE_WIDTH, y / Map.TILE_HEIGHT_PIXEL * Map.TILE_HEIGHT);
 		
-		int currentTileX = tileCoordinates.x;
-		int currentTileY = tileCoordinates.y;
-		tileCoordinates.setLocation(currentTileX, currentTileY + steps);
+		tileCoordinates = new Point(Math.round(x  / Map.TILE_WIDTH_PIXEL),Math.round(y / Map.TILE_HEIGHT_PIXEL));
+		return this;
 	}
 	
-	public void moveStepsDownward(int steps){
-		float currentRealX = (float) realCoordinates.getX();
-		float currentRealY = (float) realCoordinates.getY();
-		realCoordinates.setLocation(currentRealX, currentRealY - steps / Map.UNIT_SCALE);
-		
-		int currentTileX = tileCoordinates.x;
-		int currentTileY = tileCoordinates.y;
-		tileCoordinates.setLocation(currentTileX, currentTileY - steps);
-	}
-	
-	public void moveStepsLeft(int steps){
-		float currentRealX = (float) realCoordinates.getX();
-		float currentRealY = (float) realCoordinates.getY();
-		realCoordinates.setLocation(currentRealX - steps / Map.UNIT_SCALE, currentRealY);
-		
-		int currentTileX = tileCoordinates.x;
-		int currentTileY = tileCoordinates.y;
-		tileCoordinates.setLocation(currentTileX - steps, currentTileY);
-	}
-	
-	public void moveStepsRight(int steps){
-		float currentRealX = (float) realCoordinates.getX();
-		float currentRealY = (float) realCoordinates.getY();
-		realCoordinates.setLocation(currentRealX + steps / Map.UNIT_SCALE, currentRealY);
-		
-		int currentTileX = tileCoordinates.x;
-		int currentTileY = tileCoordinates.y;
-		tileCoordinates.setLocation(currentTileX + steps, currentTileY);
-	}
 	
 	public void scl(float scalingNumber) {
-		float oldRealX = this.getRealX();
-		float oldRealY = this.getRealY();
-		this.setPosition(oldRealX * scalingNumber, oldRealY * scalingNumber);
+		float oldRealX = this.getRealScreenX();
+		float oldRealY = this.getRealScreenY();
+		this.setPositionFromScreen(oldRealX * scalingNumber, oldRealY * scalingNumber);
 	}
 	
 	public boolean isTileEqualTo(TiledMapPosition pos) {
-		Gdx.app.debug(TAG, "testing if positions are equal");
-		Gdx.app.debug(TAG, "x : " + pos.tileCoordinates.x + " , " + tileCoordinates.x);
-		Gdx.app.debug(TAG, "y : " + pos.tileCoordinates.y + " , " + tileCoordinates.y);
 		return((pos.tileCoordinates.x == tileCoordinates.x) && (pos.tileCoordinates.y == tileCoordinates.y));
 	}
 	
-	public boolean isTileEqualToScaled(TiledMapPosition pos) {
-		Gdx.app.debug(TAG, "testing if positions are equal");
-		Gdx.app.debug(TAG, "x : " + pos.tileCoordinates.x + " , " + tileCoordinates.x);
-		Gdx.app.debug(TAG, "y : " + pos.tileCoordinates.y + " , " + tileCoordinates.y);
-		return((pos.tileCoordinates.x == tileCoordinates.x) && (pos.tileCoordinates.y == tileCoordinates.y));
+	public float getRealScreenX() {
+		return (float) realScreenCoordinates.getX();
 	}
 	
-	public float getRealX() {
-		return (float) realCoordinates.getX();
+	public float getRealScreenY() {
+		return (float) realScreenCoordinates.getY();
 	}
 	
-	public float getRealY() {
-		return (float) realCoordinates.getY();
+	public float getRealTiledX() {
+		return (float) tileCoordinates.getX();
+	}
+	
+	public float getRealTiledY() {
+		return (float) tileCoordinates.getY();
 	}
 	
 	public int getTileX() {
@@ -126,39 +81,6 @@ public class TiledMapPosition {
 	
 	public int getTileY() {
 		return tileCoordinates.y;
-	}
-	
-	public float getRealStageX() {
-		return (((float) realCoordinates.getX()) * Map.UNIT_SCALE * Map.TILE_WIDTH_PIXEL);
-	}
-	
-	public float getRealStageY() {
-		return (((float) realCoordinates.getY()) * Map.UNIT_SCALE * Map.TILE_HEIGHT_PIXEL);
-	}
-	
-	public int getTileStageX() {
-		return Math.round(tileCoordinates.x / Map.UNIT_SCALE / Map.TILE_WIDTH_PIXEL);
-	}
-	
-	
-	public int getTileStageY() {
-		return Math.round(tileCoordinates.y / Map.UNIT_SCALE / Map.TILE_HEIGHT_PIXEL);
-	}
-	
-	public static float getDownScaledX(float coor) {
-		return ((coor / (float) Map.TILE_WIDTH_PIXEL) / (float) Map.UNIT_SCALE);
-	}
-	
-	public static float getDownScaledY(float coor) {
-		return ((coor / (float) Map.TILE_HEIGHT_PIXEL) / (float) Map.UNIT_SCALE);
-	}
-	
-	public static float getUpScaledX(float coor) {
-		return ((coor * (float) Map.TILE_WIDTH_PIXEL) * (float) Map.UNIT_SCALE);
-	}
-	
-	public static float getUpScaledY(float coor) {
-		return ((coor * (float) Map.TILE_HEIGHT_PIXEL) * (float) Map.UNIT_SCALE);
 	}
 }
 
