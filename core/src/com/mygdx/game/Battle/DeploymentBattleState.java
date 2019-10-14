@@ -47,7 +47,7 @@ public class DeploymentBattleState implements BattleState{
 	
     private void deployUnit(TiledMapActor actor){
         if(actor.getIsFreeSpawn()) {
-        	TiledMapPosition newPosition = new TiledMapPosition().setPositionFromScreen(actor.getX(), actor.getY());
+        	TiledMapPosition newPosition = actor.getActorPos();
         	
     		if((unitsSortedByInitiative != null) && (deployingUnitNumber < unitsSortedByInitiative.length)) {
     			//deploy unit

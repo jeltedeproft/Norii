@@ -15,11 +15,14 @@ public class ActionsUI extends Table {
 	//padding
     private int width;
     private int height;
-    private final int iconWidth = 32;
-    private final int iconHeight = 32;
+    private final int iconWidth = Gdx.graphics.getWidth() / 22;
+    private final int iconHeight = Gdx.graphics.getHeight() / 23;
     private final int topBarIcons = 6;
     private final int botBarIcons = 6;
     private final int amountOfBars = 2;
+    
+    private float screenPercentHeight = 0.1f;
+    private float screenPercentWidth = 0.1f;
 	
 	//images
 	private static final String _moveButtonSpritePath = "sprites/gui/move.png";
@@ -45,8 +48,8 @@ public class ActionsUI extends Table {
 
     private Image _heroPortrait; //just an idea
     private Entity linkedEntity;
-	private int actionsUIOffsetX = 32;
-	private int actionsUIOffsetY = 32;
+	private int actionsUIOffsetX = Gdx.graphics.getWidth() / 22;
+	private int actionsUIOffsetY = Gdx.graphics.getHeight() / 23;
 
 
     public ActionsUI(Entity entity){
@@ -95,15 +98,22 @@ public class ActionsUI extends Table {
     
     public void update() {
     	Gdx.app.debug(TAG, "updating actionsUI");
-        //if unit is active, set visible
-        if(linkedEntity.isActive()) {
+        checkVisibility();
+        updateSize();
+        //we offset the position a little bit to make it look better
+        this.setPosition((linkedEntity.getCurrentPosition().getRealScreenX()) + actionsUIOffsetX - ( Map.TILE_WIDTH_PIXEL / 2), (linkedEntity.getCurrentPosition().getRealScreenY()) + actionsUIOffsetY);
+    }
+
+	private void checkVisibility() {
+		if(linkedEntity.isActive()) {
         	this.setVisible(true);
         }else {
         	this.setVisible(false);
         }
-        
-        //we offset the position a little bit to make it look better
-        this.setPosition((linkedEntity.getCurrentPosition().getRealScreenX()) + actionsUIOffsetX - ( Map.TILE_WIDTH_PIXEL / 2), (linkedEntity.getCurrentPosition().getRealScreenY()) + actionsUIOffsetY);
-    }
+	}
+	
+	private void updateSize() {
+		this.setSize(Gdx.graphics.getWidth() * screenPercentWidth, Gdx.graphics.getHeight() * screenPercentHeight);
+	}
 }
 

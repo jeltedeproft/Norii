@@ -52,7 +52,7 @@ public class MovementBattleState implements BattleState{
     	List<GridCell> path = actor.getTiledMap().getPathfinder().getCellsWithin(centreX, centreY, currentUnit.getMp());
     	
     	//NEW POS
-    	TiledMapPosition newPos = new TiledMapPosition().setPositionFromScreen(actor.getX(), actor.getY());
+    	TiledMapPosition newPos = actor.getActorPos();
     	
     	//NEW POS IN PATH?
     	for(int i = 0;i<path.size();i++) {

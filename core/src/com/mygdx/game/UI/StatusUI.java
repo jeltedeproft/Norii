@@ -35,6 +35,9 @@ public class StatusUI extends Window {
     
 	private int statsUIOffsetX = 32;
 	private int statsUIOffsetY = 32;
+	
+	private final float statusUIWidth = 0.3f;
+	private final float statusUIHeight = 0.3f;
 
     //Attributes
     private int _levelVal;
@@ -181,17 +184,9 @@ public class StatusUI extends Window {
     
     public void update() {
     	Gdx.app.debug(TAG, "updating statuis UI");
-        _levelVal = linkedEntity.getLevel();
-        _hpVal = linkedEntity.getHp();
-        _mpVal = linkedEntity.getMp();
-        _xpVal = linkedEntity.getXp();
-        
-        //update labels (might not work)
-        hp.setText(String.valueOf(_hpVal));
-        mp.setText(String.valueOf(_mpVal));
-        xp.setText(String.valueOf(_xpVal));
-        levelVal.setText(String.valueOf(_levelVal));
-        iniVal.setText(String.valueOf(_iniVal));
+        updateStats();
+        updateLabels();
+        updateSize();
         
         if(linkedEntity.getEntityactor().getIsHovering()) {
         	this.setVisible(true);
@@ -201,5 +196,26 @@ public class StatusUI extends Window {
         this.setPosition((linkedEntity.getCurrentPosition().getRealScreenX()) + statsUIOffsetX, (linkedEntity.getCurrentPosition().getRealScreenY()) + statsUIOffsetY);
 
     }
+
+	private void updateLabels() {
+		hp.setText(String.valueOf(_hpVal));
+        mp.setText(String.valueOf(_mpVal));
+        xp.setText(String.valueOf(_xpVal));
+        levelVal.setText(String.valueOf(_levelVal));
+        iniVal.setText(String.valueOf(_iniVal));
+	}
+
+	private void updateStats() {
+		_levelVal = linkedEntity.getLevel();
+        _hpVal = linkedEntity.getHp();
+        _mpVal = linkedEntity.getMp();
+        _xpVal = linkedEntity.getXp();
+	}
+	
+	private void updateSize() {
+		int scaledHeight = (int) (statusUIHeight * Gdx.graphics.getHeight());
+		int scaledWidth = (int) (statusUIWidth * Gdx.graphics.getWidth());
+		this.setSize(scaledWidth, scaledHeight);
+	}
 }
 

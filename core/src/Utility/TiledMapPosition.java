@@ -60,19 +60,19 @@ public class TiledMapPosition {
 	}
 	
 	public float getRealScreenX() {
-		return (float) realScreenCoordinates.getX();
+		return (float) tileCoordinates.x * Map.TILE_WIDTH_PIXEL;
 	}
 	
 	public float getRealScreenY() {
-		return (float) realScreenCoordinates.getY();
+		return (float) tileCoordinates.y * Map.TILE_HEIGHT_PIXEL;
 	}
 	
 	public float getRealTiledX() {
-		return (float) tileCoordinates.getX();
+		return (float) (tileCoordinates.x * Map.TILE_WIDTH);
 	}
 	
 	public float getRealTiledY() {
-		return (float) tileCoordinates.getY();
+		return (float) (tileCoordinates.y * Map.TILE_HEIGHT);
 	}
 	
 	public int getTileX() {
