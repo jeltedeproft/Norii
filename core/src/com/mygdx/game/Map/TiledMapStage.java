@@ -19,7 +19,6 @@ public class TiledMapStage extends Stage {
     private Map tiledMap;
     private String _layername;
     private BattleManager battlemanager;
-    private TiledMapTileLayer tilemapLayer;
     
     public TiledMapStage(Map tiledMap, String layername, BattleManager battlemanager) {
         this.tiledMap = tiledMap;
@@ -39,7 +38,6 @@ public class TiledMapStage extends Stage {
 	}
 
 	private void createActorsForLayer(TiledMapTileLayer tiledLayer) {
-		tilemapLayer = tiledLayer;
         for (int x = 0; x < tiledLayer.getWidth(); x++) {
             for (int y = 0; y < tiledLayer.getHeight(); y++) {
                 TiledMapTileLayer.Cell cell = tiledLayer.getCell(x, y);

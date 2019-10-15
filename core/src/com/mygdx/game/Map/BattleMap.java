@@ -112,8 +112,8 @@ public class BattleMap extends Map{
 		Array<Actor> Actors = tiledmapstage.getActors();
 		
 		for(Actor actor : Actors) {
-			TiledMapPosition actorPos = new TiledMapPosition().setPositionFromScreen(actor.getX(), actor.getY());
-			if(actorPos.isTileEqualTo(pos) ) {
+			TiledMapPosition actorPos = new TiledMapPosition().setPositionFromOriginal(actor.getX(), actor.getY());
+			if((actorPos.getRealScreenX() == pos.getRealScreenX()) &&  (actorPos.getRealScreenY() == pos.getRealScreenY())){
 				return (TiledMapActor) actor;
 			}
 		}

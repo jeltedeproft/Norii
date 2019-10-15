@@ -36,8 +36,11 @@ public class StatusUI extends Window {
 	private int statsUIOffsetX = 32;
 	private int statsUIOffsetY = 32;
 	
-	private final float statusUIWidth = 0.3f;
-	private final float statusUIHeight = 0.3f;
+	private final float baseWidth = 200;
+	private final float baseHeight = 200f;
+	
+	private final float statusUIWidth = 0.1f;
+	private final float statusUIHeight = 0.1f;
 
     //Attributes
     private int _levelVal;
@@ -213,9 +216,11 @@ public class StatusUI extends Window {
 	}
 	
 	private void updateSize() {
+		statsUIOffsetX = (int) Map.TILE_WIDTH_PIXEL;
+		statsUIOffsetY = (int) Map.TILE_HEIGHT_PIXEL;
 		int scaledHeight = (int) (statusUIHeight * Gdx.graphics.getHeight());
 		int scaledWidth = (int) (statusUIWidth * Gdx.graphics.getWidth());
-		this.setSize(scaledWidth, scaledHeight);
+		this.setSize(baseWidth + scaledWidth, baseHeight + scaledHeight);
 	}
 }
 

@@ -2,8 +2,13 @@ package com.mygdx.game.Entities;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Map.Map;
 
 public class EntityStage extends Stage {
@@ -31,5 +36,18 @@ public class EntityStage extends Stage {
         addActor(actor);
         EventListener eventListener = new EntityClickListener(actor);
         actor.addListener(eventListener);
+	}
+	
+	public void drawEntitiesDebug() {
+		Array<Actor> actors = this.getActors();
+		ShapeRenderer debugRenderer = new ShapeRenderer();
+        debugRenderer.setProjectionMatrix(this.getCamera().combined);
+        debugRenderer.setColor(Color.RED);
+        debugRenderer.begin(ShapeType.Line);
+		for(Actor actor : actors) {
+	        actor.debug();
+	        actor.drawDebug(debugRenderer);
+		}
+		debugRenderer.end();
 	}
 }

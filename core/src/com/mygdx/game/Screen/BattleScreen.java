@@ -171,6 +171,7 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		renderParticles(delta);
 		renderHUD(delta);
 		//map.getTiledMapStage().drawActorsDebug();
+		Player.getInstance().getEntityStage().drawEntitiesDebug();
 		map.drawActorsDebug();
 	}
 
@@ -207,12 +208,13 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 
 	@Override
 	public void resize(int width, int height) {
+		map.updatePixelDimensions();
+		map.getTiledMapStage().getViewport().update(width, height, false);
+		
 		Gdx.app.debug(TAG, "resizing with : (" + width + " , " + height + ")");
 		Player.getInstance().getEntityStage().getViewport().update(width, height, false);
 		playerBattleHUD.resize(width, height);
 		
-		map.updatePixelDimensions();
-		map.getTiledMapStage().getViewport().update(width, height, false);
 	}
 
 	@Override

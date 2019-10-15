@@ -100,7 +100,8 @@ public class Entity extends Actor implements EntitySubject{
 	
 	public void setCurrentPosition(TiledMapPosition pos){
 		entityAnimation.setFramePos(pos);
-		this._currentPlayerPosition.setPositionFromTiles(pos.getTileX(), pos.getTileY());
+		//this._currentPlayerPosition.setPositionFromTiles(pos.getTileX(), pos.getTileY());
+		this._currentPlayerPosition = pos;
 
 		//also move the actor linked to this entity
 		this.entityactor.setPos(_currentPlayerPosition);
