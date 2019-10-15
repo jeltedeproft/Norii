@@ -11,6 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Battle.BattleManager;
 
+import Utility.TiledMapPosition;
+
 public class TiledMapStage extends Stage {
 	private static final String TAG = TiledMapStage.class.getSimpleName();
 
@@ -43,9 +45,8 @@ public class TiledMapStage extends Stage {
                 
                 float tilewidth = (float) Gdx.graphics.getWidth() / (float )tiledLayer.getWidth();
                 float tileheight = (float) Gdx.graphics.getHeight() / (float) tiledLayer.getHeight();
-                Gdx.app.debug(TAG, "tilewidth = " + tilewidth + " , and tileheight = " + tileheight);
                 actor.setBounds(x * tilewidth, y * tileheight, tilewidth,tileheight);
-                //actor.setBounds(actor.getX(), actor.getY(), tilewidth,tileheight);
+                actor.setActorPos(new TiledMapPosition().setPositionFromTiles(x, y));
                 addActor(actor);
 
                 EventListener eventListener = new TiledMapClickListener(actor);

@@ -7,11 +7,15 @@ import org.xguzm.pathfinding.grid.GridCell;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.game.Battle.BattleManager;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Entities.EntityObserver;
@@ -164,10 +168,10 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		
 		renderMap();
 		renderUnits();
-		//renderGrid();
 		renderParticles(delta);
 		renderHUD(delta);
 		//map.getTiledMapStage().drawActorsDebug();
+		Player.getInstance().getEntityStage().drawEntitiesDebug();
 		map.drawActorsDebug();
 	}
 
@@ -204,12 +208,13 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 
 	@Override
 	public void resize(int width, int height) {
+		map.updatePixelDimensions();
+		map.getTiledMapStage().getViewport().update(width, height, false);
+		
 		Gdx.app.debug(TAG, "resizing with : (" + width + " , " + height + ")");
 		Player.getInstance().getEntityStage().getViewport().update(width, height, false);
 		playerBattleHUD.resize(width, height);
-		map.getTiledMapStage().getViewport().update(width, height, false);
 		
-		map.updatePixelDimensions();
 	}
 
 	@Override
@@ -258,13 +263,6 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		}
 	}
 
-	public void renderGrid() {
-		for(int x = 0; x < map.getMapWidth(); x += 1)
-			Utility.DrawDebugLine(new Vector2(x,0), new Vector2(x,map.getMapHeight()), camera.combined);
-		for(int y = 0; y < map.getMapHeight(); y += 1)
-			Utility.DrawDebugLine(new Vector2(0,y), new Vector2(map.getMapWidth(),y), camera.combined);
-	}
-
 	@Override
 	public void onNotify(EntityCommand command,Entity unit) {
 		switch(command){
@@ -272,8 +270,8 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 			List<GridCell> path = map.getPathfinder().getCellsWithin(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getMp());
 			for(GridCell cell : path) {
 				if(cell.isWalkable()) {
-					TiledMapPosition positionToPutMoveParticle = new TiledMapPosition(cell.x,cell.y);
-					ParticleMaker.addParticle(ParticleType.MOVE,positionToPutMoveParticle );
+				TiledMapPosition positionToPutMoveParticle = new TiledMapPosition().setPositionFromTiles(cell.x,cell.y);
+				ParticleMaker.addParticle(ParticleType.MOVE,positionToPutMoveParticle );
 				}
 			}
 			break;

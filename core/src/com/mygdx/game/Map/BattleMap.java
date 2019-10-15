@@ -1,3 +1,4 @@
+
 package com.mygdx.game.Map;
 
 import java.util.ArrayList;
@@ -8,7 +9,9 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Audio.AudioObserver;
@@ -51,7 +54,7 @@ public class BattleMap extends Map{
     private void initializeClassVariables() {
     	_unitSpawnPositions = new ArrayList<TiledMapPosition>();
     	_playerStartPositionRect = new Vector2(0,0);
-    	_convertedUnits = new TiledMapPosition(0,0);
+    	_convertedUnits = new TiledMapPosition();
     	
         _spawnsLayer = _currentMap.getLayers().get(MAP_SPAWNS_LAYER);
         _navLayer = (MyNavigationTiledMapLayer) _currentMap.getLayers().get(NAVIGATION_LAYER);
@@ -75,12 +78,15 @@ public class BattleMap extends Map{
             if( object.getName().equalsIgnoreCase(PLAYER_START) ){
             	
                 ((RectangleMapObject)object).getRectangle().getPosition(_playerStartPositionRect);
-                TiledMapPosition newPos = new TiledMapPosition(_playerStartPositionRect.x,_playerStartPositionRect.y);
-                startPositions.add(newPos);
+                TiledMapPosition spawnPos = new TiledMapPosition().setPositionFromTiled(_playerStartPositionRect.x,_playerStartPositionRect.y);
+            	startPositions.add(spawnPos);
                 
                 //tag tiles that can be used as spawns
-                TiledMapActor tiledactor = (TiledMapActor) tiledmapstage.hit(TiledMapPosition.getUpScaledX(_playerStartPositionRect.x), TiledMapPosition.getUpScaledY(_playerStartPositionRect.y), false);
-                tiledactor.setIsFreeSpawn(true);
+            	TiledMapActor tiledactor = getActorAtScreenCoordinate(spawnPos);
+                
+                if(tiledactor != null) {
+                	tiledactor.setIsFreeSpawn(true);
+                }
             }
         }        
     }
@@ -90,18 +96,28 @@ public class BattleMap extends Map{
         debugRenderer.setProjectionMatrix(this.getTiledMapStage().getCamera().combined);
         debugRenderer.setColor(Color.RED);
         debugRenderer.begin(ShapeType.Line);
-        for( MapObject object: _spawnsLayer.getObjects()){
-            if( object.getName().equalsIgnoreCase(PLAYER_START) ){
-            	((RectangleMapObject)object).getRectangle().getPosition(_playerStartPositionRect);
-            	TiledMapActor actor = (TiledMapActor) tiledmapstage.hit(TiledMapPosition.getUpScaledX(_playerStartPositionRect.x), TiledMapPosition.getUpScaledY(_playerStartPositionRect.y), false);
-            	// While resizing the screen, the actor wont be available until letting go of the resize.
-            	if ( actor != null ) {
-            	    actor.debug();
-                    actor.drawDebug(debugRenderer);
-                }
+        
+    	for(TiledMapPosition pos : _unitSpawnPositions) {
+    		TiledMapActor actor = getActorAtScreenCoordinate(pos);
+        	// While resizing the screen, the actor wont be available until letting go of the resize.
+        	if ( actor != null ) {
+        	    actor.debug();
+                actor.drawDebug(debugRenderer);
             }
-        }
+    	}
 		debugRenderer.end();
+	}
+
+	private TiledMapActor getActorAtScreenCoordinate(TiledMapPosition pos) {
+		Array<Actor> Actors = tiledmapstage.getActors();
+		
+		for(Actor actor : Actors) {
+			TiledMapPosition actorPos = new TiledMapPosition().setPositionFromOriginal(actor.getX(), actor.getY());
+			if((actorPos.getRealScreenX() == pos.getRealScreenX()) &&  (actorPos.getRealScreenY() == pos.getRealScreenY())){
+				return (TiledMapActor) actor;
+			}
+		}
+		return null;
 	}
     
     public void makeSpawnParticles() {

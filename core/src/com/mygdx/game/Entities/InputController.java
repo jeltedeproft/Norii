@@ -230,22 +230,18 @@ public class InputController implements InputProcessor {
 		//Keyboard input
 		if( keys.get(Keys.LEFT)){
 			//Gdx.app.debug(TAG, "LEFT key");
-			_unit.calculateNextPosition(Direction.LEFT, delta);
 			_unit.setState(State.WALKING);
 			_unit.setDirection(Direction.LEFT, delta);
 		}else if( keys.get(Keys.RIGHT)){
 			//Gdx.app.debug(TAG, "RIGHT key");
-			_unit.calculateNextPosition(Direction.RIGHT, delta);
 			_unit.setState(State.WALKING);
 			_unit.setDirection(Direction.RIGHT, delta);
 		}else if( keys.get(Keys.UP)){
 			//Gdx.app.debug(TAG, "UP key");
-			_unit.calculateNextPosition(Direction.UP, delta);
 			_unit.setState(State.WALKING);
 			_unit.setDirection(Direction.UP, delta);
 		}else if(keys.get(Keys.DOWN)){
 			//Gdx.app.debug(TAG, "DOWN key");
-			_unit.calculateNextPosition(Direction.DOWN, delta);
 			_unit.setState(State.WALKING);
 			_unit.setDirection(Direction.DOWN, delta);
 		}else if(keys.get(Keys.QUIT)){

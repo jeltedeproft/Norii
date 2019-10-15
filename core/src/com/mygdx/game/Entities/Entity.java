@@ -55,9 +55,8 @@ public class Entity extends Actor implements EntitySubject{
 	public void initEntity(){
 		this._observers = new Array<EntityObserver>();
 		this._entityID = UUID.randomUUID().toString();
-		this._nextPlayerPosition = new TiledMapPosition(0,0);
-		this._currentPlayerPosition = new TiledMapPosition(0,0);
-		this._velocity = new TiledMapPosition(2f,2f);
+		this._nextPlayerPosition = new TiledMapPosition();
+		this._currentPlayerPosition = new TiledMapPosition();
 		this.hp = 10;
 		this.mp = 3;
 		this.maxMP = 3;
@@ -101,49 +100,14 @@ public class Entity extends Actor implements EntitySubject{
 	
 	public void setCurrentPosition(TiledMapPosition pos){
 		entityAnimation.setFramePos(pos);
-		this._currentPlayerPosition.setPosition(pos.getRealX(), pos.getRealY());
+		//this._currentPlayerPosition.setPositionFromTiles(pos.getTileX(), pos.getTileY());
+		this._currentPlayerPosition = pos;
 
 		//also move the actor linked to this entity
 		this.entityactor.setPos(_currentPlayerPosition);
 		
 		//update the status UI's position
 		updateStatusUI();
-	}
-	
-
-	
-	public void setNextPositionToCurrent(){
-		setCurrentPosition(_nextPlayerPosition);
-		//Gdx.app.debug(TAG, "Setting nextPosition as Current: (" + _nextPlayerPosition.x + "," + _nextPlayerPosition.y + ")");
-	}
-	
-	public void calculateNextPosition(Direction currentDirection, float deltaTime){
-		float testX = _currentPlayerPosition.getRealX();
-		float testY = _currentPlayerPosition.getRealY();
-		
-		_velocity.scl(deltaTime);
-		
-		switch (currentDirection) {
-		case LEFT : 
-		testX -=  _velocity.getRealX();
-		break;
-		case RIGHT :
-		testX += _velocity.getRealX();
-		break;
-		case UP : 
-		testY += _velocity.getRealY();
-		break;
-		case DOWN : 
-		testY -= _velocity.getRealY();
-		break;
-		default:
-			break;
-		}
-		
-		_nextPlayerPosition.setPosition(testX, testY);
-		
-		//velocity
-		_velocity.scl(1 / deltaTime);
 	}
 	
 	public void updateStatusUI() {

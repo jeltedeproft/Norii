@@ -97,6 +97,13 @@ public class PlayerBattleHUD implements Screen, ProfileObserver {
     	Gdx.app.debug(TAG, "resizing with : (" + width + " , " + height + ")");
         _stage.getViewport().update(width, height, true);
         _portraits.updateSizeContainer();
+        updateStatusUIs();
+    }
+    
+    private void updateStatusUIs() {
+    	for(StatusUI ui : _statusUIs) {
+    		ui.update();
+    	}
     }
 
     @Override

@@ -52,17 +52,15 @@ public class MovementBattleState implements BattleState{
     	List<GridCell> path = actor.getTiledMap().getPathfinder().getCellsWithin(centreX, centreY, currentUnit.getMp());
     	
     	//NEW POS
-    	TiledMapPosition newPos = new TiledMapPosition(actor.getX(),actor.getY());
+    	TiledMapPosition newPos = actor.getActorPos();
     	
     	//NEW POS IN PATH?
     	for(int i = 0;i<path.size();i++) {
     		if((path.get(i).x == newPos.getTileX()) && (path.get(i).y == newPos.getTileY()) && path.get(i).isWalkable()) {
     			ParticleMaker.deactivateAllParticlesOfType(ParticleType.MOVE);
     			
-    			// Set previous actor position walkable
     			actor.getTiledMap().get_navLayer().getCell(centreX,centreY).setWalkable(true);
-    			
-    			TiledMapPosition newUnitPos = new TiledMapPosition(path.get(i).x, path.get(i).y);
+    			TiledMapPosition newUnitPos = new TiledMapPosition().setPositionFromTiles(path.get(i).x, path.get(i).y);
     			currentUnit.setCurrentPosition(newUnitPos);
     			currentUnit.setInActionPhase(true);
     			currentUnit.setInMovementPhase(false);   			

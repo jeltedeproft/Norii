@@ -35,6 +35,12 @@ public class StatusUI extends Window {
     
 	private int statsUIOffsetX = 32;
 	private int statsUIOffsetY = 32;
+	
+	private final float baseWidth = 200;
+	private final float baseHeight = 200f;
+	
+	private final float statusUIWidth = 0.1f;
+	private final float statusUIHeight = 0.1f;
 
     //Attributes
     private int _levelVal;
@@ -181,25 +187,40 @@ public class StatusUI extends Window {
     
     public void update() {
     	Gdx.app.debug(TAG, "updating statuis UI");
-        _levelVal = linkedEntity.getLevel();
-        _hpVal = linkedEntity.getHp();
-        _mpVal = linkedEntity.getMp();
-        _xpVal = linkedEntity.getXp();
-        
-        //update labels (might not work)
-        hp.setText(String.valueOf(_hpVal));
-        mp.setText(String.valueOf(_mpVal));
-        xp.setText(String.valueOf(_xpVal));
-        levelVal.setText(String.valueOf(_levelVal));
-        iniVal.setText(String.valueOf(_iniVal));
+        updateStats();
+        updateLabels();
+        updateSize();
         
         if(linkedEntity.getEntityactor().getIsHovering()) {
         	this.setVisible(true);
         }
         
         //we offset the position a little bit to make it look better
-        this.setPosition((linkedEntity.getCurrentPosition().getRealX()) + statsUIOffsetX, (linkedEntity.getCurrentPosition().getRealY()) + statsUIOffsetY);
+        this.setPosition((linkedEntity.getCurrentPosition().getRealScreenX()) + statsUIOffsetX, (linkedEntity.getCurrentPosition().getRealScreenY()) + statsUIOffsetY);
 
     }
+
+	private void updateLabels() {
+		hp.setText(String.valueOf(_hpVal));
+        mp.setText(String.valueOf(_mpVal));
+        xp.setText(String.valueOf(_xpVal));
+        levelVal.setText(String.valueOf(_levelVal));
+        iniVal.setText(String.valueOf(_iniVal));
+	}
+
+	private void updateStats() {
+		_levelVal = linkedEntity.getLevel();
+        _hpVal = linkedEntity.getHp();
+        _mpVal = linkedEntity.getMp();
+        _xpVal = linkedEntity.getXp();
+	}
+	
+	private void updateSize() {
+		statsUIOffsetX = (int) Map.TILE_WIDTH_PIXEL;
+		statsUIOffsetY = (int) Map.TILE_HEIGHT_PIXEL;
+		int scaledHeight = (int) (statusUIHeight * Gdx.graphics.getHeight());
+		int scaledWidth = (int) (statusUIWidth * Gdx.graphics.getWidth());
+		this.setSize(baseWidth + scaledWidth, baseHeight + scaledHeight);
+	}
 }
 

@@ -143,7 +143,7 @@ public class EntityAnimation {
 	}
 	
 	public void setFramePos(TiledMapPosition pos) {
-		_frameSprite.setX(pos.getRealX());
-		_frameSprite.setY(pos.getRealY());
+		_frameSprite.setX(pos.getRealScreenX());
+		_frameSprite.setY(pos.getRealScreenY());
 	}
 }
