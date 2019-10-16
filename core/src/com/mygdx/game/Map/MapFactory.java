@@ -13,7 +13,7 @@ public class MapFactory {
 	public static enum MapFileNames{
 		BATTLE_MAP_THE_VILLAGE{
 	        public String toString() {
-	            return "maps/32x32 rpg battlemap(navigation).tmx";
+	            return "maps/32x32 rpg battlemap(withGUI).tmx";
 	        }
 		}
 	}

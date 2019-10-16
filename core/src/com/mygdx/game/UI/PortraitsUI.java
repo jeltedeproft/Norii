@@ -1,18 +1,12 @@
 package com.mygdx.game.UI;
 
 import com.mygdx.game.Entities.Entity;
-
-import Utility.Utility;
+import com.mygdx.game.Map.Map;
 
 import java.util.ArrayList;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Scaling;
 
 public class PortraitsUI extends VerticalGroup {
 	private static final String TAG = PortraitsUI.class.getSimpleName();
@@ -20,8 +14,8 @@ public class PortraitsUI extends VerticalGroup {
 	private ArrayList<PortraitUI> portraits;
 	private Entity[] entities;
 
-	private final float portraitWidth = 0.1f;
-	private final float portraitHeight = 0.1f;
+	private final float portraitWidth = 2.0f;
+	private final float portraitHeight = 4.0f;
 	private final int verticalPadding = 5;
 	private final int horizontalPadding = 2;
 	
@@ -55,10 +49,10 @@ public class PortraitsUI extends VerticalGroup {
 	}
 
 	public void updateSizeContainer() {
-		int scaledHeight = (int) (portraitHeight * Gdx.graphics.getHeight());
-		int scaledWidth = (int) (portraitWidth * Gdx.graphics.getWidth());
+		int scaledHeight = (int) (portraitHeight * Map.TILE_HEIGHT_PIXEL);
+		int scaledWidth = (int) (portraitWidth * Map.TILE_WIDTH_PIXEL);
 		height = entities.length * (scaledHeight + verticalPadding);
-		width = scaledWidth + horizontalPadding;
+		width = scaledWidth;
 		this.setSize(width, height);
 		
 		updateSizePortraits();
