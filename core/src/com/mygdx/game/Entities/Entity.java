@@ -22,6 +22,7 @@ public class Entity extends Actor implements EntitySubject{
 	//stats
 	private String _entityID;
 	private String name;
+	private String _portraitSpritePath;
 	private int mp;
 	private int maxMP;
 	private int hp;
@@ -57,6 +58,7 @@ public class Entity extends Actor implements EntitySubject{
 		this._entityID = UUID.randomUUID().toString();
 		this._nextPlayerPosition = new TiledMapPosition();
 		this._currentPlayerPosition = new TiledMapPosition();
+		this._portraitSpritePath = "sprites/gui/portraits/knight.png";
 		this.hp = 10;
 		this.mp = 3;
 		this.maxMP = 3;
@@ -116,6 +118,10 @@ public class Entity extends Actor implements EntitySubject{
 
 	public String getName() {
 		return name;
+	}
+	
+	public String getPortraitPath() {
+		return _portraitSpritePath;
 	}
 
 	public EntityActor getEntityactor() {

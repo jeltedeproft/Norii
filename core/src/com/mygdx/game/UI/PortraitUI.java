@@ -9,7 +9,6 @@ import Utility.Utility;
 
 public class PortraitUI {
 	private static final String TAG = PortraitUI.class.getSimpleName();
-	private static final String _portraitSpritePath = "sprites/gui/portraits/knight.png";
 
 	private Image _heroPortrait;
 	private TextureRegionDrawable _heroPortraitScalable;
@@ -19,8 +18,8 @@ public class PortraitUI {
 
 	public PortraitUI(Entity entity){
 		this.linkedEntity = entity;
-		Utility.loadTextureAsset(_portraitSpritePath);
-		TextureRegion tr = new TextureRegion(Utility.getTextureAsset(_portraitSpritePath));
+		Utility.loadTextureAsset(entity.getPortraitPath());
+		TextureRegion tr = new TextureRegion(Utility.getTextureAsset(entity.getPortraitPath()));
 		_heroPortraitScalable = new TextureRegionDrawable(tr);
 		_heroPortrait = new Image(_heroPortraitScalable);
 
