@@ -6,6 +6,7 @@ import java.util.List;
 import org.xguzm.pathfinding.grid.GridCell;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -27,6 +28,7 @@ import com.mygdx.game.Map.MapManager;
 import com.mygdx.game.Particles.ParticleMaker;
 import com.mygdx.game.Particles.ParticleType;
 import com.mygdx.game.Profile.ProfileManager;
+import com.mygdx.game.UI.PauseMenuUI;
 import com.mygdx.game.UI.PlayerBattleHUD;
 
 import Utility.TiledMapPosition;
@@ -55,10 +57,12 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 	private InputMultiplexer multiplexer;
 	private OrthographicCamera hudCamera;
 	private PlayerBattleHUD playerBattleHUD;
+	private PauseMenuUI pauseMenu;
 
 	public BattleScreen(Object... params){
 		initializeVariables();
 		initializeHUD();
+		initializePauseMenu();
 		initializeInput(); 
 		initializeMap();
 		initializeUnits(params);
@@ -66,7 +70,13 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 	}
 
 	private void initializeVariables() {
-		playerSortedUnits = Player.getInstance().getUnitsSortedByIni(); 
+		playerSortedUnits = Player.getInstance().getUnitsSortedByIni();
+	}
+	
+	private void initializePauseMenu() {
+		hudCamera = new OrthographicCamera();
+		hudCamera.setToOrtho(false, VIEWPORT.physicalWidth, VIEWPORT.physicalHeight);
+		pauseMenu = new PauseMenuUI(hudCamera);
 	}
 	
 	private void initializeHUD() {
@@ -80,6 +90,7 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		multiplexer.addProcessor(Player.getInstance().getEntityStage()); 
 		battlemanager = new BattleManager(multiplexer,playerSortedUnits);
 		multiplexer.addProcessor(playerBattleHUD.getStage());
+		multiplexer.addProcessor(pauseMenu.getStage());
 	}
 	
 	private void initializeMap() {
@@ -101,6 +112,16 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		for(Owner player : players) {
 			for(Entity unit : player.getTeam()){
 				unit.addObserver(this);
+			}
+		}
+	}
+	
+	private void handleInput() {
+		if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
+			if(pauseMenu.getVisible()) {
+				pauseMenu.setVisible(false);
+			}else {
+				pauseMenu.setVisible(true);
 			}
 		}
 	}
@@ -132,7 +153,8 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 	@Override
 	public void render(float delta) {
 		updateElements(delta);
-		renderElements(delta);	
+		renderElements(delta);
+		handleInput();
 	}
 
 	private void updateElements(float delta) {
@@ -153,6 +175,7 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		Player.getInstance().getEntityStage().act();
 		playerBattleHUD.getStage().act();
 		map.getTiledMapStage().act();
+		pauseMenu.getStage().act();
 	}
 
 	private void updateCameras() {
@@ -204,6 +227,8 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 	private void renderHUD(float delta) {
 		playerBattleHUD.getStage().getViewport().apply();
 		playerBattleHUD.render(delta);
+		pauseMenu.getStage().getViewport().apply();
+		pauseMenu.render(delta);
 	}
 
 	@Override
@@ -214,6 +239,7 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		Gdx.app.debug(TAG, "resizing with : (" + width + " , " + height + ")");
 		Player.getInstance().getEntityStage().getViewport().update(width, height, false);
 		playerBattleHUD.resize(width, height);
+		pauseMenu.resize(width, height);
 		
 	}
 
@@ -231,8 +257,8 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 			owner.dispose();
 		}
 		battlemanager.dispose();
-		Gdx.input.setInputProcessor(null);
 		mapRenderer.dispose();
+		pauseMenu.dispose();
 	}
 
 	private void setupViewport(int width, int height){
