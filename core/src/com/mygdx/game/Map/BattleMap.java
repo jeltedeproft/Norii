@@ -139,6 +139,10 @@ public class BattleMap extends Map{
     public MyNavigationTiledMapLayer  get_navLayer() {
 		return _navLayer;
 	}
+    
+    public void dispose() {
+    	initializeClassVariables();
+    }
 
 
     @Override

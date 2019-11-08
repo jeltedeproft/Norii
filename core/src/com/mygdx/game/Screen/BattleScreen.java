@@ -259,6 +259,7 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		battlemanager.dispose();
 		mapRenderer.dispose();
 		pauseMenu.dispose();
+		map.dispose();
 	}
 
 	private void setupViewport(int width, int height){
