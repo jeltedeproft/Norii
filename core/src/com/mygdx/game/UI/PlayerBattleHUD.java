@@ -21,6 +21,7 @@ public class PlayerBattleHUD implements Screen, ProfileObserver {
     private Entity[] SortedUnits;
     private PortraitsUI _portraits;
     private StatusUI[] _statusUIs;
+    private BottomMenu _bottomMenu;
     private ActionsUI[] _actionUIs;
 //  private InventoryUI _inventoryUI;
     private Camera _camera;
@@ -28,6 +29,7 @@ public class PlayerBattleHUD implements Screen, ProfileObserver {
     public PlayerBattleHUD(Camera camera,Entity[] SortedUnits) {
     	this.SortedUnits = SortedUnits;
     	_statusUIs = new StatusUI[SortedUnits.length];
+    	_bottomMenu = new BottomMenu();
     	_actionUIs = new ActionsUI[SortedUnits.length];
         _camera = camera;
         _viewport = new ScreenViewport(_camera);
@@ -58,6 +60,7 @@ public class PlayerBattleHUD implements Screen, ProfileObserver {
 	        
 	        _stage.addActor(statusui);
 	        _stage.addActor(actionui);
+	        _stage.addActor(_bottomMenu);
         }
         
         //add portraits
@@ -97,6 +100,7 @@ public class PlayerBattleHUD implements Screen, ProfileObserver {
     	Gdx.app.debug(TAG, "resizing with : (" + width + " , " + height + ")");
         _stage.getViewport().update(width, height, true);
         _portraits.updateSizeContainer();
+        _bottomMenu.update();
         updateStatusUIs();
     }
     
