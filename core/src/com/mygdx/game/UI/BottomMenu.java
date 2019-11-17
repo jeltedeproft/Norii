@@ -33,10 +33,11 @@ public class BottomMenu extends Window {
     private String heroName = "???";
     private static String title = "Hero Menu";
     
-    private final float bottomMenuHeightTiles = 3;
+    private final float bottomMenuHeightTiles = 6;
 	
 	private final float bottomMenuWidth = Gdx.graphics.getWidth();
 	private final float bottomMenuHeight = bottomMenuHeightTiles * Map.TILE_HEIGHT_PIXEL;
+	
 
     //Attributes
     private int _levelVal;
@@ -71,9 +72,11 @@ public class BottomMenu extends Window {
     }
     
     public void setHero(Entity entity) {
-    	this.linkedEntity = entity;
-    	initiateHeroStats();
-    	populateElementsForUI(entity);
+    	if(entity.getName() != heroNameLabel.getText().toString()) {
+        	this.linkedEntity = entity;
+        	initiateHeroStats();
+        	populateElementsForUI(entity);
+    	}
     }
     
     private void initiateHeroStats() {
@@ -112,10 +115,6 @@ public class BottomMenu extends Window {
         levelVal = new Label("", Utility.STATUSUI_SKIN);
         iniLabel = new Label(" ini:", Utility.STATUSUI_SKIN);
         iniVal = new Label("", Utility.STATUSUI_SKIN);
-
-        //buttons
-        _heroButton= new ImageButton(Utility.STATUSUI_SKIN, "inventory-button");
-        _heroButton.getImageCell().size(32, 32);
     }
     
     private void populateElementsForUI(Entity entity) {

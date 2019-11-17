@@ -6,6 +6,7 @@ import com.mygdx.game.Entities.InputController;
 import com.mygdx.game.Map.TiledMapActor;
 import com.mygdx.game.Particles.ParticleMaker;
 import com.mygdx.game.Particles.ParticleType;
+import com.mygdx.game.UI.PlayerBattleHUD;
 
 import Utility.TiledMapPosition;
 
@@ -65,6 +66,7 @@ public class DeploymentBattleState implements BattleState{
     			//update for next
     			deployingUnitNumber++;
     			checkIfLastUnit();
+    			PlayerBattleHUD.updateDisplayedUnit();
     		}else {
     			Gdx.app.debug(TAG, "can't deploy unit, units is null or activeunitindex is > the length of units");
     		}

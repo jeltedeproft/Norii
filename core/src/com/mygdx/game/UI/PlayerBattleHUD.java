@@ -25,16 +25,18 @@ public class PlayerBattleHUD implements Screen, ProfileObserver {
     private ActionsUI[] _actionUIs;
 //  private InventoryUI _inventoryUI;
     private Camera _camera;
+	private static int displayedHeroNumber = 0;
 
     public PlayerBattleHUD(Camera camera,Entity[] SortedUnits) {
     	this.SortedUnits = SortedUnits;
     	_statusUIs = new StatusUI[SortedUnits.length];
     	_bottomMenu = new BottomMenu();
+    	_bottomMenu.setHero(SortedUnits[0]);
     	_actionUIs = new ActionsUI[SortedUnits.length];
         _camera = camera;
         _viewport = new ScreenViewport(_camera);
         _stage = new Stage(_viewport);
-        _stage.setDebugAll(true);//!!!!!!!!!!!!!!!! on for debug
+        _stage.setDebugAll(false);//!!!!!!!!!!!!!!!! on for debug
         
         //create a status & actions window for every unit
         for (int i = 0; i < SortedUnits.length; i++) {
@@ -108,7 +110,13 @@ public class PlayerBattleHUD implements Screen, ProfileObserver {
     	for(StatusUI ui : _statusUIs) {
     		ui.update();
     	}
+    	
+    	_bottomMenu.setHero(SortedUnits[displayedHeroNumber]);
     }
+    
+	public static void updateDisplayedUnit() {
+		++displayedHeroNumber;
+	}
 
     @Override
     public void pause() {
