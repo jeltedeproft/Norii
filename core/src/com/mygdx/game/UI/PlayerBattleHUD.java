@@ -30,7 +30,7 @@ public class PlayerBattleHUD implements Screen, ProfileObserver {
     public PlayerBattleHUD(Camera camera,Entity[] SortedUnits) {
     	this.SortedUnits = SortedUnits;
     	_statusUIs = new StatusUI[SortedUnits.length];
-    	_bottomMenu = new BottomMenu();
+    	_bottomMenu = new BottomMenu(SortedUnits);
     	_bottomMenu.setHero(SortedUnits[0]);
     	_actionUIs = new ActionsUI[SortedUnits.length];
         _camera = camera;
@@ -110,13 +110,8 @@ public class PlayerBattleHUD implements Screen, ProfileObserver {
     	for(StatusUI ui : _statusUIs) {
     		ui.update();
     	}
-    	
-    	_bottomMenu.setHero(SortedUnits[displayedHeroNumber]);
     }
     
-	public static void updateDisplayedUnit() {
-		++displayedHeroNumber;
-	}
 
     @Override
     public void pause() {
