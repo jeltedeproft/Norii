@@ -63,9 +63,13 @@ public class BottomMenu extends Window {
     private Label levelLabel;
     private Label iniLabel;
     
-    public BottomMenu(){
+    public BottomMenu(Entity[] entities){
         super(title, Utility.STATUSUI_SKIN);
- 
+        
+        for(Entity entity : entities) {
+        	entity.setbottomMenu(this);
+        }
+        
         initElementsForUI();
         configureElements();
         addElementsToWindow();

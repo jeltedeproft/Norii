@@ -22,6 +22,7 @@ public class DeploymentBattleState implements BattleState{
 		this.battlemanager = battlemanager;
 		this.deployingUnitNumber = 0;
 		this.unitsSortedByInitiative = battlemanager.getUnits();
+		unitsSortedByInitiative[0].setInDeploymentPhase(true);
 	}
 
 	@Override
@@ -53,6 +54,7 @@ public class DeploymentBattleState implements BattleState{
     		if((unitsSortedByInitiative != null) && (deployingUnitNumber < unitsSortedByInitiative.length)) {
     			//deploy unit
     			Entity unitToDeploy = unitsSortedByInitiative[deployingUnitNumber];
+    			unitToDeploy.setInDeploymentPhase(false);
     			initiateUnitInBattle(unitToDeploy,newPosition);
     			
     			//adjust tile
@@ -65,8 +67,10 @@ public class DeploymentBattleState implements BattleState{
     			
     			//update for next
     			deployingUnitNumber++;
+    			if(deployingUnitNumber <= unitsSortedByInitiative.length) {
+    				unitsSortedByInitiative[deployingUnitNumber].setInDeploymentPhase(true);
+    			}
     			checkIfLastUnit();
-    			PlayerBattleHUD.updateDisplayedUnit();
     		}else {
     			Gdx.app.debug(TAG, "can't deploy unit, units is null or activeunitindex is > the length of units");
     		}
