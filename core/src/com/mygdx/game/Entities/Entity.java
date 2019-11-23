@@ -11,6 +11,7 @@ import com.mygdx.game.Entities.EntityAnimation.State;
 import com.mygdx.game.Entities.EntityObserver.EntityCommand;
 import com.mygdx.game.Particles.ParticleMaker;
 import com.mygdx.game.UI.ActionsUI;
+import com.mygdx.game.UI.BottomMenu;
 import com.mygdx.game.UI.StatusUI;
 
 import Utility.TiledMapPosition;
@@ -22,6 +23,7 @@ public class Entity extends Actor implements EntitySubject{
 	//stats
 	private String _entityID;
 	private String name;
+	private String _portraitSpritePath;
 	private int mp;
 	private int maxMP;
 	private int hp;
@@ -32,6 +34,7 @@ public class Entity extends Actor implements EntitySubject{
 	private boolean isActive;
 	private boolean isInMovementPhase;
 	private boolean isInActionPhase;
+	private boolean isInDeploymentPhase;
 	
 	private TiledMapPosition _velocity;
 	protected TiledMapPosition _nextPlayerPosition;
@@ -40,6 +43,7 @@ public class Entity extends Actor implements EntitySubject{
 	
 	private StatusUI statusui;
 	private ActionsUI actionsui;
+	private BottomMenu bottomMenu;
 	
 	private EntityAnimation entityAnimation;
 	protected EntityActor entityactor;
@@ -57,12 +61,14 @@ public class Entity extends Actor implements EntitySubject{
 		this._entityID = UUID.randomUUID().toString();
 		this._nextPlayerPosition = new TiledMapPosition();
 		this._currentPlayerPosition = new TiledMapPosition();
+		this._portraitSpritePath = "sprites/gui/portraits/knight.png";
 		this.hp = 10;
 		this.mp = 3;
 		this.maxMP = 3;
 		this.ini = Utility.getRandomIntFrom1to(100);
 		this.inBattle = false;
 		this.isInMovementPhase = false;
+		this.isInDeploymentPhase = false;
 	}
 	
 	public void update(float delta){
@@ -85,6 +91,14 @@ public class Entity extends Actor implements EntitySubject{
 		this.actionsui = actionsui;
 	}
 
+	public BottomMenu getbottomMenu() {
+		return bottomMenu;
+	}
+
+	public void setbottomMenu(BottomMenu bottomMenu) {
+		this.bottomMenu = bottomMenu;
+	}
+	
 	public void dispose(){
 		Utility.unloadAsset(this.entityAnimation.get_spritePath());
 	}
@@ -116,6 +130,10 @@ public class Entity extends Actor implements EntitySubject{
 
 	public String getName() {
 		return name;
+	}
+	
+	public String getPortraitPath() {
+		return _portraitSpritePath;
 	}
 
 	public EntityActor getEntityactor() {
@@ -165,6 +183,25 @@ public class Entity extends Actor implements EntitySubject{
 
 	public void setInActionPhase(boolean isInActionPhase) {
 		this.isInActionPhase = isInActionPhase;
+	}
+	
+	public boolean isInDeploymentPhase() {
+		return isInDeploymentPhase;
+	}
+
+	public void setFocused(boolean isFocused) {
+		if (isFocused){
+			bottomMenu.setHero(this);
+		}else {
+			bottomMenu.setHero(null);
+		}
+	}
+	
+	public void setInDeploymentPhase(boolean isInDeploymentPhase) {
+		this.isInDeploymentPhase = isInDeploymentPhase;
+		if (isInDeploymentPhase){
+			bottomMenu.setHero(this);
+		}
 	}
 
 	public int getMp() {

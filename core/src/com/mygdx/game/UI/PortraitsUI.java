@@ -14,8 +14,9 @@ public class PortraitsUI extends VerticalGroup {
 	private ArrayList<PortraitUI> portraits;
 	private Entity[] entities;
 
+	private static final float portraitsBottomPadding = 6;
 	private final float portraitWidth = 2.0f;
-	private final float portraitHeight = 4.0f;
+	private final float portraitHeight = 3.0f;
 	private final int verticalPadding = 5;
 	private final int horizontalPadding = 2;
 	
@@ -37,6 +38,7 @@ public class PortraitsUI extends VerticalGroup {
 		this.expand(true);
 		this.fill();
 		createPortraits(entities);
+		this.setPosition(0, portraitsBottomPadding * Map.TILE_HEIGHT_PIXEL);
 	}
 	
 	private void createPortraits(Entity[] entities) {
@@ -51,7 +53,7 @@ public class PortraitsUI extends VerticalGroup {
 	public void updateSizeContainer() {
 		int scaledHeight = (int) (portraitHeight * Map.TILE_HEIGHT_PIXEL);
 		int scaledWidth = (int) (portraitWidth * Map.TILE_WIDTH_PIXEL);
-		height = entities.length * (scaledHeight + verticalPadding);
+		height = (entities.length * (scaledHeight + verticalPadding));
 		width = scaledWidth;
 		this.setSize(width, height);
 		
@@ -64,6 +66,7 @@ public class PortraitsUI extends VerticalGroup {
 			portrait.get_heroPortraitScalable().setMinHeight(newHeight);
 			portrait.get_heroPortraitScalable().setMinWidth(width);
 		}
+		this.setPosition(0, portraitsBottomPadding * Map.TILE_HEIGHT_PIXEL);
 	}
 
 	public void HighlightUnit(Entity unit) {
