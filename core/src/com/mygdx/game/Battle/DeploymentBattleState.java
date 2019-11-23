@@ -67,7 +67,7 @@ public class DeploymentBattleState implements BattleState{
     			
     			//update for next
     			deployingUnitNumber++;
-    			if(deployingUnitNumber <= unitsSortedByInitiative.length) {
+    			if(deployingUnitNumber < unitsSortedByInitiative.length) {
     				unitsSortedByInitiative[deployingUnitNumber].setInDeploymentPhase(true);
     			}
     			checkIfLastUnit();

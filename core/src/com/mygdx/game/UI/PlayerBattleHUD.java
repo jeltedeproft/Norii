@@ -30,6 +30,7 @@ public class PlayerBattleHUD implements Screen, ProfileObserver {
     public PlayerBattleHUD(Camera camera,Entity[] SortedUnits) {
     	this.SortedUnits = SortedUnits;
     	_statusUIs = new StatusUI[SortedUnits.length];
+    	
     	_bottomMenu = new BottomMenu(SortedUnits);
     	_bottomMenu.setHero(SortedUnits[0]);
     	_actionUIs = new ActionsUI[SortedUnits.length];

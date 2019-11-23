@@ -39,12 +39,15 @@ public class BattleManager {
 	
 	public void giveControlToNextUnit() {
 		activeUnit.setActive(false);
+		activeUnit.setFocused(false);
 		if(_controller == null) {
 			_controller = new InputController(activeUnit);
+			activeUnit.setFocused(true);
 		}else {
 			activeUnitIndex = (activeUnitIndex+1) % numberOfUnits;
 			activeUnit = sortedUnits[activeUnitIndex];
 			_controller.ChangePlayer(activeUnit);
+			activeUnit.setFocused(true);
 		}
 		//activate actions UI
 		activeUnit.setActive(true);
