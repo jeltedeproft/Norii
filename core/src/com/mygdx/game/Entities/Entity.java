@@ -189,6 +189,14 @@ public class Entity extends Actor implements EntitySubject{
 		return isInDeploymentPhase;
 	}
 
+	public void setFocused(boolean isFocused) {
+		if (isFocused){
+			bottomMenu.setHero(this);
+		}else {
+			bottomMenu.setHero(null);
+		}
+	}
+	
 	public void setInDeploymentPhase(boolean isInDeploymentPhase) {
 		this.isInDeploymentPhase = isInDeploymentPhase;
 		if (isInDeploymentPhase){

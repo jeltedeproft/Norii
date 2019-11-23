@@ -14,7 +14,7 @@ public class PortraitsUI extends VerticalGroup {
 	private ArrayList<PortraitUI> portraits;
 	private Entity[] entities;
 
-	private final float portraitsBottomPadding = 6;
+	private static final float portraitsBottomPadding = 6;
 	private final float portraitWidth = 2.0f;
 	private final float portraitHeight = 3.0f;
 	private final int verticalPadding = 5;
