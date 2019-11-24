@@ -1,8 +1,6 @@
 package com.mygdx.game.Entities;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import java.util.EnumMap;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
@@ -13,7 +11,7 @@ import com.mygdx.game.Entities.EntityAnimation.State;
 
 public class InputController implements InputProcessor {
 
-	private final static String TAG = InputController.class.getSimpleName();
+	private static final String TAG = InputController.class.getSimpleName();
 
 	enum Keys {
 		LEFT, RIGHT, UP, DOWN, QUIT
@@ -23,34 +21,33 @@ public class InputController implements InputProcessor {
 		SELECT, DOACTION
 	}
 
-	private static Map<Keys, Boolean> keys = new HashMap<InputController.Keys, Boolean>();
-	private static Map<Mouse, Boolean> mouseButtons = new HashMap<InputController.Mouse, Boolean>();
+	private static EnumMap<Keys, Boolean> keys = new EnumMap<InputController.Keys, Boolean>(Keys.class);
+	private static EnumMap<Mouse, Boolean> mouseButtons = new EnumMap<InputController.Mouse, Boolean>(Mouse.class);
 	private Vector3 lastMouseCoordinates;
 
-	//initialize the hashmap for inputs
+
 	static {
 		keys.put(Keys.LEFT, false);
 		keys.put(Keys.RIGHT, false);
 		keys.put(Keys.UP, false);
 		keys.put(Keys.DOWN, false);
 		keys.put(Keys.QUIT, false);
-	};
+	}
 
 	static {
 		mouseButtons.put(Mouse.SELECT, false);
 		mouseButtons.put(Mouse.DOACTION, false);
-	};
+	}
 
-	private Entity _unit;
+	private Entity unit;
 
-	public void ChangePlayer(Entity unit){
-		_unit = unit;
+	public void changePlayer(Entity unit){
+		this.unit = unit;
 	}
 
 	public InputController(Entity unit){
-		//Gdx.app.debug(TAG, "Construction" );
 		this.lastMouseCoordinates = new Vector3();
-		this._unit = unit;
+		this.unit = unit;
 	}
 
 	@Override
@@ -92,7 +89,6 @@ public class InputController implements InputProcessor {
 			this.quitReleased();
 		}
 		return true;
-		// TODO Auto-generated method stub
 	}
 
 	@Override
@@ -102,13 +98,10 @@ public class InputController implements InputProcessor {
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		//Gdx.app.debug(TAG, "GameScreen: MOUSE DOWN........: (" + screenX + "," + screenY + ")" );
-
 		if( button == Input.Buttons.LEFT || button == Input.Buttons.RIGHT ){
 			this.setClickedMouseCoordinates(screenX, screenY);
 		}
 
-		//left is selection, right is context menu
 		if( button == Input.Buttons.LEFT){
 			this.selectMouseButtonPressed(screenX, screenY);
 		}
@@ -120,7 +113,6 @@ public class InputController implements InputProcessor {
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		//left is selection, right is context menu
 		if( button == Input.Buttons.LEFT){
 			this.selectMouseButtonReleased(screenX, screenY);
 		}
@@ -212,9 +204,8 @@ public class InputController implements InputProcessor {
 	}
 	
 	
-	public void update(float delta){
-		processInput(delta);
-		//Gdx.app.debug(TAG, "update:: Next Position: (" + BludBourne._player.getNextPosition().x + "," + BludBourne._player.getNextPosition().y + ")" + "DELTA: " + delta);
+	public void update(){
+		processInput();
 	}
 	
 	public static void hide(){
@@ -225,34 +216,29 @@ public class InputController implements InputProcessor {
 		keys.put(Keys.QUIT, false);
 	}
 	
-	private void processInput(float delta){
+	private void processInput(){
 		
 		//Keyboard input
 		if( keys.get(Keys.LEFT)){
-			//Gdx.app.debug(TAG, "LEFT key");
-			_unit.setState(State.WALKING);
-			_unit.setDirection(Direction.LEFT, delta);
+			unit.setState(State.WALKING);
+			unit.setDirection(Direction.LEFT);
 		}else if( keys.get(Keys.RIGHT)){
-			//Gdx.app.debug(TAG, "RIGHT key");
-			_unit.setState(State.WALKING);
-			_unit.setDirection(Direction.RIGHT, delta);
+			unit.setState(State.WALKING);
+			unit.setDirection(Direction.RIGHT);
 		}else if( keys.get(Keys.UP)){
-			//Gdx.app.debug(TAG, "UP key");
-			_unit.setState(State.WALKING);
-			_unit.setDirection(Direction.UP, delta);
+			unit.setState(State.WALKING);
+			unit.setDirection(Direction.UP);
 		}else if(keys.get(Keys.DOWN)){
-			//Gdx.app.debug(TAG, "DOWN key");
-			_unit.setState(State.WALKING);
-			_unit.setDirection(Direction.DOWN, delta);
+			unit.setState(State.WALKING);
+			unit.setDirection(Direction.DOWN);
 		}else if(keys.get(Keys.QUIT)){
 			Gdx.app.exit();
 		}else{
-			_unit.setState(State.IDLE);
+			unit.setState(State.IDLE);
 		}
 		
 		//Mouse input
 		if( mouseButtons.get(Mouse.SELECT)) {
-			//Gdx.app.debug(TAG, "Mouse LEFT click at : (" + lastMouseCoordinates.x + "," + lastMouseCoordinates.y + ")" );
 			mouseButtons.put(Mouse.SELECT, false);
 		}
 

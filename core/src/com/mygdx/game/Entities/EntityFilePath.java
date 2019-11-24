@@ -6,13 +6,13 @@ public enum EntityFilePath {
     DEMON("sprites/characters/Demon.png"),
     SHAMAN("sprites/characters/Shaman.png");
 
-    private String _entityFullFilePath;
+    private String entityFullFilePath;
 
     EntityFilePath(String entityFullFilePath){
-        this._entityFullFilePath = entityFullFilePath;
+        this.entityFullFilePath = entityFullFilePath;
     }
 
     public String getValue(){
-        return _entityFullFilePath;
+        return entityFullFilePath;
     }
 }

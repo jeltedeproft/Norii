@@ -22,7 +22,7 @@ public class MyPathFinder{
 	
 	public MyPathFinder(Map map) {
 		linkedMap = map;
-		navGrid = linkedMap.get_navLayer().navGrid;
+		navGrid = linkedMap.getNavLayer().navGrid;
 		
 		//create pathfinder options
 		opt = new GridFinderOptions();

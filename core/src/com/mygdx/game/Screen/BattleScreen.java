@@ -95,7 +95,7 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 	
 	private void initializeMap() {
 		mapMgr = new MapManager();
-		map = (BattleMap) mapMgr.get_currentMap();
+		map = (BattleMap) mapMgr.getCurrentMap();
 		map.setStage(battlemanager);
 	}
 	
@@ -168,7 +168,7 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		    owner.updateUnits(delta);
 		}
 
-		battlemanager.updateController(delta);
+		battlemanager.updateController();
 	}
 	
 	private void updateStages() {
@@ -208,7 +208,7 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		mapRenderer.getBatch().begin();
 		Player.getInstance().getEntityStage().getViewport().apply();
 		for (Owner owner : players) {
-			ArrayList<Entity> units = owner.getTeam();
+			ArrayList<Entity> units = (ArrayList<Entity>) owner.getTeam();
 			for (Entity entity : units) {
 				if(entity.isInBattle()) {
 					mapRenderer.getBatch().draw(entity.getFrame(), entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY(), 1f,1f);

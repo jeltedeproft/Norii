@@ -13,27 +13,28 @@ import Utility.Utility;
 
 public class EntityAnimation {
 	private static final String TAG = EntityAnimation.class.getSimpleName();
-	//animation stuff
-	private static final int animationframes = 3;
+
+	private static final int ANIMATIONFRAMES = 3;
+	private static final int DIRECTIONS = 4;
 	private static final int FRAME_WIDTH = 32;
 	private static final int FRAME_HEIGHT = 32;
-	private String _spritePath;
+	private String spritePath;
 
-	private Animation<TextureRegion> _walkLeftAnimation;
-	private Animation<TextureRegion> _walkRightAnimation;
-	private Animation<TextureRegion> _walkUpAnimation;
-	private Animation<TextureRegion> _walkDownAnimation;
-
-	private Array<TextureRegion> _walkLeftFrames;
-	private Array<TextureRegion> _walkRightFrames;
-	private Array<TextureRegion> _walkUpFrames;
-	private Array<TextureRegion> _walkDownFrames;
+	private Animation<TextureRegion> walkLeftAnimation;
+	private Animation<TextureRegion> walkRightAnimation;
+	private Animation<TextureRegion> walkUpAnimation;
+	private Animation<TextureRegion> walkDownAnimation;
 	
-	protected float _frameTime = 0f;
-	protected Sprite _frameSprite = null;
-	protected TextureRegion _currentFrame = null;
-	private Direction _currentDirection = Direction.DOWN;
-	private Direction _previousDirection = Direction.UP;
+	Array<TextureRegion> walkDownFrames;
+	Array<TextureRegion> walkLeftFrames;
+	Array<TextureRegion> walkRightFrames;
+	Array<TextureRegion> walkUpFrames;
+	
+	protected float frameTime = 0f;
+	protected Sprite frameSprite = null;
+	protected TextureRegion currentFrame = null;
+	private Direction currentDirection = Direction.DOWN;
+	private Direction previousDirection = Direction.UP;
 	
 	public enum State {
 		IDLE, WALKING
@@ -44,98 +45,108 @@ public class EntityAnimation {
 	}
 	
 	public EntityAnimation(String spritePath) {
-		this._spritePath = spritePath;
-		Utility.loadTextureAsset(_spritePath);
+		this.spritePath = spritePath;
+		Utility.loadTextureAsset(spritePath);
 		loadSprite();
 		loadAllAnimations();
 	}
 	
 	public void update(float delta){
-		_frameTime = (_frameTime + delta)%5; //Want to avoid overflow
+		frameTime = (frameTime + delta)%5; //Want to avoid overflow
 		updateFrame();
 	}
 	
 	private void loadSprite()
 	{
-		Texture texture = Utility.getTextureAsset(_spritePath);
+		Texture texture = Utility.getTextureAsset(spritePath);
 		TextureRegion[][] textureFrames = TextureRegion.split(texture, FRAME_WIDTH, FRAME_HEIGHT);
-		_frameSprite = new Sprite(textureFrames[0][0].getTexture(), 0,0,FRAME_WIDTH, FRAME_HEIGHT);
-		_currentFrame = textureFrames[0][0];
+		frameSprite = new Sprite(textureFrames[0][0].getTexture(), 0,0,FRAME_WIDTH, FRAME_HEIGHT);
+		currentFrame = textureFrames[0][0];
 	}
 	
 	private void loadAllAnimations(){
-		//Walking animation
-		Texture texture = Utility.getTextureAsset(_spritePath);
+		TextureRegion[][] textureFrames = initVariables();
+		divideAnimationFrames(textureFrames);
+		createAnimations();
+	}
+	
+	private TextureRegion[][] initVariables() {
+		Texture texture = Utility.getTextureAsset(spritePath);
 		TextureRegion[][] textureFrames = TextureRegion.split(texture, FRAME_WIDTH, FRAME_HEIGHT);
+		
+		walkDownFrames = new Array<TextureRegion>(ANIMATIONFRAMES);
+		walkLeftFrames = new Array<TextureRegion>(ANIMATIONFRAMES);
+		walkRightFrames = new Array<TextureRegion>(ANIMATIONFRAMES);
+		walkUpFrames = new Array<TextureRegion>(ANIMATIONFRAMES);
+		return textureFrames;
+	}
 
-		_walkDownFrames = new Array<TextureRegion>(animationframes);
-		_walkLeftFrames = new Array<TextureRegion>(animationframes);
-		_walkRightFrames = new Array<TextureRegion>(animationframes);
-		_walkUpFrames = new Array<TextureRegion>(animationframes);
-
-		for (int i = 0; i < 4; i++) {
-			for (int j = 0; j < animationframes; j++) {
-				//Gdx.app.debug(TAG, "Got frame " + i + "," + j + " from " + sourceImage);
+	private void divideAnimationFrames(TextureRegion[][] textureFrames) {
+		for (int i = 0; i < DIRECTIONS; i++) {
+			for (int j = 0; j < ANIMATIONFRAMES; j++) {
 				TextureRegion region = textureFrames[i][j];
 				if( region == null ){
 					Gdx.app.debug(TAG, "Got null animation frame " + i + "," + j);
 				}
-				switch(i)
-				{
+				
+				switch(i){
 					case 0:
-						_walkDownFrames.insert(j, region);
+						walkDownFrames.insert(j, region);
 						break;
 					case 1:
-						_walkLeftFrames.insert(j, region);
+						walkLeftFrames.insert(j, region);
 						break;
 					case 2:
-						_walkRightFrames.insert(j, region);
+						walkRightFrames.insert(j, region);
 						break;
 					case 3:
-						_walkUpFrames.insert(j, region);
+						walkUpFrames.insert(j, region);
+						break;
+					default:
 						break;
 				}
 			}
 		}
+	}
 
-
-		_walkDownAnimation = new Animation(0.25f, _walkDownFrames, Animation.PlayMode.LOOP);
-		_walkLeftAnimation = new Animation(0.25f, _walkLeftFrames, Animation.PlayMode.LOOP);
-		_walkRightAnimation = new Animation(0.25f, _walkRightFrames, Animation.PlayMode.LOOP);
-		_walkUpAnimation = new Animation(0.25f, _walkUpFrames, Animation.PlayMode.LOOP);
+	private void createAnimations() {
+		walkDownAnimation = new Animation<TextureRegion>(0.25f, walkDownFrames, Animation.PlayMode.LOOP);
+		walkLeftAnimation = new Animation<TextureRegion>(0.25f, walkLeftFrames, Animation.PlayMode.LOOP);
+		walkRightAnimation = new Animation<TextureRegion>(0.25f, walkRightFrames, Animation.PlayMode.LOOP);
+		walkUpAnimation = new Animation<TextureRegion>(0.25f, walkUpFrames, Animation.PlayMode.LOOP);
 	}
 	
 	public Sprite getFrameSprite(){
-		return _frameSprite;
+		return frameSprite;
 	}
 
 	public TextureRegion getFrame(){
-		return _currentFrame;
+		return currentFrame;
 	}
 
-	public String get_spritePath() {
-		return _spritePath;
+	public String getSpritePath() {
+		return spritePath;
 	}
 	
-	public void setDirection(Direction direction,  float deltaTime){
-		this._previousDirection = this._currentDirection;
-		this._currentDirection = direction;
+	public void setDirection(Direction direction){
+		this.previousDirection = this.currentDirection;
+		this.currentDirection = direction;
 		updateFrame();
 	}
 	
 	public void updateFrame() {
-		switch (_currentDirection) {
+		switch (currentDirection) {
 		case DOWN :
-			_currentFrame = _walkDownAnimation.getKeyFrame(_frameTime);
+			currentFrame = walkDownAnimation.getKeyFrame(frameTime);
 			break;
 		case LEFT :
-			_currentFrame = _walkLeftAnimation.getKeyFrame(_frameTime);
+			currentFrame = walkLeftAnimation.getKeyFrame(frameTime);
 			break;
 		case UP :
-			_currentFrame = _walkUpAnimation.getKeyFrame(_frameTime);
+			currentFrame = walkUpAnimation.getKeyFrame(frameTime);
 			break;
 		case RIGHT :
-			_currentFrame = _walkRightAnimation.getKeyFrame(_frameTime);
+			currentFrame = walkRightAnimation.getKeyFrame(frameTime);
 			break;
 		default:
 			break;
@@ -143,7 +154,7 @@ public class EntityAnimation {
 	}
 	
 	public void setFramePos(TiledMapPosition pos) {
-		_frameSprite.setX(pos.getRealScreenX());
-		_frameSprite.setY(pos.getRealScreenY());
+		frameSprite.setX(pos.getRealScreenX());
+		frameSprite.setY(pos.getRealScreenY());
 	}
 }

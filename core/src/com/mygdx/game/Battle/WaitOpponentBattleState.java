@@ -22,19 +22,19 @@ public class WaitOpponentBattleState implements BattleState {
 
 	@Override
 	public void update() {
-		// TODO Auto-generated method stub
+		
 
 	}
 
 	@Override
 	public void exit() {
-		// TODO Auto-generated method stub
+		
 
 	}
 
 	@Override
 	public void clickedOnTile(TiledMapActor actor) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 

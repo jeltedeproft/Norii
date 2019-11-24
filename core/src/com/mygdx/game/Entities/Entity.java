@@ -5,11 +5,9 @@ import java.util.UUID;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
-import com.mygdx.game.Audio.AudioObserver;
 import com.mygdx.game.Entities.EntityAnimation.Direction;
 import com.mygdx.game.Entities.EntityAnimation.State;
 import com.mygdx.game.Entities.EntityObserver.EntityCommand;
-import com.mygdx.game.Particles.ParticleMaker;
 import com.mygdx.game.UI.ActionsUI;
 import com.mygdx.game.UI.BottomMenu;
 import com.mygdx.game.UI.StatusUI;
@@ -20,12 +18,10 @@ import Utility.Utility;
 public class Entity extends Actor implements EntitySubject{
 	private static final String TAG = Entity.class.getSimpleName();
 	
-	//stats
 	private String _entityID;
 	private String name;
-	private String _portraitSpritePath;
+	private String portraitSpritePath;
 	private int mp;
-	private int maxMP;
 	private int hp;
 	private int level;
 	private int xp;
@@ -36,10 +32,10 @@ public class Entity extends Actor implements EntitySubject{
 	private boolean isInActionPhase;
 	private boolean isInDeploymentPhase;
 	
-	private TiledMapPosition _velocity;
-	protected TiledMapPosition _nextPlayerPosition;
-	protected TiledMapPosition _currentPlayerPosition;
-	protected State _state = State.IDLE;
+
+	protected TiledMapPosition nextPlayerPosition;
+	protected TiledMapPosition currentPlayerPosition;
+	protected State state = State.IDLE;
 	
 	private StatusUI statusui;
 	private ActionsUI actionsui;
@@ -48,7 +44,7 @@ public class Entity extends Actor implements EntitySubject{
 	private EntityAnimation entityAnimation;
 	protected EntityActor entityactor;
 	
-	private Array<EntityObserver> _observers;
+	private Array<EntityObserver> observers;
 	
 	public Entity(String name,EntityFilePath entityfilepath){
 		this.entityAnimation = new EntityAnimation(entityfilepath.getValue());
@@ -57,14 +53,13 @@ public class Entity extends Actor implements EntitySubject{
 	}
 	
 	public void initEntity(){
-		this._observers = new Array<EntityObserver>();
+		this.observers = new Array<EntityObserver>();
 		this._entityID = UUID.randomUUID().toString();
-		this._nextPlayerPosition = new TiledMapPosition();
-		this._currentPlayerPosition = new TiledMapPosition();
-		this._portraitSpritePath = "sprites/gui/portraits/knight.png";
+		this.nextPlayerPosition = new TiledMapPosition();
+		this.currentPlayerPosition = new TiledMapPosition();
+		this.portraitSpritePath = "sprites/gui/portraits/knight.png";
 		this.hp = 10;
 		this.mp = 3;
-		this.maxMP = 3;
 		this.ini = Utility.getRandomIntFrom1to(100);
 		this.inBattle = false;
 		this.isInMovementPhase = false;
@@ -100,27 +95,23 @@ public class Entity extends Actor implements EntitySubject{
 	}
 	
 	public void dispose(){
-		Utility.unloadAsset(this.entityAnimation.get_spritePath());
+		Utility.unloadAsset(this.entityAnimation.getSpritePath());
 	}
 	
 	public void setState(State state){
-		this._state = state;
+		this.state = state;
 	}
 	
 
 	public TiledMapPosition getCurrentPosition(){
-		return _currentPlayerPosition;
+		return currentPlayerPosition;
 	}
 	
 	public void setCurrentPosition(TiledMapPosition pos){
 		entityAnimation.setFramePos(pos);
-		//this._currentPlayerPosition.setPositionFromTiles(pos.getTileX(), pos.getTileY());
-		this._currentPlayerPosition = pos;
-
-		//also move the actor linked to this entity
-		this.entityactor.setPos(_currentPlayerPosition);
+		this.currentPlayerPosition = pos;
+		this.entityactor.setPos(currentPlayerPosition);
 		
-		//update the status UI's position
 		updateStatusUI();
 	}
 	
@@ -128,12 +119,13 @@ public class Entity extends Actor implements EntitySubject{
 		statusui.update();
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}
 	
 	public String getPortraitPath() {
-		return _portraitSpritePath;
+		return portraitSpritePath;
 	}
 
 	public EntityActor getEntityactor() {
@@ -253,28 +245,28 @@ public class Entity extends Actor implements EntitySubject{
 		return entityAnimation.getFrame();
 	}
 	
-	public void setDirection(Direction direction, float delta) {
-		entityAnimation.setDirection(direction, delta);
+	public void setDirection(Direction direction) {
+		entityAnimation.setDirection(direction);
 	}
 	
     @Override
     public void addObserver(EntityObserver entityObserver) {
-        _observers.add(entityObserver);
+        observers.add(entityObserver);
     }
 
     @Override
     public void removeObserver(EntityObserver entityObserver) {
-        _observers.removeValue(entityObserver, true);
+        observers.removeValue(entityObserver, true);
     }
 
     @Override
     public void removeAllObservers() {
-        _observers.removeAll(_observers, true);
+        observers.removeAll(observers, true);
     }
 
     @Override
     public void notify(EntityObserver.EntityCommand command) {
-        for(EntityObserver observer: _observers){
+        for(EntityObserver observer: observers){
             observer.onNotify(command,this);
         }
     }

@@ -1,31 +1,32 @@
 package com.mygdx.game.Map;
 
-import java.util.Hashtable;
+import java.util.EnumMap;
 
 public class MapFactory {
     //All maps for the game
-    private static Hashtable<MapType,Map> _mapTable = new Hashtable<MapType, Map>();
+    private static EnumMap<MapType,Map> mapTable = new EnumMap<MapType, Map>(MapType.class);
 
-    public static enum MapType{
+    public enum MapType{
         BATTLE_MAP
     }
     
-	public static enum MapFileNames{
+	public enum MapFileNames{
 		BATTLE_MAP_THE_VILLAGE{
+			@Override
 	        public String toString() {
 	            return "maps/32x32 rpg battlemap(withGUIbiggerWhite).tmx";
 	        }
 		}
 	}
 
-    static public Map getMap(MapType mapType){
+    public static Map getMap(MapType mapType){
         Map map = null;
         switch(mapType){
             case BATTLE_MAP:
-                map = _mapTable.get(MapType.BATTLE_MAP);
+                map = mapTable.get(MapType.BATTLE_MAP);
                 if( map == null ){
                     map = new BattleMap(MapFileNames.BATTLE_MAP_THE_VILLAGE.toString());
-                    _mapTable.put(MapType.BATTLE_MAP, map);
+                    mapTable.put(MapType.BATTLE_MAP, map);
                 }
                 break;
             default:

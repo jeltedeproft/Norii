@@ -46,16 +46,16 @@ public class BattleManager {
 		}else {
 			activeUnitIndex = (activeUnitIndex+1) % numberOfUnits;
 			activeUnit = sortedUnits[activeUnitIndex];
-			_controller.ChangePlayer(activeUnit);
+			_controller.changePlayer(activeUnit);
 			activeUnit.setFocused(true);
 		}
 		//activate actions UI
 		activeUnit.setActive(true);
 	}
 	
-	public void updateController(float delta) {
+	public void updateController() {
 		if(_controller != null) {
-			_controller.update(delta);
+			_controller.update();
 		}
 	}
 	

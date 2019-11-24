@@ -1,6 +1,6 @@
 package com.mygdx.game.Entities;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -14,16 +14,16 @@ import com.mygdx.game.Map.Map;
 public class EntityStage extends Stage {
 	private static final String TAG = EntityStage.class.getSimpleName();
 
-    private ArrayList<Entity> _entities;
+    private List<Entity> entities;
 
-    public EntityStage(ArrayList<Entity> entities) {
-        this._entities = entities;
+    public EntityStage(List<Entity> entities) {
+        this.entities = entities;
         createActorsForEntities();
     }
 
 	private void createActorsForEntities() {
-        for (int x = 0; x < _entities.size(); x++) {
-        	Entity entity = _entities.get(x);
+        for (int x = 0; x < entities.size(); x++) {
+        	Entity entity = entities.get(x);
             EntityActor actor = new EntityActor(entity);
             initializeActor(actor);
         }

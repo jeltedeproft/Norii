@@ -1,36 +1,28 @@
 package com.mygdx.game.Entities;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-
-import com.badlogic.gdx.Gdx;
-import com.mygdx.game.Screen.BattleScreen;
+import java.util.List;
 
 public abstract class Owner {
 	private static final String TAG = Owner.class.getSimpleName();
 	
-	private ArrayList<Entity> team;
+	private List<Entity> team;
 	private EntityStage entityStage;
 	
 	public EntityStage getEntityStage() {
 		return entityStage;
 	}
 	
-	public ArrayList<Entity> getTeam() {
+	public List<Entity> getTeam() {
 		return team;
 	}
 
-	public void setTeam(ArrayList<Entity> team) {
+	public void setTeam(List<Entity> team) {
 		this.team = team;
-		
-		if(entityStage == null) {
-			this.entityStage = new EntityStage(team);
-		}else {
-			this.entityStage.dispose();
-			this.entityStage = new EntityStage(team);
-		}
-		
+	
+		if(entityStage != null) this.entityStage.dispose();
+		this.entityStage = new EntityStage(team);
 	}
 	
 	public void updateUnits(float delta) {
@@ -41,6 +33,11 @@ public abstract class Owner {
 	
 	public Entity[] getUnitsSortedByIni(){
 		Entity[] sortedUnits = team.toArray(new Entity[0]);
+		sortUnits(sortedUnits);
+		return sortedUnits;
+	}
+
+	private void sortUnits(Entity[] sortedUnits) {
 		Arrays.sort(sortedUnits, new Comparator<Entity>() {
 			   public int compare(Entity e1, Entity e2) {
 				   if(e1.getIni() > e2.getIni()) {
@@ -51,7 +48,6 @@ public abstract class Owner {
 				   
 			   }
 		});
-		return sortedUnits;
 	}
 	
 	public void dispose() {

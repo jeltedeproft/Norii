@@ -8,9 +8,9 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 public class MapManager {
     private static final String TAG = MapManager.class.getSimpleName();
 
-    private Camera _camera;
-    private boolean _mapChanged = false;
-    private Map _currentMap;
+    private Camera camera;
+    private boolean mapChanged = false;
+    private Map currentMap;
 
     public MapManager(){
 
@@ -24,61 +24,61 @@ public class MapManager {
             return;
         }
         
-        if( _currentMap != null ){
-            _currentMap.unloadMusic();
+        if( currentMap != null ){
+            currentMap.unloadMusic();
         }
 
         map.loadMusic();
 
 
-        _currentMap = map;
-        _mapChanged = true;
+        currentMap = map;
+        mapChanged = true;
     }
 
     public MapLayer getCollisionLayer(){
-        return _currentMap.getCollisionLayer();
+        return currentMap.getCollisionLayer();
     }
 
     public TiledMap getCurrentTiledMap(){
-        if( _currentMap == null ) {
+        if( currentMap == null ) {
             loadMap(MapFactory.MapType.BATTLE_MAP);
         }
-        return _currentMap.getCurrentTiledMap();
+        return currentMap.getCurrentTiledMap();
     }
 
-    public Map get_currentMap() {
-        if( _currentMap == null ) {
+    public Map getCurrentMap() {
+        if( currentMap == null ) {
             loadMap(MapFactory.MapType.BATTLE_MAP);
         }
-		return _currentMap;
+		return currentMap;
 	}
 
-	public void set_currentMap(Map _currentMap) {
-		this._currentMap = _currentMap;
+	public void setCurrentMap(Map currentMap) {
+		this.currentMap = currentMap;
 	}
 
 	public void setCamera(Camera camera){
-        this._camera = camera;
+        this.camera = camera;
     }
 
     public Camera getCamera(){
-        return _camera;
+        return camera;
     }
 
     public boolean hasMapChanged(){
-        return _mapChanged;
+        return mapChanged;
     }
 
     public void setMapChanged(boolean hasMapChanged){
-        this._mapChanged = hasMapChanged;
+        this.mapChanged = hasMapChanged;
     }
     
     public void disableCurrentmapMusic(){
-        _currentMap.unloadMusic();
+        currentMap.unloadMusic();
     }
 
     public void enableCurrentmapMusic(){
-        _currentMap.loadMusic();
+        currentMap.loadMusic();
     }
 
 }

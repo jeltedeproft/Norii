@@ -52,30 +52,37 @@ public class DeploymentBattleState implements BattleState{
         	TiledMapPosition newPosition = actor.getActorPos();
         	
     		if((unitsSortedByInitiative != null) && (deployingUnitNumber < unitsSortedByInitiative.length)) {
-    			//deploy unit
-    			Entity unitToDeploy = unitsSortedByInitiative[deployingUnitNumber];
-    			unitToDeploy.setInDeploymentPhase(false);
-    			initiateUnitInBattle(unitToDeploy,newPosition);
-    			
-    			//adjust tile
-    			actor.setIsFreeSpawn(false);
-    			
-    			// Set actor position not walkable
-    			int centreX = unitToDeploy.getCurrentPosition().getTileX();
-    	    	int centreY = unitToDeploy.getCurrentPosition().getTileY();
-    			actor.getTiledMap().get_navLayer().getCell(centreX,centreY).setWalkable(false);
-    			
-    			//update for next
-    			deployingUnitNumber++;
-    			if(deployingUnitNumber < unitsSortedByInitiative.length) {
-    				unitsSortedByInitiative[deployingUnitNumber].setInDeploymentPhase(true);
-    			}
-    			checkIfLastUnit();
+    			Entity unitToDeploy = deployUnit(newPosition);
+    			setSpawnPosNotWalkable(actor, unitToDeploy);   			
+    			nextDeployment();
     		}else {
     			Gdx.app.debug(TAG, "can't deploy unit, units is null or activeunitindex is > the length of units");
     		}
         }
     }
+
+	private Entity deployUnit(TiledMapPosition newPosition) {
+		//deploy unit
+		Entity unitToDeploy = unitsSortedByInitiative[deployingUnitNumber];
+		unitToDeploy.setInDeploymentPhase(false);
+		initiateUnitInBattle(unitToDeploy,newPosition);
+		return unitToDeploy;
+	}
+
+	private void setSpawnPosNotWalkable(TiledMapActor actor, Entity unitToDeploy) {
+		actor.setIsFreeSpawn(false);
+		int centreX = unitToDeploy.getCurrentPosition().getTileX();
+		int centreY = unitToDeploy.getCurrentPosition().getTileY();
+		actor.getTiledMap().getNavLayer().getCell(centreX,centreY).setWalkable(false);
+	}
+
+	private void nextDeployment() {
+		deployingUnitNumber++;
+		if(deployingUnitNumber < unitsSortedByInitiative.length) {
+			unitsSortedByInitiative[deployingUnitNumber].setInDeploymentPhase(true);
+		}
+		checkIfLastUnit();
+	}
     
 	private void initiateUnitInBattle(Entity unit, TiledMapPosition pos) {
 		unit.setInBattle(true);

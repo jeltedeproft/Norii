@@ -17,34 +17,34 @@ public abstract class Map implements AudioSubject{
     private static final String TAG = Map.class.getSimpleName();
 
     //maybe remove final and make this automatic based on map + change name
-    public final static float UNIT_SCALE  = 1/32f;
-    public final static int TILE_HEIGHT  = 32;
-    public final static int TILE_WIDTH  = 32;
+    public static final float UNIT_SCALE  = 1/32f;
+    public static final int TILE_HEIGHT  = 32;
+    public static final int TILE_WIDTH  = 32;
     public static float TILE_HEIGHT_PIXEL  = 32.0f;
     public static float TILE_WIDTH_PIXEL  = 32.0f;
     public static float ORIGINAL_TILE_HEIGHT_PIXEL  = 32.0f;
     public static float ORIGINAL_TILE_WIDTH_PIXEL  = 32.0f;
     
-    private Array<AudioObserver> _observers;
+    private Array<AudioObserver> observers;
 
     //Map layers
-    protected final static String MAP_COLLISION_LAYER = "items";
-    protected final static String MAP_SPAWNS_LAYER = "Spawn points";
-    protected final static String BACKGROUND_LAYER = "background";
-    protected final static String NAVIGATION_LAYER = "navigation";
+    protected static final String MAP_COLLISION_LAYER = "items";
+    protected static final String MAP_SPAWNS_LAYER = "Spawn points";
+    protected static final String BACKGROUND_LAYER = "background";
+    protected static final String NAVIGATION_LAYER = "navigation";
     
-    protected final static String PLAYER_START = "PLAYER_START";
+    protected static final String PLAYER_START = "PLAYER_START";
 
-    protected Json _json;
-    protected TiledMap _currentMap = null;
+    protected Json json;
+    protected TiledMap currentMap = null;
     protected TiledMapStage tiledmapstage;
     protected BattleManager battlemanager;
-    protected MapLayer _collisionLayer = null;
-    protected MapLayer _spawnsLayer = null;
-    protected MyNavigationTiledMapLayer  _navLayer = null;
+    protected MapLayer collisionLayer = null;
+    protected MapLayer spawnsLayer = null;
+    protected MyNavigationTiledMapLayer  navLayer = null;
 	protected MyPathFinder pathfinder;
 
-	protected MapFactory.MapType _currentMapType;
+	protected MapFactory.MapType currentMapType;
     
     //props
     protected MapProperties prop;
@@ -65,7 +65,7 @@ public abstract class Map implements AudioSubject{
 
         Utility.loadMapAsset(fullMapPath);
         if( Utility.isAssetLoaded(fullMapPath) ) {
-            _currentMap = Utility.getMapAsset(fullMapPath);
+            currentMap = Utility.getMapAsset(fullMapPath);
         }else{
             Gdx.app.debug(TAG, "Map not loaded");
             return;
@@ -80,7 +80,7 @@ public abstract class Map implements AudioSubject{
     
     private void setupMapProperties() {
         //setup properties
-        prop = _currentMap.getProperties();
+        prop = currentMap.getProperties();
         
 		mapWidth = prop.get("width", Integer.class);
 		mapHeight = prop.get("height", Integer.class);
@@ -99,8 +99,8 @@ public abstract class Map implements AudioSubject{
     }
     
     private void disposeMapAndStage() {
-        if( _currentMap != null ){
-            _currentMap.dispose();
+        if( currentMap != null ){
+            currentMap.dispose();
             if( tiledmapstage != null ){
             	tiledmapstage.dispose();
             }
@@ -111,25 +111,25 @@ public abstract class Map implements AudioSubject{
     }
     
     private void initializeClassVariables(MapFactory.MapType mapType) {
-        _json = new Json();
-        _currentMapType = mapType;
-        _observers = new Array<AudioObserver>();
+        json = new Json();
+        currentMapType = mapType;
+        observers = new Array<AudioObserver>();
     }
     
-    public MyNavigationTiledMapLayer  get_navLayer() {
-		return _navLayer;
+    public MyNavigationTiledMapLayer getNavLayer() {
+		return navLayer;
 	}
 
-	public void set_navLayer(MyNavigationTiledMapLayer  _navLayer) {
-		this._navLayer = _navLayer;
+	public void setNavLayer(MyNavigationTiledMapLayer  navLayer) {
+		this.navLayer = navLayer;
 	}
 
     public MapLayer getCollisionLayer(){
-        return _collisionLayer;
+        return collisionLayer;
     }
 
     public TiledMap getCurrentTiledMap() {
-        return _currentMap;
+        return currentMap;
     }
     
     public int getMapWidth() {
@@ -152,27 +152,27 @@ public abstract class Map implements AudioSubject{
 		return pathfinder;
 	}
 
-	abstract public void unloadMusic();
-    abstract public void loadMusic();
+	public abstract void unloadMusic();
+    public abstract void loadMusic();
 
     @Override
     public void addObserver(AudioObserver audioObserver) {
-        _observers.add(audioObserver);
+        observers.add(audioObserver);
     }
 
     @Override
     public void removeObserver(AudioObserver audioObserver) {
-        _observers.removeValue(audioObserver, true);
+        observers.removeValue(audioObserver, true);
     }
 
     @Override
     public void removeAllObservers() {
-        _observers.removeAll(_observers, true);
+        observers.removeAll(observers, true);
     }
 
     @Override
     public void notify(AudioObserver.AudioCommand command, AudioObserver.AudioTypeEvent event) {
-        for(AudioObserver observer: _observers){
+        for(AudioObserver observer: observers){
             observer.onNotify(command, event);
         }
     }

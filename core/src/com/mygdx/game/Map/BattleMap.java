@@ -2,6 +2,7 @@
 package com.mygdx.game.Map;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -25,26 +26,22 @@ import Utility.Utility;
 public class BattleMap extends Map{
     private static final String TAG = BattleMap.class.getSimpleName();
 
-    private static String _mapPath;
-    private ArrayList<TiledMapPosition> _unitSpawnPositions;
+    private ArrayList<TiledMapPosition> unitSpawnPositions;
     
-    protected Vector2 _playerStartPositionRect;
-    protected TiledMapPosition _convertedUnits;
+    protected Vector2 playerStartPositionRect;
+    protected TiledMapPosition convertedUnits;
 
 
     BattleMap(String mapPath){
         super(MapFactory.MapType.BATTLE_MAP, mapPath);
-        _mapPath = mapPath;
         
-        if( Utility.isAssetLoaded(_mapPath) ) {
-        	//do smthg?
-        }else{
+        if( !Utility.isAssetLoaded(mapPath) ) {
             Gdx.app.debug(TAG, "Map not loaded");
             return;
-        }  
+        } 
         
-        _collisionLayer = _currentMap.getLayers().get(MAP_COLLISION_LAYER);
-        if( _collisionLayer == null ){
+        collisionLayer = currentMap.getLayers().get(MAP_COLLISION_LAYER);
+        if( collisionLayer == null ){
             Gdx.app.debug(TAG, "No collision layer!");
         }
         
@@ -52,33 +49,33 @@ public class BattleMap extends Map{
     }
     
     private void initializeClassVariables() {
-    	_unitSpawnPositions = new ArrayList<TiledMapPosition>();
-    	_playerStartPositionRect = new Vector2(0,0);
-    	_convertedUnits = new TiledMapPosition();
+    	unitSpawnPositions = new ArrayList<TiledMapPosition>();
+    	playerStartPositionRect = new Vector2(0,0);
+    	convertedUnits = new TiledMapPosition();
     	
-        _spawnsLayer = _currentMap.getLayers().get(MAP_SPAWNS_LAYER);
-        _navLayer = (MyNavigationTiledMapLayer) _currentMap.getLayers().get(NAVIGATION_LAYER);
+        spawnsLayer = currentMap.getLayers().get(MAP_SPAWNS_LAYER);
+        navLayer = (MyNavigationTiledMapLayer) currentMap.getLayers().get(NAVIGATION_LAYER);
         pathfinder = new MyPathFinder(this);
     }
     
     public void setStage(BattleManager battlemanager) {
     	tiledmapstage = new TiledMapStage(this,BACKGROUND_LAYER,battlemanager);
     	
-        if( _spawnsLayer == null ){
+        if( spawnsLayer == null ){
             Gdx.app.debug(TAG, "No spawn layer!");
         }else{
-            if( _unitSpawnPositions.isEmpty() ){
-                fillSpawnPositions(_unitSpawnPositions);
+            if( unitSpawnPositions.isEmpty() ){
+                fillSpawnPositions(unitSpawnPositions);
             }
         }
     }
 
     private void fillSpawnPositions(final ArrayList<TiledMapPosition> startPositions){
-        for( MapObject object: _spawnsLayer.getObjects()){
+        for( MapObject object: spawnsLayer.getObjects()){
             if( object.getName().equalsIgnoreCase(PLAYER_START) ){
             	
-                ((RectangleMapObject)object).getRectangle().getPosition(_playerStartPositionRect);
-                TiledMapPosition spawnPos = new TiledMapPosition().setPositionFromTiled(_playerStartPositionRect.x,_playerStartPositionRect.y);
+                ((RectangleMapObject)object).getRectangle().getPosition(playerStartPositionRect);
+                TiledMapPosition spawnPos = new TiledMapPosition().setPositionFromTiled(playerStartPositionRect.x,playerStartPositionRect.y);
             	startPositions.add(spawnPos);
                 
                 //tag tiles that can be used as spawns
@@ -97,7 +94,7 @@ public class BattleMap extends Map{
         debugRenderer.setColor(Color.RED);
         debugRenderer.begin(ShapeType.Line);
         
-    	for(TiledMapPosition pos : _unitSpawnPositions) {
+    	for(TiledMapPosition pos : unitSpawnPositions) {
     		TiledMapActor actor = getActorAtScreenCoordinate(pos);
         	// While resizing the screen, the actor wont be available until letting go of the resize.
         	if ( actor != null ) {
@@ -109,9 +106,9 @@ public class BattleMap extends Map{
 	}
 
 	private TiledMapActor getActorAtScreenCoordinate(TiledMapPosition pos) {
-		Array<Actor> Actors = tiledmapstage.getActors();
+		Array<Actor> actors = tiledmapstage.getActors();
 		
-		for(Actor actor : Actors) {
+		for(Actor actor : actors) {
 			TiledMapPosition actorPos = new TiledMapPosition().setPositionFromOriginal(actor.getX(), actor.getY());
 			if((actorPos.getRealScreenX() == pos.getRealScreenX()) &&  (actorPos.getRealScreenY() == pos.getRealScreenY())){
 				return (TiledMapActor) actor;
@@ -121,23 +118,23 @@ public class BattleMap extends Map{
 	}
     
     public void makeSpawnParticles() {
-    	for(TiledMapPosition pos : _unitSpawnPositions) {
+    	for(TiledMapPosition pos : unitSpawnPositions) {
             ParticleMaker.addParticle(ParticleType.SPAWN, pos);
     	}
     }
     
-	public ArrayList<TiledMapPosition> getSpawnPositions(){
+	public List<TiledMapPosition> getSpawnPositions(){
     	@SuppressWarnings("unchecked")
-		ArrayList<TiledMapPosition> UnitSpawns = (ArrayList<TiledMapPosition>) _unitSpawnPositions.clone();
-        return UnitSpawns;
+		ArrayList<TiledMapPosition> unitSpawns = (ArrayList<TiledMapPosition>) unitSpawnPositions.clone();
+        return unitSpawns;
     }
     
     public TiledMapStage getTiledMapStage() {
     	return tiledmapstage;
     }
     
-    public MyNavigationTiledMapLayer  get_navLayer() {
-		return _navLayer;
+    public MyNavigationTiledMapLayer  getNavLayer() {
+		return navLayer;
 	}
     
     public void dispose() {

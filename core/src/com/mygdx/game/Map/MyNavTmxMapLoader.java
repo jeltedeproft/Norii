@@ -13,13 +13,14 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class MyNavTmxMapLoader extends TmxMapLoader{
-	public String navigationLayerName;
-	public String navigationProperty;
-	public String navigationClosedValue;
+	private String navigationLayerName;
+	private String navigationProperty;
+	private String navigationClosedValue;
 	
 	public MyNavTmxMapLoader(){
 		this("navigation", "walkable", "0");
 	}
+	
 
 	public MyNavTmxMapLoader(FileHandleResolver resolver){
 		this(resolver, "navigation", "walkable", "0");
