@@ -12,25 +12,24 @@ import Utility.TiledMapPosition;
 public class Particle extends Actor{
 	
 	private TiledMapPosition pos;
-	private Boolean Active;
+	private Boolean active;
 	private ParticleType type;
 	private PooledEffect particleEffect;
-	public Body attachedBody;
 	
 	Particle(TiledMapPosition pos, PooledEffect pe, ParticleType type){
 		super();
 		this.pos = pos;
-		this.Active = true;
+		this.active = true;
 		this.type = type;
 		this.particleEffect = pe;
 	}
 	
 	public boolean isActive() {
-		return Active;
+		return active;
 	}
 	
 	public void deactivate() {
-		this.Active = false;
+		this.active = false;
 	}
     
 	public void draw(SpriteBatch spriteBatch, float delta) {

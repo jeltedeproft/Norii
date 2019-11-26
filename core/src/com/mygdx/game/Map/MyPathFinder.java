@@ -14,8 +14,7 @@ import com.badlogic.gdx.Gdx;
 public class MyPathFinder{
 	private static final String TAG = MyPathFinder.class.getSimpleName();
 	
-	private GridCell[][] cells;
-	private static NavigationGridGraph<GridCell> navGrid;
+	private NavigationGridGraph<GridCell> navGrid;
 	private GridFinderOptions opt;
 	private AStarGridFinder<GridCell> finder;
 	private Map linkedMap;
@@ -24,7 +23,6 @@ public class MyPathFinder{
 		linkedMap = map;
 		navGrid = linkedMap.getNavLayer().navGrid;
 		
-		//create pathfinder options
 		opt = new GridFinderOptions();
 		opt.allowDiagonal = false;
 			
@@ -34,7 +32,7 @@ public class MyPathFinder{
 	public List<GridCell> getCellsWithin(int x, int y, int range) {
 		List<GridCell> cells = new ArrayList<GridCell>();
 		GridCell center = navGrid.getCell(x, y);
-		//go over all cells, if distance between start and cell is 3(range) or less, add it
+
 		for(GridCell[] gridcells : navGrid.getNodes()) {
 			for(GridCell gridcell : gridcells) {
 				if (checkIfDistanceIsCloseEnough(center,gridcell,range)) {
@@ -61,9 +59,8 @@ public class MyPathFinder{
 	}
 
 	public void dispose() {
-		//finder = null; static
+		finder = null;
 		opt = null;
-		//navGrid = null;  static
-		cells = null;
+		navGrid = null;
 	}
 }

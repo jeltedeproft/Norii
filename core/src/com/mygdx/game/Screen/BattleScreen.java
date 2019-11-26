@@ -8,15 +8,10 @@ import org.xguzm.pathfinding.grid.GridCell;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.game.Battle.BattleManager;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Entities.EntityObserver;
@@ -32,20 +27,9 @@ import com.mygdx.game.UI.PauseMenuUI;
 import com.mygdx.game.UI.PlayerBattleHUD;
 
 import Utility.TiledMapPosition;
-import Utility.Utility;
 
 public class BattleScreen extends GameScreen implements EntityObserver {
 	private static final String TAG = BattleScreen.class.getSimpleName();
-
-	private static class VIEWPORT {
-		static float viewportWidth;
-		static float viewportHeight;
-		static float virtualWidth;
-		static float virtualHeight;
-		static float physicalWidth;
-		static float physicalHeight;
-		static float aspectRatio;
-	}
 
 	private ArrayList<Owner> players;
 	private OrthogonalTiledMapRenderer mapRenderer = null;
@@ -58,6 +42,16 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 	private OrthographicCamera hudCamera;
 	private PlayerBattleHUD playerBattleHUD;
 	private PauseMenuUI pauseMenu;
+	
+	private static class VIEWPORT {
+		static float viewportWidth;
+		static float viewportHeight;
+		static float virtualWidth;
+		static float virtualHeight;
+		static float physicalWidth;
+		static float physicalHeight;
+		static float aspectRatio;
+	}
 
 	public BattleScreen(Object... params){
 		initializeVariables();
@@ -99,6 +93,7 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		map.setStage(battlemanager);
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void initializeUnits(Object... params) {
 		int index = ScreenManager.ScreenParams.ARRAYLIST_OF_OWNERS.ordinal();
 		if(params[index] != null) {
@@ -118,11 +113,7 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 	
 	private void handleInput() {
 		if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
-			if(pauseMenu.getVisible()) {
-				pauseMenu.setVisible(false);
-			}else {
-				pauseMenu.setVisible(true);
-			}
+			pauseMenu.setVisible(pauseMenu.getVisible());
 		}
 	}
 
@@ -193,7 +184,6 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		renderUnits();
 		renderParticles(delta);
 		renderHUD(delta);
-		//map.getTiledMapStage().drawActorsDebug();
 		Player.getInstance().getEntityStage().drawEntitiesDebug();
 		map.drawActorsDebug();
 	}
@@ -236,11 +226,9 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		map.updatePixelDimensions();
 		map.getTiledMapStage().getViewport().update(width, height, false);
 		
-		Gdx.app.debug(TAG, "resizing with : (" + width + " , " + height + ")");
 		Player.getInstance().getEntityStage().getViewport().update(width, height, false);
 		playerBattleHUD.resize(width, height);
 		pauseMenu.resize(width, height);
-		
 	}
 
 	@Override
@@ -262,7 +250,7 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		map.dispose();
 	}
 
-	private void setupViewport(int width, int height){
+	private static void setupViewport(int width, int height){
 		//part of display
 		VIEWPORT.virtualWidth = width;
 		VIEWPORT.virtualHeight = height;
@@ -299,6 +287,7 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 				if(cell.isWalkable()) {
 					TiledMapPosition positionToPutMoveParticle = new TiledMapPosition().setPositionFromTiles(cell.x,cell.y);
 					ParticleMaker.addParticle(ParticleType.MOVE,positionToPutMoveParticle );
+					battlemanager.setCurrentBattleState(battlemanager.getMovementBattleState());
 				}
 			}
 			break;

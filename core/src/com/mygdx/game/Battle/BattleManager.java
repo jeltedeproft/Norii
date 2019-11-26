@@ -13,7 +13,7 @@ public class BattleManager {
 	private BattleState waitOpponentBattleState;
 	private BattleState currentBattleState;
 	
-	private InputController _controller;
+	private InputController controller;
 	private InputMultiplexer multiplexer;
 	private Entity activeUnit;
 	private int activeUnitIndex;
@@ -40,13 +40,13 @@ public class BattleManager {
 	public void giveControlToNextUnit() {
 		activeUnit.setActive(false);
 		activeUnit.setFocused(false);
-		if(_controller == null) {
-			_controller = new InputController(activeUnit);
+		if(controller == null) {
+			controller = new InputController(activeUnit);
 			activeUnit.setFocused(true);
 		}else {
 			activeUnitIndex = (activeUnitIndex+1) % numberOfUnits;
 			activeUnit = sortedUnits[activeUnitIndex];
-			_controller.changePlayer(activeUnit);
+			controller.changePlayer(activeUnit);
 			activeUnit.setFocused(true);
 		}
 		//activate actions UI
@@ -54,15 +54,15 @@ public class BattleManager {
 	}
 	
 	public void updateController() {
-		if(_controller != null) {
-			_controller.update();
+		if(controller != null) {
+			controller.update();
 		}
 	}
 	
 	public void dispose() {
-		multiplexer.removeProcessor(_controller);
-		if(_controller != null) {
-			_controller.dispose();
+		multiplexer.removeProcessor(controller);
+		if(controller != null) {
+			controller.dispose();
 		}
 	}
 
@@ -74,12 +74,12 @@ public class BattleManager {
 		return sortedUnits;
 	}
 
-	public InputController get_controller() {
-		return _controller;
+	public InputController getController() {
+		return controller;
 	}
 
-	public void set_controller(InputController _controller) {
-		this._controller = _controller;
+	public void setController(InputController controller) {
+		this.controller = controller;
 	}
 
 	public InputMultiplexer getMultiplexer() {

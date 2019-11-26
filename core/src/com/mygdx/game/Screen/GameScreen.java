@@ -6,37 +6,36 @@ import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Audio.AudioManager;
 import com.mygdx.game.Audio.AudioObserver;
 import com.mygdx.game.Audio.AudioSubject;
-import com.mygdx.game.UI.PlayerBattleHUD;
 
 
 public class GameScreen implements Screen, AudioSubject{
 	private static final String TAG = GameScreen.class.getSimpleName();
 	
-    private Array<AudioObserver> _observers;
+    private Array<AudioObserver> observers;
 
     public GameScreen(){
-        _observers = new Array<AudioObserver>();
+        observers = new Array<AudioObserver>();
         this.addObserver(AudioManager.getInstance());
     }
 
     @Override
     public void addObserver(AudioObserver audioObserver) {
-        _observers.add(audioObserver);
+        observers.add(audioObserver);
     }
 
     @Override
     public void removeObserver(AudioObserver audioObserver) {
-        _observers.removeValue(audioObserver, true);
+        observers.removeValue(audioObserver, true);
     }
 
     @Override
     public void removeAllObservers() {
-        _observers.removeAll(_observers, true);
+        observers.removeAll(observers, true);
     }
 
     @Override
     public void notify(AudioObserver.AudioCommand command, AudioObserver.AudioTypeEvent event) {
-        for(AudioObserver observer: _observers){
+        for(AudioObserver observer: observers){
             observer.onNotify(command, event);
         }
     }

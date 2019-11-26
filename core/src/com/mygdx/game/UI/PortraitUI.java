@@ -10,8 +10,8 @@ import Utility.Utility;
 public class PortraitUI {
 	private static final String TAG = PortraitUI.class.getSimpleName();
 
-	private Image _heroPortrait;
-	private TextureRegionDrawable _heroPortraitScalable;
+	private Image heroPortrait;
+	private TextureRegionDrawable heroPortraitScalable;
 
 	private Boolean isActive;
 	private Entity linkedEntity;
@@ -20,8 +20,8 @@ public class PortraitUI {
 		this.linkedEntity = entity;
 		Utility.loadTextureAsset(entity.getPortraitPath());
 		TextureRegion tr = new TextureRegion(Utility.getTextureAsset(entity.getPortraitPath()));
-		_heroPortraitScalable = new TextureRegionDrawable(tr);
-		_heroPortrait = new Image(_heroPortraitScalable);
+		heroPortraitScalable = new TextureRegionDrawable(tr);
+		heroPortrait = new Image(heroPortraitScalable);
 
 	}
 
@@ -29,12 +29,12 @@ public class PortraitUI {
 		return linkedEntity.getIni();
 	}
 
-	public Image get_heroPortrait() {
-		return _heroPortrait;
+	public Image getHeroPortrait() {
+		return heroPortrait;
 	}
 
-	public void set_heroPortrait(Image _heroPortrait) {
-		this._heroPortrait = _heroPortrait;
+	public void setHeroPortrait(Image heroPortrait) {
+		this.heroPortrait = heroPortrait;
 	}
 
 	public Boolean getIsActive() {
@@ -49,8 +49,8 @@ public class PortraitUI {
 		return linkedEntity;
 	}
 	
-	public TextureRegionDrawable get_heroPortraitScalable() {
-		return _heroPortraitScalable;
+	public TextureRegionDrawable getHeroPortraitScalable() {
+		return heroPortraitScalable;
 	}
 	
 }

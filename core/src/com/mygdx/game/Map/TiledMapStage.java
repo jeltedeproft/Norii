@@ -17,12 +17,10 @@ public class TiledMapStage extends Stage {
 	private static final String TAG = TiledMapStage.class.getSimpleName();
 
     private Map tiledMap;
-    private String _layername;
     private BattleManager battlemanager;
     
     public TiledMapStage(Map tiledMap, String layername, BattleManager battlemanager) {
         this.tiledMap = tiledMap;
-        this._layername = layername;
         this.battlemanager = battlemanager;
 
         TiledMapTileLayer tiledLayer = (TiledMapTileLayer) tiledMap.getCurrentTiledMap().getLayers().get(layername);
@@ -43,17 +41,24 @@ public class TiledMapStage extends Stage {
                 TiledMapTileLayer.Cell cell = tiledLayer.getCell(x, y);
                 TiledMapActor actor = new TiledMapActor(tiledMap, tiledLayer, cell);
                 
-                float tilewidth = (float) Gdx.graphics.getWidth() / (float )tiledLayer.getWidth();
-                float tileheight = (float) Gdx.graphics.getHeight() / (float) tiledLayer.getHeight();
-                actor.setBounds(x * tilewidth, y * tileheight, tilewidth,tileheight);
-                actor.setActorPos(new TiledMapPosition().setPositionFromTiles(x, y));
-                addActor(actor);
-
-                EventListener eventListener = new TiledMapClickListener(actor);
-                actor.addListener(eventListener);
+                initiateActor(tiledLayer, x, y, actor);
+                addEventListener(actor);
             }
         }
     }
+
+	private void initiateActor(TiledMapTileLayer tiledLayer, int x, int y, TiledMapActor actor) {
+		float tilewidth = (float) Gdx.graphics.getWidth() / (float )tiledLayer.getWidth();
+		float tileheight = (float) Gdx.graphics.getHeight() / (float) tiledLayer.getHeight();
+		actor.setBounds(x * tilewidth, y * tileheight, tilewidth,tileheight);
+		actor.setActorPos(new TiledMapPosition().setPositionFromTiles(x, y));
+		addActor(actor);
+	}
+
+	private void addEventListener(TiledMapActor actor) {
+		EventListener eventListener = new TiledMapClickListener(actor);
+		actor.addListener(eventListener);
+	}
 	
 	public void drawActorsDebug() {
 		Array<Actor> actors = this.getActors();

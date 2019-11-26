@@ -24,6 +24,8 @@ public abstract class Map implements AudioSubject{
     public static float TILE_WIDTH_PIXEL  = 32.0f;
     public static float ORIGINAL_TILE_HEIGHT_PIXEL  = 32.0f;
     public static float ORIGINAL_TILE_WIDTH_PIXEL  = 32.0f;
+	public static float xScaleDifference = 1;
+	public static float yScaleDifference = 1;
     
     private Array<AudioObserver> observers;
 
@@ -94,6 +96,8 @@ public abstract class Map implements AudioSubject{
     }
     
     public void updatePixelDimensions() {
+    	xScaleDifference = (Gdx.graphics.getWidth() / (float) mapWidth) / TILE_WIDTH_PIXEL;
+    	yScaleDifference = (Gdx.graphics.getHeight() / (float) mapWidth) / TILE_HEIGHT_PIXEL;
 		TILE_WIDTH_PIXEL = Gdx.graphics.getWidth() / (float) mapWidth;
 		TILE_HEIGHT_PIXEL = Gdx.graphics.getHeight() / (float) mapHeight;
     }

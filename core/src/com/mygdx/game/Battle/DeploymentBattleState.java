@@ -27,7 +27,7 @@ public class DeploymentBattleState implements BattleState{
 
 	@Override
 	public void entry() {
-
+		Gdx.app.debug(TAG, "entering deployment phase");
 	}
 
 	@Override
@@ -38,8 +38,9 @@ public class DeploymentBattleState implements BattleState{
 	@Override
 	public void exit() {
 		ParticleMaker.deactivateAllParticlesOfType(ParticleType.SPAWN);
-		battlemanager.setCurrentBattleState(battlemanager.getMovementBattleState());
-		battlemanager.getMovementBattleState().entry();
+		battlemanager.setCurrentBattleState(battlemanager.getActionBattleState());
+		battlemanager.getCurrentBattleState().entry();
+		Gdx.app.debug(TAG, "exiting deployment phase");
 	}
 
 	@Override

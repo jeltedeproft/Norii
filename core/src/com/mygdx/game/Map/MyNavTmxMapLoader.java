@@ -52,6 +52,15 @@ public class MyNavTmxMapLoader extends TmxMapLoader{
 		int width = element.getIntAttribute("width", 0);
 		int height = element.getIntAttribute("height", 0);
 		
+		GridCell[][] nodes = createGridCells(map, element, width, height);
+		MyNavigationTiledMapLayer layer = createNavigationTiledMapLayer(layerName, nodes);
+		loadProperties(element, layer);
+		
+		map.getLayers().add(layer);
+	}
+
+
+	private GridCell[][] createGridCells(TiledMap map, Element element, int width, int height) {
 		int[] ids = getTileIds(element, width, height);
 		TiledMapTileSets tilesets = map.getTileSets();
 		GridCell[][] nodes = new GridCell[width][height];
@@ -70,16 +79,23 @@ public class MyNavTmxMapLoader extends TmxMapLoader{
 				nodes[cell.getX()][cell.getY()] = cell;
 			}
 		}
-		
+		return nodes;
+	}
+
+
+	private MyNavigationTiledMapLayer createNavigationTiledMapLayer(String layerName, GridCell[][] nodes) {
 		MyNavigationTiledMapLayer layer = new MyNavigationTiledMapLayer(nodes);
 		layer.setName(layerName);
 		layer.setVisible(false);
+		return layer;
+	}
 
+
+	private void loadProperties(Element element, MyNavigationTiledMapLayer layer) {
 		Element properties = element.getChildByName("properties");
 		if (properties != null) {
 			loadProperties(layer.getProperties(), properties);
 		}
-		map.getLayers().add(layer);
 	}
 	
 }

@@ -8,9 +8,10 @@ public class ScreenManager {
     private static ScreenManager instance;
     private Game game;
  
-    public static enum ScreenParams {
+    public enum ScreenParams {
     	ARRAYLIST_OF_OWNERS
     }
+    
     private ScreenManager() {
         super();
     }
@@ -22,21 +23,17 @@ public class ScreenManager {
         return instance;
     }
  
-    // Initialization with the game class
     public void initialize(Game game) {
         this.game = game;
     }
  
 
     public void showScreen(ScreenEnum screenEnum, Object... params) {
-    	//current
         Screen currentScreen = game.getScreen();
  
-        //new
         Screen newScreen = screenEnum.getScreen(params);
         game.setScreen(newScreen);
  
-        // Dispose old
         if (currentScreen != null) {
             currentScreen.dispose();
         }

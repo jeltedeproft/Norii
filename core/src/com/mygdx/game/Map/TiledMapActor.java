@@ -7,6 +7,7 @@ import Utility.TiledMapPosition;
 
 public class TiledMapActor extends Actor {
 	private static final String TAG = TiledMapActor.class.getSimpleName();
+	
     private Map tiledMap;
     private TiledMapTileLayer tiledLayer;   
     private Boolean isFreeSpawn;
@@ -39,5 +40,9 @@ public class TiledMapActor extends Actor {
 	
 	public TiledMapPosition getActorPos() {
 		return actorPos;
+	}
+	
+	public TiledMapTileLayer getTiledLayer() {
+		return tiledLayer;
 	}
 }

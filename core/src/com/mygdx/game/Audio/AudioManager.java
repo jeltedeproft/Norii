@@ -6,28 +6,28 @@ import com.badlogic.gdx.audio.Sound;
 
 import Utility.Utility;
 
-import java.util.Hashtable;
+import java.util.HashMap;
 
 public class AudioManager implements AudioObserver {
     private static final String TAG = AudioManager.class.getSimpleName();
 
-    private static AudioManager _instance = null;
+    private static AudioManager instance = null;
 
-    private Hashtable<String, Music> _queuedMusic;
-    private Hashtable<String, Sound> _queuedSounds;
+    private HashMap<String, Music> queuedMusic;
+    private HashMap<String, Sound> queuedSounds;
 
     private AudioManager(){
-        _queuedMusic = new Hashtable<String, Music>();
-        _queuedSounds = new Hashtable<String, Sound>();
+        queuedMusic = new HashMap<String, Music>();
+        queuedSounds = new HashMap<String, Sound>();
 
     }
 
     public static AudioManager getInstance() {
-        if (_instance == null) {
-            _instance = new AudioManager();
+        if (instance == null) {
+            instance = new AudioManager();
         }
 
-        return _instance;
+        return instance;
     }
 
 
@@ -44,13 +44,13 @@ public class AudioManager implements AudioObserver {
                 playMusic(true, event.getValue());
                 break;
             case MUSIC_STOP:
-                Music music = _queuedMusic.get(event.getValue());
+                Music music = queuedMusic.get(event.getValue());
                 if( music != null ){
                     music.stop();
                 }
                 break;
             case MUSIC_STOP_ALL:
-                for( Music musicStop: _queuedMusic.values() ){
+                for( Music musicStop: queuedMusic.values() ){
                     musicStop.stop();
                 }
                 break;
@@ -64,7 +64,7 @@ public class AudioManager implements AudioObserver {
                 playSound(false, event.getValue());
                 break;
             case SOUND_STOP:
-                Sound sound = _queuedSounds.get(event.getValue());
+                Sound sound = queuedSounds.get(event.getValue());
                 if( sound != null ){
                     sound.stop();
                 }
@@ -75,7 +75,7 @@ public class AudioManager implements AudioObserver {
     }
 
     private Music playMusic(boolean isLooping, String fullFilePath){
-        Music music = _queuedMusic.get(fullFilePath);
+        Music music = queuedMusic.get(fullFilePath);
         if( music != null ){
             music.setLooping(isLooping);
             music.play();
@@ -83,7 +83,7 @@ public class AudioManager implements AudioObserver {
             music = Utility.getMusicAsset(fullFilePath);
             music.setLooping(isLooping);
             music.play();
-            _queuedMusic.put(fullFilePath, music);
+            queuedMusic.put(fullFilePath, music);
         }else{
             Gdx.app.debug(TAG, "Music not loaded");
             return null;
@@ -92,7 +92,7 @@ public class AudioManager implements AudioObserver {
     }
 
     private Sound playSound(boolean isLooping, String fullFilePath){
-        Sound sound = _queuedSounds.get(fullFilePath);
+        Sound sound = queuedSounds.get(fullFilePath);
         if( sound != null ){
             long soundId = sound.play();
             sound.setLooping(soundId, isLooping);
@@ -100,7 +100,7 @@ public class AudioManager implements AudioObserver {
             sound = Utility.getSoundAsset(fullFilePath);
             long soundId = sound.play();
             sound.setLooping(soundId, isLooping);
-            _queuedSounds.put(fullFilePath, sound);
+            queuedSounds.put(fullFilePath, sound);
         }else{
             Gdx.app.debug(TAG, "Sound not loaded");
             return null;
@@ -109,11 +109,11 @@ public class AudioManager implements AudioObserver {
     }
 
     public void dispose(){
-        for(Music music: _queuedMusic.values()){
+        for(Music music: queuedMusic.values()){
             music.dispose();
         }
 
-        for(Sound sound: _queuedSounds.values()){
+        for(Sound sound: queuedSounds.values()){
             sound.dispose();
         }
     }

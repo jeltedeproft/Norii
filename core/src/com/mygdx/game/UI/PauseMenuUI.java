@@ -24,9 +24,8 @@ public class PauseMenuUI implements Screen {
 	private static final String TAG = PauseMenuUI.class.getSimpleName();
 	private static String defaultBackgroundPath = "maps/rpg/tiles/grass.png";
 	
-    private Stage _stage;
-    private Viewport _viewport;
-    private Camera _camera;
+    private Stage stage;
+    private Viewport viewport;
     private Table menuTable;
     private Label title;
 	private TextButton resumeButton;
@@ -36,9 +35,8 @@ public class PauseMenuUI implements Screen {
 	private boolean visible;
 
     public PauseMenuUI(Camera camera) {
-        _camera = camera;
-        _viewport = new ScreenViewport(_camera);
-        _stage = new Stage(_viewport);
+        viewport = new ScreenViewport(camera);
+        stage = new Stage(viewport);
         menuTable = new Table();
 		menuTable.setDebug(false);
 		menuTable.setFillParent(true);
@@ -64,7 +62,7 @@ public class PauseMenuUI implements Screen {
 		menuTable.add(resumeButton).spaceBottom(10).row();
 		menuTable.add(settingButton).spaceBottom(10).row();
 		menuTable.add(mainMenuButton).spaceBottom(10).row();
-		_stage.addActor(menuTable);
+		stage.addActor(menuTable);
 	}
 
 	private void addListeners() {
@@ -92,7 +90,7 @@ public class PauseMenuUI implements Screen {
 	}
 	
     public Stage getStage() {
-        return _stage;
+        return stage;
     }
     
     public boolean getVisible() {
@@ -111,15 +109,15 @@ public class PauseMenuUI implements Screen {
     @Override
     public void render(float delta) {
 	    if(visible) {
-	        _stage.act(delta);
-	        _stage.draw();
+	        stage.act(delta);
+	        stage.draw();
     	}
     }
 
     @Override
     public void resize(int width, int height) {
     	Gdx.app.debug(TAG, "resizing with : (" + width + " , " + height + ")");
-        _stage.getViewport().update(width, height, true);
+        stage.getViewport().update(width, height, true);
     }
 
     @Override
@@ -139,7 +137,7 @@ public class PauseMenuUI implements Screen {
 
     @Override
     public void dispose() {
-        _stage.dispose();
+        stage.dispose();
     }
 
 }

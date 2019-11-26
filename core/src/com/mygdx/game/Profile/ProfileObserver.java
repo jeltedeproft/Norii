@@ -1,7 +1,7 @@
 package com.mygdx.game.Profile;
 
 public interface ProfileObserver {
-    public static enum ProfileEvent{
+    public enum ProfileEvent{
         PROFILE_LOADED,
         SAVING_PROFILE
     }

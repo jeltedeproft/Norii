@@ -16,17 +16,17 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 public class StatusUI extends Window {
 	private static final String TAG = StatusUI.class.getSimpleName();
 	
-    private Image _hpBar;
-    private Image _mpBar;
-    private Image _xpBar;
+    private Image hpBar;
+    private Image mpBar;
+    private Image xpBar;
     
     private Label hp;
     private Label mp;
     private Label xp;
-    private Label levelVal;
-    private Label iniVal;
+    private Label levelValLabel;
+    private Label iniValLabel;
 
-    private ImageButton _heroButton;
+    private ImageButton heroButton;
     private Entity linkedEntity;
     
     private Label heroNameLabel;
@@ -36,30 +36,26 @@ public class StatusUI extends Window {
 	private int statsUIOffsetX = 32;
 	private int statsUIOffsetY = 32;
 	
-	private final float baseWidth = 200;
-	private final float baseHeight = 200f;
+	private static final float BASE_WIDTH = 200;
+	private static final float BASE_HEIGHT = 200f;
 	
-	private final float statusUIWidth = 0.1f;
-	private final float statusUIHeight = 0.1f;
+	private static final float STATUS_UI_WIDTH = 0.1f;
+	private static final float STATUS_UI_HEIGHT = 0.1f;
 
-    //Attributes
-    private int _levelVal;
-    private int _hpVal;
-    private int _mpVal;
-    private int _xpVal;
-    private int _iniVal;
+    private int levelVal;
+    private int hpVal;
+    private int mpVal;
+    private int xpVal;
+    private int iniVal;
     
-    //groups
     private WidgetGroup group;
     private WidgetGroup group2;
     private WidgetGroup group3;
     
-    //bars
     private Image bar;
     private Image bar2;
     private Image bar3;
     
-    //labels
     private Label hpLabel;
     private Label mpLabel;
     private Label xpLabel;
@@ -80,62 +76,54 @@ public class StatusUI extends Window {
     }
     
     private void initiateHeroStats() {
-        _levelVal = this.linkedEntity.getLevel();
-        _hpVal = this.linkedEntity.getHp();
-        _mpVal = this.linkedEntity.getMp();
-        _xpVal = this.linkedEntity.getXp();
-        _iniVal = this.linkedEntity.getIni();
+        levelVal = this.linkedEntity.getLevel();
+        hpVal = this.linkedEntity.getHp();
+        mpVal = this.linkedEntity.getMp();
+        xpVal = this.linkedEntity.getXp();
+        iniVal = this.linkedEntity.getIni();
     }
     
     private void createElementsForUI(Entity entity) {
-    	//hero name
         heroNameLabel = new Label(entity.getName(), Utility.STATUSUI_SKIN, "inventory-item-count");
         
-        //groups
         group = new WidgetGroup();
         group2 = new WidgetGroup();
         group3 = new WidgetGroup();
 
-        //images
-        _hpBar = new Image(Utility.STATUSUI_TEXTUREATLAS.findRegion("HP_Bar"));
+        hpBar = new Image(Utility.STATUSUI_TEXTUREATLAS.findRegion("HP_Bar"));
         bar = new Image(Utility.STATUSUI_TEXTUREATLAS.findRegion("Bar"));
-        _mpBar = new Image(Utility.STATUSUI_TEXTUREATLAS.findRegion("MP_Bar"));
+        mpBar = new Image(Utility.STATUSUI_TEXTUREATLAS.findRegion("MP_Bar"));
         bar2 = new Image(Utility.STATUSUI_TEXTUREATLAS.findRegion("Bar"));
-        _xpBar = new Image(Utility.STATUSUI_TEXTUREATLAS.findRegion("XP_Bar"));
+        xpBar = new Image(Utility.STATUSUI_TEXTUREATLAS.findRegion("XP_Bar"));
         bar3 = new Image(Utility.STATUSUI_TEXTUREATLAS.findRegion("Bar"));
 
-        //labels
         hpLabel = new Label(" hp:", Utility.STATUSUI_SKIN);
-        hp = new Label(String.valueOf(_hpVal), Utility.STATUSUI_SKIN);
+        hp = new Label(String.valueOf(hpVal), Utility.STATUSUI_SKIN);
         mpLabel = new Label(" mp:", Utility.STATUSUI_SKIN);
-        mp = new Label(String.valueOf(_mpVal), Utility.STATUSUI_SKIN);
+        mp = new Label(String.valueOf(mpVal), Utility.STATUSUI_SKIN);
         xpLabel = new Label(" xp:", Utility.STATUSUI_SKIN);
-        xp = new Label(String.valueOf(_xpVal), Utility.STATUSUI_SKIN);
+        xp = new Label(String.valueOf(xpVal), Utility.STATUSUI_SKIN);
         levelLabel = new Label(" lv:", Utility.STATUSUI_SKIN);
-        levelVal = new Label(String.valueOf(_levelVal), Utility.STATUSUI_SKIN);
+        levelValLabel = new Label(String.valueOf(levelVal), Utility.STATUSUI_SKIN);
         iniLabel = new Label(" ini:", Utility.STATUSUI_SKIN);
-        iniVal = new Label(String.valueOf(_iniVal), Utility.STATUSUI_SKIN);
+        iniValLabel = new Label(String.valueOf(iniVal), Utility.STATUSUI_SKIN);
 
-        //buttons
-        _heroButton= new ImageButton(Utility.STATUSUI_SKIN, "inventory-button");
-        _heroButton.getImageCell().size(32, 32);
+        heroButton= new ImageButton(Utility.STATUSUI_SKIN, "inventory-button");
+        heroButton.getImageCell().size(32, 32);
     }
     
     private void configureElements() {
-        //Align images
-        _hpBar.setPosition(3, 6);
-        _mpBar.setPosition(3, 6);
-        _xpBar.setPosition(3, 6);
+        hpBar.setPosition(3, 6);
+        mpBar.setPosition(3, 6);
+        xpBar.setPosition(3, 6);
 
-        //add to widget groups
         group.addActor(bar);
-        group.addActor(_hpBar);
+        group.addActor(hpBar);
         group2.addActor(bar2);
-        group2.addActor(_mpBar);
+        group2.addActor(mpBar);
         group3.addActor(bar3);
-        group3.addActor(_xpBar);
+        group3.addActor(xpBar);
 
-        //Add to layout
         defaults().expand().fill();
     }
     
@@ -147,7 +135,7 @@ public class StatusUI extends Window {
 
         this.add();
         this.add();
-        this.add(_heroButton).align(Align.right);
+        this.add(heroButton).align(Align.right);
         this.row();
 
         this.add(group).size(bar.getWidth(), bar.getHeight());
@@ -166,23 +154,18 @@ public class StatusUI extends Window {
         this.row();
 
         this.add(levelLabel).align(Align.left);
-        this.add(levelVal).align(Align.left);
+        this.add(levelValLabel).align(Align.left);
         this.row();
         
         this.add(iniLabel).align(Align.left);
-        this.add(iniVal).align(Align.left);
+        this.add(iniValLabel).align(Align.left);
         this.row();
 
-        //this.debug();
         this.pack();
     }
 
     public ImageButton getInventoryButton() {
-        return _heroButton;
-    }
-    
-    public void setVisible(boolean visible) {
-        super.setVisible(visible);
+        return heroButton;
     }
     
     public void update() {
@@ -201,26 +184,26 @@ public class StatusUI extends Window {
     }
 
 	private void updateLabels() {
-		hp.setText(String.valueOf(_hpVal));
-        mp.setText(String.valueOf(_mpVal));
-        xp.setText(String.valueOf(_xpVal));
-        levelVal.setText(String.valueOf(_levelVal));
-        iniVal.setText(String.valueOf(_iniVal));
+		hp.setText(String.valueOf(hpVal));
+        mp.setText(String.valueOf(mpVal));
+        xp.setText(String.valueOf(xpVal));
+        levelValLabel.setText(String.valueOf(levelVal));
+        iniValLabel.setText(String.valueOf(iniVal));
 	}
 
 	private void updateStats() {
-		_levelVal = linkedEntity.getLevel();
-        _hpVal = linkedEntity.getHp();
-        _mpVal = linkedEntity.getMp();
-        _xpVal = linkedEntity.getXp();
+		levelVal = linkedEntity.getLevel();
+        hpVal = linkedEntity.getHp();
+        mpVal = linkedEntity.getMp();
+        xpVal = linkedEntity.getXp();
 	}
 	
 	private void updateSize() {
 		statsUIOffsetX = (int) Map.TILE_WIDTH_PIXEL;
 		statsUIOffsetY = (int) Map.TILE_HEIGHT_PIXEL;
-		int scaledHeight = (int) (statusUIHeight * Gdx.graphics.getHeight());
-		int scaledWidth = (int) (statusUIWidth * Gdx.graphics.getWidth());
-		this.setSize(baseWidth + scaledWidth, baseHeight + scaledHeight);
+		int scaledHeight = (int) (STATUS_UI_HEIGHT * Gdx.graphics.getHeight());
+		int scaledWidth = (int) (STATUS_UI_WIDTH * Gdx.graphics.getWidth());
+		this.setSize(BASE_WIDTH + scaledWidth, BASE_HEIGHT + scaledHeight);
 	}
 }
 

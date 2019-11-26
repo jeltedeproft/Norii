@@ -28,8 +28,8 @@ import com.mygdx.game.Entities.Player;
 public class MainMenuScreen extends GameScreen {
 	private static final String TAG = MainMenuScreen.class.getSimpleName();
 	
-	public final int FRAME_WIDTH = 2000;
-	public final int FRAME_HEIGHT = 1125;
+	public static final int FRAME_WIDTH = 2000;
+	public static final int FRAME_HEIGHT = 1125;
 	private static String defaultBackgroundPath = "sprites/gui/forest50.png";
 	private static final int FRAME_COLS = 5;
 	private static final int FRAME_ROWS = 10;
@@ -49,7 +49,6 @@ public class MainMenuScreen extends GameScreen {
 	private TextureRegion[] bgFrames;
 
 	public MainMenuScreen(Object... params){
-		
 		initializeClassVariables();
 		
 		createBackground();
@@ -58,7 +57,6 @@ public class MainMenuScreen extends GameScreen {
 		
 		addListeners();
 		
-		//load music
 		notify(AudioObserver.AudioCommand.MUSIC_LOAD, AudioObserver.AudioTypeEvent.MUSIC_TITLE);
 	}
 	
@@ -75,6 +73,24 @@ public class MainMenuScreen extends GameScreen {
 		loadBackgroundSpritesIntoArray();
 		initializeBgAnimation();
 	}
+	
+	private void loadBackgroundSpritesIntoArray()
+	{
+		Texture texture = Utility.getTextureAsset(defaultBackgroundPath);
+		TextureRegion[][] textureFrames = TextureRegion.split(texture, FRAME_WIDTH, FRAME_HEIGHT);
+		
+		bgFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
+		int index = 0;
+		for (int i = 0; i < FRAME_ROWS; i++) {
+			for (int j = 0; j < FRAME_COLS; j++) {
+				bgFrames[index++] = textureFrames[i][j];
+			}
+		}
+	}
+	
+	private void initializeBgAnimation() {
+		bganimation = new Animation<TextureRegion>(0.050f, bgFrames);
+	}	
 	
 	private void createButtons() {
 		new Image(Utility.STATUSUI_TEXTUREATLAS.findRegion("bludbourne_title"));
@@ -127,22 +143,23 @@ public class MainMenuScreen extends GameScreen {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		//update timer for background animation
 		 updatebg(delta);
-		 
-		 //animate background
-		 currentFrame = bganimation.getKeyFrame(frameTime, true);
-		 backgroundbatch.begin();
-		 backgroundbatch.draw(currentFrame, 0, 0,stage.getViewport().getWorldWidth(),stage.getViewport().getWorldHeight());
-		 backgroundbatch.end();
 		 
 		stage.act(delta);
 		stage.draw();
 	}
+	
+	public void updatebg(float delta){
+		frameTime = (frameTime + delta)%70; //Want to avoid overflow
+		
+		 currentFrame = bganimation.getKeyFrame(frameTime, true);
+		 backgroundbatch.begin();
+		 backgroundbatch.draw(currentFrame, 0, 0,stage.getViewport().getWorldWidth(),stage.getViewport().getWorldHeight());
+		 backgroundbatch.end();
+	}
 
 	@Override
 	public void resize(int width, int height) {
-		Gdx.app.debug(TAG, "resizing with : (" + width + " , " + height + ")");
 		stage.getViewport().setScreenSize(width, height);
 	}
 
@@ -172,29 +189,6 @@ public class MainMenuScreen extends GameScreen {
 		Utility.unloadAsset(defaultBackgroundPath);
 		backgroundbatch.dispose();
 	}
-	
-	private void loadBackgroundSpritesIntoArray()
-	{
-		Texture texture = Utility.getTextureAsset(defaultBackgroundPath);
-		TextureRegion[][] textureFrames = TextureRegion.split(texture, FRAME_WIDTH, FRAME_HEIGHT);
-		
-		bgFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
-		int index = 0;
-		for (int i = 0; i < FRAME_ROWS; i++) {
-			for (int j = 0; j < FRAME_COLS; j++) {
-				bgFrames[index++] = textureFrames[i][j];
-			}
-		}
-	}
-	
-	private void initializeBgAnimation() {
-		bganimation = new Animation<TextureRegion>(0.050f, bgFrames);
-	}
-	
-	public void updatebg(float delta){
-		frameTime = (frameTime + delta)%70; //Want to avoid overflow
-	}
-	
 }
 
 

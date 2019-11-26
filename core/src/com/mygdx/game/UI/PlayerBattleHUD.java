@@ -16,71 +16,75 @@ import com.mygdx.game.Profile.ProfileObserver;
 public class PlayerBattleHUD implements Screen, ProfileObserver {
 	private static final String TAG = PlayerBattleHUD.class.getSimpleName();
 	
-    private Stage _stage;
-    private Viewport _viewport;
-    private Entity[] SortedUnits;
-    private PortraitsUI _portraits;
-    private StatusUI[] _statusUIs;
-    private BottomMenu _bottomMenu;
-    private ActionsUI[] _actionUIs;
-//  private InventoryUI _inventoryUI;
-    private Camera _camera;
-	private static int displayedHeroNumber = 0;
+    private Stage stage;
+    private Viewport viewport;
+    private PortraitsUI portraits;
+    private StatusUI[] statusUIs;
+    private BottomMenu bottomMenu;
+    private ActionsUI[] actionUIs;
+//  private InventoryUI inventoryUI;
 
-    public PlayerBattleHUD(Camera camera,Entity[] SortedUnits) {
-    	this.SortedUnits = SortedUnits;
-    	_statusUIs = new StatusUI[SortedUnits.length];
+    public PlayerBattleHUD(Camera camera,Entity[] sortedUnits) {
+    	initVariables(camera, sortedUnits);
+        createStatusAndActionWindows(sortedUnits);
+        addPortraits(sortedUnits);
+    }
+
+	private void initVariables(Camera camera, Entity[] sortedUnits) {
+		statusUIs = new StatusUI[sortedUnits.length];
     	
-    	_bottomMenu = new BottomMenu(SortedUnits);
-    	_bottomMenu.setHero(SortedUnits[0]);
-    	_actionUIs = new ActionsUI[SortedUnits.length];
-        _camera = camera;
-        _viewport = new ScreenViewport(_camera);
-        _stage = new Stage(_viewport);
-        _stage.setDebugAll(false);//!!!!!!!!!!!!!!!! on for debug
-        
-        //create a status & actions window for every unit
-        for (int i = 0; i < SortedUnits.length; i++) {
-        	Entity entity = SortedUnits[i];
-        	_statusUIs[i] = new StatusUI(entity);
-        	_actionUIs[i] = new ActionsUI(entity);
-        	StatusUI statusui = _statusUIs[i];
-        	ActionsUI actionui = _actionUIs[i];
-	        
-	        //status window blocks input beneath
-        	statusui.addListener(new InputListener() {
-	        	public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-	         		return true;
-	         	}
-	        });
-        	
-        	//action window blocks input beneath
-        	actionui.addListener(new InputListener() {
-        		public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-        			return true;
-        		}
-        	});
-	        
-	        _stage.addActor(statusui);
-	        _stage.addActor(actionui);
-	        _stage.addActor(_bottomMenu);
-        }
-        
-        //add portraits
-    	_portraits = new PortraitsUI(SortedUnits);
+    	bottomMenu = new BottomMenu(sortedUnits);
+    	bottomMenu.setHero(sortedUnits[0]);
+    	actionUIs = new ActionsUI[sortedUnits.length];
+        viewport = new ScreenViewport(camera);
+        stage = new Stage(viewport);
+        stage.setDebugAll(false);//!!!!!!!!!!!!!!!! on for debug
+	}
+
+private void createStatusAndActionWindows(Entity[] sortedUnits) {
+	for (int i = 0; i < sortedUnits.length; i++) {
+		Entity entity = sortedUnits[i];
+		statusUIs[i] = new StatusUI(entity);
+		actionUIs[i] = new ActionsUI(entity);
+		StatusUI statusui = statusUIs[i];
+		ActionsUI actionui = actionUIs[i];
+	    
+	    //status window blocks input beneath
+		statusui.addListener(new InputListener() {
+			@Override
+	    	public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+	     		return true;
+	     	}
+	    });
+		
+		//action window blocks input beneath
+		actionui.addListener(new InputListener() {
+			@Override
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				return true;
+			}
+		});
+	    
+	    stage.addActor(statusui);
+	    stage.addActor(actionui);
+	    stage.addActor(bottomMenu);
+	}
+}
+
+	private void addPortraits(Entity[] sortedUnits) {
+    	portraits = new PortraitsUI(sortedUnits);
     	
-        //portrait window blocks input beneath
-    	_portraits.addListener(new InputListener() {
+    	portraits.addListener(new InputListener() {
         	public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
          		return true;
          	}
         });
     	
-    	_stage.addActor(_portraits);
-    }
+    	stage.addActor(portraits);
+	}
 
     public Stage getStage() {
-        return _stage;
+        return stage;
     }
 
     @Override
@@ -94,21 +98,28 @@ public class PlayerBattleHUD implements Screen, ProfileObserver {
 
     @Override
     public void render(float delta) {
-        _stage.act(delta);
-        _stage.draw();
+        stage.act(delta);
+        stage.draw();
     }
 
     @Override
     public void resize(int width, int height) {
     	Gdx.app.debug(TAG, "resizing with : (" + width + " , " + height + ")");
-        _stage.getViewport().update(width, height, true);
-        _portraits.updateSizeContainer();
-        _bottomMenu.update();
+        stage.getViewport().update(width, height, true);
+        portraits.updateSizeContainer();
+        bottomMenu.update();
         updateStatusUIs();
+        updateActionUIs();
     }
     
     private void updateStatusUIs() {
-    	for(StatusUI ui : _statusUIs) {
+    	for(StatusUI ui : statusUIs) {
+    		ui.update();
+    	}
+    }
+    
+    private void updateActionUIs() {
+    	for(ActionsUI ui : actionUIs) {
     		ui.update();
     	}
     }
@@ -131,7 +142,7 @@ public class PlayerBattleHUD implements Screen, ProfileObserver {
 
     @Override
     public void dispose() {
-        _stage.dispose();
+        stage.dispose();
     }
 
 }

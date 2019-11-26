@@ -7,18 +7,19 @@ import Utility.Utility;
 
 public class ParticlePool {
 	
-	private ParticleEffectPool particlePool;
-	private int MAX_PARTICLES_IN_POOL = 50;
+	private ParticleEffectPool particleEffectPool;
+	private static final int MAX_PARTICLES_IN_POOL = 50;
+	private static final int INITIAL_CAPACITY = 1;
 	
 	
 	
 	public ParticlePool(ParticleType particletype) {
 		Utility.loadParticleAsset(particletype.getParticleFileLocation());
-		particlePool = new ParticleEffectPool(Utility.getParticleAsset(particletype.getParticleFileLocation()),1,MAX_PARTICLES_IN_POOL);
+		particleEffectPool = new ParticleEffectPool(Utility.getParticleAsset(particletype.getParticleFileLocation()),INITIAL_CAPACITY,MAX_PARTICLES_IN_POOL);
 	}
 	
 	public PooledEffect getParticleEffect() {
-		return particlePool.obtain();
+		return particleEffectPool.obtain();
 	}
 
 }

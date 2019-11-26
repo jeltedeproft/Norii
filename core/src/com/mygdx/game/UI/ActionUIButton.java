@@ -1,7 +1,7 @@
 package com.mygdx.game.UI;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
@@ -9,22 +9,22 @@ import Utility.Utility;
 
 public class ActionUIButton {
 	
-	protected ImageButton button;
+	protected Button button;
 	protected boolean active;
 
 	public ActionUIButton(String imageFileName, Action action) {
 		Utility.loadTextureAsset(imageFileName);
 		Drawable buttonImage = new TextureRegionDrawable(new TextureRegion(Utility.getTextureAsset(imageFileName)));
-		button = new ImageButton(buttonImage);
-		button.getImageCell().size(32, 32);
-		//put border around it?
+		button = new Button(buttonImage);
+		button.getBackground().setMinHeight(32);
+		button.getBackground().setMinWidth(32);
 	}
 
-	public ImageButton getButton() {
+	public Button getButton() {
 		return button;
 	}
 
-	public void setButton(ImageButton button) {
+	public void setButton(Button button) {
 		this.button = button;
 	}
 

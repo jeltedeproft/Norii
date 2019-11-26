@@ -36,11 +36,12 @@ public class MovementBattleState implements BattleState{
 
 	@Override
 	public void update() {
-		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void exit() {
+		Gdx.app.debug(TAG, "exiting movement phase");
 		battlemanager.setCurrentBattleState(battlemanager.getActionBattleState());
 		battlemanager.getCurrentBattleState().entry();
 	}

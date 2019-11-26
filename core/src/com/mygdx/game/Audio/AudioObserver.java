@@ -1,23 +1,23 @@
 package com.mygdx.game.Audio;
 
 public interface AudioObserver {
-    public static enum AudioTypeEvent{
+    public enum AudioTypeEvent{
         MUSIC_BATTLE("audio/battleTheme3.wav"),
         MUSIC_TITLE("audio/main2.wav"),
         NONE("");
 
-        private String _audioFullFilePath;
+        private String audioFullFilePath;
 
         AudioTypeEvent(String audioFullFilePath){
-            this._audioFullFilePath = audioFullFilePath;
+            this.audioFullFilePath = audioFullFilePath;
         }
 
         public String getValue(){
-            return _audioFullFilePath;
+            return audioFullFilePath;
         }
     }
 
-    public static enum AudioCommand {
+    public enum AudioCommand {
         MUSIC_LOAD,
         MUSIC_PLAY_ONCE,
         MUSIC_PLAY_LOOP,
