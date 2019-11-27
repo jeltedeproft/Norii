@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package de.tomgrill.gdxtesting.examples;
+package com.NoriiTests.examples;
 
 import static org.junit.Assert.assertTrue;
 
@@ -23,7 +23,7 @@ import org.junit.runner.RunWith;
 
 import com.badlogic.gdx.Gdx;
 
-import de.tomgrill.gdxtesting.GdxTestRunner;
+import com.NoriiTests.GdxTestRunner;
 
 @RunWith(GdxTestRunner.class)
 public class AssetExistsExampleTest {
