@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -47,12 +48,13 @@ public class PauseMenuUI implements Screen {
         addListeners();
     }
     
-    private void createUI() {        
-    	title = new Label("Pause", Utility.STATUSUI_SKIN);
+    private void createUI() {       
+    	Skin statusUISkin = Utility.getStatusUISkin();
+    	title = new Label("Pause", statusUISkin);
     	title.setFontScale(2);
-        resumeButton = new TextButton("Resume",Utility.STATUSUI_SKIN);
-        settingButton = new TextButton("Settings", Utility.STATUSUI_SKIN);
-        mainMenuButton = new TextButton("Main Menu", Utility.STATUSUI_SKIN);
+        resumeButton = new TextButton("Resume",statusUISkin);
+        settingButton = new TextButton("Settings", statusUISkin);
+        mainMenuButton = new TextButton("Main Menu", statusUISkin);
 	}
     
 	private void createLayout() {

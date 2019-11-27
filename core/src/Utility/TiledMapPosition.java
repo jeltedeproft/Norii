@@ -1,12 +1,7 @@
 package Utility;
 
 import java.awt.Point;
-import java.awt.geom.Point2D;
-
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Map.Map;
-import com.mygdx.game.Screen.BattleScreen;
 
 public class TiledMapPosition {
 	private static final String TAG = TiledMapPosition.class.getSimpleName();

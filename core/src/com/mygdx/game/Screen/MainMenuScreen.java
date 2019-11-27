@@ -8,11 +8,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Array;
@@ -93,9 +95,12 @@ public class MainMenuScreen extends GameScreen {
 	}	
 	
 	private void createButtons() {
-		new Image(Utility.STATUSUI_TEXTUREATLAS.findRegion("bludbourne_title"));
-		newGameButton = new TextButton("New Game", Utility.STATUSUI_SKIN);
-		exitButton = new TextButton("Exit",Utility.STATUSUI_SKIN);
+    	TextureAtlas statusUITextureAtlas = Utility.getStatusUITextureAtlas();
+    	Skin statusUISkin = Utility.getStatusUISkin();
+    	
+		new Image(statusUITextureAtlas.findRegion("bludbourne_title"));
+		newGameButton = new TextButton("New Game", statusUISkin);
+		exitButton = new TextButton("Exit",statusUISkin);
 	}
 	
 	private void createLayout() {

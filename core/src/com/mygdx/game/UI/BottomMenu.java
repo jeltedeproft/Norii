@@ -9,12 +9,14 @@ import Utility.Utility;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
@@ -106,37 +108,40 @@ public class BottomMenu extends HorizontalGroup {
 	}
 	
 	private void initStatsMenu() {
+    	Skin statusUISkin = Utility.getStatusUISkin();
+    	
 		statsGroup = new Table();
     	statsGroup.center();
     	
-        heroNameLabel = new Label("", Utility.STATUSUI_SKIN, "inventory-item-count");
+        heroNameLabel = new Label("", statusUISkin, "inventory-item-count");
         heroNameLabel.setFontScale(HERONAMESCALE);
         heroNameLabel.setColor(NAMECOLOR);
     	
-        hpLabel = new Label(" hp:", Utility.STATUSUI_SKIN);
-        hp = new Label("", Utility.STATUSUI_SKIN);
-        mpLabel = new Label(" mp:", Utility.STATUSUI_SKIN);
-        mp = new Label("", Utility.STATUSUI_SKIN);
-        xpLabel = new Label(" xp:", Utility.STATUSUI_SKIN);
-        xp = new Label("", Utility.STATUSUI_SKIN);
-        levelLabel = new Label(" lv:", Utility.STATUSUI_SKIN);
-        levelVal = new Label("", Utility.STATUSUI_SKIN);
-        iniLabel = new Label(" ini:", Utility.STATUSUI_SKIN);
-        iniVal = new Label("", Utility.STATUSUI_SKIN);
+        hpLabel = new Label(" hp:", statusUISkin);
+        hp = new Label("", statusUISkin);
+        mpLabel = new Label(" mp:", statusUISkin);
+        mp = new Label("", statusUISkin);
+        xpLabel = new Label(" xp:", statusUISkin);
+        xp = new Label("", statusUISkin);
+        levelLabel = new Label(" lv:", statusUISkin);
+        levelVal = new Label("", statusUISkin);
+        iniLabel = new Label(" ini:", statusUISkin);
+        iniVal = new Label("", statusUISkin);
 	}
 
 	private void initActionsMenu() {
+		Skin statusUISkin = Utility.getStatusUISkin();
 		smallMenu = new Table();
     	smallMenu.setTransform(true);
     	smallMenu.center();
     	
-    	testButton = new TextButton("test", Utility.STATUSUI_SKIN);
+    	testButton = new TextButton("test", statusUISkin);
     	testButton.setTransform(true);
     	
-    	test2Button = new TextButton("test2", Utility.STATUSUI_SKIN);
+    	test2Button = new TextButton("test2", statusUISkin);
     	test2Button.setTransform(true);
     	
-    	test3Button = new TextButton("test3", Utility.STATUSUI_SKIN);
+    	test3Button = new TextButton("test3", statusUISkin);
     	test3Button.setTransform(true);
 	}
     

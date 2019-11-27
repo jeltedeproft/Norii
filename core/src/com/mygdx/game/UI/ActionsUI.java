@@ -8,7 +8,6 @@ import Utility.Utility;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
@@ -51,7 +50,7 @@ public class ActionsUI extends Table {
     private Entity linkedEntity;
 
     public ActionsUI(Entity entity){
-        super(Utility.STATUSUI_SKIN);
+        super(Utility.getStatusUISkin());
         this.debug();
         buttons = new ArrayList<ActionUIButton>();
 

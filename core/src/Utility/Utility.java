@@ -11,77 +11,46 @@ import com.badlogic.gdx.assets.loaders.TextureLoader;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.mygdx.game.Map.MyNavTmxMapLoader;
 
 public final class Utility {
 	public static final AssetManager _assetManager = new AssetManager();
-	
-	public static Random random = new Random();
-
 	private static final String TAG = Utility.class.getSimpleName();
-
-	private static InternalFileHandleResolver _filePathResolver =  new InternalFileHandleResolver();
-	
-	private static ShapeRenderer debugRenderer = new ShapeRenderer();
+	private static InternalFileHandleResolver filePathResolver =  new InternalFileHandleResolver();
+	public static final Random random = new Random();
 	
 	//UI
-	private final static String STATUSUI_TEXTURE_ATLAS_PATH = "skins/statusui.atlas";
-	private final static String STATUSUI_SKIN_PATH = "skins/statusui.json";
+	private static final String STATUSUI_TEXTURE_ATLAS_PATH = "skins/statusui.atlas";
+	private static final String STATUSUI_SKIN_PATH = "skins/statusui.json";
 	
-	public static TextureAtlas STATUSUI_TEXTUREATLAS = new TextureAtlas(STATUSUI_TEXTURE_ATLAS_PATH);
-	public static Skin STATUSUI_SKIN = new Skin(Gdx.files.internal(STATUSUI_SKIN_PATH),STATUSUI_TEXTUREATLAS);
+	private static TextureAtlas statusUITextureAtlas;
+	private static Skin statusUISkin;
+
+	private Utility() {
+		
+	}
 	
-	public static void FillSquare(float x, float y , Color color, Matrix4 projectionMatrix) {
-        debugRenderer.setProjectionMatrix(projectionMatrix);
-        debugRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        debugRenderer.setColor(color);
-        debugRenderer.rect(x, y, 1, 1);
-        debugRenderer.end();
-	}
-	public static void FillSquareWithParticle(float x, float y, Matrix4 projectionMatrix, float delta, Batch batch,ParticleEffect particle) {
-		batch.begin();
-
-		//Setting the position of the ParticleEffect
-		particle.setPosition(x, y);
-		particle.update(delta);
+	public static TextureAtlas getStatusUITextureAtlas() {
+		if(statusUITextureAtlas == null) {
+			statusUITextureAtlas = new TextureAtlas(STATUSUI_TEXTURE_ATLAS_PATH);
+		}
 		
-		particle.draw(batch, delta);
-		
-		batch.end();
+		return statusUITextureAtlas;
 	}
-
-    public static void DrawDebugLine(Vector2 start, Vector2 end, int lineWidth, Color color, Matrix4 projectionMatrix)
-    {
-        Gdx.gl.glLineWidth(lineWidth);
-        debugRenderer.setProjectionMatrix(projectionMatrix);
-        debugRenderer.begin(ShapeRenderer.ShapeType.Line);
-        debugRenderer.setColor(color);
-        debugRenderer.line(start, end);
-        debugRenderer.end();
-        Gdx.gl.glLineWidth(1);
-    }
-
-    public static void DrawDebugLine(Vector2 start, Vector2 end, Matrix4 projectionMatrix)
-    {
-        Gdx.gl.glLineWidth(2);
-        debugRenderer.setProjectionMatrix(projectionMatrix);
-        debugRenderer.begin(ShapeRenderer.ShapeType.Line);
-        debugRenderer.setColor(Color.DARK_GRAY);
-        debugRenderer.line(start, end);
-        debugRenderer.end();
-        Gdx.gl.glLineWidth(1);
-    }
-
+	
+	public static Skin getStatusUISkin() {
+		if(statusUISkin == null) {
+			statusUISkin = new Skin(Gdx.files.internal(STATUSUI_SKIN_PATH),getStatusUITextureAtlas());
+		}
+		
+		return statusUISkin;
+	}
+	
 	public static void unloadAsset(String assetFilenamePath){
 	// once the asset manager is done loading
 	if( _assetManager.isLoaded(assetFilenamePath) ){
@@ -114,8 +83,8 @@ public final class Utility {
 	   }
 
 	   //load asset
-		if( _filePathResolver.resolve(mapFilenamePath).exists() ){
-			_assetManager.setLoader(TiledMap.class, new MyNavTmxMapLoader(_filePathResolver));
+		if( filePathResolver.resolve(mapFilenamePath).exists() ){
+			_assetManager.setLoader(TiledMap.class, new MyNavTmxMapLoader(filePathResolver));
 			_assetManager.load(mapFilenamePath, TiledMap.class);
 			//Until we add loading screen, just block until we load the map
 			_assetManager.finishLoadingAsset(mapFilenamePath);
@@ -145,8 +114,8 @@ public final class Utility {
 			return;
 		}
 		//load asset
-		if( _filePathResolver.resolve(textureFilenamePath).exists() ){
-			_assetManager.setLoader(Texture.class, new TextureLoader(_filePathResolver));
+		if( filePathResolver.resolve(textureFilenamePath).exists() ){
+			_assetManager.setLoader(Texture.class, new TextureLoader(filePathResolver));
 			_assetManager.load(textureFilenamePath, Texture.class);
 			//Until we add loading screen, just block until we load the map
 			_assetManager.finishLoadingAsset(textureFilenamePath);
@@ -174,8 +143,8 @@ public final class Utility {
 			return;
 		}
 		//load asset
-		if( _filePathResolver.resolve(particleFilenamePath).exists() ){
-			_assetManager.setLoader(ParticleEffect.class, new ParticleEffectLoader(_filePathResolver));
+		if( filePathResolver.resolve(particleFilenamePath).exists() ){
+			_assetManager.setLoader(ParticleEffect.class, new ParticleEffectLoader(filePathResolver));
 			_assetManager.load(particleFilenamePath, ParticleEffect.class);
 			//block until we load the particle
 			_assetManager.finishLoadingAsset(particleFilenamePath);
@@ -213,8 +182,8 @@ public final class Utility {
 		}
 
 		//load asset
-		if( _filePathResolver.resolve(soundFilenamePath).exists() ){
-			_assetManager.setLoader(Sound.class, new SoundLoader(_filePathResolver));
+		if( filePathResolver.resolve(soundFilenamePath).exists() ){
+			_assetManager.setLoader(Sound.class, new SoundLoader(filePathResolver));
 			_assetManager.load(soundFilenamePath, Sound.class);
 			//Until we add loading screen, just block until we load the map
 			_assetManager.finishLoadingAsset(soundFilenamePath);
@@ -249,8 +218,8 @@ public final class Utility {
 		}
 
 		//load asset
-		if( _filePathResolver.resolve(musicFilenamePath).exists() ){
-			_assetManager.setLoader(Music.class, new MusicLoader(_filePathResolver));
+		if( filePathResolver.resolve(musicFilenamePath).exists() ){
+			_assetManager.setLoader(Music.class, new MusicLoader(filePathResolver));
 			_assetManager.load(musicFilenamePath, Music.class);
 			//Until we add loading screen, just block until we load the map
 			_assetManager.finishLoadingAsset(musicFilenamePath);

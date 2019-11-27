@@ -9,9 +9,11 @@ import com.mygdx.game.Map.Map;
 import Utility.Utility;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class StatusUI extends Window {
 	private static final String TAG = StatusUI.class.getSimpleName();
@@ -63,7 +65,7 @@ public class StatusUI extends Window {
     private Label iniLabel;
     
     public StatusUI(Entity entity){
-        super(title, Utility.STATUSUI_SKIN);
+        super(title, Utility.getStatusUISkin());
         this.setVisible(false); //have to set this false and true on hover
         this.linkedEntity = entity;
         this.setResizable(true);
@@ -84,31 +86,34 @@ public class StatusUI extends Window {
     }
     
     private void createElementsForUI(Entity entity) {
-        heroNameLabel = new Label(entity.getName(), Utility.STATUSUI_SKIN, "inventory-item-count");
+    	TextureAtlas statusUITextureAtlas = Utility.getStatusUITextureAtlas();
+    	Skin statusUISkin = Utility.getStatusUISkin();
+    	
+        heroNameLabel = new Label(entity.getName(), statusUISkin, "inventory-item-count");
         
         group = new WidgetGroup();
         group2 = new WidgetGroup();
         group3 = new WidgetGroup();
 
-        hpBar = new Image(Utility.STATUSUI_TEXTUREATLAS.findRegion("HP_Bar"));
-        bar = new Image(Utility.STATUSUI_TEXTUREATLAS.findRegion("Bar"));
-        mpBar = new Image(Utility.STATUSUI_TEXTUREATLAS.findRegion("MP_Bar"));
-        bar2 = new Image(Utility.STATUSUI_TEXTUREATLAS.findRegion("Bar"));
-        xpBar = new Image(Utility.STATUSUI_TEXTUREATLAS.findRegion("XP_Bar"));
-        bar3 = new Image(Utility.STATUSUI_TEXTUREATLAS.findRegion("Bar"));
+        hpBar = new Image(statusUITextureAtlas.findRegion("HP_Bar"));
+        bar = new Image(statusUITextureAtlas.findRegion("Bar"));
+        mpBar = new Image(statusUITextureAtlas.findRegion("MP_Bar"));
+        bar2 = new Image(statusUITextureAtlas.findRegion("Bar"));
+        xpBar = new Image(statusUITextureAtlas.findRegion("XP_Bar"));
+        bar3 = new Image(statusUITextureAtlas.findRegion("Bar"));
 
-        hpLabel = new Label(" hp:", Utility.STATUSUI_SKIN);
-        hp = new Label(String.valueOf(hpVal), Utility.STATUSUI_SKIN);
-        mpLabel = new Label(" mp:", Utility.STATUSUI_SKIN);
-        mp = new Label(String.valueOf(mpVal), Utility.STATUSUI_SKIN);
-        xpLabel = new Label(" xp:", Utility.STATUSUI_SKIN);
-        xp = new Label(String.valueOf(xpVal), Utility.STATUSUI_SKIN);
-        levelLabel = new Label(" lv:", Utility.STATUSUI_SKIN);
-        levelValLabel = new Label(String.valueOf(levelVal), Utility.STATUSUI_SKIN);
-        iniLabel = new Label(" ini:", Utility.STATUSUI_SKIN);
-        iniValLabel = new Label(String.valueOf(iniVal), Utility.STATUSUI_SKIN);
+        hpLabel = new Label(" hp:", statusUISkin);
+        hp = new Label(String.valueOf(hpVal), statusUISkin);
+        mpLabel = new Label(" mp:", statusUISkin);
+        mp = new Label(String.valueOf(mpVal), statusUISkin);
+        xpLabel = new Label(" xp:", statusUISkin);
+        xp = new Label(String.valueOf(xpVal), statusUISkin);
+        levelLabel = new Label(" lv:", statusUISkin);
+        levelValLabel = new Label(String.valueOf(levelVal), statusUISkin);
+        iniLabel = new Label(" ini:", statusUISkin);
+        iniValLabel = new Label(String.valueOf(iniVal), statusUISkin);
 
-        heroButton= new ImageButton(Utility.STATUSUI_SKIN, "inventory-button");
+        heroButton= new ImageButton(statusUISkin, "inventory-button");
         heroButton.getImageCell().size(32, 32);
     }
     

@@ -19,7 +19,6 @@ public class AudioManager implements AudioObserver {
     private AudioManager(){
         queuedMusic = new HashMap<String, Music>();
         queuedSounds = new HashMap<String, Sound>();
-
     }
 
     public static AudioManager getInstance() {
