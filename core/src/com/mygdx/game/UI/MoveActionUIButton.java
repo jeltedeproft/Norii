@@ -7,8 +7,8 @@ import com.mygdx.game.Entities.Entity;
 public class MoveActionUIButton extends ActionUIButton{
 	private Entity linkedUnit;
 
-	public MoveActionUIButton(String imageFileName, Action action, final Entity linkedUnit) {
-		super(imageFileName, action);
+	public MoveActionUIButton(String imageFileName, final Entity linkedUnit) {
+		super(imageFileName);
 		this.active = true;
 		this.linkedUnit = linkedUnit;
 

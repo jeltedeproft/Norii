@@ -12,7 +12,7 @@ public class ActionUIButton {
 	protected Button button;
 	protected boolean active;
 
-	public ActionUIButton(String imageFileName, Action action) {
+	public ActionUIButton(String imageFileName) {
 		Utility.loadTextureAsset(imageFileName);
 		Drawable buttonImage = new TextureRegionDrawable(new TextureRegion(Utility.getTextureAsset(imageFileName)));
 		button = new Button(buttonImage);

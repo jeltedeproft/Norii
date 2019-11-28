@@ -2,12 +2,9 @@ package com.mygdx.game.Battle;
 
 import com.badlogic.gdx.Gdx;
 import com.mygdx.game.Entities.Entity;
-import com.mygdx.game.Entities.InputController;
 import com.mygdx.game.Map.TiledMapActor;
 import com.mygdx.game.Particles.ParticleMaker;
 import com.mygdx.game.Particles.ParticleType;
-import com.mygdx.game.UI.PlayerBattleHUD;
-
 import Utility.TiledMapPosition;
 
 public class DeploymentBattleState implements BattleState{
@@ -32,7 +29,7 @@ public class DeploymentBattleState implements BattleState{
 
 	@Override
 	public void update() {
-
+		
 	}
 
 	@Override
@@ -63,7 +60,6 @@ public class DeploymentBattleState implements BattleState{
     }
 
 	private Entity deployUnit(TiledMapPosition newPosition) {
-		//deploy unit
 		Entity unitToDeploy = unitsSortedByInitiative[deployingUnitNumber];
 		unitToDeploy.setInDeploymentPhase(false);
 		initiateUnitInBattle(unitToDeploy,newPosition);

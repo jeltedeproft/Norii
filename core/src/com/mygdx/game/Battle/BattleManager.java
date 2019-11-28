@@ -9,6 +9,7 @@ public class BattleManager {
 	
 	private BattleState deploymentBattleState;
 	private BattleState movementBattleState;
+	private BattleState attackBattleState;
 	private BattleState actionBattleState;
 	private BattleState waitOpponentBattleState;
 	private BattleState currentBattleState;
@@ -30,6 +31,7 @@ public class BattleManager {
 		
 		this.deploymentBattleState = new DeploymentBattleState(this);
 		this.movementBattleState = new MovementBattleState(this);
+		this.attackBattleState = new AttackBattleState(this);
 		this.actionBattleState = new ActionBattleState(this);
 		this.waitOpponentBattleState = new WaitOpponentBattleState(this);
 		
@@ -104,6 +106,14 @@ public class BattleManager {
 
 	public void setMovementBattleState(BattleState movementBattleState) {
 		this.movementBattleState = movementBattleState;
+	}
+	
+	public BattleState getAttackBattleState() {
+		return attackBattleState;
+	}
+	
+	public void setAttackBattleState(BattleState attackBattleState) {
+		this.attackBattleState = attackBattleState;
 	}
 
 	public BattleState getActionBattleState() {

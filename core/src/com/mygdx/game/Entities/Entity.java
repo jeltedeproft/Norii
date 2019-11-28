@@ -26,9 +26,11 @@ public class Entity extends Actor implements EntitySubject{
 	private int level;
 	private int xp;
 	private int ini;
+	private int attackRange;
 	private boolean inBattle;
 	private boolean isActive;
 	private boolean isInMovementPhase;
+	private boolean isInAttackPhase;
 	private boolean isInActionPhase;
 	private boolean isInDeploymentPhase;
 	
@@ -61,8 +63,10 @@ public class Entity extends Actor implements EntitySubject{
 		this.hp = 10;
 		this.mp = 3;
 		this.ini = Utility.getRandomIntFrom1to(100);
+		this.attackRange = 2;
 		this.inBattle = false;
 		this.isInMovementPhase = false;
+		this.isInAttackPhase = false;
 		this.isInDeploymentPhase = false;
 	}
 	
@@ -157,6 +161,18 @@ public class Entity extends Actor implements EntitySubject{
 		}
 	}
 	
+	public boolean isInAttackPhase() {
+		return isInAttackPhase;
+	}
+
+	public void setInAttackPhase(boolean isInAttackPhase) {
+		this.isInAttackPhase = isInAttackPhase;
+		if(isInAttackPhase) {
+			actionsui.setVisible(false);			
+			this.notify(EntityCommand.IN_ATTACK_PHASE);
+		}
+	}
+	
 	public boolean canMove() {
 		return (this.mp > 0);
 	}
@@ -181,18 +197,18 @@ public class Entity extends Actor implements EntitySubject{
 		return isInDeploymentPhase;
 	}
 
+	public void setInDeploymentPhase(boolean isInDeploymentPhase) {
+		this.isInDeploymentPhase = isInDeploymentPhase;
+		if (isInDeploymentPhase){
+			bottomMenu.setHero(this);
+		}
+	}
+	
 	public void setFocused(boolean isFocused) {
 		if (isFocused){
 			bottomMenu.setHero(this);
 		}else {
 			bottomMenu.setHero(null);
-		}
-	}
-	
-	public void setInDeploymentPhase(boolean isInDeploymentPhase) {
-		this.isInDeploymentPhase = isInDeploymentPhase;
-		if (isInDeploymentPhase){
-			bottomMenu.setHero(this);
 		}
 	}
 
@@ -221,6 +237,14 @@ public class Entity extends Actor implements EntitySubject{
 	public void setIni(int ini) {
 		this.ini = ini;
 		updateStatusUI();
+	}
+	
+	public int getAttackRange() {
+		return attackRange;
+	}
+	
+	public void setAttackRange(int attackRange) {
+		this.attackRange = attackRange;
 	}
 
 	public int getLevel() {

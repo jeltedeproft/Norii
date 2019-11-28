@@ -35,7 +35,7 @@ public class ActionsUI extends Table {
     
     //ActionUIButtons
     private MoveActionUIButton moveActionUIButton;
-    private ActionUIButton attackActionUIButton;
+    private AttackActionUIButton attackActionUIButton;
     private ActionUIButton spellActionUIButton;
     private ActionUIButton skipActionUIButton;
     private ActionUIButton upgradeActionUIButton;
@@ -52,23 +52,35 @@ public class ActionsUI extends Table {
     public ActionsUI(Entity entity){
         super(Utility.getStatusUISkin());
         this.debug();
-        buttons = new ArrayList<ActionUIButton>();
+        initVariables(entity);
+        
+        createButtons();
+        storeButtons();
+        addButtons();
+               
+        calculateSize();
+    }
 
+	private void initVariables(Entity entity) {
+		buttons = new ArrayList<ActionUIButton>();
         this.linkedEntity = entity;
         entity.setActionsui(this);
-        
         this.setVisible(false); //have to set this false and true when active
-        
-        moveActionUIButton = new MoveActionUIButton(MOVE_BUTTON_SPRITEPATH,Action.MOVE,linkedEntity);
-        attackActionUIButton = new ActionUIButton(ATTACK_BUTTON_SPRITEPATH,Action.ATTACK);
-        spellActionUIButton = new ActionUIButton(SPELL_BUTTON_SPRITEPATH,Action.SPELLBOOK);
-        skipActionUIButton = new ActionUIButton(SKIP_BUTTON_SPRITEPATH,Action.SKIP);
-        upgradeActionUIButton = new ActionUIButton(UPGRADE_BUTTON_SPRITEPATH,Action.UPGRADE);
-        spell1ActionUIButton = new ActionUIButton(SPELL1_BUTTON_SPRITEPATH,Action.SPELL);
-        spell2ActionUIButton = new ActionUIButton(SPELL2_BUTTON_SPRITEPATH,Action.SPELL);
-        spell3ActionUIButton = new ActionUIButton(SPELL3_BUTTON_SPRITEPATH,Action.SPELL);
-        
-        buttons.add(moveActionUIButton);
+	}
+
+	private void createButtons() {
+		moveActionUIButton = new MoveActionUIButton(MOVE_BUTTON_SPRITEPATH,linkedEntity);
+        attackActionUIButton = new AttackActionUIButton(ATTACK_BUTTON_SPRITEPATH,linkedEntity);
+        spellActionUIButton = new ActionUIButton(SPELL_BUTTON_SPRITEPATH);
+        skipActionUIButton = new ActionUIButton(SKIP_BUTTON_SPRITEPATH);
+        upgradeActionUIButton = new ActionUIButton(UPGRADE_BUTTON_SPRITEPATH);
+        spell1ActionUIButton = new ActionUIButton(SPELL1_BUTTON_SPRITEPATH);
+        spell2ActionUIButton = new ActionUIButton(SPELL2_BUTTON_SPRITEPATH);
+        spell3ActionUIButton = new ActionUIButton(SPELL3_BUTTON_SPRITEPATH);
+	}
+
+	private void storeButtons() {
+		buttons.add(moveActionUIButton);
         buttons.add(attackActionUIButton);
         buttons.add(spellActionUIButton);
         buttons.add(skipActionUIButton);
@@ -76,8 +88,10 @@ public class ActionsUI extends Table {
         buttons.add(spell1ActionUIButton);
         buttons.add(spell2ActionUIButton);
         buttons.add(spell3ActionUIButton);
+	}
 
-        this.add(spell1ActionUIButton.getButton()).expand().fill();
+	private void addButtons() {
+		this.add(spell1ActionUIButton.getButton()).expand().fill();
         this.add(spell2ActionUIButton.getButton()).expand().fill();
         this.add(spell3ActionUIButton.getButton()).expand().fill();
         this.add();
@@ -91,12 +105,13 @@ public class ActionsUI extends Table {
         this.add(skipActionUIButton.getButton()).expand().fill();
         this.add(upgradeActionUIButton.getButton()).expand().fill();
         this.add();
-               
-        //size
+	}
+
+	private void calculateSize() {
         actionsMenuWidth = iconWidth * BAR_LENGTH;
         actionsMenuHeight = NUMBER_OF_BARS * iconHeight;
         this.setSize(actionsMenuWidth, actionsMenuHeight);
-    }
+	}
 
     public void update() {
     	this.setVisible(linkedEntity.isActive());
