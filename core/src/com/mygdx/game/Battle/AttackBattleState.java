@@ -1,17 +1,8 @@
 package com.mygdx.game.Battle;
 
-import java.util.List;
-
-import org.xguzm.pathfinding.grid.GridCell;
-
 import com.badlogic.gdx.Gdx;
 import com.mygdx.game.Entities.Entity;
-import com.mygdx.game.Map.Map;
 import com.mygdx.game.Map.TiledMapActor;
-import com.mygdx.game.Particles.ParticleMaker;
-import com.mygdx.game.Particles.ParticleType;
-
-import Utility.TiledMapPosition;
 
 public class AttackBattleState implements BattleState{
 	private static final String TAG = AttackBattleState.class.getSimpleName();
@@ -45,30 +36,20 @@ public class AttackBattleState implements BattleState{
 		battlemanager.getCurrentBattleState().entry();
 	}
 	
-    private void possibleAttack(TiledMapActor actor) {
-    	List<GridCell> path = calculatePath(actor);
-    	
-    	GridCell cellToAttack = newPositionInPath(actor,path);
-    	if(cellToAttack != null) {
-    		moveUnit(actor, cellToMoveTo);
-    	}	
+    private void possibleAttack(TiledMapActor actor) {  	
+    	Entity possibleTarget = getPossibleTarget(actor);
+    	if(possibleTarget != null) {
+    		currentUnit.attack(possibleTarget);
+    	}
+    	this.exit();
     }
     
-    private List<GridCell> calculatePath(TiledMapActor actor){
-    	currentUnit = battlemanager.getActiveUnit();
-    	int centreX = currentUnit.getCurrentPosition().getTileX();
-    	int centreY = currentUnit.getCurrentPosition().getTileY();
-    	return actor.getTiledMap().getPathfinder().getCellsWithin(centreX, centreY, currentUnit.getMp());
+    private Entity getPossibleTarget(TiledMapActor actor){
+    	for(Entity entity : battlemanager.getUnits()) {
+    		if((entity.getCurrentPosition().getTileX() == actor.getActorPos().getTileX()) && (entity.getCurrentPosition().getTileY() == actor.getActorPos().getTileY())) {
+    			return entity;
+    		}
+    	}
+    	return null;
     }
-
-    
-	private GridCell newPositionInPath(TiledMapActor actor, List<GridCell> path) {
-		TiledMapPosition newPos = actor.getActorPos(); 
-		for(int i = 0;i<path.size();i++) {
-			if((path.get(i).x == newPos.getTileX()) && (path.get(i).y == newPos.getTileY()) && path.get(i).isWalkable()) {
-				return path.get(i);
-			}
-		}
-		return null;
-	}
 }

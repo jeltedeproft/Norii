@@ -29,7 +29,6 @@ public class EntityClickListener extends ClickListener {
     public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
     	actor.setIsHovering(false);
     	actor.getEntity().getStatusui().setVisible(false);
-    }
-    
+    } 
 }
 

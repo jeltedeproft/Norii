@@ -294,11 +294,9 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		case IN_ATTACK_PHASE:
 			List<GridCell> attackPath = map.getPathfinder().getCellsWithin(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getAttackRange());
 			for(GridCell cell : attackPath) {
-				if(cell.isWalkable()) {
-					TiledMapPosition positionToPutAttackParticle = new TiledMapPosition().setPositionFromTiles(cell.x,cell.y);
-					ParticleMaker.addParticle(ParticleType.ATTACK,positionToPutAttackParticle );
-					battlemanager.setCurrentBattleState(battlemanager.getAttackBattleState());
-				}
+				TiledMapPosition positionToPutAttackParticle = new TiledMapPosition().setPositionFromTiles(cell.x,cell.y);
+				ParticleMaker.addParticle(ParticleType.ATTACK,positionToPutAttackParticle );
+				battlemanager.setCurrentBattleState(battlemanager.getAttackBattleState());
 			}
 			break;
 		default:

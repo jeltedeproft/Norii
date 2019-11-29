@@ -27,12 +27,14 @@ public class Entity extends Actor implements EntitySubject{
 	private int xp;
 	private int ini;
 	private int attackRange;
+	private int attackPower;
 	private boolean inBattle;
 	private boolean isActive;
 	private boolean isInMovementPhase;
 	private boolean isInAttackPhase;
 	private boolean isInActionPhase;
 	private boolean isInDeploymentPhase;
+	private boolean isDead;
 	
 
 	protected TiledMapPosition nextPlayerPosition;
@@ -64,6 +66,8 @@ public class Entity extends Actor implements EntitySubject{
 		this.mp = 3;
 		this.ini = Utility.getRandomIntFrom1to(100);
 		this.attackRange = 2;
+		this.attackPower = Utility.getRandomIntFrom1to(5);
+		this.isDead = false;
 		this.inBattle = false;
 		this.isInMovementPhase = false;
 		this.isInAttackPhase = false;
@@ -171,6 +175,21 @@ public class Entity extends Actor implements EntitySubject{
 			actionsui.setVisible(false);			
 			this.notify(EntityCommand.IN_ATTACK_PHASE);
 		}
+	}
+	
+	public void attack(Entity target) {
+		target.damage(attackPower);
+	}
+	
+	private void damage(int damage) {
+		if(damage > this.hp) {
+			this.hp = 0;
+			this.isDead = true;
+		}else {
+			this.hp = this.hp - damage;
+		}
+		
+		updateStatusUI();
 	}
 	
 	public boolean canMove() {
