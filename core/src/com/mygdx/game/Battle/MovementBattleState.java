@@ -6,6 +6,7 @@ import org.xguzm.pathfinding.grid.GridCell;
 
 import com.badlogic.gdx.Gdx;
 import com.mygdx.game.Entities.Entity;
+import com.mygdx.game.Entities.EntityActor;
 import com.mygdx.game.Map.Map;
 import com.mygdx.game.Map.TiledMapActor;
 import com.mygdx.game.Particles.ParticleMaker;
@@ -76,9 +77,9 @@ public class MovementBattleState implements BattleState{
 	private void moveUnit(TiledMapActor actor, GridCell cellToMoveTo) { 
 		ParticleMaker.deactivateAllParticlesOfType(ParticleType.MOVE);
 		
-		setOldCellWalkable(actor);		
+		//setOldCellWalkable(actor);		
 		updateUnit(cellToMoveTo);   			
-		setNewCellNotWalkable(actor);
+		//setNewCellNotWalkable(actor);
 		
 		battlemanager.getCurrentBattleState().exit();
 	}
@@ -100,6 +101,12 @@ public class MovementBattleState implements BattleState{
 		int newCentreX = currentUnit.getCurrentPosition().getTileX();
 		int newCentreY = currentUnit.getCurrentPosition().getTileY();
 		actor.getTiledMap().getNavLayer().getCell(newCentreX,newCentreY).setWalkable(false);
+	}
+
+	@Override
+	public void clickedOnUnit(Entity entity) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 

@@ -2,6 +2,7 @@ package com.mygdx.game.Battle;
 
 import com.badlogic.gdx.Gdx;
 import com.mygdx.game.Entities.Entity;
+import com.mygdx.game.Entities.EntityActor;
 import com.mygdx.game.Map.TiledMapActor;
 import com.mygdx.game.Particles.ParticleMaker;
 import com.mygdx.game.Particles.ParticleType;
@@ -70,7 +71,7 @@ public class DeploymentBattleState implements BattleState{
 		actor.setIsFreeSpawn(false);
 		int centreX = unitToDeploy.getCurrentPosition().getTileX();
 		int centreY = unitToDeploy.getCurrentPosition().getTileY();
-		actor.getTiledMap().getNavLayer().getCell(centreX,centreY).setWalkable(false);
+		//actor.getTiledMap().getNavLayer().getCell(centreX,centreY).setWalkable(false);
 	}
 
 	private void nextDeployment() {
@@ -90,5 +91,11 @@ public class DeploymentBattleState implements BattleState{
 		if (deployingUnitNumber >= unitsSortedByInitiative.length) {
 			exit();
 		}
+	}
+
+	@Override
+	public void clickedOnUnit(Entity entity) {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -70,8 +70,7 @@ public class ParticleMaker {
 		return particlePool;
 	}
 
-	private static Particle createPooledParticle(ParticleType particletype, TiledMapPosition pos,
-			ParticlePool particlePool) {
+	private static Particle createPooledParticle(ParticleType particletype, TiledMapPosition pos, ParticlePool particlePool) {
 		PooledEffect particle = particlePool.getParticleEffect();
 		particle.setPosition(pos.getTileX(), pos.getTileY());
 		particle.scaleEffect(Map.UNIT_SCALE);

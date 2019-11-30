@@ -65,7 +65,7 @@ public class Entity extends Actor implements EntitySubject{
 		this.hp = 10;
 		this.mp = 3;
 		this.ini = Utility.getRandomIntFrom1to(100);
-		this.attackRange = 2;
+		this.attackRange = 3;
 		this.attackPower = Utility.getRandomIntFrom1to(5);
 		this.isDead = false;
 		this.inBattle = false;

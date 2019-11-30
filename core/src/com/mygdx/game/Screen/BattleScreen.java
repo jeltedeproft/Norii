@@ -184,8 +184,8 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		renderUnits();
 		renderParticles(delta);
 		renderHUD(delta);
-		Player.getInstance().getEntityStage().drawEntitiesDebug();
-		map.drawActorsDebug();
+		//Player.getInstance().getEntityStage().drawEntitiesDebug();
+		//map.drawActorsDebug();
 	}
 
 	private void renderMap() {
@@ -207,7 +207,7 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		}
 		mapRenderer.getBatch().end();
 	}
-
+	
 	private void renderParticles(float delta) {
 		mapRenderer.getBatch().begin();
 		ParticleMaker.drawAllActiveParticles((SpriteBatch) mapRenderer.getBatch(), delta);
@@ -284,7 +284,7 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		case IN_MOVEMENT:
 			List<GridCell> path = map.getPathfinder().getCellsWithin(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getMp());
 			for(GridCell cell : path) {
-				if(cell.isWalkable()) {
+				if(!isUnitOnCell(cell)) {
 					TiledMapPosition positionToPutMoveParticle = new TiledMapPosition().setPositionFromTiles(cell.x,cell.y);
 					ParticleMaker.addParticle(ParticleType.MOVE,positionToPutMoveParticle );
 					battlemanager.setCurrentBattleState(battlemanager.getMovementBattleState());
@@ -299,9 +299,21 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 				battlemanager.setCurrentBattleState(battlemanager.getAttackBattleState());
 			}
 			break;
+		case CLICKED:
+			battlemanager.getCurrentBattleState().clickedOnUnit(unit); 
 		default:
 			break;
 		}	
+	}
+	
+	private boolean isUnitOnCell(GridCell cell) {
+		TiledMapPosition cellToTiled = new TiledMapPosition().setPositionFromTiles(cell.x,cell.y);
+		for(Entity entity : battlemanager.getUnits()) {
+			if(entity.getCurrentPosition().isTileEqualTo(cellToTiled)) {
+				return true;
+			}
+		}
+		return false; 
 	}
 }
 

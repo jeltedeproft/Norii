@@ -35,7 +35,7 @@ public class MyPathFinder{
 
 		for(GridCell[] gridcells : navGrid.getNodes()) {
 			for(GridCell gridcell : gridcells) {
-				if (checkIfDistanceIsCloseEnough(center,gridcell,range)) {
+				if (checkIfDistanceIsCloseEnough(center,gridcell,(range + 1))) {
 					cells.add(gridcell);
 				}
 			}

@@ -12,6 +12,7 @@ public class EntityActor extends Actor {
     
     private Boolean isHovering;
     private Entity entity;
+    private TiledMapPosition actorPos = new TiledMapPosition();
     
 
     public Entity getEntity() {
@@ -28,6 +29,7 @@ public class EntityActor extends Actor {
 
     public EntityActor(Entity entity) {
         this.entity = entity;
+        this.actorPos.setPositionFromScreen(entity.getX(), entity.getY());
         this.isHovering = false;
         entity.setEntityactor(this);
         
@@ -48,5 +50,7 @@ public class EntityActor extends Actor {
     	this.setBounds((entity.getCurrentPosition().getRealOriginalX()), (entity.getCurrentPosition().getRealOriginalY()), Map.ORIGINAL_TILE_WIDTH_PIXEL,Map.ORIGINAL_TILE_HEIGHT_PIXEL);
     }
     
-    
+	public TiledMapPosition getActorPos() {
+		return actorPos;
+	}  
 }

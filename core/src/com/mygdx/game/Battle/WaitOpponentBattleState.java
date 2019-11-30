@@ -1,5 +1,7 @@
 package com.mygdx.game.Battle;
 
+import com.mygdx.game.Entities.Entity;
+import com.mygdx.game.Entities.EntityActor;
 import com.mygdx.game.Map.TiledMapActor;
 
 import Utility.TiledMapPosition;
@@ -34,6 +36,12 @@ public class WaitOpponentBattleState implements BattleState {
 	@Override
 	public void clickedOnTile(TiledMapActor actor) {
 		
+		
+	}
+
+	@Override
+	public void clickedOnUnit(Entity entity) {
+		// TODO Auto-generated method stub
 		
 	}
 

@@ -1,9 +1,8 @@
 package com.mygdx.game.Battle;
 
 import com.badlogic.gdx.Gdx;
+import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Map.TiledMapActor;
-
-import Utility.TiledMapPosition;
 
 public class ActionBattleState implements BattleState {
 	private static final String TAG = ActionBattleState.class.getSimpleName();
@@ -36,6 +35,12 @@ public class ActionBattleState implements BattleState {
 	@Override
 	public void clickedOnTile(TiledMapActor actor) {
 		Gdx.app.debug(TAG, "clicked on tile in actoinbattlestate");
+	}
+
+	@Override
+	public void clickedOnUnit(Entity entity) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
