@@ -3,26 +3,31 @@ package com.mygdx.game.UI;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Profile.ProfileManager;
 import com.mygdx.game.Profile.ProfileObserver;
 
+import Utility.Utility;
+
 
 public class PlayerBattleHUD implements Screen, ProfileObserver {
 	private static final String TAG = PlayerBattleHUD.class.getSimpleName();
 	
     private Stage stage;
-    private Viewport viewport;
     private PortraitsUI portraits;
     private StatusUI[] statusUIs;
     private BottomMenu bottomMenu;
     private ActionsUI[] actionUIs;
-//  private InventoryUI inventoryUI;
+    private Image onTileHover;
+
 
     public PlayerBattleHUD(Camera camera,Entity[] sortedUnits) {
     	initVariables(camera, sortedUnits);
@@ -36,45 +41,55 @@ public class PlayerBattleHUD implements Screen, ProfileObserver {
     	bottomMenu = new BottomMenu(sortedUnits);
     	bottomMenu.setHero(sortedUnits[0]);
     	actionUIs = new ActionsUI[sortedUnits.length];
-        viewport = new ScreenViewport(camera);
-        stage = new Stage(viewport);
+        stage = new Stage(new ScreenViewport(camera));
         stage.setDebugAll(false);//!!!!!!!!!!!!!!!! on for debug
+        initTileHover();
+	}
+	
+	private void initTileHover() {
+		Utility.loadTextureAsset(Utility.ON_TILE_HOVER_FILE_PATH);
+		TextureRegion tr = new TextureRegion(Utility.getTextureAsset(Utility.ON_TILE_HOVER_FILE_PATH));
+		TextureRegionDrawable trd = new TextureRegionDrawable(tr);
+		onTileHover = new Image(trd);
+		onTileHover.setPosition(-10, -10);
 	}
 
-private void createStatusAndActionWindows(Entity[] sortedUnits) {
-	for (int i = 0; i < sortedUnits.length; i++) {
-		Entity entity = sortedUnits[i];
-		statusUIs[i] = new StatusUI(entity);
-		actionUIs[i] = new ActionsUI(entity);
-		StatusUI statusui = statusUIs[i];
-		ActionsUI actionui = actionUIs[i];
-	    
-	    //status window blocks input beneath
-		statusui.addListener(new InputListener() {
-			@Override
-	    	public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-	     		return true;
-	     	}
-	    });
-		
-		//action window blocks input beneath
-		actionui.addListener(new InputListener() {
-			@Override
-			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				return true;
-			}
-		});
-	    
-	    stage.addActor(statusui);
-	    stage.addActor(actionui);
-	    stage.addActor(bottomMenu);
+	private void createStatusAndActionWindows(Entity[] sortedUnits) {
+		for (int i = 0; i < sortedUnits.length; i++) {
+			Entity entity = sortedUnits[i];
+			statusUIs[i] = new StatusUI(entity);
+			actionUIs[i] = new ActionsUI(entity);
+			StatusUI statusui = statusUIs[i];
+			ActionsUI actionui = actionUIs[i];
+		    
+		    //status window blocks input beneath
+			statusui.addListener(new InputListener() {
+				@Override
+		    	public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+		     		return true;
+		     	}
+		    });
+			
+			//action window blocks input beneath
+			actionui.addListener(new InputListener() {
+				@Override
+				public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+					return true;
+				}
+			});
+		    
+		    stage.addActor(statusui);
+		    stage.addActor(actionui);
+		    stage.addActor(bottomMenu);
+			stage.addActor(onTileHover);
+		}
 	}
-}
 
 	private void addPortraits(Entity[] sortedUnits) {
     	portraits = new PortraitsUI(sortedUnits);
     	
     	portraits.addListener(new InputListener() {
+    		@Override
         	public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
          		return true;
          	}
@@ -86,6 +101,10 @@ private void createStatusAndActionWindows(Entity[] sortedUnits) {
     public Stage getStage() {
         return stage;
     }
+    
+	public Image getTileHoverImage() {
+		return onTileHover;
+	}
 
     @Override
     public void onNotify(ProfileManager profileManager, ProfileEvent event) {

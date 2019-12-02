@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.game.Battle.BattleManager;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Entities.EntityObserver;
@@ -20,6 +21,7 @@ import com.mygdx.game.Entities.Player;
 import com.mygdx.game.Map.BattleMap;
 import com.mygdx.game.Map.Map;
 import com.mygdx.game.Map.MapManager;
+import com.mygdx.game.Map.TiledMapActor;
 import com.mygdx.game.Particles.ParticleMaker;
 import com.mygdx.game.Particles.ParticleType;
 import com.mygdx.game.Profile.ProfileManager;
@@ -219,6 +221,16 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		playerBattleHUD.render(delta);
 		pauseMenu.getStage().getViewport().apply();
 		pauseMenu.render(delta);
+		renderTileHover();
+	}
+	
+	private void renderTileHover() {
+		for(Actor actor :  map.getTiledMapStage().getActors()) {
+			TiledMapActor tiledActor = (TiledMapActor) actor;
+			if(tiledActor.getIsHovered()) {
+				playerBattleHUD.getTileHoverImage().setPosition(tiledActor.getActorPos().getRealScreenX(), tiledActor.getActorPos().getRealScreenY());
+			}
+		}
 	}
 
 	@Override
@@ -295,12 +307,13 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 			List<GridCell> attackPath = map.getPathfinder().getCellsWithin(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getAttackRange());
 			for(GridCell cell : attackPath) {
 				TiledMapPosition positionToPutAttackParticle = new TiledMapPosition().setPositionFromTiles(cell.x,cell.y);
-				ParticleMaker.addParticle(ParticleType.ATTACK,positionToPutAttackParticle );
+				ParticleMaker.addParticle(ParticleType.ATTACK,positionToPutAttackParticle);
 				battlemanager.setCurrentBattleState(battlemanager.getAttackBattleState());
 			}
 			break;
 		case CLICKED:
-			battlemanager.getCurrentBattleState().clickedOnUnit(unit); 
+			battlemanager.getCurrentBattleState().clickedOnUnit(unit);
+			break;
 		default:
 			break;
 		}	

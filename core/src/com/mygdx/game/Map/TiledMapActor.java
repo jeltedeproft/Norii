@@ -11,7 +11,8 @@ public class TiledMapActor extends Actor {
     private Map tiledMap;
     private TiledMapTileLayer tiledLayer;   
     private Boolean isFreeSpawn;
-    private TiledMapPosition actorPos = new TiledMapPosition();
+    private Boolean isHovered;
+	private TiledMapPosition actorPos = new TiledMapPosition();
 
     public Boolean getIsFreeSpawn() {
 		return isFreeSpawn;
@@ -19,6 +20,14 @@ public class TiledMapActor extends Actor {
 
 	public void setIsFreeSpawn(Boolean isFreeSpawn) {
 		this.isFreeSpawn = isFreeSpawn;
+	}
+	
+    public Boolean getIsHovered() {
+		return isHovered;
+	}
+
+	public void setIsHovered(Boolean isHovered) {
+		this.isHovered = isHovered;
 	}
 
 	TiledMapTileLayer.Cell cell;
@@ -28,6 +37,7 @@ public class TiledMapActor extends Actor {
         this.tiledLayer = tiledLayer;
         this.cell = cell;
         this.isFreeSpawn = false;
+        this.isHovered = false;
     }
 
 	public Map getTiledMap() {

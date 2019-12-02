@@ -60,7 +60,7 @@ public class Entity extends Actor implements EntitySubject{
 		this.observers = new Array<EntityObserver>();
 		this._entityID = UUID.randomUUID().toString();
 		this.nextPlayerPosition = new TiledMapPosition();
-		this.currentPlayerPosition = new TiledMapPosition();
+		this.currentPlayerPosition = new TiledMapPosition().setPositionFromScreen(-100, -100);
 		this.portraitSpritePath = "sprites/gui/portraits/knight.png";
 		this.hp = 10;
 		this.mp = 3;
@@ -110,7 +110,6 @@ public class Entity extends Actor implements EntitySubject{
 		this.state = state;
 	}
 	
-
 	public TiledMapPosition getCurrentPosition(){
 		return currentPlayerPosition;
 	}
@@ -118,7 +117,7 @@ public class Entity extends Actor implements EntitySubject{
 	public void setCurrentPosition(TiledMapPosition pos){
 		entityAnimation.setFramePos(pos);
 		this.currentPlayerPosition = pos;
-		this.entityactor.setPos(currentPlayerPosition);
+		this.entityactor.setPos();
 		
 		updateStatusUI();
 	}

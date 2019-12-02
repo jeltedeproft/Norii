@@ -27,6 +27,7 @@ public final class Utility {
 	//UI
 	private static final String STATUSUI_TEXTURE_ATLAS_PATH = "skins/statusui.atlas";
 	private static final String STATUSUI_SKIN_PATH = "skins/statusui.json";
+	public static final String ON_TILE_HOVER_FILE_PATH = "sprites/gui/selectedTile.png";
 	
 	private static TextureAtlas statusUITextureAtlas;
 	private static Skin statusUISkin;

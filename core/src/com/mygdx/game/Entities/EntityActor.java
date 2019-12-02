@@ -46,7 +46,7 @@ public class EntityActor extends Actor {
         });
     }
     
-    public void setPos(TiledMapPosition _currentPlayerPosition) {
+    public void setPos() {
     	this.setBounds((entity.getCurrentPosition().getRealOriginalX()), (entity.getCurrentPosition().getRealOriginalY()), Map.ORIGINAL_TILE_WIDTH_PIXEL,Map.ORIGINAL_TILE_HEIGHT_PIXEL);
     }
     
