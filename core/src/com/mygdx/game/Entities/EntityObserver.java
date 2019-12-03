@@ -6,6 +6,7 @@ public interface EntityObserver {
         IN_MOVEMENT,
         IN_ATTACK_PHASE,
         CLICKED,
+        SKIP,
         DIED
     }
     

@@ -37,7 +37,7 @@ public class ActionsUI extends Table {
     private MoveActionUIButton moveActionUIButton;
     private AttackActionUIButton attackActionUIButton;
     private ActionUIButton spellActionUIButton;
-    private ActionUIButton skipActionUIButton;
+    private SkipActionUIButton skipActionUIButton;
     private ActionUIButton upgradeActionUIButton;
     private ActionUIButton spell1ActionUIButton;
     private ActionUIButton spell2ActionUIButton;
@@ -72,7 +72,7 @@ public class ActionsUI extends Table {
 		moveActionUIButton = new MoveActionUIButton(MOVE_BUTTON_SPRITEPATH,linkedEntity);
         attackActionUIButton = new AttackActionUIButton(ATTACK_BUTTON_SPRITEPATH,linkedEntity);
         spellActionUIButton = new ActionUIButton(SPELL_BUTTON_SPRITEPATH);
-        skipActionUIButton = new ActionUIButton(SKIP_BUTTON_SPRITEPATH);
+        skipActionUIButton = new SkipActionUIButton(SKIP_BUTTON_SPRITEPATH,linkedEntity);
         upgradeActionUIButton = new ActionUIButton(UPGRADE_BUTTON_SPRITEPATH);
         spell1ActionUIButton = new ActionUIButton(SPELL1_BUTTON_SPRITEPATH);
         spell2ActionUIButton = new ActionUIButton(SPELL2_BUTTON_SPRITEPATH);

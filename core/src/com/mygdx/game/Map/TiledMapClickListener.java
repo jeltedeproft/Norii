@@ -1,6 +1,5 @@
 package com.mygdx.game.Map;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -23,12 +22,11 @@ public class TiledMapClickListener extends ClickListener {
     
     @Override
     public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor){
-    	Gdx.app.debug(TAG, "test");
     	actor.setIsHovered(true);
     }
     
     @Override
     public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-    	
+    	actor.setIsHovered(false);
     }
 }

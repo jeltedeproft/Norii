@@ -217,11 +217,11 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 	}
 
 	private void renderHUD(float delta) {
+		renderTileHover();
 		playerBattleHUD.getStage().getViewport().apply();
 		playerBattleHUD.render(delta);
 		pauseMenu.getStage().getViewport().apply();
 		pauseMenu.render(delta);
-		renderTileHover();
 	}
 	
 	private void renderTileHover() {
@@ -294,29 +294,41 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 	public void onNotify(EntityCommand command,Entity unit) {
 		switch(command){
 		case IN_MOVEMENT:
-			List<GridCell> path = map.getPathfinder().getCellsWithin(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getMp());
-			for(GridCell cell : path) {
-				if(!isUnitOnCell(cell)) {
-					TiledMapPosition positionToPutMoveParticle = new TiledMapPosition().setPositionFromTiles(cell.x,cell.y);
-					ParticleMaker.addParticle(ParticleType.MOVE,positionToPutMoveParticle );
-					battlemanager.setCurrentBattleState(battlemanager.getMovementBattleState());
-				}
-			}
+			prepareMove(unit);
 			break;
 		case IN_ATTACK_PHASE:
-			List<GridCell> attackPath = map.getPathfinder().getCellsWithin(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getAttackRange());
-			for(GridCell cell : attackPath) {
-				TiledMapPosition positionToPutAttackParticle = new TiledMapPosition().setPositionFromTiles(cell.x,cell.y);
-				ParticleMaker.addParticle(ParticleType.ATTACK,positionToPutAttackParticle);
-				battlemanager.setCurrentBattleState(battlemanager.getAttackBattleState());
-			}
+			prepareAttack(unit);
 			break;
 		case CLICKED:
 			battlemanager.getCurrentBattleState().clickedOnUnit(unit);
 			break;
+		case SKIP:
+			battlemanager.setCurrentBattleState(battlemanager.getActionBattleState());
+			battlemanager.getCurrentBattleState().exit();
+			break;
 		default:
 			break;
 		}	
+	}
+
+	private void prepareMove(Entity unit) {
+		List<GridCell> path = map.getPathfinder().getCellsWithin(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getMp());
+		for(GridCell cell : path) {
+			if(!isUnitOnCell(cell)) {
+				TiledMapPosition positionToPutMoveParticle = new TiledMapPosition().setPositionFromTiles(cell.x,cell.y);
+				ParticleMaker.addParticle(ParticleType.MOVE,positionToPutMoveParticle );
+				battlemanager.setCurrentBattleState(battlemanager.getMovementBattleState());
+			}
+		}
+	}
+
+	private void prepareAttack(Entity unit) {
+		List<GridCell> attackPath = map.getPathfinder().getCellsWithin(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getAttackRange());
+		for(GridCell cell : attackPath) {
+			TiledMapPosition positionToPutAttackParticle = new TiledMapPosition().setPositionFromTiles(cell.x,cell.y);
+			ParticleMaker.addParticle(ParticleType.ATTACK,positionToPutAttackParticle);
+			battlemanager.setCurrentBattleState(battlemanager.getAttackBattleState());
+		}
 	}
 	
 	private boolean isUnitOnCell(GridCell cell) {

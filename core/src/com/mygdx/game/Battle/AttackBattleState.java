@@ -21,6 +21,7 @@ public class AttackBattleState implements BattleState{
 	@Override
 	public void clickedOnTile(TiledMapActor actor) {
 		ParticleMaker.deactivateAllParticlesOfType(ParticleType.ATTACK);
+		exit();
 	}
 	
 	@Override

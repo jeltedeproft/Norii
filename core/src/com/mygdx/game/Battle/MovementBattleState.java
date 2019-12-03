@@ -32,7 +32,7 @@ public class MovementBattleState implements BattleState{
 	@Override
 	public void entry() {
 		Gdx.app.debug(TAG, "entering movement phase");
-		battlemanager.giveControlToNextUnit();
+		battlemanager.getActiveUnit().setInActionPhase(false);
 	}
 
 	@Override
@@ -49,10 +49,10 @@ public class MovementBattleState implements BattleState{
 	
     private void possibleMove(TiledMapActor actor) {
     	List<GridCell> path = calculatePath(actor);
+    	GridCell cellToMoveTo = isPositionInPath(actor,path);
     	
-    	GridCell cellToMoveTo = newPositionInPath(actor,path);
     	if(cellToMoveTo != null) {
-    		moveUnit(actor, cellToMoveTo);
+    		moveUnit(cellToMoveTo);
     	}	
     }
     
@@ -63,8 +63,7 @@ public class MovementBattleState implements BattleState{
     	return actor.getTiledMap().getPathfinder().getCellsWithin(centreX, centreY, currentUnit.getMp());
     }
 
-    
-	private GridCell newPositionInPath(TiledMapActor actor, List<GridCell> path) {
+	private GridCell isPositionInPath(TiledMapActor actor, List<GridCell> path) {
 		TiledMapPosition newPos = actor.getActorPos(); 
 		for(int i = 0;i<path.size();i++) {
 			if((path.get(i).x == newPos.getTileX()) && (path.get(i).y == newPos.getTileY()) && path.get(i).isWalkable()) {
@@ -74,40 +73,41 @@ public class MovementBattleState implements BattleState{
 		return null;
 	}
    
-	private void moveUnit(TiledMapActor actor, GridCell cellToMoveTo) { 
-		ParticleMaker.deactivateAllParticlesOfType(ParticleType.MOVE);
-		
-		//setOldCellWalkable(actor);		
-		updateUnit(cellToMoveTo);   			
-		//setNewCellNotWalkable(actor);
-		
+	private void moveUnit(GridCell cellToMoveTo) { 
+		updateMP(cellToMoveTo);
+		updateUnit(cellToMoveTo); 
+		ParticleMaker.deactivateAllParticlesOfType(ParticleType.MOVE);  			
 		battlemanager.getCurrentBattleState().exit();
 	}
-
-	private void setOldCellWalkable(TiledMapActor actor) {
-		int centreX = currentUnit.getCurrentPosition().getTileX();
-		int centreY = currentUnit.getCurrentPosition().getTileY();
-		actor.getTiledMap().getNavLayer().getCell(centreX,centreY).setWalkable(true);
+	
+	private void updateMP(GridCell cellToMoveTo) {
+		int distance = calculateDistance(cellToMoveTo);
+		if(distance >= currentUnit.getMp()) {
+			currentUnit.setMp(0);
+		}else {
+			currentUnit.setMp(currentUnit.getMp() - distance);
+		}
+	}
+	
+	private int calculateDistance(GridCell to) {
+    	int centreX = currentUnit.getCurrentPosition().getTileX();
+    	int centreY = currentUnit.getCurrentPosition().getTileY();
+		return Math.abs(centreX - to.x) + Math.abs(centreY - to.y);
 	}
 
 	private void updateUnit(GridCell cellToMoveTo) {
 		TiledMapPosition newUnitPos = new TiledMapPosition().setPositionFromTiles(cellToMoveTo.x, cellToMoveTo.y);
 		currentUnit.setCurrentPosition(newUnitPos);
-		currentUnit.setInActionPhase(true);
-		currentUnit.setInMovementPhase(false);
-	}
-
-	private void setNewCellNotWalkable(TiledMapActor actor) {
-		int newCentreX = currentUnit.getCurrentPosition().getTileX();
-		int newCentreY = currentUnit.getCurrentPosition().getTileY();
-		actor.getTiledMap().getNavLayer().getCell(newCentreX,newCentreY).setWalkable(false);
+		if(currentUnit.getMp() > 0) {
+			//
+		}else {
+			currentUnit.setInActionPhase(true);
+			currentUnit.setInMovementPhase(false);
+		}
 	}
 
 	@Override
 	public void clickedOnUnit(Entity entity) {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub	
 	}
-	
-
 }

@@ -119,11 +119,12 @@ public class Entity extends Actor implements EntitySubject{
 		this.currentPlayerPosition = pos;
 		this.entityactor.setPos();
 		
-		updateStatusUI();
+		updateUI();
 	}
 	
-	public void updateStatusUI() {
+	public void updateUI() {
 		statusui.update();
+		bottomMenu.update();
 	}
 
 	@Override
@@ -188,7 +189,7 @@ public class Entity extends Actor implements EntitySubject{
 			this.hp = this.hp - damage;
 		}
 		
-		updateStatusUI();
+		updateUI();
 	}
 	
 	public boolean canMove() {
@@ -209,6 +210,10 @@ public class Entity extends Actor implements EntitySubject{
 
 	public void setInActionPhase(boolean isInActionPhase) {
 		this.isInActionPhase = isInActionPhase;
+		if(isInActionPhase) {
+			actionsui.update();
+			actionsui.setVisible(true);			
+		}
 	}
 	
 	public boolean isInDeploymentPhase() {
@@ -236,7 +241,7 @@ public class Entity extends Actor implements EntitySubject{
 
 	public void setMp(int mp) {
 		this.mp = mp;
-		updateStatusUI();
+		updateUI();
 	}
 
 	public int getHp() {
@@ -245,7 +250,7 @@ public class Entity extends Actor implements EntitySubject{
 
 	public void setHp(int hp) {
 		this.hp = hp;
-		updateStatusUI();
+		updateUI();
 	}
 
 	public int getIni() {
@@ -254,7 +259,7 @@ public class Entity extends Actor implements EntitySubject{
 
 	public void setIni(int ini) {
 		this.ini = ini;
-		updateStatusUI();
+		updateUI();
 	}
 	
 	public int getAttackRange() {
@@ -271,7 +276,7 @@ public class Entity extends Actor implements EntitySubject{
 
 	public void setLevel(int level) {
 		this.level = level;
-		updateStatusUI();
+		updateUI();
 	}
 
 	public int getXp() {
@@ -280,7 +285,7 @@ public class Entity extends Actor implements EntitySubject{
 
 	public void setXp(int xp) {
 		this.xp = xp;
-		updateStatusUI();
+		updateUI();
 	}
 	
 	public TextureRegion getFrame() {

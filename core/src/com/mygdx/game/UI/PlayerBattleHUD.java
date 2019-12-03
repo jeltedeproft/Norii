@@ -77,11 +77,10 @@ public class PlayerBattleHUD implements Screen, ProfileObserver {
 					return true;
 				}
 			});
-		    
+			stage.addActor(onTileHover);
 		    stage.addActor(statusui);
 		    stage.addActor(actionui);
 		    stage.addActor(bottomMenu);
-			stage.addActor(onTileHover);
 		}
 	}
 

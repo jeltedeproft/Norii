@@ -36,6 +36,7 @@ public class DeploymentBattleState implements BattleState{
 	@Override
 	public void exit() {
 		ParticleMaker.deactivateAllParticlesOfType(ParticleType.SPAWN);
+		battlemanager.giveControlToNextUnit();
 		battlemanager.setCurrentBattleState(battlemanager.getActionBattleState());
 		battlemanager.getCurrentBattleState().entry();
 		Gdx.app.debug(TAG, "exiting deployment phase");
@@ -51,8 +52,8 @@ public class DeploymentBattleState implements BattleState{
         	TiledMapPosition newPosition = actor.getActorPos();
         	
     		if((unitsSortedByInitiative != null) && (deployingUnitNumber < unitsSortedByInitiative.length)) {
-    			Entity unitToDeploy = deployUnit(newPosition);
-    			setSpawnPosNotWalkable(actor, unitToDeploy);   			
+    			deployUnit(newPosition);
+    			actor.setIsFreeSpawn(false);  			
     			nextDeployment();
     		}else {
     			Gdx.app.debug(TAG, "can't deploy unit, units is null or activeunitindex is > the length of units");
@@ -60,18 +61,10 @@ public class DeploymentBattleState implements BattleState{
         }
     }
 
-	private Entity deployUnit(TiledMapPosition newPosition) {
+	private void deployUnit(TiledMapPosition newPosition) {
 		Entity unitToDeploy = unitsSortedByInitiative[deployingUnitNumber];
 		unitToDeploy.setInDeploymentPhase(false);
 		initiateUnitInBattle(unitToDeploy,newPosition);
-		return unitToDeploy;
-	}
-
-	private void setSpawnPosNotWalkable(TiledMapActor actor, Entity unitToDeploy) {
-		actor.setIsFreeSpawn(false);
-		int centreX = unitToDeploy.getCurrentPosition().getTileX();
-		int centreY = unitToDeploy.getCurrentPosition().getTileY();
-		//actor.getTiledMap().getNavLayer().getCell(centreX,centreY).setWalkable(false);
 	}
 
 	private void nextDeployment() {

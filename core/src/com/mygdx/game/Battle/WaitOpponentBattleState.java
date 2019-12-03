@@ -17,6 +17,7 @@ public class WaitOpponentBattleState implements BattleState {
 
 	@Override
 	public void entry() {
+		battlemanager.giveControlToNextUnit();
 		battlemanager.setCurrentBattleState(battlemanager.getMovementBattleState());
 		battlemanager.getMovementBattleState().entry();
 	}
