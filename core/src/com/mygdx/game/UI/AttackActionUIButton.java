@@ -16,9 +16,7 @@ public class AttackActionUIButton extends ActionUIButton{
 		button.addListener(new ClickListener(){
 		    @Override
 		    public void clicked(InputEvent event, float x, float y) {
-		    	if(linkedUnit.canMove()) { 
-		    		linkedUnit.setInAttackPhase(!linkedUnit.isInAttackPhase());
-		    	}	
+		    	linkedUnit.setInAttackPhase(!linkedUnit.isInAttackPhase());
 		    }
 		});
 	}

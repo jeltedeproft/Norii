@@ -74,9 +74,9 @@ public class MovementBattleState implements BattleState{
 	}
    
 	private void moveUnit(GridCell cellToMoveTo) { 
+		ParticleMaker.deactivateAllParticlesOfType(ParticleType.MOVE); 
 		updateMP(cellToMoveTo);
-		updateUnit(cellToMoveTo); 
-		ParticleMaker.deactivateAllParticlesOfType(ParticleType.MOVE);  			
+		updateUnit(cellToMoveTo);  			
 		battlemanager.getCurrentBattleState().exit();
 	}
 	
@@ -98,12 +98,8 @@ public class MovementBattleState implements BattleState{
 	private void updateUnit(GridCell cellToMoveTo) {
 		TiledMapPosition newUnitPos = new TiledMapPosition().setPositionFromTiles(cellToMoveTo.x, cellToMoveTo.y);
 		currentUnit.setCurrentPosition(newUnitPos);
-		if(currentUnit.getMp() > 0) {
-			//
-		}else {
-			currentUnit.setInActionPhase(true);
-			currentUnit.setInMovementPhase(false);
-		}
+		currentUnit.setInActionPhase(true);
+		currentUnit.setInMovementPhase(false);
 	}
 
 	@Override

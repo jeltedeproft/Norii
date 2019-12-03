@@ -22,6 +22,7 @@ public class Entity extends Actor implements EntitySubject{
 	private String name;
 	private String portraitSpritePath;
 	private int mp;
+	private int maxMP;
 	private int hp;
 	private int level;
 	private int xp;
@@ -64,8 +65,9 @@ public class Entity extends Actor implements EntitySubject{
 		this.portraitSpritePath = "sprites/gui/portraits/knight.png";
 		this.hp = 10;
 		this.mp = 3;
+		this.maxMP = 3;
 		this.ini = Utility.getRandomIntFrom1to(100);
-		this.attackRange = 3;
+		this.attackRange = 2;
 		this.attackPower = Utility.getRandomIntFrom1to(5);
 		this.isDead = false;
 		this.inBattle = false;
@@ -241,6 +243,15 @@ public class Entity extends Actor implements EntitySubject{
 
 	public void setMp(int mp) {
 		this.mp = mp;
+		updateUI();
+	}
+	
+	public int getMaxMp() {
+		return maxMP;
+	}
+	
+	public void setMaxMp(int maxMP) {
+		this.maxMP = maxMP;
 		updateUI();
 	}
 

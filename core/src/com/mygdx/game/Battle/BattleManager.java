@@ -51,7 +51,7 @@ public class BattleManager {
 			controller.changePlayer(activeUnit);
 			activeUnit.setFocused(true);
 		}
-		//activate actions UI
+		activeUnit.setMp(activeUnit.getMaxMp());
 		activeUnit.setActive(true);
 	}
 	
