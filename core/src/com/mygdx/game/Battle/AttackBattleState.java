@@ -32,7 +32,6 @@ public class AttackBattleState implements BattleState{
 
 	@Override
 	public void entry() {
-		
 		Gdx.app.debug(TAG, "entering attack phase");
 	}
 

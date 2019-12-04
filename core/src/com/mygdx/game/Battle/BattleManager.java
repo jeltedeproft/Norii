@@ -37,6 +37,7 @@ public class BattleManager {
 		
 		this.currentBattleState = deploymentBattleState;
 		this.currentBattleState.entry();
+		
 	}
 	
 	public void giveControlToNextUnit() {
@@ -51,6 +52,7 @@ public class BattleManager {
 			controller.changePlayer(activeUnit);
 			activeUnit.setFocused(true);
 		}
+		
 		activeUnit.setMp(activeUnit.getMaxMp());
 		activeUnit.setActive(true);
 	}
