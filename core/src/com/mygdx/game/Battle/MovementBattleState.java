@@ -31,7 +31,6 @@ public class MovementBattleState implements BattleState{
 
 	@Override
 	public void entry() {
-		Gdx.app.debug(TAG, "entering movement phase");
 		battlemanager.getActiveUnit().setInActionPhase(false);
 	}
 
@@ -42,7 +41,6 @@ public class MovementBattleState implements BattleState{
 
 	@Override
 	public void exit() {
-		Gdx.app.debug(TAG, "exiting movement phase");
 		battlemanager.setCurrentBattleState(battlemanager.getActionBattleState());
 		battlemanager.getCurrentBattleState().entry();
 	}

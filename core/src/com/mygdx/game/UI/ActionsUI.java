@@ -17,8 +17,8 @@ public class ActionsUI extends Table {
 	//padding
     private float iconWidth = Gdx.graphics.getWidth() / 22.0f;
     private float iconHeight = Gdx.graphics.getHeight() / 26.0f;
-    private static final int BAR_LENGTH = 6;
-    private static final int NUMBER_OF_BARS = 2;
+    private static final int BAR_LENGTH = 3;
+    private static final int NUMBER_OF_BARS = 1;
 	
 	//images
 	private static final String MOVE_BUTTON_SPRITEPATH = "sprites/gui/move.png";
@@ -63,45 +63,25 @@ public class ActionsUI extends Table {
 		buttons = new ArrayList<ActionUIButton>();
         this.linkedEntity = entity;
         entity.setActionsui(this);
-        this.setVisible(false); //have to set this false and true when active
+        this.setVisible(false);
 	}
 
 	private void createButtons() {
 		moveActionUIButton = new MoveActionUIButton(MOVE_BUTTON_SPRITEPATH,linkedEntity);
         attackActionUIButton = new AttackActionUIButton(ATTACK_BUTTON_SPRITEPATH,linkedEntity);
-        spellActionUIButton = new ActionUIButton(SPELL_BUTTON_SPRITEPATH);
         skipActionUIButton = new SkipActionUIButton(SKIP_BUTTON_SPRITEPATH,linkedEntity);
-        upgradeActionUIButton = new ActionUIButton(UPGRADE_BUTTON_SPRITEPATH);
-        spell1ActionUIButton = new ActionUIButton(SPELL1_BUTTON_SPRITEPATH);
-        spell2ActionUIButton = new ActionUIButton(SPELL2_BUTTON_SPRITEPATH);
-        spell3ActionUIButton = new ActionUIButton(SPELL3_BUTTON_SPRITEPATH);
 	}
 
 	private void storeButtons() {
 		buttons.add(moveActionUIButton);
         buttons.add(attackActionUIButton);
-        buttons.add(spellActionUIButton);
         buttons.add(skipActionUIButton);
-        buttons.add(upgradeActionUIButton);
-        buttons.add(spell1ActionUIButton);
-        buttons.add(spell2ActionUIButton);
-        buttons.add(spell3ActionUIButton);
 	}
 
-	private void addButtons() {
-		this.add(spell1ActionUIButton.getButton()).expand().fill();
-        this.add(spell2ActionUIButton.getButton()).expand().fill();
-        this.add(spell3ActionUIButton.getButton()).expand().fill();
-        this.add();
-        this.add();
-        this.add();
-        this.row();
-        
+	private void addButtons() {      
         this.add(moveActionUIButton.getButton()).expand().fill();
         this.add(attackActionUIButton.getButton()).expand().fill();
-        this.add(spellActionUIButton.getButton()).expand().fill();
         this.add(skipActionUIButton.getButton()).expand().fill();
-        this.add(upgradeActionUIButton.getButton()).expand().fill();
         this.add();
 	}
 

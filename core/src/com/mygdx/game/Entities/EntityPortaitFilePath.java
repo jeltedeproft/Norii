@@ -1,10 +1,10 @@
 package com.mygdx.game.Entities;
 
 public enum EntityPortaitFilePath {
-    COMMANDER("sprites/characters/commanderProfile.png"),
-    ICARUS("sprites/characters/icarusProfile.png"),
-    DEMON("sprites/characters/demonProfile.png"),
-    SHAMAN("sprites/characters/shamanProfile.png");
+    COMMANDER("sprites/characters/commanderProfileClean.png"),
+    ICARUS("sprites/characters/icarusProfileClean.png"),
+    DEMON("sprites/characters/demonProfileClean.png"),
+    SHAMAN("sprites/characters/shamanProfileClean.png");
 
     private String entityFullFilePath;
 
