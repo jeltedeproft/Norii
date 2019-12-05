@@ -50,21 +50,16 @@ public class BottomMenu extends HorizontalGroup {
     private Image heroImage;
     private Entity linkedEntity;
     
-    private static final float BOTTOMMENUHEIGHTTILES = 6;
+    private static final float BOTTOM_MENU_HEIGHT_TILES = 3.0f;
+    private static final float HERO_PORTRAIT_WIDTH_TILES = 3.0f;
+    private static final float STATS_MENU_WIDTH_TILES = 17.0f;
     private static final float HERONAMESCALE = 3.0f;
-    private static final Color NAMECOLOR = Color.DARK_GRAY;
     
     
     private HorizontalGroup bottomMenuTable;
     private Table statsGroup;
-    private Table smallMenu;
     private Container<Table> statsGroupContainer;
-    private Container<Table> smallMenuContainer;
-    
-    private TextButton testButton;
-    private TextButton test2Button;
-    private TextButton test3Button;
-    
+
     public BottomMenu(Entity[] entities){
         super();
         
@@ -83,7 +78,6 @@ public class BottomMenu extends HorizontalGroup {
 		initMainContainer();
 		changeHeroImage(unknownHeroImageLocation);
     	initStatsMenu();  	
-    	initActionsMenu();
     }
     
 	private void initMainContainer() {
@@ -97,8 +91,8 @@ public class BottomMenu extends HorizontalGroup {
 		Utility.loadTextureAsset(heroImageLink);
 		TextureRegion tr = new TextureRegion(Utility.getTextureAsset(heroImageLink));
 		TextureRegionDrawable trd = new TextureRegionDrawable(tr);
-		trd.setMinHeight((BOTTOMMENUHEIGHTTILES * Map.TILE_HEIGHT_PIXEL) - 60);
-		trd.setMinWidth(Gdx.graphics.getWidth() / 3.0f);
+		trd.setMinHeight(BOTTOM_MENU_HEIGHT_TILES * Map.TILE_HEIGHT_PIXEL);
+		trd.setMinWidth(HERO_PORTRAIT_WIDTH_TILES * Map.TILE_WIDTH_PIXEL);
 		if(heroImage != null) {
 			heroImage.setDrawable(trd);
 		}else {
@@ -111,11 +105,9 @@ public class BottomMenu extends HorizontalGroup {
     	Skin statusUISkin = Utility.getStatusUISkin();
     	
 		statsGroup = new Table();
-    	statsGroup.center();
     	
         heroNameLabel = new Label("", statusUISkin, "inventory-item-count");
         heroNameLabel.setFontScale(HERONAMESCALE);
-        heroNameLabel.setColor(NAMECOLOR);
     	
         hpLabel = new Label(" hp:", statusUISkin);
         hp = new Label("", statusUISkin);
@@ -128,30 +120,12 @@ public class BottomMenu extends HorizontalGroup {
         iniLabel = new Label(" ini:", statusUISkin);
         iniVal = new Label("", statusUISkin);
 	}
-
-	private void initActionsMenu() {
-		Skin statusUISkin = Utility.getStatusUISkin();
-		smallMenu = new Table();
-    	smallMenu.setTransform(true);
-    	smallMenu.center();
-    	
-    	testButton = new TextButton("test", statusUISkin);
-    	testButton.setTransform(true);
-    	
-    	test2Button = new TextButton("test2", statusUISkin);
-    	test2Button.setTransform(true);
-    	
-    	test3Button = new TextButton("test3", statusUISkin);
-    	test3Button.setTransform(true);
-	}
     
     private void addElementsToWindow() {
     	this.addActor(bottomMenuTable);
     	
     	populateHeroImage();   	
     	populateStatsGroup();   	
-    	populateActionsMenu();
-
     }
 
 	private void populateHeroImage() {
@@ -159,50 +133,38 @@ public class BottomMenu extends HorizontalGroup {
 	}
 	
 	private void populateStatsGroup() {
-		statsGroup.setHeight(BOTTOMMENUHEIGHTTILES * Map.TILE_HEIGHT_PIXEL);
-    	statsGroup.setWidth(Gdx.graphics.getWidth() / 3.0f);
+		float statsWidth = STATS_MENU_WIDTH_TILES * Map.TILE_WIDTH_PIXEL;
+		float statsHeight = BOTTOM_MENU_HEIGHT_TILES * Map.TILE_HEIGHT_PIXEL;
 		
-    	statsGroup.add(heroNameLabel).expandX().align(Align.left).padLeft(15.0f);
+		statsGroup.setHeight(statsHeight);
+    	statsGroup.setWidth(statsWidth);
+		
+    	statsGroup.add(heroNameLabel).align(Align.left);
     	statsGroup.row();
     	
-    	statsGroup.add(hpLabel).expandX().align(Align.left);
-    	statsGroup.add(hp).expandX().align(Align.left);
+    	statsGroup.add(hpLabel).align(Align.left);
+    	statsGroup.add(hp).align(Align.left);
+    	statsGroup.add(levelLabel).align(Align.left);
+    	statsGroup.add(levelVal).align(Align.left);
     	statsGroup.row();
     	
-    	statsGroup.add(mpLabel).expandX().align(Align.left);
-    	statsGroup.add(mp).expandX().align(Align.left);
+    	statsGroup.add(mpLabel).align(Align.left);
+    	statsGroup.add(mp).align(Align.left);
+    	statsGroup.add(iniLabel).align(Align.left);
+    	statsGroup.add(iniVal).align(Align.left);
     	statsGroup.row();
     	
     	statsGroup.add(xpLabel).align(Align.left);
     	statsGroup.add(xp).align(Align.left);
     	statsGroup.row();
-
-    	statsGroup.add(levelLabel).align(Align.left);
-    	statsGroup.add(levelVal).align(Align.left);
-    	statsGroup.row();
-
-    	statsGroup.add(iniLabel).align(Align.left);
-    	statsGroup.add(iniVal).align(Align.left);
-    	statsGroup.row();
+    	
+    	statsGroup.align(Align.left);
     	
     	statsGroupContainer = new Container<Table>(statsGroup);
-    	bottomMenuTable.addActor(statsGroupContainer.fill().prefSize(Gdx.graphics.getWidth() / 3.0f,BOTTOMMENUHEIGHTTILES * Map.TILE_HEIGHT_PIXEL));
+    	bottomMenuTable.addActor(statsGroupContainer.prefSize(statsWidth,statsHeight));
     	statsGroup.setFillParent(true);
 	}
-
-	private void populateActionsMenu() {
-		smallMenu.add(testButton).expandX().align(Align.center);
-    	smallMenu.row();
-    	smallMenu.add(test2Button).expandX().align(Align.center);
-    	smallMenu.row();
-    	smallMenu.add(test3Button).expandX().align(Align.center);
-    	smallMenu.row();
-    	smallMenuContainer = new Container<Table>(smallMenu);
-    	
-    	bottomMenuTable.addActor(smallMenuContainer.fill().prefSize(Gdx.graphics.getWidth() / 3.0f,BOTTOMMENUHEIGHTTILES * Map.TILE_HEIGHT_PIXEL));
-	}
     
-	//change hero methods
     public void setHero(Entity entity) {
     	if(entity != null) {
 	    	if(entity.getName() != heroNameLabel.getText().toString()) {
@@ -240,7 +202,6 @@ public class BottomMenu extends HorizontalGroup {
     }
     
     public void update() {
-    	Gdx.app.debug(TAG, "updating bottom menu UI");
         updateStats();
         updateLabels();
         updateSize();
@@ -271,48 +232,36 @@ public class BottomMenu extends HorizontalGroup {
 		updateMainTable();		
 		updateHeroImage();		
     	updateStatsMenu();
-    	updateActionsMenu();
     	updateContainers();
 	}
 
 	private void updateMainTable() {
 		int scaledWidth = Gdx.graphics.getWidth();
-		int scaledHeight = (int) (BOTTOMMENUHEIGHTTILES * Map.TILE_HEIGHT_PIXEL);
+		int scaledHeight = (int) (BOTTOM_MENU_HEIGHT_TILES * Map.TILE_HEIGHT_PIXEL);
 		this.setSize(scaledWidth,scaledHeight);
 		bottomMenuTable.setSize(scaledWidth,scaledHeight);
 	}
 
 	private void updateHeroImage() {
-		heroImage.getDrawable().setMinHeight((BOTTOMMENUHEIGHTTILES * Map.TILE_HEIGHT_PIXEL) - 45);
-		heroImage.getDrawable().setMinWidth((Gdx.graphics.getWidth() / 3.0f));
+		heroImage.getDrawable().setMinHeight(BOTTOM_MENU_HEIGHT_TILES * Map.TILE_HEIGHT_PIXEL);
+		heroImage.getDrawable().setMinWidth(HERO_PORTRAIT_WIDTH_TILES * Map.TILE_WIDTH_PIXEL);
 	}
 
 	private void updateStatsMenu() {
-		statsGroup.setHeight(BOTTOMMENUHEIGHTTILES * Map.TILE_HEIGHT_PIXEL);
-    	statsGroup.setWidth(Gdx.graphics.getWidth() / 3.0f);
+		float statsWidth = STATS_MENU_WIDTH_TILES * Map.TILE_WIDTH_PIXEL;
+		float statsHeight = BOTTOM_MENU_HEIGHT_TILES * Map.TILE_HEIGHT_PIXEL;
+		
+		statsGroup.setHeight(statsHeight);
+    	statsGroup.setWidth(statsWidth);
     	for(Actor actor : statsGroup.getChildren()) {
         	Label label = (Label) actor;
         	label.setFontScale(Gdx.graphics.getWidth() * 0.0018f, Gdx.graphics.getHeight() * 0.0018f);
     	}
-    	statsGroup.setPosition(Gdx.graphics.getWidth() / 3.0f, Gdx.graphics.getHeight() * 0.0008f);
-	}
-
-	private void updateActionsMenu() {
-		smallMenu.setHeight(BOTTOMMENUHEIGHTTILES * Map.TILE_HEIGHT_PIXEL);
-    	smallMenu.setWidth(Gdx.graphics.getWidth() / 3.0f);
-    	smallMenu.getCell(testButton).minHeight(Map.TILE_HEIGHT_PIXEL);
-    	smallMenu.getCell(testButton).minWidth(Map.TILE_WIDTH_PIXEL);
-    	smallMenu.getCell(test2Button).minHeight(Map.TILE_HEIGHT_PIXEL);
-    	smallMenu.getCell(test2Button).minWidth(Map.TILE_WIDTH_PIXEL);
-    	smallMenu.getCell(test3Button).minHeight(Map.TILE_HEIGHT_PIXEL);
-    	smallMenu.getCell(test3Button).minWidth(Map.TILE_WIDTH_PIXEL);
-    	smallMenu.padTop(Map.TILE_HEIGHT_PIXEL);
-    	smallMenu.padBottom(Map.TILE_HEIGHT_PIXEL);
+    	statsGroup.setPosition(HERO_PORTRAIT_WIDTH_TILES * Map.TILE_WIDTH_PIXEL, 0);
 	}
 
 	private void updateContainers() {
-		statsGroupContainer.fill().prefSize(Gdx.graphics.getWidth() / 3.0f,BOTTOMMENUHEIGHTTILES * Map.TILE_HEIGHT_PIXEL);
-    	smallMenuContainer.fill().prefSize(Gdx.graphics.getWidth() / 3.0f,BOTTOMMENUHEIGHTTILES * Map.TILE_HEIGHT_PIXEL);
+		statsGroupContainer.fill().prefSize(STATS_MENU_WIDTH_TILES * Map.TILE_WIDTH_PIXEL ,BOTTOM_MENU_HEIGHT_TILES * Map.TILE_HEIGHT_PIXEL);
 	}
 }
 

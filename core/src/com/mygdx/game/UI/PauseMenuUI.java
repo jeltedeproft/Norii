@@ -118,7 +118,6 @@ public class PauseMenuUI implements Screen {
 
     @Override
     public void resize(int width, int height) {
-    	Gdx.app.debug(TAG, "resizing with : (" + width + " , " + height + ")");
         stage.getViewport().update(width, height, true);
     }
 

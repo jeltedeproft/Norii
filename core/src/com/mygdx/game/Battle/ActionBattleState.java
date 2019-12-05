@@ -16,30 +16,27 @@ public class ActionBattleState implements BattleState {
 
 	@Override
 	public void entry() {
-		Gdx.app.debug(TAG, "entering action battle state");
 		battlemanager.getActiveUnit().setInActionPhase(true);
 	}
 
 	@Override
 	public void update() {
-		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void exit() {
-		Gdx.app.debug(TAG, "exiting action battle state");
 		battlemanager.setCurrentBattleState(battlemanager.getWaitOpponentBattleState());
 		battlemanager.getCurrentBattleState().entry();
 	}
 
 	@Override
 	public void clickedOnTile(TiledMapActor actor) {
-		Gdx.app.debug(TAG, "clicked on tile in actionbattlestate");
+
 	}
 
 	@Override
 	public void clickedOnUnit(Entity entity) {
-		// TODO Auto-generated method stub
 		
 	}
 

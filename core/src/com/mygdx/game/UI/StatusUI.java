@@ -174,7 +174,6 @@ public class StatusUI extends Window {
     }
     
     public void update() {
-    	Gdx.app.debug(TAG, "updating statuis UI");
         updateStats();
         updateLabels();
         updateSize();

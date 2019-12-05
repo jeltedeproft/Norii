@@ -21,6 +21,7 @@ import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Audio.AudioObserver;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Entities.EntityFilePath;
+import com.mygdx.game.Entities.EntityPortaitFilePath;
 
 import Utility.Utility;
 
@@ -134,10 +135,10 @@ public class MainMenuScreen extends GameScreen {
 	private void addUnitsToPlayer() {
 		fighters = new ArrayList<Owner>();
 		monsters = new ArrayList<Entity>();
-		monsters.add(new Entity("Fallia",EntityFilePath.COMMANDER));
-		monsters.add(new Entity("Julian",EntityFilePath.DEMON));
-		monsters.add(new Entity("Jelte",EntityFilePath.ICARUS));
-		monsters.add(new Entity("Shaman",EntityFilePath.SHAMAN));
+		monsters.add(new Entity("Fallia",EntityFilePath.COMMANDER,EntityPortaitFilePath.COMMANDER));
+		monsters.add(new Entity("Julian",EntityFilePath.DEMON,EntityPortaitFilePath.DEMON));
+		monsters.add(new Entity("Jelte",EntityFilePath.ICARUS,EntityPortaitFilePath.ICARUS));
+		monsters.add(new Entity("Shaman",EntityFilePath.SHAMAN,EntityPortaitFilePath.SHAMAN));
 		Player.getInstance().setTeam(monsters);
 		fighters.add(Player.getInstance());
 		ScreenManager.getInstance().showScreen( ScreenEnum.BATTLE,fighters); 

@@ -3,7 +3,6 @@ package com.mygdx.game.Map;
 import java.util.EnumMap;
 
 public class MapFactory {
-    //All maps for the game
     private static EnumMap<MapType,Map> mapTable = new EnumMap<MapType, Map>(MapType.class);
 
     public enum MapType{
@@ -14,7 +13,7 @@ public class MapFactory {
 		BATTLE_MAP_THE_VILLAGE{
 			@Override
 	        public String toString() {
-	            return "maps/32x32 rpg battlemap(withGUIbiggerWhite).tmx";
+	            return "maps/32x32 rpg battlemap(newUI).tmx";
 	        }
 		}
 	}

@@ -51,8 +51,9 @@ public class Entity extends Actor implements EntitySubject{
 	
 	private Array<EntityObserver> observers;
 	
-	public Entity(String name,EntityFilePath entityfilepath){
+	public Entity(String name,EntityFilePath entityfilepath,EntityPortaitFilePath portraitFilePath){
 		this.entityAnimation = new EntityAnimation(entityfilepath.getValue());
+		this.portraitSpritePath = portraitFilePath.getValue();
 		initEntity();
 		this.name = name;
 	}
@@ -62,7 +63,6 @@ public class Entity extends Actor implements EntitySubject{
 		this._entityID = UUID.randomUUID().toString();
 		this.nextPlayerPosition = new TiledMapPosition();
 		this.currentPlayerPosition = new TiledMapPosition().setPositionFromScreen(-100, -100);
-		this.portraitSpritePath = "sprites/gui/portraits/knight.png";
 		this.hp = 10;
 		this.mp = 3;
 		this.maxMP = 3;
@@ -216,6 +216,7 @@ public class Entity extends Actor implements EntitySubject{
 			actionsui.update();
 			actionsui.setVisible(true);			
 		}
+		this.notify(EntityCommand.IN_ACTION_PHASE);
 	}
 	
 	public boolean isInDeploymentPhase() {

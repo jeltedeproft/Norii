@@ -299,6 +299,9 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		case IN_ATTACK_PHASE:
 			prepareAttack(unit);
 			break;
+		case IN_ACTION_PHASE:
+			playerBattleHUD.getPortraits().updateBorders(unit);
+			break;
 		case CLICKED:
 			battlemanager.getCurrentBattleState().clickedOnUnit(unit);
 			break;

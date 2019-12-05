@@ -1,6 +1,5 @@
 package com.mygdx.game.UI;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -10,8 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Entities.Entity;
+import com.mygdx.game.Map.Map;
 import com.mygdx.game.Profile.ProfileManager;
 import com.mygdx.game.Profile.ProfileObserver;
 
@@ -104,6 +103,10 @@ public class PlayerBattleHUD implements Screen, ProfileObserver {
 	public Image getTileHoverImage() {
 		return onTileHover;
 	}
+	
+	public PortraitsUI getPortraits() {
+		return portraits;
+	}
 
     @Override
     public void onNotify(ProfileManager profileManager, ProfileEvent event) {
@@ -122,12 +125,12 @@ public class PlayerBattleHUD implements Screen, ProfileObserver {
 
     @Override
     public void resize(int width, int height) {
-    	Gdx.app.debug(TAG, "resizing with : (" + width + " , " + height + ")");
         stage.getViewport().update(width, height, true);
         portraits.updateSizeContainer();
         bottomMenu.update();
         updateStatusUIs();
         updateActionUIs();
+        updateHoverParticle();
     }
     
     private void updateStatusUIs() {
@@ -140,6 +143,12 @@ public class PlayerBattleHUD implements Screen, ProfileObserver {
     	for(ActionsUI ui : actionUIs) {
     		ui.update();
     	}
+    }
+    
+    private void updateHoverParticle() {
+    	onTileHover.setSize(Map.TILE_WIDTH_PIXEL, Map.TILE_HEIGHT_PIXEL);
+    	onTileHover.getDrawable().setMinHeight(Map.TILE_HEIGHT_PIXEL);
+    	onTileHover.getDrawable().setMinWidth(Map.TILE_WIDTH_PIXEL);
     }
     
 

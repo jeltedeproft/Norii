@@ -15,8 +15,6 @@ public class ActionsUI extends Table {
 	private static final String TAG = ActionsUI.class.getSimpleName();
 	
 	//padding
-    private float actionsMenuWidth;
-    private float actionsMenuHeight;
     private float iconWidth = Gdx.graphics.getWidth() / 22.0f;
     private float iconHeight = Gdx.graphics.getHeight() / 26.0f;
     private static final int BAR_LENGTH = 6;
@@ -108,8 +106,8 @@ public class ActionsUI extends Table {
 	}
 
 	private void calculateSize() {
-        actionsMenuWidth = iconWidth * BAR_LENGTH;
-        actionsMenuHeight = NUMBER_OF_BARS * iconHeight;
+        float actionsMenuWidth = iconWidth * BAR_LENGTH;
+        float actionsMenuHeight = NUMBER_OF_BARS * iconHeight;
         this.setSize(actionsMenuWidth, actionsMenuHeight);
 	}
 
