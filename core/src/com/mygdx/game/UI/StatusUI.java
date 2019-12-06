@@ -82,7 +82,7 @@ public class StatusUI extends Window {
         hpVal = this.linkedEntity.getHp();
         mpVal = this.linkedEntity.getMp();
         xpVal = this.linkedEntity.getXp();
-        iniVal = this.linkedEntity.getIni();
+        iniVal = this.linkedEntity.getBaseInitiative();
     }
     
     private void createElementsForUI(Entity entity) {

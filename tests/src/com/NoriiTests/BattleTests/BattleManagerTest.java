@@ -8,7 +8,7 @@ import org.junit.Test;
 import com.badlogic.gdx.InputMultiplexer;
 import com.mygdx.game.Battle.BattleManager;
 import com.mygdx.game.Entities.Entity;
-import com.mygdx.game.Entities.EntityFilePath;
+import com.mygdx.game.Entities.EntitySpriteFilePath;
 
 public class BattleManagerTest {
 	private BattleManager battleManager;
@@ -18,7 +18,7 @@ public class BattleManagerTest {
 	@Before
 	private void initVariables() {
 		this.entities = new Entity[2];
-		this.entities[0] = new Entity("testUnit1", EntityFilePath.COMMANDER);
+		this.entities[0] = new Entity("testUnit1", EntitySpriteFilePath.COMMANDER);
 		this.battleManager = new BattleManager(null, null);
 	}
 	

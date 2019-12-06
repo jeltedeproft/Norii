@@ -17,11 +17,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Audio.AudioObserver;
 import com.mygdx.game.Entities.Entity;
-import com.mygdx.game.Entities.EntityFilePath;
-import com.mygdx.game.Entities.EntityPortaitFilePath;
+import com.mygdx.game.Entities.EntityFileReader;
 
 import Utility.Utility;
 
@@ -45,6 +43,7 @@ public class MainMenuScreen extends GameScreen {
 	private ArrayList<Entity> monsters;
 	private Animation<TextureRegion> bganimation;
 	private SpriteBatch backgroundbatch;
+;
 	
 	protected float frameTime = 0f;
 	protected Sprite frameSprite = null;
@@ -68,6 +67,7 @@ public class MainMenuScreen extends GameScreen {
 		mainMenuTableOfButtons = new Table();
 		mainMenuTableOfButtons.setDebug(false);
 		mainMenuTableOfButtons.setFillParent(true);
+		EntityFileReader.loadUnitStatsInMemory();
 	}
 	
 	private void createBackground(){
@@ -135,10 +135,10 @@ public class MainMenuScreen extends GameScreen {
 	private void addUnitsToPlayer() {
 		fighters = new ArrayList<Owner>();
 		monsters = new ArrayList<Entity>();
-		monsters.add(new Entity("Fallia",EntityFilePath.COMMANDER,EntityPortaitFilePath.COMMANDER));
-		monsters.add(new Entity("Julian",EntityFilePath.DEMON,EntityPortaitFilePath.DEMON));
-		monsters.add(new Entity("Jelte",EntityFilePath.ICARUS,EntityPortaitFilePath.ICARUS));
-		monsters.add(new Entity("Shaman",EntityFilePath.SHAMAN,EntityPortaitFilePath.SHAMAN));
+		monsters.add(new Entity(1));
+		monsters.add(new Entity(2));
+		monsters.add(new Entity(3));
+		monsters.add(new Entity(4));
 		Player.getInstance().setTeam(monsters);
 		fighters.add(Player.getInstance());
 		ScreenManager.getInstance().showScreen( ScreenEnum.BATTLE,fighters); 
@@ -149,7 +149,7 @@ public class MainMenuScreen extends GameScreen {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		 updatebg(delta);
+		updatebg(delta);
 		 
 		stage.act(delta);
 		stage.draw();

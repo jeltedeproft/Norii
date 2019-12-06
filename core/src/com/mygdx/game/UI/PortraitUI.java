@@ -38,7 +38,7 @@ public class PortraitUI {
 	}
 
 	public int getIni() {
-		return linkedEntity.getIni();
+		return linkedEntity.getBaseInitiative();
 	}
 
 	public Image getHeroPortrait() {

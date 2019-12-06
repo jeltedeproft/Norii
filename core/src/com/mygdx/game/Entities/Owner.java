@@ -40,9 +40,9 @@ public abstract class Owner {
 	private void sortUnits(Entity[] sortedUnits) {
 		Arrays.sort(sortedUnits, new Comparator<Entity>() {
 			   public int compare(Entity e1, Entity e2) {
-				   if(e1.getIni() > e2.getIni()) {
+				   if(e1.getBaseInitiative() > e2.getBaseInitiative()) {
 					   return 1;
-				   }else if(e1.getIni() < e2.getIni()) {
+				   }else if(e1.getBaseInitiative() < e2.getBaseInitiative()) {
 					   return -1;
 				   }else return 0;
 				   

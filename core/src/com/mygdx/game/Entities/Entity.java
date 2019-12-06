@@ -1,7 +1,5 @@
 package com.mygdx.game.Entities;
 
-import java.util.UUID;
-
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
@@ -18,17 +16,11 @@ import Utility.Utility;
 public class Entity extends Actor implements EntitySubject{
 	private static final String TAG = Entity.class.getSimpleName();
 	
-	private String _entityID;
-	private String name;
-	private String portraitSpritePath;
+	private EntityData entityData;
+	
 	private int mp;
-	private int maxMP;
 	private int hp;
-	private int level;
-	private int xp;
-	private int ini;
-	private int attackRange;
-	private int attackPower;
+	private int currentInitiative;
 	private boolean inBattle;
 	private boolean isActive;
 	private boolean isInMovementPhase;
@@ -51,24 +43,19 @@ public class Entity extends Actor implements EntitySubject{
 	
 	private Array<EntityObserver> observers;
 	
-	public Entity(String name,EntityFilePath entityfilepath,EntityPortaitFilePath portraitFilePath){
-		this.entityAnimation = new EntityAnimation(entityfilepath.getValue());
-		this.portraitSpritePath = portraitFilePath.getValue();
+	public Entity(int id){
+		entityData = EntityFileReader.unitData.get(id);
+		this.entityAnimation = new EntityAnimation(entityData.getEntitySpriteFilePath());
 		initEntity();
-		this.name = name;
 	}
 	
 	public void initEntity(){
 		this.observers = new Array<EntityObserver>();
-		this._entityID = UUID.randomUUID().toString();
 		this.nextPlayerPosition = new TiledMapPosition();
 		this.currentPlayerPosition = new TiledMapPosition().setPositionFromScreen(-100, -100);
-		this.hp = 10;
-		this.mp = 3;
-		this.maxMP = 3;
-		this.ini = Utility.getRandomIntFrom1to(100);
-		this.attackRange = 2;
-		this.attackPower = Utility.getRandomIntFrom1to(5);
+		this.hp = entityData.getMaxHP();
+		this.mp = entityData.getMaxMP();
+		this.currentInitiative = entityData.getIni();
 		this.isDead = false;
 		this.inBattle = false;
 		this.isInMovementPhase = false;
@@ -131,11 +118,11 @@ public class Entity extends Actor implements EntitySubject{
 
 	@Override
 	public String getName() {
-		return name;
+		return entityData.getName();
 	}
 	
 	public String getPortraitPath() {
-		return portraitSpritePath;
+		return entityData.getPortraitSpritePath();
 	}
 
 	public EntityActor getEntityactor() {
@@ -180,7 +167,7 @@ public class Entity extends Actor implements EntitySubject{
 	}
 	
 	public void attack(Entity target) {
-		target.damage(attackPower);
+		target.damage(getAttackPower());
 	}
 	
 	private void damage(int damage) {
@@ -248,11 +235,11 @@ public class Entity extends Actor implements EntitySubject{
 	}
 	
 	public int getMaxMp() {
-		return maxMP;
+		return entityData.getMaxMP();
 	}
 	
 	public void setMaxMp(int maxMP) {
-		this.maxMP = maxMP;
+		entityData.setMaxMP(maxMP);
 		updateUI();
 	}
 
@@ -265,48 +252,64 @@ public class Entity extends Actor implements EntitySubject{
 		updateUI();
 	}
 
-	public int getIni() {
-		return ini;
+	public int getBaseInitiative() {
+		return entityData.getIni();
 	}
 
-	public void setIni(int ini) {
-		this.ini = ini;
+	public void setBaseIniative(int ini) {
+		entityData.setIni(ini);
 		updateUI();
 	}
 	
 	public int getAttackRange() {
-		return attackRange;
+		return entityData.getAttackrange();
 	}
 	
 	public void setAttackRange(int attackRange) {
-		this.attackRange = attackRange;
+		entityData.setAttackrange(attackRange);
+	}
+	
+	public int getAttackPower() {
+		return entityData.getAttackPower();
+	}
+	
+	public void setAttackPower(int attackPower) {
+		entityData.setAttackPower(attackPower);
 	}
 
 	public int getLevel() {
-		return level;
+		return entityData.getLevel();
 	}
 
 	public void setLevel(int level) {
-		this.level = level;
+		entityData.setLevel(level);
 		updateUI();
 	}
 
 	public int getXp() {
-		return xp;
+		return entityData.getXp();
 	}
 
 	public void setXp(int xp) {
-		this.xp = xp;
+		entityData.setXp(xp);
 		updateUI();
 	}
 	
+	public int getCurrentInitiative() {
+		return currentInitiative;
+	}
+
+	public void setCurrentInitiative(int currentInitiative) {
+		this.currentInitiative = currentInitiative;
+	}
+
 	public TextureRegion getFrame() {
 		return entityAnimation.getFrame();
 	}
 	
 	public void setDirection(Direction direction) {
 		entityAnimation.setDirection(direction);
-	}
+	}	
 	
     @Override
     public void addObserver(EntityObserver entityObserver) {

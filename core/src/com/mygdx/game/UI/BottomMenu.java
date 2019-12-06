@@ -182,7 +182,7 @@ public class BottomMenu extends HorizontalGroup {
         heroHP = this.linkedEntity.getHp();
         heroMP = this.linkedEntity.getMp();
         heroXP = this.linkedEntity.getXp();
-        heroINI = this.linkedEntity.getIni();
+        heroINI = this.linkedEntity.getBaseInitiative();
     }
     
     private void populateElementsForUI(Entity entity) {
