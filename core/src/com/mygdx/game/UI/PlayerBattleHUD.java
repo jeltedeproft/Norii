@@ -30,38 +30,53 @@ public class PlayerBattleHUD implements Screen, ProfileObserver {
 
     public PlayerBattleHUD(Camera camera,Entity[] sortedUnits) {
     	initVariables(camera, sortedUnits);
-        createStatusAndActionWindows(sortedUnits);
-        addPortraits(sortedUnits);
+    	createTileHoverParticle();
+    	createActionUIs(sortedUnits);
+    	createStatusUIs(sortedUnits);
+    	createBottomMenu(sortedUnits);
+        createPortraits(sortedUnits);
     }
 
 	private void initVariables(Camera camera, Entity[] sortedUnits) {
 		statusUIs = new StatusUI[sortedUnits.length];
-    	
-    	bottomMenu = new BottomMenu(sortedUnits);
-    	bottomMenu.setHero(sortedUnits[0]);
     	actionUIs = new ActionsUI[sortedUnits.length];
         stage = new Stage(new ScreenViewport(camera));
-        stage.setDebugAll(false);//!!!!!!!!!!!!!!!! on for debug
-        initTileHover();
+        stage.setDebugAll(false);
 	}
 	
-	private void initTileHover() {
+	private void createTileHoverParticle() {
 		Utility.loadTextureAsset(Utility.ON_TILE_HOVER_FILE_PATH);
 		TextureRegion tr = new TextureRegion(Utility.getTextureAsset(Utility.ON_TILE_HOVER_FILE_PATH));
 		TextureRegionDrawable trd = new TextureRegionDrawable(tr);
 		onTileHover = new Image(trd);
-		onTileHover.setPosition(-10, -10);
+		onTileHover.setPosition(-100, -100);
+		
+		stage.addActor(onTileHover);
 	}
-
-	private void createStatusAndActionWindows(Entity[] sortedUnits) {
+	
+	private void createActionUIs(Entity[] sortedUnits) {
+		for (int i = 0; i < sortedUnits.length; i++) {
+			Entity entity = sortedUnits[i];
+			actionUIs[i] = new ActionsUI(entity);
+			ActionsUI actionui = actionUIs[i];
+			
+			actionui.addListener(new InputListener() {
+				@Override
+				public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+					return true;
+				}
+			});
+			
+			stage.addActor(actionui);
+		}
+	}
+	
+	private void createStatusUIs(Entity[] sortedUnits) {
 		for (int i = 0; i < sortedUnits.length; i++) {
 			Entity entity = sortedUnits[i];
 			statusUIs[i] = new StatusUI(entity);
-			actionUIs[i] = new ActionsUI(entity);
 			StatusUI statusui = statusUIs[i];
-			ActionsUI actionui = actionUIs[i];
-		    
-		    //status window blocks input beneath
+			
 			statusui.addListener(new InputListener() {
 				@Override
 		    	public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -69,21 +84,18 @@ public class PlayerBattleHUD implements Screen, ProfileObserver {
 		     	}
 		    });
 			
-			//action window blocks input beneath
-			actionui.addListener(new InputListener() {
-				@Override
-				public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-					return true;
-				}
-			});
-			stage.addActor(onTileHover);
-		    stage.addActor(statusui);
-		    stage.addActor(actionui);
-		    stage.addActor(bottomMenu);
+			stage.addActor(statusui);
 		}
 	}
+	
+	private void createBottomMenu(Entity[] sortedUnits) {
+    	bottomMenu = new BottomMenu(sortedUnits);
+    	bottomMenu.setHero(sortedUnits[0]);
+    	
+		stage.addActor(bottomMenu);
+	}
 
-	private void addPortraits(Entity[] sortedUnits) {
+	private void createPortraits(Entity[] sortedUnits) {
     	portraits = new PortraitsUI(sortedUnits);
     	
     	portraits.addListener(new InputListener() {
@@ -107,22 +119,7 @@ public class PlayerBattleHUD implements Screen, ProfileObserver {
 	public PortraitsUI getPortraits() {
 		return portraits;
 	}
-
-    @Override
-    public void onNotify(ProfileManager profileManager, ProfileEvent event) {
-
-    }
-
-    @Override
-    public void show() {
-    }
-
-    @Override
-    public void render(float delta) {
-        stage.act(delta);
-        stage.draw();
-    }
-
+	
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
@@ -149,6 +146,21 @@ public class PlayerBattleHUD implements Screen, ProfileObserver {
     	onTileHover.setSize(Map.TILE_WIDTH_PIXEL, Map.TILE_HEIGHT_PIXEL);
     	onTileHover.getDrawable().setMinHeight(Map.TILE_HEIGHT_PIXEL);
     	onTileHover.getDrawable().setMinWidth(Map.TILE_WIDTH_PIXEL);
+    }
+
+    @Override
+    public void onNotify(ProfileManager profileManager, ProfileEvent event) {
+
+    }
+
+    @Override
+    public void show() {
+    }
+
+    @Override
+    public void render(float delta) {
+        stage.act(delta);
+        stage.draw();
     }
     
 
