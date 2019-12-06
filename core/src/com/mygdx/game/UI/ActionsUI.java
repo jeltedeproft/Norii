@@ -8,7 +8,6 @@ import Utility.Utility;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 public class ActionsUI extends Table {
@@ -31,25 +30,15 @@ public class ActionsUI extends Table {
 	private static final String SPELL3_BUTTON_SPRITEPATH = "sprites/gui/spell3.png";
 	
     
-    //ActionUIButtons
     private MoveActionUIButton moveActionUIButton;
     private AttackActionUIButton attackActionUIButton;
-    private ActionUIButton spellActionUIButton;
     private SkipActionUIButton skipActionUIButton;
-    private ActionUIButton upgradeActionUIButton;
-    private ActionUIButton spell1ActionUIButton;
-    private ActionUIButton spell2ActionUIButton;
-    private ActionUIButton spell3ActionUIButton;
     
     private ArrayList<ActionUIButton> buttons;
-	
-
-    private Image heroPortrait; //just an idea
     private Entity linkedEntity;
 
     public ActionsUI(Entity entity){
         super(Utility.getStatusUISkin());
-        this.debug();
         initVariables(entity);
         
         createButtons();

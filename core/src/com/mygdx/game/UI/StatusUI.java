@@ -1,6 +1,5 @@
 package com.mygdx.game.UI;
 
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.Align;
 import com.mygdx.game.Entities.Entity;
@@ -28,21 +27,13 @@ public class StatusUI extends Window {
     private Label levelValLabel;
     private Label iniValLabel;
 
-    private ImageButton heroButton;
     private Entity linkedEntity;
-    
-    private Label heroNameLabel;
-    private String heroName = "???";
-    private static String title = "Hero stats";
     
 	private int statsUIOffsetX = 32;
 	private int statsUIOffsetY = 32;
 	
-	private static final float BASE_WIDTH = 200;
-	private static final float BASE_HEIGHT = 200f;
-	
-	private static final float STATUS_UI_WIDTH = 0.1f;
-	private static final float STATUS_UI_HEIGHT = 0.1f;
+	private static final int WIDTH_TILES = 7;
+	private static final int HEIGHT_TILES = 7;
 
     private int levelVal;
     private int hpVal;
@@ -65,7 +56,7 @@ public class StatusUI extends Window {
     private Label iniLabel;
     
     public StatusUI(Entity entity){
-        super(title, Utility.getStatusUISkin());
+        super(entity.getName(), Utility.getStatusUISkin());
         this.setVisible(false); //have to set this false and true on hover
         this.linkedEntity = entity;
         this.setResizable(true);
@@ -88,8 +79,6 @@ public class StatusUI extends Window {
     private void createElementsForUI(Entity entity) {
     	TextureAtlas statusUITextureAtlas = Utility.getStatusUITextureAtlas();
     	Skin statusUISkin = Utility.getStatusUISkin();
-    	
-        heroNameLabel = new Label(entity.getName(), statusUISkin, "inventory-item-count");
         
         group = new WidgetGroup();
         group2 = new WidgetGroup();
@@ -112,9 +101,6 @@ public class StatusUI extends Window {
         levelValLabel = new Label(String.valueOf(levelVal), statusUISkin);
         iniLabel = new Label(" ini:", statusUISkin);
         iniValLabel = new Label(String.valueOf(iniVal), statusUISkin);
-
-        heroButton= new ImageButton(statusUISkin, "inventory-button");
-        heroButton.getImageCell().size(32, 32);
     }
     
     private void configureElements() {
@@ -133,15 +119,9 @@ public class StatusUI extends Window {
     }
     
     private void addElementsToWindow() {
-        this.add(heroNameLabel);
-
         //account for the title padding
         this.pad(this.getPadTop() + 10, 10, 10, 10);
 
-        this.add();
-        this.add();
-        this.add(heroButton).align(Align.right);
-        this.row();
 
         this.add(group).size(bar.getWidth(), bar.getHeight());
         this.add(hpLabel);
@@ -167,10 +147,6 @@ public class StatusUI extends Window {
         this.row();
 
         this.pack();
-    }
-
-    public ImageButton getInventoryButton() {
-        return heroButton;
     }
     
     public void update() {
@@ -203,11 +179,7 @@ public class StatusUI extends Window {
 	}
 	
 	private void updateSize() {
-		statsUIOffsetX = (int) Map.TILE_WIDTH_PIXEL;
-		statsUIOffsetY = (int) Map.TILE_HEIGHT_PIXEL;
-		int scaledHeight = (int) (STATUS_UI_HEIGHT * Gdx.graphics.getHeight());
-		int scaledWidth = (int) (STATUS_UI_WIDTH * Gdx.graphics.getWidth());
-		this.setSize(BASE_WIDTH + scaledWidth, BASE_HEIGHT + scaledHeight);
+		this.setSize(WIDTH_TILES * Map.TILE_WIDTH_PIXEL, HEIGHT_TILES * Map.TILE_HEIGHT_PIXEL);
 	}
 }
 
