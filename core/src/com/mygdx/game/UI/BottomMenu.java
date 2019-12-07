@@ -53,8 +53,7 @@ public class BottomMenu extends HorizontalGroup {
     private static final float BOTTOM_MENU_HEIGHT_TILES = 3.0f;
     private static final float HERO_PORTRAIT_WIDTH_TILES = 3.0f;
     private static final float STATS_MENU_WIDTH_TILES = 17.0f;
-    private static final float HERONAMESCALE = 3.0f;
-    
+    private static final float HERONAMESCALE = 3.0f; 
     
     private HorizontalGroup bottomMenuTable;
     private Table statsGroup;

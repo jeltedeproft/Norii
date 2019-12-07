@@ -53,6 +53,7 @@ public class MainMenuScreen extends GameScreen {
 	public MainMenuScreen(Object... params){
 		initializeClassVariables();
 		
+		loadAssets();
 		createBackground();
 		createButtons();
 		createLayout();
@@ -60,6 +61,10 @@ public class MainMenuScreen extends GameScreen {
 		addListeners();
 		
 		notify(AudioObserver.AudioCommand.MUSIC_LOAD, AudioObserver.AudioTypeEvent.MUSIC_TITLE);
+	}
+	
+	private void loadAssets() {
+		Utility.loadFreeTypeFontAsset("fonts/BLKCHCRY.ttf", 24);
 	}
 	
 	private void initializeClassVariables() {

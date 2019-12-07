@@ -48,6 +48,7 @@ project(":desktop") {
         compile "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
         compile "com.github.xaguzman:pathfinding-gdx-bridge:0.2.6"
+        compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
         testCompile "org.mockito:mockito-core:2.+"
     }
 }
@@ -63,6 +64,7 @@ project(":core") {
         compile "com.badlogicgames.ashley:ashley:$ashleyVersion"
         compile "com.badlogicgames.gdx:gdx-ai:$aiVersion"
         compile "com.github.xaguzman:pathfinding-gdx-bridge:0.2.6"
+        compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         testCompile "org.mockito:mockito-core:2.+"
     }
 }

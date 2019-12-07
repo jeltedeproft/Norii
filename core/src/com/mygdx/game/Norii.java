@@ -10,19 +10,10 @@ public class Norii extends Game {
 	
 	@Override
 	public void create () {	
-		//initialize player
         Player.getInstance().initialize(this);
         
-		
-		//initialize battle screen
         ScreenManager.getInstance().initialize(this);
         ScreenManager.getInstance().showScreen( ScreenEnum.MAIN_MENU); 
-	}
-
-	@Override
-	public void render () {
-		//call every render method(from screen as well)
-    	super.render();
 	}
 	
 	@Override

@@ -4,6 +4,7 @@ import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.AssetLoader;
 import com.badlogic.gdx.assets.loaders.MusicLoader;
 import com.badlogic.gdx.assets.loaders.ParticleEffectLoader;
 import com.badlogic.gdx.assets.loaders.SoundLoader;
@@ -12,235 +13,182 @@ import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
+import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
+import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoaderParameter;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.mygdx.game.Map.MyNavTmxMapLoader;
 
 public final class Utility {
-	public static final AssetManager _assetManager = new AssetManager();
 	private static final String TAG = Utility.class.getSimpleName();
-	private static InternalFileHandleResolver filePathResolver =  new InternalFileHandleResolver();
-	public static final Random random = new Random();
 	
 	private static final String STATUSUI_TEXTURE_ATLAS_PATH = "skins/statusui.atlas";
+	private static final String UISKIN_TEXTURE_ATLAS_PATH = "skins/uiskin.atlas";
 	private static final String STATUSUI_SKIN_PATH = "skins/statusui.json";
 	public static final String ON_TILE_HOVER_FILE_PATH = "sprites/gui/selectedTile.png";
 	
+	public static final AssetManager assetManager = new AssetManager();
+	private static InternalFileHandleResolver filePathResolver =  new InternalFileHandleResolver();
+	public static final Random random = new Random();
+
 	private static TextureAtlas statusUITextureAtlas;
+	private static TextureAtlas uiTextureAtlas;
 	private static Skin statusUISkin;
 
-	private Utility() {
-		
+
+	public static void loadMapAsset(String mapFilenamePath){
+		loadAsset(mapFilenamePath, TiledMap.class, new MyNavTmxMapLoader(filePathResolver));
+	}
+
+	public static TiledMap getMapAsset(String mapFilenamePath){
+		return (TiledMap) getAsset(mapFilenamePath,TiledMap.class);
+	}
+
+	
+	public static void loadTextureAsset(String textureFilenamePath){
+		loadAsset(textureFilenamePath, Texture.class, new TextureLoader(filePathResolver));
+	}
+
+	public static Texture getTextureAsset(String textureFilenamePath){
+		return (Texture) getAsset(textureFilenamePath,Texture.class);
 	}
 	
-	public static TextureAtlas getStatusUITextureAtlas() {
-		if(statusUITextureAtlas == null) {
-			statusUITextureAtlas = new TextureAtlas(STATUSUI_TEXTURE_ATLAS_PATH);
+	public static void loadParticleAsset(String particleFilenamePath){
+		loadAsset(particleFilenamePath, ParticleEffect.class, new ParticleEffectLoader(filePathResolver));
+	}
+
+	public static ParticleEffect  getParticleAsset(String particleFilenamePath){
+		return (ParticleEffect) getAsset(particleFilenamePath,ParticleEffect.class);
+	}
+
+	
+	public static void loadSoundAsset(String soundFilenamePath){
+		loadAsset(soundFilenamePath, Sound.class, new SoundLoader(filePathResolver));
+	}
+
+
+	public static Sound getSoundAsset(String soundFilenamePath){
+		return (Sound) getAsset(soundFilenamePath,Sound.class);
+	}
+
+	
+	public static void loadMusicAsset(String musicFilenamePath){
+		loadAsset(musicFilenamePath, Music.class, new MusicLoader(filePathResolver));
+	}
+
+
+	public static Music getMusicAsset(String musicFilenamePath){
+		return (Music) getAsset(musicFilenamePath,Music.class);
+	}	
+	
+	public static void loadFreeTypeFontAsset(String fontName, int size){
+		if(checkValidString(fontName)){
+			assetManager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(filePathResolver));
+			assetManager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(filePathResolver));
+			
+			FreeTypeFontLoaderParameter myFont = new FreeTypeFontLoaderParameter();
+			myFont.fontFileName = fontName;
+			myFont.fontParameters.size = size;
+			assetManager.load(fontName, BitmapFont.class, myFont);
 		}
-		
-		return statusUITextureAtlas;
 	}
 	
-	public static Skin getStatusUISkin() {
-		if(statusUISkin == null) {
-			statusUISkin = new Skin(Gdx.files.internal(STATUSUI_SKIN_PATH),getStatusUITextureAtlas());
+	public static BitmapFont getFreeTypeFontAsset(String fontName){
+		return (BitmapFont) getAsset(fontName,BitmapFont.class);
+	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static void loadAsset(String assetName,Class className,AssetLoader loader) {
+		if(checkValidString(assetName)){
+			if( filePathResolver.resolve(assetName).exists() ){
+				assetManager.setLoader(className, loader);
+				assetManager.load(assetName, className);
+				assetManager.finishLoadingAsset(assetName);//block
+				Gdx.app.debug(TAG, className.getSimpleName() +  "loaded!: " + assetName);
+			}
+			else{
+				Gdx.app.debug(TAG, className.getSimpleName() +  "doesn't exist!: " + assetName );
+			}
 		}
-		
-		return statusUISkin;
+	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static Object getAsset(String filenamePath,Class className){
+		Object object = null;
+
+		if( assetManager.isLoaded(filenamePath) ){
+			object = assetManager.get(filenamePath,className);
+		} else {
+			Gdx.app.debug(TAG, className.getSimpleName() +  "is not loaded: " + filenamePath );
+		}
+
+		return object;
 	}
 	
 	public static void unloadAsset(String assetFilenamePath){
-	// once the asset manager is done loading
-	if( _assetManager.isLoaded(assetFilenamePath) ){
-		_assetManager.unload(assetFilenamePath);
+		if( assetManager.isLoaded(assetFilenamePath) ){
+			assetManager.unload(assetFilenamePath);
 		} else {
 			Gdx.app.debug(TAG, "Asset is not loaded; Nothing to unload: " + assetFilenamePath );
 		}
 	}
 
+	public static TextureAtlas getStatusUITextureAtlas() {
+		if(statusUITextureAtlas == null) {
+			statusUITextureAtlas = new TextureAtlas(STATUSUI_TEXTURE_ATLAS_PATH);
+		}
+
+		return statusUITextureAtlas;
+	}
+
+	public static TextureAtlas getUITextureAtlas() {
+		if(uiTextureAtlas == null) {
+			uiTextureAtlas = new TextureAtlas(UISKIN_TEXTURE_ATLAS_PATH);
+		}
+
+		return uiTextureAtlas;
+	}
+
+	public static Skin getStatusUISkin() {
+		if(statusUISkin == null) {
+			statusUISkin = new Skin(Gdx.files.internal(STATUSUI_SKIN_PATH),getStatusUITextureAtlas());
+		}
+
+		return statusUISkin;
+	}
+
 	public static float loadCompleted(){
-		return _assetManager.getProgress();
+		return assetManager.getProgress();
 	}
 
 	public static int numberAssetsQueued(){
-		return _assetManager.getQueuedAssets();
+		return assetManager.getQueuedAssets();
 	}
 
-   	public static boolean updateAssetLoading(){
-		return _assetManager.update();
+	public static boolean updateAssetLoading(){
+		return assetManager.update();
 	}
 
 	public static boolean isAssetLoaded(String fileName){
-	   return _assetManager.isLoaded(fileName);
+		return assetManager.isLoaded(fileName);
 
 	}
 
-	public static void loadMapAsset(String mapFilenamePath){
-	   if( mapFilenamePath == null || mapFilenamePath.isEmpty() ){
-		   return;
-	   }
-
-	   //load asset
-		if( filePathResolver.resolve(mapFilenamePath).exists() ){
-			_assetManager.setLoader(TiledMap.class, new MyNavTmxMapLoader(filePathResolver));
-			_assetManager.load(mapFilenamePath, TiledMap.class);
-			//Until we add loading screen, just block until we load the map
-			_assetManager.finishLoadingAsset(mapFilenamePath);
-			Gdx.app.debug(TAG, "Map loaded!: " + mapFilenamePath);
-		}
-		else{
-			Gdx.app.debug(TAG, "Map doesn't exist!: " + mapFilenamePath );
-		}
-	}
-
-
-	public static TiledMap getMapAsset(String mapFilenamePath){
-		TiledMap map = null;
-
-		// once the asset manager is done loading
-		if( _assetManager.isLoaded(mapFilenamePath) ){
-			map = _assetManager.get(mapFilenamePath,TiledMap.class);
-		} else {
-			Gdx.app.debug(TAG, "Map is not loaded: " + mapFilenamePath );
-		}
-
-		return map;
-	}
-
-	public static void loadTextureAsset(String textureFilenamePath){
-		if( textureFilenamePath == null || textureFilenamePath.isEmpty() ){
-			return;
-		}
-		//load asset
-		if( filePathResolver.resolve(textureFilenamePath).exists() ){
-			_assetManager.setLoader(Texture.class, new TextureLoader(filePathResolver));
-			_assetManager.load(textureFilenamePath, Texture.class);
-			//Until we add loading screen, just block until we load the map
-			_assetManager.finishLoadingAsset(textureFilenamePath);
-		}
-		else{
-			Gdx.app.debug(TAG, "Texture doesn't exist!: " + textureFilenamePath );
-		}
-	}
-
-	public static Texture getTextureAsset(String textureFilenamePath){
-		Texture texture = null;
-
-		// once the asset manager is done loading
-		if( _assetManager.isLoaded(textureFilenamePath) ){
-			texture = _assetManager.get(textureFilenamePath,Texture.class);
-		} else {
-			Gdx.app.debug(TAG, "Texture is not loaded: " + textureFilenamePath );
-		}
-
-		return texture;
+	private static boolean checkValidString(String string) {
+		return(!( string == null || string.isEmpty()));
 	}
 	
-	public static void loadParticleAsset(String particleFilenamePath){
-		if( particleFilenamePath == null || particleFilenamePath.isEmpty() ){
-			return;
-		}
-		//load asset
-		if( filePathResolver.resolve(particleFilenamePath).exists() ){
-			_assetManager.setLoader(ParticleEffect.class, new ParticleEffectLoader(filePathResolver));
-			_assetManager.load(particleFilenamePath, ParticleEffect.class);
-			//block until we load the particle
-			_assetManager.finishLoadingAsset(particleFilenamePath);
-		}
-		else{
-			Gdx.app.debug(TAG, "particle doesn't exist!: " + particleFilenamePath );
-		}
-	}
-
-	public static ParticleEffect  getParticleAsset(String particleFilenamePath){
-		ParticleEffect particle = null;
-
-		// once the asset manager is done loading
-		if( _assetManager.isLoaded(particleFilenamePath) ){
-			particle = _assetManager.get(particleFilenamePath,ParticleEffect.class);
-			particle.start();
-		} else {
-			Gdx.app.debug(TAG, "particle is not loaded: " + particleFilenamePath );
-		}
-		return particle;
-	}
-
 	public static int getRandomIntFrom1to(int to) {
 		int result = random.nextInt(to);
 		return result + 1;
 	}
 	
-	public static void loadSoundAsset(String soundFilenamePath){
-		if( soundFilenamePath == null || soundFilenamePath.isEmpty() ){
-			return;
-		}
+	private Utility() {
 
-		if( _assetManager.isLoaded(soundFilenamePath) ){
-			return;
-		}
-
-		//load asset
-		if( filePathResolver.resolve(soundFilenamePath).exists() ){
-			_assetManager.setLoader(Sound.class, new SoundLoader(filePathResolver));
-			_assetManager.load(soundFilenamePath, Sound.class);
-			//Until we add loading screen, just block until we load the map
-			_assetManager.finishLoadingAsset(soundFilenamePath);
-			Gdx.app.debug(TAG, "Sound loaded!: " + soundFilenamePath);
-		}
-		else{
-			Gdx.app.debug(TAG, "Sound doesn't exist!: " + soundFilenamePath );
-		}
 	}
-
-
-	public static Sound getSoundAsset(String soundFilenamePath){
-		Sound sound = null;
-
-		// once the asset manager is done loading
-		if( _assetManager.isLoaded(soundFilenamePath) ){
-			sound = _assetManager.get(soundFilenamePath,Sound.class);
-		} else {
-			Gdx.app.debug(TAG, "Sound is not loaded: " + soundFilenamePath );
-		}
-
-		return sound;
-	}
-
-	public static void loadMusicAsset(String musicFilenamePath){
-		if( musicFilenamePath == null || musicFilenamePath.isEmpty() ){
-			return;
-		}
-
-		if( _assetManager.isLoaded(musicFilenamePath) ){
-			return;
-		}
-
-		//load asset
-		if( filePathResolver.resolve(musicFilenamePath).exists() ){
-			_assetManager.setLoader(Music.class, new MusicLoader(filePathResolver));
-			_assetManager.load(musicFilenamePath, Music.class);
-			//Until we add loading screen, just block until we load the map
-			_assetManager.finishLoadingAsset(musicFilenamePath);
-			Gdx.app.debug(TAG, "Music loaded!: " + musicFilenamePath);
-		}
-		else{
-			Gdx.app.debug(TAG, "Music doesn't exist!: " + musicFilenamePath );
-		}
-	}
-
-
-	public static Music getMusicAsset(String musicFilenamePath){
-		Music music = null;
-
-		// once the asset manager is done loading
-		if( _assetManager.isLoaded(musicFilenamePath) ){
-			music = _assetManager.get(musicFilenamePath,Music.class);
-		} else {
-			Gdx.app.debug(TAG, "Music is not loaded: " + musicFilenamePath );
-		}
-
-		return music;
-	}	
 }

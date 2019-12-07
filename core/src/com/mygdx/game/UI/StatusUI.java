@@ -1,7 +1,6 @@
 package com.mygdx.game.UI;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
-import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Map.Map;
@@ -9,15 +8,20 @@ import com.mygdx.game.Map.Map;
 import Utility.Utility;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class StatusUI extends Window {
 	private static final String TAG = StatusUI.class.getSimpleName();
+	private static final int FONT_SIZE = 24;
 	
     private int levelVal;
     private int hpVal;
@@ -43,6 +47,7 @@ public class StatusUI extends Window {
     private Label iniValLabel;
     
     private Label hpLabel;
+    private LabelStyle labelStyle;
     private Label mpLabel;
     private Label xpLabel;
     private Label levelLabel;
@@ -59,7 +64,7 @@ public class StatusUI extends Window {
     
     public StatusUI(Entity entity){
         super(entity.getName(), Utility.getStatusUISkin());
-        this.setVisible(false); //have to set this false and true on hover
+        this.setVisible(false);
         this.linkedEntity = entity;
         this.setResizable(true);
         entity.setStatusui(this);
@@ -80,7 +85,9 @@ public class StatusUI extends Window {
     
     private void createElementsForUI() {
     	TextureAtlas statusUITextureAtlas = Utility.getStatusUITextureAtlas();
-    	Skin statusUISkin = Utility.getStatusUISkin();
+    	BitmapFont font = Utility.getFreeTypeFontAsset("fonts/BLKCHCRY.ttf");
+    	labelStyle = new LabelStyle();
+    	labelStyle.font = font;
         
         group = new WidgetGroup();
         group2 = new WidgetGroup();
@@ -91,19 +98,19 @@ public class StatusUI extends Window {
         xpBar = new Image(statusUITextureAtlas.findRegion("XP_Bar"));
         bar3 = new Image(statusUITextureAtlas.findRegion("Bar"));
 
-        hpLabel = new Label(" hp:", statusUISkin);
-        hp = new Label(String.valueOf(hpVal), statusUISkin);
-        mpLabel = new Label(" mp:", statusUISkin);
-        mp = new Label(String.valueOf(mpVal), statusUISkin);
-        xpLabel = new Label(" xp:", statusUISkin);
-        xp = new Label(String.valueOf(xpVal), statusUISkin);
-        levelLabel = new Label(" lv:", statusUISkin);
-        levelValLabel = new Label(String.valueOf(levelVal), statusUISkin);
-        iniLabel = new Label(" ini:", statusUISkin);
-        iniValLabel = new Label(String.valueOf(iniVal), statusUISkin);
+        hpLabel = new Label(" hp:", labelStyle);
+        hp = new Label(String.valueOf(hpVal), labelStyle);
+        mpLabel = new Label(" mp:", labelStyle);
+        mp = new Label(String.valueOf(mpVal), labelStyle);
+        xpLabel = new Label(" xp:", labelStyle);
+        xp = new Label(String.valueOf(xpVal), labelStyle);
+        levelLabel = new Label(" lv:", labelStyle);
+        levelValLabel = new Label(String.valueOf(levelVal), labelStyle);
+        iniLabel = new Label(" ini:", labelStyle);
+        iniValLabel = new Label(String.valueOf(iniVal), labelStyle);
         
         //dynamic hp bar
-        TextureAtlas skinAtlas = new TextureAtlas(Gdx.files.internal("skins/uiskin.atlas"));
+        TextureAtlas skinAtlas = Utility.getUITextureAtlas();
         NinePatch loadingBarBackgroundPatch = new NinePatch(skinAtlas.findRegion("default-round"), 5, 5, 4, 4);
         NinePatch loadingBarPatch = new NinePatch(skinAtlas.findRegion("default-round-down"), 5, 5, 4, 4);
         loadingBar = new Image(loadingBarPatch);
@@ -114,7 +121,6 @@ public class StatusUI extends Window {
         hpBar.setPosition(3, 6);
         xpBar.setPosition(3, 6);
         loadingBar.setPosition(3, 6);
-        loadingBar.setWidth((linkedEntity.getHp() / linkedEntity.getMaxHp()) * bar.getWidth());
         loadingBarBackground.setPosition(3, 6);
         loadingBarBackground.setWidth(bar.getWidth());
 
