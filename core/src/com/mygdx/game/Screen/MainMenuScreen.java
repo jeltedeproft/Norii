@@ -6,17 +6,21 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.mygdx.game.Audio.AudioObserver;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Entities.EntityFileReader;
@@ -29,21 +33,22 @@ import com.mygdx.game.Entities.Player;
 public class MainMenuScreen extends GameScreen {
 	private static final String TAG = MainMenuScreen.class.getSimpleName();
 	
-	public static final int FRAME_WIDTH = 2000;
-	public static final int FRAME_HEIGHT = 1125;
-	private static String defaultBackgroundPath = "sprites/gui/forest50.png";
-	private static final int FRAME_COLS = 5;
-	private static final int FRAME_ROWS = 10;
+	public static final int FRAME_WIDTH = 200;
+	public static final int FRAME_HEIGHT = 200;
+	private static String defaultBackgroundPath = "sprites/gui/stars_bg/space2x3.png";
+	private static final int FRAME_COLS = 2;
+	private static final int FRAME_ROWS = 3;
 
 	private Stage stage;
 	private Table mainMenuTableOfButtons;
 	private TextButton newGameButton;
 	private TextButton exitButton;
+	private Label title;
 	private ArrayList<Owner> fighters;
 	private ArrayList<Entity> monsters;
 	private Animation<TextureRegion> bganimation;
 	private SpriteBatch backgroundbatch;
-;
+
 	
 	protected float frameTime = 0f;
 	protected Sprite frameSprite = null;
@@ -51,9 +56,10 @@ public class MainMenuScreen extends GameScreen {
 	private TextureRegion[] bgFrames;
 
 	public MainMenuScreen(Object... params){
-		initializeClassVariables();
-		
 		loadAssets();
+		initializeClassVariables();
+
+		
 		createBackground();
 		createButtons();
 		createLayout();
@@ -70,7 +76,6 @@ public class MainMenuScreen extends GameScreen {
 	private void initializeClassVariables() {
 		stage = new Stage();
 		mainMenuTableOfButtons = new Table();
-		mainMenuTableOfButtons.setDebug(false);
 		mainMenuTableOfButtons.setFillParent(true);
 		EntityFileReader.loadUnitStatsInMemory();
 	}
@@ -101,16 +106,23 @@ public class MainMenuScreen extends GameScreen {
 	}	
 	
 	private void createButtons() {
-    	TextureAtlas statusUITextureAtlas = Utility.getStatusUITextureAtlas();
     	Skin statusUISkin = Utility.getStatusUISkin();
     	
-		new Image(statusUITextureAtlas.findRegion("bludbourne_title"));
+    	FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/BLKCHCRY.ttf"));
+    	FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+    	parameter.size = 105;
+    	BitmapFont font = generator.generateFont(parameter);
+
+    	LabelStyle labelStyle = new LabelStyle();
+    	labelStyle.font = font;
+
+    	title = new Label("Norii:", labelStyle);
 		newGameButton = new TextButton("New Game", statusUISkin);
 		exitButton = new TextButton("Exit",statusUISkin);
 	}
 	
 	private void createLayout() {
-		mainMenuTableOfButtons.row();
+		mainMenuTableOfButtons.add(title).row();
 		mainMenuTableOfButtons.add(newGameButton).spaceBottom(10).padTop(50).row();
 		mainMenuTableOfButtons.add(exitButton).spaceBottom(10).row();
 
@@ -118,7 +130,6 @@ public class MainMenuScreen extends GameScreen {
 	}
 	
 	private void addListeners() {
-		//Listeners
 		newGameButton.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -162,11 +173,11 @@ public class MainMenuScreen extends GameScreen {
 	
 	public void updatebg(float delta){
 		frameTime = (frameTime + delta)%70; //Want to avoid overflow
-		
-		 currentFrame = bganimation.getKeyFrame(frameTime, true);
-		 backgroundbatch.begin();
-		 backgroundbatch.draw(currentFrame, 0, 0,stage.getViewport().getWorldWidth(),stage.getViewport().getWorldHeight());
-		 backgroundbatch.end();
+
+		currentFrame = bganimation.getKeyFrame(frameTime, true);
+		backgroundbatch.begin();
+		backgroundbatch.draw(currentFrame, 0, 0,stage.getViewport().getWorldWidth(),stage.getViewport().getWorldHeight());
+		backgroundbatch.end();
 	}
 
 	@Override

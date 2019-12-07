@@ -186,8 +186,6 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		renderUnits();
 		renderParticles(delta);
 		renderHUD(delta);
-		//Player.getInstance().getEntityStage().drawEntitiesDebug();
-		//map.drawActorsDebug();
 	}
 
 	private void renderMap() {

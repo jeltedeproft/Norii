@@ -38,7 +38,7 @@ public final class Utility {
 
 	private static TextureAtlas statusUITextureAtlas;
 	private static TextureAtlas uiTextureAtlas;
-	private static Skin statusUISkin;
+	private static MySkin statusUISkin;
 
 
 	public static void loadMapAsset(String mapFilenamePath){
@@ -109,10 +109,10 @@ public final class Utility {
 				assetManager.setLoader(className, loader);
 				assetManager.load(assetName, className);
 				assetManager.finishLoadingAsset(assetName);//block
-				Gdx.app.debug(TAG, className.getSimpleName() +  "loaded!: " + assetName);
+				Gdx.app.debug(TAG, className.getSimpleName() +  " loaded: " + assetName);
 			}
 			else{
-				Gdx.app.debug(TAG, className.getSimpleName() +  "doesn't exist!: " + assetName );
+				Gdx.app.debug(TAG, className.getSimpleName() +  " doesn't exist: " + assetName );
 			}
 		}
 	}
@@ -124,7 +124,7 @@ public final class Utility {
 		if( assetManager.isLoaded(filenamePath) ){
 			object = assetManager.get(filenamePath,className);
 		} else {
-			Gdx.app.debug(TAG, className.getSimpleName() +  "is not loaded: " + filenamePath );
+			Gdx.app.debug(TAG, className.getSimpleName() +  " is not loaded: " + filenamePath );
 		}
 
 		return object;
@@ -154,9 +154,9 @@ public final class Utility {
 		return uiTextureAtlas;
 	}
 
-	public static Skin getStatusUISkin() {
+	public static MySkin getStatusUISkin() {
 		if(statusUISkin == null) {
-			statusUISkin = new Skin(Gdx.files.internal(STATUSUI_SKIN_PATH),getStatusUITextureAtlas());
+			statusUISkin = new MySkin(Gdx.files.internal(STATUSUI_SKIN_PATH),getStatusUITextureAtlas());
 		}
 
 		return statusUISkin;

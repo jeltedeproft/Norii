@@ -1,8 +1,6 @@
 package com.mygdx.game.Battle;
 
-import com.badlogic.gdx.Gdx;
 import com.mygdx.game.Entities.Entity;
-import com.mygdx.game.Entities.EntityActor;
 import com.mygdx.game.Map.TiledMapActor;
 import com.mygdx.game.Particles.ParticleMaker;
 import com.mygdx.game.Particles.ParticleType;
@@ -11,8 +9,6 @@ public class AttackBattleState implements BattleState{
 	private static final String TAG = AttackBattleState.class.getSimpleName();
 	
 	private BattleManager battlemanager;
-
-	
 
 	public AttackBattleState(BattleManager battlemanager){
 		this.battlemanager = battlemanager;
@@ -32,7 +28,7 @@ public class AttackBattleState implements BattleState{
 
 	@Override
 	public void entry() {
-		Gdx.app.debug(TAG, "entering attack phase");
+
 	}
 
 	@Override
@@ -42,7 +38,6 @@ public class AttackBattleState implements BattleState{
 
 	@Override
 	public void exit() {
-		Gdx.app.debug(TAG, "exiting attack phase");
 		battlemanager.setCurrentBattleState(battlemanager.getActionBattleState());
 		battlemanager.getCurrentBattleState().entry();
 	}
@@ -50,7 +45,7 @@ public class AttackBattleState implements BattleState{
     private void possibleAttack(Entity entity) {  
     	Entity currentUnit = battlemanager.getActiveUnit();
     	Entity possibleTarget = getPossibleTarget(entity);
-    	if(possibleTarget != null) {
+    	if(possibleTarget != null && !(possibleTarget.getName().equalsIgnoreCase(currentUnit.getName()))) {
     		currentUnit.attack(possibleTarget);
     	}
     	this.exit();

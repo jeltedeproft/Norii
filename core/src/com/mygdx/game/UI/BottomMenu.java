@@ -8,8 +8,6 @@ import com.mygdx.game.Map.Map;
 import Utility.Utility;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
@@ -18,21 +16,18 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
 public class BottomMenu extends HorizontalGroup {
 	private static final String TAG = BottomMenu.class.getSimpleName();
 	
     private String unknownHeroImageLocation = "sprites/gui/portraits/unknown.png";
     
-    //identifier labels
     private Label hpLabel;
     private Label mpLabel;
     private Label xpLabel;
     private Label levelLabel;
     private Label iniLabel;
     
-    //value labels
     private Label hp;
     private Label mp;
     private Label xp;
@@ -40,7 +35,6 @@ public class BottomMenu extends HorizontalGroup {
     private Label iniVal;
     private Label heroNameLabel;
     
-    //Attributes
     private int heroLevel;
     private int heroHP;
     private int heroMP;
@@ -53,7 +47,8 @@ public class BottomMenu extends HorizontalGroup {
     private static final float BOTTOM_MENU_HEIGHT_TILES = 3.0f;
     private static final float HERO_PORTRAIT_WIDTH_TILES = 3.0f;
     private static final float STATS_MENU_WIDTH_TILES = 17.0f;
-    private static final float HERONAMESCALE = 3.0f; 
+    private static final int HERONAMESCALE = 10;
+    
     
     private HorizontalGroup bottomMenuTable;
     private Table statsGroup;
@@ -61,7 +56,6 @@ public class BottomMenu extends HorizontalGroup {
 
     public BottomMenu(Entity[] entities){
         super();
-        
         linkUnitsToMenu(entities);
         initElementsForUI();
         addElementsToWindow();
@@ -105,9 +99,7 @@ public class BottomMenu extends HorizontalGroup {
     	
 		statsGroup = new Table();
     	
-        heroNameLabel = new Label("", statusUISkin, "inventory-item-count");
-        heroNameLabel.setFontScale(HERONAMESCALE);
-    	
+        heroNameLabel = new Label("", statusUISkin);
         hpLabel = new Label(" hp:", statusUISkin);
         hp = new Label("", statusUISkin);
         mpLabel = new Label(" mp:", statusUISkin);
@@ -137,31 +129,35 @@ public class BottomMenu extends HorizontalGroup {
 		
 		statsGroup.setHeight(statsHeight);
     	statsGroup.setWidth(statsWidth);
-		
-    	statsGroup.add(heroNameLabel).align(Align.left);
-    	statsGroup.row();
-    	
-    	statsGroup.add(hpLabel).align(Align.left);
-    	statsGroup.add(hp).align(Align.left);
-    	statsGroup.add(levelLabel).align(Align.left);
-    	statsGroup.add(levelVal).align(Align.left);
-    	statsGroup.row();
-    	
-    	statsGroup.add(mpLabel).align(Align.left);
-    	statsGroup.add(mp).align(Align.left);
-    	statsGroup.add(iniLabel).align(Align.left);
-    	statsGroup.add(iniVal).align(Align.left);
-    	statsGroup.row();
-    	
-    	statsGroup.add(xpLabel).align(Align.left);
-    	statsGroup.add(xp).align(Align.left);
-    	statsGroup.row();
-    	
     	statsGroup.align(Align.left);
     	
+    	addLabelsToStatsGroup();
+
     	statsGroupContainer = new Container<Table>(statsGroup);
     	bottomMenuTable.addActor(statsGroupContainer.prefSize(statsWidth,statsHeight));
     	statsGroup.setFillParent(true);
+	}
+
+	private void addLabelsToStatsGroup() {
+		statsGroup.add(heroNameLabel).align(Align.topLeft).colspan(3);
+    	statsGroup.row();
+    	
+    	statsGroup.add(hpLabel).align(Align.topLeft).expandX().width(50);
+    	statsGroup.add(hp).align(Align.topLeft).padRight(20).expandX();
+
+    	statsGroup.add(levelLabel).align(Align.left).expandX();
+    	statsGroup.add(levelVal).align(Align.left).padRight(20).expandX();
+
+    	
+    	statsGroup.add(mpLabel).align(Align.left).expandX();
+    	statsGroup.add(mp).align(Align.left).padRight(20).expandX();
+
+    	statsGroup.add(iniLabel).align(Align.left).expandX();
+    	statsGroup.add(iniVal).align(Align.left).padRight(20).expandX();
+
+    	
+    	statsGroup.add(xpLabel).align(Align.left).expandX();
+    	statsGroup.add(xp).align(Align.left).padRight(20).expandX();
 	}
     
     public void setHero(Entity entity) {

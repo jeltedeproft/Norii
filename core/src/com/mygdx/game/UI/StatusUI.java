@@ -21,7 +21,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class StatusUI extends Window {
 	private static final String TAG = StatusUI.class.getSimpleName();
-	private static final int FONT_SIZE = 24;
 	
     private int levelVal;
     private int hpVal;
@@ -40,6 +39,7 @@ public class StatusUI extends Window {
     private Image loadingBarBackground;
     private Image loadingBar;
     
+    private Label heroName;
     private Label hp;
     private Label mp;
     private Label xp;
@@ -63,7 +63,7 @@ public class StatusUI extends Window {
 
     
     public StatusUI(Entity entity){
-        super(entity.getName(), Utility.getStatusUISkin());
+        super("", Utility.getStatusUISkin());
         this.setVisible(false);
         this.linkedEntity = entity;
         this.setResizable(true);
@@ -97,6 +97,8 @@ public class StatusUI extends Window {
         bar = new Image(statusUITextureAtlas.findRegion("Bar"));
         xpBar = new Image(statusUITextureAtlas.findRegion("XP_Bar"));
         bar3 = new Image(statusUITextureAtlas.findRegion("Bar"));
+        
+        heroName = new Label(linkedEntity.getName(),labelStyle);
 
         hpLabel = new Label(" hp:", labelStyle);
         hp = new Label(String.valueOf(hpVal), labelStyle);
@@ -137,7 +139,10 @@ public class StatusUI extends Window {
     
     private void addElementsToWindow() {
         //account for the title padding
-        this.pad(this.getPadTop() + 10, 10, 10, 10);
+        this.pad(0, 10, 10, 10);
+        
+        this.add(heroName);
+        this.row();
 
         this.add(hpLabel);
         this.add(hp);

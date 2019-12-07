@@ -18,7 +18,6 @@ public class EntityClickListener extends ClickListener {
 
     @Override
     public void clicked(InputEvent event, float x, float y) {
-    	Gdx.app.debug(TAG, "clicking on actor");
     	actor.getEntity().notify(EntityCommand.CLICKED);
     }
     

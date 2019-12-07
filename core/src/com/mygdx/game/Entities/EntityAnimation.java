@@ -56,8 +56,7 @@ public class EntityAnimation {
 		updateFrame();
 	}
 	
-	private void loadSprite()
-	{
+	private void loadSprite(){
 		Texture texture = Utility.getTextureAsset(spritePath);
 		TextureRegion[][] textureFrames = TextureRegion.split(texture, FRAME_WIDTH, FRAME_HEIGHT);
 		frameSprite = new Sprite(textureFrames[0][0].getTexture(), 0,0,FRAME_WIDTH, FRAME_HEIGHT);

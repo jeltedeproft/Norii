@@ -13,13 +13,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 public class ActionsUI extends Table {
 	private static final String TAG = ActionsUI.class.getSimpleName();
 	
-	//padding
     private float iconWidth = Gdx.graphics.getWidth() / 22.0f;
     private float iconHeight = Gdx.graphics.getHeight() / 26.0f;
     private static final int BAR_LENGTH = 3;
     private static final int NUMBER_OF_BARS = 1;
 	
-	//images
 	private static final String MOVE_BUTTON_SPRITEPATH = "sprites/gui/move.png";
 	private static final String ATTACK_BUTTON_SPRITEPATH = "sprites/gui/attack.png";
 	private static final String SPELL_BUTTON_SPRITEPATH = "sprites/gui/spell.png";
@@ -76,7 +74,7 @@ public class ActionsUI extends Table {
 
 	private void calculateSize() {
         float actionsMenuWidth = iconWidth * BAR_LENGTH;
-        float actionsMenuHeight = NUMBER_OF_BARS * iconHeight;
+        float actionsMenuHeight = iconHeight * NUMBER_OF_BARS;
         this.setSize(actionsMenuWidth, actionsMenuHeight);
 	}
 
