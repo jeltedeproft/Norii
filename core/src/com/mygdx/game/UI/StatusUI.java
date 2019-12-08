@@ -8,11 +8,13 @@ import com.mygdx.game.Map.Map;
 import Utility.Utility;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -60,6 +62,7 @@ public class StatusUI extends Window {
 	
 	private static final int WIDTH_TILES = 7;
 	private static final int HEIGHT_TILES = 7; 
+	private static final int ALPHA = 30; 
 
     
     public StatusUI(Entity entity){
@@ -67,6 +70,9 @@ public class StatusUI extends Window {
         this.setVisible(false);
         this.linkedEntity = entity;
         this.setResizable(true);
+        Color newColor = this.getColor();
+        newColor.a = ALPHA;
+        this.setColor(newColor);
         entity.setStatusui(this);
         
         initiateHeroStats();
@@ -138,7 +144,6 @@ public class StatusUI extends Window {
     }
     
     private void addElementsToWindow() {
-        //account for the title padding
         this.pad(0, 10, 10, 10);
         
         this.add(heroName);
@@ -202,6 +207,12 @@ public class StatusUI extends Window {
 		this.setSize(WIDTH_TILES * Map.TILE_WIDTH_PIXEL, HEIGHT_TILES * Map.TILE_HEIGHT_PIXEL);
 		loadingBar.setWidth(((float)linkedEntity.getHp() / (float)linkedEntity.getMaxHp()) * bar.getWidth());
 		loadingBarBackground.setWidth(bar.getWidth());
+    	for(Actor actor : this.getChildren()) {
+    		if(actor.getClass() == Label.class) {
+            	Label label = (Label) actor;
+            	label.setFontScale(Gdx.graphics.getWidth() * 0.0015f, Gdx.graphics.getHeight() * 0.0015f);
+    		}
+    	}
 	}
 }
 

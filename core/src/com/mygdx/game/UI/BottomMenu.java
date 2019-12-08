@@ -8,6 +8,7 @@ import com.mygdx.game.Map.Map;
 import Utility.Utility;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
@@ -16,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
 
 public class BottomMenu extends HorizontalGroup {
 	private static final String TAG = BottomMenu.class.getSimpleName();
@@ -48,10 +50,11 @@ public class BottomMenu extends HorizontalGroup {
     private static final float HERO_PORTRAIT_WIDTH_TILES = 3.0f;
     private static final float STATS_MENU_WIDTH_TILES = 17.0f;
     private static final int HERONAMESCALE = 10;
+	private static final int ALPHA = 30; 
     
     
     private HorizontalGroup bottomMenuTable;
-    private Table statsGroup;
+    private Window statsGroup;
     private Container<Table> statsGroupContainer;
 
     public BottomMenu(Entity[] entities){
@@ -78,6 +81,9 @@ public class BottomMenu extends HorizontalGroup {
 		bottomMenuTable.setFillParent(true);
 		this.setTransform(true);
 		this.setPosition(0, 0);
+        Color newColor = this.getColor();
+        newColor.a = ALPHA;
+        this.setColor(newColor);
 	}
 	
 	private void changeHeroImage(String heroImageLink) {
@@ -97,7 +103,7 @@ public class BottomMenu extends HorizontalGroup {
 	private void initStatsMenu() {
     	Skin statusUISkin = Utility.getStatusUISkin();
     	
-		statsGroup = new Table();
+		statsGroup = new Window("", statusUISkin);
     	
         heroNameLabel = new Label("", statusUISkin);
         hpLabel = new Label(" hp:", statusUISkin);
@@ -249,8 +255,10 @@ public class BottomMenu extends HorizontalGroup {
 		statsGroup.setHeight(statsHeight);
     	statsGroup.setWidth(statsWidth);
     	for(Actor actor : statsGroup.getChildren()) {
-        	Label label = (Label) actor;
-        	label.setFontScale(Gdx.graphics.getWidth() * 0.0018f, Gdx.graphics.getHeight() * 0.0018f);
+    		if(actor.getClass() == Label.class) {
+            	Label label = (Label) actor;
+            	label.setFontScale(Gdx.graphics.getWidth() * 0.0018f, Gdx.graphics.getHeight() * 0.0018f);
+    		}
     	}
     	statsGroup.setPosition(HERO_PORTRAIT_WIDTH_TILES * Map.TILE_WIDTH_PIXEL, 0);
 	}

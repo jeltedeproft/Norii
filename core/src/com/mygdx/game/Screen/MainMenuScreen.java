@@ -87,10 +87,10 @@ public class MainMenuScreen extends GameScreen {
 		initializeBgAnimation();
 	}
 	
-	private void loadBackgroundSpritesIntoArray()
-	{
+	private void loadBackgroundSpritesIntoArray(){
 		Texture texture = Utility.getTextureAsset(defaultBackgroundPath);
 		TextureRegion[][] textureFrames = TextureRegion.split(texture, FRAME_WIDTH, FRAME_HEIGHT);
+		
 		
 		bgFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
 		int index = 0;
