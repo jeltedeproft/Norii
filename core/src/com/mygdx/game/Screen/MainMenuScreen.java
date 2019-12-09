@@ -59,7 +59,6 @@ public class MainMenuScreen extends GameScreen {
 		loadAssets();
 		initializeClassVariables();
 
-		
 		createBackground();
 		createButtons();
 		createLayout();
@@ -71,13 +70,15 @@ public class MainMenuScreen extends GameScreen {
 	
 	private void loadAssets() {
 		Utility.loadFreeTypeFontAsset("fonts/BLKCHCRY.ttf", 24);
+		EntityFileReader.loadUnitStatsInMemory();
 	}
 	
 	private void initializeClassVariables() {
+		fighters = new ArrayList<Owner>();
+		monsters = new ArrayList<Entity>();
 		stage = new Stage();
 		mainMenuTableOfButtons = new Table();
 		mainMenuTableOfButtons.setFillParent(true);
-		EntityFileReader.loadUnitStatsInMemory();
 	}
 	
 	private void createBackground(){
@@ -107,18 +108,21 @@ public class MainMenuScreen extends GameScreen {
 	
 	private void createButtons() {
     	Skin statusUISkin = Utility.getStatusUISkin();
-    	
-    	FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/BLKCHCRY.ttf"));
-    	FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-    	parameter.size = 105;
-    	BitmapFont font = generator.generateFont(parameter);
-
-    	LabelStyle labelStyle = new LabelStyle();
-    	labelStyle.font = font;
+    	LabelStyle labelStyle = createTitleStyle();
 
     	title = new Label("Norii:", labelStyle);
 		newGameButton = new TextButton("New Game", statusUISkin);
 		exitButton = new TextButton("Exit",statusUISkin);
+	}
+
+	private LabelStyle createTitleStyle() {
+		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/BLKCHCRY.ttf"));
+    	FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+    	parameter.size = 105;
+    	BitmapFont font = generator.generateFont(parameter);
+    	LabelStyle labelStyle = new LabelStyle();
+    	labelStyle.font = font;
+		return labelStyle;
 	}
 	
 	private void createLayout() {
@@ -149,14 +153,14 @@ public class MainMenuScreen extends GameScreen {
 	}
 	
 	private void addUnitsToPlayer() {
-		fighters = new ArrayList<Owner>();
-		monsters = new ArrayList<Entity>();
+		Player player = Player.getInstance();
 		monsters.add(new Entity(1));
 		monsters.add(new Entity(2));
 		monsters.add(new Entity(3));
 		monsters.add(new Entity(4));
-		Player.getInstance().setTeam(monsters);
-		fighters.add(Player.getInstance());
+		player.setTeam(monsters);
+		fighters.add(player);
+		
 		ScreenManager.getInstance().showScreen( ScreenEnum.BATTLE,fighters); 
 	}
 	

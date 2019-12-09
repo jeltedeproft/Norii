@@ -1,12 +1,13 @@
+
 package com.mygdx.game.UI;
 
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.Entities.Entity;
@@ -17,14 +18,15 @@ import com.mygdx.game.Profile.ProfileObserver;
 import Utility.Utility;
 
 
-public class PlayerBattleHUD implements Screen, ProfileObserver {
+public class PlayerBattleHUD extends Table implements ProfileObserver {
 	private static final String TAG = PlayerBattleHUD.class.getSimpleName();
 	
     private Stage stage;
     private PortraitsUI portraits;
     private StatusUI[] statusUIs;
     private BottomMenu bottomMenu;
-    private ActionsUI[] actionUIs;
+    private ActionsUI[] actionUIs;																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																							
+    
     private Image onTileHover;
 
 
@@ -120,7 +122,7 @@ public class PlayerBattleHUD implements Screen, ProfileObserver {
 		return portraits;
 	}
 	
-    @Override
+
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
         portraits.updateSizeContainer();
@@ -148,41 +150,18 @@ public class PlayerBattleHUD implements Screen, ProfileObserver {
     	onTileHover.getDrawable().setMinWidth(Map.TILE_WIDTH_PIXEL);
     }
 
-    @Override
-    public void onNotify(ProfileManager profileManager, ProfileEvent event) {
-
-    }
-
-    @Override
-    public void show() {
-    }
-
-    @Override
     public void render(float delta) {
         stage.act(delta);
         stage.draw();
-    }
-    
+    }  
 
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void hide() {
-
-    }
-
-    @Override
     public void dispose() {
         stage.dispose();
     }
 
+	@Override
+	public void onNotify(ProfileManager profileManager, ProfileEvent event) {
+		
+	}
 }
 

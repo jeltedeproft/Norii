@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ClassDiagram>
+    <Class name="com.mygdx.game.UI.PlayerBattleHUD" x="896" y="686">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association destinationClassName="com.mygdx.game.UI.StatusUI"
+            endpointName="statusUIs" kind="Simple"/>
+        <Association
+            destinationClassName="com.mygdx.game.UI.PortraitsUI"
+            endpointName="portraits" kind="Simple"/>
+        <Association destinationClassName="com.mygdx.game.UI.BottomMenu"
+            endpointName="bottomMenu" kind="Simple"/>
+        <Communication destinationClassName="com.mygdx.game.UI.BottomMenu"/>
+        <Communication destinationClassName="com.mygdx.game.UI.PortraitsUI"/>
+        <Communication destinationClassName="com.mygdx.game.UI.StatusUI"/>
+    </Class>
+    <Class name="com.mygdx.game.Screen.BattleScreen" x="1630" y="264">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="com.mygdx.game.UI.PlayerBattleHUD"
+            endpointName="playerBattleHUD" kind="Simple"/>
+        <Association
+            destinationClassName="com.mygdx.game.Entities.Entity"
+            endpointName="playerSortedUnits" kind="Simple"/>
+        <Communication destinationClassName="com.mygdx.game.UI.PlayerBattleHUD"/>
+        <Communication destinationClassName="com.mygdx.game.UI.PortraitsUI"/>
+        <Communication destinationClassName="com.mygdx.game.Entities.Entity"/>
+    </Class>
+    <Class name="com.mygdx.game.UI.BottomMenu" x="317" y="1057">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="com.mygdx.game.Entities.Entity"
+            endpointName="linkedEntity" kind="Simple"/>
+        <Communication destinationClassName="com.mygdx.game.Entities.Entity"/>
+    </Class>
+    <Class name="com.mygdx.game.Entities.EntityStage" x="449" y="53">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="com.mygdx.game.Entities.Entity"
+            endpointName="entities" kind="Simple"/>
+    </Class>
+    <Class name="com.mygdx.game.UI.PortraitsUI" x="998" y="1206">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="com.mygdx.game.Entities.Entity"
+            endpointName="entities" kind="Simple"/>
+    </Class>
+    <Class name="com.mygdx.game.UI.StatusUI" x="1620" y="1072">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="com.mygdx.game.Entities.Entity"
+            endpointName="linkedEntity" kind="Simple"/>
+        <Communication destinationClassName="com.mygdx.game.Entities.Entity"/>
+    </Class>
+    <Class name="com.mygdx.game.Entities.EntityClickListener" x="675" y="174">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Communication destinationClassName="com.mygdx.game.Entities.Entity"/>
+    </Class>
+    <Class name="com.mygdx.game.Screen.BattleScreen.VIEWPORT" x="1488" y="256">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="com.mygdx.game.Entities.Entity" x="47" y="61">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association destinationClassName="com.mygdx.game.UI.BottomMenu"
+            endpointName="bottomMenu" kind="Simple"/>
+        <Association destinationClassName="com.mygdx.game.UI.StatusUI"
+            endpointName="statusui" kind="Simple"/>
+        <Communication destinationClassName="com.mygdx.game.UI.BottomMenu"/>
+        <Communication destinationClassName="com.mygdx.game.UI.StatusUI"/>
+    </Class>
+</ClassDiagram>

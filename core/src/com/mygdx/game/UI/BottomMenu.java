@@ -19,7 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 
-public class BottomMenu extends HorizontalGroup {
+public class BottomMenu extends Window {
 	private static final String TAG = BottomMenu.class.getSimpleName();
 	
     private String unknownHeroImageLocation = "sprites/gui/portraits/unknown.png";
@@ -47,9 +47,9 @@ public class BottomMenu extends HorizontalGroup {
     private Entity linkedEntity;
     
     private static final float BOTTOM_MENU_HEIGHT_TILES = 3.0f;
+    private static final int BOTTOM_MENU_WIDTH_TILES = 20;
     private static final float HERO_PORTRAIT_WIDTH_TILES = 3.0f;
     private static final float STATS_MENU_WIDTH_TILES = 17.0f;
-    private static final int HERONAMESCALE = 10;
 	private static final int ALPHA = 30; 
     
     
@@ -58,7 +58,7 @@ public class BottomMenu extends HorizontalGroup {
     private Container<Table> statsGroupContainer;
 
     public BottomMenu(Entity[] entities){
-        super();
+        super("", Utility.getStatusUISkin());
         linkUnitsToMenu(entities);
         initElementsForUI();
         addElementsToWindow();
@@ -79,8 +79,11 @@ public class BottomMenu extends HorizontalGroup {
 	private void initMainContainer() {
 		bottomMenuTable = new HorizontalGroup();
 		bottomMenuTable.setFillParent(true);
+		bottomMenuTable.pad(0);
+		this.pad(0);
 		this.setTransform(true);
 		this.setPosition(0, 0);
+		
         Color newColor = this.getColor();
         newColor.a = ALPHA;
         this.setColor(newColor);
@@ -116,6 +119,10 @@ public class BottomMenu extends HorizontalGroup {
         levelVal = new Label("", statusUISkin);
         iniLabel = new Label(" ini:", statusUISkin);
         iniVal = new Label("", statusUISkin);
+        
+        Color newColor = this.getColor();
+        newColor.a = ALPHA;
+        statsGroup.setColor(newColor);
 	}
     
     private void addElementsToWindow() {
@@ -237,8 +244,8 @@ public class BottomMenu extends HorizontalGroup {
 	}
 
 	private void updateMainTable() {
-		int scaledWidth = Gdx.graphics.getWidth();
-		int scaledHeight = (int) (BOTTOM_MENU_HEIGHT_TILES * Map.TILE_HEIGHT_PIXEL);
+		float scaledWidth = Gdx.graphics.getWidth();
+		float scaledHeight = BOTTOM_MENU_HEIGHT_TILES * Map.TILE_HEIGHT_PIXEL;
 		this.setSize(scaledWidth,scaledHeight);
 		bottomMenuTable.setSize(scaledWidth,scaledHeight);
 	}
@@ -257,13 +264,16 @@ public class BottomMenu extends HorizontalGroup {
     	for(Actor actor : statsGroup.getChildren()) {
     		if(actor.getClass() == Label.class) {
             	Label label = (Label) actor;
-            	label.setFontScale(Gdx.graphics.getWidth() * 0.0018f, Gdx.graphics.getHeight() * 0.0018f);
+            	label.setFontScale(Gdx.graphics.getWidth() * 0.0014f, Gdx.graphics.getHeight() * 0.0014f);
     		}
     	}
     	statsGroup.setPosition(HERO_PORTRAIT_WIDTH_TILES * Map.TILE_WIDTH_PIXEL, 0);
 	}
 
 	private void updateContainers() {
+		this.setSize(BOTTOM_MENU_WIDTH_TILES * Map.TILE_WIDTH_PIXEL ,BOTTOM_MENU_HEIGHT_TILES * Map.TILE_HEIGHT_PIXEL);
+		statsGroupContainer.setPosition(HERO_PORTRAIT_WIDTH_TILES * Map.TILE_WIDTH_PIXEL, 0);
+		statsGroupContainer.setSize(STATS_MENU_WIDTH_TILES * Map.TILE_WIDTH_PIXEL ,BOTTOM_MENU_HEIGHT_TILES * Map.TILE_HEIGHT_PIXEL);
 		statsGroupContainer.fill().prefSize(STATS_MENU_WIDTH_TILES * Map.TILE_WIDTH_PIXEL ,BOTTOM_MENU_HEIGHT_TILES * Map.TILE_HEIGHT_PIXEL);
 	}
 }

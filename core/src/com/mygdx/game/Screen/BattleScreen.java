@@ -69,16 +69,14 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		playerSortedUnits = Player.getInstance().getUnitsSortedByIni();
 	}
 	
-	private void initializePauseMenu() {
-		hudCamera = new OrthographicCamera();
-		hudCamera.setToOrtho(false, VIEWPORT.physicalWidth, VIEWPORT.physicalHeight);
-		pauseMenu = new PauseMenuUI(hudCamera);
-	}
-	
 	private void initializeHUD() {
 		hudCamera = new OrthographicCamera();
 		hudCamera.setToOrtho(false, VIEWPORT.physicalWidth, VIEWPORT.physicalHeight);
 		playerBattleHUD = new PlayerBattleHUD(hudCamera,playerSortedUnits);
+	}
+	
+	private void initializePauseMenu() {
+		pauseMenu = new PauseMenuUI(hudCamera);
 	}
 
 	private void initializeInput() {
@@ -178,7 +176,6 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 	}
 	
 	private void renderElements(float delta) {
-		//clear screen
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
@@ -310,6 +307,7 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		default:
 			break;
 		}	
+
 	}
 
 	private void prepareMove(Entity unit) {
