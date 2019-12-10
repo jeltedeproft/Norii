@@ -137,7 +137,7 @@ public class BottomMenu extends Window {
 	}
 	
 	private void populateStatsGroup() {
-		float statsWidth = STATS_MENU_WIDTH_TILES * Map.TILE_WIDTH_PIXEL;
+		float statsWidth = Gdx.graphics.getWidth() - (HERO_PORTRAIT_WIDTH_TILES * Map.TILE_WIDTH_PIXEL);
 		float statsHeight = BOTTOM_MENU_HEIGHT_TILES * Map.TILE_HEIGHT_PIXEL;
 		
 		statsGroup.setHeight(statsHeight);
@@ -256,7 +256,7 @@ public class BottomMenu extends Window {
 	}
 
 	private void updateStatsMenu() {
-		float statsWidth = STATS_MENU_WIDTH_TILES * Map.TILE_WIDTH_PIXEL;
+		float statsWidth = Gdx.graphics.getWidth() - (HERO_PORTRAIT_WIDTH_TILES * Map.TILE_WIDTH_PIXEL);
 		float statsHeight = BOTTOM_MENU_HEIGHT_TILES * Map.TILE_HEIGHT_PIXEL;
 		
 		statsGroup.setHeight(statsHeight);
@@ -271,10 +271,10 @@ public class BottomMenu extends Window {
 	}
 
 	private void updateContainers() {
-		this.setSize(BOTTOM_MENU_WIDTH_TILES * Map.TILE_WIDTH_PIXEL ,BOTTOM_MENU_HEIGHT_TILES * Map.TILE_HEIGHT_PIXEL);
+		this.setSize(Gdx.graphics.getWidth() ,BOTTOM_MENU_HEIGHT_TILES * Map.TILE_HEIGHT_PIXEL);
 		statsGroupContainer.setPosition(HERO_PORTRAIT_WIDTH_TILES * Map.TILE_WIDTH_PIXEL, 0);
-		statsGroupContainer.setSize(STATS_MENU_WIDTH_TILES * Map.TILE_WIDTH_PIXEL ,BOTTOM_MENU_HEIGHT_TILES * Map.TILE_HEIGHT_PIXEL);
-		statsGroupContainer.fill().prefSize(STATS_MENU_WIDTH_TILES * Map.TILE_WIDTH_PIXEL ,BOTTOM_MENU_HEIGHT_TILES * Map.TILE_HEIGHT_PIXEL);
+		statsGroupContainer.setSize(Gdx.graphics.getWidth() - (HERO_PORTRAIT_WIDTH_TILES * Map.TILE_WIDTH_PIXEL) ,BOTTOM_MENU_HEIGHT_TILES * Map.TILE_HEIGHT_PIXEL);
+		statsGroupContainer.fill().prefSize(Gdx.graphics.getWidth() - (HERO_PORTRAIT_WIDTH_TILES * Map.TILE_WIDTH_PIXEL),BOTTOM_MENU_HEIGHT_TILES * Map.TILE_HEIGHT_PIXEL);
 	}
 }
 
