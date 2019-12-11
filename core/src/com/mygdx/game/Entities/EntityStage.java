@@ -2,6 +2,7 @@ package com.mygdx.game.Entities;
 
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -9,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
-import com.mygdx.game.Map.Map;
+import com.mygdx.game.Screen.BattleScreen;
 
 public class EntityStage extends Stage {
 	private static final String TAG = EntityStage.class.getSimpleName();
@@ -32,7 +33,7 @@ public class EntityStage extends Stage {
 	private void initializeActor(EntityActor actor) {
 		Entity entity = actor.getEntity();
         //DANGER : I assume every entity has a 32x32 size
-        actor.setBounds(entity.getCurrentPosition().getRealScreenX(), entity.getCurrentPosition().getRealScreenY(), Map.TILE_WIDTH_PIXEL,Map.TILE_HEIGHT_PIXEL);
+        actor.setBounds(entity.getCurrentPosition().getRealScreenX(), entity.getCurrentPosition().getRealScreenY(), (Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH),(Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT));
         addActor(actor);
         EventListener eventListener = new EntityClickListener(actor);
         actor.addListener(eventListener);

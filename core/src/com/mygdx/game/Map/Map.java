@@ -22,8 +22,8 @@ public abstract class Map implements AudioSubject{
     public static final int TILE_WIDTH  = 32;
     public static float TILE_HEIGHT_PIXEL  = 32.0f;
     public static float TILE_WIDTH_PIXEL  = 32.0f;
-    public static float ORIGINAL_TILE_HEIGHT_PIXEL  = 32.0f;
-    public static float ORIGINAL_TILE_WIDTH_PIXEL  = 32.0f;
+    public static int TILEMAP_WIDTH_IN_TILES  = 32;
+    public static int TILEMAP_HEIGHT_IN_TILES  = 32;
 	public static float xScaleDifference = 1;
 	public static float yScaleDifference = 1;
     
@@ -75,13 +75,11 @@ public abstract class Map implements AudioSubject{
         
         setupMapProperties();
     	initializeClassVariables(mapType);
-		
-		//Observers
+
         this.addObserver(AudioManager.getInstance());
     }
     
     private void setupMapProperties() {
-        //setup properties
         prop = currentMap.getProperties();
         
 		mapWidth = prop.get("width", Integer.class);
@@ -89,8 +87,8 @@ public abstract class Map implements AudioSubject{
 		tilePixelWidth = prop.get("tilewidth", Integer.class);
 		tilePixelHeight = prop.get("tileheight", Integer.class);
 		
-		ORIGINAL_TILE_WIDTH_PIXEL = Gdx.graphics.getWidth() / (float) mapWidth;
-		ORIGINAL_TILE_HEIGHT_PIXEL = Gdx.graphics.getHeight() / (float) mapHeight;
+		TILEMAP_WIDTH_IN_TILES = mapWidth;
+		TILEMAP_HEIGHT_IN_TILES = mapHeight;
 		
 		updatePixelDimensions();
     }

@@ -2,6 +2,7 @@ package com.mygdx.game.UI;
 
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Map.Map;
+import com.mygdx.game.Screen.BattleScreen;
 
 import Utility.Utility;
 
@@ -77,8 +78,8 @@ public class PortraitsUI extends Window {
 	}
 
 	public void updateSizeContainer() {
-		portraitsHeight = PORTRAIT_HEIGHT * Map.TILE_HEIGHT_PIXEL;
-		portraitsWidth = Gdx.graphics.getWidth();
+		portraitsHeight = PORTRAIT_HEIGHT ;
+		portraitsWidth = 50;
 		this.setSize(portraitsWidth, portraitsHeight);
 		
 		updateSizePortraits();
@@ -86,7 +87,7 @@ public class PortraitsUI extends Window {
 	
 	private void updateSizePortraits() {
 		updatePositionContainer();
-		float newWidth = PORTRAIT_WIDTH * Map.TILE_WIDTH_PIXEL;
+		float newWidth = PORTRAIT_WIDTH ;
 		for(PortraitUI portrait : portraits) {
 			portrait.getHeroPortraitScalable().setMinHeight(portraitsHeight);
 			portrait.getHeroPortraitScalable().setMinWidth(newWidth);
@@ -99,9 +100,9 @@ public class PortraitsUI extends Window {
 	}
 	
 	private void updatePositionContainer() {
-		float currentPortraitsHeight = PORTRAITS_TOP_PADDING * Map.TILE_HEIGHT_PIXEL;
+		float currentPortraitsHeight = PORTRAITS_TOP_PADDING ;
 		float xPos = 0;
-		float yPos = Gdx.graphics.getHeight() - currentPortraitsHeight;
+		float yPos = 50 - currentPortraitsHeight;
 		this.setPosition(xPos, yPos);
 	}
 

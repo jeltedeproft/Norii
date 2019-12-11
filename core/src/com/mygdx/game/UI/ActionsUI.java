@@ -2,6 +2,7 @@ package com.mygdx.game.UI;
 
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Map.Map;
+import com.mygdx.game.Screen.BattleScreen;
 
 import Utility.Utility;
 
@@ -81,11 +82,11 @@ public class ActionsUI extends Table {
     public void update() {
     	this.setVisible(linkedEntity.isActive());
     	
-    	iconWidth = Map.TILE_WIDTH_PIXEL;
-    	iconHeight = Map.TILE_HEIGHT_PIXEL;
+    	iconWidth = 1;
+    	iconHeight = 1;
     	this.setSize(BAR_LENGTH * iconWidth, NUMBER_OF_BARS * iconHeight);
         //we offset the position a little bit to make it look better
-        this.setPosition((linkedEntity.getCurrentPosition().getRealScreenX()) + iconWidth, (linkedEntity.getCurrentPosition().getRealScreenY()) + iconHeight); 
+        this.setPosition((linkedEntity.getCurrentPosition().getTileX()) + iconWidth, (linkedEntity.getCurrentPosition().getTileY()) + iconHeight); 
     }
 }
 

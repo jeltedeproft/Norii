@@ -1,9 +1,11 @@
 package com.mygdx.game.Entities;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.Map.Map;
+import com.mygdx.game.Screen.BattleScreen;
 
 import Utility.TiledMapPosition;
 
@@ -37,6 +39,7 @@ public class EntityActor extends Actor {
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                 setIsHovering(true);
+                Gdx.app.debug(TAG, "jooooooooooooooow");
             }
             
             @Override
@@ -47,7 +50,7 @@ public class EntityActor extends Actor {
     }
     
     public void setPos() {
-    	this.setBounds((entity.getCurrentPosition().getRealOriginalX()), (entity.getCurrentPosition().getRealOriginalY()), Map.ORIGINAL_TILE_WIDTH_PIXEL,Map.ORIGINAL_TILE_HEIGHT_PIXEL);
+    	this.setBounds((entity.getCurrentPosition().getRealOriginalX()), (entity.getCurrentPosition().getRealOriginalY()), (Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH),(Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT));
     }
     
 	public TiledMapPosition getActorPos() {

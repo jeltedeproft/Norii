@@ -4,6 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Map.Map;
+import com.mygdx.game.Screen.BattleScreen;
 
 import Utility.Utility;
 
@@ -93,8 +94,8 @@ public class BottomMenu extends Window {
 		Utility.loadTextureAsset(heroImageLink);
 		TextureRegion tr = new TextureRegion(Utility.getTextureAsset(heroImageLink));
 		TextureRegionDrawable trd = new TextureRegionDrawable(tr);
-		trd.setMinHeight(BOTTOM_MENU_HEIGHT_TILES * Map.TILE_HEIGHT_PIXEL);
-		trd.setMinWidth(HERO_PORTRAIT_WIDTH_TILES * Map.TILE_WIDTH_PIXEL);
+		trd.setMinHeight(BOTTOM_MENU_HEIGHT_TILES);
+		trd.setMinWidth(HERO_PORTRAIT_WIDTH_TILES);
 		if(heroImage != null) {
 			heroImage.setDrawable(trd);
 		}else {
@@ -137,8 +138,8 @@ public class BottomMenu extends Window {
 	}
 	
 	private void populateStatsGroup() {
-		float statsWidth = Gdx.graphics.getWidth() - (HERO_PORTRAIT_WIDTH_TILES * Map.TILE_WIDTH_PIXEL);
-		float statsHeight = BOTTOM_MENU_HEIGHT_TILES * Map.TILE_HEIGHT_PIXEL;
+		float statsWidth = 50 - (HERO_PORTRAIT_WIDTH_TILES);
+		float statsHeight = BOTTOM_MENU_HEIGHT_TILES;
 		
 		statsGroup.setHeight(statsHeight);
     	statsGroup.setWidth(statsWidth);
@@ -155,22 +156,22 @@ public class BottomMenu extends Window {
 		statsGroup.add(heroNameLabel).align(Align.topLeft).colspan(3);
     	statsGroup.row();
     	
-    	statsGroup.add(hpLabel).align(Align.topLeft).expandX().width(50);
-    	statsGroup.add(hp).align(Align.topLeft).padRight(20).expandX();
+    	statsGroup.add(hpLabel).align(Align.topLeft).expandX().width(5);
+    	statsGroup.add(hp).align(Align.topLeft).padRight(2).expandX();
 
     	statsGroup.add(levelLabel).align(Align.left).expandX();
-    	statsGroup.add(levelVal).align(Align.left).padRight(20).expandX();
+    	statsGroup.add(levelVal).align(Align.left).padRight(2).expandX();
 
     	
     	statsGroup.add(mpLabel).align(Align.left).expandX();
-    	statsGroup.add(mp).align(Align.left).padRight(20).expandX();
+    	statsGroup.add(mp).align(Align.left).padRight(2).expandX();
 
     	statsGroup.add(iniLabel).align(Align.left).expandX();
-    	statsGroup.add(iniVal).align(Align.left).padRight(20).expandX();
+    	statsGroup.add(iniVal).align(Align.left).padRight(2).expandX();
 
     	
     	statsGroup.add(xpLabel).align(Align.left).expandX();
-    	statsGroup.add(xp).align(Align.left).padRight(20).expandX();
+    	statsGroup.add(xp).align(Align.left).padRight(2).expandX();
 	}
     
     public void setHero(Entity entity) {
@@ -244,37 +245,37 @@ public class BottomMenu extends Window {
 	}
 
 	private void updateMainTable() {
-		float scaledWidth = Gdx.graphics.getWidth();
-		float scaledHeight = BOTTOM_MENU_HEIGHT_TILES * Map.TILE_HEIGHT_PIXEL;
+		float scaledWidth = 50;
+		float scaledHeight = BOTTOM_MENU_HEIGHT_TILES;
 		this.setSize(scaledWidth,scaledHeight);
 		bottomMenuTable.setSize(scaledWidth,scaledHeight);
 	}
 
 	private void updateHeroImage() {
-		heroImage.getDrawable().setMinHeight(BOTTOM_MENU_HEIGHT_TILES * Map.TILE_HEIGHT_PIXEL);
-		heroImage.getDrawable().setMinWidth(HERO_PORTRAIT_WIDTH_TILES * Map.TILE_WIDTH_PIXEL);
+		heroImage.getDrawable().setMinHeight(BOTTOM_MENU_HEIGHT_TILES );
+		heroImage.getDrawable().setMinWidth(HERO_PORTRAIT_WIDTH_TILES );
 	}
 
 	private void updateStatsMenu() {
-		float statsWidth = Gdx.graphics.getWidth() - (HERO_PORTRAIT_WIDTH_TILES * Map.TILE_WIDTH_PIXEL);
-		float statsHeight = BOTTOM_MENU_HEIGHT_TILES * Map.TILE_HEIGHT_PIXEL;
+		float statsWidth = 50 - (HERO_PORTRAIT_WIDTH_TILES );
+		float statsHeight = BOTTOM_MENU_HEIGHT_TILES;
 		
 		statsGroup.setHeight(statsHeight);
     	statsGroup.setWidth(statsWidth);
     	for(Actor actor : statsGroup.getChildren()) {
     		if(actor.getClass() == Label.class) {
             	Label label = (Label) actor;
-            	label.setFontScale(Gdx.graphics.getWidth() * 0.0014f, Gdx.graphics.getHeight() * 0.0014f);
+            	label.setFontScale(50 * 0.0014f, 50 * 0.0014f);
     		}
     	}
-    	statsGroup.setPosition(HERO_PORTRAIT_WIDTH_TILES * Map.TILE_WIDTH_PIXEL, 0);
+    	statsGroup.setPosition(HERO_PORTRAIT_WIDTH_TILES , 0);
 	}
 
 	private void updateContainers() {
-		this.setSize(Gdx.graphics.getWidth() ,BOTTOM_MENU_HEIGHT_TILES * Map.TILE_HEIGHT_PIXEL);
-		statsGroupContainer.setPosition(HERO_PORTRAIT_WIDTH_TILES * Map.TILE_WIDTH_PIXEL, 0);
-		statsGroupContainer.setSize(Gdx.graphics.getWidth() - (HERO_PORTRAIT_WIDTH_TILES * Map.TILE_WIDTH_PIXEL) ,BOTTOM_MENU_HEIGHT_TILES * Map.TILE_HEIGHT_PIXEL);
-		statsGroupContainer.fill().prefSize(Gdx.graphics.getWidth() - (HERO_PORTRAIT_WIDTH_TILES * Map.TILE_WIDTH_PIXEL),BOTTOM_MENU_HEIGHT_TILES * Map.TILE_HEIGHT_PIXEL);
+		this.setSize(50 ,BOTTOM_MENU_HEIGHT_TILES );
+		statsGroupContainer.setPosition(HERO_PORTRAIT_WIDTH_TILES , 0);
+		statsGroupContainer.setSize(50 - (HERO_PORTRAIT_WIDTH_TILES) ,BOTTOM_MENU_HEIGHT_TILES );
+		statsGroupContainer.fill().prefSize(50 - (HERO_PORTRAIT_WIDTH_TILES ),BOTTOM_MENU_HEIGHT_TILES );
 	}
 }
 

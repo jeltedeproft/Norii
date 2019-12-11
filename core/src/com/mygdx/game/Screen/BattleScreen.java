@@ -13,6 +13,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.mygdx.game.Battle.BattleManager;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Entities.EntityObserver;
@@ -32,6 +34,9 @@ import Utility.TiledMapPosition;
 
 public class BattleScreen extends GameScreen implements EntityObserver {
 	private static final String TAG = BattleScreen.class.getSimpleName();
+	
+	public static final int VISIBLE_WIDTH = 50; 
+	public static final int VISIBLE_HEIGHT = 50; 
 
 	private ArrayList<Owner> players;
 	private OrthogonalTiledMapRenderer mapRenderer = null;
@@ -115,6 +120,32 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
 			pauseMenu.setVisible(pauseMenu.getVisible());
 		}
+		
+		if(Gdx.input.isKeyJustPressed(Input.Keys.UP)){
+			float x = camera.position.x;
+			
+			float y = camera.position.y + 1;
+			float z = camera.position.z;
+			camera.position.set(x, y, z);
+		}
+		if(Gdx.input.isKeyJustPressed(Input.Keys.DOWN)){
+			float x = camera.position.x;
+			float y = camera.position.y - 1;
+			float z = camera.position.z;
+			camera.position.set(x, y, z);
+		}
+		if(Gdx.input.isKeyJustPressed(Input.Keys.LEFT)){
+			float x = camera.position.x - 1;
+			float y = camera.position.y;
+			float z = camera.position.z;
+			camera.position.set(x, y, z);
+		}
+		if(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)){
+			float x = camera.position.x + 1;
+			float y = camera.position.y;
+			float z = camera.position.z;
+			camera.position.set(x, y, z);
+		}
 	}
 
 	@Override
@@ -125,15 +156,20 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		multiplexer.addProcessor(map.getTiledMapStage());
 		Gdx.input.setInputProcessor(multiplexer);
 		
-		setupViewport(map.getMapWidth(), map.getMapHeight());
+		setupViewport(VISIBLE_WIDTH, VISIBLE_HEIGHT);
 		
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, map.getMapWidth(), map.getMapHeight());
+		camera.setToOrtho(false, VISIBLE_WIDTH, VISIBLE_HEIGHT);
+		camera.position.set(map.getMapWidth()/2f, map.getMapHeight()/2f, 0f);
 		
 		mapRenderer = new OrthogonalTiledMapRenderer(mapMgr.getCurrentTiledMap(), Map.UNIT_SCALE);
 		mapRenderer.setView(camera);
 		
 		map.makeSpawnParticles();
+		StretchViewport vp = new StretchViewport(VISIBLE_WIDTH, VISIBLE_HEIGHT, camera);
+		map.getTiledMapStage().setViewport(vp);
+		playerBattleHUD.getStage().setViewport(vp);
+
 	}
 
 	@Override
@@ -170,9 +206,18 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 	}
 
 	private void updateCameras() {
-		camera.position.set(map.getMapWidth()/2f, map.getMapHeight()/2f, 0f);
+		camera.position.x = clamp(camera.position.x, Map.TILEMAP_WIDTH_IN_TILES - (camera.viewportWidth / 2), 0 + (camera.viewportWidth / 2));
+		camera.position.y = clamp(camera.position.y, Map.TILEMAP_HEIGHT_IN_TILES - (camera.viewportWidth / 2), 0 + (camera.viewportWidth / 2));
 		camera.update();
 		hudCamera.update();
+	}
+	
+	private float clamp(float var, float max, float min) {
+	    if(var > min) {
+	        if(var < max) {
+	            return var;
+	        } else return max;
+	    } else return min;
 	}
 	
 	private void renderElements(float delta) {

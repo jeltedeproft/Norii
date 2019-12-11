@@ -1,7 +1,10 @@
 package Utility;
 
 import java.awt.Point;
+
+import com.badlogic.gdx.Gdx;
 import com.mygdx.game.Map.Map;
+import com.mygdx.game.Screen.BattleScreen;
 
 public class TiledMapPosition {
 	private static final String TAG = TiledMapPosition.class.getSimpleName();
@@ -24,12 +27,12 @@ public class TiledMapPosition {
 	}
 	
 	public TiledMapPosition setPositionFromScreen(float x, float y){
-		tileCoordinates = new Point(Math.round(x  / Map.TILE_WIDTH_PIXEL),Math.round(y / Map.TILE_HEIGHT_PIXEL));
+		tileCoordinates = new Point(Math.round(x  / (Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH)),Math.round(y / (Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT)));
 		return this;
 	}
 	
 	public TiledMapPosition setPositionFromOriginal(float x, float y){
-		tileCoordinates = new Point(Math.round(x  / Map.ORIGINAL_TILE_WIDTH_PIXEL),Math.round(y / Map.ORIGINAL_TILE_HEIGHT_PIXEL));
+		tileCoordinates = new Point(Math.round(x  / (Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH)),Math.round(y / (Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT)));
 		return this;
 	}
 	
@@ -45,11 +48,11 @@ public class TiledMapPosition {
 	}
 	
 	public float getRealScreenX() {
-		return (float) tileCoordinates.x * Map.TILE_WIDTH_PIXEL;
+		return (float) tileCoordinates.x * (Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH);
 	}
 	
 	public float getRealScreenY() {
-		return (float) tileCoordinates.y * Map.TILE_HEIGHT_PIXEL;
+		return (float) tileCoordinates.y * (Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT);
 	}
 	
 	public float getRealTiledX() {
@@ -61,11 +64,11 @@ public class TiledMapPosition {
 	}
 	
 	public float getRealOriginalX() {
-		return (float) tileCoordinates.x * Map.ORIGINAL_TILE_WIDTH_PIXEL;
+		return (float) tileCoordinates.x * (Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH);
 	}
 	
 	public float getRealOriginalY() {
-		return (float) tileCoordinates.y * Map.ORIGINAL_TILE_HEIGHT_PIXEL;
+		return (float) tileCoordinates.y * (Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT);
 	}
 	
 	public int getTileX() {

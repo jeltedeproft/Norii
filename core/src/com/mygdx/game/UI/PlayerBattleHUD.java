@@ -1,6 +1,7 @@
 
 package com.mygdx.game.UI;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -14,6 +15,7 @@ import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Map.Map;
 import com.mygdx.game.Profile.ProfileManager;
 import com.mygdx.game.Profile.ProfileObserver;
+import com.mygdx.game.Screen.BattleScreen;
 
 import Utility.Utility;
 
@@ -43,7 +45,7 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
 		statusUIs = new StatusUI[sortedUnits.length];
     	actionUIs = new ActionsUI[sortedUnits.length];
         stage = new Stage(new ScreenViewport(camera));
-        stage.setDebugAll(false);
+        stage.setDebugAll(true);
 	}
 	
 	private void createTileHoverParticle() {
@@ -51,7 +53,7 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
 		TextureRegion tr = new TextureRegion(Utility.getTextureAsset(Utility.ON_TILE_HOVER_FILE_PATH));
 		TextureRegionDrawable trd = new TextureRegionDrawable(tr);
 		onTileHover = new Image(trd);
-		onTileHover.setPosition(-100, -100);
+		onTileHover.setPosition(-1, -1);
 		
 		stage.addActor(onTileHover);
 	}
@@ -145,9 +147,9 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
     }
     
     private void updateHoverParticle() {
-    	onTileHover.setSize(Map.TILE_WIDTH_PIXEL, Map.TILE_HEIGHT_PIXEL);
-    	onTileHover.getDrawable().setMinHeight(Map.TILE_HEIGHT_PIXEL);
-    	onTileHover.getDrawable().setMinWidth(Map.TILE_WIDTH_PIXEL);
+    	onTileHover.setSize((Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH), (Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT));
+    	onTileHover.getDrawable().setMinHeight((Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT));
+    	onTileHover.getDrawable().setMinWidth((Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH));
     }
 
     public void render(float delta) {

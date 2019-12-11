@@ -52,7 +52,8 @@ public class DeploymentBattleState implements BattleState{
         	
     		if((unitsSortedByInitiative != null) && (deployingUnitNumber < unitsSortedByInitiative.length)) {
     			deployUnit(newPosition);
-    			actor.setIsFreeSpawn(false);  			
+    			actor.setIsFreeSpawn(false); 
+    			ParticleMaker.deactivateParticle(ParticleMaker.getParticle(ParticleType.SPAWN, newPosition));
     			nextDeployment();
     		}else {
     			Gdx.app.debug(TAG, "can't deploy unit, units is null or activeunitindex is > the length of units");

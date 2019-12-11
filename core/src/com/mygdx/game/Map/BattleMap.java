@@ -5,14 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Audio.AudioObserver;
@@ -79,42 +74,26 @@ public class BattleMap extends Map{
                 TiledMapPosition spawnPos = new TiledMapPosition().setPositionFromTiled(playerStartPositionRect.x,playerStartPositionRect.y);
             	startPositions.add(spawnPos);
                 
-                //tag tiles that can be used as spawns
             	TiledMapActor tiledactor = getActorAtScreenCoordinate(spawnPos);
                 
                 if(tiledactor != null) {
+                	tiledactor.debug();
                 	tiledactor.setIsFreeSpawn(true);
                 }
             }
         }        
     }
     
-	public void drawActorsDebug() {
-		ShapeRenderer debugRenderer = new ShapeRenderer();
-        debugRenderer.setProjectionMatrix(this.getTiledMapStage().getCamera().combined);
-        debugRenderer.setColor(Color.RED);
-        debugRenderer.begin(ShapeType.Line);
-        
-    	for(TiledMapPosition pos : unitSpawnPositions) {
-    		TiledMapActor actor = getActorAtScreenCoordinate(pos);
-        	// While resizing the screen, the actor wont be available until letting go of the resize.
-        	if ( actor != null ) {
-        	    actor.debug();
-                actor.drawDebug(debugRenderer);
-            }
-    	}
-		debugRenderer.end();
-	}
-
 	private TiledMapActor getActorAtScreenCoordinate(TiledMapPosition pos) {
 		Array<Actor> actors = tiledmapstage.getActors();
 		
 		for(Actor actor : actors) {
-			TiledMapPosition actorPos = new TiledMapPosition().setPositionFromOriginal(actor.getX(), actor.getY());
+			TiledMapPosition actorPos = new TiledMapPosition().setPositionFromTiles((int)actor.getX(), (int)actor.getY());
 			if((actorPos.getRealScreenX() == pos.getRealScreenX()) &&  (actorPos.getRealScreenY() == pos.getRealScreenY())){
 				return (TiledMapActor) actor;
 			}
 		}
+		
 		return null;
 	}
     
@@ -141,7 +120,6 @@ public class BattleMap extends Map{
     public void dispose() {
     	initializeClassVariables();
     }
-
 
     @Override
     public void unloadMusic() {
