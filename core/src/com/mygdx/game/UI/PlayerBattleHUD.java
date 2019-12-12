@@ -45,7 +45,7 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
 		statusUIs = new StatusUI[sortedUnits.length];
     	actionUIs = new ActionsUI[sortedUnits.length];
         stage = new Stage(new ScreenViewport(camera));
-        stage.setDebugAll(true);
+        stage.setDebugAll(false);
 	}
 	
 	private void createTileHoverParticle() {
