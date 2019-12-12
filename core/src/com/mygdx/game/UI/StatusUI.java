@@ -58,8 +58,8 @@ public class StatusUI extends Window {
 
     private Entity linkedEntity;
     
-	private int statsUIOffsetX = 1;
-	private int statsUIOffsetY = 1;
+	private int statsUIOffsetX = 32;
+	private int statsUIOffsetY = 32;
 	
 	private static final int WIDTH_TILES = 7;
 	private static final int HEIGHT_TILES = 7; 
@@ -145,7 +145,7 @@ public class StatusUI extends Window {
     }
     
     private void addElementsToWindow() {
-        this.pad(0, 1, 1, 1);
+        this.pad(0, 10, 10, 10);
         
         this.add(heroName);
         this.row();
@@ -185,7 +185,7 @@ public class StatusUI extends Window {
         }
         
         //we offset the position a little bit to make it look better
-        this.setPosition((linkedEntity.getCurrentPosition().getTileX()) + statsUIOffsetX, (linkedEntity.getCurrentPosition().getTileY()) + statsUIOffsetY);
+        this.setPosition((linkedEntity.getCurrentPosition().getRealScreenX()) + statsUIOffsetX, (linkedEntity.getCurrentPosition().getRealScreenY()) + statsUIOffsetY);
 
     }
 
@@ -205,13 +205,13 @@ public class StatusUI extends Window {
 	}
 	
 	private void updateSize() {
-		this.setSize(WIDTH_TILES, HEIGHT_TILES );
+		this.setSize(WIDTH_TILES * (Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH), HEIGHT_TILES * (Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT));
 		loadingBar.setWidth(((float)linkedEntity.getHp() / (float)linkedEntity.getMaxHp()) * bar.getWidth());
 		loadingBarBackground.setWidth(bar.getWidth());
     	for(Actor actor : this.getChildren()) {
     		if(actor.getClass() == Label.class) {
             	Label label = (Label) actor;
-            	label.setFontScale(50 * 0.0015f, 50 * 0.0015f);
+            	label.setFontScale(Gdx.graphics.getWidth() * 0.0015f, Gdx.graphics.getHeight() * 0.0015f);
     		}
     	}
 	}

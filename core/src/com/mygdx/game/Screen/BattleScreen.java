@@ -35,8 +35,8 @@ import Utility.TiledMapPosition;
 public class BattleScreen extends GameScreen implements EntityObserver {
 	private static final String TAG = BattleScreen.class.getSimpleName();
 	
-	public static final int VISIBLE_WIDTH = 50; 
-	public static final int VISIBLE_HEIGHT = 50; 
+	public static final int VISIBLE_WIDTH = 20; 
+	public static final int VISIBLE_HEIGHT = 20; 
 
 	private ArrayList<Owner> players;
 	private OrthogonalTiledMapRenderer mapRenderer = null;
@@ -168,7 +168,6 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		map.makeSpawnParticles();
 		StretchViewport vp = new StretchViewport(VISIBLE_WIDTH, VISIBLE_HEIGHT, camera);
 		map.getTiledMapStage().setViewport(vp);
-		playerBattleHUD.getStage().setViewport(vp);
 
 	}
 

@@ -78,8 +78,8 @@ public class PortraitsUI extends Window {
 	}
 
 	public void updateSizeContainer() {
-		portraitsHeight = PORTRAIT_HEIGHT ;
-		portraitsWidth = 50;
+		portraitsHeight = PORTRAIT_HEIGHT * (Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT);
+		portraitsWidth = Gdx.graphics.getWidth();
 		this.setSize(portraitsWidth, portraitsHeight);
 		
 		updateSizePortraits();
@@ -87,7 +87,7 @@ public class PortraitsUI extends Window {
 	
 	private void updateSizePortraits() {
 		updatePositionContainer();
-		float newWidth = PORTRAIT_WIDTH ;
+		float newWidth = PORTRAIT_WIDTH * (Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH);
 		for(PortraitUI portrait : portraits) {
 			portrait.getHeroPortraitScalable().setMinHeight(portraitsHeight);
 			portrait.getHeroPortraitScalable().setMinWidth(newWidth);
@@ -100,9 +100,9 @@ public class PortraitsUI extends Window {
 	}
 	
 	private void updatePositionContainer() {
-		float currentPortraitsHeight = PORTRAITS_TOP_PADDING ;
+		float currentPortraitsHeight = PORTRAITS_TOP_PADDING * (Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT);
 		float xPos = 0;
-		float yPos = 50 - currentPortraitsHeight;
+		float yPos = Gdx.graphics.getHeight() - currentPortraitsHeight;
 		this.setPosition(xPos, yPos);
 	}
 

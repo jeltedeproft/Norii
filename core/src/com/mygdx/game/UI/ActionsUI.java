@@ -82,11 +82,11 @@ public class ActionsUI extends Table {
     public void update() {
     	this.setVisible(linkedEntity.isActive());
     	
-    	iconWidth = 1;
-    	iconHeight = 1;
+    	iconWidth = 32;
+    	iconHeight = 32;
     	this.setSize(BAR_LENGTH * iconWidth, NUMBER_OF_BARS * iconHeight);
         //we offset the position a little bit to make it look better
-        this.setPosition((linkedEntity.getCurrentPosition().getTileX()) + iconWidth, (linkedEntity.getCurrentPosition().getTileY()) + iconHeight); 
+        this.setPosition((linkedEntity.getCurrentPosition().getRealScreenX()) + iconWidth, (linkedEntity.getCurrentPosition().getRealScreenY()) + iconHeight); 
     }
 }
 
