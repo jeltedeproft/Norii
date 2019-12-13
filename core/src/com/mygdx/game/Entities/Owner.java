@@ -4,9 +4,9 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
+import com.badlogic.gdx.graphics.g2d.Batch;
+
 public abstract class Owner {
-	private static final String TAG = Owner.class.getSimpleName();
-	
 	private List<Entity> team;
 	private EntityStage entityStage;
 	
@@ -30,6 +30,14 @@ public abstract class Owner {
 	public void updateUnits(float delta) {
 		for(Entity entity : team) {
 			entity.update(delta);
+		}
+	}
+	
+	public void renderUnits(Batch batch) {
+		for (Entity entity : team) {
+			if(entity.isInBattle()) {
+				batch.draw(entity.getFrame(), entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY(), 1f,1f);
+			}
 		}
 	}
 	

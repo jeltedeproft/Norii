@@ -5,8 +5,6 @@ import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Entities.InputController;
 
 public class BattleManager {
-	private static final String TAG = BattleManager.class.getSimpleName();
-	
 	private BattleState deploymentBattleState;
 	private BattleState movementBattleState;
 	private BattleState attackBattleState;
@@ -45,14 +43,12 @@ public class BattleManager {
 		activeUnit.setFocused(false);
 		if(controller == null) {
 			controller = new InputController(activeUnit);
-			activeUnit.setFocused(true);
 		}else {
 			activeUnitIndex = (activeUnitIndex+1) % numberOfUnits;
 			activeUnit = sortedUnits[activeUnitIndex];
 			controller.changePlayer(activeUnit);
-			activeUnit.setFocused(true);
 		}
-		
+		activeUnit.setFocused(true);
 		activeUnit.setMp(activeUnit.getMaxMp());
 		activeUnit.setActive(true);
 	}

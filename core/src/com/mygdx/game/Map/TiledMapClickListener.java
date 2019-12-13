@@ -1,12 +1,10 @@
 package com.mygdx.game.Map;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class TiledMapClickListener extends ClickListener {
-	private static final String TAG = TiledMapClickListener.class.getSimpleName();
 
     private TiledMapActor actor;
     private TiledMapStage stage;
@@ -19,8 +17,6 @@ public class TiledMapClickListener extends ClickListener {
     @Override
     public void clicked(InputEvent event, float x, float y) {
     	stage.getBattlemanager().getCurrentBattleState().clickedOnTile(actor); 
-    	Gdx.app.debug(TAG, "clicked on : " + actor.getActorPos().getTileX() + " , " + actor.getActorPos().getTileY());
-    	Gdx.app.debug(TAG, "clicked on : " + actor.getActorPos().getCameraX() + " , " + actor.getActorPos().getCameraY());
     }
     
     @Override

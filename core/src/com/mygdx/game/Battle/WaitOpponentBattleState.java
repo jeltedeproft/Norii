@@ -42,7 +42,6 @@ public class WaitOpponentBattleState implements BattleState {
 
 	@Override
 	public void clickedOnUnit(Entity entity) {
-		// TODO Auto-generated method stub
 		
 	}
 

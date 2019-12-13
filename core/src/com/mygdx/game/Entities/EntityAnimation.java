@@ -6,8 +6,6 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
-import com.mygdx.game.Entities.EntityAnimation.Direction;
-
 import Utility.TiledMapPosition;
 import Utility.Utility;
 
@@ -34,7 +32,6 @@ public class EntityAnimation {
 	protected Sprite frameSprite = null;
 	protected TextureRegion currentFrame = null;
 	private Direction currentDirection = Direction.DOWN;
-	private Direction previousDirection = Direction.UP;
 	
 	public enum State {
 		IDLE, WALKING
@@ -128,7 +125,6 @@ public class EntityAnimation {
 	}
 	
 	public void setDirection(Direction direction){
-		this.previousDirection = this.currentDirection;
 		this.currentDirection = direction;
 		updateFrame();
 	}

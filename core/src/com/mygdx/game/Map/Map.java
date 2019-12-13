@@ -16,20 +16,14 @@ import Utility.Utility;
 public abstract class Map implements AudioSubject{
     private static final String TAG = Map.class.getSimpleName();
 
-    //maybe remove final and make this automatic based on map + change name
     public static final float UNIT_SCALE  = 1/32f;
     public static final int TILE_HEIGHT  = 32;
     public static final int TILE_WIDTH  = 32;
-    public static float TILE_HEIGHT_PIXEL  = 32.0f;
-    public static float TILE_WIDTH_PIXEL  = 32.0f;
-    public static int TILEMAP_WIDTH_IN_TILES  = 32;
-    public static int TILEMAP_HEIGHT_IN_TILES  = 32;
-	public static float xScaleDifference = 1;
-	public static float yScaleDifference = 1;
+    private int tilemapWidthInTiles  = 32;
+    private int tilemapHeightInTiles  = 32;
     
     private Array<AudioObserver> observers;
 
-    //Map layers
     protected static final String MAP_COLLISION_LAYER = "items";
     protected static final String MAP_SPAWNS_LAYER = "Spawn points";
     protected static final String BACKGROUND_LAYER = "background";
@@ -47,8 +41,6 @@ public abstract class Map implements AudioSubject{
 	protected MyPathFinder pathfinder;
 
 	protected MapFactory.MapType currentMapType;
-    
-    //props
     protected MapProperties prop;
 
 	protected int mapWidth;
@@ -87,18 +79,10 @@ public abstract class Map implements AudioSubject{
 		tilePixelWidth = prop.get("tilewidth", Integer.class);
 		tilePixelHeight = prop.get("tileheight", Integer.class);
 		
-		TILEMAP_WIDTH_IN_TILES = mapWidth;
-		TILEMAP_HEIGHT_IN_TILES = mapHeight;
-		
-		updatePixelDimensions();
+		tilemapWidthInTiles = mapWidth;
+		tilemapHeightInTiles = mapHeight;
     }
     
-    public void updatePixelDimensions() {
-    	xScaleDifference = (Gdx.graphics.getWidth() / (float) mapWidth) / TILE_WIDTH_PIXEL;
-    	yScaleDifference = (Gdx.graphics.getHeight() / (float) mapWidth) / TILE_HEIGHT_PIXEL;
-		TILE_WIDTH_PIXEL = Gdx.graphics.getWidth() / (float) mapWidth;
-		TILE_HEIGHT_PIXEL = Gdx.graphics.getHeight() / (float) mapHeight;
-    }
     
     private void disposeMapAndStage() {
         if( currentMap != null ){
@@ -152,6 +136,14 @@ public abstract class Map implements AudioSubject{
 		
     public MyPathFinder getPathfinder() {
 		return pathfinder;
+	}
+
+	public int getTilemapWidthInTiles() {
+		return tilemapWidthInTiles;
+	}
+
+	public int getTilemapHeightInTiles() {
+		return tilemapHeightInTiles;
 	}
 
 	public abstract void unloadMusic();

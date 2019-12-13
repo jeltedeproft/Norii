@@ -4,10 +4,7 @@ import java.util.List;
 
 import org.xguzm.pathfinding.grid.GridCell;
 
-import com.badlogic.gdx.Gdx;
 import com.mygdx.game.Entities.Entity;
-import com.mygdx.game.Entities.EntityActor;
-import com.mygdx.game.Map.Map;
 import com.mygdx.game.Map.TiledMapActor;
 import com.mygdx.game.Particles.ParticleMaker;
 import com.mygdx.game.Particles.ParticleType;
@@ -15,8 +12,6 @@ import com.mygdx.game.Particles.ParticleType;
 import Utility.TiledMapPosition;
 
 public class MovementBattleState implements BattleState{
-	private static final String TAG = MovementBattleState.class.getSimpleName();
-	
 	private BattleManager battlemanager;
 	private Entity currentUnit;
 	
@@ -102,6 +97,6 @@ public class MovementBattleState implements BattleState{
 
 	@Override
 	public void clickedOnUnit(Entity entity) {
-		// TODO Auto-generated method stub	
+			
 	}
 }

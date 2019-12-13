@@ -6,8 +6,6 @@ import com.mygdx.game.Particles.ParticleMaker;
 import com.mygdx.game.Particles.ParticleType;
 
 public class AttackBattleState implements BattleState{
-	private static final String TAG = AttackBattleState.class.getSimpleName();
-	
 	private BattleManager battlemanager;
 
 	public AttackBattleState(BattleManager battlemanager){

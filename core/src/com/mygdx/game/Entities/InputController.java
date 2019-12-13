@@ -10,9 +10,6 @@ import com.mygdx.game.Entities.EntityAnimation.State;
 
 
 public class InputController implements InputProcessor {
-
-	private static final String TAG = InputController.class.getSimpleName();
-
 	enum Keys {
 		LEFT, RIGHT, UP, DOWN, QUIT
 	}
@@ -103,10 +100,10 @@ public class InputController implements InputProcessor {
 		}
 
 		if( button == Input.Buttons.LEFT){
-			this.selectMouseButtonPressed(screenX, screenY);
+			this.selectMouseButtonPressed();
 		}
 		if( button == Input.Buttons.RIGHT){
-			this.doActionMouseButtonPressed(screenX, screenY);
+			this.doActionMouseButtonPressed();
 		}
 		return true;
 	}
@@ -114,10 +111,10 @@ public class InputController implements InputProcessor {
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 		if( button == Input.Buttons.LEFT){
-			this.selectMouseButtonReleased(screenX, screenY);
+			this.selectMouseButtonReleased();
 		}
 		if( button == Input.Buttons.RIGHT){
-			this.doActionMouseButtonReleased(screenX, screenY);
+			this.doActionMouseButtonReleased();
 		}
 		return true;
 	}
@@ -165,11 +162,11 @@ public class InputController implements InputProcessor {
 		lastMouseCoordinates.set(x, y, 0);
 	}
 	
-	public void selectMouseButtonPressed(int x, int y){
+	public void selectMouseButtonPressed(){
 		mouseButtons.put(Mouse.SELECT, true);
 	}
 	
-	public void doActionMouseButtonPressed(int x, int y){
+	public void doActionMouseButtonPressed(){
 		mouseButtons.put(Mouse.DOACTION, true);
 	}
 	
@@ -195,11 +192,11 @@ public class InputController implements InputProcessor {
 		keys.put(Keys.QUIT, false);
 	}
 	
-	public void selectMouseButtonReleased(int x, int y){
+	public void selectMouseButtonReleased(){
 		mouseButtons.put(Mouse.SELECT, false);
 	}
 	
-	public void doActionMouseButtonReleased(int x, int y){
+	public void doActionMouseButtonReleased(){
 		mouseButtons.put(Mouse.DOACTION, false);
 	}
 	
@@ -217,8 +214,6 @@ public class InputController implements InputProcessor {
 	}
 	
 	private void processInput(){
-		
-		//Keyboard input
 		if( keys.get(Keys.LEFT)){
 			unit.setState(State.WALKING);
 			unit.setDirection(Direction.LEFT);
@@ -237,7 +232,6 @@ public class InputController implements InputProcessor {
 			unit.setState(State.IDLE);
 		}
 		
-		//Mouse input
 		if( mouseButtons.get(Mouse.SELECT)) {
 			mouseButtons.put(Mouse.SELECT, false);
 		}

@@ -8,8 +8,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Audio.AudioObserver;
 import com.mygdx.game.Battle.BattleManager;
 import com.mygdx.game.Particles.ParticleMaker;
@@ -22,10 +20,8 @@ public class BattleMap extends Map{
     private static final String TAG = BattleMap.class.getSimpleName();
 
     private ArrayList<TiledMapPosition> unitSpawnPositions;
-    
     protected Vector2 playerStartPositionRect;
     protected TiledMapPosition convertedUnits;
-
 
     BattleMap(String mapPath){
         super(MapFactory.MapType.BATTLE_MAP, mapPath);
@@ -47,8 +43,7 @@ public class BattleMap extends Map{
     	unitSpawnPositions = new ArrayList<TiledMapPosition>();
     	playerStartPositionRect = new Vector2(0,0);
     	convertedUnits = new TiledMapPosition();
-    	
-    	
+    	  	
         spawnsLayer = currentMap.getLayers().get(MAP_SPAWNS_LAYER);
         navLayer = (MyNavigationTiledMapLayer) currentMap.getLayers().get(NAVIGATION_LAYER);
         pathfinder = new MyPathFinder(this);
@@ -57,10 +52,10 @@ public class BattleMap extends Map{
     public void setStage(BattleManager battlemanager) {
     	tiledmapstage = new TiledMapStage(this,BACKGROUND_LAYER,battlemanager);
     	
-        if( spawnsLayer == null ){
+        if(spawnsLayer == null){
             Gdx.app.debug(TAG, "No spawn layer!");
         }else{
-            if( unitSpawnPositions.isEmpty() ){
+            if(unitSpawnPositions.isEmpty()){
                 fillSpawnPositions(unitSpawnPositions);
             }
         }
@@ -69,7 +64,6 @@ public class BattleMap extends Map{
     private void fillSpawnPositions(final ArrayList<TiledMapPosition> startPositions){
         for( MapObject object: spawnsLayer.getObjects()){
             if( object.getName().equalsIgnoreCase(PLAYER_START) ){
-            	
                 ((RectangleMapObject)object).getRectangle().getPosition(playerStartPositionRect);
                 TiledMapPosition spawnPos = new TiledMapPosition().setPositionFromTiled(playerStartPositionRect.x,playerStartPositionRect.y);
             	startPositions.add(spawnPos);
@@ -77,7 +71,6 @@ public class BattleMap extends Map{
             	TiledMapActor tiledactor = getActorAtScreenCoordinate(spawnPos);
                 
                 if(tiledactor != null) {
-                	tiledactor.debug();
                 	tiledactor.setIsFreeSpawn(true);
                 }
             }
@@ -85,16 +78,7 @@ public class BattleMap extends Map{
     }
     
 	private TiledMapActor getActorAtScreenCoordinate(TiledMapPosition pos) {
-		Array<Actor> actors = tiledmapstage.getActors();
-		
-		for(Actor actor : actors) {
-			TiledMapPosition actorPos = new TiledMapPosition().setPositionFromTiles((int)actor.getX(), (int)actor.getY());
-			if((actorPos.getRealScreenX() == pos.getRealScreenX()) &&  (actorPos.getRealScreenY() == pos.getRealScreenY())){
-				return (TiledMapActor) actor;
-			}
-		}
-		
-		return null;
+		return tiledmapstage.getTiledMapActors()[pos.getTileX()][pos.getTileY()];
 	}
     
     public void makeSpawnParticles() {
@@ -104,22 +88,17 @@ public class BattleMap extends Map{
     }
     
 	public List<TiledMapPosition> getSpawnPositions(){
-    	@SuppressWarnings("unchecked")
-		ArrayList<TiledMapPosition> unitSpawns = (ArrayList<TiledMapPosition>) unitSpawnPositions.clone();
-        return unitSpawns;
+    	return unitSpawnPositions;
     }
     
     public TiledMapStage getTiledMapStage() {
     	return tiledmapstage;
     }
     
-    public MyNavigationTiledMapLayer  getNavLayer() {
+    @Override
+    public MyNavigationTiledMapLayer getNavLayer() {
 		return navLayer;
 	}
-    
-    public void dispose() {
-    	initializeClassVariables();
-    }
 
     @Override
     public void unloadMusic() {
@@ -130,6 +109,10 @@ public class BattleMap extends Map{
     public void loadMusic() {
         notify(AudioObserver.AudioCommand.MUSIC_LOAD, AudioObserver.AudioTypeEvent.MUSIC_BATTLE);
         notify(AudioObserver.AudioCommand.MUSIC_PLAY_LOOP, AudioObserver.AudioTypeEvent.MUSIC_BATTLE);
+    }
+    
+    public void dispose() {
+    	initializeClassVariables();
     }
 }
 

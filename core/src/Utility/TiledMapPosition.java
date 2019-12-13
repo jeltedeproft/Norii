@@ -59,13 +59,13 @@ public class TiledMapPosition {
 	public float getCameraX() {
 		OrthographicCamera cam = BattleScreen.getCamera();
 		float xDifference = cam.position.x - (cam.viewportWidth / 2);
-		return (float) (tileCoordinates.x - xDifference) * (Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH);
+		return (tileCoordinates.x - xDifference) * (Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH);
 	}
 	
 	public float getCameraY() {
 		OrthographicCamera cam = BattleScreen.getCamera();
 		float yDifference = cam.position.y - (cam.viewportHeight / 2);
-		return (float) (tileCoordinates.y - yDifference) * (Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT);
+		return (tileCoordinates.y - yDifference) * (Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT);
 	}
 	
 	public float getRealTiledX() {

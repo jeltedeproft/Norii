@@ -2,7 +2,6 @@ package com.mygdx.game.Entities;
 
 import java.util.List;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -10,11 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
-import com.mygdx.game.Screen.BattleScreen;
 
 public class EntityStage extends Stage {
-	private static final String TAG = EntityStage.class.getSimpleName();
-
     private List<Entity> entities;
 
     public EntityStage(List<Entity> entities) {

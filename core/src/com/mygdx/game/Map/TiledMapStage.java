@@ -1,18 +1,14 @@
 package com.mygdx.game.Map;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Battle.BattleManager;
 import Utility.TiledMapPosition;
 
 public class TiledMapStage extends Stage {
 	private static final String TAG = TiledMapStage.class.getSimpleName();
+	private TiledMapActor[][] actors;
     private Map tiledMap;
     private BattleManager battlemanager;
     
@@ -20,6 +16,7 @@ public class TiledMapStage extends Stage {
         this.tiledMap = tiledMap;
         this.battlemanager = battlemanager;
         TiledMapTileLayer tiledLayer = (TiledMapTileLayer) tiledMap.getCurrentTiledMap().getLayers().get(layername);
+        actors = new TiledMapActor[tiledLayer.getWidth()][tiledLayer.getHeight()];
         createActorsForLayer(tiledLayer);  
     }
 
@@ -36,6 +33,7 @@ public class TiledMapStage extends Stage {
             for (int y = 0; y < tiledLayer.getHeight(); y++) {
                 TiledMapTileLayer.Cell cell = tiledLayer.getCell(x, y);
                 TiledMapActor actor = new TiledMapActor(tiledMap, tiledLayer, cell);
+                actors[x][y] = actor;
                 
                 initiateActor(x, y, actor);
                 addEventListener(actor);
@@ -52,5 +50,9 @@ public class TiledMapStage extends Stage {
 	private void addEventListener(TiledMapActor actor) {
 		EventListener eventListener = new TiledMapClickListener(actor);
 		actor.addListener(eventListener);
+	}
+	
+	public TiledMapActor[][] getTiledMapActors(){
+		return this.actors;
 	}
 }

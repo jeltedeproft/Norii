@@ -14,8 +14,6 @@ import Utility.TiledMapPosition;
 import Utility.Utility;
 
 public class Entity extends Actor implements EntitySubject{
-	private static final String TAG = Entity.class.getSimpleName();
-	
 	private EntityData entityData;
 	
 	private int mp;
@@ -28,7 +26,6 @@ public class Entity extends Actor implements EntitySubject{
 	private boolean isInActionPhase;
 	private boolean isInDeploymentPhase;
 	private boolean isDead;
-	
 
 	protected TiledMapPosition nextPlayerPosition;
 	protected TiledMapPosition currentPlayerPosition;
@@ -44,7 +41,7 @@ public class Entity extends Actor implements EntitySubject{
 	private Array<EntityObserver> observers;
 	
 	public Entity(int id){
-		entityData = EntityFileReader.unitData.get(id);
+		entityData = EntityFileReader.getUnitData().get(id);
 		this.entityAnimation = new EntityAnimation(entityData.getEntitySpriteFilePath());
 		initEntity();
 	}
@@ -132,6 +129,10 @@ public class Entity extends Actor implements EntitySubject{
 	public void setEntityactor(EntityActor entityactor) {
 		this.entityactor = entityactor;
 	}
+	
+	public boolean isDead() {
+		return isDead;
+	}
 
 	public boolean isActive() {
 		return isActive;
@@ -150,7 +151,7 @@ public class Entity extends Actor implements EntitySubject{
 		this.isInMovementPhase = isInMovementPhase;
 		if(isInMovementPhase) {
 			actionsui.setVisible(false);			
-			this.notify(EntityCommand.IN_MOVEMENT);
+			this.notifyEntityObserver(EntityCommand.IN_MOVEMENT);
 		}
 	}
 	
@@ -162,7 +163,7 @@ public class Entity extends Actor implements EntitySubject{
 		this.isInAttackPhase = isInAttackPhase;
 		if(isInAttackPhase) {
 			actionsui.setVisible(false);			
-			this.notify(EntityCommand.IN_ATTACK_PHASE);
+			this.notifyEntityObserver(EntityCommand.IN_ATTACK_PHASE);
 		}
 	}
 	
@@ -203,7 +204,7 @@ public class Entity extends Actor implements EntitySubject{
 			actionsui.update();
 			actionsui.setVisible(true);			
 		}
-		this.notify(EntityCommand.IN_ACTION_PHASE);
+		this.notifyEntityObserver(EntityCommand.IN_ACTION_PHASE);
 	}
 	
 	public boolean isInDeploymentPhase() {
@@ -321,7 +322,7 @@ public class Entity extends Actor implements EntitySubject{
 	}	
 	
     @Override
-    public void addObserver(EntityObserver entityObserver) {
+    public void addEntityObserver(EntityObserver entityObserver) {
         observers.add(entityObserver);
     }
 
@@ -336,9 +337,9 @@ public class Entity extends Actor implements EntitySubject{
     }
 
     @Override
-    public void notify(EntityObserver.EntityCommand command) {
+    public void notifyEntityObserver(EntityObserver.EntityCommand command) {
         for(EntityObserver observer: observers){
-            observer.onNotify(command,this);
+            observer.onEntityNotify(command,this);
         }
     }
 
