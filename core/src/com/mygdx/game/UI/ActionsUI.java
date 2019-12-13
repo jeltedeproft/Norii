@@ -1,7 +1,6 @@
 package com.mygdx.game.UI;
 
 import com.mygdx.game.Entities.Entity;
-import com.mygdx.game.Map.Map;
 import com.mygdx.game.Screen.BattleScreen;
 
 import Utility.Utility;
@@ -12,21 +11,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 public class ActionsUI extends Table {
-	private static final String TAG = ActionsUI.class.getSimpleName();
-	
-    private float iconWidth = Gdx.graphics.getWidth() / 22.0f;
-    private float iconHeight = Gdx.graphics.getHeight() / 26.0f;
+    private float tileWidthPixel;
+    private float tileHeightPixel;
     private static final int BAR_LENGTH = 3;
     private static final int NUMBER_OF_BARS = 1;
 	
 	private static final String MOVE_BUTTON_SPRITEPATH = "sprites/gui/move.png";
 	private static final String ATTACK_BUTTON_SPRITEPATH = "sprites/gui/attack.png";
-	private static final String SPELL_BUTTON_SPRITEPATH = "sprites/gui/spell.png";
 	private static final String SKIP_BUTTON_SPRITEPATH = "sprites/gui/skip.png";
-	private static final String UPGRADE_BUTTON_SPRITEPATH = "sprites/gui/upgrade.png";
-	private static final String SPELL1_BUTTON_SPRITEPATH = "sprites/gui/spell1.jpg";
-	private static final String SPELL2_BUTTON_SPRITEPATH = "sprites/gui/spell2.jpg";
-	private static final String SPELL3_BUTTON_SPRITEPATH = "sprites/gui/spell3.png";
 	
     
     private MoveActionUIButton moveActionUIButton;
@@ -52,6 +44,9 @@ public class ActionsUI extends Table {
         this.linkedEntity = entity;
         entity.setActionsui(this);
         this.setVisible(false);
+        
+    	tileWidthPixel = (Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH);
+    	tileHeightPixel = (Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT);
 	}
 
 	private void createButtons() {
@@ -74,19 +69,19 @@ public class ActionsUI extends Table {
 	}
 
 	private void calculateSize() {
-        float actionsMenuWidth = iconWidth * BAR_LENGTH;
-        float actionsMenuHeight = iconHeight * NUMBER_OF_BARS;
+        float actionsMenuWidth = tileWidthPixel * BAR_LENGTH;
+        float actionsMenuHeight = tileHeightPixel * NUMBER_OF_BARS;
         this.setSize(actionsMenuWidth, actionsMenuHeight);
 	}
 
     public void update() {
     	this.setVisible(linkedEntity.isActive());
     	
-    	iconWidth = (Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH);
-    	iconHeight = (Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT);
-    	this.setSize(BAR_LENGTH * iconWidth, NUMBER_OF_BARS * iconHeight);
+    	tileWidthPixel = (Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH);
+    	tileHeightPixel = (Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT);
+    	this.setSize(BAR_LENGTH * tileWidthPixel, NUMBER_OF_BARS * tileHeightPixel);
         //we offset the position a little bit to make it look better
-        this.setPosition((linkedEntity.getCurrentPosition().getCameraX()) + iconWidth, (linkedEntity.getCurrentPosition().getCameraY()) + iconHeight); 
+        this.setPosition((linkedEntity.getCurrentPosition().getCameraX()) + tileWidthPixel, (linkedEntity.getCurrentPosition().getCameraY()) + tileHeightPixel); 
     }
 }
 

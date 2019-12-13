@@ -8,8 +8,6 @@ import com.mygdx.game.Entities.Entity;
 import Utility.Utility;
 
 public class PortraitUI {
-	private static final String TAG = PortraitUI.class.getSimpleName();
-
 	private Image heroPortrait;
 	private Image heroPortraitBorder;
 	private TextureRegionDrawable heroPortraitScalable;

@@ -13,10 +13,12 @@ public class ParticleEffectActor extends Actor {
         super();
         this.particleEffect = particleEffect;
     }
+    
     @Override
     public void draw(Batch batch, float parentAlpha) {
         particleEffect.draw(batch);
     }
+    
     @Override
     public void act(float delta) {
         super.act(delta);
@@ -25,9 +27,11 @@ public class ParticleEffectActor extends Actor {
         particleEffect.setPosition(acc.x, acc.y);
         particleEffect.update(delta);
     }
+    
     public void start() {
         particleEffect.start();
     }
+    
     public void allowCompletion() {
         particleEffect.allowCompletion();
     }

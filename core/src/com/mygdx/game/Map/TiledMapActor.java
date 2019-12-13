@@ -3,15 +3,11 @@ package com.mygdx.game.Map;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
-import com.mygdx.game.Entities.EntityObserver;
-import com.mygdx.game.Entities.EntityObserver.EntityCommand;
 import com.mygdx.game.Map.TiledMapObserver.TilemapCommand;
 
 import Utility.TiledMapPosition;
 
 public class TiledMapActor extends Actor implements TiledMapSubject{
-	private static final String TAG = TiledMapActor.class.getSimpleName();
-	
     private Map tiledMap;
     private TiledMapTileLayer tiledLayer;   
     private Boolean isFreeSpawn;

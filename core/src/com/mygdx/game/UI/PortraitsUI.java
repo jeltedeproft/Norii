@@ -1,9 +1,6 @@
 package com.mygdx.game.UI;
 
 import com.mygdx.game.Entities.Entity;
-import com.mygdx.game.Map.Map;
-import com.mygdx.game.Screen.BattleScreen;
-
 import Utility.Utility;
 
 import java.util.ArrayList;
@@ -11,26 +8,24 @@ import java.util.ArrayList;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
-import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
-import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.Align;
 
 public class PortraitsUI extends Window {
-	private static final String TAG = PortraitsUI.class.getSimpleName();
-
 	private ArrayList<PortraitUI> portraits;
 	private ArrayList<Stack> stacks;
-	private Entity[] entities;
 	private HorizontalGroup hgroup;
 
 	private static final float PORTRAITS_TOP_PADDING = 3;
-	private static final float PORTRAIT_WIDTH = 3.0f;
-	private static final float PORTRAIT_HEIGHT = 3.0f;
+	private static final int PORTRAIT_WIDTH = 3;
+	private static final int PORTRAIT_HEIGHT = 3;
 	private static final int ALPHA = 30; 
 	
+    private static final int TILE_TO_PIXEL_RATIO = 25;
+	
+    private float tileWidthPixel;
+    private float tileHeightPixel;
 	private float portraitsHeight;
 	private float portraitsWidth;
 
@@ -42,43 +37,61 @@ public class PortraitsUI extends Window {
 	}
 	
 	private void initializeVariables(Entity[] entities) {
-		this.entities = entities;
 		portraits = new ArrayList<PortraitUI>();
 		stacks = new ArrayList<Stack>();
 		hgroup = new HorizontalGroup();
+    	tileWidthPixel = Gdx.graphics.getWidth() / (float) TILE_TO_PIXEL_RATIO;
+    	tileHeightPixel = Gdx.graphics.getHeight() / (float) TILE_TO_PIXEL_RATIO;
 		
+		configureWindow();
+        setFadeEffectBackground();
+		configureHorizontalGroup();
+		createPortraits(entities);
+		updatePositionContainer();
+	}
+
+	private void configureWindow() {
 		this.setTransform(true);
 		this.align(Align.bottomLeft);
 		this.add(hgroup);
 		this.pad(0);
-		
-        Color newColor = this.getColor();
+	}
+
+	private void setFadeEffectBackground() {
+		Color newColor = this.getColor();
         newColor.a = ALPHA;
         this.setColor(newColor);
-		
+	}
+
+	private void configureHorizontalGroup() {
 		hgroup.setFillParent(true);
 		hgroup.align(Align.bottomLeft);
 		hgroup.pad(0);
-
-		createPortraits(entities);
-		updatePositionContainer();
 	}
 	
 	private void createPortraits(Entity[] entities) {
 		for(Entity entity : entities) {
-			PortraitUI portrait = new PortraitUI(entity);
-			portraits.add(portrait);
-			
-			Stack stack = new Stack();
-			stack.addActor(portrait.getHeroPortrait());
-			stack.addActor(portrait.getHeroPortraitBorder());
-			stacks.add(stack);
-			hgroup.addActor(stack);
+			PortraitUI portrait = addPortrait(entity);		
+			addStackPortraitBorder(portrait);
 		}
 	}
 
+	private PortraitUI addPortrait(Entity entity) {
+		PortraitUI portrait = new PortraitUI(entity);
+		portraits.add(portrait);
+		return portrait;
+	}
+
+	private void addStackPortraitBorder(PortraitUI portrait) {
+		Stack stack = new Stack();
+		stack.addActor(portrait.getHeroPortrait());
+		stack.addActor(portrait.getHeroPortraitBorder());
+		stacks.add(stack);
+		hgroup.addActor(stack);
+	}
+
 	public void updateSizeContainer() {
-		portraitsHeight = PORTRAIT_HEIGHT * (Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT);
+		portraitsHeight = PORTRAIT_HEIGHT * tileHeightPixel;
 		portraitsWidth = Gdx.graphics.getWidth();
 		this.setSize(portraitsWidth, portraitsHeight);
 		
@@ -86,21 +99,28 @@ public class PortraitsUI extends Window {
 	}
 	
 	private void updateSizePortraits() {
-		updatePositionContainer();
-		float newWidth = PORTRAIT_WIDTH * (Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH);
+		updatePositionContainer();		
+		updatePortraits();		
+		updateStacks();
+	}
+	
+	private void updatePortraits() {
 		for(PortraitUI portrait : portraits) {
 			portrait.getHeroPortraitScalable().setMinHeight(portraitsHeight);
-			portrait.getHeroPortraitScalable().setMinWidth(newWidth);
+			portrait.getHeroPortraitScalable().setMinWidth(PORTRAIT_WIDTH * tileWidthPixel);
 			portrait.getHeroPortraitScalableBorder().setMinHeight(portraitsHeight);
-			portrait.getHeroPortraitScalableBorder().setMinWidth(newWidth);
+			portrait.getHeroPortraitScalableBorder().setMinWidth(PORTRAIT_WIDTH * tileWidthPixel);
 		}
+	}
+
+	private void updateStacks() {
 		for(Stack stack : stacks) {
-			stack.setSize(newWidth, portraitsHeight);
+			stack.setSize(PORTRAIT_WIDTH * tileWidthPixel, portraitsHeight);
 		}
 	}
 	
 	private void updatePositionContainer() {
-		float currentPortraitsHeight = PORTRAITS_TOP_PADDING * (Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT);
+		float currentPortraitsHeight = PORTRAITS_TOP_PADDING * tileHeightPixel;
 		float xPos = 0;
 		float yPos = Gdx.graphics.getHeight() - currentPortraitsHeight;
 		this.setPosition(xPos, yPos);

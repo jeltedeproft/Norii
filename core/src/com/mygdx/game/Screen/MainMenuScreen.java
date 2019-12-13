@@ -9,13 +9,11 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -31,13 +29,12 @@ import com.mygdx.game.Entities.Owner;
 import com.mygdx.game.Entities.Player;
 
 public class MainMenuScreen extends GameScreen {
-	private static final String TAG = MainMenuScreen.class.getSimpleName();
-	
 	public static final int FRAME_WIDTH = 200;
 	public static final int FRAME_HEIGHT = 200;
-	private static String defaultBackgroundPath = "sprites/gui/stars_bg/space2x3.png";
 	private static final int FRAME_COLS = 2;
 	private static final int FRAME_ROWS = 3;
+	
+	private static String defaultBackgroundPath = "sprites/gui/stars_bg/space2x3.png";
 
 	private Stage stage;
 	private Table mainMenuTableOfButtons;
@@ -91,8 +88,7 @@ public class MainMenuScreen extends GameScreen {
 	private void loadBackgroundSpritesIntoArray(){
 		Texture texture = Utility.getTextureAsset(defaultBackgroundPath);
 		TextureRegion[][] textureFrames = TextureRegion.split(texture, FRAME_WIDTH, FRAME_HEIGHT);
-		
-		
+				
 		bgFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
 		int index = 0;
 		for (int i = 0; i < FRAME_ROWS; i++) {
@@ -168,9 +164,9 @@ public class MainMenuScreen extends GameScreen {
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+		
 		updatebg(delta);
-		 
+		
 		stage.act(delta);
 		stage.draw();
 	}

@@ -18,6 +18,7 @@ public class MyNavigationTiledMapLayer extends MapLayer implements NavigationGri
 		this(null);
 	}
 	
+	@SuppressWarnings("deprecation")
 	public MyNavigationTiledMapLayer(GridCell[][] nodes){
 		navGrid = new NavigationGrid<GridCell>(nodes);
 	}

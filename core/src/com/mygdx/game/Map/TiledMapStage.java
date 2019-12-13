@@ -7,7 +7,6 @@ import com.mygdx.game.Battle.BattleManager;
 import Utility.TiledMapPosition;
 
 public class TiledMapStage extends Stage {
-	private static final String TAG = TiledMapStage.class.getSimpleName();
 	private TiledMapActor[][] actors;
     private Map tiledMap;
     private BattleManager battlemanager;
