@@ -20,7 +20,9 @@ public abstract class Owner {
 
 	public void setTeam(List<Entity> team) {
 		this.team = team;
+	}
 	
+	public void setStage() {
 		if(entityStage != null) this.entityStage.dispose();
 		this.entityStage = new EntityStage(team);
 	}
@@ -54,5 +56,6 @@ public abstract class Owner {
 		for (Entity entity : team) {
 			entity.dispose();
 		}
+		entityStage.dispose();
 	}
 }

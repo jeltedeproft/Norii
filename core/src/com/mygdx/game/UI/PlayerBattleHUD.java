@@ -111,6 +111,12 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
     	
     	stage.addActor(portraits);
 	}
+	
+	public void update() {
+		updateStatusUIs();
+		updateActionUIs();
+		updateHoverParticle();
+	}
 
     public Stage getStage() {
         return stage;

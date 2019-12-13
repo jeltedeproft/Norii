@@ -35,12 +35,12 @@ import Utility.TiledMapPosition;
 public class BattleScreen extends GameScreen implements EntityObserver {
 	private static final String TAG = BattleScreen.class.getSimpleName();
 	
-	public static final int VISIBLE_WIDTH = 20; 
-	public static final int VISIBLE_HEIGHT = 20; 
+	public static final int VISIBLE_WIDTH = 35; 
+	public static final int VISIBLE_HEIGHT = 35; 
 
 	private ArrayList<Owner> players;
 	private OrthogonalTiledMapRenderer mapRenderer = null;
-	private OrthographicCamera camera = null;
+	private static OrthographicCamera camera = null;
 	private MapManager mapMgr;
 	private BattleMap map;
 	private BattleManager battlemanager;
@@ -62,6 +62,7 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 
 	public BattleScreen(Object... params){
 		initializeVariables();
+		initializePlayerStage();
 		initializeHUD();
 		initializePauseMenu();
 		initializeInput(); 
@@ -72,6 +73,12 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 
 	private void initializeVariables() {
 		playerSortedUnits = Player.getInstance().getUnitsSortedByIni();
+		camera = new OrthographicCamera();
+		camera.setToOrtho(false, VISIBLE_WIDTH, VISIBLE_HEIGHT);
+	}
+	
+	private void initializePlayerStage() {
+		Player.getInstance().setStage();
 	}
 	
 	private void initializeHUD() {
@@ -146,6 +153,7 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 			float z = camera.position.z;
 			camera.position.set(x, y, z);
 		}
+		playerBattleHUD.update();
 	}
 
 	@Override
@@ -158,8 +166,7 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		
 		setupViewport(VISIBLE_WIDTH, VISIBLE_HEIGHT);
 		
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false, VISIBLE_WIDTH, VISIBLE_HEIGHT);
+
 		camera.position.set(map.getMapWidth()/2f, map.getMapHeight()/2f, 0f);
 		
 		mapRenderer = new OrthogonalTiledMapRenderer(mapMgr.getCurrentTiledMap(), Map.UNIT_SCALE);
@@ -168,7 +175,7 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		map.makeSpawnParticles();
 		StretchViewport vp = new StretchViewport(VISIBLE_WIDTH, VISIBLE_HEIGHT, camera);
 		map.getTiledMapStage().setViewport(vp);
-
+		Player.getInstance().getEntityStage().setViewport(vp);
 	}
 
 	@Override
@@ -178,6 +185,7 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 
 	@Override
 	public void render(float delta) {
+		Player.getInstance().getEntityStage().drawEntitiesDebug();
 		updateElements(delta);
 		renderElements(delta);
 		handleInput();
@@ -267,7 +275,7 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		for(Actor actor :  map.getTiledMapStage().getActors()) {
 			TiledMapActor tiledActor = (TiledMapActor) actor;
 			if(tiledActor.getIsHovered()) {
-				playerBattleHUD.getTileHoverImage().setPosition(tiledActor.getActorPos().getRealScreenX(), tiledActor.getActorPos().getRealScreenY());
+				playerBattleHUD.getTileHoverImage().setPosition(tiledActor.getActorPos().getCameraX(), tiledActor.getActorPos().getCameraY());
 			}
 		}
 	}
@@ -302,22 +310,17 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 	}
 
 	private static void setupViewport(int width, int height){
-		//part of display
 		VIEWPORT.virtualWidth = width;
 		VIEWPORT.virtualHeight = height;
 
-		//Current
 		VIEWPORT.viewportWidth = VIEWPORT.virtualWidth;
 		VIEWPORT.viewportHeight = VIEWPORT.virtualHeight;
 
-		//pixels screen
 		VIEWPORT.physicalWidth = Gdx.graphics.getWidth();
 		VIEWPORT.physicalHeight = Gdx.graphics.getHeight();
 
-		//aspect ratio for current viewport
 		VIEWPORT.aspectRatio = (VIEWPORT.virtualWidth / VIEWPORT.virtualHeight);
 
-		//update viewport if there could be skewing
 		if( VIEWPORT.physicalWidth / VIEWPORT.physicalHeight >= VIEWPORT.aspectRatio){
 			//Letterbox left and right
 			VIEWPORT.viewportWidth = VIEWPORT.viewportHeight * (VIEWPORT.physicalWidth/VIEWPORT.physicalHeight);
@@ -382,6 +385,10 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 			}
 		}
 		return false; 
+	}
+	
+	public static OrthographicCamera getCamera() {
+		return camera;
 	}
 }
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.3.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="50" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="16" nextobjectid="460">
+<map version="1.2" tiledversion="1.3.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="50" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="16" nextobjectid="461">
  <tileset firstgid="1" source="tilesets/terrain_atlas.tsx"/>
  <tileset firstgid="1025" source="obj_misk_atlas.tsx"/>
  <tileset firstgid="2049" source="base_out_atlas.tsx"/>
@@ -175,5 +175,6 @@
   <object id="457" name="PLAYER_START" x="640" y="160" width="32" height="32"/>
   <object id="458" name="PLAYER_START" x="704" y="160" width="32" height="32"/>
   <object id="459" name="PLAYER_START" x="768" y="160" width="32" height="32"/>
+  <object id="460" name="PLAYER_START" x="192" y="1408" width="32" height="32"/>
  </objectgroup>
 </map>

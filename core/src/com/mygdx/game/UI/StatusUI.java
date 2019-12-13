@@ -61,8 +61,8 @@ public class StatusUI extends Window {
 	private int statsUIOffsetX = 32;
 	private int statsUIOffsetY = 32;
 	
-	private static final int WIDTH_TILES = 7;
-	private static final int HEIGHT_TILES = 7; 
+	private static final int WIDTH_TILES = 8;
+	private static final int HEIGHT_TILES = 8; 
 	private static final int ALPHA = 30; 
 
     
@@ -185,7 +185,7 @@ public class StatusUI extends Window {
         }
         
         //we offset the position a little bit to make it look better
-        this.setPosition((linkedEntity.getCurrentPosition().getRealScreenX()) + statsUIOffsetX, (linkedEntity.getCurrentPosition().getRealScreenY()) + statsUIOffsetY);
+        this.setPosition((linkedEntity.getCurrentPosition().getCameraX()) + statsUIOffsetX, (linkedEntity.getCurrentPosition().getCameraY()) + statsUIOffsetY);
 
     }
 

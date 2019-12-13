@@ -82,11 +82,11 @@ public class ActionsUI extends Table {
     public void update() {
     	this.setVisible(linkedEntity.isActive());
     	
-    	iconWidth = 32;
-    	iconHeight = 32;
+    	iconWidth = (Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH);
+    	iconHeight = (Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT);
     	this.setSize(BAR_LENGTH * iconWidth, NUMBER_OF_BARS * iconHeight);
         //we offset the position a little bit to make it look better
-        this.setPosition((linkedEntity.getCurrentPosition().getRealScreenX()) + iconWidth, (linkedEntity.getCurrentPosition().getRealScreenY()) + iconHeight); 
+        this.setPosition((linkedEntity.getCurrentPosition().getCameraX()) + iconWidth, (linkedEntity.getCurrentPosition().getCameraY()) + iconHeight); 
     }
 }
 

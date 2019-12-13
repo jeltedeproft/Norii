@@ -33,7 +33,7 @@ public class EntityStage extends Stage {
 	private void initializeActor(EntityActor actor) {
 		Entity entity = actor.getEntity();
         //DANGER : I assume every entity has a 32x32 size
-        actor.setBounds(entity.getCurrentPosition().getRealScreenX(), entity.getCurrentPosition().getRealScreenY(), (Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH),(Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT));
+        actor.setBounds(entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY(), 1,1);
         addActor(actor);
         EventListener eventListener = new EntityClickListener(actor);
         actor.addListener(eventListener);

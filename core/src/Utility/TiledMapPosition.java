@@ -3,6 +3,7 @@ package Utility;
 import java.awt.Point;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.mygdx.game.Map.Map;
 import com.mygdx.game.Screen.BattleScreen;
 
@@ -55,6 +56,18 @@ public class TiledMapPosition {
 		return (float) tileCoordinates.y * (Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT);
 	}
 	
+	public float getCameraX() {
+		OrthographicCamera cam = BattleScreen.getCamera();
+		float xDifference = cam.position.x - (cam.viewportWidth / 2);
+		return (float) (tileCoordinates.x - xDifference) * (Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH);
+	}
+	
+	public float getCameraY() {
+		OrthographicCamera cam = BattleScreen.getCamera();
+		float yDifference = cam.position.y - (cam.viewportHeight / 2);
+		return (float) (tileCoordinates.y - yDifference) * (Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT);
+	}
+	
 	public float getRealTiledX() {
 		return (float) (tileCoordinates.x * Map.TILE_WIDTH);
 	}
@@ -64,11 +77,11 @@ public class TiledMapPosition {
 	}
 	
 	public float getRealOriginalX() {
-		return (float) tileCoordinates.x * (Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH);
+		return (float) tileCoordinates.x * (Gdx.graphics.getWidth() / ((float) BattleScreen.VISIBLE_WIDTH));
 	}
 	
 	public float getRealOriginalY() {
-		return (float) tileCoordinates.y * (Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT);
+		return (float) tileCoordinates.y * (Gdx.graphics.getHeight() / ((float) BattleScreen.VISIBLE_HEIGHT));
 	}
 	
 	public int getTileX() {

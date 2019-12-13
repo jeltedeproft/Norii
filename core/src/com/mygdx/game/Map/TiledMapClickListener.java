@@ -18,7 +18,9 @@ public class TiledMapClickListener extends ClickListener {
 
     @Override
     public void clicked(InputEvent event, float x, float y) {
-    	stage.getBattlemanager().getCurrentBattleState().clickedOnTile(actor);  
+    	stage.getBattlemanager().getCurrentBattleState().clickedOnTile(actor); 
+    	Gdx.app.debug(TAG, "clicked on : " + actor.getActorPos().getTileX() + " , " + actor.getActorPos().getTileY());
+    	Gdx.app.debug(TAG, "clicked on : " + actor.getActorPos().getCameraX() + " , " + actor.getActorPos().getCameraY());
     }
     
     @Override

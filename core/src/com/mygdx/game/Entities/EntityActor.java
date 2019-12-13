@@ -39,7 +39,6 @@ public class EntityActor extends Actor {
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                 setIsHovering(true);
-                Gdx.app.debug(TAG, "jooooooooooooooow");
             }
             
             @Override
@@ -50,7 +49,8 @@ public class EntityActor extends Actor {
     }
     
     public void setPos() {
-    	this.setBounds((entity.getCurrentPosition().getRealOriginalX()), (entity.getCurrentPosition().getRealOriginalY()), (Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH),(Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT));
+    	TiledMapPosition pos = entity.getCurrentPosition();
+    	this.setBounds((entity.getCurrentPosition().getTileX()), (entity.getCurrentPosition().getTileY()), 1,1);
     }
     
 	public TiledMapPosition getActorPos() {

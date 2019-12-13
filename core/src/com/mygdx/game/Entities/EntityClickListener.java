@@ -25,6 +25,7 @@ public class EntityClickListener extends ClickListener {
     public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
     	actor.setIsHovering(true);
     	actor.getEntity().getStatusui().setVisible(true);
+    	Gdx.app.debug(TAG, "hoverriinnggg");
     }
     
     @Override
