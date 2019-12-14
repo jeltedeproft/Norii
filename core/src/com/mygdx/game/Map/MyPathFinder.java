@@ -4,16 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.xguzm.pathfinding.grid.GridCell;
-import org.xguzm.pathfinding.grid.NavigationGrid;
 import org.xguzm.pathfinding.grid.NavigationGridGraph;
 import org.xguzm.pathfinding.grid.finders.AStarGridFinder;
 import org.xguzm.pathfinding.grid.finders.GridFinderOptions;
 
-import com.badlogic.gdx.Gdx;
-
 public class MyPathFinder{
-	private static final String TAG = MyPathFinder.class.getSimpleName();
-	
 	private NavigationGridGraph<GridCell> navGrid;
 	private GridFinderOptions opt;
 	private AStarGridFinder<GridCell> finder;

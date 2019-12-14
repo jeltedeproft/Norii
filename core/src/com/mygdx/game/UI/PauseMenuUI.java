@@ -22,7 +22,6 @@ import Utility.Utility;
 
 
 public class PauseMenuUI implements Screen {
-	private static final String TAG = PauseMenuUI.class.getSimpleName();
 	private static String defaultBackgroundPath = "maps/rpg/tiles/grass.png";
 	
     private Stage stage;
@@ -68,7 +67,6 @@ public class PauseMenuUI implements Screen {
 	}
 
 	private void addListeners() {
-		//Listeners
 		resumeButton.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {

@@ -3,7 +3,7 @@ package com.mygdx.game.Entities;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.mygdx.game.Map.Map;
+import com.mygdx.game.Entities.EntityObserver.EntityCommand;
 
 import Utility.TiledMapPosition;
 
@@ -47,7 +47,7 @@ public class EntityActor extends Actor {
     }
     
     public void setPos() {
-    	this.setBounds((entity.getCurrentPosition().getRealOriginalX()), (entity.getCurrentPosition().getRealOriginalY()), Map.ORIGINAL_TILE_WIDTH_PIXEL,Map.ORIGINAL_TILE_HEIGHT_PIXEL);
+    	this.setBounds((entity.getCurrentPosition().getTileX()), (entity.getCurrentPosition().getTileY()), 1,1);
     }
     
 	public TiledMapPosition getActorPos() {

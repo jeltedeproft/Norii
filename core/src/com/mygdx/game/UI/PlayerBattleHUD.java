@@ -1,40 +1,41 @@
+
 package com.mygdx.game.UI;
 
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.Entities.Entity;
-import com.mygdx.game.Map.Map;
 import com.mygdx.game.Profile.ProfileManager;
 import com.mygdx.game.Profile.ProfileObserver;
+import com.mygdx.game.Screen.BattleScreen;
 
 import Utility.Utility;
 
 
-public class PlayerBattleHUD implements Screen, ProfileObserver {
-	private static final String TAG = PlayerBattleHUD.class.getSimpleName();
-	
+public class PlayerBattleHUD extends Table implements ProfileObserver {
     private Stage stage;
     private PortraitsUI portraits;
     private StatusUI[] statusUIs;
     private BottomMenu bottomMenu;
-    private ActionsUI[] actionUIs;
+    private ActionsUI[] actionUIs;																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																							
+    
     private Image onTileHover;
 
 
     public PlayerBattleHUD(Camera camera,Entity[] sortedUnits) {
     	initVariables(camera, sortedUnits);
     	createTileHoverParticle();
-    	createActionUIs(sortedUnits);
-    	createStatusUIs(sortedUnits);
     	createBottomMenu(sortedUnits);
         createPortraits(sortedUnits);
+    	createActionUIs(sortedUnits);
+    	createStatusUIs(sortedUnits);
     }
 
 	private void initVariables(Camera camera, Entity[] sortedUnits) {
@@ -49,7 +50,7 @@ public class PlayerBattleHUD implements Screen, ProfileObserver {
 		TextureRegion tr = new TextureRegion(Utility.getTextureAsset(Utility.ON_TILE_HOVER_FILE_PATH));
 		TextureRegionDrawable trd = new TextureRegionDrawable(tr);
 		onTileHover = new Image(trd);
-		onTileHover.setPosition(-100, -100);
+		onTileHover.setPosition(-1, -1);
 		
 		stage.addActor(onTileHover);
 	}
@@ -107,7 +108,15 @@ public class PlayerBattleHUD implements Screen, ProfileObserver {
     	
     	stage.addActor(portraits);
 	}
+	
+	
+	public void update() {
+		updateStatusUIs();
+		updateActionUIs();
+		updateHoverParticle();
+	}
 
+	@Override
     public Stage getStage() {
         return stage;
     }
@@ -120,7 +129,7 @@ public class PlayerBattleHUD implements Screen, ProfileObserver {
 		return portraits;
 	}
 	
-    @Override
+
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
         portraits.updateSizeContainer();
@@ -143,46 +152,25 @@ public class PlayerBattleHUD implements Screen, ProfileObserver {
     }
     
     private void updateHoverParticle() {
-    	onTileHover.setSize(Map.TILE_WIDTH_PIXEL, Map.TILE_HEIGHT_PIXEL);
-    	onTileHover.getDrawable().setMinHeight(Map.TILE_HEIGHT_PIXEL);
-    	onTileHover.getDrawable().setMinWidth(Map.TILE_WIDTH_PIXEL);
+    	float tilePixelWidth = Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH;
+    	float tilePixelHeight = Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT;
+    	onTileHover.setSize(tilePixelWidth, tilePixelHeight);
+    	onTileHover.getDrawable().setMinHeight(tilePixelHeight);
+    	onTileHover.getDrawable().setMinWidth(tilePixelWidth);
     }
 
-    @Override
-    public void onNotify(ProfileManager profileManager, ProfileEvent event) {
-
-    }
-
-    @Override
-    public void show() {
-    }
-
-    @Override
     public void render(float delta) {
         stage.act(delta);
         stage.draw();
-    }
-    
+    }  
 
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void hide() {
-
-    }
-
-    @Override
     public void dispose() {
         stage.dispose();
     }
 
+	@Override
+	public void onNotify(ProfileManager profileManager, ProfileEvent event) {
+		
+	}
 }
 

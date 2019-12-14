@@ -1,11 +1,7 @@
 package com.mygdx.game.Entities;
 
-import com.badlogic.gdx.Game;
-
 public class Player extends Owner{
-	//SINGLETON
     private static Player instance;
-    private Game game;
  
 
     private Player() {
@@ -17,9 +13,5 @@ public class Player extends Owner{
             instance = new Player();
         }
         return instance;
-    }
- 
-    public void initialize(Game game) {
-        this.game = game;
     }
 }

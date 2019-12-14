@@ -1,7 +1,6 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Game;
-import com.mygdx.game.Entities.Player;
 import com.mygdx.game.Screen.ScreenEnum;
 import com.mygdx.game.Screen.ScreenManager;
 
@@ -10,10 +9,8 @@ public class Norii extends Game {
 	
 	@Override
 	public void create () {	
-        Player.getInstance().initialize(this);
-        
         ScreenManager.getInstance().initialize(this);
-        ScreenManager.getInstance().showScreen( ScreenEnum.MAIN_MENU); 
+        ScreenManager.getInstance().showScreen(ScreenEnum.MAIN_MENU); 
 	}
 	
 	@Override

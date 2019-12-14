@@ -4,7 +4,6 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
 
 public class ScreenManager {	 
-    // Singleton: unique instance
     private static ScreenManager instance;
     private Game game;
  

@@ -6,7 +6,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 
 public class EntityFileReader {
 	private static boolean statsLoaded = false;
-	public static ObjectMap<Integer, EntityData> unitData = new ObjectMap<Integer, EntityData>();
+	private static ObjectMap<Integer, EntityData> unitData = new ObjectMap<Integer, EntityData>();
 	
 	private EntityFileReader() {
 		
@@ -21,5 +21,9 @@ public class EntityFileReader {
 	            unitData.put(data.getID(), data);
 	        }
 		}
+	}
+	
+	public static ObjectMap<Integer, EntityData> getUnitData(){
+		return unitData;
 	}
 }

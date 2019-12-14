@@ -11,5 +11,5 @@ public interface EntityObserver {
         DIED
     }
     
-	void onNotify(EntityCommand command, Entity unit);
+	void onEntityNotify(EntityCommand command, Entity unit);
 }

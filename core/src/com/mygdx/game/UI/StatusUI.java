@@ -3,7 +3,7 @@ package com.mygdx.game.UI;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.Align;
 import com.mygdx.game.Entities.Entity;
-import com.mygdx.game.Map.Map;
+import com.mygdx.game.Screen.BattleScreen;
 
 import Utility.Utility;
 
@@ -12,18 +12,13 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class StatusUI extends Window {
-	private static final String TAG = StatusUI.class.getSimpleName();
-	
     private int levelVal;
     private int hpVal;
     private int mpVal;
@@ -57,29 +52,53 @@ public class StatusUI extends Window {
 
     private Entity linkedEntity;
     
-	private int statsUIOffsetX = 32;
-	private int statsUIOffsetY = 32;
+	private float statsUIOffsetX;
+	private float statsUIOffsetY;
 	
-	private static final int WIDTH_TILES = 7;
-	private static final int HEIGHT_TILES = 7; 
-	private static final int ALPHA = 30; 
+    private float tileWidthPixel;
+    private float tileHeightPixel;
+	
+	private static final int WIDTH_TILES = 8;
+	private static final int HEIGHT_TILES = 8; 
+	private static final int BAR_WIDTH = 100; 
+	private static final int BAR_HEIGHT = 20; 
+	
+	private static final int TILE_TO_PIXEL_RATIO = 20;
+	
+	private static final int ALPHA = 40; 
 
     
     public StatusUI(Entity entity){
         super("", Utility.getStatusUISkin());
-        this.setVisible(false);
-        this.linkedEntity = entity;
-        this.setResizable(true);
-        Color newColor = this.getColor();
-        newColor.a = ALPHA;
-        this.setColor(newColor);
-        entity.setStatusui(this);
-        
+        configureWindow(entity);      
+        setFadeBackgroundEffect(entity);      
+    	initPixelVariables();       
         initiateHeroStats();
         createElementsForUI();
         configureElements();
         addElementsToWindow();
     }
+
+	private void configureWindow(Entity entity) {
+		this.setVisible(false);
+        this.linkedEntity = entity;
+        this.setResizable(true);
+	}
+
+	private void setFadeBackgroundEffect(Entity entity) {
+		Color newColor = this.getColor();
+        newColor.a = ALPHA;
+        this.setColor(newColor);
+        entity.setStatusui(this);
+	}
+
+	private void initPixelVariables() {
+		statsUIOffsetX = Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH;
+    	statsUIOffsetY = Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT;
+        
+    	tileWidthPixel = Gdx.graphics.getWidth() / (float) TILE_TO_PIXEL_RATIO;
+    	tileHeightPixel = Gdx.graphics.getHeight() / (float) TILE_TO_PIXEL_RATIO;
+	}
     
     private void initiateHeroStats() {
         levelVal = this.linkedEntity.getLevel();
@@ -91,21 +110,35 @@ public class StatusUI extends Window {
     
     private void createElementsForUI() {
     	TextureAtlas statusUITextureAtlas = Utility.getStatusUITextureAtlas();
-    	BitmapFont font = Utility.getFreeTypeFontAsset("fonts/BLKCHCRY.ttf");
+    	createFont();
+        createGroups();
+        createImages(statusUITextureAtlas);      
+        createLabels();
+        
+        createDynamicHpBar();
+    }
+    
+	private void createFont() {
+		BitmapFont font = Utility.getFreeTypeFontAsset("fonts/BLKCHCRY.ttf");
     	labelStyle = new LabelStyle();
     	labelStyle.font = font;
-        
-        group = new WidgetGroup();
+	}
+    
+	private void createGroups() {
+		group = new WidgetGroup();
         group2 = new WidgetGroup();
         group3 = new WidgetGroup();
-
-        hpBar = new Image(statusUITextureAtlas.findRegion("HP_Bar"));
+	}
+	
+	private void createImages(TextureAtlas statusUITextureAtlas) {
+		hpBar = new Image(statusUITextureAtlas.findRegion("HP_Bar"));
         bar = new Image(statusUITextureAtlas.findRegion("Bar"));
         xpBar = new Image(statusUITextureAtlas.findRegion("XP_Bar"));
         bar3 = new Image(statusUITextureAtlas.findRegion("Bar"));
-        
-        heroName = new Label(linkedEntity.getName(),labelStyle);
-
+	}
+	
+	private void createLabels() {
+		heroName = new Label(linkedEntity.getName(),labelStyle);
         hpLabel = new Label(" hp:", labelStyle);
         hp = new Label(String.valueOf(hpVal), labelStyle);
         mpLabel = new Label(" mp:", labelStyle);
@@ -116,21 +149,23 @@ public class StatusUI extends Window {
         levelValLabel = new Label(String.valueOf(levelVal), labelStyle);
         iniLabel = new Label(" ini:", labelStyle);
         iniValLabel = new Label(String.valueOf(iniVal), labelStyle);
-        
-        //dynamic hp bar
+	}
+
+	private void createDynamicHpBar() {
         TextureAtlas skinAtlas = Utility.getUITextureAtlas();
         NinePatch loadingBarBackgroundPatch = new NinePatch(skinAtlas.findRegion("default-round"), 5, 5, 4, 4);
         NinePatch loadingBarPatch = new NinePatch(skinAtlas.findRegion("default-round-down"), 5, 5, 4, 4);
         loadingBar = new Image(loadingBarPatch);
         loadingBarBackground = new Image(loadingBarBackgroundPatch);
-    }
+	}
     
     private void configureElements() {
         hpBar.setPosition(3, 6);
         xpBar.setPosition(3, 6);
         loadingBar.setPosition(3, 6);
+        loadingBar.setWidth(BAR_WIDTH);
         loadingBarBackground.setPosition(3, 6);
-        loadingBarBackground.setWidth(bar.getWidth());
+        loadingBarBackground.setWidth(BAR_WIDTH);
 
         group.addActor(bar);
         group.addActor(hpBar);
@@ -151,7 +186,7 @@ public class StatusUI extends Window {
 
         this.add(hpLabel);
         this.add(hp);
-        this.add(group2).size(bar.getWidth(), bar.getHeight());
+        this.add(group2).size(BAR_WIDTH, BAR_HEIGHT);
         this.row();
 
         this.add(mpLabel);
@@ -168,13 +203,16 @@ public class StatusUI extends Window {
         
         this.add(xpLabel);
         this.add(xp);
-        this.add(group3).size(bar3.getWidth(), bar3.getHeight());
+        this.add(group3).size(BAR_WIDTH, BAR_HEIGHT);
         this.row();
 
         this.pack();
     }
     
     public void update() {
+    	tileWidthPixel = Gdx.graphics.getWidth() / (float) TILE_TO_PIXEL_RATIO;
+    	tileHeightPixel = Gdx.graphics.getHeight() / (float) TILE_TO_PIXEL_RATIO;
+    	
         updateStats();
         updateLabels();
         updateSize();
@@ -184,7 +222,7 @@ public class StatusUI extends Window {
         }
         
         //we offset the position a little bit to make it look better
-        this.setPosition((linkedEntity.getCurrentPosition().getRealScreenX()) + statsUIOffsetX, (linkedEntity.getCurrentPosition().getRealScreenY()) + statsUIOffsetY);
+        this.setPosition((linkedEntity.getCurrentPosition().getCameraX()) + statsUIOffsetX, (linkedEntity.getCurrentPosition().getCameraY()) + statsUIOffsetY);
 
     }
 
@@ -198,13 +236,14 @@ public class StatusUI extends Window {
 
 	private void updateStats() {
 		levelVal = linkedEntity.getLevel();
+		
         hpVal = linkedEntity.getHp();
         mpVal = linkedEntity.getMp();
         xpVal = linkedEntity.getXp();
 	}
 	
 	private void updateSize() {
-		this.setSize(WIDTH_TILES * Map.TILE_WIDTH_PIXEL, HEIGHT_TILES * Map.TILE_HEIGHT_PIXEL);
+		this.setSize(WIDTH_TILES * tileWidthPixel, HEIGHT_TILES * tileHeightPixel);
 		loadingBar.setWidth(((float)linkedEntity.getHp() / (float)linkedEntity.getMaxHp()) * bar.getWidth());
 		loadingBarBackground.setWidth(bar.getWidth());
     	for(Actor actor : this.getChildren()) {

@@ -2,7 +2,6 @@ package com.mygdx.game.Particles;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.Map.Map;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
@@ -11,8 +10,6 @@ import Utility.TiledMapPosition;
 import Utility.Utility;
 
 public class ParticleMaker {
-	private static final String TAG = ParticleMaker.class.getSimpleName();
-	
 	private static EnumMap<ParticleType,ParticlePool> particlePools;
 	private static EnumMap<ParticleType,ArrayList<Particle>> allParticles;
 	private static boolean particlesChanged;

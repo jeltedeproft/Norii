@@ -2,7 +2,6 @@ package com.mygdx.game.Battle;
 
 import com.badlogic.gdx.Gdx;
 import com.mygdx.game.Entities.Entity;
-import com.mygdx.game.Entities.EntityActor;
 import com.mygdx.game.Map.TiledMapActor;
 import com.mygdx.game.Particles.ParticleMaker;
 import com.mygdx.game.Particles.ParticleType;
@@ -52,7 +51,8 @@ public class DeploymentBattleState implements BattleState{
         	
     		if((unitsSortedByInitiative != null) && (deployingUnitNumber < unitsSortedByInitiative.length)) {
     			deployUnit(newPosition);
-    			actor.setIsFreeSpawn(false);  			
+    			actor.setIsFreeSpawn(false); 
+    			ParticleMaker.deactivateParticle(ParticleMaker.getParticle(ParticleType.SPAWN, newPosition));
     			nextDeployment();
     		}else {
     			Gdx.app.debug(TAG, "can't deploy unit, units is null or activeunitindex is > the length of units");
@@ -87,7 +87,6 @@ public class DeploymentBattleState implements BattleState{
 
 	@Override
 	public void clickedOnUnit(Entity entity) {
-		// TODO Auto-generated method stub
 		
 	}
 }

@@ -19,18 +19,16 @@ public class MapManager {
     public void loadMap(MapFactory.MapType mapType){
         Map map = MapFactory.getMap(mapType);
 
-        if( map == null ){
+        if(map == null){
             Gdx.app.debug(TAG, "Map does not exist!  ");
             return;
         }
         
-        if( currentMap != null ){
+        if(currentMap != null){
             currentMap.unloadMusic();
         }
-
+        
         map.loadMusic();
-
-
         currentMap = map;
         mapChanged = true;
     }
