@@ -16,6 +16,8 @@ public class BattleScreenInputProcessor implements InputProcessor{
     private boolean downCameraMove;
     private OrthographicCamera mapCamera;
     
+    private final static int cameraSpeed = 10;
+    
     public BattleScreenInputProcessor(OrthographicCamera camera) {
     	this.mapCamera = camera;
     }
@@ -31,19 +33,19 @@ public class BattleScreenInputProcessor implements InputProcessor{
 		
 	    if (leftCameraMove)
 	    {
-	    	x -= 5 * Gdx.graphics.getDeltaTime();
+	    	x -= cameraSpeed * Gdx.graphics.getDeltaTime();
 	    }
 	    if (rightCameraMove)
 	    {
-	    	x += 5 * Gdx.graphics.getDeltaTime();
+	    	x += cameraSpeed * Gdx.graphics.getDeltaTime();
 	    }
 	    if (upCameraMove)
 	    {
-	    	y += 5 * Gdx.graphics.getDeltaTime();
+	    	y += cameraSpeed * Gdx.graphics.getDeltaTime();
 	    }
 	    if (downCameraMove)
 	    {
-	    	y -= 5 * Gdx.graphics.getDeltaTime();
+	    	y -= cameraSpeed * Gdx.graphics.getDeltaTime();
 	    }
 	
 		mapCamera.position.set(x, y, z);

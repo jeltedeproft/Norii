@@ -54,9 +54,9 @@ public class BottomMenu extends Window {
     
     private static final int HP_LABEL_WIDTH = 50;
     
-    private static final int TILE_TO_PIXEL_RATIO = 20;
+    private static final int TILE_TO_PIXEL_RATIO = 25;
     
-	private static final int ALPHA = 30; 
+	private static final int ALPHA = 40; 
     
     
     private HorizontalGroup bottomMenuTable;
@@ -111,6 +111,7 @@ public class BottomMenu extends Window {
 		Color newColor = this.getColor();
         newColor.a = ALPHA;
         this.setColor(newColor);
+        bottomMenuTable.setColor(newColor);
 	}
 	
 	private void changeHeroImage(String heroImageLink) {

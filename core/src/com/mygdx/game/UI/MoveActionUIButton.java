@@ -13,7 +13,8 @@ public class MoveActionUIButton extends ActionUIButton{
 		    @Override
 		    public void clicked(InputEvent event, float x, float y) {
 		    	if(linkedUnit.canMove()) { 
-		    		linkedUnit.setInMovementPhase(!linkedUnit.isInMovementPhase());
+		    		System.out.println("clicked");
+		    		linkedUnit.setInMovementPhase(true);
 		    	}	
 		    }
 		});

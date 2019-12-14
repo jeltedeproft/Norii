@@ -32,10 +32,10 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
     public PlayerBattleHUD(Camera camera,Entity[] sortedUnits) {
     	initVariables(camera, sortedUnits);
     	createTileHoverParticle();
-    	createActionUIs(sortedUnits);
-    	createStatusUIs(sortedUnits);
     	createBottomMenu(sortedUnits);
         createPortraits(sortedUnits);
+    	createActionUIs(sortedUnits);
+    	createStatusUIs(sortedUnits);
     }
 
 	private void initVariables(Camera camera, Entity[] sortedUnits) {
@@ -108,6 +108,7 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
     	
     	stage.addActor(portraits);
 	}
+	
 	
 	public void update() {
 		updateStatusUIs();

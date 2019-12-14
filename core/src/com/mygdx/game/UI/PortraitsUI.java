@@ -20,9 +20,9 @@ public class PortraitsUI extends Window {
 	private static final float PORTRAITS_TOP_PADDING = 3;
 	private static final int PORTRAIT_WIDTH = 3;
 	private static final int PORTRAIT_HEIGHT = 3;
-	private static final int ALPHA = 30; 
+	private static final int ALPHA = 40; 
 	
-    private static final int TILE_TO_PIXEL_RATIO = 25;
+    private static final int TILE_TO_PIXEL_RATIO = 30;
 	
     private float tileWidthPixel;
     private float tileHeightPixel;
@@ -91,6 +91,8 @@ public class PortraitsUI extends Window {
 	}
 
 	public void updateSizeContainer() {
+    	tileWidthPixel = Gdx.graphics.getWidth() / (float) TILE_TO_PIXEL_RATIO;
+    	tileHeightPixel = Gdx.graphics.getHeight() / (float) TILE_TO_PIXEL_RATIO;
 		portraitsHeight = PORTRAIT_HEIGHT * tileHeightPixel;
 		portraitsWidth = Gdx.graphics.getWidth();
 		this.setSize(portraitsWidth, portraitsHeight);
@@ -106,9 +108,9 @@ public class PortraitsUI extends Window {
 	
 	private void updatePortraits() {
 		for(PortraitUI portrait : portraits) {
-			portrait.getHeroPortraitScalable().setMinHeight(portraitsHeight);
+			portrait.getHeroPortraitScalable().setMinHeight(PORTRAIT_HEIGHT * tileHeightPixel);
 			portrait.getHeroPortraitScalable().setMinWidth(PORTRAIT_WIDTH * tileWidthPixel);
-			portrait.getHeroPortraitScalableBorder().setMinHeight(portraitsHeight);
+			portrait.getHeroPortraitScalableBorder().setMinHeight(PORTRAIT_HEIGHT * tileHeightPixel);
 			portrait.getHeroPortraitScalableBorder().setMinWidth(PORTRAIT_WIDTH * tileWidthPixel);
 		}
 	}

@@ -65,7 +65,7 @@ public class StatusUI extends Window {
 	
 	private static final int TILE_TO_PIXEL_RATIO = 20;
 	
-	private static final int ALPHA = 30; 
+	private static final int ALPHA = 40; 
 
     
     public StatusUI(Entity entity){

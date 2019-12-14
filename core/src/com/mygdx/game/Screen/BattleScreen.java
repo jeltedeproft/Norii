@@ -32,8 +32,8 @@ import com.mygdx.game.UI.PlayerBattleHUD;
 import Utility.TiledMapPosition;
 
 public class BattleScreen extends GameScreen implements EntityObserver,TiledMapObserver {
-	public static final int VISIBLE_WIDTH = 35; 
-	public static final int VISIBLE_HEIGHT = 35; 
+	public static final int VISIBLE_WIDTH = 20; 
+	public static final int VISIBLE_HEIGHT = 20; 
 
 	private ArrayList<Owner> players;
 	private OrthogonalTiledMapRenderer mapRenderer = null;
