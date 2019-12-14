@@ -226,8 +226,6 @@ public class InputController implements InputProcessor {
 		}else if(keys.get(Keys.DOWN)){
 			unit.setState(State.WALKING);
 			unit.setDirection(Direction.DOWN);
-		}else if(keys.get(Keys.QUIT)){
-			Gdx.app.exit();
 		}else{
 			unit.setState(State.IDLE);
 		}

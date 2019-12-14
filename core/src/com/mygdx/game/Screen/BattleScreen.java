@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.mygdx.game.Audio.AudioObserver;
 import com.mygdx.game.Battle.BattleManager;
 import com.mygdx.game.Battle.BattleScreenInputProcessor;
 import com.mygdx.game.Entities.Entity;
@@ -47,6 +48,7 @@ public class BattleScreen extends GameScreen implements EntityObserver,TiledMapO
 	private OrthographicCamera hudCamera;
 	private PlayerBattleHUD playerBattleHUD;
 	private PauseMenuUI pauseMenu;
+	private boolean isPaused;
 	
 	private static class VIEWPORT {
 		static float viewportWidth;
@@ -73,6 +75,7 @@ public class BattleScreen extends GameScreen implements EntityObserver,TiledMapO
 		playerSortedUnits = Player.getInstance().getUnitsSortedByIni();
 		mapCamera = new OrthographicCamera();
 		mapCamera.setToOrtho(false, VISIBLE_WIDTH, VISIBLE_HEIGHT);
+		isPaused = false;
 	}
 	
 	private void initializePlayerStage() {
@@ -90,7 +93,7 @@ public class BattleScreen extends GameScreen implements EntityObserver,TiledMapO
 	}
 
 	private void initializeInput() {
-		inputProcessor = new BattleScreenInputProcessor(mapCamera);
+		inputProcessor = new BattleScreenInputProcessor(this,mapCamera);
 		multiplexer = new InputMultiplexer();
 		multiplexer.addProcessor(inputProcessor);
 		multiplexer.addProcessor(Player.getInstance().getEntityStage()); 
@@ -155,9 +158,23 @@ public class BattleScreen extends GameScreen implements EntityObserver,TiledMapO
 
 	@Override
 	public void render(float delta) {
-		Player.getInstance().getEntityStage().drawEntitiesDebug();
-		updateElements(delta);
-		renderElements(delta);
+		if(isPaused) {
+			updatePauseMenu();
+			renderPauseMenu(delta);
+		}else {
+			Player.getInstance().getEntityStage().drawEntitiesDebug();
+			updateElements(delta);
+			renderElements(delta);
+		}
+	}
+	
+	private void updatePauseMenu() {
+		pauseMenu.getStage().act();
+	}
+	
+	private void renderPauseMenu(float delta) {
+		pauseMenu.getStage().getViewport().apply();
+		pauseMenu.render(delta);
 	}
 
 	private void updateElements(float delta) {
@@ -179,7 +196,6 @@ public class BattleScreen extends GameScreen implements EntityObserver,TiledMapO
 		Player.getInstance().getEntityStage().act();
 		playerBattleHUD.getStage().act();
 		map.getTiledMapStage().act();
-		pauseMenu.getStage().act();
 	}
 
 	private void updateCameras() {
@@ -231,8 +247,6 @@ public class BattleScreen extends GameScreen implements EntityObserver,TiledMapO
 	private void renderHUD(float delta) {
 		playerBattleHUD.getStage().getViewport().apply();
 		playerBattleHUD.render(delta);
-		pauseMenu.getStage().getViewport().apply();
-		pauseMenu.render(delta);
 	}
 
 	@Override
@@ -246,10 +260,16 @@ public class BattleScreen extends GameScreen implements EntityObserver,TiledMapO
 
 	@Override
 	public void pause() {
+		isPaused = true;
+		notify(AudioObserver.AudioCommand.MUSIC_PAUSE, AudioObserver.AudioTypeEvent.MUSIC_BATTLE);
+		pauseMenu.setVisible(true);
 	}
 
 	@Override
 	public void resume() {
+		isPaused = false;
+		notify(AudioObserver.AudioCommand.MUSIC_RESUME, AudioObserver.AudioTypeEvent.MUSIC_BATTLE);
+		pauseMenu.setVisible(false);
 	}
 
 	@Override

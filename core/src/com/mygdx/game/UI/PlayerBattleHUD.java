@@ -103,6 +103,7 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
     		@Override
         	public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
          		return true;
+         		
          	}
         });
     	

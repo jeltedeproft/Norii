@@ -29,7 +29,7 @@ class MySkin extends Skin {
        final Skin skin = this;
        
        json.setSerializer(BitmapFont.class, new Json.ReadOnlySerializer<BitmapFont>() {
-          public BitmapFont read (Json json, JsonValue jsonData, Class type) {
+          public BitmapFont read (Json json, JsonValue jsonData, @SuppressWarnings("rawtypes") Class type) {
              String path = json.readValue("file", String.class, jsonData);
              int scaledSize = json.readValue("scaledSize", int.class, -1, jsonData);
              Boolean flip = json.readValue("flip", Boolean.class, false, jsonData);

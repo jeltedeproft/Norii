@@ -1,12 +1,10 @@
 package com.mygdx.game.Battle;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.mygdx.game.Screen.ScreenEnum;
-import com.mygdx.game.Screen.ScreenManager;
 
 public class BattleScreenInputProcessor implements InputProcessor{
 	
@@ -14,12 +12,16 @@ public class BattleScreenInputProcessor implements InputProcessor{
     private boolean rightCameraMove;
     private boolean upCameraMove;
     private boolean downCameraMove;
+    private boolean isPaused;
+    private Screen battleScreen;
     private OrthographicCamera mapCamera;
     
-    private final static int cameraSpeed = 10;
+    private static final int CAMERA_SPEED = 10;
     
-    public BattleScreenInputProcessor(OrthographicCamera camera) {
+    public BattleScreenInputProcessor(Screen battleScreen,OrthographicCamera camera) {
     	this.mapCamera = camera;
+    	this.battleScreen = battleScreen;
+    	isPaused = false;
     }
     
 	public void update() {
@@ -27,25 +29,22 @@ public class BattleScreenInputProcessor implements InputProcessor{
 		float y = mapCamera.position.y;
 		float z = mapCamera.position.z;
 		
-		if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
-			ScreenManager.getInstance().showScreen(ScreenEnum.MAIN_MENU);
-		}
 		
 	    if (leftCameraMove)
 	    {
-	    	x -= cameraSpeed * Gdx.graphics.getDeltaTime();
+	    	x -= CAMERA_SPEED * Gdx.graphics.getDeltaTime();
 	    }
 	    if (rightCameraMove)
 	    {
-	    	x += cameraSpeed * Gdx.graphics.getDeltaTime();
+	    	x += CAMERA_SPEED * Gdx.graphics.getDeltaTime();
 	    }
 	    if (upCameraMove)
 	    {
-	    	y += cameraSpeed * Gdx.graphics.getDeltaTime();
+	    	y += CAMERA_SPEED * Gdx.graphics.getDeltaTime();
 	    }
 	    if (downCameraMove)
 	    {
-	    	y -= cameraSpeed * Gdx.graphics.getDeltaTime();
+	    	y -= CAMERA_SPEED * Gdx.graphics.getDeltaTime();
 	    }
 	
 		mapCamera.position.set(x, y, z);
@@ -87,6 +86,14 @@ public class BattleScreenInputProcessor implements InputProcessor{
 				break;
 			case Keys.DOWN:
 				setDownMove(false);
+				break;
+			case Keys.ESCAPE:
+				if(isPaused) {
+					battleScreen.resume();
+				}else {
+					battleScreen.pause();
+				}
+				isPaused = !isPaused;
 				break;
 			default:
 				break;

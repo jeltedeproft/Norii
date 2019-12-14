@@ -15,7 +15,6 @@ import Utility.Utility;
 
 public class Entity extends Actor implements EntitySubject{
 	private EntityData entityData;
-	
 	private int mp;
 	private int hp;
 	private int currentInitiative;
@@ -101,7 +100,6 @@ public class Entity extends Actor implements EntitySubject{
 	}
 	
 	public void setCurrentPosition(TiledMapPosition pos){
-		entityAnimation.setFramePos(pos);
 		this.currentPlayerPosition = pos;
 		this.entityactor.setPos();
 		

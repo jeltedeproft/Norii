@@ -12,6 +12,7 @@ public class AudioManager implements AudioObserver {
     private static final String TAG = AudioManager.class.getSimpleName();
 
     private static AudioManager instance = null;
+    private static Long pausedSound;
 
     private HashMap<String, Music> queuedMusic;
     private HashMap<String, Sound> queuedSounds;
@@ -66,6 +67,18 @@ public class AudioManager implements AudioObserver {
                 Sound sound = queuedSounds.get(event.getValue());
                 if( sound != null ){
                     sound.stop();
+                }
+                break;
+            case MUSIC_PAUSE:
+            	Music musicToPause = queuedMusic.get(event.getValue());
+                if( musicToPause != null ){
+                	musicToPause.pause();;
+                }
+                break;
+            case MUSIC_RESUME:
+            	Music musicToResume = queuedMusic.get(event.getValue());
+                if( musicToResume != null ){
+                	musicToResume.play();;
                 }
                 break;
             default:

@@ -26,7 +26,9 @@ public interface AudioObserver {
         SOUND_LOAD,
         SOUND_PLAY_ONCE,
         SOUND_PLAY_LOOP,
-        SOUND_STOP
+        SOUND_STOP,
+        MUSIC_PAUSE,
+        MUSIC_RESUME
     }
 
     void onNotify(AudioCommand command, AudioTypeEvent event);

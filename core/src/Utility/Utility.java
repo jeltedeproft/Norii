@@ -1,3 +1,4 @@
+
 package Utility;
 
 import java.util.Random;
@@ -21,7 +22,6 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoaderParameter;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.mygdx.game.Map.MyNavTmxMapLoader;
 
 public final class Utility {

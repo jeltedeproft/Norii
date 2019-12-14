@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
-import Utility.TiledMapPosition;
 import Utility.Utility;
 
 public class EntityAnimation {
@@ -146,10 +145,5 @@ public class EntityAnimation {
 		default:
 			break;
 		}
-	}
-	
-	public void setFramePos(TiledMapPosition pos) {
-		frameSprite.setX(pos.getRealScreenX());
-		frameSprite.setY(pos.getRealScreenY());
 	}
 }
