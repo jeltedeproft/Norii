@@ -56,7 +56,7 @@ public class BottomMenu extends Window {
     
     private static final int TILE_TO_PIXEL_RATIO = 25;
     
-	private static final int ALPHA = 40; 
+	private static final int ALPHA = 90; 
     
     
     private HorizontalGroup bottomMenuTable;
@@ -110,8 +110,8 @@ public class BottomMenu extends Window {
 	private void applyAlphaFilter() {
 		Color newColor = this.getColor();
         newColor.a = ALPHA;
-        this.setColor(newColor);
-        bottomMenuTable.setColor(newColor);
+        Color tableColor = bottomMenuTable.getColor();
+        tableColor.a = ALPHA;
 	}
 	
 	private void changeHeroImage(String heroImageLink) {
@@ -145,9 +145,8 @@ public class BottomMenu extends Window {
         iniLabel = new Label(" ini:", statusUISkin);
         iniVal = new Label("", statusUISkin);
         
-        Color newColor = this.getColor();
-        newColor.a = ALPHA;
-        statsGroup.setColor(newColor);
+        Color newStatsGroupColor = statsGroup.getColor();
+        newStatsGroupColor.a = ALPHA;
 	}
     
     private void addElementsToWindow() {

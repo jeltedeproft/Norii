@@ -10,6 +10,7 @@ public class EntityData {
 	private int maxHP;
 	private int level;
 	private int xp;
+	private int maxXP;
 	private int baseInitiative;
 	private int attackRange;
 	private int attackPower;
@@ -53,6 +54,12 @@ public class EntityData {
 	}
 	public void setMaxHP(int maxHP) {
 		this.maxHP = maxHP;
+	}
+	public int getMaxXP() {
+		return maxXP;
+	}
+	public void setMaxXP(int maxXP) {
+		this.maxXP = maxXP;
 	}
 	public int getLevel() {
 		return level;

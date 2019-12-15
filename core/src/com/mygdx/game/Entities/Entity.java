@@ -251,6 +251,10 @@ public class Entity extends Actor implements EntitySubject{
 		updateUI();
 	}
 	
+	public int getMaxXP() {
+		return entityData.getMaxXP();
+	}
+	
 	public int getMaxHp() {
 		return entityData.getMaxHP();
 	}

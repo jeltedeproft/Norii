@@ -328,7 +328,6 @@ public class BattleScreen extends GameScreen implements EntityObserver,TiledMapO
 		default:
 			break;
 		}	
-
 	}
 
 	private void prepareMove(Entity unit) {

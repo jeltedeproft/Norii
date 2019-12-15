@@ -20,7 +20,7 @@ public class PortraitsUI extends Window {
 	private static final float PORTRAITS_TOP_PADDING = 3;
 	private static final int PORTRAIT_WIDTH = 3;
 	private static final int PORTRAIT_HEIGHT = 3;
-	private static final int ALPHA = 40; 
+	private static final int ALPHA = 80; 
 	
     private static final int TILE_TO_PIXEL_RATIO = 30;
 	

@@ -25,16 +25,12 @@ public class StatusUI extends Window {
     private int xpVal;
     private int iniVal;
 	
-    private Image hpBar;
-    private Image xpBar;
-    private Image bar;
-    private Image bar3;
     private WidgetGroup group;
     private WidgetGroup group2;
-    private WidgetGroup group3;
-    
-    private Image loadingBarBackground;
-    private Image loadingBar;
+    private Image hpBarBackground;
+    private Image hpBar;
+    private Image xpBarBackground;
+    private Image xpBar;
     
     private Label heroName;
     private Label hp;
@@ -58,18 +54,19 @@ public class StatusUI extends Window {
     private float tileWidthPixel;
     private float tileHeightPixel;
 	
-	private static final int WIDTH_TILES = 8;
+	private static final int WIDTH_TILES = 9;
 	private static final int HEIGHT_TILES = 8; 
-	private static final int BAR_WIDTH = 100; 
-	private static final int BAR_HEIGHT = 20; 
+	private static final float BAR_WIDTH = 1.5f; 
+	private static final float BAR_HEIGHT = 1; 
 	
 	private static final int TILE_TO_PIXEL_RATIO = 20;
 	
-	private static final int ALPHA = 40; 
+	private static final int ALPHA = 80; 
 
     
     public StatusUI(Entity entity){
         super("", Utility.getStatusUISkin());
+        this.debugAll();
         configureWindow(entity);      
         setFadeBackgroundEffect(entity);      
     	initPixelVariables();       
@@ -88,7 +85,6 @@ public class StatusUI extends Window {
 	private void setFadeBackgroundEffect(Entity entity) {
 		Color newColor = this.getColor();
         newColor.a = ALPHA;
-        this.setColor(newColor);
         entity.setStatusui(this);
 	}
 
@@ -109,13 +105,12 @@ public class StatusUI extends Window {
     }
     
     private void createElementsForUI() {
-    	TextureAtlas statusUITextureAtlas = Utility.getStatusUITextureAtlas();
     	createFont();
-        createGroups();
-        createImages(statusUITextureAtlas);      
+        createGroups();     
         createLabels();
         
         createDynamicHpBar();
+        createDynamicXpBar();
     }
     
 	private void createFont() {
@@ -127,15 +122,8 @@ public class StatusUI extends Window {
 	private void createGroups() {
 		group = new WidgetGroup();
         group2 = new WidgetGroup();
-        group3 = new WidgetGroup();
 	}
 	
-	private void createImages(TextureAtlas statusUITextureAtlas) {
-		hpBar = new Image(statusUITextureAtlas.findRegion("HP_Bar"));
-        bar = new Image(statusUITextureAtlas.findRegion("Bar"));
-        xpBar = new Image(statusUITextureAtlas.findRegion("XP_Bar"));
-        bar3 = new Image(statusUITextureAtlas.findRegion("Bar"));
-	}
 	
 	private void createLabels() {
 		heroName = new Label(linkedEntity.getName(),labelStyle);
@@ -153,27 +141,32 @@ public class StatusUI extends Window {
 
 	private void createDynamicHpBar() {
         TextureAtlas skinAtlas = Utility.getUITextureAtlas();
-        NinePatch loadingBarBackgroundPatch = new NinePatch(skinAtlas.findRegion("default-round"), 5, 5, 4, 4);
-        NinePatch loadingBarPatch = new NinePatch(skinAtlas.findRegion("default-round-down"), 5, 5, 4, 4);
-        loadingBar = new Image(loadingBarPatch);
-        loadingBarBackground = new Image(loadingBarBackgroundPatch);
+        NinePatch hpBarBackgroundPatch = new NinePatch(skinAtlas.findRegion("default-round"), 5, 5, 4, 4);
+        NinePatch hpBarPatch = new NinePatch(skinAtlas.findRegion("default-round-down"), 5, 5, 4, 4);
+        hpBar = new Image(hpBarPatch);
+        hpBarBackground = new Image(hpBarBackgroundPatch);
+	}
+	
+	private void createDynamicXpBar() {
+		TextureAtlas skinAtlas = Utility.getUITextureAtlas();
+		NinePatch xpBarBackgroundPatch = new NinePatch(skinAtlas.findRegion("default-round"), 5, 5, 4, 4);
+		NinePatch xpBarPatch = new NinePatch(skinAtlas.findRegion("default-round-down"), 5, 5, 4, 4);
+		xpBarPatch.setColor(Color.BLACK);
+		xpBar = new Image(xpBarPatch);
+		xpBarBackground = new Image(xpBarBackgroundPatch);
 	}
     
     private void configureElements() {
-        hpBar.setPosition(3, 6);
-        xpBar.setPosition(3, 6);
-        loadingBar.setPosition(3, 6);
-        loadingBar.setWidth(BAR_WIDTH);
-        loadingBarBackground.setPosition(3, 6);
-        loadingBarBackground.setWidth(BAR_WIDTH);
+        hpBar.setWidth(BAR_WIDTH * tileWidthPixel);
+        hpBarBackground.setWidth(BAR_WIDTH * tileWidthPixel);
 
-        group.addActor(bar);
+        group.addActor(hpBarBackground);
         group.addActor(hpBar);
-        group2.addActor(loadingBarBackground);
-        group2.addActor(loadingBar);
-        group2.addActor(bar);
-        group3.addActor(bar3);
-        group3.addActor(xpBar);
+        group2.addActor(xpBar);
+        group2.addActor(xpBarBackground);
+        group.debug();
+        hpBarBackground.debug();
+        hpBar.debug();
 
         defaults().expand().fill();
     }
@@ -186,7 +179,7 @@ public class StatusUI extends Window {
 
         this.add(hpLabel);
         this.add(hp);
-        this.add(group2).size(BAR_WIDTH, BAR_HEIGHT);
+        this.add(group).size(BAR_WIDTH * tileWidthPixel, BAR_HEIGHT * tileHeightPixel);
         this.row();
 
         this.add(mpLabel);
@@ -203,13 +196,16 @@ public class StatusUI extends Window {
         
         this.add(xpLabel);
         this.add(xp);
-        this.add(group3).size(BAR_WIDTH, BAR_HEIGHT);
+        this.add(group2).size(BAR_WIDTH * tileWidthPixel, BAR_HEIGHT * tileHeightPixel).left().bottom().padBottom(2);
         this.row();
 
         this.pack();
     }
     
     public void update() {
+		statsUIOffsetX = Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH;
+    	statsUIOffsetY = Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT;
+    	
     	tileWidthPixel = Gdx.graphics.getWidth() / (float) TILE_TO_PIXEL_RATIO;
     	tileHeightPixel = Gdx.graphics.getHeight() / (float) TILE_TO_PIXEL_RATIO;
     	
@@ -244,8 +240,22 @@ public class StatusUI extends Window {
 	
 	private void updateSize() {
 		this.setSize(WIDTH_TILES * tileWidthPixel, HEIGHT_TILES * tileHeightPixel);
-		loadingBar.setWidth(((float)linkedEntity.getHp() / (float)linkedEntity.getMaxHp()) * bar.getWidth());
-		loadingBarBackground.setWidth(bar.getWidth());
+		float barWidth = BAR_WIDTH * tileWidthPixel;
+		float barHeight = BAR_HEIGHT * tileHeightPixel;
+		
+		hpBar.setWidth(((float)linkedEntity.getHp() / (float)linkedEntity.getMaxHp()) * barWidth);
+		hpBarBackground.setWidth(barWidth);
+		
+		hpBar.setHeight(barHeight);
+		hpBarBackground.setHeight(barHeight);
+		
+		xpBar.setWidth(((float)linkedEntity.getXp() / (float)linkedEntity.getMaxXP()) * barWidth);
+		xpBarBackground.setWidth(barWidth);
+		
+		xpBar.setHeight(barHeight);
+		xpBarBackground.setHeight(barHeight);
+
+
     	for(Actor actor : this.getChildren()) {
     		if(actor.getClass() == Label.class) {
             	Label label = (Label) actor;

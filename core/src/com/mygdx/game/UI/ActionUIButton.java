@@ -29,6 +29,11 @@ public class ActionUIButton {
 	public void setButton(Button button) {
 		this.button = button;
 	}
+	
+	public void setImageSize() {
+		button.getBackground().setMinHeight(Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH);
+		button.getBackground().setMinWidth(Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT);
+	}
 
 }
 

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 
@@ -21,7 +22,7 @@ public class ActionsUI extends Window {
     private static final int BUTTON_WIDTH = 1;
     private static final int BUTTON_HEIGHT = 1;
     private static final int TILE_TO_PIXEL_RATIO = 20;
-    private static final int ALPHA = 40;
+    private static final int ALPHA = 80;
 	
 	private static final String MOVE_BUTTON_SPRITEPATH = "sprites/gui/move.png";
 	private static final String ATTACK_BUTTON_SPRITEPATH = "sprites/gui/attack.png";
@@ -44,6 +45,8 @@ public class ActionsUI extends Window {
 
     public ActionsUI(Entity entity){
         super("",Utility.getStatusUISkin());
+        this.debugAll();
+        
         initVariables(entity);
         
         createButtons();
@@ -76,7 +79,7 @@ public class ActionsUI extends Window {
 	private void createButtons() {
 		moveActionUIButton = new MoveActionUIButton(MOVE_BUTTON_SPRITEPATH,linkedEntity);
         attackActionUIButton = new AttackActionUIButton(ATTACK_BUTTON_SPRITEPATH,linkedEntity);
-        skipActionUIButton = new SkipActionUIButton(SKIP_BUTTON_SPRITEPATH,linkedEntity);
+        skipActionUIButton = new SkipActionUIButton(this,SKIP_BUTTON_SPRITEPATH,linkedEntity);
 	}
 	
 	private void createLabels() {
@@ -114,13 +117,28 @@ public class ActionsUI extends Window {
 	}
 
     public void update() {
-    	this.setVisible(linkedEntity.isActive());
-    	
     	tileWidthPixel = Gdx.graphics.getWidth() / (float) TILE_TO_PIXEL_RATIO;
     	tileHeightPixel = Gdx.graphics.getHeight() / (float) TILE_TO_PIXEL_RATIO;
     	this.setSize(WIDTH_IN_TILES * tileWidthPixel, HEIGHT_IN_TILES * tileHeightPixel);
         this.setPosition((linkedEntity.getCurrentPosition().getCameraX()), (linkedEntity.getCurrentPosition().getCameraY())); 
+        updateSizeImages();
+        updateFontScaling();
         adjustPosition();
+    }
+    
+    private void updateSizeImages() {
+    	for(ActionUIButton button : buttons) {
+    		button.setImageSize();
+    	}
+    }
+    
+    private void updateFontScaling() {
+    	for(Actor actor : this.getChildren()) {
+    		if(actor.getClass() == Label.class) {
+            	Label label = (Label) actor;
+            	label.setFontScale(Gdx.graphics.getWidth() * 0.0015f, Gdx.graphics.getHeight() * 0.0015f);
+    		}
+    	}
     }
     
     private void adjustPosition() {
