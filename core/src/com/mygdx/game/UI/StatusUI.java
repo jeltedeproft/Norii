@@ -21,8 +21,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 public class StatusUI extends Window {
     private int levelVal;
     private int hpVal;
+    private int maxHpVal;
     private int mpVal;
+    private int maxMpVal;
     private int xpVal;
+    private int maxXpVal;
     private int iniVal;
 	
     private WidgetGroup group;
@@ -54,10 +57,11 @@ public class StatusUI extends Window {
     private float tileWidthPixel;
     private float tileHeightPixel;
 	
-	private static final int WIDTH_TILES = 9;
+	private static final int WIDTH_TILES = 6;
 	private static final int HEIGHT_TILES = 8; 
 	private static final float BAR_WIDTH = 1.5f; 
 	private static final float BAR_HEIGHT = 1; 
+	private static final float LABEL_WIDTH =3; 
 	
 	private static final int TILE_TO_PIXEL_RATIO = 20;
 	
@@ -66,7 +70,6 @@ public class StatusUI extends Window {
     
     public StatusUI(Entity entity){
         super("", Utility.getStatusUISkin());
-        this.debugAll();
         configureWindow(entity);      
         setFadeBackgroundEffect(entity);      
     	initPixelVariables();       
@@ -99,8 +102,11 @@ public class StatusUI extends Window {
     private void initiateHeroStats() {
         levelVal = this.linkedEntity.getLevel();
         hpVal = this.linkedEntity.getHp();
+        maxHpVal = this.linkedEntity.getMaxHp();
         mpVal = this.linkedEntity.getMp();
+        maxMpVal = this.linkedEntity.getMaxMp();
         xpVal = this.linkedEntity.getXp();
+        maxXpVal = this.linkedEntity.getMaxXP();
         iniVal = this.linkedEntity.getBaseInitiative();
     }
     
@@ -128,11 +134,11 @@ public class StatusUI extends Window {
 	private void createLabels() {
 		heroName = new Label(linkedEntity.getName(),labelStyle);
         hpLabel = new Label(" hp:", labelStyle);
-        hp = new Label(String.valueOf(hpVal), labelStyle);
+        hp = new Label(String.valueOf(hpVal) + "/" + maxHpVal, labelStyle);
         mpLabel = new Label(" mp:", labelStyle);
-        mp = new Label(String.valueOf(mpVal), labelStyle);
+        mp = new Label(String.valueOf(mpVal) + "/" + maxMpVal, labelStyle);
         xpLabel = new Label(" xp:", labelStyle);
-        xp = new Label(String.valueOf(xpVal), labelStyle);
+        xp = new Label(String.valueOf(xpVal) + "/" + maxXpVal, labelStyle);
         levelLabel = new Label(" lv:", labelStyle);
         levelValLabel = new Label(String.valueOf(levelVal), labelStyle);
         iniLabel = new Label(" ini:", labelStyle);
@@ -162,41 +168,38 @@ public class StatusUI extends Window {
 
         group.addActor(hpBarBackground);
         group.addActor(hpBar);
+        group.setFillParent(true);
         group2.addActor(xpBar);
         group2.addActor(xpBarBackground);
-        group.debug();
-        hpBarBackground.debug();
-        hpBar.debug();
+        group2.setFillParent(true);
 
         defaults().expand().fill();
     }
     
     private void addElementsToWindow() {
-        this.pad(0, 10, 10, 10);
-        
-        this.add(heroName);
+        this.add(heroName).colspan(3);
         this.row();
 
-        this.add(hpLabel);
-        this.add(hp);
-        this.add(group).size(BAR_WIDTH * tileWidthPixel, BAR_HEIGHT * tileHeightPixel);
+        this.add(hpLabel).align(Align.left).colspan(1).expandX();
+        this.add(hp).align(Align.left).colspan(1).expandX();
+        this.add(group).colspan(3).expandX();
         this.row();
 
-        this.add(mpLabel);
-        this.add(mp).align(Align.left);
+        this.add(mpLabel).align(Align.left).colspan(1).expandX();
+        this.add(mp).align(Align.left).colspan(1).expandX();
         this.row();
 
-        this.add(levelLabel).align(Align.left);
-        this.add(levelValLabel).align(Align.left);
+        this.add(levelLabel).align(Align.left).colspan(1).expandX();
+        this.add(levelValLabel).align(Align.left).colspan(1).expandX();
         this.row();
         
-        this.add(iniLabel).align(Align.left);
-        this.add(iniValLabel).align(Align.left);
+        this.add(iniLabel).align(Align.left).colspan(1).expandX();
+        this.add(iniValLabel).align(Align.left).colspan(1).expandX();
         this.row();
         
-        this.add(xpLabel);
-        this.add(xp);
-        this.add(group2).size(BAR_WIDTH * tileWidthPixel, BAR_HEIGHT * tileHeightPixel).left().bottom().padBottom(2);
+        this.add(xpLabel).align(Align.left).colspan(1).expandX();
+        this.add(xp).align(Align.left).colspan(1).expandX();
+        this.add(group2).colspan(3).expandX();
         this.row();
 
         this.pack();
@@ -223,9 +226,9 @@ public class StatusUI extends Window {
     }
 
 	private void updateLabels() {
-		hp.setText(String.valueOf(hpVal));
-        mp.setText(String.valueOf(mpVal));
-        xp.setText(String.valueOf(xpVal));
+		hp.setText(String.valueOf(hpVal) + "/" + maxHpVal);
+        mp.setText(String.valueOf(mpVal) + "/" + maxMpVal);
+        xp.setText(String.valueOf(xpVal) + "/" + maxXpVal);
         levelValLabel.setText(String.valueOf(levelVal));
         iniValLabel.setText(String.valueOf(iniVal));
 	}
@@ -234,8 +237,11 @@ public class StatusUI extends Window {
 		levelVal = linkedEntity.getLevel();
 		
         hpVal = linkedEntity.getHp();
+        maxHpVal = linkedEntity.getMaxHp();
         mpVal = linkedEntity.getMp();
+        maxMpVal = linkedEntity.getMaxMp();
         xpVal = linkedEntity.getXp();
+        maxXpVal = linkedEntity.getMaxXP();
 	}
 	
 	private void updateSize() {
@@ -254,6 +260,9 @@ public class StatusUI extends Window {
 		
 		xpBar.setHeight(barHeight);
 		xpBarBackground.setHeight(barHeight);
+		
+		this.invalidate();
+		//this.pack();
 
 
     	for(Actor actor : this.getChildren()) {

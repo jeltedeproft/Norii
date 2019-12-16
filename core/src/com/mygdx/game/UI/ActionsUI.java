@@ -8,23 +8,12 @@ import Utility.Utility;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
 
-public class ActionsUI extends Window {
-    private float tileWidthPixel;
-    private float tileHeightPixel;
-    
-    private static final float WIDTH_IN_TILES = 2.5f;
-    private static final float HEIGHT_IN_TILES = 3.3f;
+public class ActionsUI extends UIWindow {   
     private static final int BUTTON_WIDTH = 1;
     private static final int BUTTON_HEIGHT = 1;
-    private static final int TILE_TO_PIXEL_RATIO = 20;
-    private static final int ALPHA = 80;
-	
-	private static final String MOVE_BUTTON_SPRITEPATH = "sprites/gui/move.png";
+    private static final String MOVE_BUTTON_SPRITEPATH = "sprites/gui/move.png";
 	private static final String ATTACK_BUTTON_SPRITEPATH = "sprites/gui/attack.png";
 	private static final String SKIP_BUTTON_SPRITEPATH = "sprites/gui/skip.png";
 	
@@ -37,43 +26,34 @@ public class ActionsUI extends Window {
     private Label attackLabel;
     private Label skipLabel;
     
-    private Boolean right;
-    private Boolean up;
-    
     private ArrayList<ActionUIButton> buttons;
     private Entity linkedEntity;
 
     public ActionsUI(Entity entity){
-        super("",Utility.getStatusUISkin());
-        this.debugAll();
-        
+        super("");
+        configureMainWindow();
         initVariables(entity);
-        
-        createButtons();
-        createLabels();
-        storeButtons();
-        addButtons();
-               
-        calculateSize();
+        createWidgets();
+        addWidgets();
     }
-
-	private void initVariables(Entity entity) {
-		buttons = new ArrayList<ActionUIButton>();
-        this.linkedEntity = entity;
-        entity.setActionsui(this);
+    
+    protected void configureMainWindow() {
         this.setVisible(false);
         this.pad(0);
         this.setKeepWithinStage(false);
-        setFadeBackgroundEffect();
-        
-    	tileWidthPixel = Gdx.graphics.getWidth() / (float) TILE_TO_PIXEL_RATIO;
-    	tileHeightPixel = Gdx.graphics.getHeight() / (float) TILE_TO_PIXEL_RATIO;
+    }
+
+	private void initVariables(Entity entity) {
+		super.initVariables();
+		buttons = new ArrayList<ActionUIButton>();
+        linkedEntity = entity;
+        entity.setActionsui(this);
 	}
 	
-	private void setFadeBackgroundEffect() {
-		Color newColor = this.getColor();
-        newColor.a = ALPHA;
-        this.setColor(newColor);
+	protected void createWidgets() {
+        createButtons();
+        createLabels();
+        storeButtons();
 	}
 
 	private void createButtons() {
@@ -93,52 +73,30 @@ public class ActionsUI extends Window {
         buttons.add(attackActionUIButton);
         buttons.add(skipActionUIButton);
 	}
+	
+	protected void addWidgets() {
+		addButtons();
+	}
 
 	private void addButtons() {  
 		float buttonWidth = BUTTON_WIDTH * tileWidthPixel;
 		float buttonHeight = BUTTON_HEIGHT * tileHeightPixel;
-        this.add(moveActionUIButton.getButton()).height(buttonHeight).width(buttonWidth);
-		this.add(moveLabel);
+        this.add(moveActionUIButton.getButton()).size(buttonWidth,buttonHeight);
+		this.add(moveLabel).expand().fill();;
         this.row();
         
-        this.add(attackActionUIButton.getButton()).height(buttonHeight).width(buttonWidth);
-        this.add(attackLabel);
+        this.add(attackActionUIButton.getButton()).size(buttonWidth,buttonHeight);
+        this.add(attackLabel).expand().fill();
         this.row();
         
-        this.add(skipActionUIButton.getButton()).height(buttonHeight).width(buttonWidth);
-        this.add(skipLabel);
+        this.add(skipActionUIButton.getButton()).size(buttonWidth,buttonHeight);
+        this.add(skipLabel).expand().fill();
         this.add();
 	}
 
-	private void calculateSize() {
-        float actionsMenuWidth = tileWidthPixel * WIDTH_IN_TILES;
-        float actionsMenuHeight = tileHeightPixel * HEIGHT_IN_TILES;
-        this.setSize(actionsMenuWidth, actionsMenuHeight);
-	}
-
-    public void update() {
-    	tileWidthPixel = Gdx.graphics.getWidth() / (float) TILE_TO_PIXEL_RATIO;
-    	tileHeightPixel = Gdx.graphics.getHeight() / (float) TILE_TO_PIXEL_RATIO;
-    	this.setSize(WIDTH_IN_TILES * tileWidthPixel, HEIGHT_IN_TILES * tileHeightPixel);
+    public void updatePos() {
         this.setPosition((linkedEntity.getCurrentPosition().getCameraX()), (linkedEntity.getCurrentPosition().getCameraY())); 
-        updateSizeImages();
-        updateFontScaling();
         adjustPosition();
-    }
-    
-    private void updateSizeImages() {
-    	for(ActionUIButton button : buttons) {
-    		button.setImageSize();
-    	}
-    }
-    
-    private void updateFontScaling() {
-    	for(Actor actor : this.getChildren()) {
-    		if(actor.getClass() == Label.class) {
-            	Label label = (Label) actor;
-            	label.setFontScale(Gdx.graphics.getWidth() * 0.0015f, Gdx.graphics.getHeight() * 0.0015f);
-    		}
-    	}
     }
     
     private void adjustPosition() {
@@ -146,8 +104,8 @@ public class ActionsUI extends Window {
     	float y = linkedEntity.getCurrentPosition().getCameraY();
     	float offsetX = Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH;
     	float offsetY = Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT;
-    	right = x > (Gdx.graphics.getWidth() / 2);
-    	up = y > (Gdx.graphics.getHeight() / 2);
+    	Boolean right = x > (Gdx.graphics.getWidth() / 2);
+    	Boolean up = y > (Gdx.graphics.getHeight() / 2);
     	
     	if(right) {
     		this.setX(x - (offsetX * 2));
