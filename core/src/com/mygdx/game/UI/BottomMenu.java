@@ -17,8 +17,17 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 
-public class BottomMenu extends Window {
+public class BottomMenu extends UIWindow {
     private String unknownHeroImageLocation = "sprites/gui/portraits/unknown.png";
+    
+    private static final int BOTTOM_MENU_HEIGHT_TILES = 3;
+    private static final float HERO_PORTRAIT_WIDTH_TILES = 3;
+    
+    private static final float STATS_MENU_WIDTH_TILES = 17;
+    private static final int STATS_MENU_ELEMENT_PADDING = 20;
+    private static final int STATS_MENU_TOP_PADDING = 0;
+    
+    private static final int HP_LABEL_WIDTH = 50;
     
     private Label hpLabel;
     private Label mpLabel;
@@ -38,83 +47,63 @@ public class BottomMenu extends Window {
     private int heroMP;
     private int heroXP;
     private int heroINI;
+    private int heroMaxHP;
+    private int heroMaxMP;
+    private int heroMaxXP;
 
     private Image heroImage;
-    private Entity linkedEntity;
-    
-    private float tileWidthPixel;
-    private float tileHeightPixel;
-    
-    private static final int BOTTOM_MENU_HEIGHT_TILES = 3;
-    private static final int HERO_PORTRAIT_WIDTH_TILES = 3;
-    
-    private static final int STATS_MENU_WIDTH_TILES = 17;
-    private static final int STATS_MENU_ELEMENT_PADDING = 20;
-    private static final int STATS_MENU_TOP_PADDING = 0;
-    
-    private static final int HP_LABEL_WIDTH = 50;
-    
-    private static final int TILE_TO_PIXEL_RATIO = 25;
-    
-	private static final int ALPHA = 90; 
-    
+    private Entity linkedEntity;  
     
     private HorizontalGroup bottomMenuTable;
     private Window statsGroup;
-    private Container<Table> statsGroupContainer;
+    private Container<Table> statsGroupContainer;  
 
     public BottomMenu(Entity[] entities){
-        super("", Utility.getStatusUISkin());
-        initVariables();
-        linkUnitsToMenu(entities);
-        initElementsForUI();
-        addElementsToWindow();
+        super("",HERO_PORTRAIT_WIDTH_TILES + STATS_MENU_WIDTH_TILES,BOTTOM_MENU_HEIGHT_TILES);
+        this.debugAll();
+        linkUnitsToMenu(entities); 
+        configureMainWindow();
+        createWidgets();
+        addWidgets();
     }
     
-    private void initVariables(){
-    	tileWidthPixel = Gdx.graphics.getWidth() / (float) TILE_TO_PIXEL_RATIO;
-    	tileHeightPixel = Gdx.graphics.getHeight() / (float) TILE_TO_PIXEL_RATIO;
-    }
-    
-
 	private void linkUnitsToMenu(Entity[] entities) {
 		for(Entity entity : entities) {
         	entity.setbottomMenu(this);
         }
 	}
     
-    private void initElementsForUI() {
-		initMainContainer();
-		changeHeroImage(unknownHeroImageLocation);
-    	initStatsMenu();  	
+    protected void configureMainWindow() {
+		this.pad(0);
+		this.setTransform(true);
+		this.setPosition(0, 0);
     }
     
-	private void initMainContainer() {
-		initBottomMenuTable();
-		initWindow();
-        applyAlphaFilter();
+	@Override
+	protected void createWidgets() {
+		initElementsForUI();
 	}
+
+	@Override
+	protected void addWidgets() {
+		addElementsToWindow();	
+	}
+    
+    private void initElementsForUI() {
+		initBottomMenuTable();
+		initHeroImage(unknownHeroImageLocation);
+    	initStatsMenu();  	
+    }
 	
 	private void initBottomMenuTable() {
 		bottomMenuTable = new HorizontalGroup();
 		bottomMenuTable.setFillParent(true);
 		bottomMenuTable.pad(0);
-	}
-
-	private void initWindow() {
-		this.pad(0);
-		this.setTransform(true);
-		this.setPosition(0, 0);
-	}
-	
-	private void applyAlphaFilter() {
-		Color newColor = this.getColor();
-        newColor.a = ALPHA;
         Color tableColor = bottomMenuTable.getColor();
         tableColor.a = ALPHA;
 	}
-	
-	private void changeHeroImage(String heroImageLink) {
+
+	private void initHeroImage(String heroImageLink) {
 		Utility.loadTextureAsset(heroImageLink);
 		TextureRegion tr = new TextureRegion(Utility.getTextureAsset(heroImageLink));
 		TextureRegionDrawable trd = new TextureRegionDrawable(tr);
@@ -125,6 +114,7 @@ public class BottomMenu extends Window {
 		}else {
 			heroImage = new Image(trd);
 			heroImage.setAlign(Align.center);
+			heroImage.debug();
 		}
 	}
 	
@@ -167,7 +157,7 @@ public class BottomMenu extends Window {
 		statsGroup.setHeight(statsHeight);
     	statsGroup.setWidth(statsWidth);
     	statsGroup.align(Align.left);
-    	
+    	statsGroup.debug();
     	addLabelsToStatsGroup();
 
     	statsGroupContainer = new Container<Table>(statsGroup);
@@ -215,11 +205,14 @@ public class BottomMenu extends Window {
         heroMP = this.linkedEntity.getMp();
         heroXP = this.linkedEntity.getXp();
         heroINI = this.linkedEntity.getBaseInitiative();
+        heroMaxHP = this.linkedEntity.getMaxHp();
+        heroMaxMP = this.linkedEntity.getMaxMp();
+        heroMaxXP = this.linkedEntity.getMaxXP();
     }
     
     private void populateElementsForUI(Entity entity) {
     	heroNameLabel.setText(entity.getName());
-    	changeHeroImage(entity.getPortraitPath());
+    	initHeroImage(entity.getPortraitPath());
     	updateLabels();
     }
     
@@ -230,19 +223,21 @@ public class BottomMenu extends Window {
     	xp.setText("");
     	levelVal.setText("");
     	iniVal.setText("");
-    	changeHeroImage(unknownHeroImageLocation);
+    	initHeroImage(unknownHeroImageLocation);
     }
     
+    @Override
     public void update() {
+    	super.update();
         updateStats();
         updateLabels();
-        updateSize();
+        updateSizeBottomMenu();
     }
 
 	private void updateLabels() {
-		hp.setText(String.valueOf(heroHP));
-        mp.setText(String.valueOf(heroMP));
-        xp.setText(String.valueOf(heroXP));
+		hp.setText(String.valueOf(heroHP) + "/" + heroMaxHP);
+        mp.setText(String.valueOf(heroMP) + "/" + heroMaxMP);
+        xp.setText(String.valueOf(heroXP) + "/" + heroMaxXP);
         levelVal.setText(String.valueOf(heroLevel));
         iniVal.setText(String.valueOf(heroINI));
 	}
@@ -260,9 +255,7 @@ public class BottomMenu extends Window {
 		}
 	}
 	
-	private void updateSize() {
-    	tileWidthPixel = Gdx.graphics.getWidth() / (float) TILE_TO_PIXEL_RATIO;
-    	tileHeightPixel = Gdx.graphics.getHeight() / (float) TILE_TO_PIXEL_RATIO;
+	protected void updateSizeBottomMenu() {
 		updateMainTable();		
 		updateHeroImage();		
     	updateStatsMenu();
@@ -272,7 +265,6 @@ public class BottomMenu extends Window {
 	private void updateMainTable() {
 		float scaledWidth = Gdx.graphics.getWidth();
 		float scaledHeight = BOTTOM_MENU_HEIGHT_TILES * tileHeightPixel;
-		this.setSize(scaledWidth,scaledHeight);
 		bottomMenuTable.setSize(scaledWidth,scaledHeight);
 	}
 
@@ -301,6 +293,11 @@ public class BottomMenu extends Window {
 		statsGroupContainer.setPosition(HERO_PORTRAIT_WIDTH_TILES * tileWidthPixel, 0);
 		statsGroupContainer.setSize(Gdx.graphics.getWidth() - (HERO_PORTRAIT_WIDTH_TILES * tileWidthPixel) ,BOTTOM_MENU_HEIGHT_TILES * tileHeightPixel);
 		statsGroupContainer.fill().prefSize(Gdx.graphics.getWidth() - (HERO_PORTRAIT_WIDTH_TILES * tileWidthPixel),BOTTOM_MENU_HEIGHT_TILES * tileHeightPixel);
+	}
+	
+	@Override
+	protected void updatePos() {
+		// todo : refactor to more organized methods , update size and update pos	
 	}
 }
 
