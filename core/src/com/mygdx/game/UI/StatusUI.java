@@ -1,6 +1,5 @@
 package com.mygdx.game.UI;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.Align;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Screen.BattleScreen;
@@ -12,13 +11,12 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 
-public class StatusUI extends Window {
+public class StatusUI extends UIWindow {
     private int levelVal;
     private int hpVal;
     private int maxHpVal;
@@ -42,8 +40,8 @@ public class StatusUI extends Window {
     private Label levelValLabel;
     private Label iniValLabel;
     
-    private Label hpLabel;
     private LabelStyle labelStyle;
+    private Label hpLabel;
     private Label mpLabel;
     private Label xpLabel;
     private Label levelLabel;
@@ -54,49 +52,31 @@ public class StatusUI extends Window {
 	private float statsUIOffsetX;
 	private float statsUIOffsetY;
 	
-    private float tileWidthPixel;
-    private float tileHeightPixel;
-	
-	private static final int WIDTH_TILES = 6;
-	private static final int HEIGHT_TILES = 8; 
+	private static final float WIDTH_TILES = 6;
+	private static final float HEIGHT_TILES = 8; 
 	private static final float BAR_WIDTH = 1.5f; 
-	private static final float BAR_HEIGHT = 1; 
-	private static final float LABEL_WIDTH =3; 
-	
-	private static final int TILE_TO_PIXEL_RATIO = 20;
-	
-	private static final int ALPHA = 80; 
+	private static final float BAR_HEIGHT = 1;  
 
     
     public StatusUI(Entity entity){
-        super("", Utility.getStatusUISkin());
-        configureWindow(entity);      
-        setFadeBackgroundEffect(entity);      
-    	initPixelVariables();       
-        initiateHeroStats();
-        createElementsForUI();
-        configureElements();
-        addElementsToWindow();
+        super("",WIDTH_TILES,HEIGHT_TILES);            
+    	initVariables(entity); 
+        configureMainWindow();
+		createWidgets();
+        addWidgets();
     }
 
-	private void configureWindow(Entity entity) {
+	protected void configureMainWindow() {
 		this.setVisible(false);
-        this.linkedEntity = entity;
         this.setResizable(true);
 	}
 
-	private void setFadeBackgroundEffect(Entity entity) {
-		Color newColor = this.getColor();
-        newColor.a = ALPHA;
+	private void initVariables(Entity entity) {
+        this.linkedEntity = entity;
         entity.setStatusui(this);
-	}
-
-	private void initPixelVariables() {
+		initiateHeroStats();
 		statsUIOffsetX = Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH;
     	statsUIOffsetY = Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT;
-        
-    	tileWidthPixel = Gdx.graphics.getWidth() / (float) TILE_TO_PIXEL_RATIO;
-    	tileHeightPixel = Gdx.graphics.getHeight() / (float) TILE_TO_PIXEL_RATIO;
 	}
     
     private void initiateHeroStats() {
@@ -110,24 +90,18 @@ public class StatusUI extends Window {
         iniVal = this.linkedEntity.getBaseInitiative();
     }
     
-    private void createElementsForUI() {
-    	createFont();
-        createGroups();     
+    protected void createWidgets() {
+    	createFont();    
         createLabels();
-        
         createDynamicHpBar();
         createDynamicXpBar();
+    	createGroups();
     }
     
 	private void createFont() {
 		BitmapFont font = Utility.getFreeTypeFontAsset("fonts/BLKCHCRY.ttf");
     	labelStyle = new LabelStyle();
     	labelStyle.font = font;
-	}
-    
-	private void createGroups() {
-		group = new WidgetGroup();
-        group2 = new WidgetGroup();
 	}
 	
 	
@@ -151,6 +125,9 @@ public class StatusUI extends Window {
         NinePatch hpBarPatch = new NinePatch(skinAtlas.findRegion("default-round-down"), 5, 5, 4, 4);
         hpBar = new Image(hpBarPatch);
         hpBarBackground = new Image(hpBarBackgroundPatch);
+        
+        hpBar.setWidth(BAR_WIDTH * tileWidthPixel);
+        hpBarBackground.setWidth(BAR_WIDTH * tileWidthPixel);
 	}
 	
 	private void createDynamicXpBar() {
@@ -162,10 +139,9 @@ public class StatusUI extends Window {
 		xpBarBackground = new Image(xpBarBackgroundPatch);
 	}
     
-    private void configureElements() {
-        hpBar.setWidth(BAR_WIDTH * tileWidthPixel);
-        hpBarBackground.setWidth(BAR_WIDTH * tileWidthPixel);
-
+    private void createGroups() {
+		group = new WidgetGroup();
+        group2 = new WidgetGroup();
         group.addActor(hpBarBackground);
         group.addActor(hpBar);
         group.setFillParent(true);
@@ -176,7 +152,7 @@ public class StatusUI extends Window {
         defaults().expand().fill();
     }
     
-    private void addElementsToWindow() {
+    protected void addWidgets() {
         this.add(heroName).colspan(3);
         this.row();
 
@@ -205,34 +181,28 @@ public class StatusUI extends Window {
         this.pack();
     }
     
+    @Override
     public void update() {
+    	super.update();
 		statsUIOffsetX = Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH;
     	statsUIOffsetY = Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT;
     	
-    	tileWidthPixel = Gdx.graphics.getWidth() / (float) TILE_TO_PIXEL_RATIO;
-    	tileHeightPixel = Gdx.graphics.getHeight() / (float) TILE_TO_PIXEL_RATIO;
-    	
         updateStats();
         updateLabels();
-        updateSize();
+        updateSizeElements();
         
         if(linkedEntity.getEntityactor().getIsHovering()) {
         	this.setVisible(true);
         }
         
+        updatePos();
+    }
+    
+    protected void updatePos() {
         //we offset the position a little bit to make it look better
         this.setPosition((linkedEntity.getCurrentPosition().getCameraX()) + statsUIOffsetX, (linkedEntity.getCurrentPosition().getCameraY()) + statsUIOffsetY);
-
     }
-
-	private void updateLabels() {
-		hp.setText(String.valueOf(hpVal) + "/" + maxHpVal);
-        mp.setText(String.valueOf(mpVal) + "/" + maxMpVal);
-        xp.setText(String.valueOf(xpVal) + "/" + maxXpVal);
-        levelValLabel.setText(String.valueOf(levelVal));
-        iniValLabel.setText(String.valueOf(iniVal));
-	}
-
+    
 	private void updateStats() {
 		levelVal = linkedEntity.getLevel();
 		
@@ -244,7 +214,16 @@ public class StatusUI extends Window {
         maxXpVal = linkedEntity.getMaxXP();
 	}
 	
-	private void updateSize() {
+	private void updateLabels() {
+		hp.setText(String.valueOf(hpVal) + "/" + maxHpVal);
+        mp.setText(String.valueOf(mpVal) + "/" + maxMpVal);
+        xp.setText(String.valueOf(xpVal) + "/" + maxXpVal);
+        levelValLabel.setText(String.valueOf(levelVal));
+        iniValLabel.setText(String.valueOf(iniVal));
+	}
+
+	
+	private void updateSizeElements() {
 		this.setSize(WIDTH_TILES * tileWidthPixel, HEIGHT_TILES * tileHeightPixel);
 		float barWidth = BAR_WIDTH * tileWidthPixel;
 		float barHeight = BAR_HEIGHT * tileHeightPixel;
@@ -262,15 +241,6 @@ public class StatusUI extends Window {
 		xpBarBackground.setHeight(barHeight);
 		
 		this.invalidate();
-		//this.pack();
-
-
-    	for(Actor actor : this.getChildren()) {
-    		if(actor.getClass() == Label.class) {
-            	Label label = (Label) actor;
-            	label.setFontScale(Gdx.graphics.getWidth() * 0.0015f, Gdx.graphics.getHeight() * 0.0015f);
-    		}
-    	}
 	}
 }
 

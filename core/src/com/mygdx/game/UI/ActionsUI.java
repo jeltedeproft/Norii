@@ -10,7 +10,9 @@ import java.util.ArrayList;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
-public class ActionsUI extends UIWindow {   
+public class ActionsUI extends UIWindow {  
+    private static final float WINDOW_WIDTH = 2.5f;
+    private static final float WINDOW_HEIGHT = 3.3f;
     private static final int BUTTON_WIDTH = 1;
     private static final int BUTTON_HEIGHT = 1;
     private static final String MOVE_BUTTON_SPRITEPATH = "sprites/gui/move.png";
@@ -30,7 +32,7 @@ public class ActionsUI extends UIWindow {
     private Entity linkedEntity;
 
     public ActionsUI(Entity entity){
-        super("");
+        super("",WINDOW_WIDTH,WINDOW_HEIGHT);
         configureMainWindow();
         initVariables(entity);
         createWidgets();
@@ -44,7 +46,6 @@ public class ActionsUI extends UIWindow {
     }
 
 	private void initVariables(Entity entity) {
-		super.initVariables();
 		buttons = new ArrayList<ActionUIButton>();
         linkedEntity = entity;
         entity.setActionsui(this);
