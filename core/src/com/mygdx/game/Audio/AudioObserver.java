@@ -4,6 +4,7 @@ public interface AudioObserver {
     public enum AudioTypeEvent{
         MUSIC_BATTLE("audio/battleTheme3.wav"),
         MUSIC_TITLE("audio/main2.wav"),
+        ATTACK_SOUND("audio/attack.wav"),
         NONE("");
 
         private String audioFullFilePath;

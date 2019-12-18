@@ -87,6 +87,11 @@ public class PortraitsUI extends Window {
 		stack.addActor(portrait.getHeroPortrait());
 		stack.addActor(portrait.getHeroPortraitBorder());
 		stacks.add(stack);
+		
+		float x = portrait.getHeroPortrait().getX();
+		float y = portrait.getHeroPortrait().getY();
+		stack.setBounds(x, y, PORTRAIT_WIDTH * tileWidthPixel, PORTRAIT_HEIGHT * tileHeightPixel);
+		stack.addListener(new PortraitClickListener(portrait.getLinkedEntity()));
 		hgroup.addActor(stack);
 	}
 

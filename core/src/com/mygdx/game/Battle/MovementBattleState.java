@@ -13,7 +13,7 @@ import com.mygdx.game.Particles.ParticleType;
 
 import Utility.TiledMapPosition;
 
-public class MovementBattleState implements BattleState{
+public class MovementBattleState extends BattleState{
 	private BattleManager battlemanager;
 	private Entity currentUnit;
 	
@@ -22,6 +22,7 @@ public class MovementBattleState implements BattleState{
 		this.battlemanager = battlemanager;
 	}
 	
+	@Override
 	public void clickedOnTile(TiledMapActor actor) {
 		possibleMove(actor);
 	}
@@ -29,11 +30,6 @@ public class MovementBattleState implements BattleState{
 	@Override
 	public void entry() {
 		battlemanager.getActiveUnit().setInActionPhase(false);
-	}
-
-	@Override
-	public void update() {
-		
 	}
 
 	@Override
@@ -95,11 +91,6 @@ public class MovementBattleState implements BattleState{
 		currentUnit.setCurrentPosition(newUnitPos);
 		currentUnit.setInActionPhase(true);
 		currentUnit.setInMovementPhase(false);
-	}
-
-	@Override
-	public void clickedOnUnit(Entity entity) {
-			
 	}
 
 	@Override

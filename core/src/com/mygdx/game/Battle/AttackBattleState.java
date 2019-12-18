@@ -1,12 +1,13 @@
 package com.mygdx.game.Battle;
 
 import com.badlogic.gdx.Input.Buttons;
+import com.mygdx.game.Audio.AudioObserver;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Map.TiledMapActor;
 import com.mygdx.game.Particles.ParticleMaker;
 import com.mygdx.game.Particles.ParticleType;
 
-public class AttackBattleState implements BattleState{
+public class AttackBattleState extends BattleState{
 	private BattleManager battlemanager;
 
 	public AttackBattleState(BattleManager battlemanager){
@@ -26,16 +27,6 @@ public class AttackBattleState implements BattleState{
 	}
 
 	@Override
-	public void entry() {
-
-	}
-
-	@Override
-	public void update() {
-		
-	}
-
-	@Override
 	public void exit() {
 		battlemanager.setCurrentBattleState(battlemanager.getActionBattleState());
 		battlemanager.getCurrentBattleState().entry();
@@ -46,6 +37,7 @@ public class AttackBattleState implements BattleState{
     	Entity possibleTarget = getPossibleTarget(entity);
     	if(possibleTarget != null && !(possibleTarget.getName().equalsIgnoreCase(currentUnit.getName()))) {
     		currentUnit.attack(possibleTarget);
+    		notify(AudioObserver.AudioCommand.SOUND_PLAY_ONCE, AudioObserver.AudioTypeEvent.ATTACK_SOUND);
     	}
     	this.exit();
     }
@@ -58,12 +50,6 @@ public class AttackBattleState implements BattleState{
     	}
     	return null;
     }
-
-	@Override
-	public void keyPressed(int key) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public void buttonPressed(int button) {

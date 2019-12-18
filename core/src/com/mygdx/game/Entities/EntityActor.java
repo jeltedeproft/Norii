@@ -3,13 +3,9 @@ package com.mygdx.game.Entities;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.mygdx.game.Entities.EntityObserver.EntityCommand;
-
 import Utility.TiledMapPosition;
 
 public class EntityActor extends Actor {
-	private static final String TAG = EntityActor.class.getSimpleName();
-    
     private Boolean isHovering;
     private Entity entity;
     private TiledMapPosition actorPos = new TiledMapPosition();

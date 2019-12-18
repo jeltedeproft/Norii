@@ -7,7 +7,7 @@ import com.mygdx.game.Particles.ParticleMaker;
 import com.mygdx.game.Particles.ParticleType;
 import Utility.TiledMapPosition;
 
-public class DeploymentBattleState implements BattleState{
+public class DeploymentBattleState extends BattleState{
 	private static final String TAG = DeploymentBattleState.class.getSimpleName();
 	
 	private BattleManager battlemanager;
@@ -20,16 +20,6 @@ public class DeploymentBattleState implements BattleState{
 		this.deployingUnitNumber = 0;
 		this.unitsSortedByInitiative = battlemanager.getUnits();
 		unitsSortedByInitiative[0].setInDeploymentPhase(true);
-	}
-
-	@Override
-	public void entry() {
-
-	}
-
-	@Override
-	public void update() {
-		
 	}
 
 	@Override
@@ -83,22 +73,5 @@ public class DeploymentBattleState implements BattleState{
 		if (deployingUnitNumber >= unitsSortedByInitiative.length) {
 			exit();
 		}
-	}
-
-	@Override
-	public void clickedOnUnit(Entity entity) {
-		
-	}
-
-	@Override
-	public void keyPressed(int key) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void buttonPressed(int button) {
-		// TODO Auto-generated method stub
-		
 	}
 }
