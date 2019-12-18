@@ -20,6 +20,8 @@ public abstract class UIWindow extends Window{
     private static final int TILE_TO_PIXEL_RATIO = 20;
     private static final float FONT_SCALE_FACTOR = 0.0015f;
     protected static final int ALPHA = 80;
+    protected static final float BUTTON_WIDTH_FACTOR = 20;
+    protected static final float BUTTON_HEIGHT_FACTOR = 20;
     
     protected UIWindow(String name,float width,float height) {
     	super(name,Utility.getStatusUISkin());
@@ -70,7 +72,7 @@ public abstract class UIWindow extends Window{
     private void updateSizeImageButtons(Actor actor) {
     	ImageButton button = (ImageButton) actor;
     	if(button.getImage() != null) {
-    		this.getCell(actor).size(Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH,Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT);
+    		this.getCell(actor).size(Gdx.graphics.getWidth() / BUTTON_WIDTH_FACTOR,Gdx.graphics.getHeight() / BUTTON_HEIGHT_FACTOR);
     	}
     }
     

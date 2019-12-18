@@ -53,7 +53,7 @@ public class MovementBattleState implements BattleState{
     	currentUnit = battlemanager.getActiveUnit();
     	int centreX = currentUnit.getCurrentPosition().getTileX();
     	int centreY = currentUnit.getCurrentPosition().getTileY();
-    	return actor.getTiledMap().getPathfinder().getCellsWithin(centreX, centreY, currentUnit.getMp());
+    	return actor.getTiledMap().getPathfinder().getCellsWithin(centreX, centreY, currentUnit.getAp());
     }
 
 	private GridCell isPositionInPath(TiledMapActor actor, List<GridCell> path) {
@@ -75,10 +75,10 @@ public class MovementBattleState implements BattleState{
 	
 	private void updateMP(GridCell cellToMoveTo) {
 		int distance = calculateDistance(cellToMoveTo);
-		if(distance >= currentUnit.getMp()) {
-			currentUnit.setMp(0);
+		if(distance >= currentUnit.getAp()) {
+			currentUnit.setAp(0);
 		}else {
-			currentUnit.setMp(currentUnit.getMp() - distance);
+			currentUnit.setAp(currentUnit.getAp() - distance);
 		}
 	}
 	

@@ -41,7 +41,7 @@ public class MyPathFinder{
 	private boolean checkIfDistanceIsCloseEnough(GridCell center, GridCell gridcell, int range) {
 		if((Math.abs(center.x - gridcell.x) + (Math.abs(center.y - gridcell.y))) <= range){
 			List<GridCell> path = finder.findPath(center.x, center.y, gridcell.x, gridcell.y, navGrid);
-			if((path != null) && (path.size() < range)) {
+			if((path != null) && (path.size() < range) && (path.size() >0 )) {
 				return true;
 			}
 		}

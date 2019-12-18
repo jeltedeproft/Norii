@@ -6,7 +6,7 @@ public class EntityData {
 	private String name;
 	private String portraitSpritePath;
 	private String entitySpriteFilePath;
-	private int maxMP;
+	private int maxAP;
 	private int maxHP;
 	private int level;
 	private int xp;
@@ -14,6 +14,7 @@ public class EntityData {
 	private int baseInitiative;
 	private int attackRange;
 	private int attackPower;
+	private int basicAttackCost;
 	
 	public EntityData() {
 		
@@ -43,11 +44,11 @@ public class EntityData {
 	public void setEntitySpriteFilePath(String entitySpriteFilePath) {
 		this.entitySpriteFilePath = entitySpriteFilePath;
 	}
-	public int getMaxMP() {
-		return maxMP;
+	public int getMaxAP() {
+		return maxAP;
 	}
-	public void setMaxMP(int maxMP) {
-		this.maxMP = maxMP;
+	public void setMaxAP(int maxAP) {
+		this.maxAP = maxAP;
 	}
 	public int getMaxHP() {
 		return maxHP;
@@ -91,4 +92,11 @@ public class EntityData {
 	public void setAttackPower(int attackPower) {
 		this.attackPower = attackPower;
 	}
+	public int getBasicAttackCost() {
+		return basicAttackCost;
+	}
+	public void setBasicAttackCost(int basicAttackCost) {
+		this.basicAttackCost = basicAttackCost;
+	}
+	
 }

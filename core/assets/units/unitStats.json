@@ -4,7 +4,7 @@
     "name": "Commander",
     "portraitSpritePath": "sprites/characters/commanderProfileClean.png",
     "entitySpriteFilePath": "sprites/characters/Commander.png",
-    "maxMP": 3,
+    "maxAP": 3,
     "maxHP": 10,
     "level": 1,
     "xp": 5,
@@ -12,6 +12,7 @@
     "baseInitiative": 10,
     "attackRange": 1,
     "attackPower": 3,
+    "basicAttackCost" : 1,
   },
 
   {
@@ -19,7 +20,7 @@
     "name": "Icarus",
     "portraitSpritePath": "sprites/characters/icarusProfileClean.png",
     "entitySpriteFilePath": "sprites/characters/Icarus.png",
-    "maxMP": 3,
+    "maxAP": 3,
     "maxHP": 10,
     "level": 1,
     "xp": 5,
@@ -27,6 +28,7 @@
     "baseInitiative": 10,
     "attackRange": 1,
     "attackPower": 3,
+    "basicAttackCost" : 1,
   },
 
   {
@@ -34,7 +36,7 @@
     "name": "Demon",
     "portraitSpritePath": "sprites/characters/demonProfileClean.png",
     "entitySpriteFilePath": "sprites/characters/Demon.png",
-    "maxMP": 3,
+    "maxAP": 3,
     "maxHP": 10,
     "level": 1,
     "xp": 5,
@@ -42,6 +44,7 @@
     "baseInitiative": 10,
     "attackRange": 1,
     "attackPower": 3,
+    "basicAttackCost" : 1,
   },
 
   {
@@ -49,7 +52,7 @@
     "name": "Shaman",
     "portraitSpritePath": "sprites/characters/shamanProfileClean.png",
     "entitySpriteFilePath": "sprites/characters/Shaman.png",
-    "maxMP": 3,
+    "maxAP": 3,
     "maxHP": 10,
     "level": 1,
     "xp": 5,
@@ -57,5 +60,6 @@
     "baseInitiative": 10,
     "attackRange": 1,
     "attackPower": 3,
+    "basicAttackCost" : 1,
   }
 ]

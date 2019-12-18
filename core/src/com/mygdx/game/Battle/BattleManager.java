@@ -49,7 +49,7 @@ public class BattleManager {
 			controller.changePlayer(activeUnit);
 		}
 		activeUnit.setFocused(true);
-		activeUnit.setMp(activeUnit.getMaxMp());
+		activeUnit.setAp(activeUnit.getMaxAp());
 		activeUnit.setActive(true);
 	}
 	

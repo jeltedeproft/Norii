@@ -44,7 +44,7 @@ public class BattleScreen extends GameScreen implements EntityObserver,TiledMapO
 	private BattleManager battlemanager;
 	private Entity[] playerSortedUnits;
 	private InputMultiplexer multiplexer;
-	private BattleScreenInputProcessor inputProcessor;
+	private BattleScreenInputProcessor battlescreenInputProcessor;
 	private OrthographicCamera hudCamera;
 	private PlayerBattleHUD playerBattleHUD;
 	private PauseMenuUI pauseMenu;
@@ -93,9 +93,9 @@ public class BattleScreen extends GameScreen implements EntityObserver,TiledMapO
 	}
 
 	private void initializeInput() {
-		inputProcessor = new BattleScreenInputProcessor(this,mapCamera);
+		battlescreenInputProcessor = new BattleScreenInputProcessor(this,mapCamera);
 		multiplexer = new InputMultiplexer();
-		multiplexer.addProcessor(inputProcessor);
+		multiplexer.addProcessor(battlescreenInputProcessor);
 		multiplexer.addProcessor(Player.getInstance().getEntityStage()); 
 		multiplexer.addProcessor(playerBattleHUD.getStage());
 		multiplexer.addProcessor(pauseMenu.getStage());
@@ -179,7 +179,7 @@ public class BattleScreen extends GameScreen implements EntityObserver,TiledMapO
 
 	private void updateElements(float delta) {
 		playerBattleHUD.update();
-		inputProcessor.update();
+		battlescreenInputProcessor.update();
 		updateUnits(delta);	
 		updateStages();
 		updateCameras();
@@ -331,7 +331,7 @@ public class BattleScreen extends GameScreen implements EntityObserver,TiledMapO
 	}
 
 	private void prepareMove(Entity unit) {
-		List<GridCell> path = map.getPathfinder().getCellsWithin(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getMp());
+		List<GridCell> path = map.getPathfinder().getCellsWithin(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getAp());
 		for(GridCell cell : path) {
 			if(!isUnitOnCell(cell)) {
 				TiledMapPosition positionToPutMoveParticle = new TiledMapPosition().setPositionFromTiles(cell.x,cell.y);
