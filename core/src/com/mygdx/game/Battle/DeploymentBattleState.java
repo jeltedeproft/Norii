@@ -35,7 +35,7 @@ public class DeploymentBattleState implements BattleState{
 	@Override
 	public void exit() {
 		ParticleMaker.deactivateAllParticlesOfType(ParticleType.SPAWN);
-		battlemanager.giveControlToNextUnit();
+		battlemanager.startUnitTurn();
 		battlemanager.setCurrentBattleState(battlemanager.getActionBattleState());
 		battlemanager.getCurrentBattleState().entry();
 	}

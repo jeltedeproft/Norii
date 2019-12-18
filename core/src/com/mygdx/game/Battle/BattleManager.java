@@ -34,13 +34,17 @@ public class BattleManager {
 		
 	}
 	
-	public void giveControlToNextUnit() {
+	public void nextUnitActive() {
 		activeUnit.setActive(false);
 		activeUnit.setFocused(false);
 		
 		activeUnitIndex = (activeUnitIndex+1) % numberOfUnits;
 		activeUnit = sortedUnits[activeUnitIndex];
 		
+		startUnitTurn();
+	}
+	
+	public void startUnitTurn() {
 		activeUnit.setFocused(true);
 		activeUnit.setAp(activeUnit.getMaxAp());
 		activeUnit.setActive(true);

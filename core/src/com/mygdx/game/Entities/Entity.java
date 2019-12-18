@@ -209,7 +209,7 @@ public class Entity extends Actor implements EntitySubject{
 			actionsui.update();
 			actionsui.setVisible(true);			
 		}
-		this.notifyEntityObserver(EntityCommand.IN_ACTION_PHASE);
+		this.notifyEntityObserver(EntityCommand.UNIT_ACTIVE);
 	}
 	
 	public boolean isInDeploymentPhase() {
@@ -220,6 +220,7 @@ public class Entity extends Actor implements EntitySubject{
 		this.isInDeploymentPhase = isInDeploymentPhase;
 		if (isInDeploymentPhase){
 			bottomMenu.setHero(this);
+			this.notifyEntityObserver(EntityCommand.UNIT_ACTIVE);
 		}
 	}
 	

@@ -5,6 +5,7 @@ import java.util.List;
 import org.xguzm.pathfinding.grid.GridCell;
 
 import com.badlogic.gdx.Input.Buttons;
+import com.badlogic.gdx.Input.Keys;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Map.TiledMapActor;
 import com.mygdx.game.Particles.ParticleMaker;
@@ -103,16 +104,27 @@ public class MovementBattleState implements BattleState{
 
 	@Override
 	public void keyPressed(int key) {
-		
-		
+		switch(key) {
+			case Keys.Q:
+				break;
+			default:
+				break;
+		}
 	}
 
 	@Override
 	public void buttonPressed(int button) {
 		switch(button) {
 			case Buttons.RIGHT:
+				ParticleMaker.deactivateAllParticlesOfType(ParticleType.MOVE); 
 				exit();
+				break;
+			case Buttons.LEFT:
+				break;
+			case Buttons.MIDDLE:
+				break;
+			default:
+				break;		
 		}
-		
 	}
 }

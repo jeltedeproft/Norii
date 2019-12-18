@@ -1,5 +1,6 @@
 package com.mygdx.game.Battle;
 
+import com.badlogic.gdx.Input.Buttons;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Map.TiledMapActor;
 import com.mygdx.game.Particles.ParticleMaker;
@@ -66,7 +67,17 @@ public class AttackBattleState implements BattleState{
 
 	@Override
 	public void buttonPressed(int button) {
-		// TODO Auto-generated method stub
-		
+		switch(button) {
+			case Buttons.RIGHT:
+				ParticleMaker.deactivateAllParticlesOfType(ParticleType.ATTACK); 
+				exit();
+				break;
+			case Buttons.LEFT:
+				break;
+			case Buttons.MIDDLE:
+				break;
+			default:
+				break;		
+		}
 	}
 }

@@ -1,7 +1,6 @@
 package com.mygdx.game.Battle;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -23,8 +22,11 @@ public class BattleScreenInputProcessor implements InputProcessor{
     public BattleScreenInputProcessor(BattleScreen battleScreen,OrthographicCamera camera) {
     	this.mapCamera = camera;
     	this.battleScreen = battleScreen;
-    	this.bm = battleScreen.getBattlemanager();
     	isPaused = false;
+    }
+    
+    public void setBattleManager(BattleManager bm) {
+    	this.bm = bm;
     }
     
 	public void update() {
@@ -152,8 +154,8 @@ public class BattleScreenInputProcessor implements InputProcessor{
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		sendButtonToBattlestate(Buttons.RIGHT);
-		return true;
+		sendButtonToBattlestate(button);
+		return false;
 	}
 
 	@Override

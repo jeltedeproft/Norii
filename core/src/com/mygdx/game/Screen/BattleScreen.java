@@ -66,8 +66,8 @@ public class BattleScreen extends GameScreen implements EntityObserver,TiledMapO
 		initializeHUD();
 		initializePauseMenu();
 		initializeInput(); 
-		initializeMap();
 		initializeUnits(params);
+		initializeMap();
 		initializeObservers();
 	}
 
@@ -103,6 +103,7 @@ public class BattleScreen extends GameScreen implements EntityObserver,TiledMapO
 	
 	private void initializeMap() {
 		battlemanager = new BattleManager(playerSortedUnits);
+		battlescreenInputProcessor.setBattleManager(battlemanager);
 		mapMgr = new MapManager();
 		map = (BattleMap) mapMgr.getCurrentMap();
 		map.setStage(battlemanager);
@@ -114,17 +115,17 @@ public class BattleScreen extends GameScreen implements EntityObserver,TiledMapO
 		if(params[index] != null) {
 			players = (ArrayList<Owner>) params[index];
 		}else players = new ArrayList<Owner>();
-	}
-	
-	private void initializeObservers() {
-		ProfileManager.getInstance().addObserver(playerBattleHUD);
 		
 		for(Owner player : players) {
 			for(Entity unit : player.getTeam()){
 				unit.addEntityObserver(this);
 			}
 		}
-		
+	}
+	
+	private void initializeObservers() {
+		ProfileManager.getInstance().addObserver(playerBattleHUD);
+
 		for(TiledMapActor[] tmpa : map.getTiledMapStage().getTiledMapActors()){
 			for(TiledMapActor actor : tmpa) {
 				actor.addTilemapObserver(this);
@@ -317,7 +318,7 @@ public class BattleScreen extends GameScreen implements EntityObserver,TiledMapO
 		case IN_ATTACK_PHASE:
 			prepareAttack(unit);
 			break;
-		case IN_ACTION_PHASE:
+		case UNIT_ACTIVE:
 			playerBattleHUD.getPortraits().updateBorders(unit);
 			break;
 		case CLICKED:
