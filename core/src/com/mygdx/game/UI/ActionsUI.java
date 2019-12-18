@@ -104,9 +104,9 @@ public class ActionsUI extends UIWindow {
     	float x = linkedEntity.getCurrentPosition().getCameraX();
     	float y = linkedEntity.getCurrentPosition().getCameraY();
     	float offsetX = Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH;
-    	float offsetY = Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT;
-    	Boolean right = x > (Gdx.graphics.getWidth() / 2);
-    	Boolean up = y > (Gdx.graphics.getHeight() / 2);
+    	float offsetY = WINDOW_HEIGHT * tileHeightPixel;
+    	Boolean right = x > (Gdx.graphics.getWidth() / 3);
+    	Boolean up = y > (Gdx.graphics.getHeight() / 3);
     	
     	if(right) {
     		this.setX(x - (offsetX * 2));
@@ -115,9 +115,9 @@ public class ActionsUI extends UIWindow {
     	}
     	
     	if(up) {
-    		this.setY(y - (offsetY * 3));
+    		this.setY(y - (offsetY));
     	}else {
-    		this.setY(y + offsetY);
+    		this.setY(y + (offsetY / WINDOW_HEIGHT));
     	}
     }
 }

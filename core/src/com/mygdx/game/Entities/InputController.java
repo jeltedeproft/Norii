@@ -50,6 +50,7 @@ public class InputController implements InputProcessor {
 	@Override
 	public boolean keyDown(int keycode) {
 		if( keycode == Input.Keys.LEFT || keycode == Input.Keys.A){
+			System.out.println("leeeeft pressseddd");
 			this.leftPressed();
 		}
 		if( keycode == Input.Keys.RIGHT || keycode == Input.Keys.D){
@@ -214,6 +215,7 @@ public class InputController implements InputProcessor {
 	}
 	
 	private void processInput(){
+		System.out.println("teeeeeeesttt");
 		if( keys.get(Keys.LEFT)){
 			unit.setState(State.WALKING);
 			unit.setDirection(Direction.LEFT);

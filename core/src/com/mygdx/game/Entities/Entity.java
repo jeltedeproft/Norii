@@ -15,8 +15,9 @@ import Utility.Utility;
 
 public class Entity extends Actor implements EntitySubject{
 	private EntityData entityData;
-	private int mp;
+	private int ap;
 	private int hp;
+	private int basicAttackCost;
 	private int currentInitiative;
 	private boolean inBattle;
 	private boolean isActive;
@@ -50,7 +51,7 @@ public class Entity extends Actor implements EntitySubject{
 		this.nextPlayerPosition = new TiledMapPosition();
 		this.currentPlayerPosition = new TiledMapPosition().setPositionFromScreen(-100, -100);
 		this.hp = entityData.getMaxHP();
-		this.mp = entityData.getMaxMP();
+		this.ap = entityData.getMaxAP();
 		this.currentInitiative = entityData.getIni();
 		this.isDead = false;
 		this.inBattle = false;
@@ -158,15 +159,21 @@ public class Entity extends Actor implements EntitySubject{
 	}
 
 	public void setInAttackPhase(boolean isInAttackPhase) {
-		this.isInAttackPhase = isInAttackPhase;
-		if(isInAttackPhase) {
-			actionsui.setVisible(false);			
-			this.notifyEntityObserver(EntityCommand.IN_ATTACK_PHASE);
+		if(canAttack()) {
+			this.isInAttackPhase = isInAttackPhase;
+			if(isInAttackPhase) {
+				actionsui.setVisible(false);			
+				this.notifyEntityObserver(EntityCommand.IN_ATTACK_PHASE);
+			}
 		}
 	}
 	
 	public void attack(Entity target) {
 		target.damage(getAttackPower());
+	}
+	
+	public boolean canAttack() {
+		return ap > basicAttackCost;
 	}
 	
 	private void damage(int damage) {
@@ -181,7 +188,7 @@ public class Entity extends Actor implements EntitySubject{
 	}
 	
 	public boolean canMove() {
-		return (this.mp > 0);
+		return (this.ap > 0);
 	}
 
 	public boolean isInBattle() {
@@ -224,21 +231,21 @@ public class Entity extends Actor implements EntitySubject{
 		}
 	}
 
-	public int getMp() {
-		return mp;
+	public int getAp() {
+		return ap;
 	}
 
-	public void setMp(int mp) {
-		this.mp = mp;
+	public void setAp(int ap) {
+		this.ap = ap;
 		updateUI();
 	}
 	
-	public int getMaxMp() {
-		return entityData.getMaxMP();
+	public int getMaxAp() {
+		return entityData.getMaxAP();
 	}
 	
-	public void setMaxMp(int maxMP) {
-		entityData.setMaxMP(maxMP);
+	public void setMaxAp(int maxAP) {
+		entityData.setMaxAP(maxAP);
 		updateUI();
 	}
 
@@ -287,6 +294,14 @@ public class Entity extends Actor implements EntitySubject{
 	
 	public void setAttackPower(int attackPower) {
 		entityData.setAttackPower(attackPower);
+	}
+	
+	public int getAbasicAttackCost() {
+		return entityData.getBasicAttackCost();
+	}
+	
+	public void setbasicAttackCost(int basicAttackCost) {
+		entityData.setBasicAttackCost(basicAttackCost);
 	}
 
 	public int getLevel() {
@@ -340,9 +355,9 @@ public class Entity extends Actor implements EntitySubject{
 
     @Override
     public void notifyEntityObserver(EntityObserver.EntityCommand command) {
-        for(EntityObserver observer: observers){
-            observer.onEntityNotify(command,this);
-        }
+    	for(int i = 0; i < observers.size; i++) {
+    		observers.get(i).onEntityNotify(command,this);
+    	}
     }
 
 }

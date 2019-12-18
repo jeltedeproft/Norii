@@ -20,8 +20,8 @@ public class StatusUI extends UIWindow {
     private int levelVal;
     private int hpVal;
     private int maxHpVal;
-    private int mpVal;
-    private int maxMpVal;
+    private int apVal;
+    private int maxApVal;
     private int xpVal;
     private int maxXpVal;
     private int iniVal;
@@ -35,14 +35,14 @@ public class StatusUI extends UIWindow {
     
     private Label heroName;
     private Label hp;
-    private Label mp;
+    private Label ap;
     private Label xp;
     private Label levelValLabel;
     private Label iniValLabel;
     
     private LabelStyle labelStyle;
     private Label hpLabel;
-    private Label mpLabel;
+    private Label apLabel;
     private Label xpLabel;
     private Label levelLabel;
     private Label iniLabel;
@@ -83,8 +83,8 @@ public class StatusUI extends UIWindow {
         levelVal = this.linkedEntity.getLevel();
         hpVal = this.linkedEntity.getHp();
         maxHpVal = this.linkedEntity.getMaxHp();
-        mpVal = this.linkedEntity.getMp();
-        maxMpVal = this.linkedEntity.getMaxMp();
+        apVal = this.linkedEntity.getAp();
+        maxApVal = this.linkedEntity.getMaxAp();
         xpVal = this.linkedEntity.getXp();
         maxXpVal = this.linkedEntity.getMaxXP();
         iniVal = this.linkedEntity.getBaseInitiative();
@@ -109,8 +109,8 @@ public class StatusUI extends UIWindow {
 		heroName = new Label(linkedEntity.getName(),labelStyle);
         hpLabel = new Label(" hp:", labelStyle);
         hp = new Label(String.valueOf(hpVal) + "/" + maxHpVal, labelStyle);
-        mpLabel = new Label(" mp:", labelStyle);
-        mp = new Label(String.valueOf(mpVal) + "/" + maxMpVal, labelStyle);
+        apLabel = new Label(" ap:", labelStyle);
+        ap = new Label(String.valueOf(apVal) + "/" + maxApVal, labelStyle);
         xpLabel = new Label(" xp:", labelStyle);
         xp = new Label(String.valueOf(xpVal) + "/" + maxXpVal, labelStyle);
         levelLabel = new Label(" lv:", labelStyle);
@@ -161,8 +161,8 @@ public class StatusUI extends UIWindow {
         this.add(group).colspan(3).expandX();
         this.row();
 
-        this.add(mpLabel).align(Align.left).colspan(1).expandX();
-        this.add(mp).align(Align.left).colspan(1).expandX();
+        this.add(apLabel).align(Align.left).colspan(1).expandX();
+        this.add(ap).align(Align.left).colspan(1).expandX();
         this.row();
 
         this.add(levelLabel).align(Align.left).colspan(1).expandX();
@@ -208,15 +208,15 @@ public class StatusUI extends UIWindow {
 		
         hpVal = linkedEntity.getHp();
         maxHpVal = linkedEntity.getMaxHp();
-        mpVal = linkedEntity.getMp();
-        maxMpVal = linkedEntity.getMaxMp();
+        apVal = linkedEntity.getAp();
+        maxApVal = linkedEntity.getMaxAp();
         xpVal = linkedEntity.getXp();
         maxXpVal = linkedEntity.getMaxXP();
 	}
 	
 	private void updateLabels() {
 		hp.setText(String.valueOf(hpVal) + "/" + maxHpVal);
-        mp.setText(String.valueOf(mpVal) + "/" + maxMpVal);
+        ap.setText(String.valueOf(apVal) + "/" + maxApVal);
         xp.setText(String.valueOf(xpVal) + "/" + maxXpVal);
         levelValLabel.setText(String.valueOf(levelVal));
         iniValLabel.setText(String.valueOf(iniVal));

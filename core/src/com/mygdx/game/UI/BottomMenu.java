@@ -30,13 +30,13 @@ public class BottomMenu extends UIWindow {
     private static final int HP_LABEL_WIDTH = 50;
     
     private Label hpLabel;
-    private Label mpLabel;
+    private Label apLabel;
     private Label xpLabel;
     private Label levelLabel;
     private Label iniLabel;
     
     private Label hp;
-    private Label mp;
+    private Label ap;
     private Label xp;
     private Label levelVal;
     private Label iniVal;
@@ -44,7 +44,7 @@ public class BottomMenu extends UIWindow {
     
     private int heroLevel;
     private int heroHP;
-    private int heroMP;
+    private int heroAP;
     private int heroXP;
     private int heroINI;
     private int heroMaxHP;
@@ -126,8 +126,8 @@ public class BottomMenu extends UIWindow {
         heroNameLabel = new Label("", statusUISkin);
         hpLabel = new Label(" hp:", statusUISkin);
         hp = new Label("", statusUISkin);
-        mpLabel = new Label(" mp:", statusUISkin);
-        mp = new Label("", statusUISkin);
+        apLabel = new Label(" ap:", statusUISkin);
+        ap = new Label("", statusUISkin);
         xpLabel = new Label(" xp:", statusUISkin);
         xp = new Label("", statusUISkin);
         levelLabel = new Label(" lv:", statusUISkin);
@@ -176,8 +176,8 @@ public class BottomMenu extends UIWindow {
     	statsGroup.add(levelVal).align(Align.left).padRight(STATS_MENU_ELEMENT_PADDING).expandX();
 
     	
-    	statsGroup.add(mpLabel).align(Align.left).expandX();
-    	statsGroup.add(mp).align(Align.left).padRight(STATS_MENU_ELEMENT_PADDING).expandX();
+    	statsGroup.add(apLabel).align(Align.left).expandX();
+    	statsGroup.add(ap).align(Align.left).padRight(STATS_MENU_ELEMENT_PADDING).expandX();
 
     	statsGroup.add(iniLabel).align(Align.left).expandX();
     	statsGroup.add(iniVal).align(Align.left).padRight(STATS_MENU_ELEMENT_PADDING).expandX();
@@ -202,7 +202,7 @@ public class BottomMenu extends UIWindow {
     private void initiateHeroStats() {
         heroLevel = this.linkedEntity.getLevel();
         heroHP = this.linkedEntity.getHp();
-        heroMP = this.linkedEntity.getMp();
+        heroAP = this.linkedEntity.getAp();
         heroXP = this.linkedEntity.getXp();
         heroINI = this.linkedEntity.getBaseInitiative();
         heroMaxHP = this.linkedEntity.getMaxHp();
@@ -219,7 +219,7 @@ public class BottomMenu extends UIWindow {
     private void resetStats() {
     	heroNameLabel.setText("");
     	hp.setText("");
-    	mp.setText("");
+    	ap.setText("");
     	xp.setText("");
     	levelVal.setText("");
     	iniVal.setText("");
@@ -235,18 +235,24 @@ public class BottomMenu extends UIWindow {
     }
 
 	private void updateLabels() {
-		hp.setText(String.valueOf(heroHP) + "/" + heroMaxHP);
-        mp.setText(String.valueOf(heroMP) + "/" + heroMaxMP);
-        xp.setText(String.valueOf(heroXP) + "/" + heroMaxXP);
+		hp.setText(String.valueOf(heroHP));
+        ap.setText(String.valueOf(heroAP));
+        xp.setText(String.valueOf(heroXP));
         levelVal.setText(String.valueOf(heroLevel));
         iniVal.setText(String.valueOf(heroINI));
+        
+        if(heroAP == 0) {
+        	ap.setColor(Color.RED);
+        }else {
+        	ap.setColor(Color.WHITE);
+        }
 	}
 
 	private void updateStats() {
 		if(linkedEntity != null) {
 			heroLevel = linkedEntity.getLevel();
 	        heroHP = linkedEntity.getHp();
-	        heroMP = linkedEntity.getMp();
+	        heroAP = linkedEntity.getAp();
 	        heroXP = linkedEntity.getXp();
 	        
 	        if(linkedEntity.getEntityactor().getIsHovering()) {

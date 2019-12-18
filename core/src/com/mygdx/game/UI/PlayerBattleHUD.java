@@ -23,6 +23,7 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
     private Stage stage;
     private PortraitsUI portraits;
     private StatusUI[] statusUIs;
+    private HPBar[] hpBars;
     private BottomMenu bottomMenu;
     private ActionsUI[] actionUIs;																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																							
     
@@ -34,6 +35,7 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
     	createTileHoverParticle();
     	createBottomMenu(sortedUnits);
         createPortraits(sortedUnits);
+        createHPBars(sortedUnits);
     	createActionUIs(sortedUnits);
     	createStatusUIs(sortedUnits);
     }
@@ -41,6 +43,7 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
 	private void initVariables(Camera camera, Entity[] sortedUnits) {
 		statusUIs = new StatusUI[sortedUnits.length];
     	actionUIs = new ActionsUI[sortedUnits.length];
+    	hpBars = new HPBar[sortedUnits.length];
         stage = new Stage(new ScreenViewport(camera));
         stage.setDebugAll(false);
 	}
@@ -89,6 +92,15 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
 		}
 	}
 	
+	private void createHPBars(Entity[] sortedUnits) {
+		for (int i = 0; i < sortedUnits.length; i++) {
+			Entity entity = sortedUnits[i];
+			hpBars[i] = new HPBar(entity);
+			HPBar hpBar = hpBars[i];			
+			stage.addActor(hpBar.getHpBarGroup());
+		}
+	}
+	
 	private void createBottomMenu(Entity[] sortedUnits) {
     	bottomMenu = new BottomMenu(sortedUnits);
     	bottomMenu.setHero(sortedUnits[0]);
@@ -114,6 +126,7 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
 	public void update() {
 		updateStatusUIs();
 		updateActionUIs();
+		updateHPBars();
 		updateHoverParticle();
 	}
 
@@ -137,6 +150,7 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
         bottomMenu.update();
         updateStatusUIs();
         updateActionUIs();
+        updateHPBars();
         updateHoverParticle();
     }
     
@@ -149,6 +163,12 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
     private void updateActionUIs() {
     	for(ActionsUI ui : actionUIs) {
     		ui.update();
+    	}
+    }
+    
+    private void updateHPBars() {
+    	for(HPBar hpBar : hpBars) {
+    		hpBar.update();
     	}
     }
     
