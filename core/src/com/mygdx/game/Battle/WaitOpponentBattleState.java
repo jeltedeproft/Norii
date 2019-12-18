@@ -1,10 +1,7 @@
 package com.mygdx.game.Battle;
 
 import com.mygdx.game.Entities.Entity;
-import com.mygdx.game.Entities.EntityActor;
 import com.mygdx.game.Map.TiledMapActor;
-
-import Utility.TiledMapPosition;
 
 public class WaitOpponentBattleState implements BattleState {
 	
@@ -42,6 +39,18 @@ public class WaitOpponentBattleState implements BattleState {
 
 	@Override
 	public void clickedOnUnit(Entity entity) {
+		
+	}
+
+	@Override
+	public void keyPressed(int key) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void buttonPressed(int button) {
+		// TODO Auto-generated method stub
 		
 	}
 

@@ -89,4 +89,16 @@ public class DeploymentBattleState implements BattleState{
 	public void clickedOnUnit(Entity entity) {
 		
 	}
+
+	@Override
+	public void keyPressed(int key) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void buttonPressed(int button) {
+		// TODO Auto-generated method stub
+		
+	}
 }

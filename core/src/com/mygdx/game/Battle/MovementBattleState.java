@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.xguzm.pathfinding.grid.GridCell;
 
+import com.badlogic.gdx.Input.Buttons;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Map.TiledMapActor;
 import com.mygdx.game.Particles.ParticleMaker;
@@ -98,5 +99,20 @@ public class MovementBattleState implements BattleState{
 	@Override
 	public void clickedOnUnit(Entity entity) {
 			
+	}
+
+	@Override
+	public void keyPressed(int key) {
+		
+		
+	}
+
+	@Override
+	public void buttonPressed(int button) {
+		switch(button) {
+			case Buttons.RIGHT:
+				exit();
+		}
+		
 	}
 }

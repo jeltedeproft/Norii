@@ -1,10 +1,11 @@
 package com.mygdx.game.Battle;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.mygdx.game.Screen.BattleScreen;
 
 public class BattleScreenInputProcessor implements InputProcessor{
 	
@@ -13,14 +14,16 @@ public class BattleScreenInputProcessor implements InputProcessor{
     private boolean upCameraMove;
     private boolean downCameraMove;
     private boolean isPaused;
-    private Screen battleScreen;
+    private BattleScreen battleScreen;
     private OrthographicCamera mapCamera;
+    private BattleManager bm;
     
     private static final int CAMERA_SPEED = 10;
     
-    public BattleScreenInputProcessor(Screen battleScreen,OrthographicCamera camera) {
+    public BattleScreenInputProcessor(BattleScreen battleScreen,OrthographicCamera camera) {
     	this.mapCamera = camera;
     	this.battleScreen = battleScreen;
+    	this.bm = battleScreen.getBattlemanager();
     	isPaused = false;
     }
     
@@ -95,31 +98,51 @@ public class BattleScreenInputProcessor implements InputProcessor{
 				}
 				isPaused = !isPaused;
 				break;
+			case Keys.Z:
+				sendKeyToBattlestate(Keys.Z);
+				break;
+			case Keys.Q:
+				sendKeyToBattlestate(Keys.Q);
+				break;
+			case Keys.S:
+				sendKeyToBattlestate(Keys.S);
+				break;
+			case Keys.D:
+				sendKeyToBattlestate(Keys.D);
+				break;
 			default:
 				break;
 		}
 	    return true;
 	}
 	
-    public void setLeftMove(boolean t)
+    private void setLeftMove(boolean t)
     {
 	    if(rightCameraMove && t) rightCameraMove = false;
 	    leftCameraMove = t;
     }
-    public void setRightMove(boolean t)
+    private void setRightMove(boolean t)
     {
 	    if(leftCameraMove && t) leftCameraMove = false;
 	    rightCameraMove = t;
     }
-    public void setUpMove(boolean t)
+    private void setUpMove(boolean t)
     {
     	if(downCameraMove && t) downCameraMove = false;
     	upCameraMove = t;
     }
-    public void setDownMove(boolean t)
+    private void setDownMove(boolean t)
     {
     	if(upCameraMove && t) upCameraMove = false;
     	downCameraMove = t;
+    }
+    
+    private void sendKeyToBattlestate(int key) {
+    	bm.getCurrentBattleState().keyPressed(key);
+    }
+    
+    private void sendButtonToBattlestate(int button) {
+    	bm.getCurrentBattleState().buttonPressed(button);
     }
 
 	@Override
@@ -129,7 +152,8 @@ public class BattleScreenInputProcessor implements InputProcessor{
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		return false;
+		sendButtonToBattlestate(Buttons.RIGHT);
+		return true;
 	}
 
 	@Override

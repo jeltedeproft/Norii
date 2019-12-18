@@ -102,7 +102,7 @@ public class BattleScreen extends GameScreen implements EntityObserver,TiledMapO
 	}
 	
 	private void initializeMap() {
-		battlemanager = new BattleManager(multiplexer,playerSortedUnits);
+		battlemanager = new BattleManager(playerSortedUnits);
 		mapMgr = new MapManager();
 		map = (BattleMap) mapMgr.getCurrentMap();
 		map.setStage(battlemanager);
@@ -130,6 +130,10 @@ public class BattleScreen extends GameScreen implements EntityObserver,TiledMapO
 				actor.addTilemapObserver(this);
 			}
 		}
+	}
+	
+	public BattleManager getBattlemanager() {
+		return battlemanager;
 	}
 	
 	@Override
@@ -189,7 +193,6 @@ public class BattleScreen extends GameScreen implements EntityObserver,TiledMapO
 		for (Owner owner : players) {
 		    owner.updateUnits(delta);
 		}
-		battlemanager.updateController();
 	}
 	
 	private void updateStages() {
@@ -277,7 +280,6 @@ public class BattleScreen extends GameScreen implements EntityObserver,TiledMapO
 		for (Owner owner : players) {
 			owner.dispose();
 		}
-		battlemanager.dispose();
 		mapRenderer.dispose();
 		pauseMenu.dispose();
 		map.dispose();

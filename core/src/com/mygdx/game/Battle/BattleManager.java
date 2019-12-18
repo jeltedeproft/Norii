@@ -1,8 +1,7 @@
 package com.mygdx.game.Battle;
 
-import com.badlogic.gdx.InputMultiplexer;
+
 import com.mygdx.game.Entities.Entity;
-import com.mygdx.game.Entities.InputController;
 
 public class BattleManager {
 	private BattleState deploymentBattleState;
@@ -12,16 +11,13 @@ public class BattleManager {
 	private BattleState waitOpponentBattleState;
 	private BattleState currentBattleState;
 	
-	private InputController controller;
-	private InputMultiplexer multiplexer;
 	private Entity activeUnit;
 	private int activeUnitIndex;
 	private int numberOfUnits;
 	
 	private Entity[] sortedUnits;
 	
-	public BattleManager(InputMultiplexer inputmultiplexer,Entity[] playerSortedUnits) {
-		this.multiplexer = inputmultiplexer;
+	public BattleManager(Entity[] playerSortedUnits) {
 		this.sortedUnits = playerSortedUnits;
 		this.activeUnitIndex = 0;
 		this.numberOfUnits = sortedUnits.length;
@@ -41,29 +37,13 @@ public class BattleManager {
 	public void giveControlToNextUnit() {
 		activeUnit.setActive(false);
 		activeUnit.setFocused(false);
-		if(controller == null) {
-			controller = new InputController(activeUnit);
-		}else {
-			activeUnitIndex = (activeUnitIndex+1) % numberOfUnits;
-			activeUnit = sortedUnits[activeUnitIndex];
-			controller.changePlayer(activeUnit);
-		}
+		
+		activeUnitIndex = (activeUnitIndex+1) % numberOfUnits;
+		activeUnit = sortedUnits[activeUnitIndex];
+		
 		activeUnit.setFocused(true);
 		activeUnit.setAp(activeUnit.getMaxAp());
 		activeUnit.setActive(true);
-	}
-	
-	public void updateController() {
-		if(controller != null) {
-			controller.update();
-		}
-	}
-	
-	public void dispose() {
-		multiplexer.removeProcessor(controller);
-		if(controller != null) {
-			controller.dispose();
-		}
 	}
 
 	public Entity getActiveUnit() {
@@ -72,22 +52,6 @@ public class BattleManager {
 	
 	public Entity[] getUnits() {
 		return sortedUnits;
-	}
-
-	public InputController getController() {
-		return controller;
-	}
-
-	public void setController(InputController controller) {
-		this.controller = controller;
-	}
-
-	public InputMultiplexer getMultiplexer() {
-		return multiplexer;
-	}
-
-	public void setMultiplexer(InputMultiplexer multiplexer) {
-		this.multiplexer = multiplexer;
 	}
 
 	public BattleState getDeploymentBattleState() {

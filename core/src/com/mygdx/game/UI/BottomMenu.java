@@ -48,7 +48,7 @@ public class BottomMenu extends UIWindow {
     private int heroXP;
     private int heroINI;
     private int heroMaxHP;
-    private int heroMaxMP;
+    private int heroMaxAP;
     private int heroMaxXP;
 
     private Image heroImage;
@@ -206,7 +206,7 @@ public class BottomMenu extends UIWindow {
         heroXP = this.linkedEntity.getXp();
         heroINI = this.linkedEntity.getBaseInitiative();
         heroMaxHP = this.linkedEntity.getMaxHp();
-        heroMaxMP = this.linkedEntity.getMaxMp();
+        heroMaxAP = this.linkedEntity.getMaxAp();
         heroMaxXP = this.linkedEntity.getMaxXP();
     }
     

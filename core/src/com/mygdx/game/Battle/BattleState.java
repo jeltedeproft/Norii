@@ -9,4 +9,6 @@ public interface BattleState {
 	public void clickedOnTile(TiledMapActor actor);
 	public void clickedOnUnit(Entity entity);
 	public void exit();	
+	public void keyPressed(int key);	
+	public void buttonPressed(int button);	
 }
