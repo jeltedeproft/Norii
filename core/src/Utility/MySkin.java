@@ -2,6 +2,7 @@ package Utility;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -44,6 +45,10 @@ class MySkin extends Skin {
                 FreeTypeFontGenerator generator = new FreeTypeFontGenerator(fontFile);
                 FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
                 parameter.size = (int) (dpSize * Gdx.graphics.getDensity());
+                parameter.borderWidth = 0.5f;
+                parameter.color = Color.LIGHT_GRAY;
+                parameter.shadowOffsetX = 2;
+                parameter.shadowOffsetY = 2;
                 BitmapFont font = generator.generateFont(parameter);
                 generator.dispose();
                 return font;

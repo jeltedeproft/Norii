@@ -1,7 +1,9 @@
 package com.mygdx.game.Entities;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Entities.EntityAnimation.Direction;
 import com.mygdx.game.Entities.EntityAnimation.State;
@@ -207,7 +209,7 @@ public class Entity extends Actor implements EntitySubject{
 		this.isInActionPhase = isInActionPhase;
 		if(isInActionPhase) {
 			actionsui.update();
-			actionsui.setVisible(true);			
+			actionsui.setVisible(true);		
 		}
 		this.notifyEntityObserver(EntityCommand.UNIT_ACTIVE);
 	}

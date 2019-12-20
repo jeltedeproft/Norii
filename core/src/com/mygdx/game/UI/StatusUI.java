@@ -55,11 +55,12 @@ public class StatusUI extends UIWindow {
 	private static final float WIDTH_TILES = 6;
 	private static final float HEIGHT_TILES = 8; 
 	private static final float BAR_WIDTH = 1.5f; 
-	private static final float BAR_HEIGHT = 1;  
+	private static final float BAR_HEIGHT = 0.3f;  
+	private static final float BAR_BOTTOM_PAD = 10f;  
 
     
     public StatusUI(Entity entity){
-        super("",WIDTH_TILES,HEIGHT_TILES);            
+        super("",WIDTH_TILES,HEIGHT_TILES);   
     	initVariables(entity); 
         configureMainWindow();
 		createWidgets();
@@ -103,7 +104,6 @@ public class StatusUI extends UIWindow {
     	labelStyle = new LabelStyle();
     	labelStyle.font = font;
 	}
-	
 	
 	private void createLabels() {
 		heroName = new Label(linkedEntity.getName(),labelStyle);
@@ -158,7 +158,7 @@ public class StatusUI extends UIWindow {
 
         this.add(hpLabel).align(Align.left).colspan(1).expandX();
         this.add(hp).align(Align.left).colspan(1).expandX();
-        this.add(group).colspan(3).expandX();
+        this.add(group).colspan(3).expandX().center().padBottom(BAR_BOTTOM_PAD);
         this.row();
 
         this.add(apLabel).align(Align.left).colspan(1).expandX();
@@ -175,7 +175,7 @@ public class StatusUI extends UIWindow {
         
         this.add(xpLabel).align(Align.left).colspan(1).expandX();
         this.add(xp).align(Align.left).colspan(1).expandX();
-        this.add(group2).colspan(3).expandX();
+        this.add(group2).colspan(3).expandX().center().padBottom(BAR_BOTTOM_PAD);
         this.row();
 
         this.pack();

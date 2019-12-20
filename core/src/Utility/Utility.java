@@ -13,6 +13,7 @@ import com.badlogic.gdx.assets.loaders.TextureLoader;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
@@ -30,6 +31,8 @@ public final class Utility {
 	private static final String STATUSUI_TEXTURE_ATLAS_PATH = "skins/statusui.atlas";
 	private static final String UISKIN_TEXTURE_ATLAS_PATH = "skins/uiskin.atlas";
 	private static final String STATUSUI_SKIN_PATH = "skins/statusui.json";
+	private static final String SHADOW_WALKER_SKIN_TEXTURE_ATLAS_PATH = "skins/shadowWalker/shadow-walker-ui.atlas";
+	private static final String SHADOW_WALKER_SKIN_PATH = "skins/shadowWalker/shadow-walker-ui.json";
 	public static final String ON_TILE_HOVER_FILE_PATH = "sprites/gui/selectedTile.png";
 	
 	public static final AssetManager assetManager = new AssetManager();
@@ -38,7 +41,9 @@ public final class Utility {
 
 	private static TextureAtlas statusUITextureAtlas;
 	private static TextureAtlas uiTextureAtlas;
+	private static TextureAtlas shadowWalkerTextureAtlas;
 	private static MySkin statusUISkin;
+	private static MySkin shadowWalkerSkin;
 
 
 	public static void loadMapAsset(String mapFilenamePath){
@@ -94,6 +99,10 @@ public final class Utility {
 			FreeTypeFontLoaderParameter myFont = new FreeTypeFontLoaderParameter();
 			myFont.fontFileName = fontName;
 			myFont.fontParameters.size = size;
+			myFont.fontParameters.borderWidth = 0.5f;
+			myFont.fontParameters.color = Color.LIGHT_GRAY;
+			myFont.fontParameters.shadowOffsetX = 2;
+			myFont.fontParameters.shadowOffsetY = 2;
 			assetManager.load(fontName, BitmapFont.class, myFont);
 		}
 	}
@@ -153,6 +162,14 @@ public final class Utility {
 
 		return uiTextureAtlas;
 	}
+	
+	public static TextureAtlas getShadowWalkerTextureAtlas() {
+		if(shadowWalkerTextureAtlas == null) {
+			shadowWalkerTextureAtlas = new TextureAtlas(SHADOW_WALKER_SKIN_TEXTURE_ATLAS_PATH);
+		}
+		
+		return shadowWalkerTextureAtlas;
+	}
 
 	public static MySkin getStatusUISkin() {
 		if(statusUISkin == null) {
@@ -160,6 +177,14 @@ public final class Utility {
 		}
 
 		return statusUISkin;
+	}
+	
+	public static MySkin getShadowWalkersUISkin() {
+		if(shadowWalkerSkin == null) {
+			shadowWalkerSkin = new MySkin(Gdx.files.internal(SHADOW_WALKER_SKIN_PATH),getShadowWalkerTextureAtlas());
+		}
+		
+		return shadowWalkerSkin;
 	}
 
 	public static float loadCompleted(){

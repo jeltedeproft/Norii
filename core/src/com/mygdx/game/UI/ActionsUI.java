@@ -15,11 +15,13 @@ public class ActionsUI extends UIWindow {
     private static final float WINDOW_HEIGHT = 3.3f;
     private static final int BUTTON_WIDTH = 1;
     private static final int BUTTON_HEIGHT = 1;
+    private static final int ICON_PADDING = 10;
+    private static final int MAIN_WINDOW_PADDING = 5;
+    private static final float EXTRA_WINDOW_SIZE = (MAIN_WINDOW_PADDING + ICON_PADDING) * 0.0625f;
     private static final String MOVE_BUTTON_SPRITEPATH = "sprites/gui/move.png";
 	private static final String ATTACK_BUTTON_SPRITEPATH = "sprites/gui/attack.png";
 	private static final String SKIP_BUTTON_SPRITEPATH = "sprites/gui/skip.png";
 	
-    
     private MoveActionUIButton moveActionUIButton;
     private AttackActionUIButton attackActionUIButton;
     private SkipActionUIButton skipActionUIButton;
@@ -32,7 +34,7 @@ public class ActionsUI extends UIWindow {
     private Entity linkedEntity;
 
     public ActionsUI(Entity entity){
-        super("",WINDOW_WIDTH,WINDOW_HEIGHT);
+        super("",WINDOW_WIDTH + EXTRA_WINDOW_SIZE,WINDOW_HEIGHT + EXTRA_WINDOW_SIZE);
         configureMainWindow();
         initVariables(entity);
         createWidgets();
@@ -41,7 +43,7 @@ public class ActionsUI extends UIWindow {
     
     protected void configureMainWindow() {
         this.setVisible(false);
-        this.pad(0);
+        this.pad(MAIN_WINDOW_PADDING);
         this.setKeepWithinStage(false);
     }
 
@@ -82,15 +84,17 @@ public class ActionsUI extends UIWindow {
 	private void addButtons() {  
 		float buttonWidth = BUTTON_WIDTH * tileWidthPixel;
 		float buttonHeight = BUTTON_HEIGHT * tileHeightPixel;
-        this.add(moveActionUIButton.getButton()).size(buttonWidth,buttonHeight);
+		
+        this.add(moveActionUIButton.getButton()).size(buttonWidth,buttonHeight).pad(ICON_PADDING);
 		this.add(moveLabel).expand().fill();;
         this.row();
         
-        this.add(attackActionUIButton.getButton()).size(buttonWidth,buttonHeight);
+        this.add(attackActionUIButton.getButton()).size(buttonWidth,buttonHeight).pad(ICON_PADDING);
         this.add(attackLabel).expand().fill();
         this.row();
         
-        this.add(skipActionUIButton.getButton()).size(buttonWidth,buttonHeight);
+        
+        this.add(skipActionUIButton.getButton()).size(buttonWidth,buttonHeight).pad(ICON_PADDING);
         this.add(skipLabel).expand().fill();
         this.add();
 	}

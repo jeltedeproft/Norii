@@ -3,6 +3,7 @@ package com.mygdx.game.Screen;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -115,6 +116,10 @@ public class MainMenuScreen extends GameScreen {
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/BLKCHCRY.ttf"));
     	FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
     	parameter.size = 105;
+        parameter.borderWidth = 1;
+        parameter.color = Color.LIGHT_GRAY;
+        parameter.shadowOffsetX = 1;
+        parameter.shadowOffsetY = 1;
     	BitmapFont font = generator.generateFont(parameter);
     	LabelStyle labelStyle = new LabelStyle();
     	labelStyle.font = font;
