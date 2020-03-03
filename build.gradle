@@ -49,7 +49,8 @@ project(":desktop") {
         compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
         compile "com.github.xaguzman:pathfinding-gdx-bridge:0.2.6"
         compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
-        testCompile "org.mockito:mockito-core:2.+"
+        testImplementation 'junit:junit:4.12'
+        testImplementation 'org.mockito:mockito-all:2.0.2-beta'
     }
 }
 
@@ -65,10 +66,11 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx-ai:$aiVersion"
         compile "com.github.xaguzman:pathfinding-gdx-bridge:0.2.6"
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        testCompile "org.mockito:mockito-core:2.+"
+        testImplementation 'junit:junit:4.12'
+        testImplementation 'org.mockito:mockito-all:2.0.2-beta'
     }
 }
-
+/*
 project(":tests") {
     apply plugin: "java"
 
@@ -90,7 +92,7 @@ project(":tests") {
         testCompile "com.badlogicgames.gdx:gdx:$gdxVersion"
         testCompile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
     }
-}
+}*/
 
 tasks.eclipse.doLast {
     delete ".project"
