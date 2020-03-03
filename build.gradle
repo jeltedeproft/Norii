@@ -68,7 +68,7 @@ project(":core") {
         testCompile "org.mockito:mockito-core:2.+"
     }
 }
-
+/*
 project(":tests") {
     apply plugin: "java"
 
@@ -90,7 +90,7 @@ project(":tests") {
         testCompile "com.badlogicgames.gdx:gdx:$gdxVersion"
         testCompile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
     }
-}
+}*/
 
 tasks.eclipse.doLast {
     delete ".project"
