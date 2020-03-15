@@ -21,12 +21,12 @@ We encourage contributions from anybody and try to keep a warm and friendly comm
 
 Norii requires Java 8 - [download it here](https://www.java.com/en/download/). Also make sure that your graphics card driver is up to date.
 
-In order to play the game, simply 
+In order to help coding, simply 
 
 - fork the repo
 - clone the repo 
 - import as gradle project
-- run ./gradlew desktop:run  or gradlew desktop:run (depending on your OS/shell you use)
+- add assets as a source folder to your IDE
 - run the desktoplauncher.java file. (I personally used Eclipse, I haven't yet tested for other IDE's)
 
 
