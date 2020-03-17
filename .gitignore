@@ -20,6 +20,7 @@ out/
 # Gradle files
 .gradle/*
 build/
+!gradle/wrapper/gradle-wrapper.jar
 
 .idea
 
@@ -85,3 +86,4 @@ lint/generated/
 lint/outputs/
 lint/tmp/
 # lint/reports/
+/.gradle/
