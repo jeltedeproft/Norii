@@ -30,19 +30,30 @@ public class SpellBattleState extends BattleState {
 
 	@Override
 	public void exit() {
-		battlemanager.setCurrentBattleState(battlemanager.getSpellBattleState());
+		battlemanager.setCurrentBattleState(battlemanager.getActionBattleState());
 		battlemanager.getCurrentBattleState().entry();
 	}
 
 	private void possibleUnitTargetSpell(final Entity entity) {
-		final Ability abilityName = battlemanager.getCurrentSpell();
+		final Ability ability = battlemanager.getCurrentSpell();
 		final Entity currentUnit = battlemanager.getActiveUnit();
 		final Entity possibleTarget = getPossibleTarget(entity);
 		if (possibleTarget != null && !(possibleTarget.getName().equalsIgnoreCase(currentUnit.getName()))) {
-			//currentUnit.castSpell(possibleTarget);
-			notify(AudioObserver.AudioCommand.SOUND_PLAY_ONCE, AudioObserver.AudioTypeEvent.SPELL_SOUND);
+			switch (ability.getAbilityEnum()) {
+				case FIREBALL:
+					castFireBall(currentUnit, possibleTarget, ability);
+					break;
+				default:
+					break;
+			}
 		}
 		exit();
+	}
+
+	private void castFireBall(final Entity caster, final Entity target, final Ability ability) {
+		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
+		target.damage(ability.getSpellData().getDamage());
+		notify(AudioObserver.AudioCommand.SOUND_PLAY_ONCE, AudioObserver.AudioTypeEvent.SPELL_SOUND);
 	}
 
 	private void possibleTileSpell(final TiledMapActor actor) {

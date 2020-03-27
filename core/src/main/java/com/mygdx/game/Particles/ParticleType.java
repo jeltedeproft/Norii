@@ -4,6 +4,7 @@ public enum ParticleType {
 	SPAWN("particles/mysmalleffect.p"),
 	MOVE("particles/mysmalleffect.p"),
 	SPELL("particles/mysmalleffect.p"),
+	FIREBALL("particles/fireball.p"),
 	ATTACK("particles/attackParticle.p");
 
 	private String particleFileLocation;

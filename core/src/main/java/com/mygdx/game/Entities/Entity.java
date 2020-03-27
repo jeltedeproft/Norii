@@ -201,7 +201,7 @@ public class Entity extends Actor implements EntitySubject {
 		return ap > basicAttackCost;
 	}
 
-	private void damage(final int damage) {
+	public void damage(final int damage) {
 		if (damage > hp) {
 			hp = 0;
 			isDead = true;

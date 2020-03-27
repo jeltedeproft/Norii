@@ -16,7 +16,7 @@ public class SpellActionUIButton extends ActionUIButton {
 		button.addListener(new ClickListener() {
 			@Override
 			public void clicked(final InputEvent event, final float x, final float y) {
-				if (linkedUnit.canMove()) {
+				if (linkedUnit.getAp() >= ability.getSpellData().getApCost()) {
 					linkedUnit.setInSpellPhase(true, ability);
 				}
 			}
