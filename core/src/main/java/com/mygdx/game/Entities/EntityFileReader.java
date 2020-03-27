@@ -7,23 +7,25 @@ import com.badlogic.gdx.utils.ObjectMap;
 public class EntityFileReader {
 	private static boolean statsLoaded = false;
 	private static ObjectMap<Integer, EntityData> unitData = new ObjectMap<Integer, EntityData>();
-	
+	private static final String UNIT_STATS_FILE_LOCATION = "units/unitStats.json";
+
 	private EntityFileReader() {
-		
+
 	}
-	
+
 	public static void loadUnitStatsInMemory() {
-		if(!statsLoaded) {
-			Json json = new Json();
-			EntityData[] unitStats = json.fromJson(EntityData[].class, Gdx.files.internal("units/unitStats.json"));
+		if (!statsLoaded) {
+			final Json json = new Json();
+			final EntityData[] unitStats = json.fromJson(EntityData[].class, Gdx.files.internal(UNIT_STATS_FILE_LOCATION));
 			for (int i = 0; i < unitStats.length; i++) {
-				EntityData data = unitStats[i];
-	            unitData.put(data.getID(), data);
-	        }
+				final EntityData data = unitStats[i];
+				unitData.put(data.getID(), data);
+			}
+			statsLoaded = true;
 		}
 	}
-	
-	public static ObjectMap<Integer, EntityData> getUnitData(){
+
+	public static ObjectMap<Integer, EntityData> getUnitData() {
 		return unitData;
 	}
 }

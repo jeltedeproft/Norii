@@ -1,0 +1,43 @@
+RobustaRequest;OUT;01 - Channel;Channel
+OttCreateEERequest;OUT;01 - Channel;Channel
+OttCreateEEResponse;OUT;01 - Channel;Channel
+?;OUT;01 - Channel;Workflow
+?;OUT;01 - Channel;Workflow
+VerifyCustomerRequest;OUT;01 - Channel;
+VerifyCustomerResponse;OUT;01 - Channel;
+?;OUT;01 - Channel;Workflow
+?;OUT;01 - Channel;Workflow
+?;OUT;01 - Channel;Workflow
+?;OUT;04 - Final;Workflow
+OttCreateWfRequest;OUT;;
+OtRequest;OUT;01 - Channel;Workflow
+IntrRequest;OUT;;
+OtResponse;OUT;02 - Processing;EE
+OttCreateWfResponse;OUT;02 - Processing;EE
+TerminateRequest;OUT;02 - Processing;EE
+OttUpdateEERequest;OUT;02 - Processing;EE
+EEReleaseRequest;OUT;02 - Processing;EE
+SwiftRequest;OUT;03 - Settlement;EE
+SwiftResponse;OUT;04 - Final;AMH
+Firco-Request;OUT;03 - Settlement;AMH
+Firco-Response;OUT;03 - Settlement;AMH
+;OUT;04 - Final;AMH
+;OUT;04 - Final;AMH
+Firco-Request;IN;01 - Channel;AMH
+Firco-Response;IN;01 - Channel;AMH
+SwiftIn;IN;01 - Channel;AMH
+mt103-demerge-request;IN;01 - Channel;EE
+SwiftEEResponseMT;IN;02 - Capture;EE
+IttCreateEERequest;IN;02 - Capture;EE
+VerifyCustomerRequest;IN;;
+VerifyCustomerResponse;IN;;
+TerminateRequest;IN;02 - Processing;EE
+?;IN;02 - Capture;Workflow
+?;IN;02 - Capture;Workflow
+?;IN;02 - Capture;Workflow
+?;IN;03 - Release;Workflow
+GpiUpdateRequest;IN;03 - Release;?
+EEReleaseRequest;IN;03 - Release;?
+PbbEntryRequest;IN;04 - Final;?
+CfcEntryRequest;IN;04 - Final;?
+;IN;04 - Final;

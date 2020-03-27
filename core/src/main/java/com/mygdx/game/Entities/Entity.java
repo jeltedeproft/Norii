@@ -1,13 +1,17 @@
 package com.mygdx.game.Entities;
 
-import com.badlogic.gdx.graphics.Color;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.function.Predicate;
+
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Entities.EntityAnimation.Direction;
 import com.mygdx.game.Entities.EntityAnimation.State;
 import com.mygdx.game.Entities.EntityObserver.EntityCommand;
+import com.mygdx.game.Magic.AbilitiesEnum;
+import com.mygdx.game.Magic.Ability;
 import com.mygdx.game.UI.ActionsUI;
 import com.mygdx.game.UI.BottomMenu;
 import com.mygdx.game.UI.StatusUI;
@@ -15,70 +19,77 @@ import com.mygdx.game.UI.StatusUI;
 import Utility.TiledMapPosition;
 import Utility.Utility;
 
-public class Entity extends Actor implements EntitySubject{
-	private EntityData entityData;
+public class Entity extends Actor implements EntitySubject {
+	private final EntityData entityData;
+
 	private int ap;
 	private int hp;
+
 	private int basicAttackCost;
 	private int currentInitiative;
+
 	private boolean inBattle;
 	private boolean isActive;
 	private boolean isInMovementPhase;
 	private boolean isInAttackPhase;
 	private boolean isInActionPhase;
 	private boolean isInDeploymentPhase;
+	private boolean isInSpellPhase;
 	private boolean isDead;
 
 	protected TiledMapPosition nextPlayerPosition;
 	protected TiledMapPosition currentPlayerPosition;
+	protected Direction direction;
 	protected State state = State.IDLE;
-	
+
 	private StatusUI statusui;
 	private ActionsUI actionsui;
 	private BottomMenu bottomMenu;
-	
-	private EntityAnimation entityAnimation;
+
+	private final EntityAnimation entityAnimation;
 	protected EntityActor entityactor;
-	
+
 	private Array<EntityObserver> observers;
-	
-	public Entity(int id){
+	private Collection<Ability> abilities;
+
+	public Entity(final int id) {
 		entityData = EntityFileReader.getUnitData().get(id);
-		this.entityAnimation = new EntityAnimation(entityData.getEntitySpriteFilePath());
+		entityAnimation = new EntityAnimation(entityData.getEntitySpriteFilePath());
 		initEntity();
 	}
-	
-	public void initEntity(){
-		this.observers = new Array<EntityObserver>();
-		this.nextPlayerPosition = new TiledMapPosition();
-		this.currentPlayerPosition = new TiledMapPosition().setPositionFromScreen(-100, -100);
-		this.hp = entityData.getMaxHP();
-		this.ap = entityData.getMaxAP();
-		this.currentInitiative = entityData.getIni();
-		this.isDead = false;
-		this.inBattle = false;
-		this.isInMovementPhase = false;
-		this.isInAttackPhase = false;
-		this.isInDeploymentPhase = false;
+
+	public void initEntity() {
+		observers = new Array<EntityObserver>();
+		nextPlayerPosition = new TiledMapPosition();
+		currentPlayerPosition = new TiledMapPosition().setPositionFromScreen(-100, -100);
+		hp = entityData.getMaxHP();
+		ap = entityData.getMaxAP();
+		currentInitiative = entityData.getIni();
+		isDead = false;
+		inBattle = false;
+		isInMovementPhase = false;
+		isInAttackPhase = false;
+		isInDeploymentPhase = false;
+		abilities = new ArrayList<Ability>();
 	}
-	
-	public void update(float delta){
-		this.entityAnimation.update(delta);
+
+	public void update(final float delta) {
+		entityAnimation.update(delta);
 	}
 
 	public StatusUI getStatusui() {
 		return statusui;
 	}
 
-	public void setStatusui(StatusUI statusui) {
+	public void setStatusui(final StatusUI statusui) {
 		this.statusui = statusui;
 	}
-	
+
 	public ActionsUI getActionsui() {
 		return actionsui;
 	}
 
-	public void setActionsui(ActionsUI actionsui) {
+	public void setActionsui(final ActionsUI actionsui) {
 		this.actionsui = actionsui;
 	}
 
@@ -86,29 +97,29 @@ public class Entity extends Actor implements EntitySubject{
 		return bottomMenu;
 	}
 
-	public void setbottomMenu(BottomMenu bottomMenu) {
+	public void setbottomMenu(final BottomMenu bottomMenu) {
 		this.bottomMenu = bottomMenu;
 	}
-	
-	public void dispose(){
-		Utility.unloadAsset(this.entityAnimation.getSpritePath());
+
+	public void dispose() {
+		Utility.unloadAsset(entityAnimation.getSpritePath());
 	}
-	
-	public void setState(State state){
+
+	public void setState(final State state) {
 		this.state = state;
 	}
-	
-	public TiledMapPosition getCurrentPosition(){
+
+	public TiledMapPosition getCurrentPosition() {
 		return currentPlayerPosition;
 	}
-	
-	public void setCurrentPosition(TiledMapPosition pos){
-		this.currentPlayerPosition = pos;
-		this.entityactor.setPos();
-		
+
+	public void setCurrentPosition(final TiledMapPosition pos) {
+		currentPlayerPosition = pos;
+		entityactor.setPos();
+
 		updateUI();
 	}
-	
+
 	public void updateUI() {
 		statusui.update();
 		bottomMenu.update();
@@ -118,7 +129,7 @@ public class Entity extends Actor implements EntitySubject{
 	public String getName() {
 		return entityData.getName();
 	}
-	
+
 	public String getPortraitPath() {
 		return entityData.getPortraitSpritePath();
 	}
@@ -127,10 +138,10 @@ public class Entity extends Actor implements EntitySubject{
 		return entityactor;
 	}
 
-	public void setEntityactor(EntityActor entityactor) {
+	public void setEntityactor(final EntityActor entityactor) {
 		this.entityactor = entityactor;
 	}
-	
+
 	public boolean isDead() {
 		return isDead;
 	}
@@ -139,7 +150,7 @@ public class Entity extends Actor implements EntitySubject{
 		return isActive;
 	}
 
-	public void setActive(boolean isActive) {
+	public void setActive(final boolean isActive) {
 		this.isActive = isActive;
 		actionsui.update();
 	}
@@ -148,88 +159,100 @@ public class Entity extends Actor implements EntitySubject{
 		return isInMovementPhase;
 	}
 
-	public void setInMovementPhase(boolean isInMovementPhase) {
+	public void setInMovementPhase(final boolean isInMovementPhase) {
 		this.isInMovementPhase = isInMovementPhase;
-		if(isInMovementPhase) {
-			actionsui.setVisible(false);	
-			this.notifyEntityObserver(EntityCommand.IN_MOVEMENT);
+		if (isInMovementPhase) {
+			actionsui.setVisible(false);
+			notifyEntityObserver(EntityCommand.IN_MOVEMENT);
 		}
 	}
-	
+
 	public boolean isInAttackPhase() {
 		return isInAttackPhase;
 	}
 
-	public void setInAttackPhase(boolean isInAttackPhase) {
-		if(canAttack()) {
+	public void setInAttackPhase(final boolean isInAttackPhase) {
+		if (canAttack()) {
 			this.isInAttackPhase = isInAttackPhase;
-			if(isInAttackPhase) {
-				actionsui.setVisible(false);			
-				this.notifyEntityObserver(EntityCommand.IN_ATTACK_PHASE);
+			if (isInAttackPhase) {
+				actionsui.setVisible(false);
+				notifyEntityObserver(EntityCommand.IN_ATTACK_PHASE);
 			}
 		}
 	}
-	
-	public void attack(Entity target) {
+
+	public boolean isInSpellPhase() {
+		return isInSpellPhase;
+	}
+
+	public void setInSpellPhase(final boolean isInSpellPhase, final Ability ability) {
+		this.isInSpellPhase = isInSpellPhase;
+		if (isInSpellPhase) {
+			actionsui.setVisible(false);
+			notifyEntityObserver(EntityCommand.IN_SPELL_PHASE, ability);
+		}
+	}
+
+	public void attack(final Entity target) {
 		target.damage(getAttackPower());
 	}
-	
+
 	public boolean canAttack() {
 		return ap > basicAttackCost;
 	}
-	
-	private void damage(int damage) {
-		if(damage > this.hp) {
-			this.hp = 0;
-			this.isDead = true;
-		}else {
-			this.hp = this.hp - damage;
+
+	private void damage(final int damage) {
+		if (damage > hp) {
+			hp = 0;
+			isDead = true;
+		} else {
+			hp = hp - damage;
 		}
-		
+
 		updateUI();
 	}
-	
+
 	public boolean canMove() {
-		return (this.ap > 0);
+		return (ap > 0);
 	}
 
 	public boolean isInBattle() {
 		return inBattle;
 	}
 
-	public void setInBattle(boolean inBattle) {
+	public void setInBattle(final boolean inBattle) {
 		this.inBattle = inBattle;
 	}
-	
+
 	public boolean isInActionPhase() {
 		return isInActionPhase;
 	}
 
-	public void setInActionPhase(boolean isInActionPhase) {
+	public void setInActionPhase(final boolean isInActionPhase) {
 		this.isInActionPhase = isInActionPhase;
-		if(isInActionPhase) {
+		if (isInActionPhase) {
 			actionsui.update();
-			actionsui.setVisible(true);		
+			actionsui.setVisible(true);
 		}
-		this.notifyEntityObserver(EntityCommand.UNIT_ACTIVE);
+		notifyEntityObserver(EntityCommand.UNIT_ACTIVE);
 	}
-	
+
 	public boolean isInDeploymentPhase() {
 		return isInDeploymentPhase;
 	}
 
-	public void setInDeploymentPhase(boolean isInDeploymentPhase) {
+	public void setInDeploymentPhase(final boolean isInDeploymentPhase) {
 		this.isInDeploymentPhase = isInDeploymentPhase;
-		if (isInDeploymentPhase){
+		if (isInDeploymentPhase) {
 			bottomMenu.setHero(this);
-			this.notifyEntityObserver(EntityCommand.UNIT_ACTIVE);
+			notifyEntityObserver(EntityCommand.UNIT_ACTIVE);
 		}
 	}
-	
-	public void setFocused(boolean isFocused) {
-		if (isFocused){
+
+	public void setFocused(final boolean isFocused) {
+		if (isFocused) {
 			bottomMenu.setHero(this);
-		}else {
+		} else {
 			bottomMenu.setHero(null);
 		}
 	}
@@ -238,16 +261,16 @@ public class Entity extends Actor implements EntitySubject{
 		return ap;
 	}
 
-	public void setAp(int ap) {
+	public void setAp(final int ap) {
 		this.ap = ap;
 		updateUI();
 	}
-	
+
 	public int getMaxAp() {
 		return entityData.getMaxAP();
 	}
-	
-	public void setMaxAp(int maxAP) {
+
+	public void setMaxAp(final int maxAP) {
 		entityData.setMaxAP(maxAP);
 		updateUI();
 	}
@@ -256,20 +279,20 @@ public class Entity extends Actor implements EntitySubject{
 		return hp;
 	}
 
-	public void setHp(int hp) {
+	public void setHp(final int hp) {
 		this.hp = hp;
 		updateUI();
 	}
-	
+
 	public int getMaxXP() {
 		return entityData.getMaxXP();
 	}
-	
+
 	public int getMaxHp() {
 		return entityData.getMaxHP();
 	}
-	
-	public void setMaxHp(int maxHP) {
+
+	public void setMaxHp(final int maxHP) {
 		entityData.setMaxHP(maxHP);
 		updateUI();
 	}
@@ -278,32 +301,32 @@ public class Entity extends Actor implements EntitySubject{
 		return entityData.getIni();
 	}
 
-	public void setBaseIniative(int ini) {
+	public void setBaseIniative(final int ini) {
 		entityData.setIni(ini);
 		updateUI();
 	}
-	
+
 	public int getAttackRange() {
 		return entityData.getAttackrange();
 	}
-	
-	public void setAttackRange(int attackRange) {
+
+	public void setAttackRange(final int attackRange) {
 		entityData.setAttackrange(attackRange);
 	}
-	
+
 	public int getAttackPower() {
 		return entityData.getAttackPower();
 	}
-	
-	public void setAttackPower(int attackPower) {
+
+	public void setAttackPower(final int attackPower) {
 		entityData.setAttackPower(attackPower);
 	}
-	
+
 	public int getAbasicAttackCost() {
 		return entityData.getBasicAttackCost();
 	}
-	
-	public void setbasicAttackCost(int basicAttackCost) {
+
+	public void setbasicAttackCost(final int basicAttackCost) {
 		entityData.setBasicAttackCost(basicAttackCost);
 	}
 
@@ -311,7 +334,7 @@ public class Entity extends Actor implements EntitySubject{
 		return entityData.getLevel();
 	}
 
-	public void setLevel(int level) {
+	public void setLevel(final int level) {
 		entityData.setLevel(level);
 		updateUI();
 	}
@@ -320,47 +343,74 @@ public class Entity extends Actor implements EntitySubject{
 		return entityData.getXp();
 	}
 
-	public void setXp(int xp) {
+	public void setXp(final int xp) {
 		entityData.setXp(xp);
 		updateUI();
 	}
-	
+
 	public int getCurrentInitiative() {
 		return currentInitiative;
 	}
 
-	public void setCurrentInitiative(int currentInitiative) {
+	public void setCurrentInitiative(final int currentInitiative) {
 		this.currentInitiative = currentInitiative;
 	}
 
 	public TextureRegion getFrame() {
 		return entityAnimation.getFrame();
 	}
-	
-	public void setDirection(Direction direction) {
+
+	public void setDirection(final Direction direction) {
 		entityAnimation.setDirection(direction);
-	}	
-	
-    @Override
-    public void addEntityObserver(EntityObserver entityObserver) {
-        observers.add(entityObserver);
-    }
+	}
 
-    @Override
-    public void removeObserver(EntityObserver entityObserver) {
-        observers.removeValue(entityObserver, true);
-    }
+	public EntityAnimation getEntityAnimation() {
+		return entityAnimation;
+	}
 
-    @Override
-    public void removeAllObservers() {
-        observers.removeAll(observers, true);
-    }
+	public void addAbility(final AbilitiesEnum abilityEnum) {
+		final Ability ability = new Ability(abilityEnum);
+		abilities.add(ability);
+	}
 
-    @Override
-    public void notifyEntityObserver(EntityObserver.EntityCommand command) {
-    	for(int i = 0; i < observers.size; i++) {
-    		observers.get(i).onEntityNotify(command,this);
-    	}
-    }
+	public void removeAbility(final AbilitiesEnum abilityEnum) {
+		abilities.removeIf(new Predicate<Ability>() {
+			@Override
+			public boolean test(final Ability ability) {
+				return ability.getId() == abilityEnum.ordinal();
+			}
+		});
+	}
 
+	public Collection<Ability> getAbilities() {
+		return abilities;
+	}
+
+	@Override
+	public void addEntityObserver(final EntityObserver entityObserver) {
+		observers.add(entityObserver);
+	}
+
+	@Override
+	public void removeObserver(final EntityObserver entityObserver) {
+		observers.removeValue(entityObserver, true);
+	}
+
+	@Override
+	public void removeAllObservers() {
+		observers.removeAll(observers, true);
+	}
+
+	@Override
+	public void notifyEntityObserver(final EntityObserver.EntityCommand command) {
+		for (int i = 0; i < observers.size; i++) {
+			observers.get(i).onEntityNotify(command, this);
+		}
+	}
+
+	public void notifyEntityObserver(final EntityObserver.EntityCommand command, final Ability ability) {
+		for (int i = 0; i < observers.size; i++) {
+			observers.get(i).onEntityNotify(command, this, ability);
+		}
+	}
 }

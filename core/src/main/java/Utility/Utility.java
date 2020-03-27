@@ -27,16 +27,16 @@ import com.mygdx.game.Map.MyNavTmxMapLoader;
 
 public final class Utility {
 	private static final String TAG = Utility.class.getSimpleName();
-	
+
 	private static final String STATUSUI_TEXTURE_ATLAS_PATH = "skins/statusui.atlas";
 	private static final String UISKIN_TEXTURE_ATLAS_PATH = "skins/uiskin.atlas";
 	private static final String STATUSUI_SKIN_PATH = "skins/statusui.json";
 	private static final String SHADOW_WALKER_SKIN_TEXTURE_ATLAS_PATH = "skins/shadowWalker/shadow-walker-ui.atlas";
 	private static final String SHADOW_WALKER_SKIN_PATH = "skins/shadowWalker/shadow-walker-ui.json";
 	public static final String ON_TILE_HOVER_FILE_PATH = "sprites/gui/selectedTile.png";
-	
+
 	public static final AssetManager assetManager = new AssetManager();
-	private static InternalFileHandleResolver filePathResolver =  new InternalFileHandleResolver();
+	private static InternalFileHandleResolver filePathResolver = new InternalFileHandleResolver();
 	public static final Random random = new Random();
 
 	private static TextureAtlas statusUITextureAtlas;
@@ -45,58 +45,52 @@ public final class Utility {
 	private static MySkin statusUISkin;
 	private static MySkin shadowWalkerSkin;
 
-
-	public static void loadMapAsset(String mapFilenamePath){
+	public static void loadMapAsset(final String mapFilenamePath) {
 		loadAsset(mapFilenamePath, TiledMap.class, new MyNavTmxMapLoader(filePathResolver));
 	}
 
-	public static TiledMap getMapAsset(String mapFilenamePath){
-		return (TiledMap) getAsset(mapFilenamePath,TiledMap.class);
+	public static TiledMap getMapAsset(final String mapFilenamePath) {
+		return (TiledMap) getAsset(mapFilenamePath, TiledMap.class);
 	}
 
-	
-	public static void loadTextureAsset(String textureFilenamePath){
+	public static void loadTextureAsset(final String textureFilenamePath) {
 		loadAsset(textureFilenamePath, Texture.class, new TextureLoader(filePathResolver));
 	}
 
-	public static Texture getTextureAsset(String textureFilenamePath){
-		return (Texture) getAsset(textureFilenamePath,Texture.class);
+	public static Texture getTextureAsset(final String textureFilenamePath) {
+		return (Texture) getAsset(textureFilenamePath, Texture.class);
 	}
-	
-	public static void loadParticleAsset(String particleFilenamePath){
+
+	public static void loadParticleAsset(final String particleFilenamePath) {
 		loadAsset(particleFilenamePath, ParticleEffect.class, new ParticleEffectLoader(filePathResolver));
 	}
 
-	public static ParticleEffect  getParticleAsset(String particleFilenamePath){
-		return (ParticleEffect) getAsset(particleFilenamePath,ParticleEffect.class);
+	public static ParticleEffect getParticleAsset(final String particleFilenamePath) {
+		return (ParticleEffect) getAsset(particleFilenamePath, ParticleEffect.class);
 	}
 
-	
-	public static void loadSoundAsset(String soundFilenamePath){
+	public static void loadSoundAsset(final String soundFilenamePath) {
 		loadAsset(soundFilenamePath, Sound.class, new SoundLoader(filePathResolver));
 	}
 
-
-	public static Sound getSoundAsset(String soundFilenamePath){
-		return (Sound) getAsset(soundFilenamePath,Sound.class);
+	public static Sound getSoundAsset(final String soundFilenamePath) {
+		return (Sound) getAsset(soundFilenamePath, Sound.class);
 	}
 
-	
-	public static void loadMusicAsset(String musicFilenamePath){
+	public static void loadMusicAsset(final String musicFilenamePath) {
 		loadAsset(musicFilenamePath, Music.class, new MusicLoader(filePathResolver));
 	}
 
+	public static Music getMusicAsset(final String musicFilenamePath) {
+		return (Music) getAsset(musicFilenamePath, Music.class);
+	}
 
-	public static Music getMusicAsset(String musicFilenamePath){
-		return (Music) getAsset(musicFilenamePath,Music.class);
-	}	
-	
-	public static void loadFreeTypeFontAsset(String fontName, int size){
-		if(checkValidString(fontName)){
+	public static void loadFreeTypeFontAsset(final String fontName, final int size) {
+		if (checkValidString(fontName)) {
 			assetManager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(filePathResolver));
 			assetManager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(filePathResolver));
-			
-			FreeTypeFontLoaderParameter myFont = new FreeTypeFontLoaderParameter();
+
+			final FreeTypeFontLoaderParameter myFont = new FreeTypeFontLoaderParameter();
 			myFont.fontFileName = fontName;
 			myFont.fontParameters.size = size;
 			myFont.fontParameters.borderWidth = 0.5f;
@@ -106,49 +100,48 @@ public final class Utility {
 			assetManager.load(fontName, BitmapFont.class, myFont);
 		}
 	}
-	
-	public static BitmapFont getFreeTypeFontAsset(String fontName){
-		return (BitmapFont) getAsset(fontName,BitmapFont.class);
+
+	public static BitmapFont getFreeTypeFontAsset(final String fontName) {
+		return (BitmapFont) getAsset(fontName, BitmapFont.class);
 	}
-	
+
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static void loadAsset(String assetName,Class className,AssetLoader loader) {
-		if(checkValidString(assetName)){
-			if( filePathResolver.resolve(assetName).exists() ){
+	public static void loadAsset(final String assetName, final Class className, final AssetLoader loader) {
+		if (checkValidString(assetName)) {
+			if (filePathResolver.resolve(assetName).exists()) {
 				assetManager.setLoader(className, loader);
 				assetManager.load(assetName, className);
 				assetManager.finishLoadingAsset(assetName);//block
-				Gdx.app.debug(TAG, className.getSimpleName() +  " loaded: " + assetName);
-			}
-			else{
-				Gdx.app.debug(TAG, className.getSimpleName() +  " doesn't exist: " + assetName );
+				Gdx.app.debug(TAG, className.getSimpleName() + " loaded: " + assetName);
+			} else {
+				Gdx.app.debug(TAG, className.getSimpleName() + " doesn't exist: " + assetName);
 			}
 		}
 	}
-	
+
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static Object getAsset(String filenamePath,Class className){
+	public static Object getAsset(final String filenamePath, final Class className) {
 		Object object = null;
 
-		if( assetManager.isLoaded(filenamePath) ){
-			object = assetManager.get(filenamePath,className);
+		if (assetManager.isLoaded(filenamePath)) {
+			object = assetManager.get(filenamePath, className);
 		} else {
-			Gdx.app.debug(TAG, className.getSimpleName() +  " is not loaded: " + filenamePath );
+			Gdx.app.debug(TAG, className.getSimpleName() + " is not loaded: " + filenamePath);
 		}
 
 		return object;
 	}
-	
-	public static void unloadAsset(String assetFilenamePath){
-		if( assetManager.isLoaded(assetFilenamePath) ){
+
+	public static void unloadAsset(final String assetFilenamePath) {
+		if (assetManager.isLoaded(assetFilenamePath)) {
 			assetManager.unload(assetFilenamePath);
 		} else {
-			Gdx.app.debug(TAG, "Asset is not loaded; Nothing to unload: " + assetFilenamePath );
+			Gdx.app.debug(TAG, "Asset is not loaded; Nothing to unload: " + assetFilenamePath);
 		}
 	}
 
 	public static TextureAtlas getStatusUITextureAtlas() {
-		if(statusUITextureAtlas == null) {
+		if (statusUITextureAtlas == null) {
 			statusUITextureAtlas = new TextureAtlas(STATUSUI_TEXTURE_ATLAS_PATH);
 		}
 
@@ -156,63 +149,63 @@ public final class Utility {
 	}
 
 	public static TextureAtlas getUITextureAtlas() {
-		if(uiTextureAtlas == null) {
+		if (uiTextureAtlas == null) {
 			uiTextureAtlas = new TextureAtlas(UISKIN_TEXTURE_ATLAS_PATH);
 		}
 
 		return uiTextureAtlas;
 	}
-	
+
 	public static TextureAtlas getShadowWalkerTextureAtlas() {
-		if(shadowWalkerTextureAtlas == null) {
+		if (shadowWalkerTextureAtlas == null) {
 			shadowWalkerTextureAtlas = new TextureAtlas(SHADOW_WALKER_SKIN_TEXTURE_ATLAS_PATH);
 		}
-		
+
 		return shadowWalkerTextureAtlas;
 	}
 
 	public static MySkin getStatusUISkin() {
-		if(statusUISkin == null) {
-			statusUISkin = new MySkin(Gdx.files.internal(STATUSUI_SKIN_PATH),getStatusUITextureAtlas());
+		if (statusUISkin == null) {
+			statusUISkin = new MySkin(Gdx.files.internal(STATUSUI_SKIN_PATH), getStatusUITextureAtlas());
 		}
 
 		return statusUISkin;
 	}
-	
+
 	public static MySkin getShadowWalkersUISkin() {
-		if(shadowWalkerSkin == null) {
-			shadowWalkerSkin = new MySkin(Gdx.files.internal(SHADOW_WALKER_SKIN_PATH),getShadowWalkerTextureAtlas());
+		if (shadowWalkerSkin == null) {
+			shadowWalkerSkin = new MySkin(Gdx.files.internal(SHADOW_WALKER_SKIN_PATH), getShadowWalkerTextureAtlas());
 		}
-		
+
 		return shadowWalkerSkin;
 	}
 
-	public static float loadCompleted(){
+	public static float loadCompleted() {
 		return assetManager.getProgress();
 	}
 
-	public static int numberAssetsQueued(){
+	public static int numberAssetsQueued() {
 		return assetManager.getQueuedAssets();
 	}
 
-	public static boolean updateAssetLoading(){
+	public static boolean updateAssetLoading() {
 		return assetManager.update();
 	}
 
-	public static boolean isAssetLoaded(String fileName){
+	public static boolean isAssetLoaded(final String fileName) {
 		return assetManager.isLoaded(fileName);
 
 	}
 
-	private static boolean checkValidString(String string) {
-		return(!( string == null || string.isEmpty()));
+	private static boolean checkValidString(final String string) {
+		return (!(string == null || string.isEmpty()));
 	}
-	
-	public static int getRandomIntFrom1to(int to) {
-		int result = random.nextInt(to);
+
+	public static int getRandomIntFrom1to(final int to) {
+		final int result = random.nextInt(to);
 		return result + 1;
 	}
-	
+
 	private Utility() {
 
 	}

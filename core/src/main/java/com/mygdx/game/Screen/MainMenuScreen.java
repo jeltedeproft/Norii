@@ -16,25 +16,26 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.mygdx.game.Audio.AudioObserver;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Entities.EntityFileReader;
-
-import Utility.Utility;
-
 import com.mygdx.game.Entities.Owner;
 import com.mygdx.game.Entities.Player;
+import com.mygdx.game.Magic.AbilitiesEnum;
+import com.mygdx.game.Magic.SpellFileReader;
+
+import Utility.Utility;
 
 public class MainMenuScreen extends GameScreen {
 	public static final int FRAME_WIDTH = 200;
 	public static final int FRAME_HEIGHT = 200;
 	private static final int FRAME_COLS = 2;
 	private static final int FRAME_ROWS = 3;
-	
+
 	private static String defaultBackgroundPath = "sprites/gui/stars_bg/space2x3.png";
 
 	private Stage stage;
@@ -47,30 +48,30 @@ public class MainMenuScreen extends GameScreen {
 	private Animation<TextureRegion> bganimation;
 	private SpriteBatch backgroundbatch;
 
-	
 	protected float frameTime = 0f;
 	protected Sprite frameSprite = null;
 	protected TextureRegion currentFrame = null;
 	private TextureRegion[] bgFrames;
 
-	public MainMenuScreen(Object... params){
+	public MainMenuScreen(final Object... params) {
 		loadAssets();
 		initializeClassVariables();
 
 		createBackground();
 		createButtons();
 		createLayout();
-		
+
 		addListeners();
-		
+
 		notify(AudioObserver.AudioCommand.MUSIC_LOAD, AudioObserver.AudioTypeEvent.MUSIC_TITLE);
 	}
-	
+
 	private void loadAssets() {
 		Utility.loadFreeTypeFontAsset("fonts/BLKCHCRY.ttf", 24);
 		EntityFileReader.loadUnitStatsInMemory();
+		SpellFileReader.loadSpellsInMemory();
 	}
-	
+
 	private void initializeClassVariables() {
 		fighters = new ArrayList<Owner>();
 		monsters = new ArrayList<Entity>();
@@ -78,18 +79,18 @@ public class MainMenuScreen extends GameScreen {
 		mainMenuTableOfButtons = new Table();
 		mainMenuTableOfButtons.setFillParent(true);
 	}
-	
-	private void createBackground(){
+
+	private void createBackground() {
 		backgroundbatch = new SpriteBatch();
 		Utility.loadTextureAsset(defaultBackgroundPath);
 		loadBackgroundSpritesIntoArray();
 		initializeBgAnimation();
 	}
-	
-	private void loadBackgroundSpritesIntoArray(){
-		Texture texture = Utility.getTextureAsset(defaultBackgroundPath);
-		TextureRegion[][] textureFrames = TextureRegion.split(texture, FRAME_WIDTH, FRAME_HEIGHT);
-				
+
+	private void loadBackgroundSpritesIntoArray() {
+		final Texture texture = Utility.getTextureAsset(defaultBackgroundPath);
+		final TextureRegion[][] textureFrames = TextureRegion.split(texture, FRAME_WIDTH, FRAME_HEIGHT);
+
 		bgFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
 		int index = 0;
 		for (int i = 0; i < FRAME_ROWS; i++) {
@@ -98,34 +99,34 @@ public class MainMenuScreen extends GameScreen {
 			}
 		}
 	}
-	
+
 	private void initializeBgAnimation() {
 		bganimation = new Animation<TextureRegion>(0.050f, bgFrames);
-	}	
-	
-	private void createButtons() {
-    	Skin statusUISkin = Utility.getStatusUISkin();
-    	LabelStyle labelStyle = createTitleStyle();
+	}
 
-    	title = new Label("Norii:", labelStyle);
+	private void createButtons() {
+		final Skin statusUISkin = Utility.getStatusUISkin();
+		final LabelStyle labelStyle = createTitleStyle();
+
+		title = new Label("Norii:", labelStyle);
 		newGameButton = new TextButton("New Game", statusUISkin);
-		exitButton = new TextButton("Exit",statusUISkin);
+		exitButton = new TextButton("Exit", statusUISkin);
 	}
 
 	private LabelStyle createTitleStyle() {
-		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/BLKCHCRY.ttf"));
-    	FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-    	parameter.size = 105;
-        parameter.borderWidth = 1;
-        parameter.color = Color.LIGHT_GRAY;
-        parameter.shadowOffsetX = 1;
-        parameter.shadowOffsetY = 1;
-    	BitmapFont font = generator.generateFont(parameter);
-    	LabelStyle labelStyle = new LabelStyle();
-    	labelStyle.font = font;
+		final FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/BLKCHCRY.ttf"));
+		final FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+		parameter.size = 105;
+		parameter.borderWidth = 1;
+		parameter.color = Color.LIGHT_GRAY;
+		parameter.shadowOffsetX = 1;
+		parameter.shadowOffsetY = 1;
+		final BitmapFont font = generator.generateFont(parameter);
+		final LabelStyle labelStyle = new LabelStyle();
+		labelStyle.font = font;
 		return labelStyle;
 	}
-	
+
 	private void createLayout() {
 		mainMenuTableOfButtons.add(title).row();
 		mainMenuTableOfButtons.add(newGameButton).spaceBottom(10).padTop(50).row();
@@ -133,60 +134,69 @@ public class MainMenuScreen extends GameScreen {
 
 		stage.addActor(mainMenuTableOfButtons);
 	}
-	
+
 	private void addListeners() {
 		newGameButton.addListener(new InputListener() {
 			@Override
-			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
 				addUnitsToPlayer();
 				return true;
 			}
-								  }
-		);
+		});
 
 		exitButton.addListener(new InputListener() {
 			@Override
-			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
 				Gdx.app.exit();
 				return true;
 			}
 		});
 	}
-	
+
 	private void addUnitsToPlayer() {
-		Player player = Player.getInstance();
+		final Player player = Player.getInstance();
+
 		monsters.add(new Entity(1));
 		monsters.add(new Entity(2));
 		monsters.add(new Entity(3));
 		monsters.add(new Entity(4));
+
+		addAbilities();
+
 		player.setTeam(monsters);
 		fighters.add(player);
-		
-		ScreenManager.getInstance().showScreen( ScreenEnum.BATTLE,fighters); 
+
+		ScreenManager.getInstance().showScreen(ScreenEnum.BATTLE, fighters);
 	}
-	
+
+	private void addAbilities() {
+		for (final Entity monster : monsters) {
+			monster.addAbility(AbilitiesEnum.FIREBALL);
+		}
+	}
+
 	@Override
-	public void render(float delta) {
+	public void render(final float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
+
 		updatebg(delta);
-		
+
 		stage.act(delta);
 		stage.draw();
 	}
-	
-	public void updatebg(float delta){
-		frameTime = (frameTime + delta)%70; //Want to avoid overflow
+
+	public void updatebg(final float delta) {
+		frameTime = (frameTime + delta) % 70; //Want to avoid overflow
 
 		currentFrame = bganimation.getKeyFrame(frameTime, true);
 		backgroundbatch.begin();
-		backgroundbatch.draw(currentFrame, 0, 0,stage.getViewport().getWorldWidth(),stage.getViewport().getWorldHeight());
+		backgroundbatch.draw(currentFrame, 0, 0, stage.getViewport().getWorldWidth(), stage.getViewport().getWorldHeight());
 		backgroundbatch.end();
 	}
 
 	@Override
-	public void resize(int width, int height) {
+	public void resize(final int width, final int height) {
 		stage.getViewport().setScreenSize(width, height);
 	}
 
@@ -217,7 +227,3 @@ public class MainMenuScreen extends GameScreen {
 		backgroundbatch.dispose();
 	}
 }
-
-
-
-

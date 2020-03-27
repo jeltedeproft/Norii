@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
+
 import Utility.Utility;
 
 public class EntityAnimation {
@@ -15,60 +16,64 @@ public class EntityAnimation {
 	private static final int DIRECTIONS = 4;
 	private static final int FRAME_WIDTH = 32;
 	private static final int FRAME_HEIGHT = 32;
-	private String spritePath;
+	private final String spritePath;
 
 	private Animation<TextureRegion> walkLeftAnimation;
 	private Animation<TextureRegion> walkRightAnimation;
 	private Animation<TextureRegion> walkUpAnimation;
 	private Animation<TextureRegion> walkDownAnimation;
-	
+
 	Array<TextureRegion> walkDownFrames;
 	Array<TextureRegion> walkLeftFrames;
 	Array<TextureRegion> walkRightFrames;
 	Array<TextureRegion> walkUpFrames;
-	
+
 	protected float frameTime = 0f;
 	protected Sprite frameSprite = null;
 	protected TextureRegion currentFrame = null;
 	private Direction currentDirection = Direction.DOWN;
-	
+
 	public enum State {
-		IDLE, WALKING
+		IDLE,
+		WALKING
 	}
-	
+
 	public enum Direction {
-		UP,RIGHT,DOWN,LEFT;
+		UP,
+		RIGHT,
+		DOWN,
+		LEFT;
 	}
-	
-	public EntityAnimation(String spritePath) {
+
+	public EntityAnimation(final String spritePath) {
 		this.spritePath = spritePath;
 		Utility.loadTextureAsset(spritePath);
 		loadSprite();
 		loadAllAnimations();
 	}
-	
-	public void update(float delta){
-		frameTime = (frameTime + delta)%5; //Want to avoid overflow
+
+	public void update(final float delta) {
+		frameTime = (frameTime + delta) % 5; //Want to avoid overflow
 		updateFrame();
 	}
-	
-	private void loadSprite(){
-		Texture texture = Utility.getTextureAsset(spritePath);
-		TextureRegion[][] textureFrames = TextureRegion.split(texture, FRAME_WIDTH, FRAME_HEIGHT);
-		frameSprite = new Sprite(textureFrames[0][0].getTexture(), 0,0,FRAME_WIDTH, FRAME_HEIGHT);
+
+	private void loadSprite() {
+		final Texture texture = Utility.getTextureAsset(spritePath);
+		final TextureRegion[][] textureFrames = TextureRegion.split(texture, FRAME_WIDTH, FRAME_HEIGHT);
+		frameSprite = new Sprite(textureFrames[0][0].getTexture(), 0, 0, FRAME_WIDTH, FRAME_HEIGHT);
 		currentFrame = textureFrames[0][0];
 	}
-	
-	private void loadAllAnimations(){
-		TextureRegion[][] textureFrames = initVariables();
+
+	private void loadAllAnimations() {
+		final TextureRegion[][] textureFrames = initVariables();
 		divideAnimationFrames(textureFrames);
 		createAnimations();
 	}
-	
+
 	private TextureRegion[][] initVariables() {
-		Texture texture = Utility.getTextureAsset(spritePath);
-		TextureRegion[][] textureFrames = TextureRegion.split(texture, FRAME_WIDTH, FRAME_HEIGHT);
-		
+		final Texture texture = Utility.getTextureAsset(spritePath);
+		final TextureRegion[][] textureFrames = TextureRegion.split(texture, FRAME_WIDTH, FRAME_HEIGHT);
+
 		walkDownFrames = new Array<TextureRegion>(ANIMATIONFRAMES);
 		walkLeftFrames = new Array<TextureRegion>(ANIMATIONFRAMES);
 		walkRightFrames = new Array<TextureRegion>(ANIMATIONFRAMES);
@@ -76,15 +81,15 @@ public class EntityAnimation {
 		return textureFrames;
 	}
 
-	private void divideAnimationFrames(TextureRegion[][] textureFrames) {
+	private void divideAnimationFrames(final TextureRegion[][] textureFrames) {
 		for (int i = 0; i < DIRECTIONS; i++) {
 			for (int j = 0; j < ANIMATIONFRAMES; j++) {
-				TextureRegion region = textureFrames[i][j];
-				if( region == null ){
+				final TextureRegion region = textureFrames[i][j];
+				if (region == null) {
 					Gdx.app.debug(TAG, "Got null animation frame " + i + "," + j);
 				}
-				
-				switch(i){
+
+				switch (i) {
 					case 0:
 						walkDownFrames.insert(j, region);
 						break;
@@ -110,40 +115,44 @@ public class EntityAnimation {
 		walkRightAnimation = new Animation<TextureRegion>(0.25f, walkRightFrames, Animation.PlayMode.LOOP);
 		walkUpAnimation = new Animation<TextureRegion>(0.25f, walkUpFrames, Animation.PlayMode.LOOP);
 	}
-	
-	public Sprite getFrameSprite(){
+
+	public Sprite getFrameSprite() {
 		return frameSprite;
 	}
 
-	public TextureRegion getFrame(){
+	public TextureRegion getFrame() {
 		return currentFrame;
 	}
 
 	public String getSpritePath() {
 		return spritePath;
 	}
-	
-	public void setDirection(Direction direction){
-		this.currentDirection = direction;
+
+	public void setDirection(final Direction direction) {
+		currentDirection = direction;
 		updateFrame();
 	}
-	
+
+	public Direction getCurrentDirection() {
+		return currentDirection;
+	}
+
 	public void updateFrame() {
 		switch (currentDirection) {
-		case DOWN :
-			currentFrame = walkDownAnimation.getKeyFrame(frameTime);
-			break;
-		case LEFT :
-			currentFrame = walkLeftAnimation.getKeyFrame(frameTime);
-			break;
-		case UP :
-			currentFrame = walkUpAnimation.getKeyFrame(frameTime);
-			break;
-		case RIGHT :
-			currentFrame = walkRightAnimation.getKeyFrame(frameTime);
-			break;
-		default:
-			break;
+			case DOWN:
+				currentFrame = walkDownAnimation.getKeyFrame(frameTime);
+				break;
+			case LEFT:
+				currentFrame = walkLeftAnimation.getKeyFrame(frameTime);
+				break;
+			case UP:
+				currentFrame = walkUpAnimation.getKeyFrame(frameTime);
+				break;
+			case RIGHT:
+				currentFrame = walkRightAnimation.getKeyFrame(frameTime);
+				break;
+			default:
+				break;
 		}
 	}
 }

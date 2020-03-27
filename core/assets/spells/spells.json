@@ -1,0 +1,13 @@
+[
+  {
+    "id": 0,
+    "name": "Fireball",
+    "iconSpritePath": "sprites/spells/fireball.png",
+    "apCost": 1,
+    "mpCost": 0,
+    "lineOfSight": "LINE",
+    "target": "CELL",
+    "damage": 10,
+    "range": 10,
+  }
+]
