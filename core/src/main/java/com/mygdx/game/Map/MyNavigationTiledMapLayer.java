@@ -10,61 +10,63 @@ import org.xguzm.pathfinding.grid.NavigationGridGraph;
 
 import com.badlogic.gdx.maps.MapLayer;
 
-public class MyNavigationTiledMapLayer extends MapLayer implements NavigationGridGraph<GridCell>{
-	
+public class MyNavigationTiledMapLayer extends MapLayer implements NavigationGridGraph<GridCell> {
+
 	NavigationGrid<GridCell> navGrid;
-	
+
 	public MyNavigationTiledMapLayer() {
 		this(null);
 	}
-	
+
 	@SuppressWarnings("deprecation")
-	public MyNavigationTiledMapLayer(GridCell[][] nodes){
+	public MyNavigationTiledMapLayer(final GridCell[][] nodes) {
 		navGrid = new NavigationGrid<GridCell>(nodes);
 	}
-		
+
 	@Override
-	public void setCell(int x, int y, GridCell node) {
+	public void setCell(final int x, final int y, final GridCell node) {
 		navGrid.setCell(x, y, node);
 	}
 
 	@Override
-	public List<GridCell> getNeighbors(GridCell node) {
+	public List<GridCell> getNeighbors(final GridCell node) {
 		return navGrid.getNeighbors(node);
 	}
 
 	@Override
-	public List<GridCell> getNeighbors(GridCell node, PathFinderOptions opt) {
+	public List<GridCell> getNeighbors(final GridCell node, final PathFinderOptions opt) {
 		return navGrid.getNeighbors(node, opt);
 	}
 
 	@Override
-	public float getMovementCost(GridCell node1, GridCell node2, PathFinderOptions opt) {
+	public float getMovementCost(final GridCell node1, final GridCell node2, final PathFinderOptions opt) {
 		return navGrid.getMovementCost(node1, node2, opt);
 	}
 
 	@Override
-	public boolean isWalkable(GridCell node) {
+	public boolean isWalkable(final GridCell node) {
 		return navGrid.isWalkable(node);
 	}
 
 	@Override
-	public GridCell getCell(int x, int y) {
+	public GridCell getCell(final int x, final int y) {
 		return navGrid.getCell(x, y);
 	}
 
 	@Override
-	public boolean contains(int x, int y) {
+	public boolean contains(final int x, final int y) {
 		return navGrid.contains(x, y);
 	}
 
 	@Override
-	public void setWalkable(int x, int y, boolean walkable) {
-		navGrid.setWalkable(x, y, walkable);
+	public void setWalkable(final int x, final int y, final boolean walkable) {
+		if (navGrid.contains(x, y)) {
+			navGrid.setWalkable(x, y, walkable);
+		}
 	}
 
 	@Override
-	public boolean isWalkable(int x, int y) {
+	public boolean isWalkable(final int x, final int y) {
 		return navGrid.isWalkable(x, y);
 	}
 
@@ -74,7 +76,7 @@ public class MyNavigationTiledMapLayer extends MapLayer implements NavigationGri
 	}
 
 	@Override
-	public void setNodes(GridCell[][] nodes) {
+	public void setNodes(final GridCell[][] nodes) {
 		navGrid.setNodes(nodes);
 	}
 
@@ -84,7 +86,7 @@ public class MyNavigationTiledMapLayer extends MapLayer implements NavigationGri
 	}
 
 	@Override
-	public void setWidth(int width) {
+	public void setWidth(final int width) {
 		navGrid.setWidth(width);
 	}
 
@@ -94,12 +96,12 @@ public class MyNavigationTiledMapLayer extends MapLayer implements NavigationGri
 	}
 
 	@Override
-	public void setHeight(int height) {
+	public void setHeight(final int height) {
 		navGrid.setHeight(height);
 	}
 
 	@Override
-	public boolean lineOfSight(NavigationNode from, NavigationNode to) {
+	public boolean lineOfSight(final NavigationNode from, final NavigationNode to) {
 		return navGrid.lineOfSight(from, to);
 	}
 

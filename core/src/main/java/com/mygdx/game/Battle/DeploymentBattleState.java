@@ -5,20 +5,20 @@ import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Map.TiledMapActor;
 import com.mygdx.game.Particles.ParticleMaker;
 import com.mygdx.game.Particles.ParticleType;
+
 import Utility.TiledMapPosition;
 
-public class DeploymentBattleState extends BattleState{
+public class DeploymentBattleState extends BattleState {
 	private static final String TAG = DeploymentBattleState.class.getSimpleName();
-	
-	private BattleManager battlemanager;
-	private int deployingUnitNumber;
-	private Entity[] unitsSortedByInitiative;
-	
 
-	public DeploymentBattleState(BattleManager battlemanager){
+	private final BattleManager battlemanager;
+	private int deployingUnitNumber;
+	private final Entity[] unitsSortedByInitiative;
+
+	public DeploymentBattleState(final BattleManager battlemanager) {
 		this.battlemanager = battlemanager;
-		this.deployingUnitNumber = 0;
-		this.unitsSortedByInitiative = battlemanager.getUnits();
+		deployingUnitNumber = 0;
+		unitsSortedByInitiative = battlemanager.getUnits();
 		unitsSortedByInitiative[0].setInDeploymentPhase(true);
 	}
 
@@ -31,44 +31,44 @@ public class DeploymentBattleState extends BattleState{
 	}
 
 	@Override
-	public void clickedOnTile(TiledMapActor actor) {
+	public void clickedOnTile(final TiledMapActor actor) {
 		deployUnit(actor);
 	}
-	
-    private void deployUnit(TiledMapActor actor){
-        if(actor.getIsFreeSpawn()) {
-        	TiledMapPosition newPosition = actor.getActorPos();
-        	
-    		if((unitsSortedByInitiative != null) && (deployingUnitNumber < unitsSortedByInitiative.length)) {
-    			deployUnit(newPosition);
-    			actor.setIsFreeSpawn(false); 
-    			ParticleMaker.deactivateParticle(ParticleMaker.getParticle(ParticleType.SPAWN, newPosition));
-    			nextDeployment();
-    		}else {
-    			Gdx.app.debug(TAG, "can't deploy unit, units is null or activeunitindex is > the length of units");
-    		}
-        }
-    }
 
-	private void deployUnit(TiledMapPosition newPosition) {
-		Entity unitToDeploy = unitsSortedByInitiative[deployingUnitNumber];
+	private void deployUnit(final TiledMapActor actor) {
+		if (actor.getIsFreeSpawn()) {
+			final TiledMapPosition newPosition = actor.getActorPos();
+
+			if ((unitsSortedByInitiative != null) && (deployingUnitNumber < unitsSortedByInitiative.length)) {
+				deployUnit(newPosition);
+				actor.setIsFreeSpawn(false);
+				ParticleMaker.deactivateParticle(ParticleMaker.getParticle(ParticleType.SPAWN, newPosition));
+				nextDeployment();
+			} else {
+				Gdx.app.debug(TAG, "can't deploy unit, units is null or activeunitindex is > the length of units");
+			}
+		}
+	}
+
+	private void deployUnit(final TiledMapPosition newPosition) {
+		final Entity unitToDeploy = unitsSortedByInitiative[deployingUnitNumber];
 		unitToDeploy.setInDeploymentPhase(false);
-		initiateUnitInBattle(unitToDeploy,newPosition);
+		initiateUnitInBattle(unitToDeploy, newPosition);
 	}
 
 	private void nextDeployment() {
 		deployingUnitNumber++;
-		if(deployingUnitNumber < unitsSortedByInitiative.length) {
+		if (deployingUnitNumber < unitsSortedByInitiative.length) {
 			unitsSortedByInitiative[deployingUnitNumber].setInDeploymentPhase(true);
 		}
 		checkIfLastUnit();
 	}
-    
-	private void initiateUnitInBattle(Entity unit, TiledMapPosition pos) {
+
+	private void initiateUnitInBattle(final Entity unit, final TiledMapPosition pos) {
 		unit.setInBattle(true);
 		unit.setCurrentPosition(pos);
 	}
-	
+
 	private void checkIfLastUnit() {
 		if (deployingUnitNumber >= unitsSortedByInitiative.length) {
 			exit();

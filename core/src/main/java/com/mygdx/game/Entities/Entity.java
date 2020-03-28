@@ -37,6 +37,7 @@ public class Entity extends Actor implements EntitySubject {
 	private boolean isInSpellPhase;
 	private boolean isDead;
 
+	protected TiledMapPosition oldPlayerPosition;
 	protected TiledMapPosition nextPlayerPosition;
 	protected TiledMapPosition currentPlayerPosition;
 	protected Direction direction;
@@ -61,6 +62,7 @@ public class Entity extends Actor implements EntitySubject {
 	public void initEntity() {
 		observers = new Array<EntityObserver>();
 		nextPlayerPosition = new TiledMapPosition();
+		oldPlayerPosition = new TiledMapPosition().setPositionFromScreen(-100, -100);
 		currentPlayerPosition = new TiledMapPosition().setPositionFromScreen(-100, -100);
 		hp = entityData.getMaxHP();
 		ap = entityData.getMaxAP();
@@ -111,6 +113,14 @@ public class Entity extends Actor implements EntitySubject {
 
 	public TiledMapPosition getCurrentPosition() {
 		return currentPlayerPosition;
+	}
+
+	public TiledMapPosition getOldPlayerPosition() {
+		return oldPlayerPosition;
+	}
+
+	public void setOldPlayerPosition(final TiledMapPosition oldPlayerPosition) {
+		this.oldPlayerPosition = oldPlayerPosition;
 	}
 
 	public void setCurrentPosition(final TiledMapPosition pos) {

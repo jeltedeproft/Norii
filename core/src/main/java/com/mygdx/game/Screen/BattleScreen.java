@@ -371,7 +371,15 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	}
 
 	private void prepareSpell(final Entity unit, final Ability ability) {
-		final List<GridCell> spellPath = map.getPathfinder().getCellsWithinLine(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), ability.getSpellData().getRange(), unit.getEntityAnimation().getCurrentDirection());
+		final ArrayList<TiledMapPosition> positions = new ArrayList<TiledMapPosition>();
+		for (final Owner owner : players) {
+			for (final Entity character : owner.getTeam()) {
+				positions.add(character.getCurrentPosition());
+			}
+		}
+
+		final List<GridCell> spellPath = map.getPathfinder().getLineOfSightWithinLine(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), ability.getSpellData().getRange(), unit.getEntityAnimation().getCurrentDirection(),
+				positions);
 		for (final GridCell cell : spellPath) {
 			final TiledMapPosition positionToPutSpellParticle = new TiledMapPosition().setPositionFromTiles(cell.x, cell.y);
 			ParticleMaker.addParticle(ParticleType.SPELL, positionToPutSpellParticle);
