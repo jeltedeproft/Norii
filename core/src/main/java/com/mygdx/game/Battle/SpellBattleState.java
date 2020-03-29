@@ -54,6 +54,7 @@ public class SpellBattleState extends BattleState {
 		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
 		target.damage(ability.getSpellData().getDamage());
 		notify(AudioObserver.AudioCommand.SOUND_PLAY_ONCE, AudioObserver.AudioTypeEvent.SPELL_SOUND);
+		ParticleMaker.addParticle(ParticleType.FIREBALL, target.getCurrentPosition());
 	}
 
 	private void possibleTileSpell(final TiledMapActor actor) {

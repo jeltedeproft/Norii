@@ -371,12 +371,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	}
 
 	private void prepareSpell(final Entity unit, final Ability ability) {
-		final ArrayList<TiledMapPosition> positions = new ArrayList<TiledMapPosition>();
-		for (final Owner owner : players) {
-			for (final Entity character : owner.getTeam()) {
-				positions.add(character.getCurrentPosition());
-			}
-		}
+		final ArrayList<TiledMapPosition> positions = collectPositionsUnits();
 
 		final List<GridCell> spellPath = map.getPathfinder().getLineOfSightWithinLine(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), ability.getSpellData().getRange(), unit.getEntityAnimation().getCurrentDirection(),
 				positions);
@@ -386,6 +381,16 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 			battlemanager.setCurrentSpell(ability);
 			battlemanager.setCurrentBattleState(battlemanager.getSpellBattleState());
 		}
+	}
+
+	private ArrayList<TiledMapPosition> collectPositionsUnits() {
+		final ArrayList<TiledMapPosition> positions = new ArrayList<TiledMapPosition>();
+		for (final Owner owner : players) {
+			for (final Entity character : owner.getTeam()) {
+				positions.add(character.getCurrentPosition());
+			}
+		}
+		return positions;
 	}
 
 	private boolean isUnitOnCell(final GridCell cell) {
