@@ -25,7 +25,6 @@ import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Entities.EntityFileReader;
 import com.mygdx.game.Entities.Owner;
 import com.mygdx.game.Entities.Player;
-import com.mygdx.game.Magic.AbilitiesEnum;
 import com.mygdx.game.Magic.SpellFileReader;
 
 import Utility.Utility;
@@ -114,6 +113,7 @@ public class MainMenuScreen extends GameScreen {
 	}
 
 	private LabelStyle createTitleStyle() {
+		//move to utility and generalize
 		final FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/BLKCHCRY.ttf"));
 		final FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 		parameter.size = 105;
@@ -161,18 +161,10 @@ public class MainMenuScreen extends GameScreen {
 		monsters.add(new Entity(3));
 		monsters.add(new Entity(4));
 
-		addAbilities();
-
 		player.setTeam(monsters);
 		fighters.add(player);
 
 		ScreenManager.getInstance().showScreen(ScreenEnum.BATTLE, fighters);
-	}
-
-	private void addAbilities() {
-		for (final Entity monster : monsters) {
-			monster.addAbility(AbilitiesEnum.FIREBALL);
-		}
 	}
 
 	@Override

@@ -8,6 +8,8 @@ import com.mygdx.game.Map.TiledMapActor;
 import com.mygdx.game.Particles.ParticleMaker;
 import com.mygdx.game.Particles.ParticleType;
 
+import Utility.TiledMapPosition;
+
 public class SpellBattleState extends BattleState {
 	private final BattleManager battlemanager;
 
@@ -43,6 +45,9 @@ public class SpellBattleState extends BattleState {
 				case FIREBALL:
 					castFireBall(currentUnit, possibleTarget, ability);
 					break;
+				case SWAP:
+					castSwap(currentUnit, possibleTarget, ability);
+					break;
 				default:
 					break;
 			}
@@ -55,6 +60,15 @@ public class SpellBattleState extends BattleState {
 		target.damage(ability.getSpellData().getDamage());
 		notify(AudioObserver.AudioCommand.SOUND_PLAY_ONCE, AudioObserver.AudioTypeEvent.SPELL_SOUND);
 		ParticleMaker.addParticle(ParticleType.FIREBALL, target.getCurrentPosition());
+	}
+
+	private void castSwap(final Entity caster, final Entity target, final Ability ability) {
+		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
+		notify(AudioObserver.AudioCommand.SOUND_PLAY_ONCE, AudioObserver.AudioTypeEvent.SPELL_SOUND);
+		ParticleMaker.addParticle(ParticleType.SWAP, caster.getCurrentPosition());
+		final TiledMapPosition posCaster = caster.getCurrentPosition();
+		caster.setCurrentPosition(target.getCurrentPosition());
+		target.setCurrentPosition(posCaster);
 	}
 
 	private void possibleTileSpell(final TiledMapActor actor) {

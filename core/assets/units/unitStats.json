@@ -13,7 +13,7 @@
     "attackRange": 1,
     "attackPower": 3,
     "basicAttackCost" : 1,
-    "abilities":[ "Fireball"]
+    "abilities":[ "FIREBALL"]
   },
 
   {
@@ -30,7 +30,7 @@
     "attackRange": 1,
     "attackPower": 3,
     "basicAttackCost" : 1,
-    "abilities":[ "Fireball"]
+    "abilities":[ "FIREBALL"]
   },
 
   {
@@ -47,7 +47,7 @@
     "attackRange": 1,
     "attackPower": 3,
     "basicAttackCost" : 1,
-    "abilities":[ "Fireball"]
+    "abilities":[ "FIREBALL"]
   },
 
   {
@@ -64,6 +64,6 @@
     "attackRange": 1,
     "attackPower": 3,
     "basicAttackCost" : 1,
-    "abilities":[ "Fireball"]
+    "abilities":[ "SWAP"]
   }
 ]

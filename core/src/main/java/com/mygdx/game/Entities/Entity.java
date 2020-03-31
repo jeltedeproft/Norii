@@ -73,6 +73,13 @@ public class Entity extends Actor implements EntitySubject {
 		isInAttackPhase = false;
 		isInDeploymentPhase = false;
 		abilities = new ArrayList<Ability>();
+		initAbilities();
+	}
+
+	private void initAbilities() {
+		for (final String abilityString : entityData.getAbilties()) {
+			addAbility(AbilitiesEnum.valueOf(abilityString));
+		}
 	}
 
 	public void update(final float delta) {
