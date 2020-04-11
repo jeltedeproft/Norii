@@ -12,6 +12,8 @@ import com.mygdx.game.Entities.EntityAnimation.State;
 import com.mygdx.game.Entities.EntityObserver.EntityCommand;
 import com.mygdx.game.Magic.AbilitiesEnum;
 import com.mygdx.game.Magic.Ability;
+import com.mygdx.game.Magic.Modifier;
+import com.mygdx.game.Magic.ModifiersEnum;
 import com.mygdx.game.UI.ActionsUI;
 import com.mygdx.game.UI.BottomMenu;
 import com.mygdx.game.UI.StatusUI;
@@ -47,11 +49,13 @@ public class Entity extends Actor implements EntitySubject {
 	private ActionsUI actionsui;
 	private BottomMenu bottomMenu;
 
-	private final EntityAnimation entityAnimation;
+	private EntityAnimation entityAnimation;
+	private EntityAnimation entityTemporaryAnimation;
 	protected EntityActor entityactor;
 
 	private Array<EntityObserver> observers;
 	private Collection<Ability> abilities;
+	private Collection<Modifier> modifiers;
 
 	public Entity(final int id) {
 		entityData = EntityFileReader.getUnitData().get(id);
@@ -73,6 +77,7 @@ public class Entity extends Actor implements EntitySubject {
 		isInAttackPhase = false;
 		isInDeploymentPhase = false;
 		abilities = new ArrayList<Ability>();
+		modifiers = new ArrayList<Modifier>();
 		initAbilities();
 	}
 
@@ -385,6 +390,15 @@ public class Entity extends Actor implements EntitySubject {
 		return entityAnimation;
 	}
 
+	public void changeAnimation(final EntityAnimation tempAnimation) {
+		entityTemporaryAnimation = entityAnimation;
+		entityAnimation = tempAnimation;
+	}
+
+	public void restoreAnimation() {
+		entityAnimation = entityTemporaryAnimation;
+	}
+
 	public void addAbility(final AbilitiesEnum abilityEnum) {
 		final Ability ability = new Ability(abilityEnum);
 		abilities.add(ability);
@@ -397,6 +411,22 @@ public class Entity extends Actor implements EntitySubject {
 				return ability.getId() == abilityEnum.ordinal();
 			}
 		});
+	}
+
+	public void addModifier(final ModifiersEnum type, final int turns, final int amount) {
+		final Modifier modifier = new Modifier(type, turns, amount);
+		modifiers.add(modifier);
+	}
+
+	public void applyModifiers() {
+		for (final Modifier mod : modifiers) {
+			mod.applyModifier(this);
+
+			if (mod.getTurns() == 0) {
+				mod.removeModifier(this);
+				modifiers.remove(mod);
+			}
+		}
 	}
 
 	public Collection<Ability> getAbilities() {

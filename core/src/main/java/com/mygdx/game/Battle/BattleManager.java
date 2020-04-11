@@ -51,6 +51,7 @@ public class BattleManager {
 		activeUnit.setFocused(true);
 		activeUnit.setAp(activeUnit.getMaxAp());
 		activeUnit.setActive(true);
+		activeUnit.applyModifiers();
 	}
 
 	public Entity getActiveUnit() {
