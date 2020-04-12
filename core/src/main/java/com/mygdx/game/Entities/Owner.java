@@ -63,7 +63,6 @@ public abstract class Owner {
 				} else {
 					return 0;
 				}
-
 			}
 		});
 	}

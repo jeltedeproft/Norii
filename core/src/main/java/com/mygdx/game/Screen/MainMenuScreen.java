@@ -7,11 +7,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -21,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.mygdx.game.Audio.AudioObserver;
+import com.mygdx.game.Entities.AIOwner;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Entities.EntityFileReader;
 import com.mygdx.game.Entities.Owner;
@@ -43,7 +42,8 @@ public class MainMenuScreen extends GameScreen {
 	private TextButton exitButton;
 	private Label title;
 	private ArrayList<Owner> fighters;
-	private ArrayList<Entity> monsters;
+	private ArrayList<Entity> playerMonsters;
+	private ArrayList<Entity> aiMonsters;
 	private Animation<TextureRegion> bganimation;
 	private SpriteBatch backgroundbatch;
 
@@ -73,7 +73,8 @@ public class MainMenuScreen extends GameScreen {
 
 	private void initializeClassVariables() {
 		fighters = new ArrayList<Owner>();
-		monsters = new ArrayList<Entity>();
+		playerMonsters = new ArrayList<Entity>();
+		aiMonsters = new ArrayList<Entity>();
 		stage = new Stage();
 		mainMenuTableOfButtons = new Table();
 		mainMenuTableOfButtons.setFillParent(true);
@@ -113,18 +114,7 @@ public class MainMenuScreen extends GameScreen {
 	}
 
 	private LabelStyle createTitleStyle() {
-		//move to utility and generalize
-		final FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/BLKCHCRY.ttf"));
-		final FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-		parameter.size = 105;
-		parameter.borderWidth = 1;
-		parameter.color = Color.LIGHT_GRAY;
-		parameter.shadowOffsetX = 1;
-		parameter.shadowOffsetY = 1;
-		final BitmapFont font = generator.generateFont(parameter);
-		final LabelStyle labelStyle = new LabelStyle();
-		labelStyle.font = font;
-		return labelStyle;
+		return Utility.createLabelStyle("fonts/BLKCHCRY.ttf", 105, 1, Color.LIGHT_GRAY, 1, 1);
 	}
 
 	private void createLayout() {
@@ -155,14 +145,23 @@ public class MainMenuScreen extends GameScreen {
 
 	private void addUnitsToPlayer() {
 		final Player player = Player.getInstance();
+		final AIOwner enemy = new AIOwner();
 
-		monsters.add(new Entity(1));
-		monsters.add(new Entity(2));
-		monsters.add(new Entity(3));
-		monsters.add(new Entity(4));
+		playerMonsters.add(new Entity(1));
+		playerMonsters.add(new Entity(2));
+		playerMonsters.add(new Entity(3));
+		playerMonsters.add(new Entity(4));
 
-		player.setTeam(monsters);
+		aiMonsters.add(new Entity(1));
+		aiMonsters.add(new Entity(2));
+		aiMonsters.add(new Entity(3));
+		aiMonsters.add(new Entity(4));
+
+		player.setTeam(playerMonsters);
+		enemy.setTeam(aiMonsters);
+
 		fighters.add(player);
+		fighters.add(enemy);
 
 		ScreenManager.getInstance().showScreen(ScreenEnum.BATTLE, fighters);
 	}

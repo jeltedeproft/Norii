@@ -23,6 +23,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoaderParameter;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.mygdx.game.Map.MyNavTmxMapLoader;
 
 public final class Utility {
@@ -99,6 +100,20 @@ public final class Utility {
 			myFont.fontParameters.shadowOffsetY = 2;
 			assetManager.load(fontName, BitmapFont.class, myFont);
 		}
+	}
+
+	public static LabelStyle createLabelStyle(final String fontPath, final int size, final int borderWidth, final Color color, final int shadowX, final int shadowY) {
+		final FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(fontPath));
+		final FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+		parameter.size = size;
+		parameter.borderWidth = borderWidth;
+		parameter.color = color;
+		parameter.shadowOffsetX = shadowX;
+		parameter.shadowOffsetY = shadowY;
+		final BitmapFont font = generator.generateFont(parameter);
+		final LabelStyle labelStyle = new LabelStyle();
+		labelStyle.font = font;
+		return labelStyle;
 	}
 
 	public static BitmapFont getFreeTypeFontAsset(final String fontName) {

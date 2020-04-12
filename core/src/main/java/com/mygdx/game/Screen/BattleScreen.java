@@ -77,6 +77,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 		mapCamera = new OrthographicCamera();
 		mapCamera.setToOrtho(false, VISIBLE_WIDTH, VISIBLE_HEIGHT);
 		isPaused = false;
+
 	}
 
 	private void initializePlayerStage() {
