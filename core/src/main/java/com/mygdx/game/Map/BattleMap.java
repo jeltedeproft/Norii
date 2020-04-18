@@ -74,6 +74,18 @@ public class BattleMap extends Map {
 					tiledactor.setIsFreeSpawn(true);
 				}
 			}
+
+			if (object.getName().equalsIgnoreCase(ENEMY_START)) {
+				((RectangleMapObject) object).getRectangle().getPosition(playerStartPositionRect);
+				final TiledMapPosition spawnPos = new TiledMapPosition().setPositionFromTiled(playerStartPositionRect.x, playerStartPositionRect.y);
+				enemyStartPositions.add(spawnPos);
+
+				final TiledMapActor tiledactor = getActorAtScreenCoordinate(spawnPos);
+
+				if (tiledactor != null) {
+					tiledactor.setIsAISpawn(true);
+				}
+			}
 		}
 	}
 

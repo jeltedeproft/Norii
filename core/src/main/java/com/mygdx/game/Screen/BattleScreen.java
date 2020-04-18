@@ -12,6 +12,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.mygdx.game.AI.Level;
+import com.mygdx.game.AI.LevelTypes;
 import com.mygdx.game.Audio.AudioObserver;
 import com.mygdx.game.Battle.BattleManager;
 import com.mygdx.game.Battle.BattleScreenInputProcessor;
@@ -43,6 +45,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	private MapManager mapMgr;
 	private BattleMap map;
 	private BattleManager battlemanager;
+	private Level level;
 	private Entity[] playerSortedUnits;
 	private InputMultiplexer multiplexer;
 	private BattleScreenInputProcessor battlescreenInputProcessor;
@@ -68,7 +71,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 		initializePauseMenu();
 		initializeInput();
 		initializeUnits(params);
-		initializeMap();
+		initializeLevel();
 		initializeObservers();
 	}
 
@@ -103,12 +106,13 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 		multiplexer.addProcessor(pauseMenu.getStage());
 	}
 
-	private void initializeMap() {
+	private void initializeLevel() {
 		battlemanager = new BattleManager(playerSortedUnits);
 		battlescreenInputProcessor.setBattleManager(battlemanager);
 		mapMgr = new MapManager();
 		map = (BattleMap) mapMgr.getCurrentMap();
 		map.setStage(battlemanager);
+		level = new Level(LevelTypes.DESERT);
 	}
 
 	@SuppressWarnings("unchecked")

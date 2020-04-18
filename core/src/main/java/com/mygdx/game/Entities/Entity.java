@@ -57,8 +57,8 @@ public class Entity extends Actor implements EntitySubject {
 	private Collection<Ability> abilities;
 	private Collection<Modifier> modifiers;
 
-	public Entity(final int id) {
-		entityData = EntityFileReader.getUnitData().get(id);
+	public Entity(final EntityTypes type) {
+		entityData = EntityFileReader.getUnitData().get(type.ordinal());
 		entityAnimation = new EntityAnimation(entityData.getEntitySpriteFilePath());
 		initEntity();
 	}

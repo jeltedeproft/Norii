@@ -18,10 +18,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.mygdx.game.AI.Level;
+import com.mygdx.game.AI.LevelFileReader;
 import com.mygdx.game.Audio.AudioObserver;
-import com.mygdx.game.Entities.AIOwner;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Entities.EntityFileReader;
+import com.mygdx.game.Entities.EntityTypes;
 import com.mygdx.game.Entities.Owner;
 import com.mygdx.game.Entities.Player;
 import com.mygdx.game.Magic.SpellFileReader;
@@ -43,9 +45,9 @@ public class MainMenuScreen extends GameScreen {
 	private Label title;
 	private ArrayList<Owner> fighters;
 	private ArrayList<Entity> playerMonsters;
-	private ArrayList<Entity> aiMonsters;
 	private Animation<TextureRegion> bganimation;
 	private SpriteBatch backgroundbatch;
+	private Level selectedLevel;
 
 	protected float frameTime = 0f;
 	protected Sprite frameSprite = null;
@@ -69,12 +71,12 @@ public class MainMenuScreen extends GameScreen {
 		Utility.loadFreeTypeFontAsset("fonts/BLKCHCRY.ttf", 24);
 		EntityFileReader.loadUnitStatsInMemory();
 		SpellFileReader.loadSpellsInMemory();
+		LevelFileReader.loadLevelsInMemory();
 	}
 
 	private void initializeClassVariables() {
 		fighters = new ArrayList<Owner>();
 		playerMonsters = new ArrayList<Entity>();
-		aiMonsters = new ArrayList<Entity>();
 		stage = new Stage();
 		mainMenuTableOfButtons = new Table();
 		mainMenuTableOfButtons.setFillParent(true);
@@ -130,6 +132,7 @@ public class MainMenuScreen extends GameScreen {
 			@Override
 			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
 				addUnitsToPlayer();
+				ScreenManager.getInstance().showScreen(ScreenEnum.BATTLE, fighters, selectedLevel);
 				return true;
 			}
 		});
@@ -145,25 +148,14 @@ public class MainMenuScreen extends GameScreen {
 
 	private void addUnitsToPlayer() {
 		final Player player = Player.getInstance();
-		final AIOwner enemy = new AIOwner();
 
-		playerMonsters.add(new Entity(1));
-		playerMonsters.add(new Entity(2));
-		playerMonsters.add(new Entity(3));
-		playerMonsters.add(new Entity(4));
-
-		aiMonsters.add(new Entity(1));
-		aiMonsters.add(new Entity(2));
-		aiMonsters.add(new Entity(3));
-		aiMonsters.add(new Entity(4));
+		playerMonsters.add(new Entity(EntityTypes.COMMANDER));
+		playerMonsters.add(new Entity(EntityTypes.ICARUS));
+		playerMonsters.add(new Entity(EntityTypes.DEMON));
+		playerMonsters.add(new Entity(EntityTypes.SHAMAN));
 
 		player.setTeam(playerMonsters);
-		enemy.setTeam(aiMonsters);
-
 		fighters.add(player);
-		fighters.add(enemy);
-
-		ScreenManager.getInstance().showScreen(ScreenEnum.BATTLE, fighters);
 	}
 
 	@Override

@@ -7,65 +7,74 @@ import com.mygdx.game.Map.TiledMapObserver.TilemapCommand;
 
 import Utility.TiledMapPosition;
 
-public class TiledMapActor extends Actor implements TiledMapSubject{
-    private Map tiledMap;
-    private TiledMapTileLayer tiledLayer;   
-    private Boolean isFreeSpawn;
-    private Boolean isHovered;
+public class TiledMapActor extends Actor implements TiledMapSubject {
+	private final Map tiledMap;
+	private final TiledMapTileLayer tiledLayer;
+	private Boolean isFreeSpawn;
+	private Boolean isAISpawn;
+	private Boolean isHovered;
 	private TiledMapPosition actorPos = new TiledMapPosition();
-	private Array<TiledMapObserver> observers;
+	private final Array<TiledMapObserver> observers;
 
-    public Boolean getIsFreeSpawn() {
+	public Boolean getIsFreeSpawn() {
 		return isFreeSpawn;
 	}
 
-	public void setIsFreeSpawn(Boolean isFreeSpawn) {
+	public void setIsFreeSpawn(final Boolean isFreeSpawn) {
 		this.isFreeSpawn = isFreeSpawn;
 	}
-	
-    public Boolean getIsHovered() {
+
+	public Boolean getIsAISpawn() {
+		return isAISpawn;
+	}
+
+	public void setIsAISpawn(final Boolean isAISpawn) {
+		this.isAISpawn = isAISpawn;
+	}
+
+	public Boolean getIsHovered() {
 		return isHovered;
 	}
 
-	public void setIsHovered(Boolean isHovered) {
+	public void setIsHovered(final Boolean isHovered) {
 		this.isHovered = isHovered;
 		notifyTilemapObserver(TilemapCommand.HOVER_CHANGED);
 	}
 
 	TiledMapTileLayer.Cell cell;
 
-    public TiledMapActor(Map tiledMap, TiledMapTileLayer tiledLayer, TiledMapTileLayer.Cell cell) {
-        this.tiledMap = tiledMap;
-        this.tiledLayer = tiledLayer;
-        this.cell = cell;
-        this.isFreeSpawn = false;
-        this.isHovered = false;
-        this.observers = new Array<TiledMapObserver>();
-    }
+	public TiledMapActor(final Map tiledMap, final TiledMapTileLayer tiledLayer, final TiledMapTileLayer.Cell cell) {
+		this.tiledMap = tiledMap;
+		this.tiledLayer = tiledLayer;
+		this.cell = cell;
+		isFreeSpawn = false;
+		isHovered = false;
+		observers = new Array<TiledMapObserver>();
+	}
 
 	public Map getTiledMap() {
 		return tiledMap;
 	}
-	
-	public void setActorPos(TiledMapPosition pos) {
-		this.actorPos = pos;
+
+	public void setActorPos(final TiledMapPosition pos) {
+		actorPos = pos;
 	}
-	
+
 	public TiledMapPosition getActorPos() {
 		return actorPos;
 	}
-	
+
 	public TiledMapTileLayer getTiledLayer() {
 		return tiledLayer;
 	}
 
 	@Override
-	public void addTilemapObserver(TiledMapObserver tileMapObserver) {
+	public void addTilemapObserver(final TiledMapObserver tileMapObserver) {
 		observers.add(tileMapObserver);
 	}
 
 	@Override
-	public void removeObserver(TiledMapObserver tileMapObserver) {
+	public void removeObserver(final TiledMapObserver tileMapObserver) {
 		observers.removeValue(tileMapObserver, true);
 	}
 
@@ -75,9 +84,9 @@ public class TiledMapActor extends Actor implements TiledMapSubject{
 	}
 
 	@Override
-	public void notifyTilemapObserver(TilemapCommand command) {
-        for(TiledMapObserver observer: observers){
-            observer.onTiledMapNotify(command,actorPos);
-        }
+	public void notifyTilemapObserver(final TilemapCommand command) {
+		for (final TiledMapObserver observer : observers) {
+			observer.onTiledMapNotify(command, actorPos);
+		}
 	}
 }
