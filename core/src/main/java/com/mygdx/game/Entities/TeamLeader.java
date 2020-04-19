@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 
-public abstract class Owner {
+public abstract class TeamLeader {
 	private List<Entity> team;
 	private EntityStage entityStage;
 

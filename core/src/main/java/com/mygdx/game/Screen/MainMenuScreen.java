@@ -18,13 +18,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.mygdx.game.AI.Level;
-import com.mygdx.game.AI.LevelFileReader;
+import com.mygdx.game.AI.AITeam;
+import com.mygdx.game.AI.AITeamFileReader;
 import com.mygdx.game.Audio.AudioObserver;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Entities.EntityFileReader;
 import com.mygdx.game.Entities.EntityTypes;
-import com.mygdx.game.Entities.Owner;
+import com.mygdx.game.Entities.TeamLeader;
 import com.mygdx.game.Entities.Player;
 import com.mygdx.game.Magic.SpellFileReader;
 
@@ -43,11 +43,11 @@ public class MainMenuScreen extends GameScreen {
 	private TextButton newGameButton;
 	private TextButton exitButton;
 	private Label title;
-	private ArrayList<Owner> fighters;
+	private ArrayList<TeamLeader> fighters;
 	private ArrayList<Entity> playerMonsters;
 	private Animation<TextureRegion> bganimation;
 	private SpriteBatch backgroundbatch;
-	private Level selectedLevel;
+	private AITeam selectedLevel;
 
 	protected float frameTime = 0f;
 	protected Sprite frameSprite = null;
@@ -71,11 +71,11 @@ public class MainMenuScreen extends GameScreen {
 		Utility.loadFreeTypeFontAsset("fonts/BLKCHCRY.ttf", 24);
 		EntityFileReader.loadUnitStatsInMemory();
 		SpellFileReader.loadSpellsInMemory();
-		LevelFileReader.loadLevelsInMemory();
+		AITeamFileReader.loadLevelsInMemory();
 	}
 
 	private void initializeClassVariables() {
-		fighters = new ArrayList<Owner>();
+		fighters = new ArrayList<TeamLeader>();
 		playerMonsters = new ArrayList<Entity>();
 		stage = new Stage();
 		mainMenuTableOfButtons = new Table();

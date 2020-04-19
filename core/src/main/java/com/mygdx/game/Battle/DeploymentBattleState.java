@@ -36,7 +36,7 @@ public class DeploymentBattleState extends BattleState {
 	}
 
 	private void deployUnit(final TiledMapActor actor) {
-		if (actor.getIsFreeSpawn()) {
+		if (Boolean.TRUE.equals(actor.getIsFreeSpawn())) {
 			final TiledMapPosition newPosition = actor.getActorPos();
 
 			if ((unitsSortedByInitiative != null) && (deployingUnitNumber < unitsSortedByInitiative.length)) {

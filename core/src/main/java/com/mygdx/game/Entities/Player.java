@@ -1,6 +1,6 @@
 package com.mygdx.game.Entities;
 
-public class Player extends Owner{
+public class Player extends TeamLeader{
     private static Player instance;
  
 

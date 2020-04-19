@@ -1,12 +1,12 @@
 package com.mygdx.game.AI;
 
-public class LevelData {
+public class AITeamData {
 
 	private int id;
 	private String name;
 	private String[] units;
 
-	public LevelData() {
+	public AITeamData() {
 
 	}
 

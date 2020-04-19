@@ -22,6 +22,7 @@ public class BattleMap extends Map {
 	private ArrayList<TiledMapPosition> unitSpawnPositions;
 	protected Vector2 playerStartPositionRect;
 	protected TiledMapPosition convertedUnits;
+	protected ArrayList<TiledMapPosition> enemyStartPositions;
 
 	BattleMap(final String mapPath) {
 		super(MapFactory.MapType.BATTLE_MAP, mapPath);
@@ -41,6 +42,7 @@ public class BattleMap extends Map {
 
 	private void initializeClassVariables() {
 		unitSpawnPositions = new ArrayList<TiledMapPosition>();
+		enemyStartPositions = new ArrayList<TiledMapPosition>();
 		playerStartPositionRect = new Vector2(0, 0);
 		convertedUnits = new TiledMapPosition();
 
@@ -101,6 +103,10 @@ public class BattleMap extends Map {
 
 	public List<TiledMapPosition> getSpawnPositions() {
 		return unitSpawnPositions;
+	}
+
+	public ArrayList<TiledMapPosition> getEnemyStartPositions() {
+		return enemyStartPositions;
 	}
 
 	public TiledMapStage getTiledMapStage() {

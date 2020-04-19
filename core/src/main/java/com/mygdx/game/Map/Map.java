@@ -1,7 +1,5 @@
 package com.mygdx.game.Map;
 
-import java.util.ArrayList;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapProperties;
@@ -13,7 +11,6 @@ import com.mygdx.game.Audio.AudioObserver;
 import com.mygdx.game.Audio.AudioSubject;
 import com.mygdx.game.Battle.BattleManager;
 
-import Utility.TiledMapPosition;
 import Utility.Utility;
 
 public abstract class Map implements AudioSubject {
@@ -43,7 +40,6 @@ public abstract class Map implements AudioSubject {
 	protected MapLayer spawnsLayer = null;
 	protected MyNavigationTiledMapLayer navLayer = null;
 	protected MyPathFinder pathfinder;
-	protected ArrayList<TiledMapPosition> enemyStartPositions;
 
 	protected MapFactory.MapType currentMapType;
 	protected MapProperties prop;
@@ -103,7 +99,6 @@ public abstract class Map implements AudioSubject {
 		json = new Json();
 		currentMapType = mapType;
 		observers = new Array<AudioObserver>();
-		enemyStartPositions = new ArrayList<TiledMapPosition>();
 	}
 
 	public MyNavigationTiledMapLayer getNavLayer() {
@@ -148,10 +143,6 @@ public abstract class Map implements AudioSubject {
 
 	public int getTilemapHeightInTiles() {
 		return tilemapHeightInTiles;
-	}
-
-	public ArrayList<TiledMapPosition> getEnemyStartPositions() {
-		return enemyStartPositions;
 	}
 
 	public abstract void unloadMusic();
