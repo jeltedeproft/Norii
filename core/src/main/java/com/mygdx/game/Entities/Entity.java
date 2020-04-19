@@ -38,6 +38,7 @@ public class Entity extends Actor implements EntitySubject {
 	private boolean isInDeploymentPhase;
 	private boolean isInSpellPhase;
 	private boolean isDead;
+	private boolean isPlayerUnit;
 
 	protected TiledMapPosition oldPlayerPosition;
 	protected TiledMapPosition nextPlayerPosition;
@@ -76,6 +77,7 @@ public class Entity extends Actor implements EntitySubject {
 		isInMovementPhase = false;
 		isInAttackPhase = false;
 		isInDeploymentPhase = false;
+		isPlayerUnit = true;
 		abilities = new ArrayList<Ability>();
 		modifiers = new ArrayList<Modifier>();
 		initAbilities();
@@ -277,6 +279,14 @@ public class Entity extends Actor implements EntitySubject {
 		} else {
 			bottomMenu.setHero(null);
 		}
+	}
+
+	public boolean isPlayerUnit() {
+		return isPlayerUnit;
+	}
+
+	public void setPlayerUnit(boolean isPlayerUnit) {
+		this.isPlayerUnit = isPlayerUnit;
 	}
 
 	public int getAp() {
