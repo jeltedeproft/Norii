@@ -39,6 +39,7 @@ public class Entity extends Actor implements EntitySubject {
 	private boolean isInSpellPhase;
 	private boolean isDead;
 	private boolean isPlayerUnit;
+	private int entityID;
 
 	protected TiledMapPosition oldPlayerPosition;
 	protected TiledMapPosition nextPlayerPosition;
@@ -80,6 +81,7 @@ public class Entity extends Actor implements EntitySubject {
 		isPlayerUnit = true;
 		abilities = new ArrayList<Ability>();
 		modifiers = new ArrayList<Modifier>();
+		entityID = java.lang.System.identityHashCode(this);
 		initAbilities();
 	}
 
@@ -378,6 +380,10 @@ public class Entity extends Actor implements EntitySubject {
 	public void setXp(final int xp) {
 		entityData.setXp(xp);
 		updateUI();
+	}
+
+	public int getEntityID() {
+		return entityID;
 	}
 
 	public int getCurrentInitiative() {

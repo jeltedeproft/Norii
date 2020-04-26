@@ -7,7 +7,7 @@ import java.util.List;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
 public abstract class TeamLeader {
-	private List<Entity> team;
+	protected List<Entity> team;
 	private EntityStage entityStage;
 
 	public EntityStage getEntityStage() {
@@ -42,7 +42,8 @@ public abstract class TeamLeader {
 	public void renderUnits(final Batch batch) {
 		for (final Entity entity : team) {
 			if (entity.isInBattle()) {
-				batch.draw(entity.getFrame(), entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY(), 1f, 1f);
+				batch.draw(entity.getFrame(), entity.getCurrentPosition().getTileX(),
+						entity.getCurrentPosition().getTileY(), 1f, 1f);
 			}
 		}
 	}
@@ -55,6 +56,7 @@ public abstract class TeamLeader {
 
 	private void sortUnits(final Entity[] sortedUnits) {
 		Arrays.sort(sortedUnits, new Comparator<Entity>() {
+			@Override
 			public int compare(final Entity e1, final Entity e2) {
 				if (e1.getBaseInitiative() > e2.getBaseInitiative()) {
 					return 1;
