@@ -3,50 +3,33 @@ package com.mygdx.game.AI;
 import java.util.ArrayList;
 
 import com.mygdx.game.Entities.Entity;
-import com.mygdx.game.Entities.EntityStage;
 import com.mygdx.game.Entities.EntityTypes;
+import com.mygdx.game.Entities.TeamLeader;
 
-public class AITeam {
+public class AITeam extends TeamLeader {
 	private final AITeamData aiTeamData;
-	private final ArrayList<Entity> units;
-	private EntityStage entityStage;
+	private final AIDecisionMaker aiDecisionMaker;
 
 	public AITeam(final AITeams type) {
-		units = new ArrayList<Entity>();
 		aiTeamData = AITeamFileReader.getAITeamData().get(type.ordinal());
+		aiDecisionMaker = new AIDecisionMaker();
 		initiateUnits();
-		setStage();
 	}
 
 	private void initiateUnits() {
+		team = new ArrayList<Entity>();
 		for (final String name : aiTeamData.getUnits()) {
 			for (final EntityTypes type : EntityTypes.values()) {
 				if (name.equals(type.getEntityName())) {
-					units.add(new Entity(type));
+					final Entity entity = new Entity(type);
+					entity.setPlayerUnit(false);
+					team.add(entity);
 				}
 			}
 		}
 	}
 
-	private void setStage() {
-		if (entityStage != null) {
-			entityStage.dispose();
-		}
-		entityStage = new EntityStage(units);
-	}
-
-	public String[] getUnitNames() {
-		return aiTeamData.getUnits();
-	}
-
-	public ArrayList<Entity> getUnits() {
-		return units;
-	}
-
-	public void dispose() {
-		for (final Entity entity : units) {
-			entity.dispose();
-		}
-		entityStage.dispose();
+	public void aiUnitAct(Entity unit) {
+		aiDecisionMaker.makeDecision(unit);
 	}
 }

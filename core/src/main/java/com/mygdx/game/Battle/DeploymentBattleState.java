@@ -2,6 +2,7 @@ package com.mygdx.game.Battle;
 
 import com.badlogic.gdx.Gdx;
 import com.mygdx.game.Entities.Entity;
+import com.mygdx.game.Entities.Player;
 import com.mygdx.game.Map.TiledMapActor;
 import com.mygdx.game.Particles.ParticleMaker;
 import com.mygdx.game.Particles.ParticleType;
@@ -18,7 +19,7 @@ public class DeploymentBattleState extends BattleState {
 	public DeploymentBattleState(final BattleManager battlemanager) {
 		this.battlemanager = battlemanager;
 		deployingUnitNumber = 0;
-		unitsSortedByInitiative = battlemanager.getUnits();
+		unitsSortedByInitiative = Player.getInstance().getUnitsSortedByIni();
 		unitsSortedByInitiative[0].setInDeploymentPhase(true);
 	}
 

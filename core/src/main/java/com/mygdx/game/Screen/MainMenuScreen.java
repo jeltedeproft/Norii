@@ -18,14 +18,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.mygdx.game.AI.AITeam;
 import com.mygdx.game.AI.AITeamFileReader;
+import com.mygdx.game.AI.AITeams;
 import com.mygdx.game.Audio.AudioObserver;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Entities.EntityFileReader;
 import com.mygdx.game.Entities.EntityTypes;
-import com.mygdx.game.Entities.TeamLeader;
 import com.mygdx.game.Entities.Player;
+import com.mygdx.game.Entities.TeamLeader;
 import com.mygdx.game.Magic.SpellFileReader;
 
 import Utility.Utility;
@@ -47,7 +47,7 @@ public class MainMenuScreen extends GameScreen {
 	private ArrayList<Entity> playerMonsters;
 	private Animation<TextureRegion> bganimation;
 	private SpriteBatch backgroundbatch;
-	private AITeam selectedLevel;
+	private AITeams selectedLevel;
 
 	protected float frameTime = 0f;
 	protected Sprite frameSprite = null;
@@ -80,6 +80,7 @@ public class MainMenuScreen extends GameScreen {
 		stage = new Stage();
 		mainMenuTableOfButtons = new Table();
 		mainMenuTableOfButtons.setFillParent(true);
+		selectedLevel = AITeams.DESERT_TEAM;
 	}
 
 	private void createBackground() {
@@ -130,7 +131,8 @@ public class MainMenuScreen extends GameScreen {
 	private void addListeners() {
 		newGameButton.addListener(new InputListener() {
 			@Override
-			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
+			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer,
+					final int button) {
 				addUnitsToPlayer();
 				ScreenManager.getInstance().showScreen(ScreenEnum.BATTLE, fighters, selectedLevel);
 				return true;
@@ -139,7 +141,8 @@ public class MainMenuScreen extends GameScreen {
 
 		exitButton.addListener(new InputListener() {
 			@Override
-			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
+			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer,
+					final int button) {
 				Gdx.app.exit();
 				return true;
 			}
@@ -170,11 +173,12 @@ public class MainMenuScreen extends GameScreen {
 	}
 
 	public void updatebg(final float delta) {
-		frameTime = (frameTime + delta) % 70; //Want to avoid overflow
+		frameTime = (frameTime + delta) % 70; // Want to avoid overflow
 
 		currentFrame = bganimation.getKeyFrame(frameTime, true);
 		backgroundbatch.begin();
-		backgroundbatch.draw(currentFrame, 0, 0, stage.getViewport().getWorldWidth(), stage.getViewport().getWorldHeight());
+		backgroundbatch.draw(currentFrame, 0, 0, stage.getViewport().getWorldWidth(),
+				stage.getViewport().getWorldHeight());
 		backgroundbatch.end();
 	}
 

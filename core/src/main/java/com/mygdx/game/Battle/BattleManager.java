@@ -19,11 +19,11 @@ public class BattleManager {
 
 	private final Entity[] sortedUnits;
 
-	public BattleManager(final Entity[] playerSortedUnits) {
-		sortedUnits = playerSortedUnits;
+	public BattleManager(final Entity[] allSortedUnits) {
+		sortedUnits = allSortedUnits;
 		activeUnitIndex = 0;
 		numberOfUnits = sortedUnits.length;
-		activeUnit = playerSortedUnits[activeUnitIndex];
+		activeUnit = allSortedUnits[activeUnitIndex];
 
 		deploymentBattleState = new DeploymentBattleState(this);
 		movementBattleState = new MovementBattleState(this);

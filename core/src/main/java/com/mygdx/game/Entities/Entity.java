@@ -38,6 +38,8 @@ public class Entity extends Actor implements EntitySubject {
 	private boolean isInDeploymentPhase;
 	private boolean isInSpellPhase;
 	private boolean isDead;
+	private boolean isPlayerUnit;
+	private int entityID;
 
 	protected TiledMapPosition oldPlayerPosition;
 	protected TiledMapPosition nextPlayerPosition;
@@ -76,8 +78,10 @@ public class Entity extends Actor implements EntitySubject {
 		isInMovementPhase = false;
 		isInAttackPhase = false;
 		isInDeploymentPhase = false;
+		isPlayerUnit = true;
 		abilities = new ArrayList<Ability>();
 		modifiers = new ArrayList<Modifier>();
+		entityID = java.lang.System.identityHashCode(this);
 		initAbilities();
 	}
 
@@ -252,11 +256,16 @@ public class Entity extends Actor implements EntitySubject {
 
 	public void setInActionPhase(final boolean isInActionPhase) {
 		this.isInActionPhase = isInActionPhase;
-		if (isInActionPhase) {
-			actionsui.update();
-			actionsui.setVisible(true);
-		}
 		notifyEntityObserver(EntityCommand.UNIT_ACTIVE);
+
+		if (isInActionPhase) {
+			if (isPlayerUnit) {
+				actionsui.update();
+				actionsui.setVisible(true);
+			} else {
+				notifyEntityObserver(EntityCommand.AI_ACT);
+			}
+		}
 	}
 
 	public boolean isInDeploymentPhase() {
@@ -277,6 +286,14 @@ public class Entity extends Actor implements EntitySubject {
 		} else {
 			bottomMenu.setHero(null);
 		}
+	}
+
+	public boolean isPlayerUnit() {
+		return isPlayerUnit;
+	}
+
+	public void setPlayerUnit(boolean isPlayerUnit) {
+		this.isPlayerUnit = isPlayerUnit;
 	}
 
 	public int getAp() {
@@ -368,6 +385,10 @@ public class Entity extends Actor implements EntitySubject {
 	public void setXp(final int xp) {
 		entityData.setXp(xp);
 		updateUI();
+	}
+
+	public int getEntityID() {
+		return entityID;
 	}
 
 	public int getCurrentInitiative() {

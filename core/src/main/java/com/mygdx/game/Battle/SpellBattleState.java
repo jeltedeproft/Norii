@@ -42,19 +42,19 @@ public class SpellBattleState extends BattleState {
 		final Ability ability = battlemanager.getCurrentSpell();
 		final Entity currentUnit = battlemanager.getActiveUnit();
 		final Entity possibleTarget = getPossibleTarget(entity);
-		if (possibleTarget != null && !(possibleTarget.getName().equalsIgnoreCase(currentUnit.getName()))) {
+		if (possibleTarget != null && !(possibleTarget.getEntityID() == currentUnit.getEntityID())) {
 			switch (ability.getAbilityEnum()) {
-				case FIREBALL:
-					castFireBall(currentUnit, possibleTarget, ability);
-					break;
-				case SWAP:
-					castSwap(currentUnit, possibleTarget, ability);
-					break;
-				case TURN_TO_STONE:
-					castTurnToStone(currentUnit, possibleTarget, ability);
-					break;
-				default:
-					break;
+			case FIREBALL:
+				castFireBall(currentUnit, possibleTarget, ability);
+				break;
+			case SWAP:
+				castSwap(currentUnit, possibleTarget, ability);
+				break;
+			case TURN_TO_STONE:
+				castTurnToStone(currentUnit, possibleTarget, ability);
+				break;
+			default:
+				break;
 			}
 		}
 		exit();
@@ -90,7 +90,8 @@ public class SpellBattleState extends BattleState {
 
 	private Entity getPossibleTarget(final Entity targetEntity) {
 		for (final Entity entity : battlemanager.getUnits()) {
-			if ((entity.getCurrentPosition().getTileX() == targetEntity.getCurrentPosition().getTileX()) && (entity.getCurrentPosition().getTileY() == targetEntity.getCurrentPosition().getTileY())) {
+			if ((entity.getCurrentPosition().getTileX() == targetEntity.getCurrentPosition().getTileX())
+				&& (entity.getCurrentPosition().getTileY() == targetEntity.getCurrentPosition().getTileY())) {
 				return entity;
 			}
 		}
@@ -100,16 +101,16 @@ public class SpellBattleState extends BattleState {
 	@Override
 	public void buttonPressed(final int button) {
 		switch (button) {
-			case Buttons.RIGHT:
-				ParticleMaker.deactivateAllParticlesOfType(ParticleType.SPELL);
-				exit();
-				break;
-			case Buttons.LEFT:
-				break;
-			case Buttons.MIDDLE:
-				break;
-			default:
-				break;
+		case Buttons.RIGHT:
+			ParticleMaker.deactivateAllParticlesOfType(ParticleType.SPELL);
+			exit();
+			break;
+		case Buttons.LEFT:
+			break;
+		case Buttons.MIDDLE:
+			break;
+		default:
+			break;
 		}
 	}
 }

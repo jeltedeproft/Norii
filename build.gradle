@@ -66,6 +66,7 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx-ai:$aiVersion"
         compile "com.github.xaguzman:pathfinding-gdx-bridge:0.2.6"
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+        compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
         testImplementation 'junit:junit:4.12'
         testImplementation 'org.mockito:mockito-all:2.0.2-beta'
     }
