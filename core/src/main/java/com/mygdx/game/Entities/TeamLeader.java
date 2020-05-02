@@ -22,11 +22,11 @@ public abstract class TeamLeader {
 		this.team = team;
 	}
 
-	public void setStage() {
+	public void setStage(EntityStage stage) {
 		if (entityStage != null) {
 			entityStage.dispose();
 		}
-		entityStage = new EntityStage(team);
+		entityStage = stage;
 	}
 
 	public void updateUnits(final float delta) {
@@ -42,8 +42,7 @@ public abstract class TeamLeader {
 	public void renderUnits(final Batch batch) {
 		for (final Entity entity : team) {
 			if (entity.isInBattle()) {
-				batch.draw(entity.getFrame(), entity.getCurrentPosition().getTileX(),
-						entity.getCurrentPosition().getTileY(), 1f, 1f);
+				batch.draw(entity.getFrame(), entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY(), 1f, 1f);
 			}
 		}
 	}

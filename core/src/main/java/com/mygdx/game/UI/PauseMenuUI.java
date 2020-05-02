@@ -20,42 +20,44 @@ import com.mygdx.game.Screen.ScreenManager;
 
 import Utility.Utility;
 
-
 public class PauseMenuUI implements Screen {
 	private static String defaultBackgroundPath = "maps/rpg/tiles/grass.png";
-	
-    private Stage stage;
-    private Viewport viewport;
-    private Table menuTable;
-    private Label title;
+
+	private Stage stage;
+	private Viewport viewport;
+	private Table menuTable;
+	private Label title;
 	private TextButton resumeButton;
 	private TextButton settingButton;
 	private TextButton mainMenuButton;
-	
+
 	private boolean visible;
 
-    public PauseMenuUI(Camera camera) {
-        viewport = new ScreenViewport(camera);
-        stage = new Stage(viewport);
-        menuTable = new Table();
+	public PauseMenuUI(Camera camera) {
+		initVariables(camera);
+		createUI();
+		createLayout();
+		addListeners();
+	}
+
+	private void initVariables(Camera camera) {
+		viewport = new ScreenViewport(camera);
+		stage = new Stage(viewport);
+		menuTable = new Table();
 		menuTable.setDebug(false);
 		menuTable.setFillParent(true);
-		
-        createUI();
-        createLayout();
-        
-        addListeners();
-    }
-    
-    private void createUI() {       
-    	Skin statusUISkin = Utility.getStatusUISkin();
-    	title = new Label("Pause", statusUISkin);
-    	title.setFontScale(2);
-        resumeButton = new TextButton("Resume",statusUISkin);
-        settingButton = new TextButton("Settings", statusUISkin);
-        mainMenuButton = new TextButton("Main Menu", statusUISkin);
+		this.setVisible(false);
 	}
-    
+
+	private void createUI() {
+		final Skin statusUISkin = Utility.getStatusUISkin();
+		title = new Label("Pause", statusUISkin);
+		title.setFontScale(2);
+		resumeButton = new TextButton("Resume", statusUISkin);
+		settingButton = new TextButton("Settings", statusUISkin);
+		mainMenuButton = new TextButton("Main Menu", statusUISkin);
+	}
+
 	private void createLayout() {
 		menuTable.background(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(defaultBackgroundPath)))));
 		menuTable.row();
@@ -88,56 +90,55 @@ public class PauseMenuUI implements Screen {
 			}
 		});
 	}
-	
-    public Stage getStage() {
-        return stage;
-    }
-    
-    public boolean getVisible() {
-    	return visible;
-    }
-    
-    public void setVisible(boolean visible) {
-    	this.visible = visible;
+
+	public Stage getStage() {
+		return stage;
+	}
+
+	public boolean getVisible() {
+		return visible;
+	}
+
+	public void setVisible(boolean visible) {
+		this.visible = visible;
 		menuTable.setVisible(visible);
-    }
+	}
 
-    @Override
-    public void show() {
-    }
+	@Override
+	public void show() {
+	}
 
-    @Override
-    public void render(float delta) {
-	    if(visible) {
-	        stage.act(delta);
-	        stage.draw();
-    	}
-    }
+	@Override
+	public void render(float delta) {
+		if (visible) {
+			stage.act(delta);
+			stage.draw();
+		}
+	}
 
-    @Override
-    public void resize(int width, int height) {
-        stage.getViewport().update(width, height, true);
-    }
+	@Override
+	public void resize(int width, int height) {
+		stage.getViewport().update(width, height, true);
+	}
 
-    @Override
-    public void pause() {
+	@Override
+	public void pause() {
 
-    }
+	}
 
-    @Override
-    public void resume() {
+	@Override
+	public void resume() {
 
-    }
+	}
 
 	@Override
 	public void hide() {
-		
-    }
 
-    @Override
-    public void dispose() {
-        stage.dispose();
-    }
+	}
+
+	@Override
+	public void dispose() {
+		stage.dispose();
+	}
 
 }
-

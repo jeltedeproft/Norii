@@ -71,6 +71,7 @@ public class HPBar {
 
 	private void updatePos() {
 		hpBarImage.setPosition((linkedEntity.getCurrentPosition().getCameraX()), (linkedEntity.getCurrentPosition().getCameraY()) + offsetY);
+		hpBarBackgroundImage.setPosition((linkedEntity.getCurrentPosition().getCameraX()), (linkedEntity.getCurrentPosition().getCameraY()) + offsetY);
 	}
 
 	public WidgetGroup getHpBarGroup() {

@@ -256,11 +256,16 @@ public class Entity extends Actor implements EntitySubject {
 
 	public void setInActionPhase(final boolean isInActionPhase) {
 		this.isInActionPhase = isInActionPhase;
-		if (isInActionPhase) {
-			actionsui.update();
-			actionsui.setVisible(true);
-		}
 		notifyEntityObserver(EntityCommand.UNIT_ACTIVE);
+
+		if (isInActionPhase) {
+			if (isPlayerUnit) {
+				actionsui.update();
+				actionsui.setVisible(true);
+			} else {
+				notifyEntityObserver(EntityCommand.AI_ACT);
+			}
+		}
 	}
 
 	public boolean isInDeploymentPhase() {

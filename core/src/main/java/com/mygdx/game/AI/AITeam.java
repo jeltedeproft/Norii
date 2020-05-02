@@ -8,11 +8,12 @@ import com.mygdx.game.Entities.TeamLeader;
 
 public class AITeam extends TeamLeader {
 	private final AITeamData aiTeamData;
+	private final AIDecisionMaker aiDecisionMaker;
 
 	public AITeam(final AITeams type) {
 		aiTeamData = AITeamFileReader.getAITeamData().get(type.ordinal());
+		aiDecisionMaker = new AIDecisionMaker();
 		initiateUnits();
-		setStage();
 	}
 
 	private void initiateUnits() {
@@ -20,10 +21,15 @@ public class AITeam extends TeamLeader {
 		for (final String name : aiTeamData.getUnits()) {
 			for (final EntityTypes type : EntityTypes.values()) {
 				if (name.equals(type.getEntityName())) {
-					team.add(new Entity(type));
+					final Entity entity = new Entity(type);
+					entity.setPlayerUnit(false);
+					team.add(entity);
 				}
 			}
 		}
 	}
 
+	public void aiUnitAct(Entity unit) {
+		aiDecisionMaker.makeDecision(unit);
+	}
 }

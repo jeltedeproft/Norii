@@ -50,16 +50,15 @@ public class BottomMenu extends Window {
 
 	private static final int BOTTOM_MENU_HEIGHT_TILES = 3;
 	private static final int HERO_PORTRAIT_WIDTH_TILES = 3;
-
 	private static final int STATS_MENU_WIDTH_TILES = 17;
 	private static final int STATS_MENU_ELEMENT_PADDING = 20;
 	private static final int STATS_MENU_TOP_PADDING = 0;
-
 	private static final int HP_LABEL_WIDTH = 50;
-
 	private static final int TILE_TO_PIXEL_RATIO = 25;
-
 	private static final int ALPHA = 90;
+
+	private static final Color GOOD_COLOR = Color.GREEN;
+	private static final Color BAD_COLOR = Color.RED;
 
 	private HorizontalGroup bottomMenuTable;
 	private Window statsGroup;
@@ -205,6 +204,15 @@ public class BottomMenu extends Window {
 			}
 		} else {
 			resetStats();
+		}
+		setBackgroundColor(statsGroup);
+	}
+
+	private void setBackgroundColor(Window window) {
+		if (linkedEntity.isPlayerUnit()) {
+			window.setColor(GOOD_COLOR);
+		} else {
+			window.setColor(BAD_COLOR);
 		}
 	}
 

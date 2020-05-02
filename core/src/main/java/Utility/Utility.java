@@ -105,8 +105,7 @@ public final class Utility {
 		}
 	}
 
-	public static LabelStyle createLabelStyle(final String fontPath, final int size, final int borderWidth,
-			final Color color, final int shadowX, final int shadowY) {
+	public static LabelStyle createLabelStyle(final String fontPath, final int size, final int borderWidth, final Color color, final int shadowX, final int shadowY) {
 		final FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(fontPath));
 		final FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 		parameter.size = size;
@@ -126,7 +125,7 @@ public final class Utility {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void loadAsset(final String assetName, final Class className, final AssetLoader loader) {
-		if (checkValidString(assetName)) {
+		if ((!isAssetLoaded(assetName)) && (checkValidString(assetName))) {
 			if (filePathResolver.resolve(assetName).exists()) {
 				assetManager.setLoader(className, loader);
 				assetManager.load(assetName, className);

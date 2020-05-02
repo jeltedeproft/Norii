@@ -85,6 +85,7 @@ public class PortraitsUI extends Window {
 	private void addStackPortraitBorder(PortraitUI portrait) {
 		final Stack stack = new Stack();
 		stack.addActor(portrait.getHeroPortrait());
+		stack.addActor(portrait.getHeroPortraitBorderColored());
 		stack.addActor(portrait.getHeroPortraitBorder());
 		stacks.add(stack);
 
@@ -117,6 +118,8 @@ public class PortraitsUI extends Window {
 			portrait.getHeroPortraitScalable().setMinWidth(PORTRAIT_WIDTH * tileWidthPixel);
 			portrait.getHeroPortraitScalableBorder().setMinHeight(PORTRAIT_HEIGHT * tileHeightPixel);
 			portrait.getHeroPortraitScalableBorder().setMinWidth(PORTRAIT_WIDTH * tileWidthPixel);
+			portrait.getHeroPortraitScalableBorderColored().setMinHeight(PORTRAIT_HEIGHT * tileHeightPixel);
+			portrait.getHeroPortraitScalableBorderColored().setMinWidth(PORTRAIT_WIDTH * tileWidthPixel);
 		}
 	}
 
