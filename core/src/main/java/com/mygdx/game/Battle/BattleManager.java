@@ -1,7 +1,10 @@
 package com.mygdx.game.Battle;
 
+import org.xguzm.pathfinding.grid.GridCell;
+
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Magic.Ability;
+import com.mygdx.game.Map.BattleMap;
 
 public class BattleManager {
 	private BattleState deploymentBattleState;
@@ -52,6 +55,16 @@ public class BattleManager {
 		activeUnit.setAp(activeUnit.getMaxAp());
 		activeUnit.setActive(true);
 		activeUnit.applyModifiers();
+	}
+
+	public void initializeMoveSpellPosibilities(BattleMap map) {
+		for (final Entity unit : sortedUnits) {
+			for (final GridCell[] cellArray : map.getNavLayer().getNodes()) {
+				for (final GridCell cell : cellArray) {
+
+				}
+			}
+		}
 	}
 
 	public Entity getActiveUnit() {

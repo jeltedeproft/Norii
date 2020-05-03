@@ -56,8 +56,8 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	private OrthographicCamera hudCamera;
 	private PlayerBattleHUD playerBattleHUD;
 	private PauseMenuUI pauseMenu;
-	private boolean isPaused;
 	private Entity[] allUnits;
+	private boolean isPaused;
 
 	private static class VIEWPORT {
 		static float viewportWidth;
@@ -374,6 +374,8 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 			aiTeam.aiUnitAct(unit);
 			battlemanager.getCurrentBattleState().exit();
 			break;
+		case INIT_POSIBILITIES:
+			battlemanager.initializeMoveSpellPosibilities(currentMap);
 		default:
 			break;
 		}

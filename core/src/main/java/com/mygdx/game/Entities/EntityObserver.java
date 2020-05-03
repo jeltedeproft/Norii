@@ -5,7 +5,7 @@ import com.mygdx.game.Magic.Ability;
 public interface EntityObserver {
 
 	public enum EntityCommand {
-		IN_MOVEMENT, IN_ATTACK_PHASE, IN_SPELL_PHASE, UNIT_ACTIVE, CLICKED, SKIP, AI_ACT, DIED
+		IN_MOVEMENT, IN_ATTACK_PHASE, IN_SPELL_PHASE, UNIT_ACTIVE, CLICKED, SKIP, AI_ACT, DIED, INIT_POSIBILITIES
 	}
 
 	void onEntityNotify(EntityCommand command, Entity unit);

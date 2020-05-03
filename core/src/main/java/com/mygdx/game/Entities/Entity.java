@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Entities.EntityAnimation.Direction;
-import com.mygdx.game.Entities.EntityAnimation.State;
 import com.mygdx.game.Entities.EntityObserver.EntityCommand;
 import com.mygdx.game.Magic.AbilitiesEnum;
 import com.mygdx.game.Magic.Ability;
@@ -45,7 +44,6 @@ public class Entity extends Actor implements EntitySubject {
 	protected TiledMapPosition nextPlayerPosition;
 	protected TiledMapPosition currentPlayerPosition;
 	protected Direction direction;
-	protected State state = State.IDLE;
 
 	private StatusUI statusui;
 	private ActionsUI actionsui;
@@ -121,10 +119,6 @@ public class Entity extends Actor implements EntitySubject {
 
 	public void dispose() {
 		Utility.unloadAsset(entityAnimation.getSpritePath());
-	}
-
-	public void setState(final State state) {
-		this.state = state;
 	}
 
 	public TiledMapPosition getCurrentPosition() {
