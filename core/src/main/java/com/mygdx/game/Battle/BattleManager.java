@@ -1,5 +1,7 @@
 package com.mygdx.game.Battle;
 
+import java.util.HashMap;
+
 import org.xguzm.pathfinding.grid.GridCell;
 
 import com.mygdx.game.Entities.Entity;
@@ -21,12 +23,16 @@ public class BattleManager {
 	private Ability currentSpell;
 
 	private final Entity[] sortedUnits;
+	private final HashMap<Entity, boolean[][]> walkPosibilitiesForUnit;
+	private final HashMap<Entity, boolean[][]> spellPosibilitiesForUnit;
 
 	public BattleManager(final Entity[] allSortedUnits) {
 		sortedUnits = allSortedUnits;
 		activeUnitIndex = 0;
 		numberOfUnits = sortedUnits.length;
 		activeUnit = allSortedUnits[activeUnitIndex];
+		walkPosibilitiesForUnit = new HashMap<Entity, boolean[][]>();
+		spellPosibilitiesForUnit = new HashMap<Entity, boolean[][]>();
 
 		deploymentBattleState = new DeploymentBattleState(this);
 		movementBattleState = new MovementBattleState(this);
@@ -59,9 +65,15 @@ public class BattleManager {
 
 	public void initializeMoveSpellPosibilities(BattleMap map) {
 		for (final Entity unit : sortedUnits) {
+			final int height = map.getTilemapHeightInTiles();
+			final int width = map.getTilemapWidthInTiles();
+			final boolean[][] walkPosibilities = new boolean[height][width];
+			final boolean[][] spellPosibilities = new boolean[height][width];
 			for (final GridCell[] cellArray : map.getNavLayer().getNodes()) {
 				for (final GridCell cell : cellArray) {
-
+					if (cell.isWalkable() && map.getPathfinder().canUnitWalkTo(unit, cell)) {
+						walkPosibilities[cell.y][cell.x] = true;
+					}
 				}
 			}
 		}

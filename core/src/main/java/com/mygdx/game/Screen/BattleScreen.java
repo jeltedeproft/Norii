@@ -415,6 +415,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 
 	private void prepareSpell(final Entity unit, final Ability ability) {
 		final ArrayList<TiledMapPosition> positions = collectPositionsUnits();
+		// diferent spell types here, not only line
 
 		final List<GridCell> spellPath = currentMap.getPathfinder().getLineOfSightWithinLine(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(),
 			ability.getSpellData().getRange(), unit.getEntityAnimation().getCurrentDirection(), positions);

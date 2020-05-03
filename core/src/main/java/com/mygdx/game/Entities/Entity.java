@@ -172,7 +172,10 @@ public class Entity extends Actor implements EntitySubject {
 
 	public void setActive(final boolean isActive) {
 		this.isActive = isActive;
-		actionsui.update();
+
+		if (isPlayerUnit) {
+			actionsui.update();
+		}
 	}
 
 	public boolean isInMovementPhase() {

@@ -73,7 +73,7 @@ public class DeploymentBattleState extends BattleState {
 
 	private void checkIfLastUnit() {
 		if (deployingUnitNumber >= unitsSortedByInitiative.length) {
-			unitsSortedByInitiative[deployingUnitNumber].notifyEntityObserver(EntityCommand.INIT_POSIBILITIES);
+			unitsSortedByInitiative[0].notifyEntityObserver(EntityCommand.INIT_POSIBILITIES);
 			exit();
 		}
 	}
