@@ -1,17 +1,15 @@
 package com.mygdx.game.Entities;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+
 import Utility.TiledMapPosition;
 
 public class EntityActor extends Actor {
-    private Boolean isHovering;
-    private Entity entity;
-    private TiledMapPosition actorPos = new TiledMapPosition();
-    
+	private Boolean isHovering;
+	private final Entity entity;
+	private final TiledMapPosition actorPos = new TiledMapPosition();
 
-    public Entity getEntity() {
+	public Entity getEntity() {
 		return entity;
 	}
 
@@ -23,30 +21,18 @@ public class EntityActor extends Actor {
 		this.isHovering = isHovering;
 	}
 
-    public EntityActor(Entity entity) {
-        this.entity = entity;
-        this.actorPos.setPositionFromScreen(entity.getX(), entity.getY());
-        this.isHovering = false;
-        entity.setEntityactor(this);
-        
-        this.addListener(new ClickListener() {
-            @Override
-            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                setIsHovering(true);
-            }
-            
-            @Override
-            public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                setIsHovering(false);
-            }
-        });
-    }
-    
-    public void setPos() {
-    	this.setBounds((entity.getCurrentPosition().getTileX()), (entity.getCurrentPosition().getTileY()), 1,1);
-    }
-    
+	public EntityActor(Entity entity) {
+		this.entity = entity;
+		this.actorPos.setPositionFromScreen(entity.getX(), entity.getY());
+		this.isHovering = false;
+		entity.setEntityactor(this);
+	}
+
+	public void setPos() {
+		this.setBounds((entity.getCurrentPosition().getTileX()), (entity.getCurrentPosition().getTileY()), 1, 1);
+	}
+
 	public TiledMapPosition getActorPos() {
 		return actorPos;
-	}  
+	}
 }

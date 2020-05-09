@@ -42,6 +42,7 @@ public class ActionsUI extends UIWindow {
 		addWidgets();
 	}
 
+	@Override
 	protected void configureMainWindow() {
 		setVisible(false);
 		this.pad(MAIN_WINDOW_PADDING);
@@ -55,6 +56,7 @@ public class ActionsUI extends UIWindow {
 		entity.setActionsui(this);
 	}
 
+	@Override
 	protected void createWidgets() {
 		createButtons();
 		createLabels();
@@ -80,6 +82,7 @@ public class ActionsUI extends UIWindow {
 		buttons.add(skipActionUIButton);
 	}
 
+	@Override
 	protected void addWidgets() {
 		addButtons();
 	}
@@ -114,6 +117,7 @@ public class ActionsUI extends UIWindow {
 		}
 	}
 
+	@Override
 	public void updatePos() {
 		this.setPosition((linkedEntity.getCurrentPosition().getCameraX()), (linkedEntity.getCurrentPosition().getCameraY()));
 		adjustPosition();

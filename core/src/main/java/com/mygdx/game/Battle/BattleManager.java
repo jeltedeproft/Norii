@@ -74,9 +74,25 @@ public class BattleManager {
 					if (cell.isWalkable() && map.getPathfinder().canUnitWalkTo(unit, cell)) {
 						walkPosibilities[cell.y][cell.x] = true;
 					}
+
+					if (map.getPathfinder().lineOfSight(unit, cell, sortedUnits)) {
+						spellPosibilities[cell.y][cell.x] = true;
+					}
 				}
 			}
 		}
+	}
+
+	public void recalculateMoveAndSpellPosibilitiesForUnit(Entity unit) {
+
+	}
+
+	public boolean[][] getMovePosibilitiesForUnit(Entity unit) {
+		return walkPosibilitiesForUnit.get(unit);
+	}
+
+	public boolean[][] getSpellPosibilitiesForUnit(Entity unit) {
+		return spellPosibilitiesForUnit.get(unit);
 	}
 
 	public Entity getActiveUnit() {
@@ -149,5 +165,13 @@ public class BattleManager {
 
 	public void setCurrentBattleState(final BattleState currentBattleState) {
 		this.currentBattleState = currentBattleState;
+	}
+
+	public HashMap<Entity, boolean[][]> getWalkPosibilitiesForUnit() {
+		return walkPosibilitiesForUnit;
+	}
+
+	public HashMap<Entity, boolean[][]> getSpellPosibilitiesForUnit() {
+		return spellPosibilitiesForUnit;
 	}
 }

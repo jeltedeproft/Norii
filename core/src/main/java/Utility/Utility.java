@@ -1,8 +1,10 @@
 
 package Utility;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
@@ -27,6 +29,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoa
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.mygdx.game.Entities.Entity;
+import com.mygdx.game.Entities.TeamLeader;
 import com.mygdx.game.Map.MyNavTmxMapLoader;
 
 public final class Utility {
@@ -238,6 +241,26 @@ public final class Utility {
 			}
 		});
 		return sortedUnits;
+	}
+
+	public static List<TiledMapPosition> collectPositionsUnits(Entity[] units) {
+		final ArrayList<TiledMapPosition> positions = new ArrayList<TiledMapPosition>();
+
+		for (final Entity unit : units) {
+			positions.add(unit.getCurrentPosition());
+		}
+
+		return positions;
+	}
+
+	public static ArrayList<TiledMapPosition> collectPositionsUnits(List<TeamLeader> players) {
+		final ArrayList<TiledMapPosition> positions = new ArrayList<TiledMapPosition>();
+		for (final TeamLeader owner : players) {
+			for (final Entity character : owner.getTeam()) {
+				positions.add(character.getCurrentPosition());
+			}
+		}
+		return positions;
 	}
 
 	private Utility() {

@@ -114,8 +114,8 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 		battlescreenInputProcessor = new BattleScreenInputProcessor(this, mapCamera);
 		multiplexer = new InputMultiplexer();
 		multiplexer.addProcessor(battlescreenInputProcessor);
-		multiplexer.addProcessor(Player.getInstance().getEntityStage());
 		multiplexer.addProcessor(playerBattleHUD.getStage());
+		multiplexer.addProcessor(Player.getInstance().getEntityStage());
 		multiplexer.addProcessor(pauseMenu.getStage());
 	}
 
@@ -301,6 +301,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 		currentMap.getTiledMapStage().getViewport().update(width, height, false);
 		Player.getInstance().getEntityStage().getViewport().update(width, height, false);
 		aiTeam.getEntityStage().getViewport().update(width, height, false);
+
 		playerBattleHUD.resize(width, height);
 		pauseMenu.resize(width, height);
 	}
@@ -414,7 +415,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	}
 
 	private void prepareSpell(final Entity unit, final Ability ability) {
-		final ArrayList<TiledMapPosition> positions = collectPositionsUnits();
+		final ArrayList<TiledMapPosition> positions = Utility.collectPositionsUnits(players);
 		// diferent spell types here, not only line
 
 		final List<GridCell> spellPath = currentMap.getPathfinder().getLineOfSightWithinLine(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(),
@@ -422,19 +423,10 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 		for (final GridCell cell : spellPath) {
 			final TiledMapPosition positionToPutSpellParticle = new TiledMapPosition().setPositionFromTiles(cell.x, cell.y);
 			ParticleMaker.addParticle(ParticleType.SPELL, positionToPutSpellParticle);
-			battlemanager.setCurrentSpell(ability);
-			battlemanager.setCurrentBattleState(battlemanager.getSpellBattleState());
 		}
-	}
 
-	private ArrayList<TiledMapPosition> collectPositionsUnits() {
-		final ArrayList<TiledMapPosition> positions = new ArrayList<TiledMapPosition>();
-		for (final TeamLeader owner : players) {
-			for (final Entity character : owner.getTeam()) {
-				positions.add(character.getCurrentPosition());
-			}
-		}
-		return positions;
+		battlemanager.setCurrentSpell(ability);
+		battlemanager.setCurrentBattleState(battlemanager.getSpellBattleState());
 	}
 
 	private boolean isUnitOnCell(final GridCell cell) {

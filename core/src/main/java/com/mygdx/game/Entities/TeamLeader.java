@@ -72,6 +72,5 @@ public abstract class TeamLeader {
 		for (final Entity entity : team) {
 			entity.dispose();
 		}
-		entityStage.dispose();
 	}
 }
