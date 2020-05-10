@@ -2,6 +2,7 @@ package com.mygdx.game.Battle;
 
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Magic.Ability;
+import com.mygdx.game.Map.MyPathFinder;
 
 public class BattleManager {
 	private BattleState deploymentBattleState;
@@ -16,6 +17,7 @@ public class BattleManager {
 	private int activeUnitIndex;
 	private final int numberOfUnits;
 	private Ability currentSpell;
+	private MyPathFinder pathFinder;
 
 	private final Entity[] sortedUnits;
 
@@ -52,6 +54,14 @@ public class BattleManager {
 		activeUnit.setAp(activeUnit.getMaxAp());
 		activeUnit.setActive(true);
 		activeUnit.applyModifiers();
+	}
+
+	public void setPathFinder(MyPathFinder myPathFinder) {
+		this.pathFinder = myPathFinder;
+	}
+
+	public MyPathFinder getPathFinder() {
+		return pathFinder;
 	}
 
 	public Entity getActiveUnit() {

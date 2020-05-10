@@ -125,6 +125,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 		mapMgr = new MapManager();
 		currentMap = (BattleMap) mapMgr.getCurrentMap();
 		currentMap.setStage(battlemanager);
+		battlemanager.setPathFinder(currentMap.getPathfinder());
 	}
 
 	private void spawnAI() {

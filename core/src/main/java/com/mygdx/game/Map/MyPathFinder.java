@@ -166,6 +166,14 @@ public class MyPathFinder {
 		return lineOfSight(unitCell, targetCell, positionsUnits);
 	}
 
+	public boolean lineOfSight(Entity caster, Entity target, Entity[] sortedUnits) {
+		final ArrayList<TiledMapPosition> positionsUnits = (ArrayList<TiledMapPosition>) Utility.collectPositionsUnits(sortedUnits);
+		final GridCell unitCell = navGrid.getCell(caster.getCurrentPosition().getTileX(), caster.getCurrentPosition().getTileY());
+		final GridCell targetCell = navGrid.getCell(target.getCurrentPosition().getTileX(), target.getCurrentPosition().getTileY());
+
+		return lineOfSight(unitCell, targetCell, positionsUnits);
+	}
+
 	public boolean canUnitWalkTo(Entity unit, GridCell cell) {
 		final GridCell center = navGrid.getCell(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY());
 		return checkIfIsPathAndCloseEnough(center, cell, unit.getAp());

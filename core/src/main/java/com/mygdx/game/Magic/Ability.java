@@ -8,12 +8,16 @@ public class Ability {
 		LINE, CIRCLE, CROSS
 	}
 
-	public enum Targets {
+	public enum AreaOfEffect {
 		CELL, LINE, CIRCLE, CROSS, SQUARE
 	}
 
 	public enum AffectedTeams {
 		FRIENDLY, ENEMY, BOTH
+	}
+
+	public enum Target {
+		UNIT, CELL
 	}
 
 	public Ability(final AbilitiesEnum abilityEnum) {
@@ -37,12 +41,16 @@ public class Ability {
 		return LineOfSight.valueOf(spellData.getLineOfSight());
 	}
 
-	public Targets getTargets() {
-		return Targets.valueOf(spellData.getTarget());
+	public AreaOfEffect getAreaOfEffect() {
+		return AreaOfEffect.valueOf(spellData.getAreaOfEffect());
 	}
 
 	public AffectedTeams getAffectedTeams() {
 		return AffectedTeams.valueOf(spellData.getAffectsTeam());
+	}
+
+	public Target getTarget() {
+		return Target.valueOf(spellData.getTarget());
 	}
 
 	public AbilitiesEnum getAbilityEnum() {

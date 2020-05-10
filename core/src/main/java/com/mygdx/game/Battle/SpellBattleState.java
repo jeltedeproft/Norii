@@ -8,6 +8,7 @@ import com.mygdx.game.Entities.EntityAnimation.Direction;
 import com.mygdx.game.Magic.Ability;
 import com.mygdx.game.Magic.Ability.AffectedTeams;
 import com.mygdx.game.Magic.Ability.LineOfSight;
+import com.mygdx.game.Magic.Ability.Target;
 import com.mygdx.game.Magic.ModifiersEnum;
 import com.mygdx.game.Map.TiledMapActor;
 import com.mygdx.game.Particles.ParticleMaker;
@@ -25,9 +26,13 @@ public class SpellBattleState extends BattleState {
 
 	@Override
 	public void clickedOnTile(final TiledMapActor actor) {
-		possibleTileSpell(actor);
+		possibleTileSpell(actor.getActorPos());
 		ParticleMaker.deactivateAllParticlesOfType(ParticleType.SPELL);
 		exit();
+	}
+
+	private void possibleTileSpell(final TiledMapPosition pos) {
+		// todo
 	}
 
 	@Override
@@ -69,10 +74,11 @@ public class SpellBattleState extends BattleState {
 		final AffectedTeams affectedTeams = ability.getAffectedTeams();
 
 		final boolean correctTeam = checkTeams(caster, target, affectedTeams);
-		final boolean correctSpot = checkTarget(caster, target, ability);
+		final boolean correctAreaOfEffect = checkAreaOfEffect(caster, target, ability);
 		final boolean correctVisibility = checkVisibility(caster, target, ability);
+		final boolean correctTarget = checkTarget(ability);
 
-		return correctSpot && correctTeam && correctVisibility;
+		return correctAreaOfEffect && correctTeam && correctVisibility && correctTarget;
 	}
 
 	private boolean checkTeams(Entity caster, Entity target, final AffectedTeams affectedTeams) {
@@ -83,7 +89,7 @@ public class SpellBattleState extends BattleState {
 		return ((affectedTeams == AffectedTeams.FRIENDLY) && (caster.isPlayerUnit() != target.isPlayerUnit()));
 	}
 
-	private boolean checkTarget(Entity caster, Entity target, Ability ability) {
+	private boolean checkAreaOfEffect(Entity caster, Entity target, Ability ability) {
 		final LineOfSight lineOfSight = ability.getLineOfSight();
 		switch (lineOfSight) {
 		case LINE:
@@ -138,8 +144,11 @@ public class SpellBattleState extends BattleState {
 	}
 
 	private boolean checkVisibility(Entity caster, Entity target, Ability ability) {
-		// TODO Auto-generated method stub
-		return false;
+		return battlemanager.getPathFinder().lineOfSight(caster, target, battlemanager.getUnits());
+	}
+
+	private boolean checkTarget(Ability ability) {
+		return (ability.getTarget() == Target.UNIT);
 	}
 
 	private void castFireBall(final Entity caster, final Entity target, final Ability ability) {
@@ -164,10 +173,6 @@ public class SpellBattleState extends BattleState {
 		target.changeAnimation(new EntityAnimation("sprites/characters/rocksheet.png"));
 		target.addModifier(ModifiersEnum.IMAGE_CHANGED, 2, 0);
 		target.addModifier(ModifiersEnum.STUNNED, 2, 0);
-	}
-
-	private void possibleTileSpell(final TiledMapActor actor) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
