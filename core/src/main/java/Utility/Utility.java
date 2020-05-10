@@ -31,6 +31,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Entities.TeamLeader;
 import com.mygdx.game.Map.MyNavTmxMapLoader;
+import com.mygdx.game.UI.MySkin;
 
 public final class Utility {
 	private static final String TAG = Utility.class.getSimpleName();
@@ -261,6 +262,17 @@ public final class Utility {
 			}
 		}
 		return positions;
+	}
+
+	public static boolean checkIfUnitsWithinDistance(Entity unit1, Entity unit2, int distance) {
+		final TiledMapPosition pos1 = unit1.getCurrentPosition();
+		final TiledMapPosition pos2 = unit2.getCurrentPosition();
+		return (Math.abs(pos1.getTileX() - pos2.getTileX()) + Math.abs(pos1.getTileY() - pos2.getTileY())) <= distance;
+	}
+
+	public static int getDistance(TiledMapPosition pos1, Entity unit2) {
+		final TiledMapPosition pos2 = unit2.getCurrentPosition();
+		return (Math.abs(pos1.getTileX() - pos2.getTileX()) + Math.abs(pos1.getTileY() - pos2.getTileY()));
 	}
 
 	private Utility() {

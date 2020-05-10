@@ -2,7 +2,6 @@ package com.mygdx.game.Battle;
 
 import com.badlogic.gdx.Gdx;
 import com.mygdx.game.Entities.Entity;
-import com.mygdx.game.Entities.EntityObserver.EntityCommand;
 import com.mygdx.game.Entities.Player;
 import com.mygdx.game.Map.TiledMapActor;
 import com.mygdx.game.Particles.ParticleMaker;
@@ -73,7 +72,6 @@ public class DeploymentBattleState extends BattleState {
 
 	private void checkIfLastUnit() {
 		if (deployingUnitNumber >= unitsSortedByInitiative.length) {
-			unitsSortedByInitiative[0].notifyEntityObserver(EntityCommand.INIT_POSIBILITIES);
 			exit();
 		}
 	}

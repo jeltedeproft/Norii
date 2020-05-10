@@ -375,8 +375,6 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 			aiTeam.aiUnitAct(unit);
 			battlemanager.getCurrentBattleState().exit();
 			break;
-		case INIT_POSIBILITIES:
-			battlemanager.initializeMoveSpellPosibilities(currentMap);
 		default:
 			break;
 		}

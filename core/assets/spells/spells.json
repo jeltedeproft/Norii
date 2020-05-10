@@ -9,6 +9,7 @@
     "target": "CELL",
     "damage": 10,
     "range": 10,
+    "affectsTeam": "ENEMY",
   },
 
   {
@@ -21,6 +22,7 @@
     "target": "CELL",
     "damage": 10,
     "range": 10,
+    "affectsTeam": "BOTH",
   },
 
   {
@@ -33,5 +35,6 @@
     "target": "CELL",
     "damage": 0,
     "range": 10,
+    "affectsTeam": "BOTH",
   }
 ]

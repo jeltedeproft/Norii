@@ -7,19 +7,21 @@ import com.mygdx.game.Map.TiledMapActor;
 import com.mygdx.game.Particles.ParticleMaker;
 import com.mygdx.game.Particles.ParticleType;
 
-public class AttackBattleState extends BattleState{
-	private BattleManager battlemanager;
+import Utility.Utility;
 
-	public AttackBattleState(BattleManager battlemanager){
+public class AttackBattleState extends BattleState {
+	private final BattleManager battlemanager;
+
+	public AttackBattleState(BattleManager battlemanager) {
 		this.battlemanager = battlemanager;
 	}
-	
+
 	@Override
 	public void clickedOnTile(TiledMapActor actor) {
 		ParticleMaker.deactivateAllParticlesOfType(ParticleType.ATTACK);
 		exit();
 	}
-	
+
 	@Override
 	public void clickedOnUnit(Entity entity) {
 		possibleAttack(entity);
@@ -31,39 +33,30 @@ public class AttackBattleState extends BattleState{
 		battlemanager.setCurrentBattleState(battlemanager.getActionBattleState());
 		battlemanager.getCurrentBattleState().entry();
 	}
-	
-    private void possibleAttack(Entity entity) {  
-    	Entity currentUnit = battlemanager.getActiveUnit();
-    	Entity possibleTarget = getPossibleTarget(entity);
-    	if(possibleTarget != null && !(possibleTarget.getName().equalsIgnoreCase(currentUnit.getName()))) {
-    		currentUnit.attack(possibleTarget);
-    		notify(AudioObserver.AudioCommand.SOUND_PLAY_ONCE, AudioObserver.AudioTypeEvent.ATTACK_SOUND);
-    	}
-    	this.exit();
-    }
-    
-    private Entity getPossibleTarget(Entity targetEntity){
-    	for(Entity entity : battlemanager.getUnits()) {
-    		if((entity.getCurrentPosition().getTileX() == targetEntity.getCurrentPosition().getTileX()) && (entity.getCurrentPosition().getTileY() == targetEntity.getCurrentPosition().getTileY())) {
-    			return entity;
-    		}
-    	}
-    	return null;
-    }
+
+	private void possibleAttack(Entity entity) {
+		final Entity currentUnit = battlemanager.getActiveUnit();
+		final boolean closeEnough = Utility.checkIfUnitsWithinDistance(entity, currentUnit, currentUnit.getAttackRange());
+		if ((entity.isPlayerUnit() != currentUnit.isPlayerUnit()) && closeEnough) {
+			currentUnit.attack(entity);
+			notify(AudioObserver.AudioCommand.SOUND_PLAY_ONCE, AudioObserver.AudioTypeEvent.ATTACK_SOUND);
+		}
+		this.exit();
+	}
 
 	@Override
 	public void buttonPressed(int button) {
-		switch(button) {
-			case Buttons.RIGHT:
-				ParticleMaker.deactivateAllParticlesOfType(ParticleType.ATTACK); 
-				exit();
-				break;
-			case Buttons.LEFT:
-				break;
-			case Buttons.MIDDLE:
-				break;
-			default:
-				break;		
+		switch (button) {
+		case Buttons.RIGHT:
+			ParticleMaker.deactivateAllParticlesOfType(ParticleType.ATTACK);
+			exit();
+			break;
+		case Buttons.LEFT:
+			break;
+		case Buttons.MIDDLE:
+			break;
+		default:
+			break;
 		}
 	}
 }

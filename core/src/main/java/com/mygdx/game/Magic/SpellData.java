@@ -11,6 +11,7 @@ public class SpellData {
 	private String target;
 	private int damage;
 	private int range;
+	private String affectsTeam;
 
 	public SpellData() {
 
@@ -86,6 +87,14 @@ public class SpellData {
 
 	public void setRange(final int range) {
 		this.range = range;
+	}
+
+	public String getAffectsTeam() {
+		return affectsTeam;
+	}
+
+	public void setAffectsTeam(String affectsTeam) {
+		this.affectsTeam = affectsTeam;
 	}
 
 }

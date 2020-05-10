@@ -86,6 +86,12 @@ public class MyPathFinder {
 		return cells;
 	}
 
+	public boolean checkIfInLine(Entity caster, Entity target, final int range, final Direction direction) {
+		final GridCell casterCell = navGrid.getCell(caster.getCurrentPosition().getTileX(), caster.getCurrentPosition().getTileY());
+		final GridCell targetCell = navGrid.getCell(target.getCurrentPosition().getTileX(), target.getCurrentPosition().getTileY());
+		return checkIfInLine(casterCell, targetCell, range, direction);
+	}
+
 	private boolean checkIfInLine(final GridCell center, final GridCell gridcell, final int range, final Direction direction) {
 		if ((Math.abs(center.x - gridcell.x) + (Math.abs(center.y - gridcell.y))) <= range) {
 			final List<GridCell> path = finder.findPath(center.x, center.y, gridcell.x, gridcell.y, navGrid);
@@ -153,7 +159,7 @@ public class MyPathFinder {
 	}
 
 	public boolean lineOfSight(Entity unit, final GridCell to, Entity[] sortedUnits) {
-		final ArrayList<TiledMapPosition> positionsUnits = (ArrayList) Utility.collectPositionsUnits(sortedUnits);
+		final ArrayList<TiledMapPosition> positionsUnits = (ArrayList<TiledMapPosition>) Utility.collectPositionsUnits(sortedUnits);
 		final GridCell unitCell = navGrid.getCell(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY());
 		final GridCell targetCell = navGrid.getCell(to.getX(), to.getY());
 

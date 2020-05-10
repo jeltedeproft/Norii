@@ -110,16 +110,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="13" language="java" name="com.mygdx.game.Entities.PlayerEntity" project="Norii-core" 
-    file="/Norii-core/src/main/java/com/mygdx/game/Entities/PlayerEntity.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="1420" width="312" x="3475" y="4082"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <class id="14" language="java" name="com.mygdx.game.Map.MyNavTmxMapLoader" project="Norii-core" 
+  <class id="13" language="java" name="com.mygdx.game.Map.MyNavTmxMapLoader" project="Norii-core" 
     file="/Norii-core/src/main/java/com/mygdx/game/Map/MyNavTmxMapLoader.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="232" width="385" x="1805" y="37"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -128,7 +119,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <enumeration id="15" language="java" name="com.mygdx.game.Map.MapFactory.MapType" project="Norii-core" 
+  <enumeration id="14" language="java" name="com.mygdx.game.Map.MapFactory.MapType" project="Norii-core" 
     file="/Norii-core/src/main/java/com/mygdx/game/Map/MapFactory.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="106" width="169" x="775" y="2330"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -137,7 +128,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </enumeration>  
-  <class id="16" language="java" name="com.mygdx.game.Map.TiledMapStage" project="Norii-core" 
+  <class id="15" language="java" name="com.mygdx.game.Map.TiledMapStage" project="Norii-core" 
     file="/Norii-core/src/main/java/com/mygdx/game/Map/TiledMapStage.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="196" width="298" x="1398" y="2330"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -146,7 +137,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="17" language="java" name="com.mygdx.game.Map.BattleMap" project="Norii-core" 
+  <class id="16" language="java" name="com.mygdx.game.Map.BattleMap" project="Norii-core" 
     file="/Norii-core/src/main/java/com/mygdx/game/Map/BattleMap.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="304" width="393" x="2229" y="2330"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -155,7 +146,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <enumeration id="18" language="java" name="com.mygdx.game.Map.MapFactory.MapFileNames" project="Norii-core" 
+  <enumeration id="17" language="java" name="com.mygdx.game.Map.MapFactory.MapFileNames" project="Norii-core" 
     file="/Norii-core/src/main/java/com/mygdx/game/Map/MapFactory.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="106" width="297" x="457" y="1645"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -164,7 +155,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </enumeration>  
-  <class id="19" language="java" name="com.mygdx.game.Map.MyPathFinder" project="Norii-core" 
+  <class id="18" language="java" name="com.mygdx.game.Map.MyPathFinder" project="Norii-core" 
     file="/Norii-core/src/main/java/com/mygdx/game/Map/MyPathFinder.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="268" width="255" x="2254" y="3378"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -173,7 +164,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="20" language="java" name="com.mygdx.game.Map.MapFactory" project="Norii-core" 
+  <class id="19" language="java" name="com.mygdx.game.Map.MapFactory" project="Norii-core" 
     file="/Norii-core/src/main/java/com/mygdx/game/Map/MapFactory.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="106" width="158" x="775" y="1265"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -182,7 +173,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="21" language="java" name="com.mygdx.game.Map.MapManager" project="Norii-core" 
+  <class id="20" language="java" name="com.mygdx.game.Map.MapManager" project="Norii-core" 
     file="/Norii-core/src/main/java/com/mygdx/game/Map/MapManager.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="340" width="203" x="1944" y="1265"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -191,7 +182,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="22" language="java" name="com.mygdx.game.Map.MyNavigationTiledMapLayer" project="Norii-core" 
+  <class id="21" language="java" name="com.mygdx.game.Map.MyNavigationTiledMapLayer" project="Norii-core" 
     file="/Norii-core/src/main/java/com/mygdx/game/Map/MyNavigationTiledMapLayer.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="412" width="374" x="984" y="2330"/>    
@@ -201,7 +192,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="23" language="java" name="com.mygdx.game.Map.TiledMapActor" project="Norii-core" 
+  <class id="22" language="java" name="com.mygdx.game.Map.TiledMapActor" project="Norii-core" 
     file="/Norii-core/src/main/java/com/mygdx/game/Map/TiledMapActor.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="250" width="390" x="1757" y="2330"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -210,7 +201,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="24" language="java" name="com.mygdx.game.Map.Map" project="Norii-core" 
+  <class id="23" language="java" name="com.mygdx.game.Map.Map" project="Norii-core" 
     file="/Norii-core/src/main/java/com/mygdx/game/Map/Map.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="645" width="297" x="1566" y="1645"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -219,7 +210,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="25" language="java" name="com.mygdx.game.Map.TiledMapClickListener" project="Norii-core" 
+  <class id="24" language="java" name="com.mygdx.game.Map.TiledMapClickListener" project="Norii-core" 
     file="/Norii-core/src/main/java/com/mygdx/game/Map/TiledMapClickListener.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="124" width="244" x="1903" y="1645"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -228,7 +219,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="26" language="java" name="com.mygdx.game.Profile.ProfileSubject" project="Norii-core" 
+  <class id="25" language="java" name="com.mygdx.game.Profile.ProfileSubject" project="Norii-core" 
     file="/Norii-core/src/main/java/com/mygdx/game/Profile/ProfileSubject.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="160" width="248" x="2419" y="37"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -237,7 +228,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <interface id="27" language="java" name="com.mygdx.game.Profile.ProfileObserver" project="Norii-core" 
+  <interface id="26" language="java" name="com.mygdx.game.Profile.ProfileObserver" project="Norii-core" 
     file="/Norii-core/src/main/java/com/mygdx/game/Profile/ProfileObserver.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="88" width="264" x="2662" y="2330"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -246,7 +237,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </interface>  
-  <class id="28" language="java" name="com.mygdx.game.Profile.ProfileManager" project="Norii-core" 
+  <class id="27" language="java" name="com.mygdx.game.Profile.ProfileManager" project="Norii-core" 
     file="/Norii-core/src/main/java/com/mygdx/game/Profile/ProfileManager.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="394" width="302" x="2419" y="687"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -255,7 +246,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <enumeration id="29" language="java" name="com.mygdx.game.Profile.ProfileObserver.ProfileEvent" project="Norii-core" 
+  <enumeration id="28" language="java" name="com.mygdx.game.Profile.ProfileObserver.ProfileEvent" project="Norii-core" 
     file="/Norii-core/src/main/java/com/mygdx/game/Profile/ProfileObserver.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="124" width="217" x="2689" y="2872"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -264,7 +255,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </enumeration>  
-  <class id="30" language="java" name="com.mygdx.game.Screen.ScreenManager" project="Norii-core" 
+  <class id="29" language="java" name="com.mygdx.game.Screen.ScreenManager" project="Norii-core" 
     file="/Norii-core/src/main/java/com/mygdx/game/Screen/ScreenManager.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="160" width="256" x="516" y="37"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -273,16 +264,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="31" language="java" name="com.mygdx.game.Screen.AbstractScreen" project="Norii-core" 
-    file="/Norii-core/src/main/java/com/mygdx/game/Screen/AbstractScreen.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="213" width="149" x="1271" y="37"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <class id="32" language="java" name="com.mygdx.game.Screen.GameScreen" project="Norii-core" 
+  <class id="30" language="java" name="com.mygdx.game.Screen.GameScreen" project="Norii-core" 
     file="/Norii-core/src/main/java/com/mygdx/game/Screen/GameScreen.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="304" width="279" x="3754" y="37"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -291,7 +273,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <enumeration id="33" language="java" name="com.mygdx.game.Screen.ScreenEnum" project="Norii-core" 
+  <enumeration id="31" language="java" name="com.mygdx.game.Screen.ScreenEnum" project="Norii-core" 
     file="/Norii-core/src/main/java/com/mygdx/game/Screen/ScreenEnum.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="142" width="186" x="1045" y="37"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -300,7 +282,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </enumeration>  
-  <enumeration id="34" language="java" name="com.mygdx.game.Screen.ScreenManager.ScreenParams" project="Norii-core" 
+  <enumeration id="32" language="java" name="com.mygdx.game.Screen.ScreenManager.ScreenParams" project="Norii-core" 
     file="/Norii-core/src/main/java/com/mygdx/game/Screen/ScreenManager.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="106" width="281" x="516" y="687"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -309,7 +291,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </enumeration>  
-  <class id="35" language="java" name="com.mygdx.game.Screen.MainMenuScreen" project="Norii-core" 
+  <class id="33" language="java" name="com.mygdx.game.Screen.MainMenuScreen" project="Norii-core" 
     file="/Norii-core/src/main/java/com/mygdx/game/Screen/MainMenuScreen.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="502" width="259" x="3982" y="2330"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -318,7 +300,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="36" language="java" name="com.mygdx.game.UI.MoveActionUIButton" project="Norii-core" 
+  <class id="34" language="java" name="com.mygdx.game.UI.MoveActionUIButton" project="Norii-core" 
     file="/Norii-core/src/main/java/com/mygdx/game/UI/MoveActionUIButton.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="88" width="264" x="3169" y="3378"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -327,7 +309,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="37" language="java" name="com.mygdx.game.UI.PlayerBattleHUD" project="Norii-core" 
+  <class id="35" language="java" name="com.mygdx.game.UI.PlayerBattleHUD" project="Norii-core" 
     file="/Norii-core/src/main/java/com/mygdx/game/UI/PlayerBattleHUD.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="322" width="264" x="3173" y="1645"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -336,7 +318,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <enumeration id="38" language="java" name="com.mygdx.game.UI.Action" project="Norii-core" 
+  <enumeration id="36" language="java" name="com.mygdx.game.UI.Action" project="Norii-core" 
     file="/Norii-core/src/main/java/com/mygdx/game/UI/ActionUIButton.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="196" width="149" x="2230" y="37"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -345,7 +327,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </enumeration>  
-  <class id="39" language="java" name="com.mygdx.game.UI.ActionUIButton" project="Norii-core" 
+  <class id="37" language="java" name="com.mygdx.game.UI.ActionUIButton" project="Norii-core" 
     file="/Norii-core/src/main/java/com/mygdx/game/UI/ActionUIButton.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="160" width="196" x="3173" y="2872"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -354,7 +336,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="40" language="java" name="com.mygdx.game.UI.ActionsUI" project="Norii-core" 
+  <class id="38" language="java" name="com.mygdx.game.UI.ActionsUI" project="Norii-core" 
     file="/Norii-core/src/main/java/com/mygdx/game/UI/ActionsUI.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="466" width="220" x="3173" y="2330"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -363,7 +345,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="41" language="java" name="com.mygdx.game.UI.PortraitsUI" project="Norii-core" 
+  <class id="39" language="java" name="com.mygdx.game.UI.PortraitsUI" project="Norii-core" 
     file="/Norii-core/src/main/java/com/mygdx/game/UI/PortraitsUI.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="232" width="167" x="2966" y="2330"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -372,7 +354,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="42" language="java" name="com.mygdx.game.UI.StatusUI" project="Norii-core" 
+  <class id="40" language="java" name="com.mygdx.game.UI.StatusUI" project="Norii-core" 
     file="/Norii-core/src/main/java/com/mygdx/game/UI/StatusUI.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="502" width="218" x="3515" y="3378"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -381,7 +363,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="43" language="java" name="com.mygdx.game.UI.PortraitUI" project="Norii-core" 
+  <class id="41" language="java" name="com.mygdx.game.UI.PortraitUI" project="Norii-core" 
     file="/Norii-core/src/main/java/com/mygdx/game/UI/PortraitUI.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="268" width="187" x="2946" y="2872"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -390,257 +372,166 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <realization id="44">    
-    <end type="SOURCE" refId="37"/>    
-    <end type="TARGET" refId="27"/>  
-  </realization>  
-  <realization id="45">    
-    <bendpoint x="3763" y="687"/>    
-    <bendpoint x="3763" y="1265"/>    
-    <bendpoint x="3763" y="1645"/>    
-    <end type="SOURCE" refId="32"/>    
-    <end type="TARGET" refId="4"/>  
-  </realization>  
-  <association id="46">    
-    <end type="SOURCE" refId="41" navigable="false">      
-      <attribute id="47" name="portraits">        
-        <position height="0" width="0" x="335" y="-253"/>      
-      </attribute>      
-      <multiplicity id="48" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="335" y="-253"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="43" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="49">    
-    <end type="SOURCE" refId="28"/>    
-    <end type="TARGET" refId="26"/>  
-  </generalization>  
-  <nesting id="50">    
-    <end type="SOURCE" refId="20"/>    
-    <end type="TARGET" refId="18"/>  
-  </nesting>  
-  <association id="51">    
+  <association id="42">    
     <end type="SOURCE" refId="24" navigable="false">      
-      <attribute id="52" name="tiledmapstage">        
-        <position height="0" width="0" x="-729" y="-970"/>      
-      </attribute>      
-      <multiplicity id="53" minimum="0" maximum="1">        
-        <position height="0" width="0" x="-729" y="-970"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="16" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="54">    
-    <end type="SOURCE" refId="30" navigable="false">      
-      <attribute id="55" name="instance">        
-        <position height="0" width="0" x="409" y="-803"/>      
-      </attribute>      
-      <multiplicity id="56" minimum="0" maximum="1">        
-        <position height="0" width="0" x="409" y="-803"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="30" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <nesting id="57">    
-    <end type="SOURCE" refId="5"/>    
-    <end type="TARGET" refId="3"/>  
-  </nesting>  
-  <association id="58">    
-    <end type="SOURCE" refId="42" navigable="false">      
-      <attribute id="59" name="linkedEntity">        
-        <position height="0" width="0" x="577" y="525"/>      
-      </attribute>      
-      <multiplicity id="60" minimum="0" maximum="1">        
-        <position height="0" width="0" x="577" y="525"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="13" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="61">    
-    <end type="SOURCE" refId="17"/>    
-    <end type="TARGET" refId="24"/>  
-  </generalization>  
-  <nesting id="62">    
-    <end type="SOURCE" refId="27"/>    
-    <end type="TARGET" refId="29"/>  
-  </nesting>  
-  <association id="63">    
-    <bendpoint x="3463" y="2872"/>    
-    <bendpoint x="3463" y="3378"/>    
-    <end type="SOURCE" refId="40" navigable="false">      
-      <attribute id="64" name="linkedEntity">        
-        <position height="0" width="0" x="577" y="525"/>      
-      </attribute>      
-      <multiplicity id="65" minimum="0" maximum="1">        
-        <position height="0" width="0" x="577" y="525"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="13" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="66">    
-    <end type="SOURCE" refId="25" navigable="false">      
-      <attribute id="67" name="actor">        
+      <attribute id="43" name="actor">        
         <position height="0" width="0" x="1602" y="-448"/>      
       </attribute>      
-      <multiplicity id="68" minimum="0" maximum="1">        
+      <multiplicity id="44" minimum="0" maximum="1">        
         <position height="0" width="0" x="1602" y="-448"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="23" navigable="true"/>    
+    <end type="TARGET" refId="22" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="69">    
-    <bendpoint x="1726" y="2330"/>    
-    <end type="SOURCE" refId="24" navigable="false">      
-      <attribute id="70" name="battlemanager">        
-        <position height="0" width="0" x="-318" y="-376"/>      
-      </attribute>      
-      <multiplicity id="71" minimum="0" maximum="1">        
-        <position height="0" width="0" x="-318" y="-376"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="7" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="72">    
-    <end type="SOURCE" refId="11" navigable="false">      
-      <attribute id="73" name="entity">        
-        <position height="0" width="0" x="577" y="525"/>      
-      </attribute>      
-      <multiplicity id="74" minimum="0" maximum="1">        
-        <position height="0" width="0" x="577" y="525"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="13" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="75">    
-    <bendpoint x="3484" y="3378"/>    
-    <bendpoint x="3484" y="2872"/>    
-    <end type="SOURCE" refId="13" navigable="false">      
-      <attribute id="76" name="actionsui">        
-        <position height="0" width="0" x="469" y="151"/>      
-      </attribute>      
-      <multiplicity id="77" minimum="0" maximum="1">        
-        <position height="0" width="0" x="469" y="151"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="40" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="78">    
-    <bendpoint x="2223" y="3378"/>    
-    <end type="SOURCE" refId="7" navigable="false">      
-      <attribute id="79" name="sortedUnits">        
-        <position height="0" width="0" x="577" y="525"/>      
-      </attribute>      
-      <multiplicity id="80" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="577" y="525"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="13" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="81">    
-    <end type="SOURCE" refId="16" navigable="false">      
-      <attribute id="82" name="battlemanager">        
-        <position height="0" width="0" x="-318" y="-376"/>      
-      </attribute>      
-      <multiplicity id="83" minimum="0" maximum="1">        
-        <position height="0" width="0" x="-318" y="-376"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="7" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <nesting id="84">    
-    <bendpoint x="784" y="1645"/>    
-    <end type="SOURCE" refId="20"/>    
-    <end type="TARGET" refId="15"/>  
-  </nesting>  
-  <realization id="85">    
-    <end type="SOURCE" refId="24"/>    
-    <end type="TARGET" refId="4"/>  
-  </realization>  
-  <association id="86">    
-    <end type="SOURCE" refId="12" navigable="false">      
-      <attribute id="87" name="instance">        
-        <position height="0" width="0" x="1342" y="921"/>      
-      </attribute>      
-      <multiplicity id="88" minimum="0" maximum="1">        
-        <position height="0" width="0" x="1342" y="921"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="12" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <nesting id="89">    
-    <end type="SOURCE" refId="30"/>    
-    <end type="TARGET" refId="34"/>  
-  </nesting>  
-  <generalization id="90">    
-    <end type="SOURCE" refId="36"/>    
-    <end type="TARGET" refId="39"/>  
-  </generalization>  
-  <association id="91">    
-    <bendpoint x="2202" y="3378"/>    
-    <end type="SOURCE" refId="7" navigable="false">      
-      <attribute id="92" name="activeUnit">        
-        <position height="0" width="0" x="577" y="525"/>      
-      </attribute>      
-      <multiplicity id="93" minimum="0" maximum="1">        
-        <position height="0" width="0" x="577" y="525"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="13" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="94">    
-    <bendpoint x="3138" y="3378"/>    
-    <end type="SOURCE" refId="43" navigable="false">      
-      <attribute id="95" name="linkedEntity">        
-        <position height="0" width="0" x="577" y="525"/>      
-      </attribute>      
-      <multiplicity id="96" minimum="0" maximum="1">        
-        <position height="0" width="0" x="577" y="525"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="13" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <nesting id="97">    
+  <nesting id="45">    
     <end type="SOURCE" refId="5"/>    
     <end type="TARGET" refId="6"/>  
   </nesting>  
-  <realization id="98">    
-    <end type="SOURCE" refId="2"/>    
-    <end type="TARGET" refId="5"/>  
+  <realization id="46">    
+    <bendpoint x="3763" y="687"/>    
+    <bendpoint x="3763" y="1265"/>    
+    <bendpoint x="3763" y="1645"/>    
+    <end type="SOURCE" refId="30"/>    
+    <end type="TARGET" refId="4"/>  
   </realization>  
-  <association id="99">    
+  <association id="47">    
     <end type="SOURCE" refId="9" navigable="false">      
-      <attribute id="100" name="actor">        
+      <attribute id="48" name="actor">        
         <position height="0" width="0" x="346" y="-76"/>      
       </attribute>      
-      <multiplicity id="101" minimum="0" maximum="1">        
+      <multiplicity id="49" minimum="0" maximum="1">        
         <position height="0" width="0" x="346" y="-76"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="11" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <generalization id="102">    
+  <nesting id="50">    
+    <end type="SOURCE" refId="26"/>    
+    <end type="TARGET" refId="28"/>  
+  </nesting>  
+  <generalization id="51">    
+    <end type="SOURCE" refId="16"/>    
+    <end type="TARGET" refId="23"/>  
+  </generalization>  
+  <association id="52">    
+    <end type="SOURCE" refId="29" navigable="false">      
+      <attribute id="53" name="instance">        
+        <position height="0" width="0" x="409" y="-803"/>      
+      </attribute>      
+      <multiplicity id="54" minimum="0" maximum="1">        
+        <position height="0" width="0" x="409" y="-803"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="29" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="55">    
+    <end type="SOURCE" refId="34"/>    
+    <end type="TARGET" refId="37"/>  
+  </generalization>  
+  <realization id="56">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="5"/>  
+  </realization>  
+  <nesting id="57">    
+    <end type="SOURCE" refId="19"/>    
+    <end type="TARGET" refId="17"/>  
+  </nesting>  
+  <nesting id="58">    
+    <bendpoint x="784" y="1645"/>    
+    <end type="SOURCE" refId="19"/>    
+    <end type="TARGET" refId="14"/>  
+  </nesting>  
+  <association id="59">    
+    <end type="SOURCE" refId="23" navigable="false">      
+      <attribute id="60" name="tiledmapstage">        
+        <position height="0" width="0" x="-729" y="-970"/>      
+      </attribute>      
+      <multiplicity id="61" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-729" y="-970"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="15" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="62">    
+    <end type="SOURCE" refId="23"/>    
+    <end type="TARGET" refId="4"/>  
+  </realization>  
+  <association id="63">    
+    <bendpoint x="1726" y="2330"/>    
+    <end type="SOURCE" refId="23" navigable="false">      
+      <attribute id="64" name="battlemanager">        
+        <position height="0" width="0" x="-318" y="-376"/>      
+      </attribute>      
+      <multiplicity id="65" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-318" y="-376"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="7" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="66">    
     <bendpoint x="3877" y="1645"/>    
     <bendpoint x="3877" y="1265"/>    
     <bendpoint x="3877" y="687"/>    
-    <end type="SOURCE" refId="35"/>    
-    <end type="TARGET" refId="32"/>  
+    <end type="SOURCE" refId="33"/>    
+    <end type="TARGET" refId="30"/>  
   </generalization>  
+  <association id="67">    
+    <end type="SOURCE" refId="15" navigable="false">      
+      <attribute id="68" name="battlemanager">        
+        <position height="0" width="0" x="-318" y="-376"/>      
+      </attribute>      
+      <multiplicity id="69" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-318" y="-376"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="7" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="70">    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="32"/>  
+  </nesting>  
+  <association id="71">    
+    <end type="SOURCE" refId="12" navigable="false">      
+      <attribute id="72" name="instance">        
+        <position height="0" width="0" x="1342" y="921"/>      
+      </attribute>      
+      <multiplicity id="73" minimum="0" maximum="1">        
+        <position height="0" width="0" x="1342" y="921"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="12" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="74">    
+    <end type="SOURCE" refId="27"/>    
+    <end type="TARGET" refId="25"/>  
+  </generalization>  
+  <nesting id="75">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="3"/>  
+  </nesting>  
+  <realization id="76">    
+    <end type="SOURCE" refId="35"/>    
+    <end type="TARGET" refId="26"/>  
+  </realization>  
+  <association id="77">    
+    <end type="SOURCE" refId="39" navigable="false">      
+      <attribute id="78" name="portraits">        
+        <position height="0" width="0" x="335" y="-253"/>      
+      </attribute>      
+      <multiplicity id="79" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="335" y="-253"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="41" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     sort-features="false" accessors="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="true" static="true"/>    
