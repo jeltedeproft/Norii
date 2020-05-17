@@ -9,57 +9,64 @@ import com.mygdx.game.Screen.BattleScreen;
 
 public class TiledMapPosition {
 	private Point tileCoordinates;
-	
-	
+
 	public TiledMapPosition() {
-		tileCoordinates = new Point(0,0);
+		tileCoordinates = new Point(0, 0);
 	}
-	
-	public TiledMapPosition setPositionFromTiled(float x, float y){
-		tileCoordinates = new Point(Math.round(x  / Map.TILE_WIDTH),Math.round(y / Map.TILE_HEIGHT));
+
+	public TiledMapPosition setPositionFromTiled(float x, float y) {
+		tileCoordinates = new Point(Math.round(x / Map.TILE_WIDTH), Math.round(y / Map.TILE_HEIGHT));
 		return this;
 	}
-	
-	public TiledMapPosition setPositionFromTiles(int x, int y){
-		tileCoordinates = new Point(x,y);
+
+	public TiledMapPosition setPositionFromTiles(int x, int y) {
+		tileCoordinates = new Point(x, y);
 		return this;
 	}
-	
-	public TiledMapPosition setPositionFromScreen(float x, float y){
-		tileCoordinates = new Point(Math.round(x  / (Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH)),Math.round(y / (Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT)));
+
+	public TiledMapPosition setPositionFromScreen(float x, float y) {
+		tileCoordinates = new Point(Math.round(x / (Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH)),
+			Math.round(y / (Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT)));
 		return this;
 	}
-	
+
 	public boolean isTileEqualTo(TiledMapPosition pos) {
-		return((pos.tileCoordinates.x == tileCoordinates.x) && (pos.tileCoordinates.y == tileCoordinates.y));
+		return ((pos.tileCoordinates.x == tileCoordinates.x) && (pos.tileCoordinates.y == tileCoordinates.y));
 	}
-	
+
 	public float getCameraX() {
-		OrthographicCamera cam = BattleScreen.getCamera();
-		float xDifference = cam.position.x - (cam.viewportWidth / 2);
+		final OrthographicCamera cam = BattleScreen.getCamera();
+		final float xDifference = cam.position.x - (cam.viewportWidth / 2);
 		return (tileCoordinates.x - xDifference) * (Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH);
 	}
-	
+
 	public float getCameraY() {
-		OrthographicCamera cam = BattleScreen.getCamera();
-		float yDifference = cam.position.y - (cam.viewportHeight / 2);
+		final OrthographicCamera cam = BattleScreen.getCamera();
+		final float yDifference = cam.position.y - (cam.viewportHeight / 2);
 		return (tileCoordinates.y - yDifference) * (Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT);
 	}
-	
+
 	public float getRealTiledX() {
-		return (float) (tileCoordinates.x * Map.TILE_WIDTH);
+		return tileCoordinates.x * Map.TILE_WIDTH;
 	}
-	
+
 	public float getRealTiledY() {
-		return (float) (tileCoordinates.y * Map.TILE_HEIGHT);
+		return tileCoordinates.y * Map.TILE_HEIGHT;
 	}
-	
+
 	public int getTileX() {
 		return tileCoordinates.x;
 	}
-	
+
 	public int getTileY() {
 		return tileCoordinates.y;
 	}
-}
 
+	public void changeX(int change) {
+		tileCoordinates.x += change;
+	}
+
+	public void changeY(int change) {
+		tileCoordinates.y += change;
+	}
+}

@@ -266,7 +266,23 @@ public final class Utility {
 
 	public static boolean checkIfUnitsWithinDistance(Entity unit1, TiledMapPosition targetPos, int distance) {
 		final TiledMapPosition pos1 = unit1.getCurrentPosition();
-		return (Math.abs(pos1.getTileX() - targetPos.getTileX()) + Math.abs(pos1.getTileY() - targetPos.getTileY())) <= distance;
+		return checkIfWithinDistance(pos1, targetPos, distance);
+	}
+
+	public static boolean checkIfUnitsWithinDistance(Entity unit1, Entity unit2, int distance) {
+		final TiledMapPosition pos1 = unit1.getCurrentPosition();
+		final TiledMapPosition pos2 = unit2.getCurrentPosition();
+		return checkIfWithinDistance(pos1, pos2, distance);
+	}
+
+	private static boolean checkIfWithinDistance(TiledMapPosition pos1, TiledMapPosition pos2, int distance) {
+		return (Math.abs(pos1.getTileX() - pos2.getTileX()) + Math.abs(pos1.getTileY() - pos2.getTileY())) <= distance;
+	}
+
+	public static int getDistanceBetweenUnits(Entity unit1, Entity unit2) {
+		final TiledMapPosition pos1 = unit1.getCurrentPosition();
+		final TiledMapPosition pos2 = unit2.getCurrentPosition();
+		return (Math.abs(pos1.getTileX() - pos2.getTileX()) + Math.abs(pos1.getTileY() - pos2.getTileY()));
 	}
 
 	public static int getDistance(TiledMapPosition pos1, Entity unit2) {

@@ -41,8 +41,10 @@ public class BattleManager {
 		activeUnit.setActive(false);
 		activeUnit.setFocused(false);
 
-		activeUnitIndex = (activeUnitIndex + 1) % numberOfUnits;
-		activeUnit = sortedUnits[activeUnitIndex];
+		do {
+			activeUnitIndex = (activeUnitIndex + 1) % numberOfUnits;
+			activeUnit = sortedUnits[activeUnitIndex];
+		} while (activeUnit.isDead());
 
 		startUnitTurn();
 	}

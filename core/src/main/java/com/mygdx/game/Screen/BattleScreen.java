@@ -69,20 +69,21 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 		static float aspectRatio;
 	}
 
-	public BattleScreen(ArrayList<TeamLeader> players, AITeams aiTeams) {
+	public BattleScreen(AITeams aiTeams) {
 		initializeVariables();
 		initializeAI(aiTeams);
 		initializeEntityStage();
 		initializeHUD();
 		initializePauseMenu();
 		initializeInput();
-		initializeUnits(players);
+		initializeUnits();
 		initializeMap();
 		initializeObservers();
 		spawnAI();
 	}
 
 	private void initializeVariables() {
+		players = new ArrayList<TeamLeader>();
 		playerSortedUnits = Player.getInstance().getUnitsSortedByIni();
 		mapCamera = new OrthographicCamera();
 		mapCamera.setToOrtho(false, VISIBLE_WIDTH, VISIBLE_HEIGHT);
@@ -131,14 +132,15 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	private void spawnAI() {
 		final ArrayList<TiledMapPosition> enemyStartPositions = currentMap.getEnemyStartPositions();
 		aiTeam.spawnAiUnits(enemyStartPositions);
+		aiTeam.setPathFinder(currentMap.getPathfinder());
 	}
 
-	private void initializeUnits(ArrayList<TeamLeader> players) {
-		this.players = players;
-		this.players.add(aiTeam);
+	private void initializeUnits() {
+		players.add(Player.getInstance());
+		players.add(aiTeam);
 
-		for (final TeamLeader player : players) {
-			for (final Entity unit : player.getTeam()) {
+		for (final TeamLeader teamLeader : players) {
+			for (final Entity unit : teamLeader.getTeam()) {
 				unit.addEntityObserver(this);
 			}
 		}
@@ -344,7 +346,15 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 			battlemanager.getCurrentBattleState().exit();
 			break;
 		case AI_ACT:
-			aiTeam.aiUnitAct(unit);
+			final ArrayList<Entity> entities = new ArrayList<Entity>();
+			for (final TeamLeader teamLeader : players) {
+				for (final Entity entity : teamLeader.getTeam()) {
+					if (entity.getEntityID() != unit.getEntityID()) {
+						entities.add(entity);
+					}
+				}
+			}
+			aiTeam.aiUnitAct(unit, entities);
 			battlemanager.getCurrentBattleState().exit();
 			break;
 		default:

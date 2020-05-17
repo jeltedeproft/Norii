@@ -205,6 +205,33 @@ public class MyPathFinder {
 		return isCloseEnough(center, target, unit.getAp()) && pathExists(center, target, unit.getAp());
 	}
 
+	public TiledMapPosition getClosestMoveSpotNextToUnit(Entity mover, Entity target) {
+		final int startX = mover.getCurrentPosition().getTileX();
+		final int startY = mover.getCurrentPosition().getTileY();
+		final int endX = target.getCurrentPosition().getTileX();
+		final int endY = target.getCurrentPosition().getTileY();
+		final List<GridCell> path = aStarGridFinder.findPath(startX, startY, endX, endY, navGrid);
+		for (final GridCell cell : path) {
+			if (isNextTo(cell, target.getCurrentPosition())) {
+				return new TiledMapPosition().setPositionFromTiles(cell.x, cell.y);
+			}
+		}
+		return null;
+	}
+
+	public List<GridCell> getPathFromUnitToUnit(Entity mover, Entity target) {
+		final int startX = mover.getCurrentPosition().getTileX();
+		final int startY = mover.getCurrentPosition().getTileY();
+		final int endX = target.getCurrentPosition().getTileX();
+		final int endY = target.getCurrentPosition().getTileY();
+		return aStarGridFinder.findPath(startX, startY, endX, endY, navGrid);
+	}
+
+	private boolean isNextTo(GridCell cell, TiledMapPosition target) {
+		return ((Math.abs(cell.x - target.getTileX()) == 1) && (Math.abs(cell.y - target.getTileY()) == 0))
+			|| ((Math.abs(cell.x - target.getTileX()) == 0) && (Math.abs(cell.y - target.getTileY()) == 1));
+	}
+
 	public void dispose() {
 		aStarGridFinder = null;
 		gridFinderOptions = null;

@@ -33,6 +33,7 @@ public class Entity extends Actor implements EntitySubject {
 	private boolean isInAttackPhase;
 	private boolean isDead;
 	private boolean isPlayerUnit;
+	private boolean isActive;
 	private int entityID;
 
 	protected TiledMapPosition oldPlayerPosition;
@@ -150,9 +151,14 @@ public class Entity extends Actor implements EntitySubject {
 	}
 
 	public void setActive(final boolean isActive) {
+		this.isActive = isActive;
 		if (isPlayerUnit) {
 			actionsui.update();
 		}
+	}
+
+	public boolean isActive() {
+		return isActive;
 	}
 
 	public void setInMovementPhase(final boolean isInMovementPhase) {
@@ -192,14 +198,23 @@ public class Entity extends Actor implements EntitySubject {
 	}
 
 	public void damage(final int damage) {
-		if (damage > hp) {
-			hp = 0;
-			isDead = true;
+		if (damage >= hp) {
+			removeUnit();
 		} else {
 			hp = hp - damage;
 		}
 
 		updateUI();
+	}
+
+	private void removeUnit() {
+		hp = 0;
+		isDead = true;
+		inBattle = false;
+		isActive = false;
+		setCurrentPosition(new TiledMapPosition().setPositionFromScreen(-100, -100));
+		getEntityactor().setPosition(-100, -100);
+		setVisible(false);
 	}
 
 	public boolean canMove() {

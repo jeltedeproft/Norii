@@ -22,7 +22,7 @@
     "portraitSpritePath": "sprites/characters/icarusProfileClean.png",
     "entitySpriteFilePath": "sprites/characters/Icarus.png",
     "maxAP": 10,
-    "maxHP": 10,
+    "maxHP": 1,
     "level": 1,
     "xp": 5,
     "maxXP": 10,
