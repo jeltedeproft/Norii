@@ -18,16 +18,20 @@ import Utility.Utility;
 
 public class MyPathFinder {
 	private NavigationGridGraph<GridCell> navGrid;
-	private GridFinderOptions opt;
-	private AStarGridFinder<GridCell> finder;
+	private GridFinderOptions gridFinderOptions;
+	private AStarGridFinder<GridCell> aStarGridFinder;
 	private final Map linkedMap;
 
 	public MyPathFinder(final Map map) {
 		linkedMap = map;
 		navGrid = linkedMap.getNavLayer().navGrid;
-		opt = new GridFinderOptions();
-		opt.allowDiagonal = false;
-		finder = new AStarGridFinder<GridCell>(GridCell.class, opt); // implement singleton
+		gridFinderOptions = new GridFinderOptions();
+		gridFinderOptions.allowDiagonal = false;
+		aStarGridFinder = new AStarGridFinder<GridCell>(GridCell.class, gridFinderOptions);
+	}
+
+	public AStarGridFinder<GridCell> getFinder() {
+		return aStarGridFinder;
 	}
 
 	public List<GridCell> getLineOfSightWithinCircle(final int x, final int y, final int range, final ArrayList<TiledMapPosition> positionsUnits) {
@@ -36,7 +40,7 @@ public class MyPathFinder {
 
 		for (final GridCell[] gridcells : navGrid.getNodes()) {
 			for (final GridCell gridcell : gridcells) {
-				if (checkIfIsPathAndCloseEnough(center, gridcell, range) && lineOfSight(center, gridcell, positionsUnits)) {
+				if (isCloseEnough(center, gridcell, range) && pathExists(center, gridcell, range) && lineOfSight(center, gridcell, positionsUnits)) {
 					cells.add(gridcell);
 				}
 			}
@@ -64,7 +68,7 @@ public class MyPathFinder {
 
 		for (final GridCell[] gridcells : navGrid.getNodes()) {
 			for (final GridCell gridcell : gridcells) {
-				if (checkIfIsPathAndCloseEnough(center, gridcell, range)) {
+				if (isCloseEnough(center, gridcell, range) && pathExists(center, gridcell, range)) {
 					cells.add(gridcell);
 				}
 			}
@@ -93,8 +97,8 @@ public class MyPathFinder {
 	}
 
 	private boolean checkIfInLine(final GridCell center, final GridCell gridcell, final int range, final Direction direction) {
-		if ((Math.abs(center.x - gridcell.x) + (Math.abs(center.y - gridcell.y))) <= range) {
-			final List<GridCell> path = finder.findPath(center.x, center.y, gridcell.x, gridcell.y, navGrid);
+		if (isCloseEnough(center, gridcell, range)) {
+			final List<GridCell> path = aStarGridFinder.findPath(center.x, center.y, gridcell.x, gridcell.y, navGrid);
 			if ((path != null) && (path.size() <= range) && (!path.isEmpty())) {
 				switch (direction) {
 				case UP:
@@ -114,14 +118,37 @@ public class MyPathFinder {
 		return false;
 	}
 
-	private boolean checkIfIsPathAndCloseEnough(final GridCell center, final GridCell gridcell, final int range) {
-		if ((Math.abs(center.x - gridcell.x) + (Math.abs(center.y - gridcell.y))) <= range) {
-			final List<GridCell> path = finder.findPath(center.x, center.y, gridcell.x, gridcell.y, navGrid);
-			if ((path != null) && (path.size() <= range) && (!path.isEmpty())) {
-				return true;
-			}
-		}
-		return false;
+	private boolean isCloseEnough(final GridCell center, final GridCell gridcell, final int range) {
+		return ((Math.abs(center.x - gridcell.x) + (Math.abs(center.y - gridcell.y))) <= range);
+	}
+
+	private boolean pathExists(final GridCell center, final GridCell gridcell, final int range) {
+		final List<GridCell> path = aStarGridFinder.findPath(center.x, center.y, gridcell.x, gridcell.y, navGrid);
+		return ((path != null) && (path.size() <= range) && (!path.isEmpty()));
+	}
+
+	public boolean lineOfSight(Entity unit, final GridCell to, Entity[] sortedUnits) {
+		final ArrayList<TiledMapPosition> positionsUnits = (ArrayList<TiledMapPosition>) Utility.collectPositionsUnits(sortedUnits);
+		final GridCell unitCell = navGrid.getCell(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY());
+		final GridCell targetCell = navGrid.getCell(to.getX(), to.getY());
+
+		return lineOfSight(unitCell, targetCell, positionsUnits);
+	}
+
+	public boolean lineOfSight(Entity caster, Entity target, Entity[] sortedUnits) {
+		final ArrayList<TiledMapPosition> positionsUnits = (ArrayList<TiledMapPosition>) Utility.collectPositionsUnits(sortedUnits);
+		final GridCell unitCell = navGrid.getCell(caster.getCurrentPosition().getTileX(), caster.getCurrentPosition().getTileY());
+		final GridCell targetCell = navGrid.getCell(target.getCurrentPosition().getTileX(), target.getCurrentPosition().getTileY());
+
+		return lineOfSight(unitCell, targetCell, positionsUnits);
+	}
+
+	public boolean lineOfSight(Entity caster, TiledMapPosition targetPos, Entity[] sortedUnits) {
+		final ArrayList<TiledMapPosition> positionsUnits = (ArrayList<TiledMapPosition>) Utility.collectPositionsUnits(sortedUnits);
+		final GridCell unitCell = navGrid.getCell(caster.getCurrentPosition().getTileX(), caster.getCurrentPosition().getTileY());
+		final GridCell targetCell = navGrid.getCell(targetPos.getTileX(), targetPos.getTileY());
+
+		return lineOfSight(unitCell, targetCell, positionsUnits);
 	}
 
 	public boolean lineOfSight(final NavigationNode from, final NavigationNode to, final ArrayList<TiledMapPosition> positionsUnits) {
@@ -158,33 +185,6 @@ public class MyPathFinder {
 		return true;
 	}
 
-	public boolean lineOfSight(Entity unit, final GridCell to, Entity[] sortedUnits) {
-		final ArrayList<TiledMapPosition> positionsUnits = (ArrayList<TiledMapPosition>) Utility.collectPositionsUnits(sortedUnits);
-		final GridCell unitCell = navGrid.getCell(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY());
-		final GridCell targetCell = navGrid.getCell(to.getX(), to.getY());
-
-		return lineOfSight(unitCell, targetCell, positionsUnits);
-	}
-
-	public boolean lineOfSight(Entity caster, Entity target, Entity[] sortedUnits) {
-		final ArrayList<TiledMapPosition> positionsUnits = (ArrayList<TiledMapPosition>) Utility.collectPositionsUnits(sortedUnits);
-		final GridCell unitCell = navGrid.getCell(caster.getCurrentPosition().getTileX(), caster.getCurrentPosition().getTileY());
-		final GridCell targetCell = navGrid.getCell(target.getCurrentPosition().getTileX(), target.getCurrentPosition().getTileY());
-
-		return lineOfSight(unitCell, targetCell, positionsUnits);
-	}
-
-	public boolean canUnitWalkTo(Entity unit, GridCell cell) {
-		final GridCell center = navGrid.getCell(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY());
-		return checkIfIsPathAndCloseEnough(center, cell, unit.getAp());
-	}
-
-	public boolean canUnitWalkTo(Entity unit, TiledMapPosition pos) {
-		final GridCell center = navGrid.getCell(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY());
-		final GridCell target = navGrid.getCell(pos.getTileX(), pos.getTileY());
-		return checkIfIsPathAndCloseEnough(center, target, unit.getAp());
-	}
-
 	private boolean isUnitOnCell(final int x2, final int y2, final int targetX, final int targetY, final ArrayList<TiledMapPosition> positionsUnits) {
 		for (final TiledMapPosition pos : positionsUnits) {
 			if (pos.getTileX() == x2 && pos.getTileY() == y2 && !(pos.getTileX() == targetX && pos.getTileY() == targetY)) {
@@ -194,13 +194,20 @@ public class MyPathFinder {
 		return false;
 	}
 
-	public AStarGridFinder<GridCell> getFinder() {
-		return finder;
+	public boolean canUnitWalkTo(Entity unit, GridCell cell) {
+		final GridCell center = navGrid.getCell(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY());
+		return isCloseEnough(center, cell, unit.getAp()) && pathExists(center, cell, unit.getAp());
+	}
+
+	public boolean canUnitWalkTo(Entity unit, TiledMapPosition pos) {
+		final GridCell center = navGrid.getCell(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY());
+		final GridCell target = navGrid.getCell(pos.getTileX(), pos.getTileY());
+		return isCloseEnough(center, target, unit.getAp()) && pathExists(center, target, unit.getAp());
 	}
 
 	public void dispose() {
-		finder = null;
-		opt = null;
+		aStarGridFinder = null;
+		gridFinderOptions = null;
 		navGrid = null;
 	}
 }

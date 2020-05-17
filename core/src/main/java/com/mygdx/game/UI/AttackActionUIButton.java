@@ -12,7 +12,7 @@ public class AttackActionUIButton extends ActionUIButton {
 		button.addListener(new ClickListener() {
 			@Override
 			public void clicked(final InputEvent event, final float x, final float y) {
-				if (linkedUnit.getAp() >= linkedUnit.getAbasicAttackCost()) {
+				if (linkedUnit.getAp() >= linkedUnit.getEntityData().getBasicAttackCost()) {
 					linkedUnit.setInAttackPhase(!linkedUnit.isInAttackPhase());
 				}
 			}

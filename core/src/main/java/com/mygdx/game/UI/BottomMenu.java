@@ -2,9 +2,7 @@ package com.mygdx.game.UI;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
@@ -21,9 +19,10 @@ import com.mygdx.game.Entities.Entity;
 import Utility.Utility;
 
 public class BottomMenu extends Window {
-	private final String unknownHeroImageLocation = "sprites/gui/portraits/unknown.png";
+	private static final String UNKNOWN_HERO_IMAGE_LOCATION = "sprites/gui/portraits/unknown.png";
 
 	private Label hpLabel;
+
 	private Label apLabel;
 	private Label xpLabel;
 	private Label levelLabel;
@@ -56,6 +55,7 @@ public class BottomMenu extends Window {
 	private static final int HP_LABEL_WIDTH = 50;
 	private static final int TILE_TO_PIXEL_RATIO = 25;
 	private static final int ALPHA = 90;
+	private static final float LABEL_FONT_SCALE = 0.00028f;
 
 	private static final Color GOOD_COLOR = Color.GREEN;
 	private static final Color BAD_COLOR = Color.RED;
@@ -85,7 +85,7 @@ public class BottomMenu extends Window {
 
 	private void initElementsForUI() {
 		initMainContainer();
-		changeHeroImage(unknownHeroImageLocation);
+		changeHeroImage(UNKNOWN_HERO_IMAGE_LOCATION);
 		initStatsMenu();
 	}
 
@@ -103,13 +103,14 @@ public class BottomMenu extends Window {
 
 	private void initWindow() {
 		this.pad(0);
-		setTransform(true);
 		this.setPosition(0, 0);
+		setTransform(true);
 	}
 
 	private void applyAlphaFilter() {
 		final Color newColor = getColor();
 		newColor.a = ALPHA;
+
 		final Color tableColor = bottomMenuTable.getColor();
 		tableColor.a = ALPHA;
 	}
@@ -197,7 +198,7 @@ public class BottomMenu extends Window {
 
 	public void setHero(final Entity entity) {
 		if (entity != null) {
-			if (!entity.getName().equalsIgnoreCase(heroNameLabel.getText().toString())) {
+			if (!entity.getEntityData().getName().equalsIgnoreCase(heroNameLabel.getText().toString())) {
 				linkedEntity = entity;
 				initiateHeroStats();
 				populateElementsForUI(entity);
@@ -217,16 +218,16 @@ public class BottomMenu extends Window {
 	}
 
 	private void initiateHeroStats() {
-		heroLevel = linkedEntity.getLevel();
+		heroLevel = linkedEntity.getEntityData().getLevel();
 		heroHP = linkedEntity.getHp();
 		heroAP = linkedEntity.getAp();
-		heroXP = linkedEntity.getXp();
-		heroINI = linkedEntity.getBaseInitiative();
+		heroXP = linkedEntity.getEntityData().getXp();
+		heroINI = linkedEntity.getEntityData().getBaseInitiative();
 	}
 
 	private void populateElementsForUI(final Entity entity) {
-		heroNameLabel.setText(entity.getName());
-		changeHeroImage(entity.getPortraitPath());
+		heroNameLabel.setText(entity.getEntityData().getName());
+		changeHeroImage(entity.getEntityData().getPortraitSpritePath());
 		updateLabels();
 	}
 
@@ -237,7 +238,7 @@ public class BottomMenu extends Window {
 		xp.setText("");
 		levelVal.setText("");
 		iniVal.setText("");
-		changeHeroImage(unknownHeroImageLocation);
+		changeHeroImage(UNKNOWN_HERO_IMAGE_LOCATION);
 	}
 
 	public void update() {
@@ -262,12 +263,12 @@ public class BottomMenu extends Window {
 
 	private void updateStats() {
 		if (linkedEntity != null) {
-			heroLevel = linkedEntity.getLevel();
+			heroLevel = linkedEntity.getEntityData().getLevel();
 			heroHP = linkedEntity.getHp();
 			heroAP = linkedEntity.getAp();
-			heroXP = linkedEntity.getXp();
+			heroXP = linkedEntity.getEntityData().getXp();
 
-			if (linkedEntity.getEntityactor().getIsHovering()) {
+			if (Boolean.TRUE.equals(linkedEntity.getEntityactor().getIsHovering())) {
 				setVisible(true);
 			}
 		}
@@ -300,29 +301,15 @@ public class BottomMenu extends Window {
 
 		statsGroup.setHeight(statsHeight);
 		statsGroup.setWidth(statsWidth);
-		final LabelStyle labelStyle = createLabelStyle();
+		final LabelStyle labelStyle = Utility.createLabelStyle("fonts/BLKCHCRY.ttf", 105, 1, Color.LIGHT_GRAY, 1, 1);
 		for (final Actor actor : statsGroup.getChildren()) {
 			if (actor.getClass() == Label.class) {
 				final Label label = (Label) actor;
 				label.setStyle(labelStyle);
-				label.setFontScale(Gdx.graphics.getWidth() * 0.00028f, Gdx.graphics.getHeight() * 0.00028f);
+				label.setFontScale(Gdx.graphics.getWidth() * LABEL_FONT_SCALE, Gdx.graphics.getHeight() * LABEL_FONT_SCALE);
 			}
 		}
 		statsGroup.setPosition(HERO_PORTRAIT_WIDTH_TILES * tileWidthPixel, 0);
-	}
-
-	private LabelStyle createLabelStyle() {
-		final FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/BLKCHCRY.ttf"));
-		final FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-		parameter.size = 105;
-		parameter.borderWidth = 1;
-		parameter.color = Color.LIGHT_GRAY;
-		parameter.shadowOffsetX = 1;
-		parameter.shadowOffsetY = 1;
-		final BitmapFont font = generator.generateFont(parameter);
-		final LabelStyle labelStyle = new LabelStyle();
-		labelStyle.font = font;
-		return labelStyle;
 	}
 
 	private void updateContainers() {

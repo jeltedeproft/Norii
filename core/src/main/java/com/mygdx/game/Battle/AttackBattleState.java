@@ -36,7 +36,7 @@ public class AttackBattleState extends BattleState {
 
 	private void possibleAttack(Entity entity) {
 		final Entity currentUnit = battlemanager.getActiveUnit();
-		final boolean closeEnough = Utility.checkIfUnitsWithinDistance(entity, currentUnit, currentUnit.getAttackRange());
+		final boolean closeEnough = Utility.checkIfUnitsWithinDistance(entity, currentUnit.getCurrentPosition(), currentUnit.getEntityData().getAttackRange());
 		if ((entity.isPlayerUnit() != currentUnit.isPlayerUnit()) && closeEnough) {
 			currentUnit.attack(entity);
 			notify(AudioObserver.AudioCommand.SOUND_PLAY_ONCE, AudioObserver.AudioTypeEvent.ATTACK_SOUND);

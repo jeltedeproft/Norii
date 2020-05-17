@@ -27,7 +27,6 @@ public class PortraitsUI extends Window {
 	private float tileWidthPixel;
 	private float tileHeightPixel;
 	private float portraitsHeight;
-	private float portraitsWidth;
 
 	public PortraitsUI(Entity[] entities) {
 		super("", Utility.getStatusUISkin());
@@ -100,8 +99,7 @@ public class PortraitsUI extends Window {
 		tileWidthPixel = Gdx.graphics.getWidth() / (float) TILE_TO_PIXEL_RATIO;
 		tileHeightPixel = Gdx.graphics.getHeight() / (float) TILE_TO_PIXEL_RATIO;
 		portraitsHeight = PORTRAIT_HEIGHT * tileHeightPixel;
-		portraitsWidth = Gdx.graphics.getWidth();
-		this.setSize(portraitsWidth, portraitsHeight);
+		this.setSize(Gdx.graphics.getWidth(), portraitsHeight);
 
 		updateSizePortraits();
 	}

@@ -264,15 +264,26 @@ public final class Utility {
 		return positions;
 	}
 
-	public static boolean checkIfUnitsWithinDistance(Entity unit1, Entity unit2, int distance) {
+	public static boolean checkIfUnitsWithinDistance(Entity unit1, TiledMapPosition targetPos, int distance) {
 		final TiledMapPosition pos1 = unit1.getCurrentPosition();
-		final TiledMapPosition pos2 = unit2.getCurrentPosition();
-		return (Math.abs(pos1.getTileX() - pos2.getTileX()) + Math.abs(pos1.getTileY() - pos2.getTileY())) <= distance;
+		return (Math.abs(pos1.getTileX() - targetPos.getTileX()) + Math.abs(pos1.getTileY() - targetPos.getTileY())) <= distance;
 	}
 
 	public static int getDistance(TiledMapPosition pos1, Entity unit2) {
 		final TiledMapPosition pos2 = unit2.getCurrentPosition();
 		return (Math.abs(pos1.getTileX() - pos2.getTileX()) + Math.abs(pos1.getTileY() - pos2.getTileY()));
+	}
+
+	public static float clamp(final float var, final float max, final float min) {
+		if (var > min) {
+			if (var < max) {
+				return var;
+			} else {
+				return max;
+			}
+		} else {
+			return min;
+		}
 	}
 
 	private Utility() {

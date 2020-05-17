@@ -10,7 +10,6 @@ public class BattleManager {
 	private BattleState attackBattleState;
 	private BattleState spellBattleState;
 	private BattleState actionBattleState;
-	private BattleState waitOpponentBattleState;
 	private BattleState currentBattleState;
 
 	private Entity activeUnit;
@@ -32,7 +31,6 @@ public class BattleManager {
 		attackBattleState = new AttackBattleState(this);
 		spellBattleState = new SpellBattleState(this);
 		actionBattleState = new ActionBattleState(this);
-		waitOpponentBattleState = new WaitOpponentBattleState(this);
 
 		currentBattleState = deploymentBattleState;
 		currentBattleState.entry();
@@ -51,7 +49,7 @@ public class BattleManager {
 
 	public void startUnitTurn() {
 		activeUnit.setFocused(true);
-		activeUnit.setAp(activeUnit.getMaxAp());
+		activeUnit.setAp(activeUnit.getEntityData().getMaxAP());
 		activeUnit.setActive(true);
 		activeUnit.applyModifiers();
 	}
@@ -118,14 +116,6 @@ public class BattleManager {
 
 	public void setActionBattleState(final BattleState actionBattleState) {
 		this.actionBattleState = actionBattleState;
-	}
-
-	public BattleState getWaitOpponentBattleState() {
-		return waitOpponentBattleState;
-	}
-
-	public void setWaitOpponentBattleState(final BattleState waitOpponentBattleState) {
-		this.waitOpponentBattleState = waitOpponentBattleState;
 	}
 
 	public BattleState getCurrentBattleState() {

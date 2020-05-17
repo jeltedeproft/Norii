@@ -1,5 +1,7 @@
 package com.mygdx.game.Battle;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Input.Buttons;
 import com.mygdx.game.Audio.AudioObserver;
 import com.mygdx.game.Entities.Entity;
@@ -31,8 +33,24 @@ public class SpellBattleState extends BattleState {
 		exit();
 	}
 
-	private void possibleTileSpell(final TiledMapPosition pos) {
-		// todo
+	private void possibleTileSpell(final TiledMapPosition targetPos) {
+		final Ability ability = battlemanager.getCurrentSpell();
+		final Entity currentUnit = battlemanager.getActiveUnit();
+
+		if (isValidTileTarget(currentUnit, targetPos)) {
+			selectSpell(null, ability, currentUnit, targetPos);
+		}
+		exit();
+	}
+
+	private boolean isValidTileTarget(Entity caster, TiledMapPosition targetPos) {
+		final Ability ability = battlemanager.getCurrentSpell();
+
+		final boolean correctAreaOfEffect = checkAreaOfEffect(caster, targetPos, ability);
+		final boolean correctVisibility = checkVisibility(caster, targetPos);
+		final boolean correctTarget = checkTarget(ability, Target.CELL);
+
+		return correctAreaOfEffect && correctVisibility && correctTarget;
 	}
 
 	@Override
@@ -51,67 +69,54 @@ public class SpellBattleState extends BattleState {
 		final Ability ability = battlemanager.getCurrentSpell();
 		final Entity currentUnit = battlemanager.getActiveUnit();
 
-		if (isValidTarget(currentUnit, target)) {
-			switch (ability.getAbilityEnum()) {
-			case FIREBALL:
-				castFireBall(currentUnit, target, ability);
-				break;
-			case SWAP:
-				castSwap(currentUnit, target, ability);
-				break;
-			case TURN_TO_STONE:
-				castTurnToStone(currentUnit, target, ability);
-				break;
-			default:
-				break;
-			}
+		if (isValidUnitTarget(currentUnit, target)) {
+			selectSpell(target, ability, currentUnit, target.getCurrentPosition());
 		}
 		exit();
 	}
 
-	private boolean isValidTarget(Entity caster, Entity target) {
+	private boolean isValidUnitTarget(Entity caster, Entity target) {
 		final Ability ability = battlemanager.getCurrentSpell();
 		final AffectedTeams affectedTeams = ability.getAffectedTeams();
 
 		final boolean correctTeam = checkTeams(caster, target, affectedTeams);
-		final boolean correctAreaOfEffect = checkAreaOfEffect(caster, target, ability);
-		final boolean correctVisibility = checkVisibility(caster, target, ability);
-		final boolean correctTarget = checkTarget(ability);
+		final boolean correctAreaOfEffect = checkAreaOfEffect(caster, target.getCurrentPosition(), ability);
+		final boolean correctVisibility = checkVisibility(caster, target.getCurrentPosition());
+		final boolean correctTarget = checkTarget(ability, Target.UNIT);
 
 		return correctAreaOfEffect && correctTeam && correctVisibility && correctTarget;
 	}
 
 	private boolean checkTeams(Entity caster, Entity target, final AffectedTeams affectedTeams) {
-		if ((affectedTeams == AffectedTeams.ENEMY) && (caster.isPlayerUnit() == target.isPlayerUnit())) {
-			return false;
+		if (affectedTeams == AffectedTeams.ENEMY) {
+			return caster.isPlayerUnit() != target.isPlayerUnit();
 		}
 
 		return ((affectedTeams == AffectedTeams.FRIENDLY) && (caster.isPlayerUnit() != target.isPlayerUnit()));
 	}
 
-	private boolean checkAreaOfEffect(Entity caster, Entity target, Ability ability) {
+	private boolean checkAreaOfEffect(Entity caster, TiledMapPosition targetPos, Ability ability) {
 		final LineOfSight lineOfSight = ability.getLineOfSight();
 		switch (lineOfSight) {
 		case LINE:
-			return checkLine(caster, target, ability);
+			return checkLine(caster, targetPos, ability);
 		case CIRCLE:
-			return checkCircle(caster, target, ability);
+			return checkCircle(caster, targetPos, ability);
 		case CROSS:
-			return checkCross(caster, target, ability);
+			return checkCross(caster, targetPos, ability);
 		default:
 			throw new IllegalArgumentException("not a valid line of sight");
 		}
 	}
 
-	private boolean checkLine(Entity caster, Entity target, Ability ability) {
+	private boolean checkLine(Entity caster, TiledMapPosition targetPos, Ability ability) {
 		final Direction direction = caster.getEntityAnimation().getCurrentDirection();
 		final int range = ability.getSpellData().getRange();
-		return checkIfInLine(caster, target, range, direction);
+		return checkIfInLine(caster, targetPos, range, direction);
 	}
 
-	private boolean checkIfInLine(final Entity caster, final Entity target, final int range, final Direction direction) {
+	private boolean checkIfInLine(final Entity caster, final TiledMapPosition targetPos, final int range, final Direction direction) {
 		final TiledMapPosition casterPos = caster.getCurrentPosition();
-		final TiledMapPosition targetPos = target.getCurrentPosition();
 		if ((Math.abs(casterPos.getTileX() - targetPos.getTileX()) + (Math.abs(casterPos.getTileY() - targetPos.getTileY()))) <= range) {
 			switch (direction) {
 			case UP:
@@ -129,33 +134,52 @@ public class SpellBattleState extends BattleState {
 		return false;
 	}
 
-	private boolean checkCircle(Entity caster, Entity target, Ability ability) {
+	private boolean checkCircle(Entity caster, TiledMapPosition targetPos, Ability ability) {
 		final int range = ability.getSpellData().getRange();
-		return Utility.checkIfUnitsWithinDistance(caster, target, range);
+		return Utility.checkIfUnitsWithinDistance(caster, targetPos, range);
 	}
 
-	private boolean checkCross(Entity caster, Entity target, Ability ability) {
+	private boolean checkCross(Entity caster, TiledMapPosition targetPos, Ability ability) {
 		final int range = ability.getSpellData().getRange();
 		final TiledMapPosition casterPos = caster.getCurrentPosition();
-		final TiledMapPosition targetPos = target.getCurrentPosition();
 		final boolean checkX = Math.abs(casterPos.getTileX() - targetPos.getTileX()) <= range;
 		final boolean checkY = Math.abs(casterPos.getTileY() - targetPos.getTileY()) <= range;
 		return (checkX && checkY);
 	}
 
-	private boolean checkVisibility(Entity caster, Entity target, Ability ability) {
-		return battlemanager.getPathFinder().lineOfSight(caster, target, battlemanager.getUnits());
+	private boolean checkVisibility(Entity caster, TiledMapPosition targetPos) {
+		return battlemanager.getPathFinder().lineOfSight(caster, targetPos, battlemanager.getUnits());
 	}
 
-	private boolean checkTarget(Ability ability) {
-		return (ability.getTarget() == Target.UNIT);
+	private boolean checkTarget(Ability ability, Target targetType) {
+		return (ability.getTarget() == targetType || ability.getTarget() == Target.BOTH);
 	}
 
-	private void castFireBall(final Entity caster, final Entity target, final Ability ability) {
+	private void selectSpell(final Entity target, final Ability ability, final Entity currentUnit, final TiledMapPosition targetPos) {
+		switch (ability.getAbilityEnum()) {
+		case FIREBALL:
+			castFireBall(currentUnit, targetPos, ability);
+			break;
+		case SWAP:
+			castSwap(currentUnit, target, ability);
+			break;
+		case TURN_TO_STONE:
+			castTurnToStone(currentUnit, target, ability);
+			break;
+		default:
+			break;
+		}
+	}
+
+	private void castFireBall(final Entity caster, final TiledMapPosition targetPos, final Ability ability) {
 		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
-		target.damage(ability.getSpellData().getDamage());
 		notify(AudioObserver.AudioCommand.SOUND_PLAY_ONCE, AudioObserver.AudioTypeEvent.SPELL_SOUND);
-		ParticleMaker.addParticle(ParticleType.FIREBALL, target.getCurrentPosition());
+		ParticleMaker.addParticle(ParticleType.FIREBALL, targetPos);
+
+		final Entity possibleTarget = getEntityAtPosition(targetPos);
+		if (possibleTarget != null) {
+			possibleTarget.damage(ability.getSpellData().getDamage());
+		}
 	}
 
 	private void castSwap(final Entity caster, final Entity target, final Ability ability) {
@@ -173,6 +197,28 @@ public class SpellBattleState extends BattleState {
 		target.changeAnimation(new EntityAnimation("sprites/characters/rocksheet.png"));
 		target.addModifier(ModifiersEnum.IMAGE_CHANGED, 2, 0);
 		target.addModifier(ModifiersEnum.STUNNED, 2, 0);
+	}
+
+	private Entity getEntityAtPosition(TiledMapPosition targetPos) {
+		final Entity[] units = battlemanager.getUnits();
+		for (final Entity unit : units) {
+			if (unit.getCurrentPosition().isTileEqualTo(targetPos)) {
+				return unit;
+			}
+		}
+		return null;
+	}
+
+	private ArrayList<Entity> getEntitiesAtPositions(ArrayList<TiledMapPosition> positions) {
+		final ArrayList<Entity> entities = new ArrayList<Entity>();
+		for (final TiledMapPosition pos : positions) {
+			for (final Entity entity : battlemanager.getUnits()) {
+				if (entity.getCurrentPosition().isTileEqualTo(pos)) {
+					entities.add(entity);
+				}
+			}
+		}
+		return entities;
 	}
 
 	@Override

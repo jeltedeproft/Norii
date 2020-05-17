@@ -17,7 +17,7 @@ public class Ability {
 	}
 
 	public enum Target {
-		UNIT, CELL
+		UNIT, CELL, BOTH
 	}
 
 	public Ability(final AbilitiesEnum abilityEnum) {

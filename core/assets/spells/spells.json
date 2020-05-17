@@ -10,7 +10,7 @@
     "damage": 10,
     "range": 10,
     "affectsTeam": "ENEMY",
-    "target": "CELL",
+    "target": "BOTH",
   },
 
   {

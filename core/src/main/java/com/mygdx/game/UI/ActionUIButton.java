@@ -34,5 +34,5 @@ public class ActionUIButton {
 }
 
 enum Action {
-	MOVE, ATTACK, SPELL, SKIP, UPGRADE, SPELLBOOK
+	MOVE, ATTACK, SPELL, SKIP
 }

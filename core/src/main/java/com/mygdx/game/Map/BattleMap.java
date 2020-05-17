@@ -58,35 +58,39 @@ public class BattleMap extends Map {
 			Gdx.app.debug(TAG, "No spawn layer!");
 		} else {
 			if (unitSpawnPositions.isEmpty()) {
-				fillSpawnPositions(unitSpawnPositions);
+				fillSpawnPositions();
 			}
 		}
 	}
 
-	private void fillSpawnPositions(final ArrayList<TiledMapPosition> startPositions) {
+	private void fillSpawnPositions() {
 		for (final MapObject object : spawnsLayer.getObjects()) {
 			if (object.getName().equalsIgnoreCase(PLAYER_START)) {
-				((RectangleMapObject) object).getRectangle().getPosition(playerStartPositionRect);
-				final TiledMapPosition spawnPos = new TiledMapPosition().setPositionFromTiled(playerStartPositionRect.x, playerStartPositionRect.y);
-				startPositions.add(spawnPos);
-
-				final TiledMapActor tiledactor = getActorAtScreenCoordinate(spawnPos);
-
-				if (tiledactor != null) {
-					tiledactor.setIsFreeSpawn(true);
-				}
+				addPositions(object, unitSpawnPositions, true);
 			}
 
 			if (object.getName().equalsIgnoreCase(ENEMY_START)) {
-				((RectangleMapObject) object).getRectangle().getPosition(playerStartPositionRect);
-				final TiledMapPosition spawnPos = new TiledMapPosition().setPositionFromTiled(playerStartPositionRect.x, playerStartPositionRect.y);
-				enemyStartPositions.add(spawnPos);
+				addPositions(object, enemyStartPositions, false);
+			}
+		}
+	}
 
-				final TiledMapActor tiledactor = getActorAtScreenCoordinate(spawnPos);
+	private void addPositions(MapObject object, ArrayList<TiledMapPosition> startPositions, boolean isHuman) {
+		((RectangleMapObject) object).getRectangle().getPosition(playerStartPositionRect);
+		final TiledMapPosition spawnPos = new TiledMapPosition().setPositionFromTiled(playerStartPositionRect.x, playerStartPositionRect.y);
+		startPositions.add(spawnPos);
 
-				if (tiledactor != null) {
-					tiledactor.setIsAISpawn(true);
-				}
+		final TiledMapActor tiledactor = getActorAtScreenCoordinate(spawnPos);
+
+		setSpawns(isHuman, tiledactor);
+	}
+
+	private void setSpawns(boolean isHuman, final TiledMapActor tiledactor) {
+		if (tiledactor != null) {
+			if (isHuman) {
+				tiledactor.setIsFreeSpawn(true);
+			} else {
+				tiledactor.setIsAISpawn(true);
 			}
 		}
 	}

@@ -17,30 +17,30 @@ public class Modifier {
 
 	public void applyModifier(final Entity unit) {
 		switch (type) {
-			case DAMAGE:
-				unit.damage(amount);
-				break;
-			case REMOVE_AP:
-				unit.setAp(unit.getAp() - amount);
-				break;
-			case REDUCE_DAMAGE:
-				unit.setAttackPower(unit.getAttackPower() - amount);
-				break;
-			case REDUCE_INITIATIVE:
-				unit.setCurrentInitiative(unit.getCurrentInitiative() - amount);
-				break;
-			case IMPROVE_DAMAGE:
-				unit.setAttackPower(unit.getAttackPower() + amount);
-				break;
-			case IMPROVE_INITIATIVE:
-				unit.setCurrentInitiative(unit.getCurrentInitiative() + amount);
-				break;
-			case STUNNED:
-				unit.getActionsui().setVisible(false);
-				unit.notifyEntityObserver(EntityCommand.SKIP);
-				break;
-			default:
-				break;
+		case DAMAGE:
+			unit.damage(amount);
+			break;
+		case REMOVE_AP:
+			unit.setAp(unit.getAp() - amount);
+			break;
+		case REDUCE_DAMAGE:
+			unit.getEntityData().setAttackPower(unit.getEntityData().getAttackPower() - amount);
+			break;
+		case REDUCE_INITIATIVE:
+			unit.setCurrentInitiative(unit.getCurrentInitiative() - amount);
+			break;
+		case IMPROVE_DAMAGE:
+			unit.getEntityData().setAttackPower(unit.getEntityData().getAttackPower() + amount);
+			break;
+		case IMPROVE_INITIATIVE:
+			unit.setCurrentInitiative(unit.getCurrentInitiative() + amount);
+			break;
+		case STUNNED:
+			unit.getActionsui().setVisible(false);
+			unit.notifyEntityObserver(EntityCommand.SKIP);
+			break;
+		default:
+			break;
 
 		}
 		reduceTurn();
@@ -48,23 +48,23 @@ public class Modifier {
 
 	public void removeModifier(final Entity unit) {
 		switch (type) {
-			case REDUCE_DAMAGE:
-				unit.setAttackPower(unit.getAttackPower() + amount);
-				break;
-			case REDUCE_INITIATIVE:
-				unit.setCurrentInitiative(unit.getCurrentInitiative() + amount);
-				break;
-			case IMPROVE_DAMAGE:
-				unit.setAttackPower(unit.getAttackPower() - amount);
-				break;
-			case IMPROVE_INITIATIVE:
-				unit.setCurrentInitiative(unit.getCurrentInitiative() - amount);
-				break;
-			case IMAGE_CHANGED:
-				unit.restoreAnimation();
-				break;
-			default:
-				break;
+		case REDUCE_DAMAGE:
+			unit.getEntityData().setAttackPower(unit.getEntityData().getAttackPower() + amount);
+			break;
+		case REDUCE_INITIATIVE:
+			unit.setCurrentInitiative(unit.getCurrentInitiative() + amount);
+			break;
+		case IMPROVE_DAMAGE:
+			unit.getEntityData().setAttackPower(unit.getEntityData().getAttackPower() - amount);
+			break;
+		case IMPROVE_INITIATIVE:
+			unit.setCurrentInitiative(unit.getCurrentInitiative() - amount);
+			break;
+		case IMAGE_CHANGED:
+			unit.restoreAnimation();
+			break;
+		default:
+			break;
 		}
 	}
 

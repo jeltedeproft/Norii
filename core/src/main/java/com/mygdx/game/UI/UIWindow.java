@@ -83,7 +83,7 @@ public abstract class UIWindow extends Window {
 	private void updateSizeImageButtons(Actor actor) {
 		final ImageButton button = (ImageButton) actor;
 		if (button.getImage() != null) {
-			final Cell cell = this.getCell(actor);
+			final Cell<Actor> cell = this.getCell(actor);
 			cell.size(Gdx.graphics.getWidth() / BUTTON_WIDTH_FACTOR, Gdx.graphics.getHeight() / BUTTON_HEIGHT_FACTOR);
 			button.setBounds(cell.getActorX(), cell.getActorY(), Gdx.graphics.getWidth() / BUTTON_WIDTH_FACTOR, Gdx.graphics.getHeight() / BUTTON_HEIGHT_FACTOR);
 		}

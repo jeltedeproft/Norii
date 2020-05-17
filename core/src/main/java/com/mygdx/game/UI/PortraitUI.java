@@ -14,8 +14,6 @@ public class PortraitUI {
 	private TextureRegionDrawable heroPortraitScalable;
 	private TextureRegionDrawable heroPortraitScalableBorder;
 	private TextureRegionDrawable heroPortraitScalableBorderColored;
-	private TextureRegion trBorder;
-	private TextureRegion trBorderColored;
 	private static final String PORTRAIT_BORDER_FILE_PATH = "sprites/gui/heroActive.png";
 	private static final String PORTRAIT_BORDER_FILE_PATH_GREEN = "sprites/gui/heroActiveGreen.png";
 	private static final String PORTRAIT_BORDER_FILE_PATH_RED = "sprites/gui/heroActiveRed.png";
@@ -29,16 +27,10 @@ public class PortraitUI {
 	}
 
 	private void loadScalableImage(Entity entity) {
-		Utility.loadTextureAsset(entity.getPortraitPath());
-		final TextureRegion tr = new TextureRegion(Utility.getTextureAsset(entity.getPortraitPath()));
-		heroPortraitScalable = new TextureRegionDrawable(tr);
-		heroPortrait = new Image(heroPortraitScalable);
+		createPortraitTexture(entity);
+		createPortraitBorderTexture();
 
-		Utility.loadTextureAsset(PORTRAIT_BORDER_FILE_PATH);
-		trBorder = new TextureRegion(Utility.getTextureAsset(PORTRAIT_BORDER_FILE_PATH));
-		heroPortraitScalableBorder = new TextureRegionDrawable(trBorder);
-		heroPortraitBorder = new Image(heroPortraitScalableBorder);
-		heroPortraitBorder.setVisible(false);
+		TextureRegion trBorderColored;
 
 		if (entity.isPlayerUnit()) {
 			Utility.loadTextureAsset(PORTRAIT_BORDER_FILE_PATH_GREEN);
@@ -53,8 +45,23 @@ public class PortraitUI {
 		heroPortraitBorderColored.setVisible(true);
 	}
 
+	private void createPortraitTexture(Entity entity) {
+		Utility.loadTextureAsset(entity.getEntityData().getPortraitSpritePath());
+		final TextureRegion tr = new TextureRegion(Utility.getTextureAsset(entity.getEntityData().getPortraitSpritePath()));
+		heroPortraitScalable = new TextureRegionDrawable(tr);
+		heroPortrait = new Image(heroPortraitScalable);
+	}
+
+	private void createPortraitBorderTexture() {
+		Utility.loadTextureAsset(PORTRAIT_BORDER_FILE_PATH);
+		final TextureRegion trBorder = new TextureRegion(Utility.getTextureAsset(PORTRAIT_BORDER_FILE_PATH));
+		heroPortraitScalableBorder = new TextureRegionDrawable(trBorder);
+		heroPortraitBorder = new Image(heroPortraitScalableBorder);
+		heroPortraitBorder.setVisible(false);
+	}
+
 	public int getIni() {
-		return linkedEntity.getBaseInitiative();
+		return linkedEntity.getEntityData().getBaseInitiative();
 	}
 
 	public Image getHeroPortrait() {

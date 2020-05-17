@@ -17,6 +17,8 @@ public class EntityData {
 	private int basicAttackCost;
 	private String[] abilities;
 
+	private Entity linkedEntity;
+
 	public EntityData() {
 
 	}
@@ -59,6 +61,7 @@ public class EntityData {
 
 	public void setMaxAP(final int maxAP) {
 		this.maxAP = maxAP;
+		linkedEntity.updateUI();
 	}
 
 	public int getMaxHP() {
@@ -67,6 +70,7 @@ public class EntityData {
 
 	public void setMaxHP(final int maxHP) {
 		this.maxHP = maxHP;
+		linkedEntity.updateUI();
 	}
 
 	public int getMaxXP() {
@@ -75,6 +79,7 @@ public class EntityData {
 
 	public void setMaxXP(final int maxXP) {
 		this.maxXP = maxXP;
+		linkedEntity.updateUI();
 	}
 
 	public int getLevel() {
@@ -83,6 +88,7 @@ public class EntityData {
 
 	public void setLevel(final int level) {
 		this.level = level;
+		linkedEntity.updateUI();
 	}
 
 	public int getXp() {
@@ -91,21 +97,23 @@ public class EntityData {
 
 	public void setXp(final int xp) {
 		this.xp = xp;
+		linkedEntity.updateUI();
 	}
 
-	public int getIni() {
+	public int getBaseInitiative() {
 		return baseInitiative;
 	}
 
-	public void setIni(final int ini) {
+	public void setBaseInitiative(final int ini) {
 		baseInitiative = ini;
+		linkedEntity.updateUI();
 	}
 
-	public int getAttackrange() {
+	public int getAttackRange() {
 		return attackRange;
 	}
 
-	public void setAttackrange(final int attackrange) {
+	public void setAttackRange(final int attackrange) {
 		attackRange = attackrange;
 	}
 
@@ -131,6 +139,10 @@ public class EntityData {
 
 	public void setAbilties(final String[] abilties) {
 		this.abilities = abilties;
+	}
+
+	public void setEntity(Entity entity) {
+		this.linkedEntity = entity;
 	}
 
 }

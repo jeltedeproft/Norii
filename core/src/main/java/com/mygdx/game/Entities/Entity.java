@@ -30,18 +30,12 @@ public class Entity extends Actor implements EntitySubject {
 	private int currentInitiative;
 
 	private boolean inBattle;
-	private boolean isActive;
-	private boolean isInMovementPhase;
 	private boolean isInAttackPhase;
-	private boolean isInActionPhase;
-	private boolean isInDeploymentPhase;
-	private boolean isInSpellPhase;
 	private boolean isDead;
 	private boolean isPlayerUnit;
 	private int entityID;
 
 	protected TiledMapPosition oldPlayerPosition;
-	protected TiledMapPosition nextPlayerPosition;
 	protected TiledMapPosition currentPlayerPosition;
 	protected Direction direction;
 
@@ -59,23 +53,21 @@ public class Entity extends Actor implements EntitySubject {
 
 	public Entity(final EntityTypes type) {
 		entityData = EntityFileReader.getUnitData().get(type.ordinal());
+		entityData.setEntity(this);
 		entityAnimation = new EntityAnimation(entityData.getEntitySpriteFilePath());
 		initEntity();
 	}
 
 	public void initEntity() {
 		observers = new Array<EntityObserver>();
-		nextPlayerPosition = new TiledMapPosition();
 		oldPlayerPosition = new TiledMapPosition().setPositionFromScreen(-100, -100);
 		currentPlayerPosition = new TiledMapPosition().setPositionFromScreen(-100, -100);
 		hp = entityData.getMaxHP();
 		ap = entityData.getMaxAP();
-		currentInitiative = entityData.getIni();
+		currentInitiative = entityData.getBaseInitiative();
 		isDead = false;
 		inBattle = false;
-		isInMovementPhase = false;
 		isInAttackPhase = false;
-		isInDeploymentPhase = false;
 		isPlayerUnit = true;
 		abilities = new ArrayList<Ability>();
 		modifiers = new ArrayList<Modifier>();
@@ -93,6 +85,10 @@ public class Entity extends Actor implements EntitySubject {
 		entityAnimation.update(delta);
 	}
 
+	public EntityData getEntityData() {
+		return entityData;
+	}
+
 	public StatusUI getStatusui() {
 		return statusui;
 	}
@@ -107,10 +103,6 @@ public class Entity extends Actor implements EntitySubject {
 
 	public void setActionsui(final ActionsUI actionsui) {
 		this.actionsui = actionsui;
-	}
-
-	public BottomMenu getbottomMenu() {
-		return bottomMenu;
 	}
 
 	public void setbottomMenu(final BottomMenu bottomMenu) {
@@ -145,15 +137,6 @@ public class Entity extends Actor implements EntitySubject {
 		bottomMenu.update();
 	}
 
-	@Override
-	public String getName() {
-		return entityData.getName();
-	}
-
-	public String getPortraitPath() {
-		return entityData.getPortraitSpritePath();
-	}
-
 	public EntityActor getEntityactor() {
 		return entityactor;
 	}
@@ -166,24 +149,13 @@ public class Entity extends Actor implements EntitySubject {
 		return isDead;
 	}
 
-	public boolean isActive() {
-		return isActive;
-	}
-
 	public void setActive(final boolean isActive) {
-		this.isActive = isActive;
-
 		if (isPlayerUnit) {
 			actionsui.update();
 		}
 	}
 
-	public boolean isInMovementPhase() {
-		return isInMovementPhase;
-	}
-
 	public void setInMovementPhase(final boolean isInMovementPhase) {
-		this.isInMovementPhase = isInMovementPhase;
 		if (isInMovementPhase) {
 			actionsui.setVisible(false);
 			notifyEntityObserver(EntityCommand.IN_MOVEMENT);
@@ -204,12 +176,7 @@ public class Entity extends Actor implements EntitySubject {
 		}
 	}
 
-	public boolean isInSpellPhase() {
-		return isInSpellPhase;
-	}
-
 	public void setInSpellPhase(final boolean isInSpellPhase, final Ability ability) {
-		this.isInSpellPhase = isInSpellPhase;
 		if (isInSpellPhase) {
 			actionsui.setVisible(false);
 			notifyEntityObserver(EntityCommand.IN_SPELL_PHASE, ability);
@@ -217,7 +184,7 @@ public class Entity extends Actor implements EntitySubject {
 	}
 
 	public void attack(final Entity target) {
-		target.damage(getAttackPower());
+		target.damage(entityData.getAttackPower());
 	}
 
 	public boolean canAttack() {
@@ -247,12 +214,7 @@ public class Entity extends Actor implements EntitySubject {
 		this.inBattle = inBattle;
 	}
 
-	public boolean isInActionPhase() {
-		return isInActionPhase;
-	}
-
 	public void setInActionPhase(final boolean isInActionPhase) {
-		this.isInActionPhase = isInActionPhase;
 		notifyEntityObserver(EntityCommand.UNIT_ACTIVE);
 
 		if (isInActionPhase) {
@@ -265,12 +227,7 @@ public class Entity extends Actor implements EntitySubject {
 		}
 	}
 
-	public boolean isInDeploymentPhase() {
-		return isInDeploymentPhase;
-	}
-
 	public void setInDeploymentPhase(final boolean isInDeploymentPhase) {
-		this.isInDeploymentPhase = isInDeploymentPhase;
 		if (isInDeploymentPhase) {
 			bottomMenu.setHero(this);
 			notifyEntityObserver(EntityCommand.UNIT_ACTIVE);
@@ -302,85 +259,12 @@ public class Entity extends Actor implements EntitySubject {
 		updateUI();
 	}
 
-	public int getMaxAp() {
-		return entityData.getMaxAP();
-	}
-
-	public void setMaxAp(final int maxAP) {
-		entityData.setMaxAP(maxAP);
-		updateUI();
-	}
-
 	public int getHp() {
 		return hp;
 	}
 
 	public void setHp(final int hp) {
 		this.hp = hp;
-		updateUI();
-	}
-
-	public int getMaxXP() {
-		return entityData.getMaxXP();
-	}
-
-	public int getMaxHp() {
-		return entityData.getMaxHP();
-	}
-
-	public void setMaxHp(final int maxHP) {
-		entityData.setMaxHP(maxHP);
-		updateUI();
-	}
-
-	public int getBaseInitiative() {
-		return entityData.getIni();
-	}
-
-	public void setBaseIniative(final int ini) {
-		entityData.setIni(ini);
-		updateUI();
-	}
-
-	public int getAttackRange() {
-		return entityData.getAttackrange();
-	}
-
-	public void setAttackRange(final int attackRange) {
-		entityData.setAttackrange(attackRange);
-	}
-
-	public int getAttackPower() {
-		return entityData.getAttackPower();
-	}
-
-	public void setAttackPower(final int attackPower) {
-		entityData.setAttackPower(attackPower);
-	}
-
-	public int getAbasicAttackCost() {
-		return entityData.getBasicAttackCost();
-	}
-
-	public void setbasicAttackCost(final int basicAttackCost) {
-		entityData.setBasicAttackCost(basicAttackCost);
-	}
-
-	public int getLevel() {
-		return entityData.getLevel();
-	}
-
-	public void setLevel(final int level) {
-		entityData.setLevel(level);
-		updateUI();
-	}
-
-	public int getXp() {
-		return entityData.getXp();
-	}
-
-	public void setXp(final int xp) {
-		entityData.setXp(xp);
 		updateUI();
 	}
 

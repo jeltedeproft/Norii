@@ -25,7 +25,6 @@ public class ActionsUI extends UIWindow {
 	private MoveActionUIButton moveActionUIButton;
 	private AttackActionUIButton attackActionUIButton;
 	private SkipActionUIButton skipActionUIButton;
-	private ArrayList<SpellActionUIButton> SpellActionUIButtons;
 
 	private Label moveLabel;
 	private Label attackLabel;
@@ -51,7 +50,6 @@ public class ActionsUI extends UIWindow {
 
 	private void initVariables(final Entity entity) {
 		buttons = new ArrayList<ActionUIButton>();
-		SpellActionUIButtons = new ArrayList<SpellActionUIButton>();
 		linkedEntity = entity;
 		entity.setActionsui(this);
 	}

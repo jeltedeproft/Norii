@@ -57,9 +57,9 @@ public abstract class TeamLeader {
 		Arrays.sort(sortedUnits, new Comparator<Entity>() {
 			@Override
 			public int compare(final Entity e1, final Entity e2) {
-				if (e1.getBaseInitiative() > e2.getBaseInitiative()) {
+				if (e1.getEntityData().getBaseInitiative() > e2.getEntityData().getBaseInitiative()) {
 					return 1;
-				} else if (e1.getBaseInitiative() < e2.getBaseInitiative()) {
+				} else if (e1.getEntityData().getBaseInitiative() < e2.getEntityData().getBaseInitiative()) {
 					return -1;
 				} else {
 					return 0;
