@@ -39,7 +39,6 @@ import Utility.TiledMapPosition;
 import Utility.Utility;
 
 public class BattleScreen extends GameScreen implements EntityObserver, TiledMapObserver {
-	private static final String TAG = BattleScreen.class.getSimpleName();
 	public static final int VISIBLE_WIDTH = 20;
 	public static final int VISIBLE_HEIGHT = 20;
 	private static OrthographicCamera mapCamera = null;
@@ -69,20 +68,21 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 		static float aspectRatio;
 	}
 
-	public BattleScreen(final Object... params) {
+	public BattleScreen(AITeams aiTeams) {
 		initializeVariables();
-		initializeAI((AITeams) params[ScreenManager.ScreenParams.AI_TEAM.ordinal()]);
+		initializeAI(aiTeams);
 		initializeEntityStage();
 		initializeHUD();
 		initializePauseMenu();
 		initializeInput();
-		initializeUnits(params);
+		initializeUnits();
 		initializeMap();
 		initializeObservers();
 		spawnAI();
 	}
 
 	private void initializeVariables() {
+		players = new ArrayList<TeamLeader>();
 		playerSortedUnits = Player.getInstance().getUnitsSortedByIni();
 		mapCamera = new OrthographicCamera();
 		mapCamera.setToOrtho(false, VISIBLE_WIDTH, VISIBLE_HEIGHT);
@@ -114,8 +114,8 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 		battlescreenInputProcessor = new BattleScreenInputProcessor(this, mapCamera);
 		multiplexer = new InputMultiplexer();
 		multiplexer.addProcessor(battlescreenInputProcessor);
-		multiplexer.addProcessor(Player.getInstance().getEntityStage());
 		multiplexer.addProcessor(playerBattleHUD.getStage());
+		multiplexer.addProcessor(Player.getInstance().getEntityStage());
 		multiplexer.addProcessor(pauseMenu.getStage());
 	}
 
@@ -125,36 +125,21 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 		mapMgr = new MapManager();
 		currentMap = (BattleMap) mapMgr.getCurrentMap();
 		currentMap.setStage(battlemanager);
+		battlemanager.setPathFinder(currentMap.getPathfinder());
 	}
 
 	private void spawnAI() {
 		final ArrayList<TiledMapPosition> enemyStartPositions = currentMap.getEnemyStartPositions();
-
-		for (final Entity unit : aiTeam.getTeam()) {
-			if (!enemyStartPositions.isEmpty()) {
-				unit.setCurrentPosition(enemyStartPositions.get(0));
-				unit.setPlayerUnit(false);
-				unit.setInBattle(true);
-				enemyStartPositions.remove(0);
-			} else {
-				Gdx.app.debug(TAG, "maybe no more room to spawn ai units!");
-			}
-		}
+		aiTeam.spawnAiUnits(enemyStartPositions);
+		aiTeam.setPathFinder(currentMap.getPathfinder());
 	}
 
-	@SuppressWarnings("unchecked")
-	private void initializeUnits(final Object... params) {
-		final int ownerIndex = ScreenManager.ScreenParams.ARRAYLIST_OF_OWNERS.ordinal();
-
-		if (params[ownerIndex] != null) {
-			players = (ArrayList<TeamLeader>) params[ownerIndex];
-		} else {
-			players = new ArrayList<TeamLeader>();
-		}
+	private void initializeUnits() {
+		players.add(Player.getInstance());
 		players.add(aiTeam);
 
-		for (final TeamLeader player : players) {
-			for (final Entity unit : player.getTeam()) {
+		for (final TeamLeader teamLeader : players) {
+			for (final Entity unit : teamLeader.getTeam()) {
 				unit.addEntityObserver(this);
 			}
 		}
@@ -241,22 +226,10 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	}
 
 	private void updateCameras() {
-		mapCamera.position.x = clamp(mapCamera.position.x, currentMap.getTilemapWidthInTiles() - (mapCamera.viewportWidth / 2), 0 + (mapCamera.viewportWidth / 2));
-		mapCamera.position.y = clamp(mapCamera.position.y, currentMap.getTilemapHeightInTiles() - (mapCamera.viewportWidth / 2), 0 + (mapCamera.viewportWidth / 2));
+		mapCamera.position.x = Utility.clamp(mapCamera.position.x, currentMap.getTilemapWidthInTiles() - (mapCamera.viewportWidth / 2), 0 + (mapCamera.viewportWidth / 2));
+		mapCamera.position.y = Utility.clamp(mapCamera.position.y, currentMap.getTilemapHeightInTiles() - (mapCamera.viewportWidth / 2), 0 + (mapCamera.viewportWidth / 2));
 		mapCamera.update();
 		hudCamera.update();
-	}
-
-	private float clamp(final float var, final float max, final float min) {
-		if (var > min) {
-			if (var < max) {
-				return var;
-			} else {
-				return max;
-			}
-		} else {
-			return min;
-		}
 	}
 
 	private void renderElements(final float delta) {
@@ -301,6 +274,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 		currentMap.getTiledMapStage().getViewport().update(width, height, false);
 		Player.getInstance().getEntityStage().getViewport().update(width, height, false);
 		aiTeam.getEntityStage().getViewport().update(width, height, false);
+
 		playerBattleHUD.resize(width, height);
 		pauseMenu.resize(width, height);
 	}
@@ -371,11 +345,19 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 			battlemanager.getCurrentBattleState().exit();
 			break;
 		case AI_ACT:
-			aiTeam.aiUnitAct(unit);
+			final ArrayList<Entity> entities = new ArrayList<Entity>();
+			for (final TeamLeader teamLeader : players) {
+				for (final Entity entity : teamLeader.getTeam()) {
+					if (entity.getEntityID() != unit.getEntityID()) {
+						entities.add(entity);
+					}
+				}
+			}
+			aiTeam.aiUnitAct(unit, entities);
+			break;
+		case AI_FINISHED_TURN:
 			battlemanager.getCurrentBattleState().exit();
 			break;
-		case INIT_POSIBILITIES:
-			battlemanager.initializeMoveSpellPosibilities(currentMap);
 		default:
 			break;
 		}
@@ -405,7 +387,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 
 	private void prepareAttack(final Entity unit) {
 		final List<GridCell> attackPath = currentMap.getPathfinder().getCellsWithinCircle(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(),
-			unit.getAttackRange());
+			unit.getEntityData().getAttackRange());
 		for (final GridCell cell : attackPath) {
 			final TiledMapPosition positionToPutAttackParticle = new TiledMapPosition().setPositionFromTiles(cell.x, cell.y);
 			ParticleMaker.addParticle(ParticleType.ATTACK, positionToPutAttackParticle);
@@ -414,26 +396,37 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	}
 
 	private void prepareSpell(final Entity unit, final Ability ability) {
-		final ArrayList<TiledMapPosition> positions = collectPositionsUnits();
+		final ArrayList<TiledMapPosition> positions = Utility.collectPositionsUnits(players);
+		final List<GridCell> spellPath = calculateSpellPath(unit, ability, positions);
 
-		final List<GridCell> spellPath = currentMap.getPathfinder().getLineOfSightWithinLine(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(),
-			ability.getSpellData().getRange(), unit.getEntityAnimation().getCurrentDirection(), positions);
 		for (final GridCell cell : spellPath) {
 			final TiledMapPosition positionToPutSpellParticle = new TiledMapPosition().setPositionFromTiles(cell.x, cell.y);
 			ParticleMaker.addParticle(ParticleType.SPELL, positionToPutSpellParticle);
-			battlemanager.setCurrentSpell(ability);
-			battlemanager.setCurrentBattleState(battlemanager.getSpellBattleState());
 		}
+
+		battlemanager.setCurrentSpell(ability);
+		battlemanager.setCurrentBattleState(battlemanager.getSpellBattleState());
 	}
 
-	private ArrayList<TiledMapPosition> collectPositionsUnits() {
-		final ArrayList<TiledMapPosition> positions = new ArrayList<TiledMapPosition>();
-		for (final TeamLeader owner : players) {
-			for (final Entity character : owner.getTeam()) {
-				positions.add(character.getCurrentPosition());
-			}
+	private List<GridCell> calculateSpellPath(final Entity unit, final Ability ability, final ArrayList<TiledMapPosition> positions) {
+		List<GridCell> spellPath = null;
+
+		switch (ability.getLineOfSight()) {
+		case CIRCLE:
+			spellPath = currentMap.getPathfinder().getLineOfSightWithinCircle(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(),
+				ability.getSpellData().getRange(), positions);
+			break;
+		case CROSS:
+			// TODO
+			break;
+		case LINE:
+			spellPath = currentMap.getPathfinder().getLineOfSightWithinLine(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(),
+				ability.getSpellData().getRange(), unit.getEntityAnimation().getCurrentDirection(), positions);
+			break;
+		default:
+			break;
 		}
-		return positions;
+		return spellPath;
 	}
 
 	private boolean isUnitOnCell(final GridCell cell) {

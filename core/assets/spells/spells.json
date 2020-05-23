@@ -6,9 +6,11 @@
     "apCost": 1,
     "mpCost": 0,
     "lineOfSight": "LINE",
-    "target": "CELL",
+    "areaOfEffect": "CELL",
     "damage": 10,
     "range": 10,
+    "affectsTeam": "ENEMY",
+    "target": "BOTH",
   },
 
   {
@@ -18,9 +20,11 @@
     "apCost": 1,
     "mpCost": 0,
     "lineOfSight": "LINE",
-    "target": "CELL",
+    "areaOfEffect": "CELL",
     "damage": 10,
     "range": 10,
+    "affectsTeam": "BOTH",
+    "target": "UNIT",
   },
 
   {
@@ -30,8 +34,10 @@
     "apCost": 1,
     "mpCost": 0,
     "lineOfSight": "LINE",
-    "target": "CELL",
+    "areaOfEffect": "CELL",
     "damage": 0,
     "range": 10,
+    "affectsTeam": "BOTH",
+    "target": "UNIT",
   }
 ]

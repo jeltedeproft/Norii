@@ -62,7 +62,7 @@ public class HPBar {
 
 	private void updateSizeHPBar() {
 		hpBarImage.setVisible(linkedEntity.getHp() != 0);
-		hpBarImage.setWidth(((float) linkedEntity.getHp() / (float) linkedEntity.getMaxHp()) * BAR_WIDTH * tileWidthPixel);
+		hpBarImage.setWidth(((float) linkedEntity.getHp() / (float) linkedEntity.getEntityData().getMaxHP()) * BAR_WIDTH * tileWidthPixel);
 		hpBarBackgroundImage.setWidth(BAR_WIDTH * tileWidthPixel);
 
 		hpBarImage.setHeight(BAR_HEIGHT * tileHeightPixel);

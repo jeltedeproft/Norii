@@ -7,10 +7,6 @@ public class ScreenManager {
 	private static ScreenManager instance;
 	private Game game;
 
-	public enum ScreenParams {
-		ARRAYLIST_OF_OWNERS, AI_TEAM;
-	}
-
 	private ScreenManager() {
 		super();
 	}

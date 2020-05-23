@@ -25,7 +25,6 @@ import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Entities.EntityFileReader;
 import com.mygdx.game.Entities.EntityTypes;
 import com.mygdx.game.Entities.Player;
-import com.mygdx.game.Entities.TeamLeader;
 import com.mygdx.game.Magic.SpellFileReader;
 
 import Utility.Utility;
@@ -43,7 +42,6 @@ public class MainMenuScreen extends GameScreen {
 	private TextButton newGameButton;
 	private TextButton exitButton;
 	private Label title;
-	private ArrayList<TeamLeader> fighters;
 	private ArrayList<Entity> playerMonsters;
 	private Animation<TextureRegion> bganimation;
 	private SpriteBatch backgroundbatch;
@@ -54,7 +52,7 @@ public class MainMenuScreen extends GameScreen {
 	protected TextureRegion currentFrame = null;
 	private TextureRegion[] bgFrames;
 
-	public MainMenuScreen(final Object... params) {
+	public MainMenuScreen() {
 		loadAssets();
 		initializeClassVariables();
 
@@ -75,7 +73,6 @@ public class MainMenuScreen extends GameScreen {
 	}
 
 	private void initializeClassVariables() {
-		fighters = new ArrayList<TeamLeader>();
 		playerMonsters = new ArrayList<Entity>();
 		stage = new Stage();
 		mainMenuTableOfButtons = new Table();
@@ -131,18 +128,16 @@ public class MainMenuScreen extends GameScreen {
 	private void addListeners() {
 		newGameButton.addListener(new InputListener() {
 			@Override
-			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer,
-					final int button) {
+			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
 				addUnitsToPlayer();
-				ScreenManager.getInstance().showScreen(ScreenEnum.BATTLE, fighters, selectedLevel);
+				ScreenManager.getInstance().showScreen(ScreenEnum.BATTLE, selectedLevel);
 				return true;
 			}
 		});
 
 		exitButton.addListener(new InputListener() {
 			@Override
-			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer,
-					final int button) {
+			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
 				Gdx.app.exit();
 				return true;
 			}
@@ -150,15 +145,12 @@ public class MainMenuScreen extends GameScreen {
 	}
 
 	private void addUnitsToPlayer() {
-		final Player player = Player.getInstance();
-
 		playerMonsters.add(new Entity(EntityTypes.COMMANDER));
 		playerMonsters.add(new Entity(EntityTypes.ICARUS));
 		playerMonsters.add(new Entity(EntityTypes.DEMON));
 		playerMonsters.add(new Entity(EntityTypes.SHAMAN));
 
-		player.setTeam(playerMonsters);
-		fighters.add(player);
+		Player.getInstance().setTeam(playerMonsters);
 	}
 
 	@Override
@@ -177,8 +169,7 @@ public class MainMenuScreen extends GameScreen {
 
 		currentFrame = bganimation.getKeyFrame(frameTime, true);
 		backgroundbatch.begin();
-		backgroundbatch.draw(currentFrame, 0, 0, stage.getViewport().getWorldWidth(),
-				stage.getViewport().getWorldHeight());
+		backgroundbatch.draw(currentFrame, 0, 0, stage.getViewport().getWorldWidth(), stage.getViewport().getWorldHeight());
 		backgroundbatch.end();
 	}
 

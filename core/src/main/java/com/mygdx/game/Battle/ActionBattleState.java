@@ -18,28 +18,28 @@ public class ActionBattleState extends BattleState {
 
 	@Override
 	public void exit() {
-		battlemanager.setCurrentBattleState(battlemanager.getWaitOpponentBattleState());
-		battlemanager.getCurrentBattleState().entry();
+		battlemanager.nextUnitActive();
+		entry();
 	}
 
 	@Override
 	public void keyPressed(final int key) {
 		final Entity activeUnit = battlemanager.getActiveUnit();
 		switch (key) {
-			case Keys.Z:
-				activeUnit.setDirection(Direction.UP);
-				break;
-			case Keys.Q:
-				activeUnit.setDirection(Direction.LEFT);
-				break;
-			case Keys.S:
-				activeUnit.setDirection(Direction.DOWN);
-				break;
-			case Keys.D:
-				activeUnit.setDirection(Direction.RIGHT);
-				break;
-			default:
-				break;
+		case Keys.Z:
+			activeUnit.setDirection(Direction.UP);
+			break;
+		case Keys.Q:
+			activeUnit.setDirection(Direction.LEFT);
+			break;
+		case Keys.S:
+			activeUnit.setDirection(Direction.DOWN);
+			break;
+		case Keys.D:
+			activeUnit.setDirection(Direction.RIGHT);
+			break;
+		default:
+			break;
 		}
 	}
 }

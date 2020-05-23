@@ -96,11 +96,11 @@
 </data>
  </layer>
  <objectgroup id="4" name="Spawn points">
-  <object id="6" name="PLAYER_START" x="96" y="640" width="32" height="32"/>
-  <object id="7" name="PLAYER_START" x="224" y="640" width="32" height="32"/>
+  <object id="6" name="ENEMY_START" x="96" y="640" width="32" height="32"/>
+  <object id="7" name="ENEMY_START" x="224" y="640" width="32" height="32"/>
   <object id="8" name="PLAYER_START" x="480" y="160" width="32" height="32"/>
-  <object id="9" name="PLAYER_START" x="352" y="640" width="32" height="32"/>
-  <object id="10" name="PLAYER_START" x="480" y="640" width="32" height="32"/>
+  <object id="9" name="ENEMY_START" x="352" y="640" width="32" height="32"/>
+  <object id="10" name="ENEMY_START" x="480" y="640" width="32" height="32"/>
   <object id="11" name="PLAYER_START" x="352" y="160" width="32" height="32"/>
   <object id="12" name="PLAYER_START" x="96" y="160" width="32" height="32"/>
   <object id="13" name="PLAYER_START" x="224" y="160" width="32" height="32"/>

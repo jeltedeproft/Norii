@@ -1,10 +1,8 @@
 package com.mygdx.game.Battle;
 
-import org.xguzm.pathfinding.grid.GridCell;
-
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Magic.Ability;
-import com.mygdx.game.Map.BattleMap;
+import com.mygdx.game.Map.MyPathFinder;
 
 public class BattleManager {
 	private BattleState deploymentBattleState;
@@ -12,13 +10,13 @@ public class BattleManager {
 	private BattleState attackBattleState;
 	private BattleState spellBattleState;
 	private BattleState actionBattleState;
-	private BattleState waitOpponentBattleState;
 	private BattleState currentBattleState;
 
 	private Entity activeUnit;
 	private int activeUnitIndex;
 	private final int numberOfUnits;
 	private Ability currentSpell;
+	private MyPathFinder pathFinder;
 
 	private final Entity[] sortedUnits;
 
@@ -33,7 +31,6 @@ public class BattleManager {
 		attackBattleState = new AttackBattleState(this);
 		spellBattleState = new SpellBattleState(this);
 		actionBattleState = new ActionBattleState(this);
-		waitOpponentBattleState = new WaitOpponentBattleState(this);
 
 		currentBattleState = deploymentBattleState;
 		currentBattleState.entry();
@@ -44,27 +41,27 @@ public class BattleManager {
 		activeUnit.setActive(false);
 		activeUnit.setFocused(false);
 
-		activeUnitIndex = (activeUnitIndex + 1) % numberOfUnits;
-		activeUnit = sortedUnits[activeUnitIndex];
+		do {
+			activeUnitIndex = (activeUnitIndex + 1) % numberOfUnits;
+			activeUnit = sortedUnits[activeUnitIndex];
+		} while (activeUnit.isDead());
 
 		startUnitTurn();
 	}
 
 	public void startUnitTurn() {
 		activeUnit.setFocused(true);
-		activeUnit.setAp(activeUnit.getMaxAp());
+		activeUnit.setAp(activeUnit.getEntityData().getMaxAP());
 		activeUnit.setActive(true);
 		activeUnit.applyModifiers();
 	}
 
-	public void initializeMoveSpellPosibilities(BattleMap map) {
-		for (final Entity unit : sortedUnits) {
-			for (final GridCell[] cellArray : map.getNavLayer().getNodes()) {
-				for (final GridCell cell : cellArray) {
+	public void setPathFinder(MyPathFinder myPathFinder) {
+		this.pathFinder = myPathFinder;
+	}
 
-				}
-			}
-		}
+	public MyPathFinder getPathFinder() {
+		return pathFinder;
 	}
 
 	public Entity getActiveUnit() {
@@ -121,14 +118,6 @@ public class BattleManager {
 
 	public void setActionBattleState(final BattleState actionBattleState) {
 		this.actionBattleState = actionBattleState;
-	}
-
-	public BattleState getWaitOpponentBattleState() {
-		return waitOpponentBattleState;
-	}
-
-	public void setWaitOpponentBattleState(final BattleState waitOpponentBattleState) {
-		this.waitOpponentBattleState = waitOpponentBattleState;
 	}
 
 	public BattleState getCurrentBattleState() {

@@ -14,7 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Screen.ScreenEnum;
 import com.mygdx.game.Screen.ScreenManager;
 
@@ -24,7 +23,6 @@ public class PauseMenuUI implements Screen {
 	private static String defaultBackgroundPath = "maps/rpg/tiles/grass.png";
 
 	private Stage stage;
-	private Viewport viewport;
 	private Table menuTable;
 	private Label title;
 	private TextButton resumeButton;
@@ -32,6 +30,10 @@ public class PauseMenuUI implements Screen {
 	private TextButton mainMenuButton;
 
 	private boolean visible;
+
+	private static final int TITLE_FONT_SCALE = 2;
+	private static final int BOTTOM_PAD = 10;
+	private static final int TOP_PAD = 50;
 
 	public PauseMenuUI(Camera camera) {
 		initVariables(camera);
@@ -41,8 +43,7 @@ public class PauseMenuUI implements Screen {
 	}
 
 	private void initVariables(Camera camera) {
-		viewport = new ScreenViewport(camera);
-		stage = new Stage(viewport);
+		stage = new Stage(new ScreenViewport(camera));
 		menuTable = new Table();
 		menuTable.setDebug(false);
 		menuTable.setFillParent(true);
@@ -52,7 +53,7 @@ public class PauseMenuUI implements Screen {
 	private void createUI() {
 		final Skin statusUISkin = Utility.getStatusUISkin();
 		title = new Label("Pause", statusUISkin);
-		title.setFontScale(2);
+		title.setFontScale(TITLE_FONT_SCALE);
 		resumeButton = new TextButton("Resume", statusUISkin);
 		settingButton = new TextButton("Settings", statusUISkin);
 		mainMenuButton = new TextButton("Main Menu", statusUISkin);
@@ -61,10 +62,10 @@ public class PauseMenuUI implements Screen {
 	private void createLayout() {
 		menuTable.background(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(defaultBackgroundPath)))));
 		menuTable.row();
-		menuTable.add(title).spaceBottom(10).padTop(50).row();
-		menuTable.add(resumeButton).spaceBottom(10).row();
-		menuTable.add(settingButton).spaceBottom(10).row();
-		menuTable.add(mainMenuButton).spaceBottom(10).row();
+		menuTable.add(title).spaceBottom(BOTTOM_PAD).padTop(TOP_PAD).row();
+		menuTable.add(resumeButton).spaceBottom(BOTTOM_PAD).row();
+		menuTable.add(settingButton).spaceBottom(BOTTOM_PAD).row();
+		menuTable.add(mainMenuButton).spaceBottom(BOTTOM_PAD).row();
 		stage.addActor(menuTable);
 	}
 

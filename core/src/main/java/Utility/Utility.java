@@ -1,8 +1,10 @@
 
 package Utility;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
@@ -27,7 +29,9 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoa
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.mygdx.game.Entities.Entity;
+import com.mygdx.game.Entities.TeamLeader;
 import com.mygdx.game.Map.MyNavTmxMapLoader;
+import com.mygdx.game.UI.MySkin;
 
 public final class Utility {
 	private static final String TAG = Utility.class.getSimpleName();
@@ -238,6 +242,64 @@ public final class Utility {
 			}
 		});
 		return sortedUnits;
+	}
+
+	public static List<TiledMapPosition> collectPositionsUnits(Entity[] units) {
+		final ArrayList<TiledMapPosition> positions = new ArrayList<TiledMapPosition>();
+
+		for (final Entity unit : units) {
+			positions.add(unit.getCurrentPosition());
+		}
+
+		return positions;
+	}
+
+	public static ArrayList<TiledMapPosition> collectPositionsUnits(List<TeamLeader> players) {
+		final ArrayList<TiledMapPosition> positions = new ArrayList<TiledMapPosition>();
+		for (final TeamLeader owner : players) {
+			for (final Entity character : owner.getTeam()) {
+				positions.add(character.getCurrentPosition());
+			}
+		}
+		return positions;
+	}
+
+	public static boolean checkIfUnitsWithinDistance(Entity unit1, TiledMapPosition targetPos, int distance) {
+		final TiledMapPosition pos1 = unit1.getCurrentPosition();
+		return checkIfWithinDistance(pos1, targetPos, distance);
+	}
+
+	public static boolean checkIfUnitsWithinDistance(Entity unit1, Entity unit2, int distance) {
+		final TiledMapPosition pos1 = unit1.getCurrentPosition();
+		final TiledMapPosition pos2 = unit2.getCurrentPosition();
+		return checkIfWithinDistance(pos1, pos2, distance);
+	}
+
+	private static boolean checkIfWithinDistance(TiledMapPosition pos1, TiledMapPosition pos2, int distance) {
+		return (Math.abs(pos1.getTileX() - pos2.getTileX()) + Math.abs(pos1.getTileY() - pos2.getTileY())) <= distance;
+	}
+
+	public static int getDistanceBetweenUnits(Entity unit1, Entity unit2) {
+		final TiledMapPosition pos1 = unit1.getCurrentPosition();
+		final TiledMapPosition pos2 = unit2.getCurrentPosition();
+		return (Math.abs(pos1.getTileX() - pos2.getTileX()) + Math.abs(pos1.getTileY() - pos2.getTileY()));
+	}
+
+	public static int getDistance(TiledMapPosition pos1, Entity unit2) {
+		final TiledMapPosition pos2 = unit2.getCurrentPosition();
+		return (Math.abs(pos1.getTileX() - pos2.getTileX()) + Math.abs(pos1.getTileY() - pos2.getTileY()));
+	}
+
+	public static float clamp(final float var, final float max, final float min) {
+		if (var > min) {
+			if (var < max) {
+				return var;
+			} else {
+				return max;
+			}
+		} else {
+			return min;
+		}
 	}
 
 	private Utility() {

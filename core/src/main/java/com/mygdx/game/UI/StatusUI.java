@@ -81,14 +81,14 @@ public class StatusUI extends UIWindow {
 	}
 
 	private void initiateHeroStats() {
-		levelVal = this.linkedEntity.getLevel();
+		levelVal = this.linkedEntity.getEntityData().getLevel();
 		hpVal = this.linkedEntity.getHp();
-		maxHpVal = this.linkedEntity.getMaxHp();
+		maxHpVal = this.linkedEntity.getEntityData().getMaxHP();
 		apVal = this.linkedEntity.getAp();
-		maxApVal = this.linkedEntity.getMaxAp();
-		xpVal = this.linkedEntity.getXp();
-		maxXpVal = this.linkedEntity.getMaxXP();
-		iniVal = this.linkedEntity.getBaseInitiative();
+		maxApVal = this.linkedEntity.getEntityData().getMaxAP();
+		xpVal = this.linkedEntity.getEntityData().getXp();
+		maxXpVal = this.linkedEntity.getEntityData().getMaxXP();
+		iniVal = this.linkedEntity.getEntityData().getBaseInitiative();
 	}
 
 	@Override
@@ -107,7 +107,7 @@ public class StatusUI extends UIWindow {
 	}
 
 	private void createLabels() {
-		heroName = new Label(linkedEntity.getName(), labelStyle);
+		heroName = new Label(linkedEntity.getEntityData().getName(), labelStyle);
 		hpLabel = new Label(" hp:", labelStyle);
 		hp = new Label(String.valueOf(hpVal) + "/" + maxHpVal, labelStyle);
 		apLabel = new Label(" ap:", labelStyle);
@@ -193,7 +193,7 @@ public class StatusUI extends UIWindow {
 		updateLabels();
 		updateSizeElements();
 
-		if (linkedEntity.getEntityactor().getIsHovering()) {
+		if (Boolean.TRUE.equals(linkedEntity.getEntityactor().getIsHovering())) {
 			this.setVisible(true);
 		}
 
@@ -202,19 +202,18 @@ public class StatusUI extends UIWindow {
 
 	@Override
 	protected void updatePos() {
-		// we offset the position a little bit to make it look better
 		this.setPosition((linkedEntity.getCurrentPosition().getCameraX()) + statsUIOffsetX, (linkedEntity.getCurrentPosition().getCameraY()) + statsUIOffsetY);
 	}
 
 	private void updateStats() {
-		levelVal = linkedEntity.getLevel();
+		levelVal = linkedEntity.getEntityData().getLevel();
 
 		hpVal = linkedEntity.getHp();
-		maxHpVal = linkedEntity.getMaxHp();
+		maxHpVal = linkedEntity.getEntityData().getMaxHP();
 		apVal = linkedEntity.getAp();
-		maxApVal = linkedEntity.getMaxAp();
-		xpVal = linkedEntity.getXp();
-		maxXpVal = linkedEntity.getMaxXP();
+		maxApVal = linkedEntity.getEntityData().getMaxAP();
+		xpVal = linkedEntity.getEntityData().getXp();
+		maxXpVal = linkedEntity.getEntityData().getMaxXP();
 	}
 
 	private void updateLabels() {
@@ -230,13 +229,13 @@ public class StatusUI extends UIWindow {
 		final float barWidth = BAR_WIDTH * tileWidthPixel;
 		final float barHeight = BAR_HEIGHT * tileHeightPixel;
 
-		hpBar.setWidth(((float) linkedEntity.getHp() / (float) linkedEntity.getMaxHp()) * barWidth);
+		hpBar.setWidth(((float) linkedEntity.getHp() / (float) linkedEntity.getEntityData().getMaxHP()) * barWidth);
 		hpBarBackground.setWidth(barWidth);
 
 		hpBar.setHeight(barHeight);
 		hpBarBackground.setHeight(barHeight);
 
-		xpBar.setWidth(((float) linkedEntity.getXp() / (float) linkedEntity.getMaxXP()) * barWidth);
+		xpBar.setWidth(((float) linkedEntity.getEntityData().getXp() / (float) linkedEntity.getEntityData().getMaxXP()) * barWidth);
 		xpBarBackground.setWidth(barWidth);
 
 		xpBar.setHeight(barHeight);

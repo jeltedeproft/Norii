@@ -1,11 +1,19 @@
 package com.mygdx.game.Entities;
 
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveTo;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.run;
+
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Predicate;
+
+import org.xguzm.pathfinding.grid.GridCell;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Entities.EntityAnimation.Direction;
 import com.mygdx.game.Entities.EntityObserver.EntityCommand;
@@ -30,18 +38,13 @@ public class Entity extends Actor implements EntitySubject {
 	private int currentInitiative;
 
 	private boolean inBattle;
-	private boolean isActive;
-	private boolean isInMovementPhase;
 	private boolean isInAttackPhase;
-	private boolean isInActionPhase;
-	private boolean isInDeploymentPhase;
-	private boolean isInSpellPhase;
 	private boolean isDead;
 	private boolean isPlayerUnit;
+	private boolean isActive;
 	private int entityID;
 
 	protected TiledMapPosition oldPlayerPosition;
-	protected TiledMapPosition nextPlayerPosition;
 	protected TiledMapPosition currentPlayerPosition;
 	protected Direction direction;
 
@@ -57,30 +60,32 @@ public class Entity extends Actor implements EntitySubject {
 	private Collection<Ability> abilities;
 	private Collection<Modifier> modifiers;
 
+	private Runnable updatePositionAction;
+	private Runnable aiFinishTurn;
+
 	public Entity(final EntityTypes type) {
 		entityData = EntityFileReader.getUnitData().get(type.ordinal());
+		entityData.setEntity(this);
 		entityAnimation = new EntityAnimation(entityData.getEntitySpriteFilePath());
 		initEntity();
 	}
 
 	public void initEntity() {
 		observers = new Array<EntityObserver>();
-		nextPlayerPosition = new TiledMapPosition();
 		oldPlayerPosition = new TiledMapPosition().setPositionFromScreen(-100, -100);
 		currentPlayerPosition = new TiledMapPosition().setPositionFromScreen(-100, -100);
 		hp = entityData.getMaxHP();
 		ap = entityData.getMaxAP();
-		currentInitiative = entityData.getIni();
+		currentInitiative = entityData.getBaseInitiative();
 		isDead = false;
 		inBattle = false;
-		isInMovementPhase = false;
 		isInAttackPhase = false;
-		isInDeploymentPhase = false;
 		isPlayerUnit = true;
 		abilities = new ArrayList<Ability>();
 		modifiers = new ArrayList<Modifier>();
 		entityID = java.lang.System.identityHashCode(this);
 		initAbilities();
+		initActions();
 	}
 
 	private void initAbilities() {
@@ -89,8 +94,28 @@ public class Entity extends Actor implements EntitySubject {
 		}
 	}
 
+	private void initActions() {
+		updatePositionAction = new Runnable() {
+			@Override
+			public void run() {
+				updatePositionFromActor();
+			}
+		};
+
+		aiFinishTurn = new Runnable() {
+			@Override
+			public void run() {
+				notifyEntityObserver(EntityCommand.AI_FINISHED_TURN);
+			}
+		};
+	}
+
 	public void update(final float delta) {
 		entityAnimation.update(delta);
+	}
+
+	public EntityData getEntityData() {
+		return entityData;
 	}
 
 	public StatusUI getStatusui() {
@@ -107,10 +132,6 @@ public class Entity extends Actor implements EntitySubject {
 
 	public void setActionsui(final ActionsUI actionsui) {
 		this.actionsui = actionsui;
-	}
-
-	public BottomMenu getbottomMenu() {
-		return bottomMenu;
 	}
 
 	public void setbottomMenu(final BottomMenu bottomMenu) {
@@ -145,15 +166,6 @@ public class Entity extends Actor implements EntitySubject {
 		bottomMenu.update();
 	}
 
-	@Override
-	public String getName() {
-		return entityData.getName();
-	}
-
-	public String getPortraitPath() {
-		return entityData.getPortraitSpritePath();
-	}
-
 	public EntityActor getEntityactor() {
 		return entityactor;
 	}
@@ -166,21 +178,18 @@ public class Entity extends Actor implements EntitySubject {
 		return isDead;
 	}
 
+	public void setActive(final boolean isActive) {
+		this.isActive = isActive;
+		if (isPlayerUnit) {
+			actionsui.update();
+		}
+	}
+
 	public boolean isActive() {
 		return isActive;
 	}
 
-	public void setActive(final boolean isActive) {
-		this.isActive = isActive;
-		actionsui.update();
-	}
-
-	public boolean isInMovementPhase() {
-		return isInMovementPhase;
-	}
-
 	public void setInMovementPhase(final boolean isInMovementPhase) {
-		this.isInMovementPhase = isInMovementPhase;
 		if (isInMovementPhase) {
 			actionsui.setVisible(false);
 			notifyEntityObserver(EntityCommand.IN_MOVEMENT);
@@ -201,12 +210,7 @@ public class Entity extends Actor implements EntitySubject {
 		}
 	}
 
-	public boolean isInSpellPhase() {
-		return isInSpellPhase;
-	}
-
 	public void setInSpellPhase(final boolean isInSpellPhase, final Ability ability) {
-		this.isInSpellPhase = isInSpellPhase;
 		if (isInSpellPhase) {
 			actionsui.setVisible(false);
 			notifyEntityObserver(EntityCommand.IN_SPELL_PHASE, ability);
@@ -214,7 +218,7 @@ public class Entity extends Actor implements EntitySubject {
 	}
 
 	public void attack(final Entity target) {
-		target.damage(getAttackPower());
+		target.damage(entityData.getAttackPower());
 	}
 
 	public boolean canAttack() {
@@ -222,14 +226,23 @@ public class Entity extends Actor implements EntitySubject {
 	}
 
 	public void damage(final int damage) {
-		if (damage > hp) {
-			hp = 0;
-			isDead = true;
+		if (damage >= hp) {
+			removeUnit();
 		} else {
 			hp = hp - damage;
 		}
 
 		updateUI();
+	}
+
+	private void removeUnit() {
+		hp = 0;
+		isDead = true;
+		inBattle = false;
+		isActive = false;
+		setCurrentPosition(new TiledMapPosition().setPositionFromScreen(-100, -100));
+		getEntityactor().setPosition(-100, -100);
+		setVisible(false);
 	}
 
 	public boolean canMove() {
@@ -244,12 +257,7 @@ public class Entity extends Actor implements EntitySubject {
 		this.inBattle = inBattle;
 	}
 
-	public boolean isInActionPhase() {
-		return isInActionPhase;
-	}
-
 	public void setInActionPhase(final boolean isInActionPhase) {
-		this.isInActionPhase = isInActionPhase;
 		notifyEntityObserver(EntityCommand.UNIT_ACTIVE);
 
 		if (isInActionPhase) {
@@ -262,12 +270,7 @@ public class Entity extends Actor implements EntitySubject {
 		}
 	}
 
-	public boolean isInDeploymentPhase() {
-		return isInDeploymentPhase;
-	}
-
 	public void setInDeploymentPhase(final boolean isInDeploymentPhase) {
-		this.isInDeploymentPhase = isInDeploymentPhase;
 		if (isInDeploymentPhase) {
 			bottomMenu.setHero(this);
 			notifyEntityObserver(EntityCommand.UNIT_ACTIVE);
@@ -299,85 +302,12 @@ public class Entity extends Actor implements EntitySubject {
 		updateUI();
 	}
 
-	public int getMaxAp() {
-		return entityData.getMaxAP();
-	}
-
-	public void setMaxAp(final int maxAP) {
-		entityData.setMaxAP(maxAP);
-		updateUI();
-	}
-
 	public int getHp() {
 		return hp;
 	}
 
 	public void setHp(final int hp) {
 		this.hp = hp;
-		updateUI();
-	}
-
-	public int getMaxXP() {
-		return entityData.getMaxXP();
-	}
-
-	public int getMaxHp() {
-		return entityData.getMaxHP();
-	}
-
-	public void setMaxHp(final int maxHP) {
-		entityData.setMaxHP(maxHP);
-		updateUI();
-	}
-
-	public int getBaseInitiative() {
-		return entityData.getIni();
-	}
-
-	public void setBaseIniative(final int ini) {
-		entityData.setIni(ini);
-		updateUI();
-	}
-
-	public int getAttackRange() {
-		return entityData.getAttackrange();
-	}
-
-	public void setAttackRange(final int attackRange) {
-		entityData.setAttackrange(attackRange);
-	}
-
-	public int getAttackPower() {
-		return entityData.getAttackPower();
-	}
-
-	public void setAttackPower(final int attackPower) {
-		entityData.setAttackPower(attackPower);
-	}
-
-	public int getAbasicAttackCost() {
-		return entityData.getBasicAttackCost();
-	}
-
-	public void setbasicAttackCost(final int basicAttackCost) {
-		entityData.setBasicAttackCost(basicAttackCost);
-	}
-
-	public int getLevel() {
-		return entityData.getLevel();
-	}
-
-	public void setLevel(final int level) {
-		entityData.setLevel(level);
-		updateUI();
-	}
-
-	public int getXp() {
-		return entityData.getXp();
-	}
-
-	public void setXp(final int xp) {
-		entityData.setXp(xp);
 		updateUI();
 	}
 
@@ -474,5 +404,59 @@ public class Entity extends Actor implements EntitySubject {
 		for (int i = 0; i < observers.size; i++) {
 			observers.get(i).onEntityNotify(command, this, ability);
 		}
+	}
+
+	public void move(List<GridCell> path) {
+		final SequenceAction sequence = createMoveSequence(path);
+		sequence.addAction(run(aiFinishTurn));
+		this.getEntityactor().addAction(sequence);
+		this.setAp(this.getAp() - path.size());
+	}
+
+	public void moveAttack(List<GridCell> path, Entity target) {
+		final SequenceAction sequence = createMoveSequence(path);
+		sequence.addAction(new AttackAction(target));
+		sequence.addAction(run(aiFinishTurn));
+
+		this.getEntityactor().addAction(sequence);
+		this.setAp(this.getAp() - path.size() - this.getEntityData().getBasicAttackCost());
+	}
+
+	private SequenceAction createMoveSequence(List<GridCell> path) {
+		final SequenceAction sequence = Actions.sequence();
+		for (final GridCell cell : path) {
+			sequence.addAction(Actions.rotateTo(decideRotation(cell), 0.1f));
+			sequence.addAction(moveTo(cell.x, cell.y, 0.2f));
+			sequence.addAction(run(updatePositionAction));
+		}
+		return sequence;
+	}
+
+	private float decideRotation(GridCell cell) {
+		final TiledMapPosition currentPos = this.getCurrentPosition();
+		if ((currentPos.getTileX() == cell.x) && (currentPos.getTileY() > cell.y)) {
+			return 270.0f;
+		} else if ((currentPos.getTileX() == cell.x) && (currentPos.getTileY() < cell.y)) {
+			return 90.0f;
+		} else if ((currentPos.getTileX() > cell.x) && (currentPos.getTileY() == cell.y)) {
+			return 0.0f;
+		}
+		return 180.0f;
+	}
+
+	private void updatePositionFromActor() {
+		this.setCurrentPosition(new TiledMapPosition().setPositionFromTiles((int) this.getEntityactor().getX(), (int) this.getEntityactor().getY()));
+		this.setDirection(decideDirection(this.getEntityactor().getRotation()));
+	}
+
+	private Direction decideDirection(float rotation) {
+		if (rotation >= 45 && rotation < 135) {
+			return Direction.RIGHT;
+		} else if (rotation >= 135 && rotation < 225) {
+			return Direction.UP;
+		} else if (rotation >= 225 && rotation < 315) {
+			return Direction.LEFT;
+		}
+		return Direction.DOWN;
 	}
 }

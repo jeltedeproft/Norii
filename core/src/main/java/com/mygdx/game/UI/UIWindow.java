@@ -3,6 +3,7 @@ package com.mygdx.game.UI;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
@@ -82,7 +83,9 @@ public abstract class UIWindow extends Window {
 	private void updateSizeImageButtons(Actor actor) {
 		final ImageButton button = (ImageButton) actor;
 		if (button.getImage() != null) {
-			this.getCell(actor).size(Gdx.graphics.getWidth() / BUTTON_WIDTH_FACTOR, Gdx.graphics.getHeight() / BUTTON_HEIGHT_FACTOR);
+			final Cell<Actor> cell = this.getCell(actor);
+			cell.size(Gdx.graphics.getWidth() / BUTTON_WIDTH_FACTOR, Gdx.graphics.getHeight() / BUTTON_HEIGHT_FACTOR);
+			button.setBounds(cell.getActorX(), cell.getActorY(), Gdx.graphics.getWidth() / BUTTON_WIDTH_FACTOR, Gdx.graphics.getHeight() / BUTTON_HEIGHT_FACTOR);
 		}
 	}
 

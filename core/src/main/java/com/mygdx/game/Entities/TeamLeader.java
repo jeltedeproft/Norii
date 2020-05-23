@@ -7,6 +7,7 @@ import java.util.List;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
 public abstract class TeamLeader {
+	private static final String TAG = TeamLeader.class.getSimpleName();
 	protected List<Entity> team;
 	private EntityStage entityStage;
 
@@ -57,9 +58,9 @@ public abstract class TeamLeader {
 		Arrays.sort(sortedUnits, new Comparator<Entity>() {
 			@Override
 			public int compare(final Entity e1, final Entity e2) {
-				if (e1.getBaseInitiative() > e2.getBaseInitiative()) {
+				if (e1.getEntityData().getBaseInitiative() > e2.getEntityData().getBaseInitiative()) {
 					return 1;
-				} else if (e1.getBaseInitiative() < e2.getBaseInitiative()) {
+				} else if (e1.getEntityData().getBaseInitiative() < e2.getEntityData().getBaseInitiative()) {
 					return -1;
 				} else {
 					return 0;
@@ -72,6 +73,5 @@ public abstract class TeamLeader {
 		for (final Entity entity : team) {
 			entity.dispose();
 		}
-		entityStage.dispose();
 	}
 }

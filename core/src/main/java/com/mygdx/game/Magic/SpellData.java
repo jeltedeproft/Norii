@@ -9,8 +9,10 @@ public class SpellData {
 	private int mpCost;
 	private String lineOfSight;
 	private String target;
+	private String areaOfEffect;
 	private int damage;
 	private int range;
+	private String affectsTeam;
 
 	public SpellData() {
 
@@ -86,6 +88,22 @@ public class SpellData {
 
 	public void setRange(final int range) {
 		this.range = range;
+	}
+
+	public String getAffectsTeam() {
+		return affectsTeam;
+	}
+
+	public void setAffectsTeam(String affectsTeam) {
+		this.affectsTeam = affectsTeam;
+	}
+
+	public String getAreaOfEffect() {
+		return areaOfEffect;
+	}
+
+	public void setAreaOfEffect(String areaOfEffect) {
+		this.areaOfEffect = areaOfEffect;
 	}
 
 }
