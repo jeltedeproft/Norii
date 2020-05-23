@@ -39,7 +39,6 @@ import Utility.TiledMapPosition;
 import Utility.Utility;
 
 public class BattleScreen extends GameScreen implements EntityObserver, TiledMapObserver {
-	private static final String TAG = BattleScreen.class.getSimpleName();
 	public static final int VISIBLE_WIDTH = 20;
 	public static final int VISIBLE_HEIGHT = 20;
 	private static OrthographicCamera mapCamera = null;
@@ -355,6 +354,8 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 				}
 			}
 			aiTeam.aiUnitAct(unit, entities);
+			break;
+		case AI_FINISHED_TURN:
 			battlemanager.getCurrentBattleState().exit();
 			break;
 		default:

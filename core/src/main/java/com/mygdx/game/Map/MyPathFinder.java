@@ -224,7 +224,12 @@ public class MyPathFinder {
 		final int startY = mover.getCurrentPosition().getTileY();
 		final int endX = target.getCurrentPosition().getTileX();
 		final int endY = target.getCurrentPosition().getTileY();
-		return aStarGridFinder.findPath(startX, startY, endX, endY, navGrid);
+		return removeEndPoint(aStarGridFinder.findPath(startX, startY, endX, endY, navGrid));
+	}
+
+	private List<GridCell> removeEndPoint(List<GridCell> path) {
+		path.remove(path.size() - 1);
+		return path;
 	}
 
 	private boolean isNextTo(GridCell cell, TiledMapPosition target) {

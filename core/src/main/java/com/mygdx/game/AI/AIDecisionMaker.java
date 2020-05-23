@@ -8,7 +8,6 @@ import org.xguzm.pathfinding.grid.GridCell;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Map.MyPathFinder;
 
-import Utility.TiledMapPosition;
 import Utility.Utility;
 
 public class AIDecisionMaker {
@@ -21,43 +20,32 @@ public class AIDecisionMaker {
 	public void makeDecision(Entity unit, ArrayList<Entity> entities) {
 
 		// can I kill someone with a basic attack
-		for (final Entity entity : entities) {
+		for (final Entity target : entities) {
 
-			if (canMoveAttack(unit, entity) && canKill(unit, entity)) {
-				moveUnitNextTo(unit, entity);
-				unit.attack(entity);
+			if (isEnemy(unit, target) && canMoveAttack(unit, target) && canKill(unit, target)) {
+				walkOverAndAttack(unit, target);
 			}
 		}
-
 	}
 
-	private boolean canMoveAttack(Entity unit, Entity entity) {
-		final int distance = Utility.getDistanceBetweenUnits(unit, entity) - 1;
-		final int ap = unit.getAp();
-		final int basicAttackPoints = unit.getEntityData().getBasicAttackCost();
+	private boolean isEnemy(Entity attacker, Entity target) {
+		return attacker.isPlayerUnit() != target.isPlayerUnit();
+	}
+
+	private boolean canMoveAttack(Entity attacker, Entity target) {
+		final int distance = Utility.getDistanceBetweenUnits(attacker, target) - 1;
+		final int ap = attacker.getAp();
+		final int basicAttackPoints = attacker.getEntityData().getBasicAttackCost();
 		return (ap >= (distance + basicAttackPoints));
 	}
 
-	private boolean canKill(Entity unit, final Entity entity) {
-		return entity.getHp() < unit.getEntityData().getAttackPower();
+	private boolean canKill(Entity attacker, final Entity target) {
+		return target.getHp() < attacker.getEntityData().getAttackPower();
 	}
 
-	private void moveUnitNextTo(Entity unit, Entity entity) {
+	private void walkOverAndAttack(Entity attacker, Entity target) {
 		final MyPathFinder pathFinder = aiTeam.getMyPathFinder();
-		final List<GridCell> path = pathFinder.getPathFromUnitToUnit(unit, entity);
-		if (path != null) {
-			moveSlowlyTowards(unit, path);
-		}
-	}
-
-	private void moveSlowlyTowards(Entity unit, List<GridCell> path) {
-		for (final GridCell cell : path) {
-			unit.setCurrentPosition(new TiledMapPosition().setPositionFromTiled(cell.x, cell.y));
-			try {
-				Thread.sleep(500);
-			} catch (final InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+		final List<GridCell> path = pathFinder.getPathFromUnitToUnit(attacker, target);
+		attacker.moveAttack(path, target);
 	}
 }

@@ -1,11 +1,19 @@
 package com.mygdx.game.Entities;
 
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveTo;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.run;
+
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Predicate;
+
+import org.xguzm.pathfinding.grid.GridCell;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Entities.EntityAnimation.Direction;
 import com.mygdx.game.Entities.EntityObserver.EntityCommand;
@@ -52,6 +60,9 @@ public class Entity extends Actor implements EntitySubject {
 	private Collection<Ability> abilities;
 	private Collection<Modifier> modifiers;
 
+	private Runnable updatePositionAction;
+	private Runnable aiFinishTurn;
+
 	public Entity(final EntityTypes type) {
 		entityData = EntityFileReader.getUnitData().get(type.ordinal());
 		entityData.setEntity(this);
@@ -74,12 +85,29 @@ public class Entity extends Actor implements EntitySubject {
 		modifiers = new ArrayList<Modifier>();
 		entityID = java.lang.System.identityHashCode(this);
 		initAbilities();
+		initActions();
 	}
 
 	private void initAbilities() {
 		for (final String abilityString : entityData.getAbilties()) {
 			addAbility(AbilitiesEnum.valueOf(abilityString));
 		}
+	}
+
+	private void initActions() {
+		updatePositionAction = new Runnable() {
+			@Override
+			public void run() {
+				updatePositionFromActor();
+			}
+		};
+
+		aiFinishTurn = new Runnable() {
+			@Override
+			public void run() {
+				notifyEntityObserver(EntityCommand.AI_FINISHED_TURN);
+			}
+		};
 	}
 
 	public void update(final float delta) {
@@ -376,5 +404,59 @@ public class Entity extends Actor implements EntitySubject {
 		for (int i = 0; i < observers.size; i++) {
 			observers.get(i).onEntityNotify(command, this, ability);
 		}
+	}
+
+	public void move(List<GridCell> path) {
+		final SequenceAction sequence = createMoveSequence(path);
+		sequence.addAction(run(aiFinishTurn));
+		this.getEntityactor().addAction(sequence);
+		this.setAp(this.getAp() - path.size());
+	}
+
+	public void moveAttack(List<GridCell> path, Entity target) {
+		final SequenceAction sequence = createMoveSequence(path);
+		sequence.addAction(new AttackAction(target));
+		sequence.addAction(run(aiFinishTurn));
+
+		this.getEntityactor().addAction(sequence);
+		this.setAp(this.getAp() - path.size() - this.getEntityData().getBasicAttackCost());
+	}
+
+	private SequenceAction createMoveSequence(List<GridCell> path) {
+		final SequenceAction sequence = Actions.sequence();
+		for (final GridCell cell : path) {
+			sequence.addAction(Actions.rotateTo(decideRotation(cell), 0.1f));
+			sequence.addAction(moveTo(cell.x, cell.y, 0.2f));
+			sequence.addAction(run(updatePositionAction));
+		}
+		return sequence;
+	}
+
+	private float decideRotation(GridCell cell) {
+		final TiledMapPosition currentPos = this.getCurrentPosition();
+		if ((currentPos.getTileX() == cell.x) && (currentPos.getTileY() > cell.y)) {
+			return 270.0f;
+		} else if ((currentPos.getTileX() == cell.x) && (currentPos.getTileY() < cell.y)) {
+			return 90.0f;
+		} else if ((currentPos.getTileX() > cell.x) && (currentPos.getTileY() == cell.y)) {
+			return 0.0f;
+		}
+		return 180.0f;
+	}
+
+	private void updatePositionFromActor() {
+		this.setCurrentPosition(new TiledMapPosition().setPositionFromTiles((int) this.getEntityactor().getX(), (int) this.getEntityactor().getY()));
+		this.setDirection(decideDirection(this.getEntityactor().getRotation()));
+	}
+
+	private Direction decideDirection(float rotation) {
+		if (rotation >= 45 && rotation < 135) {
+			return Direction.RIGHT;
+		} else if (rotation >= 135 && rotation < 225) {
+			return Direction.UP;
+		} else if (rotation >= 225 && rotation < 315) {
+			return Direction.LEFT;
+		}
+		return Direction.DOWN;
 	}
 }
