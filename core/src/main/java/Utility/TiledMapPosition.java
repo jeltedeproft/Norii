@@ -62,11 +62,13 @@ public class TiledMapPosition {
 		return tileCoordinates.y;
 	}
 
-	public void changeX(int change) {
+	public TiledMapPosition changeX(int change) {
 		tileCoordinates.x += change;
+		return this;
 	}
 
-	public void changeY(int change) {
+	public TiledMapPosition changeY(int change) {
 		tileCoordinates.y += change;
+		return this;
 	}
 }

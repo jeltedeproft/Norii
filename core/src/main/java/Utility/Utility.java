@@ -254,6 +254,18 @@ public final class Utility {
 		return positions;
 	}
 
+	public static ArrayList<TiledMapPosition> collectPositionsEnemeyUnits(ArrayList<Entity> units, boolean isPlayer) {
+		final ArrayList<TiledMapPosition> enemyPositions = new ArrayList<TiledMapPosition>();
+
+		for (final Entity unit : units) {
+			if (unit.isPlayerUnit() != isPlayer) {
+				enemyPositions.add(unit.getCurrentPosition());
+			}
+		}
+
+		return enemyPositions;
+	}
+
 	public static ArrayList<TiledMapPosition> collectPositionsUnits(List<TeamLeader> players) {
 		final ArrayList<TiledMapPosition> positions = new ArrayList<TiledMapPosition>();
 		for (final TeamLeader owner : players) {

@@ -219,6 +219,71 @@ public class MyPathFinder {
 		return null;
 	}
 
+	public TiledMapPosition getPositionFurthestAwayFrom(TiledMapPosition pos) {
+		final int height = navGrid.getHeight();
+		final int width = navGrid.getWidth();
+		int maxDistance = 0;
+		int maxX = 0;
+		int maxY = 0;
+
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
+				final int distance = calculateDistance(i, j, pos.getTileX(), pos.getTileY());
+				if (distance > maxDistance) {
+					maxDistance = distance;
+					maxX = i;
+					maxY = j;
+				}
+			}
+		}
+		return new TiledMapPosition().setPositionFromTiles(maxX, maxY);
+	}
+
+	public List<GridCell> pathTowards(TiledMapPosition start, TiledMapPosition goal, int ap) {
+		final List<GridCell> path = aStarGridFinder.findPath(start.getTileX(), start.getTileY(), goal.getTileX(), goal.getTileY(), navGrid);
+
+		if (path == null) {
+			return adjustGoal(start, goal, path);
+		}
+
+		if (path.size() <= ap) {
+			return path;
+		}
+
+		return chippedPath(path, ap);
+	}
+
+	private List<GridCell> adjustGoal(TiledMapPosition start, TiledMapPosition goal, List<GridCell> path) {
+		while (path == null) {
+			goal = tryAdjacentTile(start, goal);
+			path = aStarGridFinder.findPath(start.getTileX(), start.getTileY(), goal.getTileX(), goal.getTileY(), navGrid);
+		}
+		return path;
+	}
+
+	private TiledMapPosition tryAdjacentTile(TiledMapPosition start, TiledMapPosition goal) {
+		if (start.getTileX() < goal.getTileX()) {
+			return goal.changeX(-1);
+		} else if (start.getTileX() > goal.getTileX()) {
+			return goal.changeX(1);
+		} else if (start.getTileY() < goal.getTileY()) {
+			return goal.changeY(-1);
+		}
+		return goal.changeY(1);
+	}
+
+	private List<GridCell> chippedPath(List<GridCell> path, int ap) {
+		while (path.size() > ap) {
+			path.remove(path.size());
+		}
+
+		return path;
+	}
+
+	private int calculateDistance(int x1, int y1, int x2, int y2) {
+		return (Math.abs(x1 - x2) + (Math.abs(y1 - y2)));
+	}
+
 	public List<GridCell> getPathFromUnitToUnit(Entity mover, Entity target) {
 		final int startX = mover.getCurrentPosition().getTileX();
 		final int startY = mover.getCurrentPosition().getTileY();

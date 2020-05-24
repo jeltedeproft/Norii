@@ -423,25 +423,26 @@ public class Entity extends Actor implements EntitySubject {
 	}
 
 	private SequenceAction createMoveSequence(List<GridCell> path) {
+		GridCell oldCell = new GridCell(this.getCurrentPosition().getTileX(), this.getCurrentPosition().getTileY());
 		final SequenceAction sequence = Actions.sequence();
 		for (final GridCell cell : path) {
-			sequence.addAction(Actions.rotateTo(decideRotation(cell), 0.1f));
+			sequence.addAction(Actions.rotateTo(decideRotation(oldCell, cell), 0.1f));
 			sequence.addAction(moveTo(cell.x, cell.y, 0.2f));
 			sequence.addAction(run(updatePositionAction));
+			oldCell = cell;
 		}
 		return sequence;
 	}
 
-	private float decideRotation(GridCell cell) {
-		final TiledMapPosition currentPos = this.getCurrentPosition();
-		if ((currentPos.getTileX() == cell.x) && (currentPos.getTileY() > cell.y)) {
+	private float decideRotation(GridCell oldCell, GridCell cell) {
+		if ((oldCell.x == cell.x) && (oldCell.y > cell.y)) {
 			return 270.0f;
-		} else if ((currentPos.getTileX() == cell.x) && (currentPos.getTileY() < cell.y)) {
-			return 90.0f;
-		} else if ((currentPos.getTileX() > cell.x) && (currentPos.getTileY() == cell.y)) {
-			return 0.0f;
+		} else if ((oldCell.x == cell.x) && (oldCell.y < cell.y)) {
+			return 180.0f;
+		} else if ((oldCell.x > cell.x) && (oldCell.y == cell.y)) {
+			return 270.0f;
 		}
-		return 180.0f;
+		return 90.0f;
 	}
 
 	private void updatePositionFromActor() {

@@ -27,8 +27,8 @@
     "xp": 5,
     "maxXP": 10,
     "baseInitiative": 10,
-    "attackRange": 1,
-    "attackPower": 3,
+    "attackRange": 30,
+    "attackPower": 9,
     "basicAttackCost" : 1,
     "abilities":[ "TURN_TO_STONE"]
   },
