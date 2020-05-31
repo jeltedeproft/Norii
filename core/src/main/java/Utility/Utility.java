@@ -19,9 +19,11 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
@@ -91,6 +93,10 @@ public final class Utility {
 
 	public static Music getMusicAsset(final String musicFilenamePath) {
 		return (Music) getAsset(musicFilenamePath, Music.class);
+	}
+
+	public static Animation<TextureRegion> getGIFAsset(final String gifFilenamePath) {
+		return GifDecoder.loadGIFAnimation(Animation.PlayMode.LOOP, Gdx.files.internal(gifFilenamePath).read());
 	}
 
 	public static void loadFreeTypeFontAsset(final String fontName, final int size) {
@@ -244,7 +250,7 @@ public final class Utility {
 		return sortedUnits;
 	}
 
-	public static List<TiledMapPosition> collectPositionsUnits(Entity[] units) {
+	public static List<TiledMapPosition> collectPositionsUnits(final Entity[] units) {
 		final ArrayList<TiledMapPosition> positions = new ArrayList<TiledMapPosition>();
 
 		for (final Entity unit : units) {
@@ -254,7 +260,7 @@ public final class Utility {
 		return positions;
 	}
 
-	public static ArrayList<TiledMapPosition> collectPositionsEnemeyUnits(ArrayList<Entity> units, boolean isPlayer) {
+	public static ArrayList<TiledMapPosition> collectPositionsEnemeyUnits(final ArrayList<Entity> units, final boolean isPlayer) {
 		final ArrayList<TiledMapPosition> enemyPositions = new ArrayList<TiledMapPosition>();
 
 		for (final Entity unit : units) {
@@ -266,7 +272,7 @@ public final class Utility {
 		return enemyPositions;
 	}
 
-	public static ArrayList<TiledMapPosition> collectPositionsUnits(List<TeamLeader> players) {
+	public static ArrayList<TiledMapPosition> collectPositionsUnits(final List<TeamLeader> players) {
 		final ArrayList<TiledMapPosition> positions = new ArrayList<TiledMapPosition>();
 		for (final TeamLeader owner : players) {
 			for (final Entity character : owner.getTeam()) {
@@ -276,28 +282,28 @@ public final class Utility {
 		return positions;
 	}
 
-	public static boolean checkIfUnitsWithinDistance(Entity unit1, TiledMapPosition targetPos, int distance) {
+	public static boolean checkIfUnitsWithinDistance(final Entity unit1, final TiledMapPosition targetPos, final int distance) {
 		final TiledMapPosition pos1 = unit1.getCurrentPosition();
 		return checkIfWithinDistance(pos1, targetPos, distance);
 	}
 
-	public static boolean checkIfUnitsWithinDistance(Entity unit1, Entity unit2, int distance) {
+	public static boolean checkIfUnitsWithinDistance(final Entity unit1, final Entity unit2, final int distance) {
 		final TiledMapPosition pos1 = unit1.getCurrentPosition();
 		final TiledMapPosition pos2 = unit2.getCurrentPosition();
 		return checkIfWithinDistance(pos1, pos2, distance);
 	}
 
-	private static boolean checkIfWithinDistance(TiledMapPosition pos1, TiledMapPosition pos2, int distance) {
+	private static boolean checkIfWithinDistance(final TiledMapPosition pos1, final TiledMapPosition pos2, final int distance) {
 		return (Math.abs(pos1.getTileX() - pos2.getTileX()) + Math.abs(pos1.getTileY() - pos2.getTileY())) <= distance;
 	}
 
-	public static int getDistanceBetweenUnits(Entity unit1, Entity unit2) {
+	public static int getDistanceBetweenUnits(final Entity unit1, final Entity unit2) {
 		final TiledMapPosition pos1 = unit1.getCurrentPosition();
 		final TiledMapPosition pos2 = unit2.getCurrentPosition();
 		return (Math.abs(pos1.getTileX() - pos2.getTileX()) + Math.abs(pos1.getTileY() - pos2.getTileY()));
 	}
 
-	public static int getDistance(TiledMapPosition pos1, Entity unit2) {
+	public static int getDistance(final TiledMapPosition pos1, final Entity unit2) {
 		final TiledMapPosition pos2 = unit2.getCurrentPosition();
 		return (Math.abs(pos1.getTileX() - pos2.getTileX()) + Math.abs(pos1.getTileY() - pos2.getTileY()));
 	}

@@ -15,7 +15,7 @@ import com.badlogic.gdx.utils.Array;
 public class EntityStage extends Stage {
 	private final List<Entity> entities;
 
-	public EntityStage(Entity[] entities) {
+	public EntityStage(final Entity[] entities) {
 		this.entities = new ArrayList<Entity>(Arrays.asList(entities));
 		createActorsForEntities();
 	}
@@ -28,9 +28,9 @@ public class EntityStage extends Stage {
 		}
 	}
 
-	private void initializeActor(EntityActor actor) {
+	private void initializeActor(final EntityActor actor) {
 		final Entity entity = actor.getEntity();
-		// DANGER : I assume every entity has a 32x32 size
+		// DANGER : I assume every entity has a 32x32 size (map tile width x map tile height)
 		actor.setBounds(entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY(), 1, 1);
 		addActor(actor);
 		final EventListener eventListener = new EntityClickListener(actor);
@@ -38,9 +38,9 @@ public class EntityStage extends Stage {
 	}
 
 	public void drawEntitiesDebug() {
-		final Array<Actor> actors = this.getActors();
+		final Array<Actor> actors = getActors();
 		final ShapeRenderer debugRenderer = new ShapeRenderer();
-		debugRenderer.setProjectionMatrix(this.getCamera().combined);
+		debugRenderer.setProjectionMatrix(getCamera().combined);
 		debugRenderer.setColor(Color.RED);
 		debugRenderer.begin(ShapeType.Line);
 		for (final Actor actor : actors) {

@@ -16,11 +16,11 @@ public class AIDecisionMaker {
 	private final AITeam aiTeam;
 	private boolean actionTaken = false;
 
-	public AIDecisionMaker(AITeam aiTeam) {
+	public AIDecisionMaker(final AITeam aiTeam) {
 		this.aiTeam = aiTeam;
 	}
 
-	public void makeDecision(Entity unit, ArrayList<Entity> entities) {
+	public void makeDecision(final Entity unit, final ArrayList<Entity> entities) {
 
 		rule1CanKill(unit, entities);
 
@@ -28,7 +28,6 @@ public class AIDecisionMaker {
 			rule2ShouldRun(unit, entities);
 		}
 
-		
 		if (!actionTaken) {
 			rule3SpellSpecific(unit, entities);
 		}
@@ -39,7 +38,7 @@ public class AIDecisionMaker {
 		actionTaken = false;
 	}
 
-	private void rule1CanKill(Entity unit, ArrayList<Entity> entities) {
+	private void rule1CanKill(final Entity unit, final ArrayList<Entity> entities) {
 		for (final Entity target : entities) {
 			if (isEnemy(unit, target) && canMoveAttack(unit, target) && canKill(unit, target)) {
 				walkOverAndAttack(unit, target);
@@ -48,52 +47,52 @@ public class AIDecisionMaker {
 		}
 	}
 
-	private boolean isEnemy(Entity attacker, Entity target) {
+	private boolean isEnemy(final Entity attacker, final Entity target) {
 		return attacker.isPlayerUnit() != target.isPlayerUnit();
 	}
 
-	private boolean canMoveAttack(Entity attacker, Entity target) {
+	private boolean canMoveAttack(final Entity attacker, final Entity target) {
 		final int distance = Utility.getDistanceBetweenUnits(attacker, target) - 1;
 		final int ap = attacker.getAp();
 		final int basicAttackPoints = attacker.getEntityData().getBasicAttackCost();
 		return (ap >= (distance + basicAttackPoints));
 	}
 
-	private boolean canKill(Entity attacker, final Entity target) {
+	private boolean canKill(final Entity attacker, final Entity target) {
 		return target.getHp() < attacker.getEntityData().getAttackPower();
 	}
 
-	private void walkOverAndAttack(Entity attacker, Entity target) {
+	private void walkOverAndAttack(final Entity attacker, final Entity target) {
 		final MyPathFinder pathFinder = aiTeam.getMyPathFinder();
 		final List<GridCell> path = pathFinder.getPathFromUnitToUnit(attacker, target);
 		attacker.moveAttack(path, target);
 	}
 
-	private void rule2ShouldRun(Entity unit, ArrayList<Entity> entities) {
+	private void rule2ShouldRun(final Entity unit, final ArrayList<Entity> entities) {
 		if (healthIsLow(unit)) {
 			runToSafety(unit, entities);
 			actionTaken = true;
 		}
 	}
 
-	private boolean healthIsLow(Entity unit) {
+	private boolean healthIsLow(final Entity unit) {
 		final int currentHP = unit.getHp();
 		final int maxHP = unit.getEntityData().getMaxHP();
 		return (currentHP / maxHP) <= 0.1f;
 	}
 
-	private void runToSafety(Entity unit, ArrayList<Entity> entities) {
+	private void runToSafety(final Entity unit, final ArrayList<Entity> entities) {
 		final ArrayList<TiledMapPosition> positions = Utility.collectPositionsEnemeyUnits(entities, unit.isPlayerUnit());
 		unit.move(getSafestPath(unit, positions));
 	}
 
-	private List<GridCell> getSafestPath(Entity unit, ArrayList<TiledMapPosition> positions) {
+	private List<GridCell> getSafestPath(final Entity unit, final ArrayList<TiledMapPosition> positions) {
 		final TiledMapPosition centerOfGravity = calculateCenterOfGravity(positions);
 		final TiledMapPosition furthestPoint = aiTeam.getMyPathFinder().getPositionFurthestAwayFrom(centerOfGravity);
 		return aiTeam.getMyPathFinder().pathTowards(unit.getCurrentPosition(), furthestPoint, unit.getAp());
 	}
 
-	private TiledMapPosition calculateCenterOfGravity(ArrayList<TiledMapPosition> positions) {
+	private TiledMapPosition calculateCenterOfGravity(final ArrayList<TiledMapPosition> positions) {
 		final int numberOfElements = positions.size();
 		int sumX = 0;
 		int sumY = 0;
@@ -106,7 +105,7 @@ public class AIDecisionMaker {
 		return new TiledMapPosition().setPositionFromTiles(sumX / numberOfElements, sumY / numberOfElements);
 	}
 
-	private void rule3SpellSpecific(Entity unit, ArrayList<Entity> entities) {
+	private void rule3SpellSpecific(final Entity unit, final ArrayList<Entity> entities) {
 
 	}
 }

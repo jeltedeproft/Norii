@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -30,12 +29,9 @@ import com.mygdx.game.Magic.SpellFileReader;
 import Utility.Utility;
 
 public class MainMenuScreen extends GameScreen {
-	public static final int FRAME_WIDTH = 200;
-	public static final int FRAME_HEIGHT = 200;
-	private static final int FRAME_COLS = 2;
-	private static final int FRAME_ROWS = 3;
+	private static final float FRAME_DURATION = 0.2f;
 
-	private static String defaultBackgroundPath = "sprites/gui/stars_bg/space2x3.png";
+	private static String defaultBackgroundPath = "sprites/gui/mountain_bg/water.gif";
 
 	private Stage stage;
 	private Table mainMenuTableOfButtons;
@@ -50,7 +46,6 @@ public class MainMenuScreen extends GameScreen {
 	protected float frameTime = 0f;
 	protected Sprite frameSprite = null;
 	protected TextureRegion currentFrame = null;
-	private TextureRegion[] bgFrames;
 
 	public MainMenuScreen() {
 		loadAssets();
@@ -66,7 +61,7 @@ public class MainMenuScreen extends GameScreen {
 	}
 
 	private void loadAssets() {
-		Utility.loadFreeTypeFontAsset("fonts/BLKCHCRY.ttf", 24);
+		Utility.loadFreeTypeFontAsset("fonts/BreatheFireIi-2z9W.ttf", 24);
 		EntityFileReader.loadUnitStatsInMemory();
 		SpellFileReader.loadSpellsInMemory();
 		AITeamFileReader.loadLevelsInMemory();
@@ -82,26 +77,12 @@ public class MainMenuScreen extends GameScreen {
 
 	private void createBackground() {
 		backgroundbatch = new SpriteBatch();
-		Utility.loadTextureAsset(defaultBackgroundPath);
-		loadBackgroundSpritesIntoArray();
 		initializeBgAnimation();
 	}
 
-	private void loadBackgroundSpritesIntoArray() {
-		final Texture texture = Utility.getTextureAsset(defaultBackgroundPath);
-		final TextureRegion[][] textureFrames = TextureRegion.split(texture, FRAME_WIDTH, FRAME_HEIGHT);
-
-		bgFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
-		int index = 0;
-		for (int i = 0; i < FRAME_ROWS; i++) {
-			for (int j = 0; j < FRAME_COLS; j++) {
-				bgFrames[index++] = textureFrames[i][j];
-			}
-		}
-	}
-
 	private void initializeBgAnimation() {
-		bganimation = new Animation<TextureRegion>(0.050f, bgFrames);
+		bganimation = Utility.getGIFAsset(defaultBackgroundPath);
+		bganimation.setFrameDuration(FRAME_DURATION);
 	}
 
 	private void createButtons() {
@@ -114,7 +95,7 @@ public class MainMenuScreen extends GameScreen {
 	}
 
 	private LabelStyle createTitleStyle() {
-		return Utility.createLabelStyle("fonts/BLKCHCRY.ttf", 105, 1, Color.LIGHT_GRAY, 1, 1);
+		return Utility.createLabelStyle("fonts/BreatheFireIi-2z9W.ttf", 105, 1, Color.LIGHT_GRAY, 1, 1);
 	}
 
 	private void createLayout() {

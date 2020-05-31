@@ -57,7 +57,7 @@ public class StatusUI extends UIWindow {
 	private static final float BAR_HEIGHT = 0.3f;
 	private static final float BAR_BOTTOM_PAD = 10f;
 
-	public StatusUI(Entity entity) {
+	public StatusUI(final Entity entity) {
 		super("", WIDTH_TILES, HEIGHT_TILES);
 		initVariables(entity);
 		configureMainWindow();
@@ -68,12 +68,12 @@ public class StatusUI extends UIWindow {
 
 	@Override
 	protected void configureMainWindow() {
-		this.setVisible(false);
-		this.setResizable(true);
+		setVisible(false);
+		setResizable(true);
 	}
 
-	private void initVariables(Entity entity) {
-		this.linkedEntity = entity;
+	private void initVariables(final Entity entity) {
+		linkedEntity = entity;
 		entity.setStatusui(this);
 		initiateHeroStats();
 		statsUIOffsetX = Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH;
@@ -81,14 +81,14 @@ public class StatusUI extends UIWindow {
 	}
 
 	private void initiateHeroStats() {
-		levelVal = this.linkedEntity.getEntityData().getLevel();
-		hpVal = this.linkedEntity.getHp();
-		maxHpVal = this.linkedEntity.getEntityData().getMaxHP();
-		apVal = this.linkedEntity.getAp();
-		maxApVal = this.linkedEntity.getEntityData().getMaxAP();
-		xpVal = this.linkedEntity.getEntityData().getXp();
-		maxXpVal = this.linkedEntity.getEntityData().getMaxXP();
-		iniVal = this.linkedEntity.getEntityData().getBaseInitiative();
+		levelVal = linkedEntity.getEntityData().getLevel();
+		hpVal = linkedEntity.getHp();
+		maxHpVal = linkedEntity.getEntityData().getMaxHP();
+		apVal = linkedEntity.getAp();
+		maxApVal = linkedEntity.getEntityData().getMaxAP();
+		xpVal = linkedEntity.getEntityData().getXp();
+		maxXpVal = linkedEntity.getEntityData().getMaxXP();
+		iniVal = linkedEntity.getEntityData().getBaseInitiative();
 	}
 
 	@Override
@@ -101,7 +101,7 @@ public class StatusUI extends UIWindow {
 	}
 
 	private void createFont() {
-		final BitmapFont font = Utility.getFreeTypeFontAsset("fonts/BLKCHCRY.ttf");
+		final BitmapFont font = Utility.getFreeTypeFontAsset("fonts/BreatheFireIi-2z9W.ttf");
 		labelStyle = new LabelStyle();
 		labelStyle.font = font;
 	}
@@ -156,31 +156,31 @@ public class StatusUI extends UIWindow {
 	@Override
 	protected void addWidgets() {
 		this.add(heroName).colspan(3);
-		this.row();
+		row();
 
 		this.add(hpLabel).align(Align.left).colspan(1).expandX();
 		this.add(hp).align(Align.left).colspan(1).expandX();
 		this.add(group).colspan(3).expandX().center().padBottom(BAR_BOTTOM_PAD);
-		this.row();
+		row();
 
 		this.add(apLabel).align(Align.left).colspan(1).expandX();
 		this.add(ap).align(Align.left).colspan(1).expandX();
-		this.row();
+		row();
 
 		this.add(levelLabel).align(Align.left).colspan(1).expandX();
 		this.add(levelValLabel).align(Align.left).colspan(1).expandX();
-		this.row();
+		row();
 
 		this.add(iniLabel).align(Align.left).colspan(1).expandX();
 		this.add(iniValLabel).align(Align.left).colspan(1).expandX();
-		this.row();
+		row();
 
 		this.add(xpLabel).align(Align.left).colspan(1).expandX();
 		this.add(xp).align(Align.left).colspan(1).expandX();
 		this.add(group2).colspan(3).expandX().center().padBottom(BAR_BOTTOM_PAD);
-		this.row();
+		row();
 
-		this.pack();
+		pack();
 	}
 
 	@Override
@@ -194,7 +194,7 @@ public class StatusUI extends UIWindow {
 		updateSizeElements();
 
 		if (Boolean.TRUE.equals(linkedEntity.getEntityactor().getIsHovering())) {
-			this.setVisible(true);
+			setVisible(true);
 		}
 
 		updatePos();
@@ -225,7 +225,7 @@ public class StatusUI extends UIWindow {
 	}
 
 	private void updateSizeElements() {
-		this.setSize(WIDTH_TILES * tileWidthPixel, HEIGHT_TILES * tileHeightPixel);
+		setSize(WIDTH_TILES * tileWidthPixel, HEIGHT_TILES * tileHeightPixel);
 		final float barWidth = BAR_WIDTH * tileWidthPixel;
 		final float barHeight = BAR_HEIGHT * tileHeightPixel;
 
@@ -241,6 +241,6 @@ public class StatusUI extends UIWindow {
 		xpBar.setHeight(barHeight);
 		xpBarBackground.setHeight(barHeight);
 
-		this.invalidate();
+		invalidate();
 	}
 }

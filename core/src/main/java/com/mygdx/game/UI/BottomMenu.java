@@ -209,7 +209,7 @@ public class BottomMenu extends Window {
 		setBackgroundColor(statsGroup);
 	}
 
-	private void setBackgroundColor(Window window) {
+	private void setBackgroundColor(final Window window) {
 		if (linkedEntity.isPlayerUnit()) {
 			window.setColor(GOOD_COLOR);
 		} else {
@@ -301,7 +301,7 @@ public class BottomMenu extends Window {
 
 		statsGroup.setHeight(statsHeight);
 		statsGroup.setWidth(statsWidth);
-		final LabelStyle labelStyle = Utility.createLabelStyle("fonts/BLKCHCRY.ttf", 105, 1, Color.LIGHT_GRAY, 1, 1);
+		final LabelStyle labelStyle = Utility.createLabelStyle("fonts/BreatheFireIi-2z9W.ttf", 105, 1, Color.LIGHT_GRAY, 1, 1);
 		for (final Actor actor : statsGroup.getChildren()) {
 			if (actor.getClass() == Label.class) {
 				final Label label = (Label) actor;
