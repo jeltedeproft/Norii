@@ -39,8 +39,8 @@ import Utility.TiledMapPosition;
 import Utility.Utility;
 
 public class BattleScreen extends GameScreen implements EntityObserver, TiledMapObserver {
-	public static final int VISIBLE_WIDTH = 20;
-	public static final int VISIBLE_HEIGHT = 20;
+	public static final int VISIBLE_WIDTH = 40;
+	public static final int VISIBLE_HEIGHT = 40;
 	private static OrthographicCamera mapCamera = null;
 
 	private ArrayList<TeamLeader> players;
@@ -226,8 +226,8 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	}
 
 	private void updateCameras() {
-		mapCamera.position.x = Utility.clamp(mapCamera.position.x, currentMap.getTilemapWidthInTiles() - (mapCamera.viewportWidth / 2), 0 + (mapCamera.viewportWidth / 2));
-		mapCamera.position.y = Utility.clamp(mapCamera.position.y, currentMap.getTilemapHeightInTiles() - (mapCamera.viewportWidth / 2), 0 + (mapCamera.viewportWidth / 2));
+		mapCamera.position.x = currentMap.getMapWidth() / 2f;
+		mapCamera.position.y = currentMap.getMapHeight() / 2f;
 		mapCamera.update();
 		hudCamera.update();
 	}

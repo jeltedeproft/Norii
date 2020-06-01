@@ -28,6 +28,7 @@ public abstract class Map implements AudioSubject {
 	protected static final String MAP_SPAWNS_LAYER = "Spawn points";
 	protected static final String BACKGROUND_LAYER = "background";
 	protected static final String NAVIGATION_LAYER = "navigation";
+	protected static final String ACTOR_LAYER = "actors";
 
 	protected static final String PLAYER_START = "PLAYER_START";
 	protected static final String ENEMY_START = "ENEMY_START";

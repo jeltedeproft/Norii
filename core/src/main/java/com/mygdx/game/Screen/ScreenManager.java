@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 
 public class ScreenManager {
 	private static ScreenManager instance;
+	private static Screen mainMenu;
 	private Game game;
 
 	private ScreenManager() {
@@ -32,4 +33,18 @@ public class ScreenManager {
 			currentScreen.dispose();
 		}
 	}
+
+	public void showScreenSafe(ScreenEnum screenEnum, Object... params) {
+		final Screen newScreen = screenEnum.getScreen(params);
+		game.setScreen(newScreen);
+	}
+
+	public static Screen getMainMenu() {
+		return mainMenu;
+	}
+
+	public static void setMainMenu(Screen mainMenu) {
+		ScreenManager.mainMenu = mainMenu;
+	}
+
 }

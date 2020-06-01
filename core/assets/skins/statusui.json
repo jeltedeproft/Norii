@@ -65,6 +65,24 @@
             "background": "dialog"
         }
     },
+    "com.badlogic.gdx.scenes.scene2d.ui.SelectBox$SelectBoxStyle": {
+        "default": {
+            "font": "default-font",
+            "fontColor": "white",
+            "background": "textfield",
+            "backgroundOpen": "textfield",
+            "scrollStyle": {
+                "background": "textfield",
+                "vScroll": "selection"
+            },
+            "listStyle": {
+                "font": "default-font",
+                "fontColorSelected": "black",
+                "fontColorUnselected": "white",
+                "selection": "selection"
+            }
+        }
+    },
     "com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle": {
         "inventory-button": {
             "imageUp": "inventory_button_closed",

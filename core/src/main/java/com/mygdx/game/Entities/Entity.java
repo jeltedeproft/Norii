@@ -72,8 +72,8 @@ public class Entity extends Actor implements EntitySubject {
 
 	public void initEntity() {
 		observers = new Array<EntityObserver>();
-		oldPlayerPosition = new TiledMapPosition().setPositionFromScreen(-100, -100);
-		currentPlayerPosition = new TiledMapPosition().setPositionFromScreen(-100, -100);
+		oldPlayerPosition = new TiledMapPosition().setPositionFromScreen(-1000, -1000);
+		currentPlayerPosition = new TiledMapPosition().setPositionFromScreen(-1000, -1000);
 		hp = entityData.getMaxHP();
 		ap = entityData.getMaxAP();
 		currentInitiative = entityData.getBaseInitiative();

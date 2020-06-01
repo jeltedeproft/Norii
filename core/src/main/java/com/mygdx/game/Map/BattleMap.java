@@ -25,7 +25,7 @@ public class BattleMap extends Map {
 	protected ArrayList<TiledMapPosition> enemyStartPositions;
 
 	BattleMap(final String mapPath) {
-		super(MapFactory.MapType.BATTLE_MAP, mapPath);
+		super(MapFactory.MapType.BATTLE_MAP_THE_TOWN, mapPath);
 
 		if (!Utility.isAssetLoaded(mapPath)) {
 			Gdx.app.debug(TAG, "Map not loaded");
@@ -52,7 +52,7 @@ public class BattleMap extends Map {
 	}
 
 	public void setStage(final BattleManager battlemanager) {
-		tiledmapstage = new TiledMapStage(this, BACKGROUND_LAYER, battlemanager);
+		tiledmapstage = new TiledMapStage(this, ACTOR_LAYER, battlemanager);
 
 		if (spawnsLayer == null) {
 			Gdx.app.debug(TAG, "No spawn layer!");

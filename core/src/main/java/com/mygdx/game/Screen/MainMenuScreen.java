@@ -3,6 +3,7 @@ package com.mygdx.game.Screen;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -36,6 +37,7 @@ public class MainMenuScreen extends GameScreen {
 	private Stage stage;
 	private Table mainMenuTableOfButtons;
 	private TextButton newGameButton;
+	private TextButton settingsButton;
 	private TextButton exitButton;
 	private Label title;
 	private ArrayList<Entity> playerMonsters;
@@ -46,6 +48,8 @@ public class MainMenuScreen extends GameScreen {
 	protected float frameTime = 0f;
 	protected Sprite frameSprite = null;
 	protected TextureRegion currentFrame = null;
+
+	private boolean notResizedYet = true;
 
 	public MainMenuScreen() {
 		loadAssets();
@@ -73,6 +77,7 @@ public class MainMenuScreen extends GameScreen {
 		mainMenuTableOfButtons = new Table();
 		mainMenuTableOfButtons.setFillParent(true);
 		selectedLevel = AITeams.DESERT_TEAM;
+		ScreenManager.setMainMenu(this);
 	}
 
 	private void createBackground() {
@@ -91,6 +96,7 @@ public class MainMenuScreen extends GameScreen {
 
 		title = new Label("Norii:", labelStyle);
 		newGameButton = new TextButton("New Game", statusUISkin);
+		settingsButton = new TextButton("Settings", statusUISkin);
 		exitButton = new TextButton("Exit", statusUISkin);
 	}
 
@@ -101,6 +107,7 @@ public class MainMenuScreen extends GameScreen {
 	private void createLayout() {
 		mainMenuTableOfButtons.add(title).row();
 		mainMenuTableOfButtons.add(newGameButton).spaceBottom(10).padTop(50).row();
+		mainMenuTableOfButtons.add(settingsButton).spaceBottom(10).row();
 		mainMenuTableOfButtons.add(exitButton).spaceBottom(10).row();
 
 		stage.addActor(mainMenuTableOfButtons);
@@ -111,7 +118,15 @@ public class MainMenuScreen extends GameScreen {
 			@Override
 			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
 				addUnitsToPlayer();
-				ScreenManager.getInstance().showScreen(ScreenEnum.BATTLE, selectedLevel);
+				ScreenManager.getInstance().showScreenSafe(ScreenEnum.BATTLE, selectedLevel);
+				return true;
+			}
+		});
+
+		settingsButton.addListener(new InputListener() {
+			@Override
+			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
+				ScreenManager.getInstance().showScreenSafe(ScreenEnum.SETTINGS, selectedLevel);
 				return true;
 			}
 		});
@@ -138,11 +153,16 @@ public class MainMenuScreen extends GameScreen {
 	public void render(final float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
 		updatebg(delta);
 
+		stage.getViewport().apply();
 		stage.act(delta);
 		stage.draw();
+
+		if (notResizedYet) {
+			setResolution();
+			notResizedYet = false;
+		}
 	}
 
 	public void updatebg(final float delta) {
@@ -152,6 +172,12 @@ public class MainMenuScreen extends GameScreen {
 		backgroundbatch.begin();
 		backgroundbatch.draw(currentFrame, 0, 0, stage.getViewport().getWorldWidth(), stage.getViewport().getWorldHeight());
 		backgroundbatch.end();
+	}
+
+	private void setResolution() {
+		final DisplayMode displayMode = Gdx.graphics.getDisplayMode();
+		this.resize(displayMode.width, displayMode.height);
+		Gdx.graphics.setWindowedMode(displayMode.width, displayMode.height);
 	}
 
 	@Override
