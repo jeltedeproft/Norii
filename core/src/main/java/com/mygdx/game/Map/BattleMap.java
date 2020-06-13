@@ -52,7 +52,7 @@ public class BattleMap extends Map {
 	}
 
 	public void setStage(final BattleManager battlemanager) {
-		tiledmapstage = new TiledMapStage(this, ACTOR_LAYER, battlemanager);
+		tiledmapstage = new TiledMapStage(this, BACKGROUND_LAYER, battlemanager);
 
 		if (spawnsLayer == null) {
 			Gdx.app.debug(TAG, "No spawn layer!");

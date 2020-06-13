@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
 
 import Utility.Utility;
 
@@ -34,11 +35,10 @@ public class SettingsScreen implements Screen {
 		stage = new Stage();
 		table = new Table();
 		table.setFillParent(true);
-		table.top().center();
 		createButtons();
 		addButtons();
 		addListeners();
-		stage.setDebugAll(true);
+		stage.setDebugAll(false);
 	}
 
 	private void createButtons() {
@@ -46,6 +46,7 @@ public class SettingsScreen implements Screen {
 
 		titleLabel = new Label("SETTINGS", statusUISkin);
 		titleLabel.setFontScale(3);
+		titleLabel.setAlignment(Align.center);
 		settingsLabel = new Label("aspect ratio", statusUISkin);
 
 		final String[] displayModeStrings = getDisplayModeStrings();
@@ -74,10 +75,13 @@ public class SettingsScreen implements Screen {
 	}
 
 	private void addButtons() {
-		table.add(titleLabel).spaceBottom(100).padTop(10).size(400).top().expand().row();
-		table.add(settingsLabel).spaceBottom(10).padTop(50).height(100).width(200).left();
-		table.add(aspectRatioSelectBox).spaceBottom(10).padTop(50).height(100).width(200).row();
-		table.add(exit).spaceTop(100).height(100).width(200).row();
+		table.add(titleLabel).expandX().colspan(10).spaceBottom(100).padTop(100).height(500).width(1000).row();
+		table.add(settingsLabel).height(75).width(200).row();
+		table.add(settingsLabel).height(75).width(200).row();
+		table.add(settingsLabel).height(75).width(200).row();
+		table.add(settingsLabel).height(75).width(200);
+		table.add(aspectRatioSelectBox).height(75).width(500).row();
+		table.add(exit).spaceTop(100).height(100).width(100).row();
 
 		stage.addActor(table);
 	}

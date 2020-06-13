@@ -2,7 +2,6 @@ package com.mygdx.game.Map;
 
 import java.util.EnumMap;
 
-
 public class MapFactory {
 	private static EnumMap<MapType, Map> mapTable = new EnumMap<MapType, Map>(MapType.class);
 
@@ -10,7 +9,7 @@ public class MapFactory {
 		BATTLE_MAP_THE_TOWN {
 			@Override
 			public String toString() {
-				return "maps/battletown.tmx";
+				return "maps/field.tmx";
 			}
 		},
 		BATTLE_MAP_THE_VILLAGE {
