@@ -22,6 +22,7 @@ import Utility.Utility;
 
 public class SettingsScreen implements Screen {
 
+	private Label titleLabel;
 	private Label settingsLabel;
 	private SelectBox<String> aspectRatioSelectBox;
 	private TextButton exit;
@@ -33,14 +34,18 @@ public class SettingsScreen implements Screen {
 		stage = new Stage();
 		table = new Table();
 		table.setFillParent(true);
+		table.top().center();
 		createButtons();
 		addButtons();
 		addListeners();
+		stage.setDebugAll(true);
 	}
 
 	private void createButtons() {
 		final Skin statusUISkin = Utility.getStatusUISkin();
 
+		titleLabel = new Label("SETTINGS", statusUISkin);
+		titleLabel.setFontScale(3);
 		settingsLabel = new Label("aspect ratio", statusUISkin);
 
 		final String[] displayModeStrings = getDisplayModeStrings();
@@ -69,9 +74,10 @@ public class SettingsScreen implements Screen {
 	}
 
 	private void addButtons() {
-		table.add(settingsLabel).spaceBottom(10).padTop(50);
-		table.add(aspectRatioSelectBox).spaceBottom(10).padTop(50).row();
-		table.add(exit).spaceBottom(10).row();
+		table.add(titleLabel).spaceBottom(100).padTop(10).size(400).top().expand().row();
+		table.add(settingsLabel).spaceBottom(10).padTop(50).height(100).width(200).left();
+		table.add(aspectRatioSelectBox).spaceBottom(10).padTop(50).height(100).width(200).row();
+		table.add(exit).spaceTop(100).height(100).width(200).row();
 
 		stage.addActor(table);
 	}
@@ -100,6 +106,7 @@ public class SettingsScreen implements Screen {
 
 	@Override
 	public void show() {
+		resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		Gdx.input.setInputProcessor(stage);
 	}
 
@@ -113,19 +120,18 @@ public class SettingsScreen implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		stage.getViewport().setScreenSize(width, height);
+		stage.getViewport().setScreenSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		table.setSize(width, height);
 	}
 
 	@Override
 	public void pause() {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void resume() {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
