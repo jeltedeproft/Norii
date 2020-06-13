@@ -9,7 +9,7 @@ public class MapFactory {
 		BATTLE_MAP_THE_TOWN {
 			@Override
 			public String toString() {
-				return "maps/field.tmx";
+				return "maps/32x32 rpg battlemap(newUI).tmx";
 			}
 		},
 		BATTLE_MAP_THE_VILLAGE {
