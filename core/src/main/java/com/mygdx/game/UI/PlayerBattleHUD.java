@@ -33,7 +33,7 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
 		initVariables(camera, sortedUnits);
 		createTileHoverParticle();
 		createBottomMenu(sortedUnits);
-		createPortraits(sortedUnits);
+		//createPortraits(sortedUnits);
 		createHPBars(sortedUnits);
 		createActionUIs(sortedUnits);
 		createStatusUIs(sortedUnits);

@@ -21,9 +21,10 @@ public class HPBar {
 	private float tileHeightPixel;
 	private float offsetY;
 
-	private static final float BAR_WIDTH = 1.5f;
+	private static final float BAR_WIDTH = 1.0f;
 	private static final float BAR_HEIGHT = 0.3f;
-	private static final int TILE_TO_PIXEL_RATIO = 30;
+	private static final int TILE_TO_SCREEN_RATIO = 40
+			;
 
 	public HPBar(final Entity entity) {
 		linkedEntity = entity;
@@ -32,8 +33,8 @@ public class HPBar {
 
 	private void initVariables() {
 		group = new WidgetGroup();
-		tileWidthPixel = Gdx.graphics.getWidth() / (float) TILE_TO_PIXEL_RATIO;
-		tileHeightPixel = Gdx.graphics.getHeight() / (float) TILE_TO_PIXEL_RATIO;
+		tileWidthPixel = Gdx.graphics.getWidth() / (float) TILE_TO_SCREEN_RATIO;
+		tileHeightPixel = Gdx.graphics.getHeight() / (float) TILE_TO_SCREEN_RATIO;
 		createDynamicHpBar();
 		addImagesToGroup();
 	}
@@ -53,8 +54,8 @@ public class HPBar {
 	}
 
 	public void update() {
-		tileWidthPixel = Gdx.graphics.getWidth() / (float) TILE_TO_PIXEL_RATIO;
-		tileHeightPixel = Gdx.graphics.getHeight() / (float) TILE_TO_PIXEL_RATIO;
+		tileWidthPixel = Gdx.graphics.getWidth() / (float) TILE_TO_SCREEN_RATIO;
+		tileHeightPixel = Gdx.graphics.getHeight() / (float) TILE_TO_SCREEN_RATIO;
 		offsetY = Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT;
 		updateSizeHPBar();
 		updatePos();

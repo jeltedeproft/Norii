@@ -102,8 +102,8 @@ public class SettingsScreen implements Screen {
 				final SelectBox<String> selectBox = (SelectBox<String>) actor;
 				final String displayMode = selectBox.getSelected();
 				final String[] splitDisplays = displayMode.split("x");
-				resize(Integer.parseInt(splitDisplays[0].strip()), Integer.parseInt(splitDisplays[1].strip()));
-				Gdx.graphics.setWindowedMode(Integer.parseInt(splitDisplays[0].strip()), Integer.parseInt(splitDisplays[1].strip()));
+				resize(Integer.parseInt(splitDisplays[0].trim()), Integer.parseInt(splitDisplays[1].trim()));
+				Gdx.graphics.setWindowedMode(Integer.parseInt(splitDisplays[0].trim()), Integer.parseInt(splitDisplays[1].trim()));
 			}
 		});
 	}
