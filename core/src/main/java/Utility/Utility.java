@@ -38,11 +38,8 @@ import com.mygdx.game.UI.MySkin;
 public final class Utility {
 	private static final String TAG = Utility.class.getSimpleName();
 
-	private static final String STATUSUI_TEXTURE_ATLAS_PATH = "skins/statusui.atlas";
-	private static final String UISKIN_TEXTURE_ATLAS_PATH = "skins/uiskin.atlas";
-	private static final String STATUSUI_SKIN_PATH = "skins/statusui.json";
-	private static final String SHADOW_WALKER_SKIN_TEXTURE_ATLAS_PATH = "skins/shadowWalker/shadow-walker-ui.atlas";
-	private static final String SHADOW_WALKER_SKIN_PATH = "skins/shadowWalker/shadow-walker-ui.json";
+	private static final String SKIN_TEXTURE_ATLAS_PATH = "skins/norii.atlas";
+	private static final String SKIN_JSON_PATH = "skins/norii.json";
 	public static final String ON_TILE_HOVER_FILE_PATH = "sprites/gui/selectedTile.png";
 
 	public static final AssetManager assetManager = new AssetManager();
@@ -50,10 +47,7 @@ public final class Utility {
 	public static final Random random = new Random();
 
 	private static TextureAtlas statusUITextureAtlas;
-	private static TextureAtlas uiTextureAtlas;
-	private static TextureAtlas shadowWalkerTextureAtlas;
 	private static MySkin statusUISkin;
-	private static MySkin shadowWalkerSkin;
 
 	public static void loadMapAsset(final String mapFilenamePath) {
 		loadAsset(mapFilenamePath, TiledMap.class, new MyNavTmxMapLoader(filePathResolver));
@@ -168,44 +162,20 @@ public final class Utility {
 		}
 	}
 
-	public static TextureAtlas getStatusUITextureAtlas() {
+	public static TextureAtlas getSkinTextureAtlas() {
 		if (statusUITextureAtlas == null) {
-			statusUITextureAtlas = new TextureAtlas(STATUSUI_TEXTURE_ATLAS_PATH);
+			statusUITextureAtlas = new TextureAtlas(SKIN_TEXTURE_ATLAS_PATH);
 		}
 
 		return statusUITextureAtlas;
 	}
 
-	public static TextureAtlas getUITextureAtlas() {
-		if (uiTextureAtlas == null) {
-			uiTextureAtlas = new TextureAtlas(UISKIN_TEXTURE_ATLAS_PATH);
-		}
-
-		return uiTextureAtlas;
-	}
-
-	public static TextureAtlas getShadowWalkerTextureAtlas() {
-		if (shadowWalkerTextureAtlas == null) {
-			shadowWalkerTextureAtlas = new TextureAtlas(SHADOW_WALKER_SKIN_TEXTURE_ATLAS_PATH);
-		}
-
-		return shadowWalkerTextureAtlas;
-	}
-
-	public static MySkin getStatusUISkin() {
+	public static MySkin getSkin() {
 		if (statusUISkin == null) {
-			statusUISkin = new MySkin(Gdx.files.internal(STATUSUI_SKIN_PATH), getStatusUITextureAtlas());
+			statusUISkin = new MySkin(Gdx.files.internal(SKIN_JSON_PATH), getSkinTextureAtlas());
 		}
 
 		return statusUISkin;
-	}
-
-	public static MySkin getShadowWalkersUISkin() {
-		if (shadowWalkerSkin == null) {
-			shadowWalkerSkin = new MySkin(Gdx.files.internal(SHADOW_WALKER_SKIN_PATH), getShadowWalkerTextureAtlas());
-		}
-
-		return shadowWalkerSkin;
 	}
 
 	public static float loadCompleted() {

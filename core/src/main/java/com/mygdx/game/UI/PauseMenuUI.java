@@ -51,7 +51,7 @@ public class PauseMenuUI implements Screen {
 	}
 
 	private void createUI() {
-		final Skin statusUISkin = Utility.getStatusUISkin();
+		final Skin statusUISkin = Utility.getSkin();
 		title = new Label("Pause", statusUISkin);
 		title.setFontScale(TITLE_FONT_SCALE);
 		resumeButton = new TextButton("Resume", statusUISkin);

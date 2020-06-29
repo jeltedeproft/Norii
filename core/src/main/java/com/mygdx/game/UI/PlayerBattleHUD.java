@@ -145,7 +145,7 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
 
 	public void resize(int width, int height) {
 		stage.getViewport().update(width, height, true);
-		portraits.updateSizeContainer();
+		//portraits.updateSizeContainer();
 		bottomMenu.update();
 		updateStatusUIs();
 		updateActionUIs();

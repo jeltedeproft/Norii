@@ -63,7 +63,6 @@ public class StatusUI extends UIWindow {
 		configureMainWindow();
 		createWidgets();
 		addWidgets();
-		setBackgroundColor(this, entity);
 	}
 
 	@Override
@@ -121,9 +120,9 @@ public class StatusUI extends UIWindow {
 	}
 
 	private void createDynamicHpBar() {
-		final TextureAtlas skinAtlas = Utility.getUITextureAtlas();
-		final NinePatch hpBarBackgroundPatch = new NinePatch(skinAtlas.findRegion("default-round"), 5, 5, 4, 4);
-		final NinePatch hpBarPatch = new NinePatch(skinAtlas.findRegion("default-round-down"), 5, 5, 4, 4);
+		final TextureAtlas skinAtlas = Utility.getSkinTextureAtlas();
+		final NinePatch hpBarBackgroundPatch = new NinePatch(skinAtlas.findRegion("progress-bar"), 5, 5, 4, 4);
+		final NinePatch hpBarPatch = new NinePatch(skinAtlas.findRegion("progress-bar"), 5, 5, 4, 4);
 		hpBar = new Image(hpBarPatch);
 		hpBarBackground = new Image(hpBarBackgroundPatch);
 
@@ -132,9 +131,9 @@ public class StatusUI extends UIWindow {
 	}
 
 	private void createDynamicXpBar() {
-		final TextureAtlas skinAtlas = Utility.getUITextureAtlas();
-		final NinePatch xpBarBackgroundPatch = new NinePatch(skinAtlas.findRegion("default-round"), 5, 5, 4, 4);
-		final NinePatch xpBarPatch = new NinePatch(skinAtlas.findRegion("default-round-down"), 5, 5, 4, 4);
+		final TextureAtlas skinAtlas = Utility.getSkinTextureAtlas();
+		final NinePatch xpBarBackgroundPatch = new NinePatch(skinAtlas.findRegion("progress-bar"), 5, 5, 4, 4);
+		final NinePatch xpBarPatch = new NinePatch(skinAtlas.findRegion("progress-bar"), 5, 5, 4, 4);
 		xpBarPatch.setColor(Color.BLACK);
 		xpBar = new Image(xpBarPatch);
 		xpBarBackground = new Image(xpBarBackgroundPatch);

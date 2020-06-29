@@ -69,9 +69,9 @@ public class ActionsUI extends UIWindow {
 	}
 
 	private void createLabels() {
-		moveLabel = new Label("move", Utility.getStatusUISkin());
-		attackLabel = new Label("attack", Utility.getStatusUISkin());
-		skipLabel = new Label("skip", Utility.getStatusUISkin());
+		moveLabel = new Label("move", Utility.getSkin());
+		attackLabel = new Label("attack", Utility.getSkin());
+		skipLabel = new Label("skip", Utility.getSkin());
 	}
 
 	private void storeButtons() {
@@ -110,7 +110,7 @@ public class ActionsUI extends UIWindow {
 			final SpellActionUIButton spellActionUIButton = new SpellActionUIButton(ability.getSpellData().getIconSpritePath(), linkedEntity, ability);
 			buttons.add(spellActionUIButton);
 			this.add(spellActionUIButton.getButton()).size(buttonWidth, buttonHeight).pad(ICON_PADDING);
-			this.add(new Label(ability.getName(), Utility.getStatusUISkin())).expand().fill();
+			this.add(new Label(ability.getName(), Utility.getSkin())).expand().fill();
 			row();
 		}
 	}

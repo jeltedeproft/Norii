@@ -42,7 +42,7 @@ public class SettingsScreen implements Screen {
 	}
 
 	private void createButtons() {
-		final Skin statusUISkin = Utility.getStatusUISkin();
+		final Skin statusUISkin = Utility.getSkin();
 
 		titleLabel = new Label("SETTINGS", statusUISkin);
 		titleLabel.setFontScale(3);

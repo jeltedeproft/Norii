@@ -1,0 +1,158 @@
+{
+com.badlogic.gdx.graphics.g2d.BitmapFont: {
+	font-button-export: {
+		file: font-button-export.fnt
+	}
+	font-export: {
+		file: font-export.fnt
+	}
+	font-title-export: {
+		file: font-title-export.fnt
+	}
+}
+com.badlogic.gdx.graphics.Color: {
+	black: {
+		r: 0
+		g: 0
+		b: 0
+		a: 1
+	}
+	white: {
+		r: 1
+		g: 1
+		b: 1
+		a: 1
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
+	window-darkgray: {
+		name: window
+		color: {
+			r: 0.25490198
+			g: 0.25490198
+			b: 0.25490198
+			a: 1
+		}
+	}
+}
+com.kotcrab.vis.ui.Sizes: {
+	default: {
+		scaleFactor: 1
+		spacingBottom: 8
+		spacingRight: 6
+		buttonBarSpacing: 10
+		menuItemIconSize: 22
+		borderSize: 1
+		spinnerButtonHeight: 12
+		spinnerFieldSize: 50
+		fileChooserViewModeBigIconsSize: 200
+		fileChooserViewModeMediumIconsSize: 128
+		fileChooserViewModeSmallIconsSize: 64
+		fileChooserViewModeListWidthSize: 150
+	}
+}
+com.kotcrab.vis.ui.widget.Separator$SeparatorStyle: {
+	default: {
+		thickness: 4
+	}
+	menu: {
+		thickness: 1
+	}
+}
+com.kotcrab.vis.ui.widget.Tooltip$TooltipStyle: {
+	default: {
+		background: tooltip
+	}
+}
+com.kotcrab.vis.ui.widget.tabbedpane.TabbedPane$TabbedPaneStyle: {
+	default: {
+		vertical: false
+		draggable: false
+	}
+}
+com.kotcrab.vis.ui.widget.BusyBar$BusyBarStyle: {
+	default: {
+		height: 5
+		segmentWidth: 150
+		segmentOverflow: 10
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
+	default: {
+		up: button
+		down: button-pressed
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
+	default: {
+		hScrollKnob: scrollbar
+		vScrollKnob: scrollbar
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle: {
+	default: {
+		font: font-export
+		fontColorSelected: white
+		fontColorUnselected: white
+		background: list
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.SelectBox$SelectBoxStyle: {
+	default: {
+		font: font-export
+		fontColor: white
+		background: select-box
+		scrollStyle: default
+		listStyle: default
+		backgroundOver: select-box
+		backgroundOpen: select-box-pressed
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {
+	default: {
+		checkboxOn: checkbox-pressed
+		checkboxOff: checkbox
+		font: font-button-export
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
+	default: {
+		up: button
+		down: button-pressed
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
+	default: {
+		font: font-export
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle: {
+	default-horizontal: {
+		background: progress-bar
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
+	default-horizontal: {
+		background: slider-fancy
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
+	default: {
+		font: font-button-export
+		fontColor: black
+		up: button
+		down: button-pressed
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle: {
+	default: {
+		label: default
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
+	default: {
+		background: window-darkgray
+		titleFont: font-export
+	}
+}
+}

@@ -29,7 +29,7 @@ public class PortraitsUI extends Window {
 	private float portraitsHeight;
 
 	public PortraitsUI(Entity[] entities) {
-		super("", Utility.getStatusUISkin());
+		super("", Utility.getSkin());
 		initializeVariables(entities);
 		updateSizeContainer();
 		updateSizePortraits();

@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.mygdx.game.AI.AITeam;
 import com.mygdx.game.AI.AITeams;
@@ -39,8 +40,8 @@ import Utility.TiledMapPosition;
 import Utility.Utility;
 
 public class BattleScreen extends GameScreen implements EntityObserver, TiledMapObserver {
-	public static final int VISIBLE_WIDTH = 40;
-	public static final int VISIBLE_HEIGHT = 40;
+	public static final int VISIBLE_WIDTH = 35;
+	public static final int VISIBLE_HEIGHT = 35;
 	private static OrthographicCamera mapCamera = null;
 
 	private ArrayList<TeamLeader> players;
@@ -173,7 +174,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 		mapRenderer.setView(mapCamera);
 		currentMap.makeSpawnParticles();
 
-		final StretchViewport vp = new StretchViewport(VISIBLE_WIDTH, VISIBLE_HEIGHT, mapCamera);
+		final ExtendViewport vp = new ExtendViewport(VISIBLE_WIDTH, VISIBLE_HEIGHT, mapCamera);
 		currentMap.getTiledMapStage().setViewport(vp);
 		Player.getInstance().getEntityStage().setViewport(vp);
 		aiTeam.getEntityStage().setViewport(vp);
@@ -335,7 +336,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 			prepareAttack(unit);
 			break;
 		case UNIT_ACTIVE:
-			playerBattleHUD.getPortraits().updateBorders(unit);
+			//playerBattleHUD.getPortraits().updateBorders(unit);
 			break;
 		case CLICKED:
 			battlemanager.getCurrentBattleState().clickedOnUnit(unit);

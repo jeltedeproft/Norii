@@ -1,4 +1,4 @@
-package com.mygdx.game.UI;
+                                                                                                                                                                                                                                     package com.mygdx.game.UI;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -57,15 +57,12 @@ public class BottomMenu extends Window {
 	private static final int ALPHA = 90;
 	private static final float LABEL_FONT_SCALE = 0.00028f;
 
-	private static final Color GOOD_COLOR = Color.GREEN;
-	private static final Color BAD_COLOR = Color.RED;
-
 	private HorizontalGroup bottomMenuTable;
 	private Window statsGroup;
 	private Container<Table> statsGroupContainer;
 
 	public BottomMenu(final Entity[] entities) {
-		super("", Utility.getStatusUISkin());
+		super("", Utility.getSkin());
 		initVariables();
 		linkUnitsToMenu(entities);
 		initElementsForUI();
@@ -130,7 +127,7 @@ public class BottomMenu extends Window {
 	}
 
 	private void initStatsMenu() {
-		final Skin statusUISkin = Utility.getStatusUISkin();
+		final Skin statusUISkin = Utility.getSkin();
 
 		statsGroup = new Window("", statusUISkin);
 
@@ -205,15 +202,6 @@ public class BottomMenu extends Window {
 			}
 		} else {
 			resetStats();
-		}
-		setBackgroundColor(statsGroup);
-	}
-
-	private void setBackgroundColor(final Window window) {
-		if (linkedEntity.isPlayerUnit()) {
-			window.setColor(GOOD_COLOR);
-		} else {
-			window.setColor(BAD_COLOR);
 		}
 	}
 

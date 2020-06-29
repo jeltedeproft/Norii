@@ -23,8 +23,7 @@ public class HPBar {
 
 	private static final float BAR_WIDTH = 1.0f;
 	private static final float BAR_HEIGHT = 0.3f;
-	private static final int TILE_TO_SCREEN_RATIO = 40
-			;
+	private static final int TILE_TO_SCREEN_RATIO = 40;
 
 	public HPBar(final Entity entity) {
 		linkedEntity = entity;
@@ -40,9 +39,9 @@ public class HPBar {
 	}
 
 	private void createDynamicHpBar() {
-		final TextureAtlas skinAtlas = Utility.getUITextureAtlas();
-		final NinePatch hpBarBackgroundPatch = new NinePatch(skinAtlas.findRegion("default-round"), 5, 5, 4, 4);
-		final NinePatch hpBarPatch = new NinePatch(skinAtlas.findRegion("default-round-down"), 5, 5, 4, 4);
+		final TextureAtlas skinAtlas = Utility.getSkinTextureAtlas();
+		final NinePatch hpBarBackgroundPatch = new NinePatch(skinAtlas.findRegion("progress-bar"), 5, 5, 4, 4);
+		final NinePatch hpBarPatch = new NinePatch(skinAtlas.findRegion("progress-bar"), 5, 5, 4, 4);
 		hpBarImage = new Image(hpBarPatch);
 		hpBarBackgroundImage = new Image(hpBarBackgroundPatch);
 	}

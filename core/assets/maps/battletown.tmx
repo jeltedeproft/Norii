@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.2" tiledversion="1.3.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="40" height="40" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="23">
- <tileset firstgid="1" source="obj_misk_atlas.tsx"/>
- <tileset firstgid="1025" source="arcana.tsx"/>
- <tileset firstgid="1385" source="arcanamap.tsx"/>
+ <tileset firstgid="1" source="tsx/obj_misk_atlas.tsx"/>
+ <tileset firstgid="1025" source="tsx/arcana.tsx"/>
+ <tileset firstgid="1385" source="tsx/arcanamap.tsx"/>
  <layer id="1" name="navigation" width="40" height="40" offsetx="0" offsety="-64">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,

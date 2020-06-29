@@ -26,6 +26,7 @@ allprojects {
         ashleyVersion = '1.7.0'
         aiVersion = '1.8.0'
         junitVersion = '5.5.2'
+        visuiVersion = '1.4.1'
     }
 
     repositories {
@@ -68,6 +69,7 @@ project(":core") {
         implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         implementation 'org.lwjgl.lwjgl:lwjgl:2.8.2'
         implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
+        implementation "com.kotcrab.vis:vis-ui:$visuiVersion"
         testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
         testImplementation 'org.mockito:mockito-all:2.0.2-beta'
     }

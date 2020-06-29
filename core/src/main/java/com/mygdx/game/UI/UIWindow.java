@@ -23,11 +23,9 @@ public abstract class UIWindow extends Window {
 	protected static final int ALPHA = 80;
 	protected static final float BUTTON_WIDTH_FACTOR = 20;
 	protected static final float BUTTON_HEIGHT_FACTOR = 20;
-	protected static final Color GOOD_COLOR = Color.GREEN;
-	protected static final Color BAD_COLOR = Color.RED;
 
 	protected UIWindow(String name, float width, float height) {
-		super(name, Utility.getStatusUISkin());
+		super(name, Utility.getSkin());
 
 		initVariables(width, height);
 		setFadeBackgroundEffect();
@@ -45,13 +43,6 @@ public abstract class UIWindow extends Window {
 		newColor.a = ALPHA;
 	}
 
-	protected void setBackgroundColor(Window window, Entity entity) {
-		if (entity.isPlayerUnit()) {
-			window.setColor(GOOD_COLOR);
-		} else {
-			window.setColor(BAD_COLOR);
-		}
-	}
 
 	public void update() {
 		if (this.isVisible()) {

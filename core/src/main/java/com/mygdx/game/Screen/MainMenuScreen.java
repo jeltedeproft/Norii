@@ -3,7 +3,6 @@ package com.mygdx.game.Screen;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -49,8 +48,6 @@ public class MainMenuScreen extends GameScreen {
 	protected Sprite frameSprite = null;
 	protected TextureRegion currentFrame = null;
 
-	private boolean notResizedYet = true;
-
 	public MainMenuScreen() {
 		loadAssets();
 		initializeClassVariables();
@@ -91,7 +88,7 @@ public class MainMenuScreen extends GameScreen {
 	}
 
 	private void createButtons() {
-		final Skin statusUISkin = Utility.getStatusUISkin();
+		final Skin statusUISkin = Utility.getSkin();
 		final LabelStyle labelStyle = createTitleStyle();
 
 		title = new Label("Norii:", labelStyle);
@@ -158,11 +155,6 @@ public class MainMenuScreen extends GameScreen {
 		stage.getViewport().apply();
 		stage.act(delta);
 		stage.draw();
-
-		if (notResizedYet) {
-			setResolution();
-			notResizedYet = false;
-		}
 	}
 
 	public void updatebg(final float delta) {
@@ -174,11 +166,6 @@ public class MainMenuScreen extends GameScreen {
 		backgroundbatch.end();
 	}
 
-	private void setResolution() {
-		final DisplayMode displayMode = Gdx.graphics.getDisplayMode();
-		this.resize(displayMode.width, displayMode.height);
-		Gdx.graphics.setWindowedMode(displayMode.width, displayMode.height);
-	}
 
 	@Override
 	public void resize(final int width, final int height) {
