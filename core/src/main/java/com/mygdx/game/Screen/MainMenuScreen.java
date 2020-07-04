@@ -62,7 +62,7 @@ public class MainMenuScreen extends GameScreen {
 	}
 
 	private void loadAssets() {
-		Utility.loadFreeTypeFontAsset("fonts/BreatheFireIi-2z9W.ttf", 24);
+		Utility.loadFreeTypeFontAsset("fonts/twilight.ttf", 24);
 		EntityFileReader.loadUnitStatsInMemory();
 		SpellFileReader.loadSpellsInMemory();
 		AITeamFileReader.loadLevelsInMemory();
@@ -98,7 +98,7 @@ public class MainMenuScreen extends GameScreen {
 	}
 
 	private LabelStyle createTitleStyle() {
-		return Utility.createLabelStyle("fonts/BreatheFireIi-2z9W.ttf", 105, 1, Color.LIGHT_GRAY, 1, 1);
+		return Utility.createLabelStyle("fonts/twilight.ttf", 105, 1, Color.LIGHT_GRAY, 1, 1);
 	}
 
 	private void createLayout() {

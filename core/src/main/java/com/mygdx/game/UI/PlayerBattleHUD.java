@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Entities.Player;
 import com.mygdx.game.Profile.ProfileManager;
@@ -33,7 +33,7 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
 		initVariables(camera, sortedUnits);
 		createTileHoverParticle();
 		createBottomMenu(sortedUnits);
-		//createPortraits(sortedUnits);
+		// createPortraits(sortedUnits);
 		createHPBars(sortedUnits);
 		createActionUIs(sortedUnits);
 		createStatusUIs(sortedUnits);
@@ -43,7 +43,7 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
 		statusUIs = new StatusUI[sortedUnits.length];
 		actionUIs = new ActionsUI[Player.getInstance().getUnitsSortedByIni().length];
 		hpBars = new HPBar[sortedUnits.length];
-		stage = new Stage(new ScreenViewport(camera));
+		stage = new Stage(new ExtendViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera));
 		stage.setDebugAll(false);
 	}
 
@@ -145,7 +145,7 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
 
 	public void resize(int width, int height) {
 		stage.getViewport().update(width, height, true);
-		//portraits.updateSizeContainer();
+		// portraits.updateSizeContainer();
 		bottomMenu.update();
 		updateStatusUIs();
 		updateActionUIs();

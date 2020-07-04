@@ -100,7 +100,7 @@ public class StatusUI extends UIWindow {
 	}
 
 	private void createFont() {
-		final BitmapFont font = Utility.getFreeTypeFontAsset("fonts/BreatheFireIi-2z9W.ttf");
+		final BitmapFont font = Utility.getFreeTypeFontAsset("fonts/twilight.ttf");
 		labelStyle = new LabelStyle();
 		labelStyle.font = font;
 	}

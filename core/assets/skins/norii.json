@@ -121,6 +121,10 @@ com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
 		up: button
 		down: button-pressed
 	}
+	heroPortrait: {
+		imageUp: hud_big
+		up: unknown
+	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 	default: {
@@ -154,6 +158,11 @@ com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
 	default: {
 		background: window-darkgray
 		titleFont: font-export
+	}
+	transparent: {
+		background: transparentPixel
+		titleFont: font-export
+		stageBackground: transparentPixel
 	}
 }
 }

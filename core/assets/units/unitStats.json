@@ -2,7 +2,7 @@
   {
     "id": 0,
     "name": "Commander",
-    "portraitSpritePath": "sprites/characters/commanderProfileClean.png",
+    "portraitSpritePath": "sprites/characters/portraits/commanderProfileTiny.png",
     "entitySpriteFilePath": "sprites/characters/Commander.png",
     "maxAP": 10,
     "maxHP": 10,
@@ -19,7 +19,7 @@
   {
     "id": 1,
     "name": "Icarus",
-    "portraitSpritePath": "sprites/characters/icarusProfileClean.png",
+    "portraitSpritePath": "sprites/characters/portraits/icarusProfileTiny.png",
     "entitySpriteFilePath": "sprites/characters/Icarus.png",
     "maxAP": 10,
     "maxHP": 1,
@@ -36,7 +36,7 @@
   {
     "id": 2,
     "name": "Demon",
-    "portraitSpritePath": "sprites/characters/demonProfileClean.png",
+    "portraitSpritePath": "sprites/characters/portraits/demonProfileTiny.png",
     "entitySpriteFilePath": "sprites/characters/Demon.png",
     "maxAP": 10,
     "maxHP": 10,
@@ -53,7 +53,7 @@
   {
     "id": 3,
     "name": "Shaman",
-    "portraitSpritePath": "sprites/characters/shamanProfileClean.png",
+    "portraitSpritePath": "sprites/characters/portraits/shamanProfileTiny.png",
     "entitySpriteFilePath": "sprites/characters/Shaman.png",
     "maxAP": 10,
     "maxHP": 10,
