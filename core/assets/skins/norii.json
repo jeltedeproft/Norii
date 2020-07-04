@@ -9,12 +9,27 @@ com.badlogic.gdx.graphics.g2d.BitmapFont: {
 	font-title-export: {
 		file: font-title-export.fnt
 	}
+	pixthulhu: {
+		file: font-export.fnt
+	}
 }
 com.badlogic.gdx.graphics.Color: {
 	black: {
 		r: 0
 		g: 0
 		b: 0
+		a: 1
+	}
+	pixthulhu: {
+		r: 0
+		g: 0.27450982
+		b: 0.23529412
+		a: 1
+	}
+	red: {
+		r: 0.92000026
+		g: 0.29133344
+		b: 0.29133344
 		a: 1
 	}
 	white: {
@@ -33,6 +48,14 @@ com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
 			b: 0.25490198
 			a: 1
 		}
+	}
+}
+com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable: {
+	android-horizontal-scrollbar-knob-tiled: {
+		region: android-horizontal-scrollbar-knob
+		color: red
+		minWidth: 0
+		minHeight: 8
 	}
 }
 com.kotcrab.vis.ui.Sizes: {
@@ -79,7 +102,7 @@ com.kotcrab.vis.ui.widget.BusyBar$BusyBarStyle: {
 }
 com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
 	default: {
-		up: button
+		up: buttonPixthulhu
 		down: button-pressed
 	}
 }
@@ -121,9 +144,11 @@ com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
 		up: button
 		down: button-pressed
 	}
-	heroPortrait: {
-		imageUp: hud_big
-		up: unknown
+	Portrait: {
+		imageUp: CommanderProfileSmall
+		imageDown: Webp.net-resizeimage2
+		up: buttonPixthulhu
+		down: button-pressedPixthulhu
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
@@ -133,7 +158,8 @@ com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 }
 com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle: {
 	default-horizontal: {
-		background: progress-bar
+		background: progressbar-horizontal
+		knobBefore: android-horizontal-scrollbar-knob-tiled
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
@@ -158,11 +184,16 @@ com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
 	default: {
 		background: window-darkgray
 		titleFont: font-export
+		titleFontColor: white
 	}
 	transparent: {
 		background: transparentPixel
 		titleFont: font-export
 		stageBackground: transparentPixel
+	}
+	pixthulhu: {
+		background: window-round
+		titleFont: font-export
 	}
 }
 }

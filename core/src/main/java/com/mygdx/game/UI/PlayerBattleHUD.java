@@ -98,7 +98,7 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
 			final Entity entity = sortedUnits[i];
 			hpBars[i] = new HPBar(entity);
 			final HPBar hpBar = hpBars[i];
-			stage.addActor(hpBar.getHpBarGroup());
+			stage.addActor(hpBar.getHpBarWidget());
 		}
 	}
 

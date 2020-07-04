@@ -35,6 +35,7 @@ allprojects {
 		jcenter()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+        maven { url 'https://jitpack.io' }
     }
 }
 
@@ -70,6 +71,7 @@ project(":core") {
         implementation 'org.lwjgl.lwjgl:lwjgl:2.8.2'
         implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
         implementation "com.kotcrab.vis:vis-ui:$visuiVersion"
+        implementation 'com.github.raeleus.TenPatch:tenpatch:5.0.0'
         testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
         testImplementation 'org.mockito:mockito-all:2.0.2-beta'
     }

@@ -1,11 +1,7 @@
 package com.mygdx.game.UI;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.NinePatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
@@ -27,10 +23,6 @@ public class StatusUI extends UIWindow {
 
 	private WidgetGroup group;
 	private WidgetGroup group2;
-	private Image hpBarBackground;
-	private Image hpBar;
-	private Image xpBarBackground;
-	private Image xpBar;
 
 	private Label heroName;
 	private Label hp;
@@ -58,7 +50,7 @@ public class StatusUI extends UIWindow {
 	private static final float BAR_BOTTOM_PAD = 10f;
 
 	public StatusUI(final Entity entity) {
-		super("", WIDTH_TILES, HEIGHT_TILES);
+		super("Stats", WIDTH_TILES, HEIGHT_TILES);
 		initVariables(entity);
 		configureMainWindow();
 		createWidgets();
@@ -94,8 +86,6 @@ public class StatusUI extends UIWindow {
 	protected void createWidgets() {
 		createFont();
 		createLabels();
-		createDynamicHpBar();
-		createDynamicXpBar();
 		createGroups();
 	}
 
@@ -119,34 +109,10 @@ public class StatusUI extends UIWindow {
 		iniValLabel = new Label(String.valueOf(iniVal), labelStyle);
 	}
 
-	private void createDynamicHpBar() {
-		final TextureAtlas skinAtlas = Utility.getSkinTextureAtlas();
-		final NinePatch hpBarBackgroundPatch = new NinePatch(skinAtlas.findRegion("progress-bar"), 5, 5, 4, 4);
-		final NinePatch hpBarPatch = new NinePatch(skinAtlas.findRegion("progress-bar"), 5, 5, 4, 4);
-		hpBar = new Image(hpBarPatch);
-		hpBarBackground = new Image(hpBarBackgroundPatch);
-
-		hpBar.setWidth(BAR_WIDTH * tileWidthPixel);
-		hpBarBackground.setWidth(BAR_WIDTH * tileWidthPixel);
-	}
-
-	private void createDynamicXpBar() {
-		final TextureAtlas skinAtlas = Utility.getSkinTextureAtlas();
-		final NinePatch xpBarBackgroundPatch = new NinePatch(skinAtlas.findRegion("progress-bar"), 5, 5, 4, 4);
-		final NinePatch xpBarPatch = new NinePatch(skinAtlas.findRegion("progress-bar"), 5, 5, 4, 4);
-		xpBarPatch.setColor(Color.BLACK);
-		xpBar = new Image(xpBarPatch);
-		xpBarBackground = new Image(xpBarBackgroundPatch);
-	}
-
 	private void createGroups() {
 		group = new WidgetGroup();
 		group2 = new WidgetGroup();
-		group.addActor(hpBarBackground);
-		group.addActor(hpBar);
 		group.setFillParent(true);
-		group2.addActor(xpBar);
-		group2.addActor(xpBarBackground);
 		group2.setFillParent(true);
 
 		defaults().expand().fill();
@@ -225,20 +191,6 @@ public class StatusUI extends UIWindow {
 
 	private void updateSizeElements() {
 		setSize(WIDTH_TILES * tileWidthPixel, HEIGHT_TILES * tileHeightPixel);
-		final float barWidth = BAR_WIDTH * tileWidthPixel;
-		final float barHeight = BAR_HEIGHT * tileHeightPixel;
-
-		hpBar.setWidth(((float) linkedEntity.getHp() / (float) linkedEntity.getEntityData().getMaxHP()) * barWidth);
-		hpBarBackground.setWidth(barWidth);
-
-		hpBar.setHeight(barHeight);
-		hpBarBackground.setHeight(barHeight);
-
-		xpBar.setWidth(((float) linkedEntity.getEntityData().getXp() / (float) linkedEntity.getEntityData().getMaxXP()) * barWidth);
-		xpBarBackground.setWidth(barWidth);
-
-		xpBar.setHeight(barHeight);
-		xpBarBackground.setHeight(barHeight);
 
 		invalidate();
 	}
