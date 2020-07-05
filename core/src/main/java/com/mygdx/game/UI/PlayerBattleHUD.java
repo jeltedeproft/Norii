@@ -1,6 +1,8 @@
 
 package com.mygdx.game.UI;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -23,8 +25,9 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
 	private Stage stage;
 	private PortraitsUI portraits;
 	private StatusUI[] statusUIs;
+	private ArrayList<ActionInfoUIWindow> actionInfoUIWindows;
 	private HPBar[] hpBars;
-	private BottomMenu bottomMenu;
+	private CharacterHud bottomMenu;
 	private ActionsUI[] actionUIs;
 
 	private Image onTileHover;
@@ -36,6 +39,7 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
 		// createPortraits(sortedUnits);
 		createHPBars(sortedUnits);
 		createActionUIs(sortedUnits);
+		initializeActionPopUps();
 		createStatusUIs(sortedUnits);
 	}
 
@@ -44,7 +48,6 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
 		actionUIs = new ActionsUI[Player.getInstance().getUnitsSortedByIni().length];
 		hpBars = new HPBar[sortedUnits.length];
 		stage = new Stage(new ExtendViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera));
-		stage.setDebugAll(false);
 	}
 
 	private void createTileHoverParticle() {
@@ -76,6 +79,16 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
 		}
 	}
 
+	private void initializeActionPopUps() {
+		actionInfoUIWindows = new ArrayList<ActionInfoUIWindow>();
+		for (final ActionsUI actionUI : actionUIs) {
+			for (final ActionInfoUIWindow popUp : actionUI.getPopUps()) {
+				actionInfoUIWindows.add(popUp);
+				stage.addActor(popUp);
+			}
+		}
+	}
+
 	private void createStatusUIs(Entity[] sortedUnits) {
 		for (int i = 0; i < sortedUnits.length; i++) {
 			final Entity entity = sortedUnits[i];
@@ -103,7 +116,7 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
 	}
 
 	private void createBottomMenu(Entity[] sortedUnits) {
-		bottomMenu = new BottomMenu(sortedUnits);
+		bottomMenu = new CharacterHud(sortedUnits);
 		bottomMenu.setHero(sortedUnits[0]);
 
 		stage.addActor(bottomMenu);
@@ -128,6 +141,7 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
 		updateActionUIs();
 		updateHPBars();
 		updateHoverParticle();
+		updatePopUps();
 	}
 
 	@Override
@@ -168,6 +182,12 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
 	private void updateHPBars() {
 		for (final HPBar hpBar : hpBars) {
 			hpBar.update();
+		}
+	}
+
+	private void updatePopUps() {
+		for (final ActionInfoUIWindow popUp : actionInfoUIWindows) {
+			popUp.update();
 		}
 	}
 

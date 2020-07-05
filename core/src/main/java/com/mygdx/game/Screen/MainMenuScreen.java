@@ -31,7 +31,7 @@ import Utility.Utility;
 public class MainMenuScreen extends GameScreen {
 	private static final float FRAME_DURATION = 0.2f;
 
-	private static String defaultBackgroundPath = "sprites/gui/mountain_bg/water.gif";
+	private static String defaultBackgroundPath = "sprites/gui/mountain_bg/japanesebg.gif";
 
 	private Stage stage;
 	private Table mainMenuTableOfButtons;
@@ -165,7 +165,6 @@ public class MainMenuScreen extends GameScreen {
 		backgroundbatch.draw(currentFrame, 0, 0, stage.getViewport().getWorldWidth(), stage.getViewport().getWorldHeight());
 		backgroundbatch.end();
 	}
-
 
 	@Override
 	public void resize(final int width, final int height) {

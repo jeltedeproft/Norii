@@ -2,7 +2,7 @@
   {
     "id": 0,
     "name": "Fireball",
-    "iconSpritePath": "sprites/spells/fireball.png",
+    "iconSpritePath": "sprites/spells/spell (4).png",
     "apCost": 1,
     "mpCost": 0,
     "lineOfSight": "LINE",
@@ -11,12 +11,13 @@
     "range": 10,
     "affectsTeam": "ENEMY",
     "target": "BOTH",
+    "infoText": "Cast a Fireball.",
   },
 
   {
     "id": 1,
     "name": "Petrification",
-    "iconSpritePath": "sprites/spells/rock.png",
+    "iconSpritePath": "sprites/spells/spell (5).png",
     "apCost": 1,
     "mpCost": 0,
     "lineOfSight": "LINE",
@@ -25,12 +26,13 @@
     "range": 10,
     "affectsTeam": "BOTH",
     "target": "UNIT",
+    "infoText": "Cast Petrification.",
   },
 
   {
     "id": 2,
     "name": "Swap",
-    "iconSpritePath": "sprites/spells/swap.png",
+    "iconSpritePath": "sprites/spells/spell (6).png",
     "apCost": 1,
     "mpCost": 0,
     "lineOfSight": "LINE",
@@ -39,5 +41,6 @@
     "range": 10,
     "affectsTeam": "BOTH",
     "target": "UNIT",
+    "infoText": "Cast Swap.",
   }
 ]

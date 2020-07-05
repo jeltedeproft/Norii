@@ -2,11 +2,13 @@ package com.mygdx.game.UI;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -15,7 +17,7 @@ import com.mygdx.game.Entities.Entity;
 
 import Utility.Utility;
 
-public class BottomMenu extends Window {
+public class CharacterHud extends Window {
 	private static final String UNKNOWN_HERO_IMAGE_LOCATION = "sprites/gui/portraits/unknown.png";
 
 	private int heroHP;
@@ -38,6 +40,7 @@ public class BottomMenu extends Window {
 	private Label ap;
 	private Label iniLabel;
 	private Label iniVal;
+	private LabelStyle labelStyle;
 
 	private static final int STATS_MENU_ELEMENT_PADDING = 20;
 	private static final int HP_LABEL_WIDTH = 50;
@@ -45,7 +48,7 @@ public class BottomMenu extends Window {
 	private static final int HUD_BORDER_WIDTH = 8;
 	private static final int TILE_TO_PIXEL_RATIO = 25;
 
-	public BottomMenu(final Entity[] entities) {
+	public CharacterHud(final Entity[] entities) {
 		super("", Utility.getSkin());
 		initVariables();
 		linkUnitsToMenu(entities);
@@ -66,6 +69,7 @@ public class BottomMenu extends Window {
 
 	private void initElementsForUI() {
 		initWindow();
+		createFont();
 		initPortrait();
 		initStatsMenu();
 	}
@@ -88,19 +92,25 @@ public class BottomMenu extends Window {
 		heroImageButton.setPosition(0, 0);
 	}
 
+	private void createFont() {
+		final BitmapFont font = Utility.getFreeTypeFontAsset("fonts/twilight.ttf");
+		labelStyle = new LabelStyle();
+		labelStyle.font = font;
+	}
+
 	private void initStatsMenu() {
 		final Skin statusUISkin = Utility.getSkin();
 		statsGroup = new Window("", statusUISkin.get("pixthulhu", WindowStyle.class));
 		statsGroup.setResizable(true);
 		statsGroup.top();
 
-		heroNameLabel = new Label("", statusUISkin);
-		hpLabel = new Label(" hp:", statusUISkin);
-		hp = new Label("", statusUISkin);
-		apLabel = new Label(" ap:", statusUISkin);
-		ap = new Label("", statusUISkin);
-		iniLabel = new Label(" ini:", statusUISkin);
-		iniVal = new Label("", statusUISkin);
+		heroNameLabel = new Label("", labelStyle);
+		hpLabel = new Label(" hp:", labelStyle);
+		hp = new Label("", labelStyle);
+		apLabel = new Label(" ap:", labelStyle);
+		ap = new Label("", labelStyle);
+		iniLabel = new Label(" ini:", labelStyle);
+		iniVal = new Label("", labelStyle);
 		addLabelsToStatsGroup();
 	}
 
@@ -198,7 +208,6 @@ public class BottomMenu extends Window {
 		tileWidthPixel = Gdx.graphics.getWidth() / (float) TILE_TO_PIXEL_RATIO;
 		tileHeightPixel = Gdx.graphics.getHeight() / (float) TILE_TO_PIXEL_RATIO;
 		updateMainTable();
-		updateHeroImage();
 		updateContainers();
 	}
 
@@ -206,31 +215,6 @@ public class BottomMenu extends Window {
 		final float scaledWidth = Gdx.graphics.getWidth();
 		final float scaledHeight = HUD_BORDER_HEIGHT * tileHeightPixel;
 		setSize(scaledWidth, scaledHeight);
-	}
-
-	private void updateHeroImage() {
-		// heroImage.getDrawable().setMinHeight(HUD_HEIGHT * tileHeightPixel);
-		// heroImage.getDrawable().setMinWidth(HUD_WIDTH * tileWidthPixel);
-		// heroImageBorder.getDrawable().setMinHeight(HUD_BORDER_HEIGHT *
-		// tileHeightPixel);
-		// heroImageBorder.getDrawable().setMinWidth(HUD_BORDER_WIDTH * tileWidthPixel);
-	}
-
-	private void updateStatsMenu() {
-//		final float statsWidth = Gdx.graphics.getWidth() - (HERO_PORTRAIT_WIDTH_TILES * tileWidthPixel);
-//		final float statsHeight = BOTTOM_MENU_HEIGHT_TILES * tileHeightPixel;
-//
-//		statsGroup.setHeight(statsHeight);
-//		statsGroup.setWidth(statsWidth);
-//		final LabelStyle labelStyle = Utility.createLabelStyle("fonts/BreatheFireIi-2z9W.ttf", 105, 1, Color.LIGHT_GRAY, 1, 1);
-//		for (final Actor actor : statsGroup.getChildren()) {
-//			if (actor.getClass() == Label.class) {
-//				final Label label = (Label) actor;
-//				label.setStyle(labelStyle);
-//				label.setFontScale(Gdx.graphics.getWidth() * LABEL_FONT_SCALE, Gdx.graphics.getHeight() * LABEL_FONT_SCALE);
-//			}
-//		}
-//		statsGroup.setPosition(HERO_PORTRAIT_WIDTH_TILES * tileWidthPixel, 0);
 	}
 
 	private void updateContainers() {

@@ -12,6 +12,9 @@ com.badlogic.gdx.graphics.g2d.BitmapFont: {
 	pixthulhu: {
 		file: font-export.fnt
 	}
+	pixtulhu-big: {
+		file: font-export.fnt
+	}
 }
 com.badlogic.gdx.graphics.Color: {
 	black: {
@@ -106,32 +109,6 @@ com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
 		down: button-pressed
 	}
 }
-com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
-	default: {
-		hScrollKnob: scrollbar
-		vScrollKnob: scrollbar
-	}
-}
-com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle: {
-	default: {
-		font: font-export
-		fontColorSelected: white
-		fontColorUnselected: white
-		background: list
-		selection: selection
-	}
-}
-com.badlogic.gdx.scenes.scene2d.ui.SelectBox$SelectBoxStyle: {
-	default: {
-		font: font-export
-		fontColor: white
-		background: select-box
-		scrollStyle: default
-		listStyle: default
-		backgroundOver: select-box
-		backgroundOpen: select-box-pressed
-	}
-}
 com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {
 	default: {
 		checkboxOn: checkbox-pressed
@@ -153,13 +130,43 @@ com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
 }
 com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 	default: {
-		font: font-export
+		font: pixtulhu-big
+		fontColor: white
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle: {
+	default: {
+		font: pixthulhu
+		fontColorSelected: red
+		fontColorUnselected: white
+		selection: button-selected
+		background: list
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle: {
 	default-horizontal: {
 		background: progressbar-horizontal
 		knobBefore: android-horizontal-scrollbar-knob-tiled
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
+	default: {
+		background: window-round
+		corner: scroll_corner
+		hScroll: scrollbar-horizontal
+		hScrollKnob: scrollbar-horizontal-knob
+		vScroll: scrollbar-vertical
+		vScrollKnob: scrollbar-vertical-knob
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.SelectBox$SelectBoxStyle: {
+	default: {
+		font: pixthulhu
+		fontColor: white
+		disabledFontColor: black
+		background: select-box
+		scrollStyle: default
+		listStyle: default
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
@@ -169,8 +176,8 @@ com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
 }
 com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 	default: {
-		font: font-button-export
-		fontColor: black
+		font: pixthulhu
+		fontColor: white
 		up: button
 		down: button-pressed
 	}
@@ -178,6 +185,7 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle: {
 	default: {
 		label: default
+		background: window-round
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {

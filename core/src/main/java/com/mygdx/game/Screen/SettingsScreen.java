@@ -7,6 +7,10 @@ import org.lwjgl.opengl.DisplayMode;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -22,6 +26,9 @@ import com.badlogic.gdx.utils.Align;
 import Utility.Utility;
 
 public class SettingsScreen implements Screen {
+	private static final float FRAME_DURATION = 0.2f;
+
+	private static String defaultBackgroundPath = "sprites/gui/mountain_bg/forestbg.gif";
 
 	private Label titleLabel;
 	private Label settingsLabel;
@@ -30,15 +37,21 @@ public class SettingsScreen implements Screen {
 	private final Stage stage;
 	private final Table table;
 	private DisplayMode[] displayModes;
+	private Animation<TextureRegion> bganimation;
+	private SpriteBatch backgroundbatch;
+
+	protected float frameTime = 0f;
+	protected Sprite frameSprite = null;
+	protected TextureRegion currentFrame = null;
 
 	public SettingsScreen() {
 		stage = new Stage();
 		table = new Table();
 		table.setFillParent(true);
+		createBackground();
 		createButtons();
 		addButtons();
 		addListeners();
-		stage.setDebugAll(false);
 	}
 
 	private void createButtons() {
@@ -46,7 +59,7 @@ public class SettingsScreen implements Screen {
 
 		titleLabel = new Label("SETTINGS", statusUISkin);
 		titleLabel.setFontScale(3);
-		titleLabel.setAlignment(Align.center);
+		titleLabel.setAlignment(Align.top);
 		settingsLabel = new Label("aspect ratio", statusUISkin);
 
 		final String[] displayModeStrings = getDisplayModeStrings();
@@ -54,6 +67,16 @@ public class SettingsScreen implements Screen {
 		aspectRatioSelectBox.setItems(displayModeStrings);
 
 		exit = new TextButton("exit", statusUISkin);
+	}
+
+	private void createBackground() {
+		backgroundbatch = new SpriteBatch();
+		initializeBgAnimation();
+	}
+
+	private void initializeBgAnimation() {
+		bganimation = Utility.getGIFAsset(defaultBackgroundPath);
+		bganimation.setFrameDuration(FRAME_DURATION);
 	}
 
 	private String[] getDisplayModeStrings() {
@@ -75,7 +98,7 @@ public class SettingsScreen implements Screen {
 	}
 
 	private void addButtons() {
-		table.add(titleLabel).expandX().colspan(10).spaceBottom(100).padTop(100).height(500).width(1000).row();
+		table.add(titleLabel).expandX().colspan(10).spaceBottom(100).height(250).width(1000).row();
 		table.add(settingsLabel).height(75).width(200).row();
 		table.add(settingsLabel).height(75).width(200).row();
 		table.add(settingsLabel).height(75).width(200).row();
@@ -118,8 +141,18 @@ public class SettingsScreen implements Screen {
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		updatebg(delta);
 		stage.act(delta);
 		stage.draw();
+	}
+
+	public void updatebg(final float delta) {
+		frameTime = (frameTime + delta) % 70; // Want to avoid overflow
+
+		currentFrame = bganimation.getKeyFrame(frameTime, true);
+		backgroundbatch.begin();
+		backgroundbatch.draw(currentFrame, 0, 0, stage.getViewport().getWorldWidth(), stage.getViewport().getWorldHeight());
+		backgroundbatch.end();
 	}
 
 	@Override

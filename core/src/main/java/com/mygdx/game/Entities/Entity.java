@@ -22,7 +22,7 @@ import com.mygdx.game.Magic.Ability;
 import com.mygdx.game.Magic.Modifier;
 import com.mygdx.game.Magic.ModifiersEnum;
 import com.mygdx.game.UI.ActionsUI;
-import com.mygdx.game.UI.BottomMenu;
+import com.mygdx.game.UI.CharacterHud;
 import com.mygdx.game.UI.StatusUI;
 
 import Utility.TiledMapPosition;
@@ -50,7 +50,7 @@ public class Entity extends Actor implements EntitySubject {
 
 	private StatusUI statusui;
 	private ActionsUI actionsui;
-	private BottomMenu bottomMenu;
+	private CharacterHud bottomMenu;
 
 	private EntityAnimation entityAnimation;
 	private EntityAnimation entityTemporaryAnimation;
@@ -134,7 +134,7 @@ public class Entity extends Actor implements EntitySubject {
 		this.actionsui = actionsui;
 	}
 
-	public void setbottomMenu(final BottomMenu bottomMenu) {
+	public void setbottomMenu(final CharacterHud bottomMenu) {
 		this.bottomMenu = bottomMenu;
 	}
 

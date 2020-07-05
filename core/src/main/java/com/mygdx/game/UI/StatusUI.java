@@ -43,14 +43,12 @@ public class StatusUI extends UIWindow {
 	private float statsUIOffsetX;
 	private float statsUIOffsetY;
 
-	private static final float WIDTH_TILES = 6;
-	private static final float HEIGHT_TILES = 8;
-	private static final float BAR_WIDTH = 1.5f;
-	private static final float BAR_HEIGHT = 0.3f;
-	private static final float BAR_BOTTOM_PAD = 10f;
+	private static final float WIDTH_TILES = 5;
+	private static final float HEIGHT_TILES = 6;
+	private static final float LABEL_WIDTH = 50;
 
 	public StatusUI(final Entity entity) {
-		super("Stats", WIDTH_TILES, HEIGHT_TILES);
+		super("", WIDTH_TILES, HEIGHT_TILES);
 		initVariables(entity);
 		configureMainWindow();
 		createWidgets();
@@ -123,29 +121,26 @@ public class StatusUI extends UIWindow {
 		this.add(heroName).colspan(3);
 		row();
 
-		this.add(hpLabel).align(Align.left).colspan(1).expandX();
-		this.add(hp).align(Align.left).colspan(1).expandX();
-		this.add(group).colspan(3).expandX().center().padBottom(BAR_BOTTOM_PAD);
+		this.add(hpLabel).align(Align.left).expandX().width(LABEL_WIDTH);
+		this.add(hp).align(Align.left);
 		row();
 
-		this.add(apLabel).align(Align.left).colspan(1).expandX();
-		this.add(ap).align(Align.left).colspan(1).expandX();
+		this.add(apLabel).align(Align.left).expandX();
+		this.add(ap).align(Align.left);
 		row();
 
-		this.add(levelLabel).align(Align.left).colspan(1).expandX();
-		this.add(levelValLabel).align(Align.left).colspan(1).expandX();
+		this.add(levelLabel).align(Align.left).expandX();
+		this.add(levelValLabel).align(Align.left);
 		row();
 
-		this.add(iniLabel).align(Align.left).colspan(1).expandX();
-		this.add(iniValLabel).align(Align.left).colspan(1).expandX();
+		this.add(iniLabel).align(Align.left).expandX();
+		this.add(iniValLabel).align(Align.left);
 		row();
 
-		this.add(xpLabel).align(Align.left).colspan(1).expandX();
-		this.add(xp).align(Align.left).colspan(1).expandX();
-		this.add(group2).colspan(3).expandX().center().padBottom(BAR_BOTTOM_PAD);
+		this.add(xpLabel).align(Align.left).expandX();
+		this.add(xp).align(Align.left);
 		row();
 
-		pack();
 	}
 
 	@Override
@@ -191,7 +186,6 @@ public class StatusUI extends UIWindow {
 
 	private void updateSizeElements() {
 		setSize(WIDTH_TILES * tileWidthPixel, HEIGHT_TILES * tileHeightPixel);
-
 		invalidate();
 	}
 }

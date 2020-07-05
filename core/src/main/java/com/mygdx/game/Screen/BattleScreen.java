@@ -13,7 +13,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.mygdx.game.AI.AITeam;
 import com.mygdx.game.AI.AITeams;
 import com.mygdx.game.Audio.AudioObserver;
@@ -40,8 +39,8 @@ import Utility.TiledMapPosition;
 import Utility.Utility;
 
 public class BattleScreen extends GameScreen implements EntityObserver, TiledMapObserver {
-	public static final int VISIBLE_WIDTH = 35;
-	public static final int VISIBLE_HEIGHT = 35;
+	public static final int VISIBLE_WIDTH = 20;
+	public static final int VISIBLE_HEIGHT = 20;
 	private static OrthographicCamera mapCamera = null;
 
 	private ArrayList<TeamLeader> players;
@@ -336,7 +335,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 			prepareAttack(unit);
 			break;
 		case UNIT_ACTIVE:
-			//playerBattleHUD.getPortraits().updateBorders(unit);
+			// playerBattleHUD.getPortraits().updateBorders(unit);
 			break;
 		case CLICKED:
 			battlemanager.getCurrentBattleState().clickedOnUnit(unit);
@@ -387,8 +386,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	}
 
 	private void prepareAttack(final Entity unit) {
-		final List<GridCell> attackPath = currentMap.getPathfinder().getCellsWithinCircle(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(),
-			unit.getEntityData().getAttackRange());
+		final List<GridCell> attackPath = currentMap.getPathfinder().getCellsWithinCircle(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getEntityData().getAttackRange());
 		for (final GridCell cell : attackPath) {
 			final TiledMapPosition positionToPutAttackParticle = new TiledMapPosition().setPositionFromTiles(cell.x, cell.y);
 			ParticleMaker.addParticle(ParticleType.ATTACK, positionToPutAttackParticle);
@@ -414,15 +412,13 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 
 		switch (ability.getLineOfSight()) {
 		case CIRCLE:
-			spellPath = currentMap.getPathfinder().getLineOfSightWithinCircle(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(),
-				ability.getSpellData().getRange(), positions);
+			spellPath = currentMap.getPathfinder().getLineOfSightWithinCircle(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), ability.getSpellData().getRange(), positions);
 			break;
 		case CROSS:
 			// TODO
 			break;
 		case LINE:
-			spellPath = currentMap.getPathfinder().getLineOfSightWithinLine(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(),
-				ability.getSpellData().getRange(), unit.getEntityAnimation().getCurrentDirection(), positions);
+			spellPath = currentMap.getPathfinder().getLineOfSightWithinLine(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), ability.getSpellData().getRange(), unit.getEntityAnimation().getCurrentDirection(), positions);
 			break;
 		default:
 			break;

@@ -12,6 +12,9 @@ public class SpellActionUIButton extends ActionUIButton {
 		super(imageFileName);
 		active = true;
 		this.ability = ability;
+		infotext = ability.getSpellInfo();
+		actionName = ability.getName();
+		initPopUp();
 
 		button.addListener(new ClickListener() {
 			@Override

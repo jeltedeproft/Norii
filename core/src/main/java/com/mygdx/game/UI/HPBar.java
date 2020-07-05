@@ -29,8 +29,8 @@ public class HPBar {
 	}
 
 	private void initVariables() {
-		tileWidthPixel = Gdx.graphics.getWidth() / (float) TILE_TO_SCREEN_RATIO;
-		tileHeightPixel = Gdx.graphics.getHeight() / (float) TILE_TO_SCREEN_RATIO;
+		tileWidthPixel = Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH;
+		tileHeightPixel = Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT;
 		createDynamicHpBar();
 	}
 
@@ -44,9 +44,8 @@ public class HPBar {
 	}
 
 	public void update() {
-		tileWidthPixel = Gdx.graphics.getWidth() / (float) TILE_TO_SCREEN_RATIO;
-		tileHeightPixel = Gdx.graphics.getHeight() / (float) TILE_TO_SCREEN_RATIO;
-		offsetY = Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT;
+		tileWidthPixel = Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH;
+		tileHeightPixel = Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT;
 		updateSizeHPBar();
 		updatePos();
 	}
@@ -58,7 +57,7 @@ public class HPBar {
 	}
 
 	private void updatePos() {
-		healthBar.setPosition((linkedEntity.getCurrentPosition().getCameraX()), (linkedEntity.getCurrentPosition().getCameraY()) + offsetY);
+		healthBar.setPosition((linkedEntity.getCurrentPosition().getCameraX()), (linkedEntity.getCurrentPosition().getCameraY()) + tileHeightPixel);
 	}
 
 	public ProgressBar getHpBarWidget() {

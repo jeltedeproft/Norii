@@ -14,6 +14,11 @@ public class ActionUIButton {
 	protected TextureRegion tr;
 	protected TextureRegionDrawable buttonImage;
 	protected ImageButtonStyle btnStyle;
+	protected ActionInfoUIWindow popUpWindow;
+	protected String infotext;
+	protected String actionName = "action";
+
+	private boolean hovering = false;
 
 	public ActionUIButton(String imageFileName) {
 		Utility.loadTextureAsset(imageFileName);
@@ -22,14 +27,47 @@ public class ActionUIButton {
 		btnStyle = new ImageButtonStyle();
 		btnStyle.up = buttonImage;
 		button = new ImageButton(btnStyle);
+		button.addListener(new ActionUIButtonHoverListener(this));
+	}
+
+	protected void initPopUp() {
+		popUpWindow = new ActionInfoUIWindow(this);
 	}
 
 	public ImageButton getButton() {
 		return button;
 	}
 
+	public TextureRegionDrawable getButtonImage() {
+		return buttonImage;
+	}
+
+	public String getInfoText() {
+		return infotext;
+	}
+
+	public String getName() {
+		return actionName;
+	}
+
 	public void setButton(ImageButton button) {
 		this.button = button;
+	}
+
+	public void showPopUp() {
+		hovering = true;
+	}
+
+	public void hidePopUp() {
+		hovering = false;
+	}
+
+	public boolean getVisible() {
+		return hovering;
+	}
+
+	public ActionInfoUIWindow getPopUp() {
+		return popUpWindow;
 	}
 }
 
