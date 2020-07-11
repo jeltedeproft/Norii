@@ -1,4 +1,4 @@
-package com.mygdx.game.UI;
+package com.mygdx.game.Screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -14,13 +14,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.mygdx.game.Screen.ScreenEnum;
-import com.mygdx.game.Screen.ScreenManager;
 
 import Utility.Utility;
 
-public class PauseMenuUI implements Screen {
-	private static String defaultBackgroundPath = "maps/rpg/tiles/grass.png";
+public class PauseMenuScreen implements Screen {
+	private static String defaultBackgroundPath = "sprites/gui/bg.jpg";
 
 	private Stage stage;
 	private Table menuTable;
@@ -35,7 +33,7 @@ public class PauseMenuUI implements Screen {
 	private static final int BOTTOM_PAD = 10;
 	private static final int TOP_PAD = 50;
 
-	public PauseMenuUI(Camera camera) {
+	public PauseMenuScreen(Camera camera) {
 		initVariables(camera);
 		createUI();
 		createLayout();

@@ -1,36 +1,33 @@
 package com.mygdx.game.Profile;
 
-import com.badlogic.gdx.utils.Array;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
-public class ProfileSubjectTest {
+import com.badlogic.gdx.utils.Array;
 
-    private static ProfileSubject sut;
+class ProfileSubjectTest {
+	private static ProfileSubject sut;
+	private static Array<ProfileObserver> observers;
 
-    private static Array<ProfileObserver> observers;
+	@BeforeAll
+	public static void setUp() {
+		observers = new Array<ProfileObserver>();
+		sut = new ProfileSubject();
+	}
 
+	@AfterAll
+	public static void teardown() {
+		observers = null;
+		sut = null;
+	}
 
-    @BeforeAll
-    public static void setUp() {
-        observers = new Array<ProfileObserver>();
-        sut = new ProfileSubject();
-    }
+	@Test
+	void testAddObserver() {
+		ProfileObserver mockObserver = Mockito.mock(ProfileObserver.class);
 
-    @AfterAll
-    public static void teardown() {
-        observers = null;
-        sut = null;
-    }
-
-    @Test
-    public void testAddObserver() {
-        ProfileObserver mockObserver = Mockito.mock(ProfileObserver.class);
-
-        sut.addObserver(mockObserver);
-    }
+		sut.addObserver(mockObserver);
+	}
 
 }

@@ -33,7 +33,6 @@ import com.mygdx.game.Map.TiledMapObserver;
 import com.mygdx.game.Particles.ParticleMaker;
 import com.mygdx.game.Particles.ParticleType;
 import com.mygdx.game.Profile.ProfileManager;
-import com.mygdx.game.UI.PauseMenuUI;
 import com.mygdx.game.UI.PlayerBattleHUD;
 import com.mygdx.game.UI.StatusUI;
 
@@ -41,8 +40,8 @@ import Utility.TiledMapPosition;
 import Utility.Utility;
 
 public class BattleScreen extends GameScreen implements EntityObserver, TiledMapObserver {
-	public static final int VISIBLE_WIDTH = 20;
-	public static final int VISIBLE_HEIGHT = 20;
+	public static final int VISIBLE_WIDTH = 25;
+	public static final int VISIBLE_HEIGHT = 25;
 	private static OrthographicCamera mapCamera = null;
 
 	private ArrayList<TeamLeader> players;
@@ -56,7 +55,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	private BattleScreenInputProcessor battlescreenInputProcessor;
 	private OrthographicCamera hudCamera;
 	private PlayerBattleHUD playerBattleHUD;
-	private PauseMenuUI pauseMenu;
+	private PauseMenuScreen pauseMenu;
 	private Entity[] allUnits;
 	private boolean isPaused;
 
@@ -84,7 +83,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	}
 
 	private void initializeVariables() {
-		players = new ArrayList<TeamLeader>();
+		players = new ArrayList<>();
 		playerSortedUnits = Player.getInstance().getUnitsSortedByIni();
 		mapCamera = new OrthographicCamera();
 		mapCamera.setToOrtho(false, VISIBLE_WIDTH, VISIBLE_HEIGHT);
@@ -109,7 +108,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	}
 
 	private void initializePauseMenu() {
-		pauseMenu = new PauseMenuUI(hudCamera);
+		pauseMenu = new PauseMenuScreen(hudCamera);
 	}
 
 	private void initializeInput() {
@@ -368,7 +367,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 			battlemanager.getCurrentBattleState().exit();
 			break;
 		case AI_ACT:
-			final ArrayList<Entity> entities = new ArrayList<Entity>();
+			final ArrayList<Entity> entities = new ArrayList<>();
 			for (final TeamLeader teamLeader : players) {
 				for (final Entity entity : teamLeader.getTeam()) {
 					if (entity.getEntityID() != unit.getEntityID()) {

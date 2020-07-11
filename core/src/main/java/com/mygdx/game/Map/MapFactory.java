@@ -9,7 +9,7 @@ public class MapFactory {
 		BATTLE_MAP_THE_TOWN {
 			@Override
 			public String toString() {
-				return "maps/battle.tmx";
+				return "maps/battle-raining.tmx";
 			}
 		},
 		BATTLE_MAP_THE_VILLAGE {
