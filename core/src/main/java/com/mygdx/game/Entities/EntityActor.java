@@ -6,6 +6,7 @@ import Utility.TiledMapPosition;
 
 public class EntityActor extends Actor {
 	private Boolean isHovering;
+	private Boolean isActionsHovering;
 	private final Entity entity;
 	private final TiledMapPosition actorPos = new TiledMapPosition();
 
@@ -25,6 +26,7 @@ public class EntityActor extends Actor {
 		this.entity = entity;
 		this.actorPos.setPositionFromScreen(entity.getX(), entity.getY());
 		this.isHovering = false;
+		isActionsHovering = false;
 		entity.setEntityactor(this);
 	}
 
@@ -34,5 +36,13 @@ public class EntityActor extends Actor {
 
 	public TiledMapPosition getActorPos() {
 		return actorPos;
+	}
+
+	public void setActionsHovering(boolean isActionsHovering) {
+		this.isActionsHovering = isActionsHovering;
+	}
+
+	public boolean isActionsHovering() {
+		return isActionsHovering;
 	}
 }

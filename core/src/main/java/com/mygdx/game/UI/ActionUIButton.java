@@ -15,6 +15,9 @@ public class ActionUIButton {
 	protected TextureRegionDrawable buttonImage;
 	protected ImageButtonStyle btnStyle;
 	protected ActionInfoUIWindow popUpWindow;
+	protected boolean isHovering;
+	protected boolean entered = false;
+	protected boolean exited = false;
 	protected String infotext;
 	protected String actionName = "action";
 
@@ -68,6 +71,22 @@ public class ActionUIButton {
 
 	public ActionInfoUIWindow getPopUp() {
 		return popUpWindow;
+	}
+
+	public void setIsHovering(boolean state) {
+		this.isHovering = state;
+	}
+
+	public boolean isHovering() {
+		return isHovering;
+	}
+
+	public void setEntered(boolean entered) {
+		this.entered = entered;
+	}
+
+	public void setExited(boolean exited) {
+		this.exited = exited;
 	}
 }
 

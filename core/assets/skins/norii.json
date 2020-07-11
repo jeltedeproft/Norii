@@ -9,6 +9,12 @@ com.badlogic.gdx.graphics.g2d.BitmapFont: {
 	font-title-export: {
 		file: font-title-export.fnt
 	}
+	neutral: {
+		file: font-export.fnt
+	}
+	neutral-export: {
+		file: font-title-export.fnt
+	}
 	pixthulhu: {
 		file: font-export.fnt
 	}
@@ -21,6 +27,12 @@ com.badlogic.gdx.graphics.Color: {
 		r: 0
 		g: 0
 		b: 0
+		a: 1
+	}
+	metal: {
+		r: 0.4263
+		g: 0.5382557
+		b: 0.6299999
 		a: 1
 	}
 	pixthulhu: {
@@ -105,7 +117,7 @@ com.kotcrab.vis.ui.widget.BusyBar$BusyBarStyle: {
 }
 com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
 	default: {
-		up: buttonPixthulhu
+		up: button
 		down: button-pressed
 	}
 }
@@ -124,23 +136,23 @@ com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
 	Portrait: {
 		imageUp: CommanderProfileSmall
 		imageDown: Webp.net-resizeimage2
-		up: buttonPixthulhu
-		down: button-pressedPixthulhu
+		up: button
+		down: button-pressed
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 	default: {
-		font: pixtulhu-big
+		font: neutral
 		fontColor: white
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle: {
 	default: {
-		font: pixthulhu
-		fontColorSelected: red
+		font: neutral
+		fontColorSelected: metal
 		fontColorUnselected: white
-		selection: button-selected
-		background: list
+		selection: file-menu-list-button-over
+		background: file-menu-list
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle: {
@@ -151,17 +163,17 @@ com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle: {
 }
 com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
 	default: {
-		background: window-round
+		background: window-darkgray
 		corner: scroll_corner
-		hScroll: scrollbar-horizontal
-		hScrollKnob: scrollbar-horizontal-knob
-		vScroll: scrollbar-vertical
-		vScrollKnob: scrollbar-vertical-knob
+		hScroll: scroll-bar-horizontal
+		hScrollKnob: scroll_horizontal_knob
+		vScroll: scroll-bar-vertical
+		vScrollKnob: scroll_vertical_knob
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.SelectBox$SelectBoxStyle: {
 	default: {
-		font: pixthulhu
+		font: neutral
 		fontColor: white
 		disabledFontColor: black
 		background: select-box
@@ -176,7 +188,7 @@ com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
 }
 com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 	default: {
-		font: pixthulhu
+		font: neutral
 		fontColor: white
 		up: button
 		down: button-pressed
@@ -190,13 +202,13 @@ com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle: {
 }
 com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
 	default: {
-		background: window-darkgray
-		titleFont: font-export
+		background: window
+		titleFont: neutral
 		titleFontColor: white
 	}
 	transparent: {
 		background: transparentPixel
-		titleFont: font-export
+		titleFont: neutral
 		stageBackground: transparentPixel
 	}
 	pixthulhu: {

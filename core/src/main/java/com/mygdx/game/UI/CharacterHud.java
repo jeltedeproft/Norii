@@ -100,7 +100,7 @@ public class CharacterHud extends Window {
 
 	private void initStatsMenu() {
 		final Skin statusUISkin = Utility.getSkin();
-		statsGroup = new Window("", statusUISkin.get("pixthulhu", WindowStyle.class));
+		statsGroup = new Window("", statusUISkin.get("default", WindowStyle.class));
 		statsGroup.setResizable(true);
 		statsGroup.top();
 

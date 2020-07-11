@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.mygdx.game.AI.AITeam;
 import com.mygdx.game.AI.AITeams;
@@ -34,6 +35,7 @@ import com.mygdx.game.Particles.ParticleType;
 import com.mygdx.game.Profile.ProfileManager;
 import com.mygdx.game.UI.PauseMenuUI;
 import com.mygdx.game.UI.PlayerBattleHUD;
+import com.mygdx.game.UI.StatusUI;
 
 import Utility.TiledMapPosition;
 import Utility.Utility;
@@ -208,6 +210,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 		playerBattleHUD.update();
 		battlescreenInputProcessor.update();
 		updateUnits(delta);
+		updateUIHover();
 		updateStages();
 		updateCameras();
 	}
@@ -215,6 +218,18 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	private void updateUnits(final float delta) {
 		for (final TeamLeader owner : players) {
 			owner.updateUnits(delta);
+		}
+	}
+
+	private void updateUIHover() {
+		boolean hoverResult = false;
+		for (final Entity unit : Player.getInstance().getUnitsSortedByIni()) {
+			if (unit.getEntityactor().isActionsHovering()) {
+				hoverResult = true;
+			}
+		}
+		for (final StatusUI ui : playerBattleHUD.getStatusuis()) {
+			ui.setActionsUIHovering(hoverResult);
 		}
 	}
 
@@ -237,6 +252,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		renderMap();
+		renderGrid();
 		renderUnits();
 		renderParticles(delta);
 		renderHUD(delta);
@@ -267,6 +283,13 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	private void renderHUD(final float delta) {
 		playerBattleHUD.getStage().getViewport().apply();
 		playerBattleHUD.render(delta);
+	}
+
+	public void renderGrid() {
+		for (int x = 0; x < currentMap.getMapWidth(); x += 1)
+			Utility.DrawDebugLine(new Vector2(x, 0), new Vector2(x, currentMap.getMapHeight()), mapCamera.combined);
+		for (int y = 0; y < currentMap.getMapHeight(); y += 1)
+			Utility.DrawDebugLine(new Vector2(0, y), new Vector2(currentMap.getMapWidth(), y), mapCamera.combined);
 	}
 
 	@Override

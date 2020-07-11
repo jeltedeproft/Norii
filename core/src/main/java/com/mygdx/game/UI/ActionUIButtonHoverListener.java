@@ -14,11 +14,17 @@ public class ActionUIButtonHoverListener extends ClickListener {
 	@Override
 	public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
 		actionUIButton.showPopUp();
+		actionUIButton.setIsHovering(true);
+		actionUIButton.setEntered(true);
+		actionUIButton.setExited(false);
 	}
 
 	@Override
 	public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
 		actionUIButton.hidePopUp();
+		actionUIButton.setIsHovering(false);
+		actionUIButton.setEntered(false);
+		actionUIButton.setExited(true);
 	}
 
 }

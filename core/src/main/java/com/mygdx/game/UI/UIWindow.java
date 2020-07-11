@@ -27,7 +27,7 @@ public abstract class UIWindow extends Window {
 		super(name, Utility.getSkin());
 
 		initVariables(width, height);
-		setFadeBackgroundEffect();
+		// setFadeBackgroundEffect();
 	}
 
 	protected void initVariables(float width, float height) {
@@ -35,8 +35,8 @@ public abstract class UIWindow extends Window {
 		tileHeightPixel = Gdx.graphics.getHeight() / (float) TILE_TO_PIXEL_RATIO;
 		windowWidth = width;
 		windowHeight = height;
-		final WindowStyle styleTransparent = Utility.getSkin().get("pixthulhu", WindowStyle.class);
-		setStyle(styleTransparent);
+		// final WindowStyle styleTransparent = Utility.getSkin().get("pixthulhu", WindowStyle.class);
+		// setStyle(styleTransparent);
 	}
 
 	private void setFadeBackgroundEffect() {

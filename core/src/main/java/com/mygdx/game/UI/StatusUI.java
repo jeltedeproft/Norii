@@ -39,6 +39,7 @@ public class StatusUI extends UIWindow {
 	private Label iniLabel;
 
 	private Entity linkedEntity;
+	private boolean actionsUIIsHovering = false;
 
 	private float statsUIOffsetX;
 	private float statsUIOffsetY;
@@ -153,8 +154,12 @@ public class StatusUI extends UIWindow {
 		updateLabels();
 		updateSizeElements();
 
-		if (Boolean.TRUE.equals(linkedEntity.getEntityactor().getIsHovering())) {
+		if (linkedEntity.getEntityactor().getIsHovering()) {
 			setVisible(true);
+		}
+
+		if (actionsUIIsHovering) {
+			setVisible(false);
 		}
 
 		updatePos();
@@ -187,5 +192,9 @@ public class StatusUI extends UIWindow {
 	private void updateSizeElements() {
 		setSize(WIDTH_TILES * tileWidthPixel, HEIGHT_TILES * tileHeightPixel);
 		invalidate();
+	}
+
+	public void setActionsUIHovering(boolean actionsUIHovering) {
+		this.actionsUIIsHovering = actionsUIHovering;
 	}
 }

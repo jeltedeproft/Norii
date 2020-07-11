@@ -36,7 +36,6 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
 		initVariables(camera, sortedUnits);
 		createTileHoverParticle();
 		createBottomMenu(sortedUnits);
-		// createPortraits(sortedUnits);
 		createHPBars(sortedUnits);
 		createActionUIs(sortedUnits);
 		initializeActionPopUps();
@@ -155,6 +154,10 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
 
 	public PortraitsUI getPortraits() {
 		return portraits;
+	}
+
+	public StatusUI[] getStatusuis() {
+		return statusUIs;
 	}
 
 	public void resize(int width, int height) {

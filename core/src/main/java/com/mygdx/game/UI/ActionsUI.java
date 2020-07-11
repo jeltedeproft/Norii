@@ -105,11 +105,13 @@ public class ActionsUI extends UIWindow {
 		this.setPosition(linkedEntity.getCurrentPosition().getCameraX(), linkedEntity.getCurrentPosition().getCameraY());
 		adjustPosition();
 		adjustPopUps();
+		setHovering();
 	}
 
 	private void adjustPopUps() {
+		final float buttonHeight = BUTTON_HEIGHT * tileHeightPixel;
 		for (final ActionInfoUIWindow popUp : popUps) {
-			popUp.setPosition(linkedEntity.getCurrentPosition().getCameraX(), linkedEntity.getCurrentPosition().getCameraY());
+			popUp.setPosition(linkedEntity.getCurrentPosition().getCameraX(), linkedEntity.getCurrentPosition().getCameraY() + buttonHeight);
 		}
 	}
 
@@ -136,5 +138,18 @@ public class ActionsUI extends UIWindow {
 
 	public ArrayList<ActionInfoUIWindow> getPopUps() {
 		return popUps;
+	}
+
+	private void setHovering() {
+		for (final ActionUIButton button : buttons) {
+			if (button.isHovering() && button.entered) {
+				linkedEntity.getEntityactor().setActionsHovering(true);
+			}
+
+			if (button.exited) {
+				linkedEntity.getEntityactor().setActionsHovering(false);
+				button.exited = false;
+			}
+		}
 	}
 }
