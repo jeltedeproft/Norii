@@ -8,6 +8,9 @@ public class MoveActionUIButton extends ActionUIButton {
 	public MoveActionUIButton(final String imageFileName, final Entity linkedUnit) {
 		super(imageFileName);
 		active = true;
+		infotext = "use this button to move";
+		actionName = "Move";
+		initPopUp();
 
 		button.addListener(new ClickListener() {
 			@Override

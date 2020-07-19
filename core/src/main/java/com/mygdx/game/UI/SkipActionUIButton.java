@@ -9,6 +9,9 @@ public class SkipActionUIButton extends ActionUIButton {
 	public SkipActionUIButton(final ActionsUI ui, final String imageFileName, final Entity linkedUnit) {
 		super(imageFileName);
 		active = true;
+		infotext = "use this button to \n skip your turn";
+		actionName = "Skip";
+		initPopUp();
 
 		button.addListener(new ClickListener() {
 			@Override

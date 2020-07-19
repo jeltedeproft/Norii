@@ -11,8 +11,8 @@ public class DesktopLauncher {
 	public static void main(final String[] arg) {
 		final LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.title = "Norii a turn based strategy game by Jelte";
-		config.width = 580;
-		config.height = 580;
+		config.width = 1120;
+		config.height = 1120;
 		config.fullscreen = false;
 		config.initialBackgroundColor = Color.BLACK;
 

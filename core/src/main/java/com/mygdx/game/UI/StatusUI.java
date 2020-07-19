@@ -1,11 +1,7 @@
 package com.mygdx.game.UI;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.NinePatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
@@ -27,10 +23,6 @@ public class StatusUI extends UIWindow {
 
 	private WidgetGroup group;
 	private WidgetGroup group2;
-	private Image hpBarBackground;
-	private Image hpBar;
-	private Image xpBarBackground;
-	private Image xpBar;
 
 	private Label heroName;
 	private Label hp;
@@ -47,15 +39,14 @@ public class StatusUI extends UIWindow {
 	private Label iniLabel;
 
 	private Entity linkedEntity;
+	private boolean actionsUIIsHovering = false;
 
 	private float statsUIOffsetX;
 	private float statsUIOffsetY;
 
-	private static final float WIDTH_TILES = 6;
-	private static final float HEIGHT_TILES = 8;
-	private static final float BAR_WIDTH = 1.5f;
-	private static final float BAR_HEIGHT = 0.3f;
-	private static final float BAR_BOTTOM_PAD = 10f;
+	private static final float WIDTH_TILES = 5;
+	private static final float HEIGHT_TILES = 6;
+	private static final float LABEL_WIDTH = 50;
 
 	public StatusUI(final Entity entity) {
 		super("", WIDTH_TILES, HEIGHT_TILES);
@@ -63,7 +54,6 @@ public class StatusUI extends UIWindow {
 		configureMainWindow();
 		createWidgets();
 		addWidgets();
-		setBackgroundColor(this, entity);
 	}
 
 	@Override
@@ -95,13 +85,11 @@ public class StatusUI extends UIWindow {
 	protected void createWidgets() {
 		createFont();
 		createLabels();
-		createDynamicHpBar();
-		createDynamicXpBar();
 		createGroups();
 	}
 
 	private void createFont() {
-		final BitmapFont font = Utility.getFreeTypeFontAsset("fonts/BreatheFireIi-2z9W.ttf");
+		final BitmapFont font = Utility.getFreeTypeFontAsset("fonts/sporty.ttf");
 		labelStyle = new LabelStyle();
 		labelStyle.font = font;
 	}
@@ -120,34 +108,10 @@ public class StatusUI extends UIWindow {
 		iniValLabel = new Label(String.valueOf(iniVal), labelStyle);
 	}
 
-	private void createDynamicHpBar() {
-		final TextureAtlas skinAtlas = Utility.getUITextureAtlas();
-		final NinePatch hpBarBackgroundPatch = new NinePatch(skinAtlas.findRegion("default-round"), 5, 5, 4, 4);
-		final NinePatch hpBarPatch = new NinePatch(skinAtlas.findRegion("default-round-down"), 5, 5, 4, 4);
-		hpBar = new Image(hpBarPatch);
-		hpBarBackground = new Image(hpBarBackgroundPatch);
-
-		hpBar.setWidth(BAR_WIDTH * tileWidthPixel);
-		hpBarBackground.setWidth(BAR_WIDTH * tileWidthPixel);
-	}
-
-	private void createDynamicXpBar() {
-		final TextureAtlas skinAtlas = Utility.getUITextureAtlas();
-		final NinePatch xpBarBackgroundPatch = new NinePatch(skinAtlas.findRegion("default-round"), 5, 5, 4, 4);
-		final NinePatch xpBarPatch = new NinePatch(skinAtlas.findRegion("default-round-down"), 5, 5, 4, 4);
-		xpBarPatch.setColor(Color.BLACK);
-		xpBar = new Image(xpBarPatch);
-		xpBarBackground = new Image(xpBarBackgroundPatch);
-	}
-
 	private void createGroups() {
 		group = new WidgetGroup();
 		group2 = new WidgetGroup();
-		group.addActor(hpBarBackground);
-		group.addActor(hpBar);
 		group.setFillParent(true);
-		group2.addActor(xpBar);
-		group2.addActor(xpBarBackground);
 		group2.setFillParent(true);
 
 		defaults().expand().fill();
@@ -158,29 +122,26 @@ public class StatusUI extends UIWindow {
 		this.add(heroName).colspan(3);
 		row();
 
-		this.add(hpLabel).align(Align.left).colspan(1).expandX();
-		this.add(hp).align(Align.left).colspan(1).expandX();
-		this.add(group).colspan(3).expandX().center().padBottom(BAR_BOTTOM_PAD);
+		this.add(hpLabel).align(Align.left).expandX().width(LABEL_WIDTH);
+		this.add(hp).align(Align.left);
 		row();
 
-		this.add(apLabel).align(Align.left).colspan(1).expandX();
-		this.add(ap).align(Align.left).colspan(1).expandX();
+		this.add(apLabel).align(Align.left).expandX();
+		this.add(ap).align(Align.left);
 		row();
 
-		this.add(levelLabel).align(Align.left).colspan(1).expandX();
-		this.add(levelValLabel).align(Align.left).colspan(1).expandX();
+		this.add(levelLabel).align(Align.left).expandX();
+		this.add(levelValLabel).align(Align.left);
 		row();
 
-		this.add(iniLabel).align(Align.left).colspan(1).expandX();
-		this.add(iniValLabel).align(Align.left).colspan(1).expandX();
+		this.add(iniLabel).align(Align.left).expandX();
+		this.add(iniValLabel).align(Align.left);
 		row();
 
-		this.add(xpLabel).align(Align.left).colspan(1).expandX();
-		this.add(xp).align(Align.left).colspan(1).expandX();
-		this.add(group2).colspan(3).expandX().center().padBottom(BAR_BOTTOM_PAD);
+		this.add(xpLabel).align(Align.left).expandX();
+		this.add(xp).align(Align.left);
 		row();
 
-		pack();
 	}
 
 	@Override
@@ -193,8 +154,12 @@ public class StatusUI extends UIWindow {
 		updateLabels();
 		updateSizeElements();
 
-		if (Boolean.TRUE.equals(linkedEntity.getEntityactor().getIsHovering())) {
+		if (linkedEntity.getEntityactor().getIsHovering()) {
 			setVisible(true);
+		}
+
+		if (actionsUIIsHovering) {
+			setVisible(false);
 		}
 
 		updatePos();
@@ -226,21 +191,10 @@ public class StatusUI extends UIWindow {
 
 	private void updateSizeElements() {
 		setSize(WIDTH_TILES * tileWidthPixel, HEIGHT_TILES * tileHeightPixel);
-		final float barWidth = BAR_WIDTH * tileWidthPixel;
-		final float barHeight = BAR_HEIGHT * tileHeightPixel;
-
-		hpBar.setWidth(((float) linkedEntity.getHp() / (float) linkedEntity.getEntityData().getMaxHP()) * barWidth);
-		hpBarBackground.setWidth(barWidth);
-
-		hpBar.setHeight(barHeight);
-		hpBarBackground.setHeight(barHeight);
-
-		xpBar.setWidth(((float) linkedEntity.getEntityData().getXp() / (float) linkedEntity.getEntityData().getMaxXP()) * barWidth);
-		xpBarBackground.setWidth(barWidth);
-
-		xpBar.setHeight(barHeight);
-		xpBarBackground.setHeight(barHeight);
-
 		invalidate();
+	}
+
+	public void setActionsUIHovering(boolean actionsUIHovering) {
+		this.actionsUIIsHovering = actionsUIHovering;
 	}
 }

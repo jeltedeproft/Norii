@@ -8,6 +8,9 @@ public class AttackActionUIButton extends ActionUIButton {
 	public AttackActionUIButton(final String imageFileName, final Entity linkedUnit) {
 		super(imageFileName);
 		active = true;
+		infotext = "use this button to attack";
+		actionName = "Attack";
+		initPopUp();
 
 		button.addListener(new ClickListener() {
 			@Override

@@ -21,11 +21,12 @@ allprojects {
     ext {
         appName = "Norii"
         gdxVersion = '1.9.8'
-        roboVMVersion = '2.3.5'
+        roboVMVersion = '2.3.10'
         box2DLightsVersion = '1.4'
         ashleyVersion = '1.7.0'
         aiVersion = '1.8.0'
-        junitVersion = '5.6.2'
+        junitVersion = '5.5.2'
+        visuiVersion = '1.4.1'
     }
 
     repositories {
@@ -34,6 +35,7 @@ allprojects {
 		jcenter()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+        maven { url 'https://jitpack.io' }
     }
 }
 
@@ -66,12 +68,15 @@ project(":core") {
         implementation "com.badlogicgames.gdx:gdx-ai:$aiVersion"
         implementation "com.github.xaguzman:pathfinding-gdx-bridge:0.2.6"
         implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+        implementation 'org.lwjgl.lwjgl:lwjgl:2.8.2'
         implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
+        implementation "com.kotcrab.vis:vis-ui:$visuiVersion"
+        implementation 'com.github.raeleus.TenPatch:tenpatch:5.0.0'
         testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
         testImplementation 'org.mockito:mockito-all:2.0.2-beta'
     }
 }
-/*
+
 project(":tests") {
     apply plugin: "java"
 
@@ -80,25 +85,26 @@ project(":tests") {
     dependencies {
         implementation project(":core")
 
-        implementation "junit:junit:4.+"
+        implementation "junit:junit:5.+"
         implementation "org.mockito:mockito-all:1.9.+"
 
         implementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
         implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
 
-        testImplementation 'junit:junit:4.+'
+        testImplementation 'junit:junit:5.+'
         testImplementation "org.mockito:mockito-all:1.9.+"
 
         testImplementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
         testImplementation "com.badlogicgames.gdx:gdx:$gdxVersion"
         testImplementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
     }
-}*/
+}
 
 tasks.eclipse.doLast {
     delete ".project"
 }
 
 wrapper {
-   gradleVersion = '5.6.2' //version required
+    gradleVersion = '5.6.2'
+    distributionType = Wrapper.DistributionType.ALL
 }

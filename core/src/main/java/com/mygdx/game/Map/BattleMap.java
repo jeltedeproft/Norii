@@ -25,7 +25,7 @@ public class BattleMap extends Map {
 	protected ArrayList<TiledMapPosition> enemyStartPositions;
 
 	BattleMap(final String mapPath) {
-		super(MapFactory.MapType.BATTLE_MAP, mapPath);
+		super(MapFactory.MapType.BATTLE_MAP_THE_TOWN, mapPath);
 
 		if (!Utility.isAssetLoaded(mapPath)) {
 			Gdx.app.debug(TAG, "Map not loaded");

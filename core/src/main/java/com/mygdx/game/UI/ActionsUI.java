@@ -3,16 +3,13 @@ package com.mygdx.game.UI;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Magic.Ability;
 import com.mygdx.game.Screen.BattleScreen;
 
-import Utility.Utility;
-
 public class ActionsUI extends UIWindow {
-	private static final float WINDOW_WIDTH = 2.5f;
-	private static final float WINDOW_HEIGHT = 3.3f;
+	private static final float WINDOW_WIDTH = 5f;
+	private static final float WINDOW_HEIGHT = 1f;
 	private static final int BUTTON_WIDTH = 1;
 	private static final int BUTTON_HEIGHT = 1;
 	private static final int ICON_PADDING = 10;
@@ -26,11 +23,8 @@ public class ActionsUI extends UIWindow {
 	private AttackActionUIButton attackActionUIButton;
 	private SkipActionUIButton skipActionUIButton;
 
-	private Label moveLabel;
-	private Label attackLabel;
-	private Label skipLabel;
-
 	private ArrayList<ActionUIButton> buttons;
+	private ArrayList<ActionInfoUIWindow> popUps;
 	private Entity linkedEntity;
 
 	public ActionsUI(final Entity entity) {
@@ -39,6 +33,7 @@ public class ActionsUI extends UIWindow {
 		initVariables(entity);
 		createWidgets();
 		addWidgets();
+		initPopUps();
 	}
 
 	@Override
@@ -49,7 +44,7 @@ public class ActionsUI extends UIWindow {
 	}
 
 	private void initVariables(final Entity entity) {
-		buttons = new ArrayList<ActionUIButton>();
+		buttons = new ArrayList<>();
 		linkedEntity = entity;
 		entity.setActionsui(this);
 	}
@@ -57,9 +52,7 @@ public class ActionsUI extends UIWindow {
 	@Override
 	protected void createWidgets() {
 		createButtons();
-		createLabels();
 		storeButtons();
-		addSpells();
 	}
 
 	private void createButtons() {
@@ -68,38 +61,32 @@ public class ActionsUI extends UIWindow {
 		skipActionUIButton = new SkipActionUIButton(this, SKIP_BUTTON_SPRITEPATH, linkedEntity);
 	}
 
-	private void createLabels() {
-		moveLabel = new Label("move", Utility.getStatusUISkin());
-		attackLabel = new Label("attack", Utility.getStatusUISkin());
-		skipLabel = new Label("skip", Utility.getStatusUISkin());
-	}
-
 	private void storeButtons() {
 		buttons.add(moveActionUIButton);
 		buttons.add(attackActionUIButton);
 		buttons.add(skipActionUIButton);
 	}
 
+	private void initPopUps() {
+		popUps = new ArrayList<>();
+		for (final ActionUIButton button : buttons) {
+			popUps.add(button.getPopUp());
+		}
+	}
+
 	@Override
 	protected void addWidgets() {
 		addButtons();
+		addSpells();
 	}
 
 	private void addButtons() {
 		final float buttonWidth = BUTTON_WIDTH * tileWidthPixel;
 		final float buttonHeight = BUTTON_HEIGHT * tileHeightPixel;
 
-		this.add(moveActionUIButton.getButton()).size(buttonWidth, buttonHeight).pad(ICON_PADDING);
-		this.add(moveLabel).expand().fill();
-		row();
-
 		this.add(attackActionUIButton.getButton()).size(buttonWidth, buttonHeight).pad(ICON_PADDING);
-		this.add(attackLabel).expand().fill();
-		row();
-
+		this.add(moveActionUIButton.getButton()).size(buttonWidth, buttonHeight).pad(ICON_PADDING);
 		this.add(skipActionUIButton.getButton()).size(buttonWidth, buttonHeight).pad(ICON_PADDING);
-		this.add(skipLabel).expand().fill();
-		this.add();
 	}
 
 	private void addSpells() {
@@ -110,15 +97,22 @@ public class ActionsUI extends UIWindow {
 			final SpellActionUIButton spellActionUIButton = new SpellActionUIButton(ability.getSpellData().getIconSpritePath(), linkedEntity, ability);
 			buttons.add(spellActionUIButton);
 			this.add(spellActionUIButton.getButton()).size(buttonWidth, buttonHeight).pad(ICON_PADDING);
-			this.add(new Label(ability.getName(), Utility.getStatusUISkin())).expand().fill();
-			row();
 		}
 	}
 
 	@Override
 	public void updatePos() {
-		this.setPosition((linkedEntity.getCurrentPosition().getCameraX()), (linkedEntity.getCurrentPosition().getCameraY()));
+		this.setPosition(linkedEntity.getCurrentPosition().getCameraX(), linkedEntity.getCurrentPosition().getCameraY());
 		adjustPosition();
+		adjustPopUps();
+		setHovering();
+	}
+
+	private void adjustPopUps() {
+		final float buttonHeight = BUTTON_HEIGHT * tileHeightPixel;
+		for (final ActionInfoUIWindow popUp : popUps) {
+			popUp.setPosition(linkedEntity.getCurrentPosition().getCameraX(), linkedEntity.getCurrentPosition().getCameraY() + buttonHeight);
+		}
 	}
 
 	private void adjustPosition() {
@@ -139,6 +133,23 @@ public class ActionsUI extends UIWindow {
 			this.setY(y - (offsetY));
 		} else {
 			this.setY(y + (offsetY / WINDOW_HEIGHT));
+		}
+	}
+
+	public ArrayList<ActionInfoUIWindow> getPopUps() {
+		return popUps;
+	}
+
+	private void setHovering() {
+		for (final ActionUIButton button : buttons) {
+			if (button.isHovering() && button.entered) {
+				linkedEntity.getEntityactor().setActionsHovering(true);
+			}
+
+			if (button.exited) {
+				linkedEntity.getEntityactor().setActionsHovering(false);
+				button.exited = false;
+			}
 		}
 	}
 }

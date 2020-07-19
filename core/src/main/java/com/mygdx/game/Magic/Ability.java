@@ -33,6 +33,10 @@ public class Ability {
 		return spellData.getName();
 	}
 
+	public String getSpellInfo() {
+		return spellData.getInfoText();
+	}
+
 	public int getId() {
 		return spellData.getId();
 	}

@@ -88,6 +88,10 @@ public class SpellBattleState extends BattleState {
 	}
 
 	private boolean checkTeams(Entity caster, Entity target, final AffectedTeams affectedTeams) {
+		if (affectedTeams == AffectedTeams.BOTH) {
+			return true;
+		}
+
 		if (affectedTeams == AffectedTeams.ENEMY) {
 			return caster.isPlayerUnit() != target.isPlayerUnit();
 		}

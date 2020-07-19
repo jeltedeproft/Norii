@@ -15,8 +15,6 @@ public class PortraitUI {
 	private TextureRegionDrawable heroPortraitScalableBorder;
 	private TextureRegionDrawable heroPortraitScalableBorderColored;
 	private static final String PORTRAIT_BORDER_FILE_PATH = "sprites/gui/heroActive.png";
-	private static final String PORTRAIT_BORDER_FILE_PATH_GREEN = "sprites/gui/heroActiveGreen.png";
-	private static final String PORTRAIT_BORDER_FILE_PATH_RED = "sprites/gui/heroActiveRed.png";
 
 	private Boolean isActive;
 	private final Entity linkedEntity;
@@ -29,20 +27,6 @@ public class PortraitUI {
 	private void loadScalableImage(Entity entity) {
 		createPortraitTexture(entity);
 		createPortraitBorderTexture();
-
-		TextureRegion trBorderColored;
-
-		if (entity.isPlayerUnit()) {
-			Utility.loadTextureAsset(PORTRAIT_BORDER_FILE_PATH_GREEN);
-			trBorderColored = new TextureRegion(Utility.getTextureAsset(PORTRAIT_BORDER_FILE_PATH_GREEN));
-		} else {
-			Utility.loadTextureAsset(PORTRAIT_BORDER_FILE_PATH_RED);
-			trBorderColored = new TextureRegion(Utility.getTextureAsset(PORTRAIT_BORDER_FILE_PATH_RED));
-		}
-
-		heroPortraitScalableBorderColored = new TextureRegionDrawable(trBorderColored);
-		heroPortraitBorderColored = new Image(heroPortraitScalableBorderColored);
-		heroPortraitBorderColored.setVisible(true);
 	}
 
 	private void createPortraitTexture(Entity entity) {

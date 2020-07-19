@@ -6,7 +6,7 @@ lowMin: 9880.0
 lowMax: 9880.0
 - Count -
 min: 0
-max: 50
+max: 1
 - Emission -
 lowMin: 83.0
 lowMax: 83.0
@@ -20,19 +20,19 @@ timeline0: 0.0
 - Life -
 lowMin: 0.0
 lowMax: 0.0
-highMin: 499.0
-highMax: 499.0
+highMin: 20000.0
+highMax: 20000.0
 relative: false
 scalingCount: 1
-scaling0: 0.4509804
+scaling0: 1
 timelineCount: 1
 timeline0: 0.0
 - Life Offset -
 active: true
 lowMin: 0.0
 lowMax: 0.0
-highMin: 5.0
-highMax: 5.0
+highMin: 0.0
+highMax: 0.0
 relative: false
 scalingCount: 1
 scaling0: 1.0
@@ -85,8 +85,8 @@ timeline0: 0.0
 - X Scale -
 lowMin: 0.0
 lowMax: 0.0
-highMin: 6.0
-highMax: 6.0
+highMin: 30.0
+highMax: 30.0
 relative: false
 scalingCount: 1
 scaling0: 1.0
@@ -96,64 +96,28 @@ timeline0: 0.0
 active: true
 lowMin: 0.0
 lowMax: 0.0
-highMin: 6.0
-highMax: 6.0
+highMin: 30.0
+highMax: 30.0
 relative: false
 scalingCount: 1
 scaling0: 1.0
 timelineCount: 1
 timeline0: 0.0
-- Velocity -
-active: true
-lowMin: 0.0
-lowMax: 0.0
-highMin: 0.0
-highMax: 0.0
-relative: false
-scalingCount: 1
-scaling0: 1.0
-timelineCount: 1
-timeline0: 0.0
-- Angle -
-active: true
-lowMin: 0.0
-lowMax: 0.0
-highMin: 89.0
-highMax: 89.0
-relative: false
-scalingCount: 1
-scaling0: 1.0
-timelineCount: 1
-timeline0: 0.0
-- Rotation -
+- Velocity - 
 active: false
-- Wind -
-active: true
-lowMin: 0.0
-lowMax: 0.0
-highMin: 23.0
-highMax: 23.0
-relative: false
-scalingCount: 1
-scaling0: 1.0
-timelineCount: 1
-timeline0: 0.0
-- Gravity -
-active: true
-lowMin: -10.0
-lowMax: -10.0
-highMin: -5.0
-highMax: -5.0
-relative: false
-scalingCount: 1
-scaling0: 1.0
-timelineCount: 1
-timeline0: 0.0
+- Angle - 
+active: false
+- Rotation - 
+active: false
+- Wind - 
+active: false
+- Gravity - 
+active: false
 - Tint -
 colorsCount: 3
-colors0: 0.047058824
-colors1: 1.0
-colors2: 0.11372549
+colors0: 0.3529412
+colors1: 0.9254902
+colors2: 0.043137256
 timelineCount: 1
 timeline0: 0.0
 - Transparency -
@@ -162,23 +126,25 @@ lowMax: 0.0
 highMin: 1.0
 highMax: 1.0
 relative: false
-scalingCount: 4
-scaling0: 1.0
-scaling1: 0.71348315
-scaling2: 0.26404494
-scaling3: 0.14044943
-timelineCount: 4
+scalingCount: 5
+scaling0: 0.0
+scaling1: 1.0
+scaling2: 0.01754386
+scaling3: 1.0
+scaling4: 0.0
+timelineCount: 5
 timeline0: 0.0
-timeline1: 0.60631
-timeline2: 0.8058985
-timeline3: 0.8957476
+timeline1: 0.23972602
+timeline2: 0.51369864
+timeline3: 0.7123288
+timeline4: 1.0
 - Options -
 attached: false
-continuous: false
+continuous: true
 aligned: false
 additive: true
 behind: false
 premultipliedAlpha: false
 spriteMode: single
 - Image Paths -
-particle.png
+square.png

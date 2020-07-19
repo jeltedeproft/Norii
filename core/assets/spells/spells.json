@@ -11,12 +11,13 @@
     "range": 10,
     "affectsTeam": "ENEMY",
     "target": "BOTH",
+    "infoText": "Cast a Fireball.",
   },
 
   {
     "id": 1,
     "name": "Petrification",
-    "iconSpritePath": "sprites/spells/rock.png",
+    "iconSpritePath": "sprites/spells/petrification.png",
     "apCost": 1,
     "mpCost": 0,
     "lineOfSight": "LINE",
@@ -25,6 +26,7 @@
     "range": 10,
     "affectsTeam": "BOTH",
     "target": "UNIT",
+    "infoText": "Cast Petrification.",
   },
 
   {
@@ -39,5 +41,6 @@
     "range": 10,
     "affectsTeam": "BOTH",
     "target": "UNIT",
+    "infoText": "Cast Swap.",
   }
 ]

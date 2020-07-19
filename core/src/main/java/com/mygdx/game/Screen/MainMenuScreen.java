@@ -31,11 +31,12 @@ import Utility.Utility;
 public class MainMenuScreen extends GameScreen {
 	private static final float FRAME_DURATION = 0.2f;
 
-	private static String defaultBackgroundPath = "sprites/gui/mountain_bg/water.gif";
+	private static String defaultBackgroundPath = "sprites/gui/mountain_bg/japanesebg.gif";
 
 	private Stage stage;
 	private Table mainMenuTableOfButtons;
 	private TextButton newGameButton;
+	private TextButton settingsButton;
 	private TextButton exitButton;
 	private Label title;
 	private ArrayList<Entity> playerMonsters;
@@ -61,7 +62,7 @@ public class MainMenuScreen extends GameScreen {
 	}
 
 	private void loadAssets() {
-		Utility.loadFreeTypeFontAsset("fonts/BreatheFireIi-2z9W.ttf", 24);
+		Utility.loadFreeTypeFontAsset("fonts/sporty.ttf", 24);
 		EntityFileReader.loadUnitStatsInMemory();
 		SpellFileReader.loadSpellsInMemory();
 		AITeamFileReader.loadLevelsInMemory();
@@ -73,6 +74,7 @@ public class MainMenuScreen extends GameScreen {
 		mainMenuTableOfButtons = new Table();
 		mainMenuTableOfButtons.setFillParent(true);
 		selectedLevel = AITeams.DESERT_TEAM;
+		ScreenManager.setMainMenu(this);
 	}
 
 	private void createBackground() {
@@ -86,22 +88,20 @@ public class MainMenuScreen extends GameScreen {
 	}
 
 	private void createButtons() {
-		final Skin statusUISkin = Utility.getStatusUISkin();
-		final LabelStyle labelStyle = createTitleStyle();
+		final Skin statusUISkin = Utility.getSkin();
+		final LabelStyle labelStyle = Utility.createLabelStyle("fonts/sporty.ttf", 105, 1, Color.LIGHT_GRAY, 1, 1);
 
 		title = new Label("Norii:", labelStyle);
 		newGameButton = new TextButton("New Game", statusUISkin);
+		settingsButton = new TextButton("Settings", statusUISkin);
 		exitButton = new TextButton("Exit", statusUISkin);
-	}
-
-	private LabelStyle createTitleStyle() {
-		return Utility.createLabelStyle("fonts/BreatheFireIi-2z9W.ttf", 105, 1, Color.LIGHT_GRAY, 1, 1);
 	}
 
 	private void createLayout() {
 		mainMenuTableOfButtons.add(title).row();
-		mainMenuTableOfButtons.add(newGameButton).spaceBottom(10).padTop(50).row();
-		mainMenuTableOfButtons.add(exitButton).spaceBottom(10).row();
+		mainMenuTableOfButtons.add(newGameButton).height(75).width(200).spaceBottom(20).padTop(30).row();
+		mainMenuTableOfButtons.add(settingsButton).height(75).width(200).spaceBottom(20).row();
+		mainMenuTableOfButtons.add(exitButton).height(75).width(200).spaceBottom(20).row();
 
 		stage.addActor(mainMenuTableOfButtons);
 	}
@@ -111,7 +111,15 @@ public class MainMenuScreen extends GameScreen {
 			@Override
 			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
 				addUnitsToPlayer();
-				ScreenManager.getInstance().showScreen(ScreenEnum.BATTLE, selectedLevel);
+				ScreenManager.getInstance().showScreenSafe(ScreenEnum.BATTLE, selectedLevel);
+				return true;
+			}
+		});
+
+		settingsButton.addListener(new InputListener() {
+			@Override
+			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
+				ScreenManager.getInstance().showScreenSafe(ScreenEnum.SETTINGS, selectedLevel);
 				return true;
 			}
 		});
@@ -138,9 +146,9 @@ public class MainMenuScreen extends GameScreen {
 	public void render(final float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
 		updatebg(delta);
 
+		stage.getViewport().apply();
 		stage.act(delta);
 		stage.draw();
 	}

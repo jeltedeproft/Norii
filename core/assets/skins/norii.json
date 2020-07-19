@@ -1,0 +1,219 @@
+{
+com.badlogic.gdx.graphics.g2d.BitmapFont: {
+	font-button-export: {
+		file: font-button-export.fnt
+	}
+	font-export: {
+		file: font-export.fnt
+	}
+	font-title-export: {
+		file: font-title-export.fnt
+	}
+	neutral: {
+		file: font-export.fnt
+	}
+	neutral-export: {
+		file: font-title-export.fnt
+	}
+	pixthulhu: {
+		file: font-export.fnt
+	}
+	pixtulhu-big: {
+		file: font-export.fnt
+	}
+}
+com.badlogic.gdx.graphics.Color: {
+	black: {
+		r: 0
+		g: 0
+		b: 0
+		a: 1
+	}
+	metal: {
+		r: 0.4263
+		g: 0.5382557
+		b: 0.6299999
+		a: 1
+	}
+	pixthulhu: {
+		r: 0
+		g: 0.27450982
+		b: 0.23529412
+		a: 1
+	}
+	red: {
+		r: 0.92000026
+		g: 0.29133344
+		b: 0.29133344
+		a: 1
+	}
+	white: {
+		r: 1
+		g: 1
+		b: 1
+		a: 1
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
+	window-darkgray: {
+		name: window
+		color: {
+			r: 0.25490198
+			g: 0.25490198
+			b: 0.25490198
+			a: 1
+		}
+	}
+}
+com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable: {
+	android-horizontal-scrollbar-knob-tiled: {
+		region: android-horizontal-scrollbar-knob
+		color: red
+		minWidth: 0
+		minHeight: 8
+	}
+}
+com.kotcrab.vis.ui.Sizes: {
+	default: {
+		scaleFactor: 1
+		spacingBottom: 8
+		spacingRight: 6
+		buttonBarSpacing: 10
+		menuItemIconSize: 22
+		borderSize: 1
+		spinnerButtonHeight: 12
+		spinnerFieldSize: 50
+		fileChooserViewModeBigIconsSize: 200
+		fileChooserViewModeMediumIconsSize: 128
+		fileChooserViewModeSmallIconsSize: 64
+		fileChooserViewModeListWidthSize: 150
+	}
+}
+com.kotcrab.vis.ui.widget.Separator$SeparatorStyle: {
+	default: {
+		thickness: 4
+	}
+	menu: {
+		thickness: 1
+	}
+}
+com.kotcrab.vis.ui.widget.Tooltip$TooltipStyle: {
+	default: {
+		background: tooltip
+	}
+}
+com.kotcrab.vis.ui.widget.tabbedpane.TabbedPane$TabbedPaneStyle: {
+	default: {
+		vertical: false
+		draggable: false
+	}
+}
+com.kotcrab.vis.ui.widget.BusyBar$BusyBarStyle: {
+	default: {
+		height: 5
+		segmentWidth: 150
+		segmentOverflow: 10
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
+	default: {
+		up: button
+		down: button-pressed
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {
+	default: {
+		checkboxOn: checkbox-pressed
+		checkboxOff: checkbox
+		font: font-button-export
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
+	default: {
+		up: button
+		down: button-pressed
+	}
+	Portrait: {
+		imageUp: CommanderProfileSmall
+		imageDown: Webp.net-resizeimage2
+		up: button
+		down: button-pressed
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
+	default: {
+		font: neutral
+		fontColor: white
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle: {
+	default: {
+		font: neutral
+		fontColorSelected: metal
+		fontColorUnselected: white
+		selection: file-menu-list-button-over
+		background: file-menu-list
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle: {
+	default-horizontal: {
+		background: progressbar-horizontal
+		knobBefore: android-horizontal-scrollbar-knob-tiled
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
+	default: {
+		background: window-darkgray
+		corner: scroll_corner
+		hScroll: scroll-bar-horizontal
+		hScrollKnob: scroll_horizontal_knob
+		vScroll: scroll-bar-vertical
+		vScrollKnob: scroll_vertical_knob
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.SelectBox$SelectBoxStyle: {
+	default: {
+		font: neutral
+		fontColor: white
+		disabledFontColor: black
+		background: select-box
+		scrollStyle: default
+		listStyle: default
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
+	default-horizontal: {
+		background: slider-fancy
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
+	default: {
+		font: neutral
+		fontColor: white
+		up: button
+		down: button-pressed
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle: {
+	default: {
+		label: default
+		background: window-round
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
+	default: {
+		background: window-noborder
+		titleFont: neutral
+		titleFontColor: white
+	}
+	transparent: {
+		background: transparentPixel
+		titleFont: neutral
+		stageBackground: transparentPixel
+	}
+	pixthulhu: {
+		background: window-round
+		titleFont: font-export
+	}
+}
+}

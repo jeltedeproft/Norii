@@ -88,7 +88,7 @@ public class BattleScreenInputProcessor implements InputProcessor {
 			setDownMove(false);
 			break;
 		case Keys.ESCAPE:
-			if (isPaused) {
+			if (isPaused && battleScreen.isPaused()) {
 				battleScreen.resume();
 			} else {
 				battleScreen.pause();
