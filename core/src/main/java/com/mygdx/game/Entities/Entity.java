@@ -9,7 +9,6 @@ import java.util.List;
 
 import org.xguzm.pathfinding.grid.GridCell;
 
-import com.badlogic.gdx.ai.fsm.StateMachine;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -40,7 +39,7 @@ public class Entity extends Actor implements EntitySubject {
 	private boolean inBattle;
 	private boolean isInAttackPhase;
 	private boolean isDead;
-	private boolean isPlayerUnit;
+	protected boolean isPlayerUnit;
 	private boolean isActive;
 	private int entityID;
 
@@ -62,7 +61,6 @@ public class Entity extends Actor implements EntitySubject {
 
 	private Runnable updatePositionAction;
 	private Runnable aiFinishTurn;
-	private StateMachine<Entity, BobState> stateMachine;
 
 	public Entity(final EntityTypes type) {
 		entityData = EntityFileReader.getUnitData().get(type.ordinal());
