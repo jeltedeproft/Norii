@@ -26,7 +26,6 @@ class ProfileSubjectTest {
 	@Test
 	void testAddObserver() {
 		ProfileObserver mockObserver = Mockito.mock(ProfileObserver.class);
-
 		sut.addObserver(mockObserver);
 	}
 

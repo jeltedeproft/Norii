@@ -62,7 +62,7 @@ public class MainMenuScreen extends GameScreen {
 	}
 
 	private void loadAssets() {
-		Utility.loadFreeTypeFontAsset("fonts/twilight.ttf", 24);
+		Utility.loadFreeTypeFontAsset("fonts/sporty.ttf", 24);
 		EntityFileReader.loadUnitStatsInMemory();
 		SpellFileReader.loadSpellsInMemory();
 		AITeamFileReader.loadLevelsInMemory();
@@ -89,7 +89,7 @@ public class MainMenuScreen extends GameScreen {
 
 	private void createButtons() {
 		final Skin statusUISkin = Utility.getSkin();
-		final LabelStyle labelStyle = createTitleStyle();
+		final LabelStyle labelStyle = Utility.createLabelStyle("fonts/sporty.ttf", 105, 1, Color.LIGHT_GRAY, 1, 1);
 
 		title = new Label("Norii:", labelStyle);
 		newGameButton = new TextButton("New Game", statusUISkin);
@@ -97,15 +97,11 @@ public class MainMenuScreen extends GameScreen {
 		exitButton = new TextButton("Exit", statusUISkin);
 	}
 
-	private LabelStyle createTitleStyle() {
-		return Utility.createLabelStyle("fonts/twilight.ttf", 105, 1, Color.LIGHT_GRAY, 1, 1);
-	}
-
 	private void createLayout() {
 		mainMenuTableOfButtons.add(title).row();
-		mainMenuTableOfButtons.add(newGameButton).spaceBottom(10).padTop(50).row();
-		mainMenuTableOfButtons.add(settingsButton).spaceBottom(10).row();
-		mainMenuTableOfButtons.add(exitButton).spaceBottom(10).row();
+		mainMenuTableOfButtons.add(newGameButton).height(75).width(200).spaceBottom(20).padTop(30).row();
+		mainMenuTableOfButtons.add(settingsButton).height(75).width(200).spaceBottom(20).row();
+		mainMenuTableOfButtons.add(exitButton).height(75).width(200).spaceBottom(20).row();
 
 		stage.addActor(mainMenuTableOfButtons);
 	}

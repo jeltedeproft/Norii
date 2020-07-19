@@ -274,7 +274,7 @@ public class MyPathFinder {
 
 	private List<GridCell> chippedPath(List<GridCell> path, int ap) {
 		while (path.size() > ap) {
-			path.remove(path.size());
+			path.remove(path.size() - 1);
 		}
 
 		return path;
@@ -298,8 +298,7 @@ public class MyPathFinder {
 	}
 
 	private boolean isNextTo(GridCell cell, TiledMapPosition target) {
-		return ((Math.abs(cell.x - target.getTileX()) == 1) && (Math.abs(cell.y - target.getTileY()) == 0))
-			|| ((Math.abs(cell.x - target.getTileX()) == 0) && (Math.abs(cell.y - target.getTileY()) == 1));
+		return ((Math.abs(cell.x - target.getTileX()) == 1) && (Math.abs(cell.y - target.getTileY()) == 0)) || ((Math.abs(cell.x - target.getTileX()) == 0) && (Math.abs(cell.y - target.getTileY()) == 1));
 	}
 
 	public void dispose() {

@@ -6,10 +6,10 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.run;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.function.Predicate;
 
 import org.xguzm.pathfinding.grid.GridCell;
 
+import com.badlogic.gdx.ai.fsm.StateMachine;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -62,6 +62,7 @@ public class Entity extends Actor implements EntitySubject {
 
 	private Runnable updatePositionAction;
 	private Runnable aiFinishTurn;
+	private StateMachine<Entity, BobState> stateMachine;
 
 	public Entity(final EntityTypes type) {
 		entityData = EntityFileReader.getUnitData().get(type.ordinal());
@@ -71,7 +72,7 @@ public class Entity extends Actor implements EntitySubject {
 	}
 
 	public void initEntity() {
-		observers = new Array<EntityObserver>();
+		observers = new Array<>();
 		oldPlayerPosition = new TiledMapPosition().setPositionFromScreen(-1000, -1000);
 		currentPlayerPosition = new TiledMapPosition().setPositionFromScreen(-1000, -1000);
 		hp = entityData.getMaxHP();
@@ -81,8 +82,8 @@ public class Entity extends Actor implements EntitySubject {
 		inBattle = false;
 		isInAttackPhase = false;
 		isPlayerUnit = true;
-		abilities = new ArrayList<Ability>();
-		modifiers = new ArrayList<Modifier>();
+		abilities = new ArrayList<>();
+		modifiers = new ArrayList<>();
 		entityID = java.lang.System.identityHashCode(this);
 		initAbilities();
 		initActions();
@@ -95,19 +96,8 @@ public class Entity extends Actor implements EntitySubject {
 	}
 
 	private void initActions() {
-		updatePositionAction = new Runnable() {
-			@Override
-			public void run() {
-				updatePositionFromActor();
-			}
-		};
-
-		aiFinishTurn = new Runnable() {
-			@Override
-			public void run() {
-				notifyEntityObserver(EntityCommand.AI_FINISHED_TURN);
-			}
-		};
+		updatePositionAction = () -> updatePositionFromActor();
+		aiFinishTurn = () -> notifyEntityObserver(EntityCommand.AI_FINISHED_TURN);
 	}
 
 	public void update(final float delta) {
@@ -350,12 +340,7 @@ public class Entity extends Actor implements EntitySubject {
 	}
 
 	public void removeAbility(final AbilitiesEnum abilityEnum) {
-		abilities.removeIf(new Predicate<Ability>() {
-			@Override
-			public boolean test(final Ability ability) {
-				return ability.getId() == abilityEnum.ordinal();
-			}
-		});
+		abilities.removeIf(ability -> (ability.getId() == abilityEnum.ordinal()));
 	}
 
 	public void addModifier(final ModifiersEnum type, final int turns, final int amount) {

@@ -1,5 +1,9 @@
 package com.mygdx.game.Battle;
 
+import java.util.List;
+
+import org.xguzm.pathfinding.grid.GridCell;
+
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.mygdx.game.Entities.Entity;
@@ -59,7 +63,8 @@ public class MovementBattleState extends BattleState {
 	private void updateUnit(TiledMapPosition pos) {
 		final Entity currentUnit = battlemanager.getActiveUnit();
 		final TiledMapPosition newUnitPos = new TiledMapPosition().setPositionFromTiles(pos.getTileX(), pos.getTileY());
-		currentUnit.setCurrentPosition(newUnitPos);
+		List<GridCell> path = battlemanager.getPathFinder().pathTowards(currentUnit.getCurrentPosition(), newUnitPos, currentUnit.getAp());
+		currentUnit.move(path);
 		currentUnit.setInActionPhase(true);
 		currentUnit.setInMovementPhase(false);
 	}

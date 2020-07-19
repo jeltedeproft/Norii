@@ -21,30 +21,32 @@ public class PauseMenuScreen implements Screen {
 	private static String defaultBackgroundPath = "sprites/gui/bg.jpg";
 
 	private Stage stage;
+	private BattleScreen battleScreen;
 	private Table menuTable;
 	private Label title;
 	private TextButton resumeButton;
 	private TextButton settingButton;
 	private TextButton mainMenuButton;
 
-	private boolean visible;
+	private boolean isVisible;
 
 	private static final int TITLE_FONT_SCALE = 2;
 	private static final int BOTTOM_PAD = 10;
 	private static final int TOP_PAD = 50;
 
-	public PauseMenuScreen(Camera camera) {
-		initVariables(camera);
+	public PauseMenuScreen(Camera camera, BattleScreen battleScreen) {
+		initVariables(camera, battleScreen);
 		createUI();
 		createLayout();
 		addListeners();
 	}
 
-	private void initVariables(Camera camera) {
+	private void initVariables(Camera camera, BattleScreen battleScreen) {
 		stage = new Stage(new ScreenViewport(camera));
 		menuTable = new Table();
 		menuTable.setDebug(false);
 		menuTable.setFillParent(true);
+		this.battleScreen = battleScreen;
 		this.setVisible(false);
 	}
 
@@ -72,6 +74,7 @@ public class PauseMenuScreen implements Screen {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 				setVisible(false);
+				battleScreen.resume();
 				return true;
 			}
 		});
@@ -95,11 +98,11 @@ public class PauseMenuScreen implements Screen {
 	}
 
 	public boolean getVisible() {
-		return visible;
+		return isVisible;
 	}
 
 	public void setVisible(boolean visible) {
-		this.visible = visible;
+		this.isVisible = visible;
 		menuTable.setVisible(visible);
 	}
 
@@ -109,7 +112,7 @@ public class PauseMenuScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
-		if (visible) {
+		if (isVisible) {
 			stage.act(delta);
 			stage.draw();
 		}

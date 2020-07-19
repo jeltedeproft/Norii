@@ -57,6 +57,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	private PlayerBattleHUD playerBattleHUD;
 	private PauseMenuScreen pauseMenu;
 	private Entity[] allUnits;
+
 	private boolean isPaused;
 
 	private static class VIEWPORT {
@@ -67,6 +68,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 		static float physicalWidth;
 		static float physicalHeight;
 		static float aspectRatio;
+
 	}
 
 	public BattleScreen(AITeams aiTeams) {
@@ -108,7 +110,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	}
 
 	private void initializePauseMenu() {
-		pauseMenu = new PauseMenuScreen(hudCamera);
+		pauseMenu = new PauseMenuScreen(hudCamera, this);
 	}
 
 	private void initializeInput() {
@@ -469,5 +471,9 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 			playerBattleHUD.getTileHoverImage().setPosition(pos.getCameraX(), pos.getCameraY());
 			break;
 		}
+	}
+
+	public boolean isPaused() {
+		return isPaused;
 	}
 }

@@ -15,9 +15,9 @@ public class ActionsUI extends UIWindow {
 	private static final int ICON_PADDING = 10;
 	private static final int MAIN_WINDOW_PADDING = 5;
 	private static final float EXTRA_WINDOW_SIZE = (MAIN_WINDOW_PADDING + ICON_PADDING) * 0.0625f;
-	private static final String MOVE_BUTTON_SPRITEPATH = "sprites/gui/spell (1).png";
-	private static final String ATTACK_BUTTON_SPRITEPATH = "sprites/gui/spell (2).png";
-	private static final String SKIP_BUTTON_SPRITEPATH = "sprites/gui/spell (3).png";
+	private static final String MOVE_BUTTON_SPRITEPATH = "sprites/gui/move.png";
+	private static final String ATTACK_BUTTON_SPRITEPATH = "sprites/gui/attack.png";
+	private static final String SKIP_BUTTON_SPRITEPATH = "sprites/gui/skip.png";
 
 	private MoveActionUIButton moveActionUIButton;
 	private AttackActionUIButton attackActionUIButton;
@@ -32,8 +32,8 @@ public class ActionsUI extends UIWindow {
 		configureMainWindow();
 		initVariables(entity);
 		createWidgets();
-		initPopUps();
 		addWidgets();
+		initPopUps();
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class ActionsUI extends UIWindow {
 	}
 
 	private void initVariables(final Entity entity) {
-		buttons = new ArrayList<ActionUIButton>();
+		buttons = new ArrayList<>();
 		linkedEntity = entity;
 		entity.setActionsui(this);
 	}
@@ -53,7 +53,6 @@ public class ActionsUI extends UIWindow {
 	protected void createWidgets() {
 		createButtons();
 		storeButtons();
-		addSpells();
 	}
 
 	private void createButtons() {
@@ -69,7 +68,7 @@ public class ActionsUI extends UIWindow {
 	}
 
 	private void initPopUps() {
-		popUps = new ArrayList<ActionInfoUIWindow>();
+		popUps = new ArrayList<>();
 		for (final ActionUIButton button : buttons) {
 			popUps.add(button.getPopUp());
 		}
@@ -78,14 +77,15 @@ public class ActionsUI extends UIWindow {
 	@Override
 	protected void addWidgets() {
 		addButtons();
+		addSpells();
 	}
 
 	private void addButtons() {
 		final float buttonWidth = BUTTON_WIDTH * tileWidthPixel;
 		final float buttonHeight = BUTTON_HEIGHT * tileHeightPixel;
 
-		this.add(moveActionUIButton.getButton()).size(buttonWidth, buttonHeight).pad(ICON_PADDING);
 		this.add(attackActionUIButton.getButton()).size(buttonWidth, buttonHeight).pad(ICON_PADDING);
+		this.add(moveActionUIButton.getButton()).size(buttonWidth, buttonHeight).pad(ICON_PADDING);
 		this.add(skipActionUIButton.getButton()).size(buttonWidth, buttonHeight).pad(ICON_PADDING);
 	}
 

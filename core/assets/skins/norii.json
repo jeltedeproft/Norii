@@ -202,7 +202,7 @@ com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle: {
 }
 com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
 	default: {
-		background: window
+		background: window-noborder
 		titleFont: neutral
 		titleFontColor: white
 	}

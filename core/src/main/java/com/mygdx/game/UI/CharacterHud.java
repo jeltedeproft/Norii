@@ -93,7 +93,7 @@ public class CharacterHud extends Window {
 	}
 
 	private void createFont() {
-		final BitmapFont font = Utility.getFreeTypeFontAsset("fonts/twilight.ttf");
+		final BitmapFont font = Utility.getFreeTypeFontAsset("fonts/sporty.ttf");
 		labelStyle = new LabelStyle();
 		labelStyle.font = font;
 	}
