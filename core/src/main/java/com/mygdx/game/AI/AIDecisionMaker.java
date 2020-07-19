@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.xguzm.pathfinding.grid.GridCell;
 
+import com.mygdx.game.Entities.AiEntity;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Entities.EntityObserver.EntityCommand;
 import com.mygdx.game.Map.MyPathFinder;
@@ -13,14 +14,14 @@ import Utility.TiledMapPosition;
 import Utility.Utility;
 
 public class AIDecisionMaker {
-	private final AITeam aiTeam;
+	private final AITeamLeader aiTeam;
 	private boolean actionTaken = false;
 
-	public AIDecisionMaker(final AITeam aiTeam) {
+	public AIDecisionMaker(final AITeamLeader aiTeam) {
 		this.aiTeam = aiTeam;
 	}
 
-	public void makeDecision(final Entity unit, final ArrayList<Entity> entities) {
+	public void makeDecision(final AiEntity unit, final ArrayList<Entity> entities) {
 
 		rule1CanKill(unit, entities);
 
@@ -38,7 +39,7 @@ public class AIDecisionMaker {
 		actionTaken = false;
 	}
 
-	private void rule1CanKill(final Entity unit, final ArrayList<Entity> entities) {
+	private void rule1CanKill(final AiEntity unit, final ArrayList<Entity> entities) {
 		for (final Entity target : entities) {
 			if (isEnemy(unit, target) && canMoveAttack(unit, target) && canKill(unit, target)) {
 				walkOverAndAttack(unit, target);
@@ -47,28 +48,28 @@ public class AIDecisionMaker {
 		}
 	}
 
-	private boolean isEnemy(final Entity attacker, final Entity target) {
+	private boolean isEnemy(final AiEntity attacker, final Entity target) {
 		return attacker.isPlayerUnit() != target.isPlayerUnit();
 	}
 
-	private boolean canMoveAttack(final Entity attacker, final Entity target) {
+	private boolean canMoveAttack(final AiEntity attacker, final Entity target) {
 		final int distance = Utility.getDistanceBetweenUnits(attacker, target) - 1;
 		final int ap = attacker.getAp();
 		final int basicAttackPoints = attacker.getEntityData().getBasicAttackCost();
 		return (ap >= (distance + basicAttackPoints));
 	}
 
-	private boolean canKill(final Entity attacker, final Entity target) {
+	private boolean canKill(final AiEntity attacker, final Entity target) {
 		return target.getHp() < attacker.getEntityData().getAttackPower();
 	}
 
-	private void walkOverAndAttack(final Entity attacker, final Entity target) {
+	private void walkOverAndAttack(final AiEntity attacker, final Entity target) {
 		final MyPathFinder pathFinder = aiTeam.getMyPathFinder();
 		final List<GridCell> path = pathFinder.getPathFromUnitToUnit(attacker, target);
 		attacker.moveAttack(path, target);
 	}
 
-	private void rule2ShouldRun(final Entity unit, final ArrayList<Entity> entities) {
+	private void rule2ShouldRun(final AiEntity unit, final ArrayList<Entity> entities) {
 		if (healthIsLow(unit)) {
 			runToSafety(unit, entities);
 			actionTaken = true;
@@ -81,12 +82,12 @@ public class AIDecisionMaker {
 		return (currentHP / maxHP) <= 0.1f;
 	}
 
-	private void runToSafety(final Entity unit, final ArrayList<Entity> entities) {
-		final ArrayList<TiledMapPosition> positions = Utility.collectPositionsEnemeyUnits(entities, unit.isPlayerUnit());
+	private void runToSafety(final AiEntity unit, final ArrayList<Entity> entities) {
+		final ArrayList<TiledMapPosition> positions = Utility.collectPositionsEnemyUnits(entities, unit.isPlayerUnit());
 		unit.move(getSafestPath(unit, positions));
 	}
 
-	private List<GridCell> getSafestPath(final Entity unit, final ArrayList<TiledMapPosition> positions) {
+	private List<GridCell> getSafestPath(final AiEntity unit, final ArrayList<TiledMapPosition> positions) {
 		final TiledMapPosition centerOfGravity = calculateCenterOfGravity(positions);
 		final TiledMapPosition furthestPoint = aiTeam.getMyPathFinder().getPositionFurthestAwayFrom(centerOfGravity);
 		return aiTeam.getMyPathFinder().pathTowards(unit.getCurrentPosition(), furthestPoint, unit.getAp());
@@ -105,7 +106,7 @@ public class AIDecisionMaker {
 		return new TiledMapPosition().setPositionFromTiles(sumX / numberOfElements, sumY / numberOfElements);
 	}
 
-	private void rule3SpellSpecific(final Entity unit, final ArrayList<Entity> entities) {
+	private void rule3SpellSpecific(final AiEntity unit, final ArrayList<Entity> entities) {
 
 	}
 }

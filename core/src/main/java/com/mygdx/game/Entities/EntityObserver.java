@@ -10,5 +10,7 @@ public interface EntityObserver {
 
 	void onEntityNotify(EntityCommand command, Entity unit);
 
+	void onEntityNotify(EntityCommand command, AiEntity unit);
+
 	void onEntityNotify(EntityCommand command, Entity unit, Ability ability);
 }

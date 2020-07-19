@@ -1,6 +1,7 @@
 package com.mygdx.game.Battle;
 
 import com.mygdx.game.Entities.Entity;
+import com.mygdx.game.Entities.PlayerEntity;
 import com.mygdx.game.Magic.Ability;
 import com.mygdx.game.Map.MyPathFinder;
 
@@ -12,7 +13,7 @@ public class BattleManager {
 	private BattleState actionBattleState;
 	private BattleState currentBattleState;
 
-	private Entity activeUnit;
+	private PlayerEntity activeUnit;
 	private int activeUnitIndex;
 	private final int numberOfUnits;
 	private Ability currentSpell;

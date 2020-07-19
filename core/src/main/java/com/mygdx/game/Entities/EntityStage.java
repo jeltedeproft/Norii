@@ -16,7 +16,7 @@ public class EntityStage extends Stage {
 	private final List<Entity> entities;
 
 	public EntityStage(final Entity[] entities) {
-		this.entities = new ArrayList<Entity>(Arrays.asList(entities));
+		this.entities = new ArrayList<>(Arrays.asList(entities));
 		createActorsForEntities();
 	}
 

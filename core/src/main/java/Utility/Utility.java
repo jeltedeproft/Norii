@@ -34,7 +34,6 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.mygdx.game.Entities.Entity;
-import com.mygdx.game.Entities.TeamLeader;
 import com.mygdx.game.Map.MyNavTmxMapLoader;
 import com.mygdx.game.UI.MySkin;
 
@@ -234,8 +233,8 @@ public final class Utility {
 		return positions;
 	}
 
-	public static ArrayList<TiledMapPosition> collectPositionsEnemeyUnits(final ArrayList<Entity> units, final boolean isPlayer) {
-		final ArrayList<TiledMapPosition> enemyPositions = new ArrayList<TiledMapPosition>();
+	public static ArrayList<TiledMapPosition> collectPositionsEnemyUnits(final ArrayList<Entity> units, final boolean isPlayer) {
+		final ArrayList<TiledMapPosition> enemyPositions = new ArrayList<>();
 
 		for (final Entity unit : units) {
 			if (unit.isPlayerUnit() != isPlayer) {
@@ -244,16 +243,6 @@ public final class Utility {
 		}
 
 		return enemyPositions;
-	}
-
-	public static ArrayList<TiledMapPosition> collectPositionsUnits(final List<TeamLeader> players) {
-		final ArrayList<TiledMapPosition> positions = new ArrayList<TiledMapPosition>();
-		for (final TeamLeader owner : players) {
-			for (final Entity character : owner.getTeam()) {
-				positions.add(character.getCurrentPosition());
-			}
-		}
-		return positions;
 	}
 
 	public static boolean checkIfUnitsWithinDistance(final Entity unit1, final TiledMapPosition targetPos, final int distance) {

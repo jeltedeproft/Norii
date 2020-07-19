@@ -20,7 +20,6 @@ import com.mygdx.game.Magic.AbilitiesEnum;
 import com.mygdx.game.Magic.Ability;
 import com.mygdx.game.Magic.Modifier;
 import com.mygdx.game.Magic.ModifiersEnum;
-import com.mygdx.game.UI.ActionsUI;
 import com.mygdx.game.UI.CharacterHud;
 import com.mygdx.game.UI.StatusUI;
 
@@ -28,31 +27,30 @@ import Utility.TiledMapPosition;
 import Utility.Utility;
 
 public class Entity extends Actor implements EntitySubject {
-	private final EntityData entityData;
+	protected final EntityData entityData;
 
-	private int ap;
-	private int hp;
+	protected int ap;
+	protected int hp;
 
-	private int basicAttackCost;
-	private int currentInitiative;
+	protected int basicAttackCost;
+	protected int currentInitiative;
 
-	private boolean inBattle;
-	private boolean isInAttackPhase;
-	private boolean isDead;
+	protected boolean inBattle;
+	protected boolean isInAttackPhase;
+	protected boolean isDead;
 	protected boolean isPlayerUnit;
-	private boolean isActive;
-	private int entityID;
+	protected boolean isActive;
+	protected int entityID;
 
 	protected TiledMapPosition oldPlayerPosition;
 	protected TiledMapPosition currentPlayerPosition;
 	protected Direction direction;
 
 	private StatusUI statusui;
-	private ActionsUI actionsui;
-	private CharacterHud bottomMenu;
+	private CharacterHud characterHUD;
 
-	private EntityAnimation entityAnimation;
-	private EntityAnimation entityTemporaryAnimation;
+	protected EntityAnimation entityAnimation;
+	protected EntityAnimation entityTemporaryAnimation;
 	protected EntityActor entityactor;
 
 	private Array<EntityObserver> observers;
@@ -114,16 +112,8 @@ public class Entity extends Actor implements EntitySubject {
 		this.statusui = statusui;
 	}
 
-	public ActionsUI getActionsui() {
-		return actionsui;
-	}
-
-	public void setActionsui(final ActionsUI actionsui) {
-		this.actionsui = actionsui;
-	}
-
 	public void setbottomMenu(final CharacterHud bottomMenu) {
-		this.bottomMenu = bottomMenu;
+		this.characterHUD = bottomMenu;
 	}
 
 	public void dispose() {
@@ -151,7 +141,7 @@ public class Entity extends Actor implements EntitySubject {
 
 	public void updateUI() {
 		statusui.update();
-		bottomMenu.update();
+		characterHUD.update();
 	}
 
 	public EntityActor getEntityactor() {
@@ -166,43 +156,12 @@ public class Entity extends Actor implements EntitySubject {
 		return isDead;
 	}
 
-	public void setActive(final boolean isActive) {
-		this.isActive = isActive;
-		if (isPlayerUnit) {
-			actionsui.update();
-		}
-	}
-
 	public boolean isActive() {
 		return isActive;
 	}
 
-	public void setInMovementPhase(final boolean isInMovementPhase) {
-		if (isInMovementPhase) {
-			actionsui.setVisible(false);
-			notifyEntityObserver(EntityCommand.IN_MOVEMENT);
-		}
-	}
-
 	public boolean isInAttackPhase() {
 		return isInAttackPhase;
-	}
-
-	public void setInAttackPhase(final boolean isInAttackPhase) {
-		if (canAttack()) {
-			this.isInAttackPhase = isInAttackPhase;
-			if (isInAttackPhase) {
-				actionsui.setVisible(false);
-				notifyEntityObserver(EntityCommand.IN_ATTACK_PHASE);
-			}
-		}
-	}
-
-	public void setInSpellPhase(final boolean isInSpellPhase, final Ability ability) {
-		if (isInSpellPhase) {
-			actionsui.setVisible(false);
-			notifyEntityObserver(EntityCommand.IN_SPELL_PHASE, ability);
-		}
 	}
 
 	public void attack(final Entity target) {
@@ -245,31 +204,18 @@ public class Entity extends Actor implements EntitySubject {
 		this.inBattle = inBattle;
 	}
 
-	public void setInActionPhase(final boolean isInActionPhase) {
-		notifyEntityObserver(EntityCommand.UNIT_ACTIVE);
-
-		if (isInActionPhase) {
-			if (isPlayerUnit) {
-				actionsui.update();
-				actionsui.setVisible(true);
-			} else {
-				notifyEntityObserver(EntityCommand.AI_ACT);
-			}
-		}
-	}
-
 	public void setInDeploymentPhase(final boolean isInDeploymentPhase) {
 		if (isInDeploymentPhase) {
-			bottomMenu.setHero(this);
+			characterHUD.setHero(this);
 			notifyEntityObserver(EntityCommand.UNIT_ACTIVE);
 		}
 	}
 
 	public void setFocused(final boolean isFocused) {
 		if (isFocused) {
-			bottomMenu.setHero(this);
+			characterHUD.setHero(this);
 		} else {
-			bottomMenu.setHero(null);
+			characterHUD.setHero(null);
 		}
 	}
 
@@ -344,6 +290,16 @@ public class Entity extends Actor implements EntitySubject {
 	public void addModifier(final ModifiersEnum type, final int turns, final int amount) {
 		final Modifier modifier = new Modifier(type, turns, amount);
 		modifiers.add(modifier);
+	}
+
+	public boolean hasModifier(final ModifiersEnum type) {
+		boolean result = false;
+		for (Modifier modifier : modifiers) {
+			if (modifier.getType() == type) {
+				result = true;
+			}
+		}
+		return result;
 	}
 
 	public void applyModifiers() {
