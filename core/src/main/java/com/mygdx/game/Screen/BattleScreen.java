@@ -3,6 +3,7 @@ package com.mygdx.game.Screen;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.xguzm.pathfinding.grid.GridCell;
 
@@ -26,6 +27,7 @@ import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Entities.EntityObserver;
 import com.mygdx.game.Entities.EntityStage;
 import com.mygdx.game.Entities.Player;
+import com.mygdx.game.Entities.PlayerEntity;
 import com.mygdx.game.Magic.Ability;
 import com.mygdx.game.Map.BattleMap;
 import com.mygdx.game.Map.Map;
@@ -51,13 +53,14 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	private BattleMap currentMap;
 	private BattleManager battlemanager;
 	private AITeamLeader aiTeamLeader;
-	private Entity[] playerSortedUnits;
 	private InputMultiplexer multiplexer;
 	private BattleScreenInputProcessor battlescreenInputProcessor;
 	private OrthographicCamera hudCamera;
 	private PlayerBattleHUD playerBattleHUD;
 	private PauseMenuScreen pauseMenu;
-	private Entity[] allUnits;
+	private List<PlayerEntity> playerUnits;
+	private List<AiEntity> aiUnits;
+	private List<Entity> allUnits;
 	private EntityStage entityStage;
 
 	private boolean isPaused;
@@ -87,7 +90,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	}
 
 	private void initializeVariables() {
-		playerSortedUnits = Player.getInstance().getUnitsSortedByIni();
+		playerUnits = Player.getInstance().getPlayerUnits();
 		mapCamera = new OrthographicCamera();
 		mapCamera.setToOrtho(false, VISIBLE_WIDTH, VISIBLE_HEIGHT);
 		isPaused = false;
@@ -95,17 +98,18 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 
 	private void initializeAI(AITeams ai) {
 		aiTeamLeader = new AITeamLeader(ai);
+		aiUnits = aiTeamLeader.getTeam();
 	}
 
 	private void initializeEntityStage() {
-		allUnits = (Entity[]) ArrayUtils.addAll(playerSortedUnits, aiTeamLeader.getTeam().toArray());
+		allUnits = ListUtils.union(playerUnits, aiUnits);
 		entityStage = new EntityStage(allUnits);
 	}
 
 	private void initializeHUD() {
 		hudCamera = new OrthographicCamera();
 		hudCamera.setToOrtho(false, VIEWPORT.physicalWidth, VIEWPORT.physicalHeight);
-		playerBattleHUD = new PlayerBattleHUD(hudCamera, Utility.sortUnits(allUnits));
+		playerBattleHUD = new PlayerBattleHUD(hudCamera, playerUnits, aiUnits);
 	}
 
 	private void initializePauseMenu() {
@@ -122,7 +126,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	}
 
 	private void initializeMap() {
-		battlemanager = new BattleManager(allUnits);
+		battlemanager = new BattleManager(playerUnits, aiUnits);
 		battlescreenInputProcessor.setBattleManager(battlemanager);
 		mapMgr = new MapManager();
 		currentMap = (BattleMap) mapMgr.getCurrentMap();
@@ -137,13 +141,8 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	}
 
 	private void initializeUnits() {
-		for (final Entity unit : Player.getInstance().getTeam()) {
-			unit.addEntityObserver(this);
-		}
-
-		for (final Entity unit : aiTeamLeader.getTeam()) {
-			unit.addEntityObserver(this);
-		}
+		playerUnits.forEach((playerEntity) -> playerEntity.addEntityObserver(this));
+		aiUnits.forEach((aiEntity) -> aiEntity.addEntityObserver(this));
 	}
 
 	private void initializeObservers() {
@@ -226,7 +225,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 
 	private void updateUIHover() {
 		boolean hoverResult = false;
-		for (final Entity unit : Player.getInstance().getUnitsSortedByIni()) {
+		for (final Entity unit : Player.getInstance().getPlayerUnits()) {
 			if (unit.getEntityactor().isActionsHovering()) {
 				hoverResult = true;
 			}
@@ -422,7 +421,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	}
 
 	private void prepareSpell(final Entity unit, final Ability ability) {
-		final ArrayList<TiledMapPosition> positions = (ArrayList<TiledMapPosition>) Utility.collectPositionsUnits((Entity[]) ArrayUtils.addAll(playerSortedUnits, aiTeamLeader.getTeam().toArray()));
+		final ArrayList<TiledMapPosition> positions = (ArrayList<TiledMapPosition>) Utility.collectPositionsUnits((Entity[]) ArrayUtils.addAll(playerUnits, aiUnits));
 		final List<GridCell> spellPath = calculateSpellPath(unit, ability, positions);
 
 		for (final GridCell cell : spellPath) {

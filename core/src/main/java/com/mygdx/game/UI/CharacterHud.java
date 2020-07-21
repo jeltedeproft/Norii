@@ -1,5 +1,7 @@
 package com.mygdx.game.UI;
 
+import java.util.List;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -38,8 +40,6 @@ public class CharacterHud extends Window {
 	private Label hp;
 	private Label apLabel;
 	private Label ap;
-	private Label iniLabel;
-	private Label iniVal;
 	private LabelStyle labelStyle;
 
 	private static final int STATS_MENU_ELEMENT_PADDING = 20;
@@ -48,10 +48,10 @@ public class CharacterHud extends Window {
 	private static final int HUD_BORDER_WIDTH = 8;
 	private static final int TILE_TO_PIXEL_RATIO = 25;
 
-	public CharacterHud(final Entity[] entities) {
+	public CharacterHud(final List<Entity> allUnits) {
 		super("", Utility.getSkin());
 		initVariables();
-		linkUnitsToMenu(entities);
+		linkUnitsToMenu(allUnits);
 		initElementsForUI();
 		populateHeroImage();
 	}
@@ -61,10 +61,8 @@ public class CharacterHud extends Window {
 		tileHeightPixel = Gdx.graphics.getHeight() / (float) TILE_TO_PIXEL_RATIO;
 	}
 
-	private void linkUnitsToMenu(final Entity[] entities) {
-		for (final Entity entity : entities) {
-			entity.setbottomMenu(this);
-		}
+	private void linkUnitsToMenu(final List<Entity> allUnits) {
+		allUnits.forEach((entity) -> entity.setbottomMenu(this));
 	}
 
 	private void initElementsForUI() {
@@ -109,8 +107,6 @@ public class CharacterHud extends Window {
 		hp = new Label("", labelStyle);
 		apLabel = new Label(" ap:", labelStyle);
 		ap = new Label("", labelStyle);
-		iniLabel = new Label(" ini:", labelStyle);
-		iniVal = new Label("", labelStyle);
 		addLabelsToStatsGroup();
 	}
 
@@ -123,18 +119,15 @@ public class CharacterHud extends Window {
 
 		statsGroup.add(apLabel).align(Align.left).expandX();
 		statsGroup.add(ap).align(Align.left).padRight(STATS_MENU_ELEMENT_PADDING).expandX();
-
-		statsGroup.add(iniLabel).align(Align.left).expandX();
-		statsGroup.add(iniVal).align(Align.left).padRight(STATS_MENU_ELEMENT_PADDING).expandX();
 	}
 
 	private void changeHeroImage(final String heroImageLink) {
 		Utility.loadTextureAsset(heroImageLink);
 		final TextureRegion tr = new TextureRegion(Utility.getTextureAsset(heroImageLink));
 		final TextureRegionDrawable trd = new TextureRegionDrawable(tr);
-		final ImageButtonStyle _oldStyle = heroImageButton.getStyle();
-		_oldStyle.imageUp = trd;
-		heroImageButton.setStyle(_oldStyle);
+		final ImageButtonStyle oldStyle = heroImageButton.getStyle();
+		oldStyle.imageUp = trd;
+		heroImageButton.setStyle(oldStyle);
 	}
 
 	private void populateHeroImage() {
@@ -162,7 +155,6 @@ public class CharacterHud extends Window {
 	private void initiateHeroStats() {
 		heroHP = linkedEntity.getHp();
 		heroAP = linkedEntity.getAp();
-		heroINI = linkedEntity.getEntityData().getBaseInitiative();
 	}
 
 	private void populateElementsForUI(final Entity entity) {
@@ -195,7 +187,6 @@ public class CharacterHud extends Window {
 	private void updateLabels() {
 		hp.setText(String.valueOf(heroHP));
 		ap.setText(String.valueOf(heroAP));
-		iniVal.setText(String.valueOf(heroINI));
 
 		if (heroAP == 0) {
 			ap.setColor(Color.RED);

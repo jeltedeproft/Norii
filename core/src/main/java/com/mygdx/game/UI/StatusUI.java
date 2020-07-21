@@ -19,7 +19,6 @@ public class StatusUI extends UIWindow {
 	private int maxApVal;
 	private int xpVal;
 	private int maxXpVal;
-	private int iniVal;
 
 	private WidgetGroup group;
 	private WidgetGroup group2;
@@ -29,14 +28,12 @@ public class StatusUI extends UIWindow {
 	private Label ap;
 	private Label xp;
 	private Label levelValLabel;
-	private Label iniValLabel;
 
 	private LabelStyle labelStyle;
 	private Label hpLabel;
 	private Label apLabel;
 	private Label xpLabel;
 	private Label levelLabel;
-	private Label iniLabel;
 
 	private Entity linkedEntity;
 	private boolean actionsUIIsHovering = false;
@@ -78,7 +75,6 @@ public class StatusUI extends UIWindow {
 		maxApVal = linkedEntity.getEntityData().getMaxAP();
 		xpVal = linkedEntity.getEntityData().getXp();
 		maxXpVal = linkedEntity.getEntityData().getMaxXP();
-		iniVal = linkedEntity.getEntityData().getBaseInitiative();
 	}
 
 	@Override
@@ -104,8 +100,6 @@ public class StatusUI extends UIWindow {
 		xp = new Label(String.valueOf(xpVal) + "/" + maxXpVal, labelStyle);
 		levelLabel = new Label(" lv:", labelStyle);
 		levelValLabel = new Label(String.valueOf(levelVal), labelStyle);
-		iniLabel = new Label(" ini:", labelStyle);
-		iniValLabel = new Label(String.valueOf(iniVal), labelStyle);
 	}
 
 	private void createGroups() {
@@ -132,10 +126,6 @@ public class StatusUI extends UIWindow {
 
 		this.add(levelLabel).align(Align.left).expandX();
 		this.add(levelValLabel).align(Align.left);
-		row();
-
-		this.add(iniLabel).align(Align.left).expandX();
-		this.add(iniValLabel).align(Align.left);
 		row();
 
 		this.add(xpLabel).align(Align.left).expandX();
@@ -186,7 +176,6 @@ public class StatusUI extends UIWindow {
 		ap.setText(String.valueOf(apVal) + "/" + maxApVal);
 		xp.setText(String.valueOf(xpVal) + "/" + maxXpVal);
 		levelValLabel.setText(String.valueOf(levelVal));
-		iniValLabel.setText(String.valueOf(iniVal));
 	}
 
 	private void updateSizeElements() {

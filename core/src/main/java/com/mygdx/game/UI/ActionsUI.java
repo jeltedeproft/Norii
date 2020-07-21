@@ -3,7 +3,7 @@ package com.mygdx.game.UI;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
-import com.mygdx.game.Entities.Entity;
+import com.mygdx.game.Entities.PlayerEntity;
 import com.mygdx.game.Magic.Ability;
 import com.mygdx.game.Screen.BattleScreen;
 
@@ -25,9 +25,9 @@ public class ActionsUI extends UIWindow {
 
 	private ArrayList<ActionUIButton> buttons;
 	private ArrayList<ActionInfoUIWindow> popUps;
-	private Entity linkedEntity;
+	private PlayerEntity linkedEntity;
 
-	public ActionsUI(final Entity entity) {
+	public ActionsUI(final PlayerEntity entity) {
 		super("", WINDOW_WIDTH + EXTRA_WINDOW_SIZE, WINDOW_HEIGHT + EXTRA_WINDOW_SIZE);
 		configureMainWindow();
 		initVariables(entity);
@@ -43,7 +43,7 @@ public class ActionsUI extends UIWindow {
 		setKeepWithinStage(false);
 	}
 
-	private void initVariables(final Entity entity) {
+	private void initVariables(final PlayerEntity entity) {
 		buttons = new ArrayList<>();
 		linkedEntity = entity;
 		entity.setActionsui(this);

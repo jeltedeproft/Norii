@@ -1,13 +1,12 @@
 package com.mygdx.game.Entities;
 
-import java.util.Arrays;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 
 public class Player {
 	private static Player instance;
-	private List<Entity> team;
+	private List<PlayerEntity> team;
 
 	private Player() {
 		super();
@@ -38,25 +37,11 @@ public class Player {
 		}
 	}
 
-	public Entity[] getUnitsSortedByIni() {
-		final Entity[] sortedUnits = team.toArray(new Entity[0]);
-		sortUnits(sortedUnits);
-		return sortedUnits;
+	public List<PlayerEntity> getPlayerUnits() {
+		return team;
 	}
 
-	private void sortUnits(final Entity[] sortedUnits) {
-		Arrays.sort(sortedUnits, (Entity e1, Entity e2) -> {
-			if (e1.getEntityData().getBaseInitiative() > e2.getEntityData().getBaseInitiative()) {
-				return 1;
-			} else if (e1.getEntityData().getBaseInitiative() < e2.getEntityData().getBaseInitiative()) {
-				return -1;
-			} else {
-				return 0;
-			}
-		});
-	}
-
-	public List<Entity> getTeam() {
+	public List<PlayerEntity> getTeam() {
 		return team;
 	}
 
@@ -64,5 +49,9 @@ public class Player {
 		for (final Entity entity : team) {
 			entity.dispose();
 		}
+	}
+
+	public void setTeam(List<PlayerEntity> playerMonsters) {
+		team = playerMonsters;
 	}
 }

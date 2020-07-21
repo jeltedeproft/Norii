@@ -2,8 +2,6 @@
 package Utility;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -205,22 +203,6 @@ public final class Utility {
 	public static int getRandomIntFrom1to(final int to) {
 		final int result = random.nextInt(to);
 		return result + 1;
-	}
-
-	public static Entity[] sortUnits(final Entity[] sortedUnits) {
-		Arrays.sort(sortedUnits, new Comparator<Entity>() {
-			@Override
-			public int compare(final Entity e1, final Entity e2) {
-				if (e1.getCurrentInitiative() > e2.getCurrentInitiative()) {
-					return 1;
-				} else if (e1.getCurrentInitiative() < e2.getCurrentInitiative()) {
-					return -1;
-				} else {
-					return 0;
-				}
-			}
-		});
-		return sortedUnits;
 	}
 
 	public static List<TiledMapPosition> collectPositionsUnits(final Entity[] units) {

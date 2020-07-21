@@ -20,10 +20,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.mygdx.game.AI.AITeamFileReader;
 import com.mygdx.game.AI.AITeams;
 import com.mygdx.game.Audio.AudioObserver;
-import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Entities.EntityFileReader;
 import com.mygdx.game.Entities.EntityTypes;
 import com.mygdx.game.Entities.Player;
+import com.mygdx.game.Entities.PlayerEntity;
 import com.mygdx.game.Magic.SpellFileReader;
 
 import Utility.Utility;
@@ -39,7 +39,7 @@ public class MainMenuScreen extends GameScreen {
 	private TextButton settingsButton;
 	private TextButton exitButton;
 	private Label title;
-	private ArrayList<Entity> playerMonsters;
+	private ArrayList<PlayerEntity> playerMonsters;
 	private Animation<TextureRegion> bganimation;
 	private SpriteBatch backgroundbatch;
 	private AITeams selectedLevel;
@@ -69,7 +69,7 @@ public class MainMenuScreen extends GameScreen {
 	}
 
 	private void initializeClassVariables() {
-		playerMonsters = new ArrayList<Entity>();
+		playerMonsters = new ArrayList<>();
 		stage = new Stage();
 		mainMenuTableOfButtons = new Table();
 		mainMenuTableOfButtons.setFillParent(true);
@@ -134,10 +134,10 @@ public class MainMenuScreen extends GameScreen {
 	}
 
 	private void addUnitsToPlayer() {
-		playerMonsters.add(new Entity(EntityTypes.COMMANDER));
-		playerMonsters.add(new Entity(EntityTypes.ICARUS));
-		playerMonsters.add(new Entity(EntityTypes.DEMON));
-		playerMonsters.add(new Entity(EntityTypes.SHAMAN));
+		playerMonsters.add(new PlayerEntity(EntityTypes.COMMANDER));
+		playerMonsters.add(new PlayerEntity(EntityTypes.ICARUS));
+		playerMonsters.add(new PlayerEntity(EntityTypes.DEMON));
+		playerMonsters.add(new PlayerEntity(EntityTypes.SHAMAN));
 
 		Player.getInstance().setTeam(playerMonsters);
 	}

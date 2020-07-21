@@ -1,5 +1,15 @@
 package com.mygdx.game.Battle;
 
+import java.util.List;
+
+import com.mygdx.game.Battle.BattleStates.ActionBattleState;
+import com.mygdx.game.Battle.BattleStates.AttackBattleState;
+import com.mygdx.game.Battle.BattleStates.BattleState;
+import com.mygdx.game.Battle.BattleStates.DeploymentBattleState;
+import com.mygdx.game.Battle.BattleStates.MovementBattleState;
+import com.mygdx.game.Battle.BattleStates.SelectUnitBattleState;
+import com.mygdx.game.Battle.BattleStates.SpellBattleState;
+import com.mygdx.game.Entities.AiEntity;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Entities.PlayerEntity;
 import com.mygdx.game.Magic.Ability;
@@ -7,6 +17,7 @@ import com.mygdx.game.Map.MyPathFinder;
 
 public class BattleManager {
 	private BattleState deploymentBattleState;
+	private BattleState selectUnitBattleState;
 	private BattleState movementBattleState;
 	private BattleState attackBattleState;
 	private BattleState spellBattleState;
@@ -14,20 +25,18 @@ public class BattleManager {
 	private BattleState currentBattleState;
 
 	private PlayerEntity activeUnit;
-	private int activeUnitIndex;
-	private final int numberOfUnits;
 	private Ability currentSpell;
 	private MyPathFinder pathFinder;
+	private boolean playerTurn;
 
-	private final Entity[] sortedUnits;
+	private List<PlayerEntity> playerUnits;
+	private List<AiEntity> aiUnits;
 
-	public BattleManager(final Entity[] allSortedUnits) {
-		sortedUnits = allSortedUnits;
-		activeUnitIndex = 0;
-		numberOfUnits = sortedUnits.length;
-		activeUnit = allSortedUnits[activeUnitIndex];
+	public BattleManager(final List<PlayerEntity> playerUnits, final List<AiEntity> aiUnits) {
+		initVariables(playerUnits, aiUnits);
 
 		deploymentBattleState = new DeploymentBattleState(this);
+		selectUnitBattleState = new SelectUnitBattleState(this);
 		movementBattleState = new MovementBattleState(this);
 		attackBattleState = new AttackBattleState(this);
 		spellBattleState = new SpellBattleState(this);
@@ -35,26 +44,32 @@ public class BattleManager {
 
 		currentBattleState = deploymentBattleState;
 		currentBattleState.entry();
-
 	}
 
-	public void nextUnitActive() {
-		activeUnit.setActive(false);
+	private void initVariables(final List<PlayerEntity> playerUnits, final List<AiEntity> aiUnits) {
+		this.playerUnits = playerUnits;
+		this.aiUnits = aiUnits;
+		activeUnit = playerUnits.get(0);
+		playerTurn = true;
+	}
+
+	public void setUnitActive(Entity entity) {
+		PlayerEntity playerEntity = (PlayerEntity) entity;
 		activeUnit.setFocused(false);
+		activeUnit.setActive(false);
 
-		do {
-			activeUnitIndex = (activeUnitIndex + 1) % numberOfUnits;
-			activeUnit = sortedUnits[activeUnitIndex];
-		} while (activeUnit.isDead());
-
-		startUnitTurn();
+		activeUnit = playerEntity;
+		activeUnit.setFocused(true);
+		activeUnit.setActive(true);
 	}
 
-	public void startUnitTurn() {
-		activeUnit.setFocused(true);
-		activeUnit.setAp(activeUnit.getEntityData().getMaxAP());
-		activeUnit.setActive(true);
-		activeUnit.applyModifiers();
+	public void changeTurn() {
+		playerUnits.forEach(PlayerEntity::applyModifiers);
+		aiUnits.forEach(AiEntity::applyModifiers);
+	}
+
+	public void swapTurn() {
+		playerTurn = !playerTurn;
 	}
 
 	public void setPathFinder(MyPathFinder myPathFinder) {
@@ -65,12 +80,16 @@ public class BattleManager {
 		return pathFinder;
 	}
 
-	public Entity getActiveUnit() {
+	public PlayerEntity getActiveUnit() {
 		return activeUnit;
 	}
 
-	public Entity[] getUnits() {
-		return sortedUnits;
+	public List<PlayerEntity> getPlayerUnits() {
+		return playerUnits;
+	}
+
+	public List<AiEntity> getAiUnits() {
+		return aiUnits;
 	}
 
 	public Ability getCurrentSpell() {
@@ -79,6 +98,14 @@ public class BattleManager {
 
 	public void setCurrentSpell(final Ability currentSpell) {
 		this.currentSpell = currentSpell;
+	}
+
+	public boolean isPlayerTurn() {
+		return playerTurn;
+	}
+
+	public void setPlayerTurn(boolean playerTurn) {
+		this.playerTurn = playerTurn;
 	}
 
 	public BattleState getDeploymentBattleState() {
@@ -127,5 +154,13 @@ public class BattleManager {
 
 	public void setCurrentBattleState(final BattleState currentBattleState) {
 		this.currentBattleState = currentBattleState;
+	}
+
+	public BattleState getSelectUnitBattleState() {
+		return selectUnitBattleState;
+	}
+
+	public void setSelectUnitBattleState(BattleState selectUnitBattleState) {
+		this.selectUnitBattleState = selectUnitBattleState;
 	}
 }

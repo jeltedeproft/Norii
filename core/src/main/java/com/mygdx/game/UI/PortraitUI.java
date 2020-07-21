@@ -44,10 +44,6 @@ public class PortraitUI {
 		heroPortraitBorder.setVisible(false);
 	}
 
-	public int getIni() {
-		return linkedEntity.getEntityData().getBaseInitiative();
-	}
-
 	public Image getHeroPortrait() {
 		return heroPortrait;
 	}

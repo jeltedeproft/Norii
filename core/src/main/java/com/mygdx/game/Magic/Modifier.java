@@ -26,17 +26,10 @@ public class Modifier {
 		case REDUCE_DAMAGE:
 			unit.getEntityData().setAttackPower(unit.getEntityData().getAttackPower() - amount);
 			break;
-		case REDUCE_INITIATIVE:
-			unit.setCurrentInitiative(unit.getCurrentInitiative() - amount);
-			break;
 		case IMPROVE_DAMAGE:
 			unit.getEntityData().setAttackPower(unit.getEntityData().getAttackPower() + amount);
 			break;
-		case IMPROVE_INITIATIVE:
-			unit.setCurrentInitiative(unit.getCurrentInitiative() + amount);
-			break;
 		case STUNNED:
-			unit.getActionsui().setVisible(false);
 			unit.notifyEntityObserver(EntityCommand.SKIP);
 			break;
 		default:
@@ -51,14 +44,8 @@ public class Modifier {
 		case REDUCE_DAMAGE:
 			unit.getEntityData().setAttackPower(unit.getEntityData().getAttackPower() + amount);
 			break;
-		case REDUCE_INITIATIVE:
-			unit.setCurrentInitiative(unit.getCurrentInitiative() + amount);
-			break;
 		case IMPROVE_DAMAGE:
 			unit.getEntityData().setAttackPower(unit.getEntityData().getAttackPower() - amount);
-			break;
-		case IMPROVE_INITIATIVE:
-			unit.setCurrentInitiative(unit.getCurrentInitiative() - amount);
 			break;
 		case IMAGE_CHANGED:
 			unit.restoreAnimation();

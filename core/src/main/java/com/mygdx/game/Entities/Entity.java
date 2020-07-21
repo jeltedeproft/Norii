@@ -33,7 +33,6 @@ public class Entity extends Actor implements EntitySubject {
 	protected int hp;
 
 	protected int basicAttackCost;
-	protected int currentInitiative;
 
 	protected boolean inBattle;
 	protected boolean isInAttackPhase;
@@ -73,7 +72,6 @@ public class Entity extends Actor implements EntitySubject {
 		currentPlayerPosition = new TiledMapPosition().setPositionFromScreen(-1000, -1000);
 		hp = entityData.getMaxHP();
 		ap = entityData.getMaxAP();
-		currentInitiative = entityData.getBaseInitiative();
 		isDead = false;
 		inBattle = false;
 		isInAttackPhase = false;
@@ -247,14 +245,6 @@ public class Entity extends Actor implements EntitySubject {
 
 	public int getEntityID() {
 		return entityID;
-	}
-
-	public int getCurrentInitiative() {
-		return currentInitiative;
-	}
-
-	public void setCurrentInitiative(final int currentInitiative) {
-		this.currentInitiative = currentInitiative;
 	}
 
 	public TextureRegion getFrame() {
