@@ -205,17 +205,17 @@ public final class Utility {
 		return result + 1;
 	}
 
-	public static List<TiledMapPosition> collectPositionsUnits(final Entity[] units) {
-		final ArrayList<TiledMapPosition> positions = new ArrayList<TiledMapPosition>();
+	public static List<TiledMapPosition> collectPositionsUnits(final List<Entity> allUnits) {
+		final ArrayList<TiledMapPosition> positions = new ArrayList<>();
 
-		for (final Entity unit : units) {
+		for (final Entity unit : allUnits) {
 			positions.add(unit.getCurrentPosition());
 		}
 
 		return positions;
 	}
 
-	public static ArrayList<TiledMapPosition> collectPositionsEnemyUnits(final ArrayList<Entity> units, final boolean isPlayer) {
+	public static List<TiledMapPosition> collectPositionsEnemyUnits(final List<Entity> units, final boolean isPlayer) {
 		final ArrayList<TiledMapPosition> enemyPositions = new ArrayList<>();
 
 		for (final Entity unit : units) {
@@ -269,7 +269,7 @@ public final class Utility {
 
 	}
 
-	public static void DrawDebugLine(Vector2 start, Vector2 end, int lineWidth, Color color, Matrix4 projectionMatrix) {
+	public static void drawDebugLine(Vector2 start, Vector2 end, int lineWidth, Color color, Matrix4 projectionMatrix) {
 		Gdx.gl.glLineWidth(lineWidth);
 		debugRenderer.setProjectionMatrix(projectionMatrix);
 		debugRenderer.begin(ShapeRenderer.ShapeType.Line);
@@ -279,7 +279,7 @@ public final class Utility {
 		Gdx.gl.glLineWidth(1);
 	}
 
-	public static void DrawDebugLine(Vector2 start, Vector2 end, Matrix4 projectionMatrix) {
+	public static void drawDebugLine(Vector2 start, Vector2 end, Matrix4 projectionMatrix) {
 		Gdx.gl.glLineWidth(2);
 		debugRenderer.setProjectionMatrix(projectionMatrix);
 		debugRenderer.begin(ShapeRenderer.ShapeType.Line);

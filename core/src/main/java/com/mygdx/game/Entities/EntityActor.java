@@ -45,4 +45,9 @@ public class EntityActor extends Actor {
 	public boolean isActionsHovering() {
 		return isActionsHovering;
 	}
+
+	@Override
+	public String toString() {
+		return "name : " + entity.getEntityData().getName() + "   pos:" + entity.getCurrentPosition().getTileX() + " , " + entity.getCurrentPosition().getTileY();
+	}
 }

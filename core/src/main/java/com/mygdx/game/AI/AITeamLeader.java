@@ -5,9 +5,12 @@ import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.mygdx.game.AI.SelectUnitStrategy.SelectNextUnitRandomly;
+import com.mygdx.game.AI.SelectUnitStrategy.SelectUnitStrategy;
 import com.mygdx.game.Entities.AiEntity;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Entities.EntityTypes;
+import com.mygdx.game.Entities.PlayerEntity;
 import com.mygdx.game.Map.MyPathFinder;
 
 import Utility.TiledMapPosition;
@@ -19,10 +22,12 @@ public class AITeamLeader {
 	private final AITeamData aiTeamData;
 	private final AIDecisionMaker aiDecisionMaker;
 	private MyPathFinder myPathFinder;
+	private SelectUnitStrategy selectUnitStrategy;
 
 	public AITeamLeader(final AITeams type) {
 		aiTeamData = AITeamFileReader.getAITeamData().get(type.ordinal());
 		aiDecisionMaker = new AIDecisionMaker(this);
+		selectUnitStrategy = new SelectNextUnitRandomly();
 		initiateUnits();
 	}
 
@@ -39,7 +44,7 @@ public class AITeamLeader {
 		}
 	}
 
-	public void spawnAiUnits(ArrayList<TiledMapPosition> spawnPositions) {
+	public void spawnAiUnits(List<TiledMapPosition> spawnPositions) {
 		for (final AiEntity unit : team) {
 			if (!spawnPositions.isEmpty()) {
 				unit.setCurrentPosition(spawnPositions.get(0));
@@ -50,6 +55,11 @@ public class AITeamLeader {
 				Gdx.app.debug(TAG, "maybe no more room to spawn ai units!");
 			}
 		}
+	}
+
+	public void act(List<PlayerEntity> playerUnits, List<AiEntity> aiUnits) {
+		AiEntity entity = selectUnitStrategy.selectNextEntity(aiUnits);
+		aiUnitAct(entity, playerUnits, aiUnits);
 	}
 
 	public void updateUnits(final float delta) {
@@ -66,8 +76,8 @@ public class AITeamLeader {
 		}
 	}
 
-	public void aiUnitAct(AiEntity unit, ArrayList<Entity> entities) {
-		aiDecisionMaker.makeDecision(unit, entities);
+	public void aiUnitAct(AiEntity unit, List<PlayerEntity> playerUnits, List<AiEntity> aiUnits) {
+		aiDecisionMaker.makeDecision(unit, playerUnits, aiUnits);
 	}
 
 	public void setPathFinder(MyPathFinder pathfinder) {
@@ -90,5 +100,10 @@ public class AITeamLeader {
 		for (final Entity entity : team) {
 			entity.dispose();
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "AITeamLeader with team : " + team;
 	}
 }

@@ -2,6 +2,9 @@ package com.mygdx.game.Battle;
 
 import java.util.List;
 
+import org.apache.commons.collections4.ListUtils;
+
+import com.mygdx.game.AI.AITeamLeader;
 import com.mygdx.game.Battle.BattleStates.ActionBattleState;
 import com.mygdx.game.Battle.BattleStates.AttackBattleState;
 import com.mygdx.game.Battle.BattleStates.BattleState;
@@ -25,15 +28,17 @@ public class BattleManager {
 	private BattleState currentBattleState;
 
 	private PlayerEntity activeUnit;
+	private AITeamLeader aiTeamLeader;
 	private Ability currentSpell;
 	private MyPathFinder pathFinder;
 	private boolean playerTurn;
 
 	private List<PlayerEntity> playerUnits;
 	private List<AiEntity> aiUnits;
+	private Entity lockedUnit;
 
-	public BattleManager(final List<PlayerEntity> playerUnits, final List<AiEntity> aiUnits) {
-		initVariables(playerUnits, aiUnits);
+	public BattleManager(final List<PlayerEntity> playerUnits, final List<AiEntity> aiUnits, AITeamLeader aiTeamLeader) {
+		initVariables(playerUnits, aiUnits, aiTeamLeader);
 
 		deploymentBattleState = new DeploymentBattleState(this);
 		selectUnitBattleState = new SelectUnitBattleState(this);
@@ -46,11 +51,13 @@ public class BattleManager {
 		currentBattleState.entry();
 	}
 
-	private void initVariables(final List<PlayerEntity> playerUnits, final List<AiEntity> aiUnits) {
+	private void initVariables(final List<PlayerEntity> playerUnits, final List<AiEntity> aiUnits, AITeamLeader aiTeamLeader) {
 		this.playerUnits = playerUnits;
 		this.aiUnits = aiUnits;
+		this.aiTeamLeader = aiTeamLeader;
 		activeUnit = playerUnits.get(0);
 		playerTurn = true;
+		lockedUnit = null;
 	}
 
 	public void setUnitActive(Entity entity) {
@@ -63,13 +70,18 @@ public class BattleManager {
 		activeUnit.setActive(true);
 	}
 
-	public void changeTurn() {
+	public void swapTurn() {
 		playerUnits.forEach(PlayerEntity::applyModifiers);
 		aiUnits.forEach(AiEntity::applyModifiers);
-	}
-
-	public void swapTurn() {
 		playerTurn = !playerTurn;
+
+		if (!playerTurn) {
+			aiTeamLeader.act(playerUnits, aiUnits);
+		}
+
+		setCurrentBattleState(getSelectUnitBattleState());
+		getCurrentBattleState().entry();
+
 	}
 
 	public void setPathFinder(MyPathFinder myPathFinder) {
@@ -106,6 +118,14 @@ public class BattleManager {
 
 	public void setPlayerTurn(boolean playerTurn) {
 		this.playerTurn = playerTurn;
+	}
+
+	public Entity getLockedUnit() {
+		return lockedUnit;
+	}
+
+	public void setLockedUnit(Entity lockedUnit) {
+		this.lockedUnit = lockedUnit;
 	}
 
 	public BattleState getDeploymentBattleState() {
@@ -162,5 +182,9 @@ public class BattleManager {
 
 	public void setSelectUnitBattleState(BattleState selectUnitBattleState) {
 		this.selectUnitBattleState = selectUnitBattleState;
+	}
+
+	public List<Entity> getUnits() {
+		return ListUtils.union(playerUnits, aiUnits);
 	}
 }

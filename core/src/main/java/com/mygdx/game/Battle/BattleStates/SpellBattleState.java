@@ -1,6 +1,6 @@
 package com.mygdx.game.Battle.BattleStates;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.badlogic.gdx.Input.Buttons;
 import com.mygdx.game.Audio.AudioObserver;
@@ -8,6 +8,7 @@ import com.mygdx.game.Battle.BattleManager;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Entities.EntityAnimation;
 import com.mygdx.game.Entities.EntityAnimation.Direction;
+import com.mygdx.game.Entities.EntityObserver.EntityCommand;
 import com.mygdx.game.Magic.Ability;
 import com.mygdx.game.Magic.Ability.AffectedTeams;
 import com.mygdx.game.Magic.Ability.LineOfSight;
@@ -72,6 +73,8 @@ public class SpellBattleState extends BattleState {
 
 		if (isValidUnitTarget(currentUnit, target)) {
 			selectSpell(target, ability, currentUnit, target.getCurrentPosition());
+			currentUnit.setLocked(true);
+			currentUnit.notifyEntityObserver(EntityCommand.UNIT_LOCKED);
 		}
 		exit();
 	}
@@ -205,25 +208,13 @@ public class SpellBattleState extends BattleState {
 	}
 
 	private Entity getEntityAtPosition(TiledMapPosition targetPos) {
-		final Entity[] units = battlemanager.getUnits();
+		final List<Entity> units = battlemanager.getUnits();
 		for (final Entity unit : units) {
 			if (unit.getCurrentPosition().isTileEqualTo(targetPos)) {
 				return unit;
 			}
 		}
 		return null;
-	}
-
-	private ArrayList<Entity> getEntitiesAtPositions(ArrayList<TiledMapPosition> positions) {
-		final ArrayList<Entity> entities = new ArrayList<Entity>();
-		for (final TiledMapPosition pos : positions) {
-			for (final Entity entity : battlemanager.getUnits()) {
-				if (entity.getCurrentPosition().isTileEqualTo(pos)) {
-					entities.add(entity);
-				}
-			}
-		}
-		return entities;
 	}
 
 	@Override

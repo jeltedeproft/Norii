@@ -18,6 +18,7 @@ public class SkipActionUIButton extends ActionUIButton {
 			public void clicked(final InputEvent event, final float x, final float y) {
 				linkedUnit.setActive(false);
 				linkedUnit.setFocused(false);
+				linkedUnit.setLocked(false);
 				linkedUnit.setAp(linkedUnit.getEntityData().getMaxAP());
 				ui.setVisible(false);
 				linkedUnit.notifyEntityObserver(EntityCommand.SKIP);

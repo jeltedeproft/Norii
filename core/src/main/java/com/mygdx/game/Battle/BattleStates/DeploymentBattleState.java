@@ -1,9 +1,12 @@
 package com.mygdx.game.Battle.BattleStates;
 
+import java.util.List;
+
 import com.badlogic.gdx.Gdx;
 import com.mygdx.game.Battle.BattleManager;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Entities.Player;
+import com.mygdx.game.Entities.PlayerEntity;
 import com.mygdx.game.Map.TiledMapActor;
 import com.mygdx.game.Particles.ParticleMaker;
 import com.mygdx.game.Particles.ParticleType;
@@ -15,13 +18,13 @@ public class DeploymentBattleState extends BattleState {
 
 	private final BattleManager battlemanager;
 	private int deployingUnitNumber;
-	private final Entity[] playerUnits;
+	private final List<PlayerEntity> playerUnits;
 
 	public DeploymentBattleState(final BattleManager battlemanager) {
 		this.battlemanager = battlemanager;
 		deployingUnitNumber = 0;
 		playerUnits = Player.getInstance().getPlayerUnits();
-		playerUnits[0].setInDeploymentPhase(true);
+		playerUnits.get(0).setInDeploymentPhase(true);
 	}
 
 	@Override
@@ -40,7 +43,7 @@ public class DeploymentBattleState extends BattleState {
 		if (Boolean.TRUE.equals(actor.getIsFreeSpawn())) {
 			final TiledMapPosition newPosition = actor.getActorPos();
 
-			if ((playerUnits != null) && (deployingUnitNumber < playerUnits.length)) {
+			if ((playerUnits != null) && (deployingUnitNumber < playerUnits.size())) {
 				deployUnit(newPosition);
 				actor.setIsFreeSpawn(false);
 				ParticleMaker.deactivateParticle(ParticleMaker.getParticle(ParticleType.SPAWN, newPosition));
@@ -52,15 +55,15 @@ public class DeploymentBattleState extends BattleState {
 	}
 
 	private void deployUnit(final TiledMapPosition newPosition) {
-		final Entity unitToDeploy = playerUnits[deployingUnitNumber];
+		final Entity unitToDeploy = playerUnits.get(deployingUnitNumber);
 		unitToDeploy.setInDeploymentPhase(false);
 		initiateUnitInBattle(unitToDeploy, newPosition);
 	}
 
 	private void nextDeployment() {
 		deployingUnitNumber++;
-		if (deployingUnitNumber < playerUnits.length) {
-			playerUnits[deployingUnitNumber].setInDeploymentPhase(true);
+		if (deployingUnitNumber < playerUnits.size()) {
+			playerUnits.get(deployingUnitNumber).setInDeploymentPhase(true);
 		}
 		checkIfLastUnit();
 	}
@@ -71,7 +74,7 @@ public class DeploymentBattleState extends BattleState {
 	}
 
 	private void checkIfLastUnit() {
-		if (deployingUnitNumber >= playerUnits.length) {
+		if (deployingUnitNumber >= playerUnits.size()) {
 			exit();
 		}
 	}

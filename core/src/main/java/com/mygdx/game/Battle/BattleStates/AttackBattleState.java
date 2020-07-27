@@ -4,6 +4,7 @@ import com.badlogic.gdx.Input.Buttons;
 import com.mygdx.game.Audio.AudioObserver;
 import com.mygdx.game.Battle.BattleManager;
 import com.mygdx.game.Entities.Entity;
+import com.mygdx.game.Entities.EntityObserver.EntityCommand;
 import com.mygdx.game.Map.TiledMapActor;
 import com.mygdx.game.Particles.ParticleMaker;
 import com.mygdx.game.Particles.ParticleType;
@@ -40,6 +41,8 @@ public class AttackBattleState extends BattleState {
 		final boolean closeEnough = Utility.checkIfUnitsWithinDistance(entity, currentUnit.getCurrentPosition(), currentUnit.getEntityData().getAttackRange());
 		if ((entity.isPlayerUnit() != currentUnit.isPlayerUnit()) && closeEnough) {
 			currentUnit.attack(entity);
+			currentUnit.setLocked(true);
+			currentUnit.notifyEntityObserver(EntityCommand.UNIT_LOCKED);
 			notify(AudioObserver.AudioCommand.SOUND_PLAY_ONCE, AudioObserver.AudioTypeEvent.ATTACK_SOUND);
 		}
 		this.exit();

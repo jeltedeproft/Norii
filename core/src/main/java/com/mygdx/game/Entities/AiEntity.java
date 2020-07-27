@@ -1,13 +1,9 @@
 package com.mygdx.game.Entities;
 
-import com.badlogic.gdx.ai.fsm.StateMachine;
-import com.mygdx.game.AI.AIState;
 import com.mygdx.game.Entities.EntityObserver.EntityCommand;
 import com.mygdx.game.Magic.Ability;
 
 public class AiEntity extends Entity {
-	private StateMachine<AiEntity, AIState> stateMachine;
-
 	public AiEntity(EntityTypes type) {
 		super(type);
 		isPlayerUnit = false;
@@ -40,10 +36,18 @@ public class AiEntity extends Entity {
 
 	public void setInActionPhase(final boolean isInActionPhase) {
 		notifyEntityObserver(EntityCommand.UNIT_ACTIVE);
+	}
 
-		if (isInActionPhase) {
-			notifyEntityObserver(EntityCommand.AI_ACT);
+	@Override
+	public void notifyEntityObserver(final EntityObserver.EntityCommand command) {
+		for (int i = 0; i < observers.size; i++) {
+			observers.get(i).onEntityNotify(command, this);
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "name : " + entityData.getName() + "   ID:" + entityID;
 	}
 
 }

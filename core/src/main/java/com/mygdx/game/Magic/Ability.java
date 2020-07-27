@@ -61,4 +61,9 @@ public class Ability {
 		return abilityEnum;
 	}
 
+	@Override
+	public String toString() {
+		return "ability name : " + spellData.getName();
+	}
+
 }

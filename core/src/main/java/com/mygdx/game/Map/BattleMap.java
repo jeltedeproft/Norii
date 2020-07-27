@@ -41,8 +41,8 @@ public class BattleMap extends Map {
 	}
 
 	private void initializeClassVariables() {
-		unitSpawnPositions = new ArrayList<TiledMapPosition>();
-		enemyStartPositions = new ArrayList<TiledMapPosition>();
+		unitSpawnPositions = new ArrayList<>();
+		enemyStartPositions = new ArrayList<>();
 		playerStartPositionRect = new Vector2(0, 0);
 		convertedUnits = new TiledMapPosition();
 
@@ -109,7 +109,7 @@ public class BattleMap extends Map {
 		return unitSpawnPositions;
 	}
 
-	public ArrayList<TiledMapPosition> getEnemyStartPositions() {
+	public List<TiledMapPosition> getEnemyStartPositions() {
 		return enemyStartPositions;
 	}
 
@@ -137,5 +137,10 @@ public class BattleMap extends Map {
 
 	public void dispose() {
 		initializeClassVariables();
+	}
+
+	@Override
+	public String toString() {
+		return "map name : " + TAG;
 	}
 }

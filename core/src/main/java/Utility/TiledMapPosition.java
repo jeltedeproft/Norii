@@ -79,4 +79,9 @@ public class TiledMapPosition {
 		}
 
 	}
+
+	@Override
+	public String toString() {
+		return "[" + tileCoordinates.x + "," + tileCoordinates.y + "]";
+	}
 }

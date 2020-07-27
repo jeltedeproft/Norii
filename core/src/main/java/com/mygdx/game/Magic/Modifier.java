@@ -83,4 +83,9 @@ public class Modifier {
 		this.amount = amount;
 	}
 
+	@Override
+	public String toString() {
+		return "modifier name : " + type;
+	}
+
 }

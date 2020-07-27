@@ -60,4 +60,9 @@ public class Particle extends Actor {
 	public void start() {
 		particleEffect.start();
 	}
+
+	@Override
+	public String toString() {
+		return "Particle : " + type + " at pos : (" + pos.getTileX() + "," + pos.getTileY() + ")";
+	}
 }

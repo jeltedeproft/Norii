@@ -20,11 +20,10 @@ import com.mygdx.game.Entities.Entity;
 import Utility.Utility;
 
 public class CharacterHud extends Window {
-	private static final String UNKNOWN_HERO_IMAGE_LOCATION = "sprites/gui/portraits/unknown.png";
+	private static final String UNKNOWN_HERO_IMAGE_LOCATION = "sprites/gui/portraits/nochar.png";
 
 	private int heroHP;
 	private int heroAP;
-	private int heroINI;
 
 	private ImageButton heroImageButton;
 	private HorizontalGroup horizontalGroup;
@@ -116,6 +115,7 @@ public class CharacterHud extends Window {
 
 		statsGroup.add(hpLabel).align(Align.topLeft).expandX().width(HP_LABEL_WIDTH);
 		statsGroup.add(hp).align(Align.topLeft).padRight(STATS_MENU_ELEMENT_PADDING).expandX();
+		statsGroup.row();
 
 		statsGroup.add(apLabel).align(Align.left).expandX();
 		statsGroup.add(ap).align(Align.left).padRight(STATS_MENU_ELEMENT_PADDING).expandX();

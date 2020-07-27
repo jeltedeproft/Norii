@@ -60,4 +60,9 @@ public class PlayerEntity extends Entity {
 		}
 	}
 
+	@Override
+	public String toString() {
+		return "name : " + entityData.getName() + "   ID:" + entityID;
+	}
+
 }

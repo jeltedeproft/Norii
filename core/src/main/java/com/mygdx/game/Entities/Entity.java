@@ -39,6 +39,7 @@ public class Entity extends Actor implements EntitySubject {
 	protected boolean isDead;
 	protected boolean isPlayerUnit;
 	protected boolean isActive;
+	protected boolean locked;
 	protected int entityID;
 
 	protected TiledMapPosition oldPlayerPosition;
@@ -52,11 +53,12 @@ public class Entity extends Actor implements EntitySubject {
 	protected EntityAnimation entityTemporaryAnimation;
 	protected EntityActor entityactor;
 
-	private Array<EntityObserver> observers;
-	private Collection<Ability> abilities;
-	private Collection<Modifier> modifiers;
+	protected Array<EntityObserver> observers;
+	protected Collection<Ability> abilities;
+	protected Collection<Modifier> modifiers;
 
 	private Runnable updatePositionAction;
+	private Runnable updatePositionActorAction;
 	private Runnable aiFinishTurn;
 
 	public Entity(final EntityTypes type) {
@@ -76,6 +78,7 @@ public class Entity extends Actor implements EntitySubject {
 		inBattle = false;
 		isInAttackPhase = false;
 		isPlayerUnit = true;
+		locked = false;
 		abilities = new ArrayList<>();
 		modifiers = new ArrayList<>();
 		entityID = java.lang.System.identityHashCode(this);
@@ -90,7 +93,8 @@ public class Entity extends Actor implements EntitySubject {
 	}
 
 	private void initActions() {
-		updatePositionAction = () -> updatePositionFromActor();
+		updatePositionAction = this::updatePositionFromActor;
+		updatePositionActorAction = this::updatePositionFromSprite;
 		aiFinishTurn = () -> notifyEntityObserver(EntityCommand.AI_FINISHED_TURN);
 	}
 
@@ -215,6 +219,14 @@ public class Entity extends Actor implements EntitySubject {
 		} else {
 			characterHUD.setHero(null);
 		}
+	}
+
+	public boolean isLocked() {
+		return locked;
+	}
+
+	public void setLocked(boolean locked) {
+		this.locked = locked;
 	}
 
 	public boolean isPlayerUnit() {
@@ -356,16 +368,17 @@ public class Entity extends Actor implements EntitySubject {
 		final SequenceAction sequence = Actions.sequence();
 		for (final GridCell cell : path) {
 			sequence.addAction(Actions.rotateTo(decideRotation(oldCell, cell), 0.1f));
-			sequence.addAction(moveTo(cell.x, cell.y, 0.2f));
+			sequence.addAction(moveTo(cell.getX(), cell.getY(), 0.2f));
 			sequence.addAction(run(updatePositionAction));
 			oldCell = cell;
 		}
+		sequence.addAction(run(updatePositionActorAction));
 		return sequence;
 	}
 
 	private float decideRotation(GridCell oldCell, GridCell cell) {
 		if ((oldCell.x == cell.x) && (oldCell.y > cell.y)) {
-			return 270.0f;
+			return 0.0f;
 		} else if ((oldCell.x == cell.x) && (oldCell.y < cell.y)) {
 			return 180.0f;
 		} else if ((oldCell.x > cell.x) && (oldCell.y == cell.y)) {
@@ -379,6 +392,10 @@ public class Entity extends Actor implements EntitySubject {
 		this.setDirection(decideDirection(this.getEntityactor().getRotation()));
 	}
 
+	private void updatePositionFromSprite() {
+		this.getEntityactor().setPos();
+	}
+
 	private Direction decideDirection(float rotation) {
 		if (rotation >= 45 && rotation < 135) {
 			return Direction.RIGHT;
@@ -388,5 +405,10 @@ public class Entity extends Actor implements EntitySubject {
 			return Direction.LEFT;
 		}
 		return Direction.DOWN;
+	}
+
+	@Override
+	public String toString() {
+		return "name : " + entityData.getName() + "   ID:" + entityID;
 	}
 }

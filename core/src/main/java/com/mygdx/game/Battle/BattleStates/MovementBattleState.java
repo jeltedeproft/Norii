@@ -7,14 +7,13 @@ import org.xguzm.pathfinding.grid.GridCell;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.mygdx.game.Battle.BattleManager;
-import com.mygdx.game.Entities.Entity;
+import com.mygdx.game.Entities.EntityObserver.EntityCommand;
 import com.mygdx.game.Entities.PlayerEntity;
 import com.mygdx.game.Map.TiledMapActor;
 import com.mygdx.game.Particles.ParticleMaker;
 import com.mygdx.game.Particles.ParticleType;
 
 import Utility.TiledMapPosition;
-import Utility.Utility;
 
 public class MovementBattleState extends BattleState {
 	private final BattleManager battlemanager;
@@ -47,19 +46,10 @@ public class MovementBattleState extends BattleState {
 
 	private void moveUnit(TiledMapPosition pos) {
 		ParticleMaker.deactivateAllParticlesOfType(ParticleType.MOVE);
-		updateMP(pos);
+		battlemanager.getActiveUnit().setLocked(true);
+		battlemanager.getActiveUnit().notifyEntityObserver(EntityCommand.UNIT_LOCKED);
 		updateUnit(pos);
 		battlemanager.getCurrentBattleState().exit();
-	}
-
-	private void updateMP(TiledMapPosition pos) {
-		final Entity currentUnit = battlemanager.getActiveUnit();
-		final int distance = Utility.getDistance(pos, battlemanager.getActiveUnit());
-		if (distance >= currentUnit.getAp()) {
-			currentUnit.setAp(0);
-		} else {
-			currentUnit.setAp(currentUnit.getAp() - distance);
-		}
 	}
 
 	private void updateUnit(TiledMapPosition pos) {

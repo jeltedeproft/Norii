@@ -1,10 +1,9 @@
 package com.mygdx.game.Screen;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.ListUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import org.xguzm.pathfinding.grid.GridCell;
 
 import com.badlogic.gdx.Gdx;
@@ -126,7 +125,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	}
 
 	private void initializeMap() {
-		battlemanager = new BattleManager(playerUnits, aiUnits);
+		battlemanager = new BattleManager(playerUnits, aiUnits, aiTeamLeader);
 		battlescreenInputProcessor.setBattleManager(battlemanager);
 		mapMgr = new MapManager();
 		currentMap = (BattleMap) mapMgr.getCurrentMap();
@@ -135,14 +134,14 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	}
 
 	private void spawnAI() {
-		final ArrayList<TiledMapPosition> enemyStartPositions = currentMap.getEnemyStartPositions();
+		final List<TiledMapPosition> enemyStartPositions = currentMap.getEnemyStartPositions();
 		aiTeamLeader.spawnAiUnits(enemyStartPositions);
 		aiTeamLeader.setPathFinder(currentMap.getPathfinder());
 	}
 
 	private void initializeUnits() {
-		playerUnits.forEach((playerEntity) -> playerEntity.addEntityObserver(this));
-		aiUnits.forEach((aiEntity) -> aiEntity.addEntityObserver(this));
+		playerUnits.forEach(playerEntity -> playerEntity.addEntityObserver(this));
+		aiUnits.forEach(aiEntity -> aiEntity.addEntityObserver(this));
 	}
 
 	private void initializeObservers() {
@@ -180,7 +179,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 
 	@Override
 	public void hide() {
-
+		// no-op
 	}
 
 	@Override
@@ -257,6 +256,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 		renderUnits();
 		renderParticles(delta);
 		renderHUD(delta);
+		entityStage.drawEntitiesDebug();
 	}
 
 	private void renderMap() {
@@ -286,9 +286,9 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 
 	public void renderGrid() {
 		for (int x = 0; x < currentMap.getMapWidth(); x += 1)
-			Utility.DrawDebugLine(new Vector2(x, 0), new Vector2(x, currentMap.getMapHeight()), mapCamera.combined);
+			Utility.drawDebugLine(new Vector2(x, 0), new Vector2(x, currentMap.getMapHeight()), mapCamera.combined);
 		for (int y = 0; y < currentMap.getMapHeight(); y += 1)
-			Utility.DrawDebugLine(new Vector2(0, y), new Vector2(currentMap.getMapWidth(), y), mapCamera.combined);
+			Utility.drawDebugLine(new Vector2(0, y), new Vector2(currentMap.getMapWidth(), y), mapCamera.combined);
 	}
 
 	@Override
@@ -357,10 +357,14 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 		case UNIT_ACTIVE:
 			// playerBattleHUD.getPortraits().updateBorders(unit);
 			break;
+		case UNIT_LOCKED:
+			battlemanager.setLockedUnit(unit);
+			break;
 		case CLICKED:
 			battlemanager.getCurrentBattleState().clickedOnUnit(unit);
 			break;
 		case SKIP:
+			battlemanager.setLockedUnit(null);
 			battlemanager.setCurrentBattleState(battlemanager.getActionBattleState());
 			battlemanager.getCurrentBattleState().exit();
 			break;
@@ -370,19 +374,10 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	}
 
 	@Override
-	public void onEntityNotify(final EntityCommand command, final AiEntity AIunit) {
+	public void onEntityNotify(final EntityCommand command, final AiEntity aiUnit) {
 		switch (command) {
-		case AI_ACT:
-			final ArrayList<Entity> entities = new ArrayList<>();
-			for (final Entity entity : Player.getInstance().getTeam()) {
-				if (entity.getEntityID() != AIunit.getEntityID()) {
-					entities.add(entity);
-				}
-			}
-			aiTeamLeader.aiUnitAct(AIunit, entities);
-			break;
 		case AI_FINISHED_TURN:
-			battlemanager.getCurrentBattleState().exit();
+			battlemanager.swapTurn();
 			break;
 		default:
 			break;
@@ -421,7 +416,8 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	}
 
 	private void prepareSpell(final Entity unit, final Ability ability) {
-		final ArrayList<TiledMapPosition> positions = (ArrayList<TiledMapPosition>) Utility.collectPositionsUnits((Entity[]) ArrayUtils.addAll(playerUnits, aiUnits));
+		final List<Entity> allUnits = ListUtils.union(playerUnits, aiUnits);
+		final List<TiledMapPosition> positions = allUnits.stream().map(Entity::getCurrentPosition).collect(Collectors.toList());
 		final List<GridCell> spellPath = calculateSpellPath(unit, ability, positions);
 
 		for (final GridCell cell : spellPath) {
@@ -433,7 +429,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 		battlemanager.setCurrentBattleState(battlemanager.getSpellBattleState());
 	}
 
-	private List<GridCell> calculateSpellPath(final Entity unit, final Ability ability, final ArrayList<TiledMapPosition> positions) {
+	private List<GridCell> calculateSpellPath(final Entity unit, final Ability ability, final List<TiledMapPosition> positions) {
 		List<GridCell> spellPath = null;
 
 		switch (ability.getLineOfSight()) {

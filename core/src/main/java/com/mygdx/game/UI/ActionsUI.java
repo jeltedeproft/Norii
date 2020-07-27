@@ -1,6 +1,7 @@
 package com.mygdx.game.UI;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.mygdx.game.Entities.PlayerEntity;
@@ -136,7 +137,7 @@ public class ActionsUI extends UIWindow {
 		}
 	}
 
-	public ArrayList<ActionInfoUIWindow> getPopUps() {
+	public List<ActionInfoUIWindow> getPopUps() {
 		return popUps;
 	}
 

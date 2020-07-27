@@ -21,7 +21,6 @@ public class ActionBattleState extends BattleState {
 	@Override
 	public void exit() {
 		battlemanager.swapTurn();
-		battlemanager.getActiveUnit().setInActionPhase(true);
 	}
 
 	@Override
@@ -49,6 +48,7 @@ public class ActionBattleState extends BattleState {
 	public void buttonPressed(int button) {
 		switch (button) {
 		case Buttons.RIGHT:
+			battlemanager.getActiveUnit().getActionsui().setVisible(false);
 			battlemanager.setCurrentBattleState(battlemanager.getSelectUnitBattleState());
 			battlemanager.getCurrentBattleState().entry();
 			break;
