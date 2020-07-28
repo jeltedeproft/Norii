@@ -8,7 +8,7 @@ import Utility.TiledMapPosition;
 
 public class Particle extends Actor {
 
-	private final TiledMapPosition pos;
+	private TiledMapPosition pos;
 	private Boolean active;
 	private final ParticleType type;
 	private final PooledEffect particleEffect;
@@ -43,6 +43,11 @@ public class Particle extends Actor {
 
 	public TiledMapPosition getPosition() {
 		return pos;
+	}
+
+	public void setPosition(TiledMapPosition pos) {
+		this.pos = pos;
+		particleEffect.setPosition(pos.getTileX(), pos.getTileY());
 	}
 
 	public void update(final float delta) {

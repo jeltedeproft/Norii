@@ -181,7 +181,7 @@ public class SpellBattleState extends BattleState {
 
 	private void castFireBall(final Entity caster, final TiledMapPosition targetPos, final Ability ability) {
 		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
-		notify(AudioObserver.AudioCommand.SOUND_PLAY_ONCE, AudioObserver.AudioTypeEvent.SPELL_SOUND);
+		notifyAudio(AudioObserver.AudioCommand.SOUND_PLAY_ONCE, AudioObserver.AudioTypeEvent.FIREBALL_SOUND);
 		ParticleMaker.addParticle(ParticleType.FIREBALL, targetPos);
 
 		final Entity possibleTarget = getEntityAtPosition(targetPos);
@@ -192,7 +192,7 @@ public class SpellBattleState extends BattleState {
 
 	private void castSwap(final Entity caster, final Entity target, final Ability ability) {
 		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
-		notify(AudioObserver.AudioCommand.SOUND_PLAY_ONCE, AudioObserver.AudioTypeEvent.SPELL_SOUND);
+		notifyAudio(AudioObserver.AudioCommand.SOUND_PLAY_ONCE, AudioObserver.AudioTypeEvent.SWAP_SOUND);
 		ParticleMaker.addParticle(ParticleType.SWAP, caster.getCurrentPosition());
 		final TiledMapPosition posCaster = caster.getCurrentPosition();
 		caster.setCurrentPosition(target.getCurrentPosition());
@@ -201,7 +201,7 @@ public class SpellBattleState extends BattleState {
 
 	private void castTurnToStone(final Entity caster, final Entity target, final Ability ability) {
 		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
-		notify(AudioObserver.AudioCommand.SOUND_PLAY_ONCE, AudioObserver.AudioTypeEvent.SPELL_SOUND);
+		notifyAudio(AudioObserver.AudioCommand.SOUND_PLAY_ONCE, AudioObserver.AudioTypeEvent.STONE_SOUND);
 		target.changeAnimation(new EntityAnimation("sprites/characters/rocksheet.png"));
 		target.addModifier(ModifiersEnum.IMAGE_CHANGED, 2, 0);
 		target.addModifier(ModifiersEnum.STUNNED, 2, 0);

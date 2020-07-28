@@ -58,7 +58,7 @@ public class MainMenuScreen extends GameScreen {
 
 		addListeners();
 
-		notify(AudioObserver.AudioCommand.MUSIC_LOAD, AudioObserver.AudioTypeEvent.MUSIC_TITLE);
+		notifyAudio(AudioObserver.AudioCommand.MUSIC_LOAD, AudioObserver.AudioTypeEvent.MUSIC_TITLE);
 	}
 
 	private void loadAssets() {
@@ -170,13 +170,13 @@ public class MainMenuScreen extends GameScreen {
 	@Override
 	public void show() {
 		Gdx.input.setInputProcessor(stage);
-		notify(AudioObserver.AudioCommand.MUSIC_PLAY_LOOP, AudioObserver.AudioTypeEvent.MUSIC_TITLE);
+		notifyAudio(AudioObserver.AudioCommand.MUSIC_PLAY_LOOP, AudioObserver.AudioTypeEvent.MUSIC_TITLE);
 	}
 
 	@Override
 	public void hide() {
 		Gdx.input.setInputProcessor(null);
-		notify(AudioObserver.AudioCommand.MUSIC_STOP, AudioObserver.AudioTypeEvent.MUSIC_TITLE);
+		notifyAudio(AudioObserver.AudioCommand.MUSIC_STOP, AudioObserver.AudioTypeEvent.MUSIC_TITLE);
 	}
 
 	@Override

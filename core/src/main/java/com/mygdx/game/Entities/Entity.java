@@ -10,23 +10,28 @@ import java.util.List;
 import org.xguzm.pathfinding.grid.GridCell;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.utils.Array;
+import com.mygdx.game.Audio.AudioManager;
+import com.mygdx.game.Audio.AudioObserver;
+import com.mygdx.game.Audio.AudioSubject;
 import com.mygdx.game.Entities.EntityAnimation.Direction;
 import com.mygdx.game.Entities.EntityObserver.EntityCommand;
 import com.mygdx.game.Magic.AbilitiesEnum;
 import com.mygdx.game.Magic.Ability;
 import com.mygdx.game.Magic.Modifier;
 import com.mygdx.game.Magic.ModifiersEnum;
+import com.mygdx.game.Particles.Particle;
 import com.mygdx.game.UI.CharacterHud;
 import com.mygdx.game.UI.StatusUI;
 
 import Utility.TiledMapPosition;
 import Utility.Utility;
 
-public class Entity extends Actor implements EntitySubject {
+public class Entity extends Actor implements EntitySubject, AudioSubject {
 	protected final EntityData entityData;
 
 	protected int ap;
@@ -53,13 +58,16 @@ public class Entity extends Actor implements EntitySubject {
 	protected EntityAnimation entityTemporaryAnimation;
 	protected EntityActor entityactor;
 
-	protected Array<EntityObserver> observers;
+	protected Array<EntityObserver> entityObservers;
+	protected Array<AudioObserver> audioObservers;
 	protected Collection<Ability> abilities;
 	protected Collection<Modifier> modifiers;
 
 	private Runnable updatePositionAction;
-	private Runnable updatePositionActorAction;
 	private Runnable aiFinishTurn;
+	private Runnable stopWalkSound;
+
+	protected Particle ringParticle;
 
 	public Entity(final EntityTypes type) {
 		entityData = EntityFileReader.getUnitData().get(type.ordinal());
@@ -69,7 +77,9 @@ public class Entity extends Actor implements EntitySubject {
 	}
 
 	public void initEntity() {
-		observers = new Array<>();
+		entityObservers = new Array<>();
+		audioObservers = new Array<>();
+		this.addAudioObserver(AudioManager.getInstance());
 		oldPlayerPosition = new TiledMapPosition().setPositionFromScreen(-1000, -1000);
 		currentPlayerPosition = new TiledMapPosition().setPositionFromScreen(-1000, -1000);
 		hp = entityData.getMaxHP();
@@ -94,12 +104,13 @@ public class Entity extends Actor implements EntitySubject {
 
 	private void initActions() {
 		updatePositionAction = this::updatePositionFromActor;
-		updatePositionActorAction = this::updatePositionFromSprite;
+		stopWalkSound = this::stopWalkingSound;
 		aiFinishTurn = () -> notifyEntityObserver(EntityCommand.AI_FINISHED_TURN);
 	}
 
 	public void update(final float delta) {
 		entityAnimation.update(delta);
+		ringParticle.setPosition(currentPlayerPosition);
 	}
 
 	public EntityData getEntityData() {
@@ -192,6 +203,7 @@ public class Entity extends Actor implements EntitySubject {
 		setCurrentPosition(new TiledMapPosition().setPositionFromScreen(-100, -100));
 		getEntityactor().setPosition(-100, -100);
 		setVisible(false);
+		ringParticle.delete();
 	}
 
 	public boolean canMove() {
@@ -321,33 +333,35 @@ public class Entity extends Actor implements EntitySubject {
 
 	@Override
 	public void addEntityObserver(final EntityObserver entityObserver) {
-		observers.add(entityObserver);
+		entityObservers.add(entityObserver);
 	}
 
 	@Override
 	public void removeObserver(final EntityObserver entityObserver) {
-		observers.removeValue(entityObserver, true);
+		entityObservers.removeValue(entityObserver, true);
 	}
 
 	@Override
 	public void removeAllObservers() {
-		observers.removeAll(observers, true);
+		entityObservers.removeAll(entityObservers, true);
 	}
 
 	@Override
 	public void notifyEntityObserver(final EntityObserver.EntityCommand command) {
-		for (int i = 0; i < observers.size; i++) {
-			observers.get(i).onEntityNotify(command, this);
+		for (int i = 0; i < entityObservers.size; i++) {
+			entityObservers.get(i).onEntityNotify(command, this);
 		}
 	}
 
 	public void notifyEntityObserver(final EntityObserver.EntityCommand command, final Ability ability) {
-		for (int i = 0; i < observers.size; i++) {
-			observers.get(i).onEntityNotify(command, this, ability);
+		for (int i = 0; i < entityObservers.size; i++) {
+			entityObservers.get(i).onEntityNotify(command, this, ability);
 		}
 	}
 
 	public void move(List<GridCell> path) {
+		notifyAudio(AudioObserver.AudioCommand.SOUND_PLAY_LOOP, AudioObserver.AudioTypeEvent.WALK_LOOP);
+		this.getEntityactor().setOrigin(this.getEntityactor().getWidth() / 2, this.getEntityactor().getHeight() / 2);
 		final SequenceAction sequence = createMoveSequence(path);
 		sequence.addAction(run(aiFinishTurn));
 		this.getEntityactor().addAction(sequence);
@@ -367,12 +381,12 @@ public class Entity extends Actor implements EntitySubject {
 		GridCell oldCell = new GridCell(this.getCurrentPosition().getTileX(), this.getCurrentPosition().getTileY());
 		final SequenceAction sequence = Actions.sequence();
 		for (final GridCell cell : path) {
-			sequence.addAction(Actions.rotateTo(decideRotation(oldCell, cell), 0.1f));
-			sequence.addAction(moveTo(cell.getX(), cell.getY(), 0.2f));
+			sequence.addAction(Actions.rotateTo(decideRotation(oldCell, cell), 0.05f, Interpolation.swingIn));
+			sequence.addAction(moveTo(cell.getX(), cell.getY(), 0.05f));
 			sequence.addAction(run(updatePositionAction));
 			oldCell = cell;
 		}
-		sequence.addAction(run(updatePositionActorAction));
+		sequence.addAction(run(stopWalkSound));
 		return sequence;
 	}
 
@@ -392,8 +406,8 @@ public class Entity extends Actor implements EntitySubject {
 		this.setDirection(decideDirection(this.getEntityactor().getRotation()));
 	}
 
-	private void updatePositionFromSprite() {
-		this.getEntityactor().setPos();
+	private void stopWalkingSound() {
+		notifyAudio(AudioObserver.AudioCommand.SOUND_STOP, AudioObserver.AudioTypeEvent.WALK_LOOP);
 	}
 
 	private Direction decideDirection(float rotation) {
@@ -410,5 +424,27 @@ public class Entity extends Actor implements EntitySubject {
 	@Override
 	public String toString() {
 		return "name : " + entityData.getName() + "   ID:" + entityID;
+	}
+
+	@Override
+	public void addAudioObserver(AudioObserver audioObserver) {
+		audioObservers.add(audioObserver);
+	}
+
+	@Override
+	public void removeAudioObserver(AudioObserver audioObserver) {
+		audioObservers.removeValue(audioObserver, true);
+	}
+
+	@Override
+	public void removeAllAudioObservers() {
+		audioObservers.removeAll(audioObservers, true);
+	}
+
+	@Override
+	public void notifyAudio(AudioObserver.AudioCommand command, AudioObserver.AudioTypeEvent event) {
+		for (AudioObserver observer : audioObservers) {
+			observer.onNotify(command, event);
+		}
 	}
 }

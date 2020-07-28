@@ -16,7 +16,7 @@ public class AttackActionUIButton extends ActionUIButton {
 			@Override
 			public void clicked(final InputEvent event, final float x, final float y) {
 				if (linkedUnit.getAp() >= linkedUnit.getEntityData().getBasicAttackCost()) {
-					linkedUnit.setInAttackPhase(!linkedUnit.isInAttackPhase());
+					linkedUnit.setInAttackPhase(true);
 				}
 			}
 		});

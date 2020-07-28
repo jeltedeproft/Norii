@@ -43,7 +43,7 @@ public class AttackBattleState extends BattleState {
 			currentUnit.attack(entity);
 			currentUnit.setLocked(true);
 			currentUnit.notifyEntityObserver(EntityCommand.UNIT_LOCKED);
-			notify(AudioObserver.AudioCommand.SOUND_PLAY_ONCE, AudioObserver.AudioTypeEvent.ATTACK_SOUND);
+			notifyAudio(AudioObserver.AudioCommand.SOUND_PLAY_ONCE, AudioObserver.AudioTypeEvent.ATTACK_SOUND);
 		}
 		this.exit();
 	}

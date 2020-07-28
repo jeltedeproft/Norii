@@ -9,6 +9,7 @@ import com.mygdx.game.AI.SelectUnitStrategy.SelectNextUnitRandomly;
 import com.mygdx.game.AI.SelectUnitStrategy.SelectUnitStrategy;
 import com.mygdx.game.Entities.AiEntity;
 import com.mygdx.game.Entities.Entity;
+import com.mygdx.game.Entities.EntityObserver.EntityCommand;
 import com.mygdx.game.Entities.EntityTypes;
 import com.mygdx.game.Entities.PlayerEntity;
 import com.mygdx.game.Map.MyPathFinder;
@@ -59,10 +60,13 @@ public class AITeamLeader {
 
 	public void act(List<PlayerEntity> playerUnits, List<AiEntity> aiUnits) {
 		AiEntity entity = selectUnitStrategy.selectNextEntity(aiUnits);
+		entity.notifyEntityObserver(EntityCommand.FOCUS_CAMERA);
 		aiUnitAct(entity, playerUnits, aiUnits);
 	}
 
 	public void updateUnits(final float delta) {
+		team.removeIf(entity -> entity.isDead());
+
 		for (final Entity entity : team) {
 			entity.update(delta);
 		}

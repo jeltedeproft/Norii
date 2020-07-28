@@ -6,6 +6,10 @@ public interface AudioObserver {
 		MUSIC_TITLE("audio/main2.wav"),
 		ATTACK_SOUND("audio/attack.wav"),
 		SPELL_SOUND("audio/spell.wav"),
+		FIREBALL_SOUND("audio/fireball.mp3"),
+		SWAP_SOUND("audio/swap.mp3"),
+		STONE_SOUND("audio/stone.mp3"),
+		WALK_LOOP("audio/walkloop.wav"),
 		NONE("");
 
 		private final String audioFullFilePath;

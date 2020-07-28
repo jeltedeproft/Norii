@@ -85,7 +85,7 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
 	}
 
 	private void initializeActionPopUps() {
-		actionInfoUIWindows = new ArrayList<ActionInfoUIWindow>();
+		actionInfoUIWindows = new ArrayList<>();
 		for (final ActionsUI actionUI : actionUIs) {
 			for (final ActionInfoUIWindow popUp : actionUI.getPopUps()) {
 				actionInfoUIWindows.add(popUp);

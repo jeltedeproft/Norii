@@ -25,7 +25,7 @@ public class BattleMap extends Map {
 	protected ArrayList<TiledMapPosition> enemyStartPositions;
 
 	BattleMap(final String mapPath) {
-		super(MapFactory.MapType.BATTLE_MAP_THE_TOWN, mapPath);
+		super(MapFactory.MapType.BATTLE_MAP_THE_CELLS, mapPath);
 
 		if (!Utility.isAssetLoaded(mapPath)) {
 			Gdx.app.debug(TAG, "Map not loaded");
@@ -124,15 +124,19 @@ public class BattleMap extends Map {
 
 	@Override
 	public void unloadMusic() {
-		notify(AudioObserver.AudioCommand.MUSIC_STOP, AudioObserver.AudioTypeEvent.MUSIC_BATTLE);
+		notifyAudio(AudioObserver.AudioCommand.MUSIC_STOP, AudioObserver.AudioTypeEvent.MUSIC_BATTLE);
 	}
 
 	@Override
 	public void loadMusic() {
-		notify(AudioObserver.AudioCommand.MUSIC_LOAD, AudioObserver.AudioTypeEvent.MUSIC_BATTLE);
-		notify(AudioObserver.AudioCommand.SOUND_LOAD, AudioObserver.AudioTypeEvent.ATTACK_SOUND);
-		notify(AudioObserver.AudioCommand.SOUND_LOAD, AudioObserver.AudioTypeEvent.SPELL_SOUND);
-		notify(AudioObserver.AudioCommand.MUSIC_PLAY_LOOP, AudioObserver.AudioTypeEvent.MUSIC_BATTLE);
+		notifyAudio(AudioObserver.AudioCommand.MUSIC_LOAD, AudioObserver.AudioTypeEvent.MUSIC_BATTLE);
+		notifyAudio(AudioObserver.AudioCommand.SOUND_LOAD, AudioObserver.AudioTypeEvent.ATTACK_SOUND);
+		notifyAudio(AudioObserver.AudioCommand.SOUND_LOAD, AudioObserver.AudioTypeEvent.SPELL_SOUND);
+		notifyAudio(AudioObserver.AudioCommand.SOUND_LOAD, AudioObserver.AudioTypeEvent.WALK_LOOP);
+		notifyAudio(AudioObserver.AudioCommand.SOUND_LOAD, AudioObserver.AudioTypeEvent.FIREBALL_SOUND);
+		notifyAudio(AudioObserver.AudioCommand.SOUND_LOAD, AudioObserver.AudioTypeEvent.SWAP_SOUND);
+		notifyAudio(AudioObserver.AudioCommand.SOUND_LOAD, AudioObserver.AudioTypeEvent.STONE_SOUND);
+		notifyAudio(AudioObserver.AudioCommand.MUSIC_PLAY_LOOP, AudioObserver.AudioTypeEvent.MUSIC_BATTLE);
 	}
 
 	public void dispose() {

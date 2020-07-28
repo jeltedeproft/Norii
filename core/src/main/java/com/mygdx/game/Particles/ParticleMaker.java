@@ -17,8 +17,8 @@ public class ParticleMaker {
 
 	static {
 		particlesChanged = false;
-		particlePools = new EnumMap<ParticleType, ParticlePool>(ParticleType.class);
-		allParticles = new EnumMap<ParticleType, ArrayList<Particle>>(ParticleType.class);
+		particlePools = new EnumMap<>(ParticleType.class);
+		allParticles = new EnumMap<>(ParticleType.class);
 	}
 
 	private ParticleMaker() {
@@ -77,7 +77,7 @@ public class ParticleMaker {
 
 	private static void addParticleToTypedParticles(final ParticleType particletype, final Particle newParticle) {
 		if (allParticles.get(particletype) == null) {
-			allParticles.put(particletype, new ArrayList<Particle>());
+			allParticles.put(particletype, new ArrayList<>());
 		}
 		allParticles.get(particletype).add(newParticle);
 		newParticle.start();

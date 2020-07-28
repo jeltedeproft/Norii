@@ -250,13 +250,12 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	private void renderElements(final float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+		Gdx.graphics.setTitle("fps = " + Gdx.graphics.getFramesPerSecond());
 		renderMap();
 		renderGrid();
 		renderUnits();
 		renderParticles(delta);
 		renderHUD(delta);
-		entityStage.drawEntitiesDebug();
 	}
 
 	private void renderMap() {
@@ -303,14 +302,14 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	@Override
 	public void pause() {
 		isPaused = true;
-		notify(AudioObserver.AudioCommand.MUSIC_PAUSE, AudioObserver.AudioTypeEvent.MUSIC_BATTLE);
+		notifyAudio(AudioObserver.AudioCommand.MUSIC_PAUSE, AudioObserver.AudioTypeEvent.MUSIC_BATTLE);
 		pauseMenu.setVisible(true);
 	}
 
 	@Override
 	public void resume() {
 		isPaused = false;
-		notify(AudioObserver.AudioCommand.MUSIC_RESUME, AudioObserver.AudioTypeEvent.MUSIC_BATTLE);
+		notifyAudio(AudioObserver.AudioCommand.MUSIC_RESUME, AudioObserver.AudioTypeEvent.MUSIC_BATTLE);
 		pauseMenu.setVisible(false);
 	}
 
@@ -354,9 +353,6 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 		case IN_ATTACK_PHASE:
 			prepareAttack(unit);
 			break;
-		case UNIT_ACTIVE:
-			// playerBattleHUD.getPortraits().updateBorders(unit);
-			break;
 		case UNIT_LOCKED:
 			battlemanager.setLockedUnit(unit);
 			break;
@@ -378,6 +374,12 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 		switch (command) {
 		case AI_FINISHED_TURN:
 			battlemanager.swapTurn();
+			break;
+		case FOCUS_CAMERA:
+			mapCamera.position.set(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY(), 0f);
+			break;
+		case CLICKED:
+			battlemanager.getCurrentBattleState().clickedOnUnit(aiUnit);
 			break;
 		default:
 			break;
@@ -411,8 +413,8 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 		for (final GridCell cell : attackPath) {
 			final TiledMapPosition positionToPutAttackParticle = new TiledMapPosition().setPositionFromTiles(cell.x, cell.y);
 			ParticleMaker.addParticle(ParticleType.ATTACK, positionToPutAttackParticle);
-			battlemanager.setCurrentBattleState(battlemanager.getAttackBattleState());
 		}
+		battlemanager.setCurrentBattleState(battlemanager.getAttackBattleState());
 	}
 
 	private void prepareSpell(final Entity unit, final Ability ability) {

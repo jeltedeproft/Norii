@@ -14,7 +14,7 @@ public abstract class BattleState implements AudioSubject {
 
 	public BattleState() {
 		observers = new Array<>();
-		this.addObserver(AudioManager.getInstance());
+		this.addAudioObserver(AudioManager.getInstance());
 	}
 
 	public void entry() {
@@ -42,22 +42,22 @@ public abstract class BattleState implements AudioSubject {
 	}
 
 	@Override
-	public void addObserver(AudioObserver audioObserver) {
+	public void addAudioObserver(AudioObserver audioObserver) {
 		observers.add(audioObserver);
 	}
 
 	@Override
-	public void removeObserver(AudioObserver audioObserver) {
+	public void removeAudioObserver(AudioObserver audioObserver) {
 		observers.removeValue(audioObserver, true);
 	}
 
 	@Override
-	public void removeAllObservers() {
+	public void removeAllAudioObservers() {
 		observers.removeAll(observers, true);
 	}
 
 	@Override
-	public void notify(AudioObserver.AudioCommand command, AudioObserver.AudioTypeEvent event) {
+	public void notifyAudio(AudioObserver.AudioCommand command, AudioObserver.AudioTypeEvent event) {
 		for (AudioObserver observer : observers) {
 			observer.onNotify(command, event);
 		}
