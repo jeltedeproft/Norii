@@ -182,7 +182,7 @@ public class SpellBattleState extends BattleState {
 	private void castFireBall(final Entity caster, final TiledMapPosition targetPos, final Ability ability) {
 		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
 		notifyAudio(AudioObserver.AudioCommand.SOUND_PLAY_ONCE, AudioObserver.AudioTypeEvent.FIREBALL_SOUND);
-		ParticleMaker.addParticle(ParticleType.FIREBALL, targetPos);
+		ParticleMaker.addParticle(ParticleType.FIREBALL, targetPos, 0);
 
 		final Entity possibleTarget = getEntityAtPosition(targetPos);
 		if (possibleTarget != null) {
@@ -193,7 +193,7 @@ public class SpellBattleState extends BattleState {
 	private void castSwap(final Entity caster, final Entity target, final Ability ability) {
 		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
 		notifyAudio(AudioObserver.AudioCommand.SOUND_PLAY_ONCE, AudioObserver.AudioTypeEvent.SWAP_SOUND);
-		ParticleMaker.addParticle(ParticleType.SWAP, caster.getCurrentPosition());
+		ParticleMaker.addParticle(ParticleType.SWAP, caster.getCurrentPosition(), 0);
 		final TiledMapPosition posCaster = caster.getCurrentPosition();
 		caster.setCurrentPosition(target.getCurrentPosition());
 		target.setCurrentPosition(posCaster);

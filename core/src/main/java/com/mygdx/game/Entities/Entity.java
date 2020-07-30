@@ -317,13 +317,15 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 	}
 
 	public void applyModifiers() {
-		for (final Modifier mod : modifiers) {
-			mod.applyModifier(this);
+		modifiers.forEach(this::applymod);
+		modifiers.removeIf(mod -> mod.getTurns() == 0);
+	}
 
-			if (mod.getTurns() == 0) {
-				mod.removeModifier(this);
-				modifiers.remove(mod);
-			}
+	private void applymod(Modifier mod) {
+		mod.applyModifier(this);
+
+		if (mod.getTurns() == 0) {
+			mod.removeModifier(this);
 		}
 	}
 

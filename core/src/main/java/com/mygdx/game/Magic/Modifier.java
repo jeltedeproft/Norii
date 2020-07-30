@@ -1,7 +1,6 @@
 package com.mygdx.game.Magic;
 
 import com.mygdx.game.Entities.Entity;
-import com.mygdx.game.Entities.EntityObserver.EntityCommand;
 
 public class Modifier {
 	private ModifiersEnum type;
@@ -30,7 +29,6 @@ public class Modifier {
 			unit.getEntityData().setAttackPower(unit.getEntityData().getAttackPower() + amount);
 			break;
 		case STUNNED:
-			unit.notifyEntityObserver(EntityCommand.SKIP);
 			break;
 		default:
 			break;

@@ -9,8 +9,8 @@ public class AiEntity extends Entity {
 	public AiEntity(EntityTypes type) {
 		super(type);
 		isPlayerUnit = false;
-		ParticleMaker.addParticle(ParticleType.RED_CIRCLE, currentPlayerPosition);
-		ringParticle = ParticleMaker.getParticle(ParticleType.RED_CIRCLE, currentPlayerPosition);
+		ParticleMaker.addParticle(ParticleType.RED_CIRCLE, currentPlayerPosition, entityID);
+		ringParticle = ParticleMaker.getParticle(ParticleType.RED_CIRCLE, currentPlayerPosition, entityID);
 	}
 
 	public void setActive(final boolean isActive) {

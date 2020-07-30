@@ -14,8 +14,8 @@ public class PlayerEntity extends Entity {
 	public PlayerEntity(EntityTypes type) {
 		super(type);
 		isPlayerUnit = true;
-		ParticleMaker.addParticle(ParticleType.BLUE_CIRCLE, currentPlayerPosition);
-		ringParticle = ParticleMaker.getParticle(ParticleType.BLUE_CIRCLE, currentPlayerPosition);
+		ParticleMaker.addParticle(ParticleType.BLUE_CIRCLE, currentPlayerPosition, entityID);
+		ringParticle = ParticleMaker.getParticle(ParticleType.BLUE_CIRCLE, currentPlayerPosition, entityID);
 	}
 
 	public ActionsUI getActionsui() {

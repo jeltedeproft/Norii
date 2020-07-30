@@ -402,7 +402,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 		for (final GridCell cell : path) {
 			if (!isUnitOnCell(cell)) {
 				final TiledMapPosition positionToPutMoveParticle = new TiledMapPosition().setPositionFromTiles(cell.x, cell.y);
-				ParticleMaker.addParticle(ParticleType.MOVE, positionToPutMoveParticle);
+				ParticleMaker.addParticle(ParticleType.MOVE, positionToPutMoveParticle, 0);
 				battlemanager.setCurrentBattleState(battlemanager.getMovementBattleState());
 			}
 		}
@@ -412,7 +412,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 		final List<GridCell> attackPath = currentMap.getPathfinder().getCellsWithinCircle(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getEntityData().getAttackRange());
 		for (final GridCell cell : attackPath) {
 			final TiledMapPosition positionToPutAttackParticle = new TiledMapPosition().setPositionFromTiles(cell.x, cell.y);
-			ParticleMaker.addParticle(ParticleType.ATTACK, positionToPutAttackParticle);
+			ParticleMaker.addParticle(ParticleType.ATTACK, positionToPutAttackParticle, 0);
 		}
 		battlemanager.setCurrentBattleState(battlemanager.getAttackBattleState());
 	}
@@ -424,7 +424,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 
 		for (final GridCell cell : spellPath) {
 			final TiledMapPosition positionToPutSpellParticle = new TiledMapPosition().setPositionFromTiles(cell.x, cell.y);
-			ParticleMaker.addParticle(ParticleType.SPELL, positionToPutSpellParticle);
+			ParticleMaker.addParticle(ParticleType.SPELL, positionToPutSpellParticle, 0);
 		}
 
 		battlemanager.setCurrentSpell(ability);

@@ -101,7 +101,7 @@ public class BattleMap extends Map {
 
 	public void makeSpawnParticles() {
 		for (final TiledMapPosition pos : unitSpawnPositions) {
-			ParticleMaker.addParticle(ParticleType.SPAWN, pos);
+			ParticleMaker.addParticle(ParticleType.SPAWN, pos, 0);
 		}
 	}
 

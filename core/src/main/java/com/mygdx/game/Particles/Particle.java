@@ -10,15 +10,17 @@ public class Particle extends Actor {
 
 	private TiledMapPosition pos;
 	private Boolean active;
+	private int id;
 	private final ParticleType type;
 	private final PooledEffect particleEffect;
 
-	Particle(final TiledMapPosition pos, final PooledEffect pe, final ParticleType type) {
+	Particle(final TiledMapPosition pos, final PooledEffect pe, final ParticleType type, final int id) {
 		super();
 		this.pos = pos;
 		active = true;
 		this.type = type;
 		particleEffect = pe;
+		this.id = id;
 	}
 
 	public boolean isActive() {
@@ -64,6 +66,14 @@ public class Particle extends Actor {
 
 	public void start() {
 		particleEffect.start();
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	@Override

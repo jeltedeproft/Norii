@@ -2,6 +2,7 @@ package com.mygdx.game.Battle.BattleStates;
 
 import com.mygdx.game.Battle.BattleManager;
 import com.mygdx.game.Entities.Entity;
+import com.mygdx.game.Magic.ModifiersEnum;
 
 public class SelectUnitBattleState extends BattleState {
 	private final BattleManager battlemanager;
@@ -17,13 +18,18 @@ public class SelectUnitBattleState extends BattleState {
 
 	@Override
 	public void clickedOnUnit(Entity entity) {
-		Entity lockedEntity = battlemanager.getLockedUnit();
-		if ((lockedEntity != null) && (lockedEntity.getEntityID() != entity.getEntityID())) {
-			// no-op
-		} else {
+		if (isUnitSelectable(entity)) {
 			battlemanager.setUnitActive(entity);
 			exit();
 		}
+	}
+
+	private boolean isUnitSelectable(Entity entity) {
+		Entity lockedEntity = battlemanager.getLockedUnit();
+		if ((lockedEntity != null) && (lockedEntity.getEntityID() != entity.getEntityID())) {
+			return false;
+		}
+		return !entity.hasModifier(ModifiersEnum.STUNNED);
 	}
 
 	@Override
