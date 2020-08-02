@@ -1,12 +1,14 @@
 package com.mygdx.game.Particles;
 
 public enum ParticleType {
-	SPAWN("particles/spawn.p"), //
-	MOVE("particles/move.p"), //
-	SPELL("particles/mysmalleffect.p"), //
-	FIREBALL("particles/fireball.p"), //
-	SWAP("particles/swap.p"), //
-	ATTACK("particles/attack.p");//
+	SPAWN("particles/spawn.p"),
+	MOVE("particles/move.p"),
+	SPELL("particles/mysmalleffect.p"),
+	FIREBALL("particles/fireball.p"),
+	SWAP("particles/swap.p"),
+	RED_CIRCLE("particles/red_ring.p"),
+	BLUE_CIRCLE("particles/blue_ring.p"),
+	ATTACK("particles/attack.p");
 
 	private String particleFileLocation;
 

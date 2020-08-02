@@ -1,9 +1,9 @@
 package com.mygdx.game.Audio;
 
 public interface AudioSubject {
-    public void addObserver(AudioObserver audioObserver);
-    public void removeObserver(AudioObserver audioObserver);
-    public void removeAllObservers();
-    public void notify(final AudioObserver.AudioCommand command, AudioObserver.AudioTypeEvent event);
+    public void addAudioObserver(AudioObserver audioObserver);
+    public void removeAudioObserver(AudioObserver audioObserver);
+    public void removeAllAudioObservers();
+    public void notifyAudio(final AudioObserver.AudioCommand command, AudioObserver.AudioTypeEvent event);
 }
 

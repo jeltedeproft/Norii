@@ -19,24 +19,18 @@ public class StatusUI extends UIWindow {
 	private int maxApVal;
 	private int xpVal;
 	private int maxXpVal;
-	private int iniVal;
-
-	private WidgetGroup group;
-	private WidgetGroup group2;
 
 	private Label heroName;
 	private Label hp;
 	private Label ap;
 	private Label xp;
 	private Label levelValLabel;
-	private Label iniValLabel;
 
 	private LabelStyle labelStyle;
 	private Label hpLabel;
 	private Label apLabel;
 	private Label xpLabel;
 	private Label levelLabel;
-	private Label iniLabel;
 
 	private Entity linkedEntity;
 	private boolean actionsUIIsHovering = false;
@@ -65,20 +59,9 @@ public class StatusUI extends UIWindow {
 	private void initVariables(final Entity entity) {
 		linkedEntity = entity;
 		entity.setStatusui(this);
-		initiateHeroStats();
+		updateStats();
 		statsUIOffsetX = Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH;
 		statsUIOffsetY = Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT;
-	}
-
-	private void initiateHeroStats() {
-		levelVal = linkedEntity.getEntityData().getLevel();
-		hpVal = linkedEntity.getHp();
-		maxHpVal = linkedEntity.getEntityData().getMaxHP();
-		apVal = linkedEntity.getAp();
-		maxApVal = linkedEntity.getEntityData().getMaxAP();
-		xpVal = linkedEntity.getEntityData().getXp();
-		maxXpVal = linkedEntity.getEntityData().getMaxXP();
-		iniVal = linkedEntity.getEntityData().getBaseInitiative();
 	}
 
 	@Override
@@ -104,13 +87,11 @@ public class StatusUI extends UIWindow {
 		xp = new Label(String.valueOf(xpVal) + "/" + maxXpVal, labelStyle);
 		levelLabel = new Label(" lv:", labelStyle);
 		levelValLabel = new Label(String.valueOf(levelVal), labelStyle);
-		iniLabel = new Label(" ini:", labelStyle);
-		iniValLabel = new Label(String.valueOf(iniVal), labelStyle);
 	}
 
 	private void createGroups() {
-		group = new WidgetGroup();
-		group2 = new WidgetGroup();
+		WidgetGroup group = new WidgetGroup();
+		WidgetGroup group2 = new WidgetGroup();
 		group.setFillParent(true);
 		group2.setFillParent(true);
 
@@ -134,10 +115,6 @@ public class StatusUI extends UIWindow {
 		this.add(levelValLabel).align(Align.left);
 		row();
 
-		this.add(iniLabel).align(Align.left).expandX();
-		this.add(iniValLabel).align(Align.left);
-		row();
-
 		this.add(xpLabel).align(Align.left).expandX();
 		this.add(xp).align(Align.left);
 		row();
@@ -154,12 +131,14 @@ public class StatusUI extends UIWindow {
 		updateLabels();
 		updateSizeElements();
 
-		if (linkedEntity.getEntityactor().getIsHovering()) {
+		boolean isHovering = linkedEntity.getEntityactor().getIsHovering();
+
+		if (Boolean.TRUE.equals(isHovering)) {
 			setVisible(true);
 		}
 
 		if (actionsUIIsHovering) {
-			setVisible(false);
+			// setVisible(false);
 		}
 
 		updatePos();
@@ -172,7 +151,6 @@ public class StatusUI extends UIWindow {
 
 	private void updateStats() {
 		levelVal = linkedEntity.getEntityData().getLevel();
-
 		hpVal = linkedEntity.getHp();
 		maxHpVal = linkedEntity.getEntityData().getMaxHP();
 		apVal = linkedEntity.getAp();
@@ -186,7 +164,6 @@ public class StatusUI extends UIWindow {
 		ap.setText(String.valueOf(apVal) + "/" + maxApVal);
 		xp.setText(String.valueOf(xpVal) + "/" + maxXpVal);
 		levelValLabel.setText(String.valueOf(levelVal));
-		iniValLabel.setText(String.valueOf(iniVal));
 	}
 
 	private void updateSizeElements() {

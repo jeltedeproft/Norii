@@ -2,8 +2,6 @@
 package Utility;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -34,7 +32,6 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.mygdx.game.Entities.Entity;
-import com.mygdx.game.Entities.TeamLeader;
 import com.mygdx.game.Map.MyNavTmxMapLoader;
 import com.mygdx.game.UI.MySkin;
 
@@ -208,34 +205,18 @@ public final class Utility {
 		return result + 1;
 	}
 
-	public static Entity[] sortUnits(final Entity[] sortedUnits) {
-		Arrays.sort(sortedUnits, new Comparator<Entity>() {
-			@Override
-			public int compare(final Entity e1, final Entity e2) {
-				if (e1.getCurrentInitiative() > e2.getCurrentInitiative()) {
-					return 1;
-				} else if (e1.getCurrentInitiative() < e2.getCurrentInitiative()) {
-					return -1;
-				} else {
-					return 0;
-				}
-			}
-		});
-		return sortedUnits;
-	}
+	public static List<TiledMapPosition> collectPositionsUnits(final List<Entity> allUnits) {
+		final ArrayList<TiledMapPosition> positions = new ArrayList<>();
 
-	public static List<TiledMapPosition> collectPositionsUnits(final Entity[] units) {
-		final ArrayList<TiledMapPosition> positions = new ArrayList<TiledMapPosition>();
-
-		for (final Entity unit : units) {
+		for (final Entity unit : allUnits) {
 			positions.add(unit.getCurrentPosition());
 		}
 
 		return positions;
 	}
 
-	public static ArrayList<TiledMapPosition> collectPositionsEnemeyUnits(final ArrayList<Entity> units, final boolean isPlayer) {
-		final ArrayList<TiledMapPosition> enemyPositions = new ArrayList<TiledMapPosition>();
+	public static List<TiledMapPosition> collectPositionsEnemyUnits(final List<Entity> units, final boolean isPlayer) {
+		final ArrayList<TiledMapPosition> enemyPositions = new ArrayList<>();
 
 		for (final Entity unit : units) {
 			if (unit.isPlayerUnit() != isPlayer) {
@@ -244,16 +225,6 @@ public final class Utility {
 		}
 
 		return enemyPositions;
-	}
-
-	public static ArrayList<TiledMapPosition> collectPositionsUnits(final List<TeamLeader> players) {
-		final ArrayList<TiledMapPosition> positions = new ArrayList<TiledMapPosition>();
-		for (final TeamLeader owner : players) {
-			for (final Entity character : owner.getTeam()) {
-				positions.add(character.getCurrentPosition());
-			}
-		}
-		return positions;
 	}
 
 	public static boolean checkIfUnitsWithinDistance(final Entity unit1, final TiledMapPosition targetPos, final int distance) {
@@ -298,7 +269,7 @@ public final class Utility {
 
 	}
 
-	public static void DrawDebugLine(Vector2 start, Vector2 end, int lineWidth, Color color, Matrix4 projectionMatrix) {
+	public static void drawDebugLine(Vector2 start, Vector2 end, int lineWidth, Color color, Matrix4 projectionMatrix) {
 		Gdx.gl.glLineWidth(lineWidth);
 		debugRenderer.setProjectionMatrix(projectionMatrix);
 		debugRenderer.begin(ShapeRenderer.ShapeType.Line);
@@ -308,7 +279,7 @@ public final class Utility {
 		Gdx.gl.glLineWidth(1);
 	}
 
-	public static void DrawDebugLine(Vector2 start, Vector2 end, Matrix4 projectionMatrix) {
+	public static void drawDebugLine(Vector2 start, Vector2 end, Matrix4 projectionMatrix) {
 		Gdx.gl.glLineWidth(2);
 		debugRenderer.setProjectionMatrix(projectionMatrix);
 		debugRenderer.begin(ShapeRenderer.ShapeType.Line);

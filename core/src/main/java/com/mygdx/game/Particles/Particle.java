@@ -8,17 +8,21 @@ import Utility.TiledMapPosition;
 
 public class Particle extends Actor {
 
-	private final TiledMapPosition pos;
+	private TiledMapPosition pos;
 	private Boolean active;
+	private Boolean shown;
+	private int id;
 	private final ParticleType type;
 	private final PooledEffect particleEffect;
 
-	Particle(final TiledMapPosition pos, final PooledEffect pe, final ParticleType type) {
+	Particle(final TiledMapPosition pos, final PooledEffect pe, final ParticleType type, final int id) {
 		super();
 		this.pos = pos;
+		shown = true;
 		active = true;
 		this.type = type;
 		particleEffect = pe;
+		this.id = id;
 	}
 
 	public boolean isActive() {
@@ -30,7 +34,10 @@ public class Particle extends Actor {
 	}
 
 	public void draw(final SpriteBatch spriteBatch, final float delta) {
-		particleEffect.draw(spriteBatch, delta);
+		if (Boolean.TRUE.equals(shown)) {
+			particleEffect.draw(spriteBatch, delta);
+		}
+
 	}
 
 	public void delete() {
@@ -45,8 +52,15 @@ public class Particle extends Actor {
 		return pos;
 	}
 
+	public void setPosition(TiledMapPosition pos) {
+		this.pos = pos;
+		particleEffect.setPosition(pos.getTileX(), pos.getTileY());
+	}
+
 	public void update(final float delta) {
-		particleEffect.update(delta);
+		if (Boolean.TRUE.equals(shown)) {
+			particleEffect.update(delta);
+		}
 	}
 
 	public boolean isComplete() {
@@ -59,5 +73,26 @@ public class Particle extends Actor {
 
 	public void start() {
 		particleEffect.start();
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public Boolean isShown() {
+		return shown;
+	}
+
+	public void setShown(Boolean shown) {
+		this.shown = shown;
+	}
+
+	@Override
+	public String toString() {
+		return "Particle : " + type + " at pos : (" + pos.getTileX() + "," + pos.getTileY() + ")";
 	}
 }

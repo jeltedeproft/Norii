@@ -89,4 +89,9 @@ public class TiledMapActor extends Actor implements TiledMapSubject {
 			observer.onTiledMapNotify(command, actorPos);
 		}
 	}
+
+	@Override
+	public String toString() {
+		return "tiledMapActor : (" + actorPos.getTileX() + "," + actorPos.getTileY() + ")";
+	}
 }

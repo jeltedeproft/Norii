@@ -28,7 +28,7 @@ import Utility.Utility;
 public class SettingsScreen implements Screen {
 	private static final float FRAME_DURATION = 0.2f;
 
-	private static String defaultBackgroundPath = "sprites/gui/mountain_bg/forestbg.gif";
+	private static String defaultBackgroundPath = "sprites/gui/gif/forestbg.gif";
 
 	private Label titleLabel;
 	private Label settingsLabel;

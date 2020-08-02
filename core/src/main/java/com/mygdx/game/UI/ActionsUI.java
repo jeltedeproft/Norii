@@ -1,13 +1,15 @@
 package com.mygdx.game.UI;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.badlogic.gdx.Gdx;
-import com.mygdx.game.Entities.Entity;
+import com.mygdx.game.Entities.PlayerEntity;
 import com.mygdx.game.Magic.Ability;
 import com.mygdx.game.Screen.BattleScreen;
 
 public class ActionsUI extends UIWindow {
+	private static final float Y_OFFSET = 50f;
 	private static final float WINDOW_WIDTH = 5f;
 	private static final float WINDOW_HEIGHT = 1f;
 	private static final int BUTTON_WIDTH = 1;
@@ -25,9 +27,9 @@ public class ActionsUI extends UIWindow {
 
 	private ArrayList<ActionUIButton> buttons;
 	private ArrayList<ActionInfoUIWindow> popUps;
-	private Entity linkedEntity;
+	private PlayerEntity linkedEntity;
 
-	public ActionsUI(final Entity entity) {
+	public ActionsUI(final PlayerEntity entity) {
 		super("", WINDOW_WIDTH + EXTRA_WINDOW_SIZE, WINDOW_HEIGHT + EXTRA_WINDOW_SIZE);
 		configureMainWindow();
 		initVariables(entity);
@@ -43,7 +45,7 @@ public class ActionsUI extends UIWindow {
 		setKeepWithinStage(false);
 	}
 
-	private void initVariables(final Entity entity) {
+	private void initVariables(final PlayerEntity entity) {
 		buttons = new ArrayList<>();
 		linkedEntity = entity;
 		entity.setActionsui(this);
@@ -102,7 +104,7 @@ public class ActionsUI extends UIWindow {
 
 	@Override
 	public void updatePos() {
-		this.setPosition(linkedEntity.getCurrentPosition().getCameraX(), linkedEntity.getCurrentPosition().getCameraY());
+		this.setPosition(linkedEntity.getCurrentPosition().getCameraX(), linkedEntity.getCurrentPosition().getCameraY() + Y_OFFSET);
 		adjustPosition();
 		adjustPopUps();
 		setHovering();
@@ -119,7 +121,7 @@ public class ActionsUI extends UIWindow {
 		final float x = linkedEntity.getCurrentPosition().getCameraX();
 		final float y = linkedEntity.getCurrentPosition().getCameraY();
 		final float offsetX = Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH;
-		final float offsetY = WINDOW_HEIGHT * tileHeightPixel;
+		final float offsetY = (WINDOW_HEIGHT * tileHeightPixel) + Y_OFFSET;
 		final Boolean right = x > (Gdx.graphics.getWidth() / 3);
 		final Boolean up = y > (Gdx.graphics.getHeight() / 3);
 
@@ -136,7 +138,7 @@ public class ActionsUI extends UIWindow {
 		}
 	}
 
-	public ArrayList<ActionInfoUIWindow> getPopUps() {
+	public List<ActionInfoUIWindow> getPopUps() {
 		return popUps;
 	}
 

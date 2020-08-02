@@ -9,6 +9,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
+import com.mygdx.game.Battle.BattleStates.AttackBattleState;
+import com.mygdx.game.Battle.BattleStates.BattleState;
+
 public class AttackBattleStateTest {
 
 	@InjectMocks

@@ -11,27 +11,27 @@ public class GameScreen implements Screen, AudioSubject {
 	private final Array<AudioObserver> observers;
 
 	public GameScreen() {
-		observers = new Array<AudioObserver>();
-		this.addObserver(AudioManager.getInstance());
+		observers = new Array<>();
+		this.addAudioObserver(AudioManager.getInstance());
 	}
 
 	@Override
-	public void addObserver(AudioObserver audioObserver) {
+	public void addAudioObserver(AudioObserver audioObserver) {
 		observers.add(audioObserver);
 	}
 
 	@Override
-	public void removeObserver(AudioObserver audioObserver) {
+	public void removeAudioObserver(AudioObserver audioObserver) {
 		observers.removeValue(audioObserver, true);
 	}
 
 	@Override
-	public void removeAllObservers() {
+	public void removeAllAudioObservers() {
 		observers.removeAll(observers, true);
 	}
 
 	@Override
-	public void notify(AudioObserver.AudioCommand command, AudioObserver.AudioTypeEvent event) {
+	public void notifyAudio(AudioObserver.AudioCommand command, AudioObserver.AudioTypeEvent event) {
 		for (final AudioObserver observer : observers) {
 			observer.onNotify(command, event);
 		}

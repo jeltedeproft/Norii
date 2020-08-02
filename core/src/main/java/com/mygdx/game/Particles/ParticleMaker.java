@@ -17,8 +17,8 @@ public class ParticleMaker {
 
 	static {
 		particlesChanged = false;
-		particlePools = new EnumMap<ParticleType, ParticlePool>(ParticleType.class);
-		allParticles = new EnumMap<ParticleType, ArrayList<Particle>>(ParticleType.class);
+		particlePools = new EnumMap<>(ParticleType.class);
+		allParticles = new EnumMap<>(ParticleType.class);
 	}
 
 	private ParticleMaker() {
@@ -34,7 +34,7 @@ public class ParticleMaker {
 				}
 
 				if (particle.isComplete()) {
-					particle.delete();
+					particlesChanged = true;
 					particle.deactivate();
 				}
 			}
@@ -51,9 +51,9 @@ public class ParticleMaker {
 		}
 	}
 
-	public static void addParticle(final ParticleType particletype, final TiledMapPosition pos) {
+	public static void addParticle(final ParticleType particletype, final TiledMapPosition pos, final int id) {
 		final ParticlePool particlePool = initiatePool(particletype);
-		final Particle newParticle = createPooledParticle(particletype, pos, particlePool);
+		final Particle newParticle = createPooledParticle(particletype, pos, particlePool, id);
 		addParticleToTypedParticles(particletype, newParticle);
 	}
 
@@ -68,17 +68,15 @@ public class ParticleMaker {
 		return particlePool;
 	}
 
-	private static Particle createPooledParticle(final ParticleType particletype, final TiledMapPosition pos, final ParticlePool particlePool) {
+	private static Particle createPooledParticle(final ParticleType particletype, final TiledMapPosition pos, final ParticlePool particlePool, final int id) {
 		final PooledEffect particle = particlePool.getParticleEffect();
 		particle.setPosition(pos.getTileX(), pos.getTileY());
 		particle.scaleEffect(Map.UNIT_SCALE);
-		return new Particle(pos, particle, particletype);
+		return new Particle(pos, particle, particletype, id);
 	}
 
 	private static void addParticleToTypedParticles(final ParticleType particletype, final Particle newParticle) {
-		if (allParticles.get(particletype) == null) {
-			allParticles.put(particletype, new ArrayList<Particle>());
-		}
+		allParticles.computeIfAbsent(particletype, k -> new ArrayList<>());
 		allParticles.get(particletype).add(newParticle);
 		newParticle.start();
 	}
@@ -86,6 +84,15 @@ public class ParticleMaker {
 	public static Particle getParticle(final ParticleType particletype, final TiledMapPosition pos) {
 		for (final Particle particle : allParticles.get(particletype)) {
 			if (particle.getPosition().isTileEqualTo(pos)) {
+				return particle;
+			}
+		}
+		return null;
+	}
+
+	public static Particle getParticle(final ParticleType particletype, final TiledMapPosition pos, final int id) {
+		for (final Particle particle : allParticles.get(particletype)) {
+			if ((particle.getPosition().isTileEqualTo(pos)) && particle.getId() == id) {
 				return particle;
 			}
 		}

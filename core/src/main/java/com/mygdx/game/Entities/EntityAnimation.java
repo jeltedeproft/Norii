@@ -1,9 +1,10 @@
 package com.mygdx.game.Entities;
 
+import java.util.EnumMap;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 
@@ -12,112 +13,146 @@ import Utility.Utility;
 public class EntityAnimation {
 	private static final String TAG = EntityAnimation.class.getSimpleName();
 
-	private static final int ANIMATIONFRAMES = 3;
-	private static final int DIRECTIONS = 4;
-	private static final int FRAME_WIDTH = 32;
-	private static final int FRAME_HEIGHT = 32;
-	private final String spritePath;
+	private static final int FRAME_WIDTH = 64;
+	private static final int FRAME_HEIGHT = 64;
 
-	private Animation<TextureRegion> walkLeftAnimation;
-	private Animation<TextureRegion> walkRightAnimation;
-	private Animation<TextureRegion> walkUpAnimation;
-	private Animation<TextureRegion> walkDownAnimation;
-
-	Array<TextureRegion> walkDownFrames;
-	Array<TextureRegion> walkLeftFrames;
-	Array<TextureRegion> walkRightFrames;
-	Array<TextureRegion> walkUpFrames;
-
+	private String spritePath;
 	protected float frameTime = 0f;
-	protected Sprite frameSprite = null;
 	protected TextureRegion currentFrame = null;
 	private Direction currentDirection = Direction.DOWN;
 
-	public enum State {
-		IDLE,
-		WALKING
-	}
+	private EnumMap<EntityAnimationType, Integer> framesPerAnimationType;
+	private EnumMap<EntityAnimationType, Animation.PlayMode> playmodePerAnimationType;
+	private EntityAnimationType currentAnimationType = EntityAnimationType.IDLE;
 
-	public enum Direction {
-		UP,
-		RIGHT,
-		DOWN,
-		LEFT;
-	}
+	private EnumMap<EntityAnimationType, Animation<TextureRegion>> leftAnimations;
+	private EnumMap<EntityAnimationType, Animation<TextureRegion>> rightAnimations;
+	private EnumMap<EntityAnimationType, Animation<TextureRegion>> upAnimations;
+	private EnumMap<EntityAnimationType, Animation<TextureRegion>> downAnimations;
 
 	public EntityAnimation(final String spritePath) {
+		initVariables(spritePath);
+		loadTextureSheet();
+	}
+
+	private void initVariables(final String spritePath) {
 		this.spritePath = spritePath;
+		framesPerAnimationType = new EnumMap<>(EntityAnimationType.class);
+		playmodePerAnimationType = new EnumMap<>(EntityAnimationType.class);
+		downAnimations = new EnumMap<>(EntityAnimationType.class);
+		leftAnimations = new EnumMap<>(EntityAnimationType.class);
+		rightAnimations = new EnumMap<>(EntityAnimationType.class);
+		upAnimations = new EnumMap<>(EntityAnimationType.class);
+		initFramesPerAnimationType();
+		initPlaymodePerAnimationType();
+	}
+
+	private void initFramesPerAnimationType() {
+		framesPerAnimationType.put(EntityAnimationType.SPELLCAST, 7);
+		framesPerAnimationType.put(EntityAnimationType.THRUST, 8);
+		framesPerAnimationType.put(EntityAnimationType.WALK, 9);
+		framesPerAnimationType.put(EntityAnimationType.SLASH, 6);
+		framesPerAnimationType.put(EntityAnimationType.SHOOT, 13);
+		framesPerAnimationType.put(EntityAnimationType.HURT, 6);
+		framesPerAnimationType.put(EntityAnimationType.IDLE, 2);
+	}
+
+	private void initPlaymodePerAnimationType() {
+		playmodePerAnimationType.put(EntityAnimationType.SPELLCAST, Animation.PlayMode.NORMAL);
+		playmodePerAnimationType.put(EntityAnimationType.THRUST, Animation.PlayMode.NORMAL);
+		playmodePerAnimationType.put(EntityAnimationType.WALK, Animation.PlayMode.LOOP);
+		playmodePerAnimationType.put(EntityAnimationType.SLASH, Animation.PlayMode.NORMAL);
+		playmodePerAnimationType.put(EntityAnimationType.SHOOT, Animation.PlayMode.NORMAL);
+		playmodePerAnimationType.put(EntityAnimationType.HURT, Animation.PlayMode.NORMAL);
+		playmodePerAnimationType.put(EntityAnimationType.IDLE, Animation.PlayMode.LOOP);
+	}
+
+	private void loadTextureSheet() {
 		Utility.loadTextureAsset(spritePath);
-		loadSprite();
-		loadAllAnimations();
-	}
-
-	public void update(final float delta) {
-		frameTime = (frameTime + delta) % 5; //Want to avoid overflow
-		updateFrame();
-	}
-
-	private void loadSprite() {
 		final Texture texture = Utility.getTextureAsset(spritePath);
 		final TextureRegion[][] textureFrames = TextureRegion.split(texture, FRAME_WIDTH, FRAME_HEIGHT);
-		frameSprite = new Sprite(textureFrames[0][0].getTexture(), 0, 0, FRAME_WIDTH, FRAME_HEIGHT);
 		currentFrame = textureFrames[0][0];
-	}
-
-	private void loadAllAnimations() {
-		final TextureRegion[][] textureFrames = initVariables();
 		divideAnimationFrames(textureFrames);
-		createAnimations();
-	}
-
-	private TextureRegion[][] initVariables() {
-		final Texture texture = Utility.getTextureAsset(spritePath);
-		final TextureRegion[][] textureFrames = TextureRegion.split(texture, FRAME_WIDTH, FRAME_HEIGHT);
-
-		walkDownFrames = new Array<TextureRegion>(ANIMATIONFRAMES);
-		walkLeftFrames = new Array<TextureRegion>(ANIMATIONFRAMES);
-		walkRightFrames = new Array<TextureRegion>(ANIMATIONFRAMES);
-		walkUpFrames = new Array<TextureRegion>(ANIMATIONFRAMES);
-		return textureFrames;
 	}
 
 	private void divideAnimationFrames(final TextureRegion[][] textureFrames) {
-		for (int i = 0; i < DIRECTIONS; i++) {
-			for (int j = 0; j < ANIMATIONFRAMES; j++) {
-				final TextureRegion region = textureFrames[i][j];
-				if (region == null) {
-					Gdx.app.debug(TAG, "Got null animation frame " + i + "," + j);
+		for (Direction direction : Direction.values()) {
+			for (EntityAnimationType animationType : EntityAnimationType.values()) {
+				Array<TextureRegion> holderTextureRegion = new Array<>();
+				if (notIdleOrDeath(animationType)) {
+					for (int i = 0; i < framesPerAnimationType.get(animationType); i++) {
+						int y1 = direction.ordinal();
+						int y2 = animationType.getYPosition();
+						holderTextureRegion.add(textureFrames[y1 + y2][i]);
+					}
+				} else {
+					addIdleOrDeath(direction, animationType, holderTextureRegion, textureFrames);
 				}
-
-				switch (i) {
-					case 0:
-						walkDownFrames.insert(j, region);
-						break;
-					case 1:
-						walkLeftFrames.insert(j, region);
-						break;
-					case 2:
-						walkRightFrames.insert(j, region);
-						break;
-					case 3:
-						walkUpFrames.insert(j, region);
-						break;
-					default:
-						break;
-				}
+				sortFrames(direction, animationType, holderTextureRegion);
 			}
 		}
 	}
 
-	private void createAnimations() {
-		walkDownAnimation = new Animation<TextureRegion>(0.25f, walkDownFrames, Animation.PlayMode.LOOP);
-		walkLeftAnimation = new Animation<TextureRegion>(0.25f, walkLeftFrames, Animation.PlayMode.LOOP);
-		walkRightAnimation = new Animation<TextureRegion>(0.25f, walkRightFrames, Animation.PlayMode.LOOP);
-		walkUpAnimation = new Animation<TextureRegion>(0.25f, walkUpFrames, Animation.PlayMode.LOOP);
+	private boolean notIdleOrDeath(EntityAnimationType animationType) {
+		return !(animationType == EntityAnimationType.IDLE || animationType == EntityAnimationType.HURT);
 	}
 
-	public Sprite getFrameSprite() {
-		return frameSprite;
+	private void addIdleOrDeath(Direction direction, EntityAnimationType animationType, Array<TextureRegion> holderTextureRegion, TextureRegion[][] textureFrames) {
+		if (animationType == EntityAnimationType.IDLE) {
+			int y1 = direction.ordinal();
+			holderTextureRegion.add(textureFrames[y1][0]);
+			holderTextureRegion.add(textureFrames[y1][1]);
+		}
+
+		if (animationType == EntityAnimationType.HURT) {
+			int y2 = animationType.getYPosition();
+			for (int i = 0; i < framesPerAnimationType.get(animationType); i++) {
+				holderTextureRegion.add(textureFrames[y2][i]);
+			}
+		}
+	}
+
+	private void sortFrames(Direction direction, EntityAnimationType animationType, Array<TextureRegion> holderTextureRegion) {
+		switch (direction) {
+		case DOWN:
+			downAnimations.put(animationType, new Animation<>(0.25f, holderTextureRegion, playmodePerAnimationType.get(animationType)));
+			break;
+		case UP:
+			upAnimations.put(animationType, new Animation<>(0.25f, holderTextureRegion, playmodePerAnimationType.get(animationType)));
+			break;
+		case LEFT:
+			leftAnimations.put(animationType, new Animation<>(0.25f, holderTextureRegion, playmodePerAnimationType.get(animationType)));
+			break;
+		case RIGHT:
+			rightAnimations.put(animationType, new Animation<>(0.25f, holderTextureRegion, playmodePerAnimationType.get(animationType)));
+			break;
+		default:
+			Gdx.app.log(TAG, "wrong direction for animation");
+		}
+	}
+
+	public void update(final float delta) {
+		frameTime = (frameTime + delta) % 5; // Want to avoid overflow
+		updateFrame();
+	}
+
+	public void updateFrame() {
+		switch (currentDirection) {
+		case DOWN:
+			currentFrame = downAnimations.get(currentAnimationType).getKeyFrame(frameTime);
+			break;
+		case LEFT:
+			currentFrame = leftAnimations.get(currentAnimationType).getKeyFrame(frameTime);
+			break;
+		case UP:
+			currentFrame = upAnimations.get(currentAnimationType).getKeyFrame(frameTime);
+			break;
+		case RIGHT:
+			currentFrame = rightAnimations.get(currentAnimationType).getKeyFrame(frameTime);
+			break;
+		default:
+			break;
+		}
 	}
 
 	public TextureRegion getFrame() {
@@ -137,22 +172,18 @@ public class EntityAnimation {
 		return currentDirection;
 	}
 
-	public void updateFrame() {
-		switch (currentDirection) {
-			case DOWN:
-				currentFrame = walkDownAnimation.getKeyFrame(frameTime);
-				break;
-			case LEFT:
-				currentFrame = walkLeftAnimation.getKeyFrame(frameTime);
-				break;
-			case UP:
-				currentFrame = walkUpAnimation.getKeyFrame(frameTime);
-				break;
-			case RIGHT:
-				currentFrame = walkRightAnimation.getKeyFrame(frameTime);
-				break;
-			default:
-				break;
-		}
+	public EntityAnimationType getCurrentAnimationType() {
+		return currentAnimationType;
+	}
+
+	public void setCurrentAnimationType(EntityAnimationType currentAnimationType) {
+		this.currentAnimationType = currentAnimationType;
+	}
+
+	public enum Direction {
+		UP,
+		LEFT,
+		DOWN,
+		RIGHT;
 	}
 }

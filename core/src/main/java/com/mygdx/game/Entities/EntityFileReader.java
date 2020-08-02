@@ -6,7 +6,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 
 public class EntityFileReader {
 	private static boolean statsLoaded = false;
-	private static ObjectMap<Integer, EntityData> unitData = new ObjectMap<Integer, EntityData>();
+	private static ObjectMap<Integer, EntityData> unitData = new ObjectMap<>();
 	private static final String UNIT_STATS_FILE_LOCATION = "units/unitStats.json";
 
 	private EntityFileReader() {

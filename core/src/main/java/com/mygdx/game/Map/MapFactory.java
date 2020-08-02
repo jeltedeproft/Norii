@@ -3,7 +3,7 @@ package com.mygdx.game.Map;
 import java.util.EnumMap;
 
 public class MapFactory {
-	private static EnumMap<MapType, Map> mapTable = new EnumMap<MapType, Map>(MapType.class);
+	private static EnumMap<MapType, Map> mapTable = new EnumMap<>(MapType.class);
 
 	public enum MapType {
 		BATTLE_MAP_THE_TOWN {
@@ -17,17 +17,22 @@ public class MapFactory {
 			public String toString() {
 				return "maps/32x32 rpg battlemap(UIseparate).tmx";
 			}
+		},
+		BATTLE_MAP_THE_CELLS {
+			@Override
+			public String toString() {
+				return "maps/tactical.tmx";
+			}
 		}
 	}
 
 	public static Map getMap(MapType mapType) {
-		Map map = null;
-		map = mapTable.get(mapType);
-		if (map == null) {
-			map = new BattleMap(mapType.toString());
-			mapTable.put(mapType, map);
-		}
+		return mapTable.computeIfAbsent(mapType, k -> computeMap(k));
+	}
 
+	private static BattleMap computeMap(MapType k) {
+		BattleMap map = new BattleMap(k.toString());
+		mapTable.put(k, map);
 		return map;
 	}
 }

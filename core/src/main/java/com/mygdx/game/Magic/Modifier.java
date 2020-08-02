@@ -1,7 +1,6 @@
 package com.mygdx.game.Magic;
 
 import com.mygdx.game.Entities.Entity;
-import com.mygdx.game.Entities.EntityObserver.EntityCommand;
 
 public class Modifier {
 	private ModifiersEnum type;
@@ -26,18 +25,10 @@ public class Modifier {
 		case REDUCE_DAMAGE:
 			unit.getEntityData().setAttackPower(unit.getEntityData().getAttackPower() - amount);
 			break;
-		case REDUCE_INITIATIVE:
-			unit.setCurrentInitiative(unit.getCurrentInitiative() - amount);
-			break;
 		case IMPROVE_DAMAGE:
 			unit.getEntityData().setAttackPower(unit.getEntityData().getAttackPower() + amount);
 			break;
-		case IMPROVE_INITIATIVE:
-			unit.setCurrentInitiative(unit.getCurrentInitiative() + amount);
-			break;
 		case STUNNED:
-			unit.getActionsui().setVisible(false);
-			unit.notifyEntityObserver(EntityCommand.SKIP);
 			break;
 		default:
 			break;
@@ -51,14 +42,8 @@ public class Modifier {
 		case REDUCE_DAMAGE:
 			unit.getEntityData().setAttackPower(unit.getEntityData().getAttackPower() + amount);
 			break;
-		case REDUCE_INITIATIVE:
-			unit.setCurrentInitiative(unit.getCurrentInitiative() + amount);
-			break;
 		case IMPROVE_DAMAGE:
 			unit.getEntityData().setAttackPower(unit.getEntityData().getAttackPower() - amount);
-			break;
-		case IMPROVE_INITIATIVE:
-			unit.setCurrentInitiative(unit.getCurrentInitiative() - amount);
 			break;
 		case IMAGE_CHANGED:
 			unit.restoreAnimation();
@@ -94,6 +79,11 @@ public class Modifier {
 
 	public void setAmount(final int amount) {
 		this.amount = amount;
+	}
+
+	@Override
+	public String toString() {
+		return "modifier name : " + type;
 	}
 
 }

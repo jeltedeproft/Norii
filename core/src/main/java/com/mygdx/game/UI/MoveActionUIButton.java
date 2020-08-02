@@ -2,10 +2,10 @@ package com.mygdx.game.UI;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.mygdx.game.Entities.Entity;
+import com.mygdx.game.Entities.PlayerEntity;
 
 public class MoveActionUIButton extends ActionUIButton {
-	public MoveActionUIButton(final String imageFileName, final Entity linkedUnit) {
+	public MoveActionUIButton(final String imageFileName, final PlayerEntity linkedUnit) {
 		super(imageFileName);
 		active = true;
 		infotext = "use this button to move";

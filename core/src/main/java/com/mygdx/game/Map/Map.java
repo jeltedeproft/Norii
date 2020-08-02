@@ -70,7 +70,7 @@ public abstract class Map implements AudioSubject {
 		setupMapProperties();
 		initializeClassVariables(mapType);
 
-		addObserver(AudioManager.getInstance());
+		addAudioObserver(AudioManager.getInstance());
 	}
 
 	private void setupMapProperties() {
@@ -100,7 +100,7 @@ public abstract class Map implements AudioSubject {
 	private void initializeClassVariables(final MapFactory.MapType mapType) {
 		json = new Json();
 		currentMapType = mapType;
-		observers = new Array<AudioObserver>();
+		observers = new Array<>();
 	}
 
 	public MyNavigationTiledMapLayer getNavLayer() {
@@ -152,22 +152,22 @@ public abstract class Map implements AudioSubject {
 	public abstract void loadMusic();
 
 	@Override
-	public void addObserver(final AudioObserver audioObserver) {
+	public void addAudioObserver(final AudioObserver audioObserver) {
 		observers.add(audioObserver);
 	}
 
 	@Override
-	public void removeObserver(final AudioObserver audioObserver) {
+	public void removeAudioObserver(final AudioObserver audioObserver) {
 		observers.removeValue(audioObserver, true);
 	}
 
 	@Override
-	public void removeAllObservers() {
+	public void removeAllAudioObservers() {
 		observers.removeAll(observers, true);
 	}
 
 	@Override
-	public void notify(final AudioObserver.AudioCommand command, final AudioObserver.AudioTypeEvent event) {
+	public void notifyAudio(final AudioObserver.AudioCommand command, final AudioObserver.AudioTypeEvent event) {
 		for (final AudioObserver observer : observers) {
 			observer.onNotify(command, event);
 		}

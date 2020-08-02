@@ -11,7 +11,6 @@ public class EntityData {
 	private int level;
 	private int xp;
 	private int maxXP;
-	private int baseInitiative;
 	private int attackRange;
 	private int attackPower;
 	private int basicAttackCost;
@@ -97,15 +96,6 @@ public class EntityData {
 
 	public void setXp(final int xp) {
 		this.xp = xp;
-		linkedEntity.updateUI();
-	}
-
-	public int getBaseInitiative() {
-		return baseInitiative;
-	}
-
-	public void setBaseInitiative(final int ini) {
-		baseInitiative = ini;
 		linkedEntity.updateUI();
 	}
 
