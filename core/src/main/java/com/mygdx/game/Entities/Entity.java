@@ -25,6 +25,7 @@ import com.mygdx.game.Magic.Ability;
 import com.mygdx.game.Magic.Modifier;
 import com.mygdx.game.Magic.ModifiersEnum;
 import com.mygdx.game.Particles.Particle;
+import com.mygdx.game.Particles.ParticleMaker;
 import com.mygdx.game.UI.CharacterHud;
 import com.mygdx.game.UI.StatusUI;
 
@@ -65,7 +66,7 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 
 	private Runnable updatePositionAction;
 	private Runnable aiFinishTurn;
-	private Runnable stopWalkSound;
+	private Runnable stopWalkAction;
 
 	protected Particle ringParticle;
 
@@ -104,7 +105,7 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 
 	private void initActions() {
 		updatePositionAction = this::updatePositionFromActor;
-		stopWalkSound = this::stopWalkingSound;
+		stopWalkAction = this::stopWalkingAction;
 		aiFinishTurn = () -> notifyEntityObserver(EntityCommand.AI_FINISHED_TURN);
 	}
 
@@ -178,6 +179,7 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 	}
 
 	public void attack(final Entity target) {
+		getEntityAnimation().setCurrentAnimationType(EntityAnimationType.SLASH);
 		target.damage(entityData.getAttackPower());
 	}
 
@@ -196,13 +198,15 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 	}
 
 	private void removeUnit() {
+		// TO-DO use actions to create a sequence, die -> animate -> remove with fade out
+		ParticleMaker.deactivateParticle(ParticleMaker.getParticle(ringParticle.getParticleType(), currentPlayerPosition));
 		hp = 0;
-		isDead = true;
-		inBattle = false;
-		isActive = false;
-		setCurrentPosition(new TiledMapPosition().setPositionFromScreen(-100, -100));
-		getEntityactor().setPosition(-100, -100);
-		setVisible(false);
+		// isDead = true;
+		// inBattle = false;
+		// isActive = false;
+		this.getEntityAnimation().setCurrentAnimationType(EntityAnimationType.HURT);
+		// getEntityactor().setPosition(-100, -100);
+		// setVisible(false);
 		ringParticle.delete();
 	}
 
@@ -329,6 +333,14 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 		}
 	}
 
+	public void hideTurnParticle() {
+		ringParticle.setShown(false);
+	}
+
+	public void showTurnParticle() {
+		ringParticle.setShown(true);
+	}
+
 	public Collection<Ability> getAbilities() {
 		return abilities;
 	}
@@ -362,7 +374,6 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 	}
 
 	public void move(List<GridCell> path) {
-		notifyAudio(AudioObserver.AudioCommand.SOUND_PLAY_LOOP, AudioObserver.AudioTypeEvent.WALK_LOOP);
 		this.getEntityactor().setOrigin(this.getEntityactor().getWidth() / 2, this.getEntityactor().getHeight() / 2);
 		final SequenceAction sequence = createMoveSequence(path);
 		sequence.addAction(run(aiFinishTurn));
@@ -372,7 +383,7 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 
 	public void moveAttack(List<GridCell> path, Entity target) {
 		final SequenceAction sequence = createMoveSequence(path);
-		sequence.addAction(new AttackAction(target));
+		sequence.addAction(new AttackAction(this, target));
 		sequence.addAction(run(aiFinishTurn));
 
 		this.getEntityactor().addAction(sequence);
@@ -380,6 +391,8 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 	}
 
 	private SequenceAction createMoveSequence(List<GridCell> path) {
+		notifyAudio(AudioObserver.AudioCommand.SOUND_PLAY_LOOP, AudioObserver.AudioTypeEvent.WALK_LOOP);
+		this.getEntityAnimation().setCurrentAnimationType(EntityAnimationType.WALK);
 		GridCell oldCell = new GridCell(this.getCurrentPosition().getTileX(), this.getCurrentPosition().getTileY());
 		final SequenceAction sequence = Actions.sequence();
 		for (final GridCell cell : path) {
@@ -388,7 +401,7 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 			sequence.addAction(run(updatePositionAction));
 			oldCell = cell;
 		}
-		sequence.addAction(run(stopWalkSound));
+		sequence.addAction(run(stopWalkAction));
 		return sequence;
 	}
 
@@ -408,8 +421,9 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 		this.setDirection(decideDirection(this.getEntityactor().getRotation()));
 	}
 
-	private void stopWalkingSound() {
+	private void stopWalkingAction() {
 		notifyAudio(AudioObserver.AudioCommand.SOUND_STOP, AudioObserver.AudioTypeEvent.WALK_LOOP);
+		this.getEntityAnimation().setCurrentAnimationType(EntityAnimationType.IDLE);
 	}
 
 	private Direction decideDirection(float rotation) {

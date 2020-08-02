@@ -58,6 +58,8 @@ public class BattleManager {
 		activeUnit = playerUnits.get(0);
 		playerTurn = true;
 		lockedUnit = null;
+		playerUnits.forEach(Entity::showTurnParticle);
+		aiUnits.forEach(Entity::hideTurnParticle);
 	}
 
 	public void setUnitActive(Entity entity) {
@@ -73,10 +75,16 @@ public class BattleManager {
 	public void swapTurn() {
 		playerUnits.forEach(PlayerEntity::applyModifiers);
 		aiUnits.forEach(AiEntity::applyModifiers);
+
 		playerTurn = !playerTurn;
 
 		if (!playerTurn) {
 			aiTeamLeader.act(playerUnits, aiUnits);
+			playerUnits.forEach(Entity::hideTurnParticle);
+			aiUnits.forEach(Entity::showTurnParticle);
+		} else {
+			playerUnits.forEach(Entity::showTurnParticle);
+			aiUnits.forEach(Entity::hideTurnParticle);
 		}
 
 		setCurrentBattleState(getSelectUnitBattleState());

@@ -28,13 +28,11 @@ import Utility.Utility;
 
 public class PlayerBattleHUD extends Table implements ProfileObserver {
 	private Stage stage;
-	private PortraitsUI portraits;
 	private StatusUI[] statusUIs;
 	private List<ActionInfoUIWindow> actionInfoUIWindows;
 	private HPBar[] hpBars;
 	private CharacterHud bottomMenu;
 	private ActionsUI[] actionUIs;
-
 	private Image onTileHover;
 
 	public PlayerBattleHUD(Camera camera, List<PlayerEntity> playerUnits, List<AiEntity> aiUnits) {
@@ -44,8 +42,8 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
 		createCharacterHUDs(allUnits);
 		createHPBars(allUnits);
 		createActionUIs(playerUnits);
-		initializeActionPopUps();
 		createStatusUIs(allUnits);
+		initializeActionPopUps();
 	}
 
 	private void initVariables(Camera camera, List<Entity> allUnits) {
@@ -127,19 +125,6 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
 		stage.addActor(bottomMenu);
 	}
 
-	private void createPortraits(Entity[] sortedUnits) {
-		portraits = new PortraitsUI(sortedUnits);
-
-		portraits.addListener(new InputListener() {
-			@Override
-			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-				return true;
-			}
-		});
-
-		stage.addActor(portraits);
-	}
-
 	public void update() {
 		updateStatusUIs();
 		updateActionUIs();
@@ -157,17 +142,12 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
 		return onTileHover;
 	}
 
-	public PortraitsUI getPortraits() {
-		return portraits;
-	}
-
 	public StatusUI[] getStatusuis() {
 		return statusUIs;
 	}
 
 	public void resize(int width, int height) {
 		stage.getViewport().update(width, height, true);
-		// portraits.updateSizeContainer();
 		bottomMenu.update();
 		updateStatusUIs();
 		updateActionUIs();
@@ -218,6 +198,6 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
 
 	@Override
 	public void onNotify(ProfileManager profileManager, ProfileEvent event) {
-
+		// no-op
 	}
 }

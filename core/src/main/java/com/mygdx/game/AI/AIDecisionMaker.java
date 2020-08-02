@@ -1,5 +1,6 @@
 package com.mygdx.game.AI;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.collections4.ListUtils;
@@ -9,6 +10,7 @@ import com.mygdx.game.Entities.AiEntity;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Entities.EntityObserver.EntityCommand;
 import com.mygdx.game.Entities.PlayerEntity;
+import com.mygdx.game.Magic.Ability;
 import com.mygdx.game.Map.MyPathFinder;
 
 import Utility.TiledMapPosition;
@@ -40,6 +42,7 @@ public class AIDecisionMaker {
 		if (!actionTaken) {
 			unit.notifyEntityObserver(EntityCommand.AI_FINISHED_TURN);
 		}
+
 		actionTaken = false;
 
 	}
@@ -59,10 +62,11 @@ public class AIDecisionMaker {
 	}
 
 	private boolean canMoveAttack(final AiEntity attacker, final Entity target) {
+		final int attackRange = attacker.getEntityData().getAttackRange();
 		final int distance = Utility.getDistanceBetweenUnits(attacker, target) - 1;
 		final int ap = attacker.getAp();
 		final int basicAttackPoints = attacker.getEntityData().getBasicAttackCost();
-		return (ap >= (distance + basicAttackPoints));
+		return (ap >= (distance + basicAttackPoints - attackRange));
 	}
 
 	private boolean canKill(final AiEntity attacker, final Entity target) {
@@ -122,6 +126,8 @@ public class AIDecisionMaker {
 	}
 
 	private void rule4SpellSpecific(final AiEntity unit, List<PlayerEntity> playerUnits, List<AiEntity> aiUnits) {
+		final Collection<Ability> abilities = unit.getAbilities();
+
 		unit.notifyEntityObserver(EntityCommand.AI_FINISHED_TURN);
 		actionTaken = true;
 	}

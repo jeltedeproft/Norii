@@ -31,7 +31,7 @@ import Utility.Utility;
 public class MainMenuScreen extends GameScreen {
 	private static final float FRAME_DURATION = 0.2f;
 
-	private static String defaultBackgroundPath = "sprites/gui/mountain_bg/japanesebg.gif";
+	private static String defaultBackgroundPath = "sprites/gui/mainMenu.gif";
 
 	private Stage stage;
 	private Table mainMenuTableOfButtons;
@@ -58,7 +58,7 @@ public class MainMenuScreen extends GameScreen {
 
 		addListeners();
 
-		notifyAudio(AudioObserver.AudioCommand.MUSIC_LOAD, AudioObserver.AudioTypeEvent.MUSIC_TITLE);
+		notifyAudio(AudioObserver.AudioCommand.MUSIC_LOAD, AudioObserver.AudioTypeEvent.MUSIC_TITLE2);
 	}
 
 	private void loadAssets() {
@@ -134,10 +134,10 @@ public class MainMenuScreen extends GameScreen {
 	}
 
 	private void addUnitsToPlayer() {
-		playerMonsters.add(new PlayerEntity(EntityTypes.COMMANDER));
-		playerMonsters.add(new PlayerEntity(EntityTypes.ICARUS));
-		playerMonsters.add(new PlayerEntity(EntityTypes.DEMON));
-		playerMonsters.add(new PlayerEntity(EntityTypes.SHAMAN));
+		playerMonsters.add(new PlayerEntity(EntityTypes.MONK));
+		playerMonsters.add(new PlayerEntity(EntityTypes.ORC));
+		playerMonsters.add(new PlayerEntity(EntityTypes.SKELETON));
+		playerMonsters.add(new PlayerEntity(EntityTypes.KNIGHT));
 
 		Player.getInstance().setTeam(playerMonsters);
 	}
@@ -170,13 +170,12 @@ public class MainMenuScreen extends GameScreen {
 	@Override
 	public void show() {
 		Gdx.input.setInputProcessor(stage);
-		notifyAudio(AudioObserver.AudioCommand.MUSIC_PLAY_LOOP, AudioObserver.AudioTypeEvent.MUSIC_TITLE);
+		notifyAudio(AudioObserver.AudioCommand.MUSIC_PLAY_LOOP, AudioObserver.AudioTypeEvent.MUSIC_TITLE2);
 	}
 
 	@Override
 	public void hide() {
 		Gdx.input.setInputProcessor(null);
-		notifyAudio(AudioObserver.AudioCommand.MUSIC_STOP, AudioObserver.AudioTypeEvent.MUSIC_TITLE);
 	}
 
 	@Override

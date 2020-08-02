@@ -117,8 +117,8 @@ com.kotcrab.vis.ui.widget.BusyBar$BusyBarStyle: {
 }
 com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
 	default: {
-		up: button
-		down: button-pressed
+		up: nine
+		down: twelve
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {
@@ -190,8 +190,8 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 	default: {
 		font: neutral
 		fontColor: white
-		up: button
-		down: button-pressed
+		up: eightteen
+		down: twentytwo
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle: {

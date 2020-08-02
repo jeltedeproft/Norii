@@ -160,6 +160,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 
 	@Override
 	public void show() {
+		notifyAudio(AudioObserver.AudioCommand.MUSIC_STOP, AudioObserver.AudioTypeEvent.MUSIC_TITLE2);
 		resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		mapMgr.getCurrentTiledMap();
 
@@ -303,6 +304,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	public void pause() {
 		isPaused = true;
 		notifyAudio(AudioObserver.AudioCommand.MUSIC_PAUSE, AudioObserver.AudioTypeEvent.MUSIC_BATTLE);
+		notifyAudio(AudioObserver.AudioCommand.SOUND_STOP, AudioObserver.AudioTypeEvent.WALK_LOOP);
 		pauseMenu.setVisible(true);
 	}
 
@@ -418,8 +420,8 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	}
 
 	private void prepareSpell(final Entity unit, final Ability ability) {
-		final List<Entity> allUnits = ListUtils.union(playerUnits, aiUnits);
-		final List<TiledMapPosition> positions = allUnits.stream().map(Entity::getCurrentPosition).collect(Collectors.toList());
+		final List<Entity> allEntities = ListUtils.union(playerUnits, aiUnits);
+		final List<TiledMapPosition> positions = allEntities.stream().map(Entity::getCurrentPosition).collect(Collectors.toList());
 		final List<GridCell> spellPath = calculateSpellPath(unit, ability, positions);
 
 		for (final GridCell cell : spellPath) {

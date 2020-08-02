@@ -20,9 +20,6 @@ public class StatusUI extends UIWindow {
 	private int xpVal;
 	private int maxXpVal;
 
-	private WidgetGroup group;
-	private WidgetGroup group2;
-
 	private Label heroName;
 	private Label hp;
 	private Label ap;
@@ -62,19 +59,9 @@ public class StatusUI extends UIWindow {
 	private void initVariables(final Entity entity) {
 		linkedEntity = entity;
 		entity.setStatusui(this);
-		initiateHeroStats();
+		updateStats();
 		statsUIOffsetX = Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH;
 		statsUIOffsetY = Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT;
-	}
-
-	private void initiateHeroStats() {
-		levelVal = linkedEntity.getEntityData().getLevel();
-		hpVal = linkedEntity.getHp();
-		maxHpVal = linkedEntity.getEntityData().getMaxHP();
-		apVal = linkedEntity.getAp();
-		maxApVal = linkedEntity.getEntityData().getMaxAP();
-		xpVal = linkedEntity.getEntityData().getXp();
-		maxXpVal = linkedEntity.getEntityData().getMaxXP();
 	}
 
 	@Override
@@ -103,8 +90,8 @@ public class StatusUI extends UIWindow {
 	}
 
 	private void createGroups() {
-		group = new WidgetGroup();
-		group2 = new WidgetGroup();
+		WidgetGroup group = new WidgetGroup();
+		WidgetGroup group2 = new WidgetGroup();
 		group.setFillParent(true);
 		group2.setFillParent(true);
 
@@ -144,12 +131,14 @@ public class StatusUI extends UIWindow {
 		updateLabels();
 		updateSizeElements();
 
-		if (linkedEntity.getEntityactor().getIsHovering()) {
+		boolean isHovering = linkedEntity.getEntityactor().getIsHovering();
+
+		if (Boolean.TRUE.equals(isHovering)) {
 			setVisible(true);
 		}
 
 		if (actionsUIIsHovering) {
-			setVisible(false);
+			// setVisible(false);
 		}
 
 		updatePos();
@@ -162,7 +151,6 @@ public class StatusUI extends UIWindow {
 
 	private void updateStats() {
 		levelVal = linkedEntity.getEntityData().getLevel();
-
 		hpVal = linkedEntity.getHp();
 		maxHpVal = linkedEntity.getEntityData().getMaxHP();
 		apVal = linkedEntity.getAp();

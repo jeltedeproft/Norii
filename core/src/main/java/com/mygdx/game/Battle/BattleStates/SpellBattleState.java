@@ -8,6 +8,7 @@ import com.mygdx.game.Battle.BattleManager;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Entities.EntityAnimation;
 import com.mygdx.game.Entities.EntityAnimation.Direction;
+import com.mygdx.game.Entities.EntityAnimationType;
 import com.mygdx.game.Entities.EntityObserver.EntityCommand;
 import com.mygdx.game.Magic.Ability;
 import com.mygdx.game.Magic.Ability.AffectedTeams;
@@ -40,7 +41,9 @@ public class SpellBattleState extends BattleState {
 		final Entity currentUnit = battlemanager.getActiveUnit();
 
 		if (isValidTileTarget(currentUnit, targetPos)) {
+			currentUnit.getEntityAnimation().setCurrentAnimationType(EntityAnimationType.SPELLCAST);
 			selectSpell(null, ability, currentUnit, targetPos);
+			currentUnit.getEntityAnimation().setCurrentAnimationType(EntityAnimationType.IDLE);
 		}
 		exit();
 	}

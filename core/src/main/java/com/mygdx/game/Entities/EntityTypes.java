@@ -5,7 +5,11 @@ public enum EntityTypes {
 	COMMANDER("Commander"),
 	ICARUS("Icarus"),
 	DEMON("Demon"),
-	SHAMAN("Shaman");
+	SHAMAN("Shaman"),
+	MONK("Monk"),
+	SKELETON("Skeleton"),
+	ORC("Orc"),
+	KNIGHT("Knight");
 
 	private String entityName;
 

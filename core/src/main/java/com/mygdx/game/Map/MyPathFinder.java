@@ -27,7 +27,7 @@ public class MyPathFinder {
 		navGrid = linkedMap.getNavLayer().navGrid;
 		gridFinderOptions = new GridFinderOptions();
 		gridFinderOptions.allowDiagonal = false;
-		aStarGridFinder = new AStarGridFinder<GridCell>(GridCell.class, gridFinderOptions);
+		aStarGridFinder = new AStarGridFinder<>(GridCell.class, gridFinderOptions);
 	}
 
 	public AStarGridFinder<GridCell> getFinder() {
@@ -35,7 +35,7 @@ public class MyPathFinder {
 	}
 
 	public List<GridCell> getLineOfSightWithinCircle(final int x, final int y, final int range, final List<TiledMapPosition> positions) {
-		final List<GridCell> cells = new ArrayList<GridCell>();
+		final List<GridCell> cells = new ArrayList<>();
 		final GridCell center = navGrid.getCell(x, y);
 
 		for (final GridCell[] gridcells : navGrid.getNodes()) {
@@ -63,7 +63,7 @@ public class MyPathFinder {
 	}
 
 	public List<GridCell> getCellsWithinCircle(final int x, final int y, final int range) {
-		final List<GridCell> cells = new ArrayList<GridCell>();
+		final List<GridCell> cells = new ArrayList<>();
 		final GridCell center = navGrid.getCell(x, y);
 
 		for (final GridCell[] gridcells : navGrid.getNodes()) {
@@ -77,7 +77,7 @@ public class MyPathFinder {
 	}
 
 	public List<GridCell> getCellsWithinLine(final int x, final int y, final int range, final Direction direction) {
-		final List<GridCell> cells = new ArrayList<GridCell>();
+		final List<GridCell> cells = new ArrayList<>();
 		final GridCell center = navGrid.getCell(x, y);
 
 		for (final GridCell[] gridcells : navGrid.getNodes()) {

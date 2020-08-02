@@ -61,5 +61,69 @@
     "attackPower": 3,
     "basicAttackCost" : 1,
     "abilities":[ "SWAP"]
+  },
+
+  {
+    "id": 4,
+    "name": "Monk",
+    "portraitSpritePath": "sprites/characters/portraits/shamanProfileSmall.png",
+    "entitySpriteFilePath": "sprites/characters/monk.png",
+    "maxAP": 10,
+    "maxHP": 10,
+    "level": 1,
+    "xp": 5,
+    "maxXP": 10,
+    "attackRange": 1,
+    "attackPower": 3,
+    "basicAttackCost" : 1,
+    "abilities":[ "FIREBALL"]
+  },
+
+  {
+    "id": 5,
+    "name": "Skeleton",
+    "portraitSpritePath": "sprites/characters/portraits/shamanProfileSmall.png",
+    "entitySpriteFilePath": "sprites/characters/skeleton.png",
+    "maxAP": 10,
+    "maxHP": 10,
+    "level": 1,
+    "xp": 5,
+    "maxXP": 10,
+    "attackRange": 1,
+    "attackPower": 3,
+    "basicAttackCost" : 1,
+    "abilities":[ "TURN_TO_STONE"]
+  },
+
+  {
+    "id": 6,
+    "name": "Orc",
+    "portraitSpritePath": "sprites/characters/portraits/shamanProfileSmall.png",
+    "entitySpriteFilePath": "sprites/characters/orc.png",
+    "maxAP": 10,
+    "maxHP": 10,
+    "level": 1,
+    "xp": 5,
+    "maxXP": 10,
+    "attackRange": 1,
+    "attackPower": 3,
+    "basicAttackCost" : 1,
+    "abilities":[ "SWAP"]
+  },
+
+  {
+    "id": 7,
+    "name": "Knight",
+    "portraitSpritePath": "sprites/characters/portraits/shamanProfileSmall.png",
+    "entitySpriteFilePath": "sprites/characters/knight.png",
+    "maxAP": 10,
+    "maxHP": 10,
+    "level": 1,
+    "xp": 5,
+    "maxXP": 10,
+    "attackRange": 1,
+    "attackPower": 3,
+    "basicAttackCost" : 1,
+    "abilities":[ "FIREBALL"]
   }
 ]

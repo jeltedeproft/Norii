@@ -9,6 +9,7 @@ import com.mygdx.game.Magic.Ability;
 import com.mygdx.game.Screen.BattleScreen;
 
 public class ActionsUI extends UIWindow {
+	private static final float Y_OFFSET = 50f;
 	private static final float WINDOW_WIDTH = 5f;
 	private static final float WINDOW_HEIGHT = 1f;
 	private static final int BUTTON_WIDTH = 1;
@@ -103,7 +104,7 @@ public class ActionsUI extends UIWindow {
 
 	@Override
 	public void updatePos() {
-		this.setPosition(linkedEntity.getCurrentPosition().getCameraX(), linkedEntity.getCurrentPosition().getCameraY());
+		this.setPosition(linkedEntity.getCurrentPosition().getCameraX(), linkedEntity.getCurrentPosition().getCameraY() + Y_OFFSET);
 		adjustPosition();
 		adjustPopUps();
 		setHovering();
@@ -120,7 +121,7 @@ public class ActionsUI extends UIWindow {
 		final float x = linkedEntity.getCurrentPosition().getCameraX();
 		final float y = linkedEntity.getCurrentPosition().getCameraY();
 		final float offsetX = Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH;
-		final float offsetY = WINDOW_HEIGHT * tileHeightPixel;
+		final float offsetY = (WINDOW_HEIGHT * tileHeightPixel) + Y_OFFSET;
 		final Boolean right = x > (Gdx.graphics.getWidth() / 3);
 		final Boolean up = y > (Gdx.graphics.getHeight() / 3);
 

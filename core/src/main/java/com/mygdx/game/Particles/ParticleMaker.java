@@ -34,7 +34,7 @@ public class ParticleMaker {
 				}
 
 				if (particle.isComplete()) {
-					particle.delete();
+					particlesChanged = true;
 					particle.deactivate();
 				}
 			}
@@ -76,9 +76,7 @@ public class ParticleMaker {
 	}
 
 	private static void addParticleToTypedParticles(final ParticleType particletype, final Particle newParticle) {
-		if (allParticles.get(particletype) == null) {
-			allParticles.put(particletype, new ArrayList<>());
-		}
+		allParticles.computeIfAbsent(particletype, k -> new ArrayList<>());
 		allParticles.get(particletype).add(newParticle);
 		newParticle.start();
 	}

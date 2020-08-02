@@ -65,7 +65,7 @@ public class AITeamLeader {
 	}
 
 	public void updateUnits(final float delta) {
-		team.removeIf(entity -> entity.isDead());
+		team.removeIf(Entity::isDead);
 
 		for (final Entity entity : team) {
 			entity.update(delta);
@@ -75,7 +75,7 @@ public class AITeamLeader {
 	public void renderUnits(final Batch batch) {
 		for (final Entity entity : team) {
 			if (entity.isInBattle()) {
-				batch.draw(entity.getFrame(), entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY(), 1f, 1f);
+				batch.draw(entity.getFrame(), entity.getCurrentPosition().getTileX() - 0.2f, entity.getCurrentPosition().getTileY() - 0.0f, 1.5f, 1.5f);
 			}
 		}
 	}
