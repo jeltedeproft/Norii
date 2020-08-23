@@ -6,7 +6,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 
 public class SpellFileReader {
 	private static boolean statsLoaded = false;
-	private static ObjectMap<Integer, SpellData> spellData = new ObjectMap<Integer, SpellData>();
+	private static ObjectMap<Integer, SpellData> spellData = new ObjectMap<>();
 	private static final String UNIT_STATS_FILE_LOCATION = "spells/spells.json";
 
 	private SpellFileReader() {

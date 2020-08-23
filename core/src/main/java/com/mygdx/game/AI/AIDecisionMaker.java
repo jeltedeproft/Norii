@@ -44,17 +44,21 @@ public class AIDecisionMaker {
 		}
 
 		actionTaken = false;
-
 	}
 
 	private void rule1CanKill(final AiEntity unit, List<PlayerEntity> playerUnits, List<AiEntity> aiUnits) {
 		final List<Entity> entities = ListUtils.union(playerUnits, aiUnits);
 		for (final Entity target : entities) {
-			if (isEnemy(unit, target) && canMoveAttack(unit, target) && canKill(unit, target)) {
+			if (isEnemy(unit, target) && canMoveAttack(unit, target) && canKill(unit, target) && canMoveNextToUnit(unit, target)) {
 				walkOverAndAttack(unit, target);
 				actionTaken = true;
 			}
 		}
+	}
+
+	private boolean canMoveNextToUnit(AiEntity unit, Entity target) {
+		// TODO create path, check if end tile is aken, try another path without that tile, return false
+		return false;
 	}
 
 	private boolean isEnemy(final AiEntity attacker, final Entity target) {

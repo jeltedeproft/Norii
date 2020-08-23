@@ -42,5 +42,20 @@
     "affectsTeam": "BOTH",
     "target": "UNIT",
     "infoText": "Cast Swap.",
+  },
+
+  {
+    "id": 3,
+    "name": "Hammerback",
+    "iconSpritePath": "sprites/spells/hammer.png",
+    "apCost": 1,
+    "mpCost": 0,
+    "lineOfSight": "LINE",
+    "areaOfEffect": "CELL",
+    "damage": 0,
+    "range": 10,
+    "affectsTeam": "ENEMY",
+    "target": "CELL",
+    "infoText": "Cast Hammerback.",
   }
 ]

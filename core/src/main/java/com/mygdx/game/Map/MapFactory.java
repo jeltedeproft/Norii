@@ -23,6 +23,12 @@ public class MapFactory {
 			public String toString() {
 				return "maps/tactical.tmx";
 			}
+		},
+		BATTLE_MAP_THE_DARK_SWAMP {
+			@Override
+			public String toString() {
+				return "maps/Field.tmx";
+			}
 		}
 	}
 

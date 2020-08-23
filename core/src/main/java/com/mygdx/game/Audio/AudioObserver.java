@@ -10,6 +10,7 @@ public interface AudioObserver {
 		FIREBALL_SOUND("audio/fireball.mp3"),
 		SWAP_SOUND("audio/swap.mp3"),
 		STONE_SOUND("audio/stone.mp3"),
+		HAMMER_SOUND("audio/hammer.mp3"),
 		WALK_LOOP("audio/walkloop.wav"),
 		NONE("");
 

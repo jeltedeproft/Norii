@@ -39,14 +39,14 @@ public class MapManager {
 
 	public TiledMap getCurrentTiledMap() {
 		if (currentMap == null) {
-			loadMap(MapFactory.MapType.BATTLE_MAP_THE_CELLS);
+			loadMap(MapFactory.MapType.BATTLE_MAP_THE_DARK_SWAMP);
 		}
 		return currentMap.getCurrentTiledMap();
 	}
 
 	public Map getCurrentMap() {
 		if (currentMap == null) {
-			loadMap(MapFactory.MapType.BATTLE_MAP_THE_CELLS);
+			loadMap(MapFactory.MapType.BATTLE_MAP_THE_DARK_SWAMP);
 		}
 		return currentMap;
 	}

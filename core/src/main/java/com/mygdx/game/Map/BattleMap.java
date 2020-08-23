@@ -136,6 +136,7 @@ public class BattleMap extends Map {
 		notifyAudio(AudioObserver.AudioCommand.SOUND_LOAD, AudioObserver.AudioTypeEvent.FIREBALL_SOUND);
 		notifyAudio(AudioObserver.AudioCommand.SOUND_LOAD, AudioObserver.AudioTypeEvent.SWAP_SOUND);
 		notifyAudio(AudioObserver.AudioCommand.SOUND_LOAD, AudioObserver.AudioTypeEvent.STONE_SOUND);
+		notifyAudio(AudioObserver.AudioCommand.SOUND_LOAD, AudioObserver.AudioTypeEvent.HAMMER_SOUND);
 		notifyAudio(AudioObserver.AudioCommand.MUSIC_PLAY_LOOP, AudioObserver.AudioTypeEvent.MUSIC_BATTLE);
 	}
 

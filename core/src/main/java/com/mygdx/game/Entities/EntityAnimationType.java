@@ -3,12 +3,12 @@ package com.mygdx.game.Entities;
 public enum EntityAnimationType {
 
 	SPELLCAST(0),
-	THRUST(4),
-	WALK(8),
-	SLASH(12),
-	SHOOT(16),
-	HURT(20),
-	IDLE(24);
+	THRUST(0),
+	WALK(0),
+	SLASH(0),
+	SHOOT(0),
+	HURT(0),
+	IDLE(0);
 
 	private int positionInSpriteSheet;
 

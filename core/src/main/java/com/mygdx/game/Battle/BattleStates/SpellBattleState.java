@@ -41,9 +41,9 @@ public class SpellBattleState extends BattleState {
 		final Entity currentUnit = battlemanager.getActiveUnit();
 
 		if (isValidTileTarget(currentUnit, targetPos)) {
-			currentUnit.getEntityAnimation().setCurrentAnimationType(EntityAnimationType.SPELLCAST);
+			currentUnit.getEntityAnimation().setCurrentAnimationType(EntityAnimationType.WALK);
 			selectSpell(null, ability, currentUnit, targetPos);
-			currentUnit.getEntityAnimation().setCurrentAnimationType(EntityAnimationType.IDLE);
+			currentUnit.getEntityAnimation().setCurrentAnimationType(EntityAnimationType.WALK);
 		}
 		exit();
 	}
@@ -177,6 +177,9 @@ public class SpellBattleState extends BattleState {
 		case TURN_TO_STONE:
 			castTurnToStone(currentUnit, target, ability);
 			break;
+		case HAMMERBACK:
+			castHammerback(currentUnit, targetPos, ability);
+			break;
 		default:
 			break;
 		}
@@ -208,6 +211,11 @@ public class SpellBattleState extends BattleState {
 		target.changeAnimation(new EntityAnimation("sprites/characters/rocksheet.png"));
 		target.addModifier(ModifiersEnum.IMAGE_CHANGED, 2, 0);
 		target.addModifier(ModifiersEnum.STUNNED, 2, 0);
+	}
+
+	private void castHammerback(final Entity caster, final TiledMapPosition targetPos, final Ability ability) {
+		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
+		notifyAudio(AudioObserver.AudioCommand.SOUND_PLAY_ONCE, AudioObserver.AudioTypeEvent.HAMMER_SOUND);
 	}
 
 	private Entity getEntityAtPosition(TiledMapPosition targetPos) {

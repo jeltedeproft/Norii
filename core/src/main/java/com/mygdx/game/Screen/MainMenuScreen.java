@@ -134,10 +134,17 @@ public class MainMenuScreen extends GameScreen {
 	}
 
 	private void addUnitsToPlayer() {
-		playerMonsters.add(new PlayerEntity(EntityTypes.MONK));
-		playerMonsters.add(new PlayerEntity(EntityTypes.ORC));
-		playerMonsters.add(new PlayerEntity(EntityTypes.SKELETON));
-		playerMonsters.add(new PlayerEntity(EntityTypes.KNIGHT));
+		playerMonsters.add(new PlayerEntity(EntityTypes.ALIEN));
+		playerMonsters.add(new PlayerEntity(EntityTypes.BLACK_CAT));
+		playerMonsters.add(new PlayerEntity(EntityTypes.BLACK_GHOST));
+		playerMonsters.add(new PlayerEntity(EntityTypes.BLACK_SKELETAL));
+		playerMonsters.add(new PlayerEntity(EntityTypes.BLACK_SLIME));
+		playerMonsters.add(new PlayerEntity(EntityTypes.BROWN_CAT));
+		playerMonsters.add(new PlayerEntity(EntityTypes.BROWN_DOG));
+		playerMonsters.add(new PlayerEntity(EntityTypes.CREEPY_NURSE_GREEN));
+		playerMonsters.add(new PlayerEntity(EntityTypes.CREEPY_NURSE_WHITE));
+		playerMonsters.add(new PlayerEntity(EntityTypes.FROST_GHOSTY));
+		playerMonsters.add(new PlayerEntity(EntityTypes.GHOSTY));
 
 		Player.getInstance().setTeam(playerMonsters);
 	}

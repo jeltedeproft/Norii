@@ -15,7 +15,7 @@ public class AttackAction extends Action {
 	@Override
 	public boolean act(float delta) {
 		if (target != null) {
-			attacker.getEntityAnimation().setCurrentAnimationType(EntityAnimationType.SLASH);
+			attacker.getEntityAnimation().setCurrentAnimationType(EntityAnimationType.WALK);
 			final EntityActor targetEntity = (EntityActor) target;
 			targetEntity.getEntity().attack(entityToAttack);
 		}

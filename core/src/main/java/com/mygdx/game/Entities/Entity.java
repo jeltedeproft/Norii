@@ -67,6 +67,7 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 	private Runnable updatePositionAction;
 	private Runnable aiFinishTurn;
 	private Runnable stopWalkAction;
+	private Runnable cleanup;
 
 	protected Particle ringParticle;
 
@@ -106,6 +107,7 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 	private void initActions() {
 		updatePositionAction = this::updatePositionFromActor;
 		stopWalkAction = this::stopWalkingAction;
+		cleanup = this::cleanUpDeadUnit;
 		aiFinishTurn = () -> notifyEntityObserver(EntityCommand.AI_FINISHED_TURN);
 	}
 
@@ -179,7 +181,7 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 	}
 
 	public void attack(final Entity target) {
-		getEntityAnimation().setCurrentAnimationType(EntityAnimationType.SLASH);
+		getEntityAnimation().setCurrentAnimationType(EntityAnimationType.WALK);
 		target.damage(entityData.getAttackPower());
 	}
 
@@ -198,15 +200,21 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 	}
 
 	private void removeUnit() {
-		// TO-DO use actions to create a sequence, die -> animate -> remove with fade out
+		this.getEntityAnimation().setCurrentAnimationType(EntityAnimationType.WALK);
+		final SequenceAction sequence = Actions.sequence();
+		sequence.addAction(Actions.fadeOut(1));
+		sequence.addAction(run(cleanup));
+		this.getEntityactor().addAction(sequence);
+	}
+
+	private void cleanUpDeadUnit() {
 		ParticleMaker.deactivateParticle(ParticleMaker.getParticle(ringParticle.getParticleType(), currentPlayerPosition));
 		hp = 0;
-		// isDead = true;
-		// inBattle = false;
-		// isActive = false;
-		this.getEntityAnimation().setCurrentAnimationType(EntityAnimationType.HURT);
-		// getEntityactor().setPosition(-100, -100);
-		// setVisible(false);
+		isDead = true;
+		inBattle = false;
+		isActive = false;
+		getEntityactor().setPosition(-100, -100);
+		setVisible(false);
 		ringParticle.delete();
 	}
 
@@ -374,11 +382,10 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 	}
 
 	public void move(List<GridCell> path) {
-		this.getEntityactor().setOrigin(this.getEntityactor().getWidth() / 2, this.getEntityactor().getHeight() / 2);
 		final SequenceAction sequence = createMoveSequence(path);
 		sequence.addAction(run(aiFinishTurn));
-		this.getEntityactor().addAction(sequence);
-		this.setAp(this.getAp() - path.size());
+		getEntityactor().addAction(sequence);
+		setAp(getAp() - path.size());
 	}
 
 	public void moveAttack(List<GridCell> path, Entity target) {
@@ -386,14 +393,15 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 		sequence.addAction(new AttackAction(this, target));
 		sequence.addAction(run(aiFinishTurn));
 
-		this.getEntityactor().addAction(sequence);
-		this.setAp(this.getAp() - path.size() - this.getEntityData().getBasicAttackCost());
+		getEntityactor().addAction(sequence);
+		setAp(getAp() - path.size() - getEntityData().getBasicAttackCost());
 	}
 
 	private SequenceAction createMoveSequence(List<GridCell> path) {
+		getEntityactor().setOrigin(getEntityactor().getWidth() / 2, getEntityactor().getHeight() / 2);
 		notifyAudio(AudioObserver.AudioCommand.SOUND_PLAY_LOOP, AudioObserver.AudioTypeEvent.WALK_LOOP);
-		this.getEntityAnimation().setCurrentAnimationType(EntityAnimationType.WALK);
-		GridCell oldCell = new GridCell(this.getCurrentPosition().getTileX(), this.getCurrentPosition().getTileY());
+		getEntityAnimation().setCurrentAnimationType(EntityAnimationType.WALK);
+		GridCell oldCell = new GridCell(getCurrentPosition().getTileX(), getCurrentPosition().getTileY());
 		final SequenceAction sequence = Actions.sequence();
 		for (final GridCell cell : path) {
 			sequence.addAction(Actions.rotateTo(decideRotation(oldCell, cell), 0.05f, Interpolation.swingIn));
@@ -423,7 +431,7 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 
 	private void stopWalkingAction() {
 		notifyAudio(AudioObserver.AudioCommand.SOUND_STOP, AudioObserver.AudioTypeEvent.WALK_LOOP);
-		this.getEntityAnimation().setCurrentAnimationType(EntityAnimationType.IDLE);
+		this.getEntityAnimation().setCurrentAnimationType(EntityAnimationType.WALK);
 	}
 
 	private Direction decideDirection(float rotation) {

@@ -135,4 +135,10 @@ public class EntityData {
 		this.linkedEntity = entity;
 	}
 
+	@Override
+	public String toString() {
+		return "id : " + id + "\n" + "name : " + name + "\n" + "portraitSpritePath : " + portraitSpritePath + "\n" + "entitySpriteFilePath : " + entitySpriteFilePath + "\n" + "maxAP : " + maxAP + "\n" + "maxHP : " + maxHP + "\n" + "level : " + level + "\n" + "xp : " + xp + "\n" + "maxXP : " + maxXP + "\n" + "attackRange : " + attackRange + "\n"
+				+ "attackPower : " + attackPower + "\n" + "basicAttackCost : " + basicAttackCost + "\n";
+	}
+
 }

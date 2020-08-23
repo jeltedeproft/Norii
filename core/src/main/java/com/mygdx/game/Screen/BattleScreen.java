@@ -375,6 +375,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	public void onEntityNotify(final EntityCommand command, final AiEntity aiUnit) {
 		switch (command) {
 		case AI_FINISHED_TURN:
+			aiUnit.setAp(aiUnit.getEntityData().getMaxAP());
 			battlemanager.swapTurn();
 			break;
 		case FOCUS_CAMERA:

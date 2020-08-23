@@ -3,7 +3,7 @@ package com.mygdx.game.Particles;
 public enum ParticleType {
 	SPAWN("particles/spawn.p"),
 	MOVE("particles/move.p"),
-	SPELL("particles/mysmalleffect.p"),
+	SPELL("particles/spell.p"),
 	FIREBALL("particles/fireball.p"),
 	SWAP("particles/swap.p"),
 	RED_CIRCLE("particles/red_ring.p"),
