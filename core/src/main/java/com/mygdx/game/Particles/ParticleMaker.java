@@ -7,8 +7,8 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.Map.Map;
 
+import Utility.AssetManagerUtility;
 import Utility.TiledMapPosition;
-import Utility.Utility;
 
 public class ParticleMaker {
 	private static EnumMap<ParticleType, ParticlePool> particlePools;
@@ -47,7 +47,7 @@ public class ParticleMaker {
 				particle.deactivate();
 			}
 			particlesChanged = true;
-			Utility.unloadAsset(particletype.getParticleFileLocation());
+			AssetManagerUtility.unloadAsset(particletype.getParticleFileLocation());
 		}
 	}
 

@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -26,7 +27,7 @@ import com.mygdx.game.Entities.Player;
 import com.mygdx.game.Entities.PlayerEntity;
 import com.mygdx.game.Magic.SpellFileReader;
 
-import Utility.Utility;
+import Utility.AssetManagerUtility;
 
 public class MainMenuScreen extends GameScreen {
 	private static final float FRAME_DURATION = 0.2f;
@@ -62,7 +63,12 @@ public class MainMenuScreen extends GameScreen {
 	}
 
 	private void loadAssets() {
-		Utility.loadFreeTypeFontAsset("fonts/sporty.ttf", 24);
+		AssetManagerUtility.loadFreeTypeFontAsset("24_fonts/sporty.ttf", 24, 1, Color.LIGHT_GRAY, 1, 1);
+		AssetManagerUtility.loadFreeTypeFontAsset("15_fonts/sporty.ttf", 15, 1, Color.LIGHT_GRAY, 1, 1);
+		AssetManagerUtility.loadFreeTypeFontAsset("95_fonts/sporty.ttf", 95, 1, Color.LIGHT_GRAY, 1, 1);
+		AssetManagerUtility.loadTextureAtlas(AssetManagerUtility.SKIN_TEXTURE_ATLAS_PATH);
+		AssetManagerUtility.loadTextureAtlas(AssetManagerUtility.SPRITES_ATLAS_PATH);
+		AssetManagerUtility.loadSkin(AssetManagerUtility.SKIN_JSON_PATH);
 		EntityFileReader.loadUnitStatsInMemory();
 		SpellFileReader.loadSpellsInMemory();
 		AITeamFileReader.loadLevelsInMemory();
@@ -83,13 +89,15 @@ public class MainMenuScreen extends GameScreen {
 	}
 
 	private void initializeBgAnimation() {
-		bganimation = Utility.getGIFAsset(defaultBackgroundPath);
+		bganimation = AssetManagerUtility.getGIFAsset(defaultBackgroundPath);
 		bganimation.setFrameDuration(FRAME_DURATION);
 	}
 
 	private void createButtons() {
-		final Skin statusUISkin = Utility.getSkin();
-		final LabelStyle labelStyle = Utility.createLabelStyle("fonts/sporty.ttf", 105, 1, Color.LIGHT_GRAY, 1, 1);
+		final Skin statusUISkin = AssetManagerUtility.getSkin();
+		final BitmapFont bitmapFont = AssetManagerUtility.getFreeTypeFontAsset("95_fonts/sporty.ttf");
+		LabelStyle labelStyle = new LabelStyle();
+		labelStyle.font = bitmapFont;
 
 		title = new Label("Norii:", labelStyle);
 		newGameButton = new TextButton("New Game", statusUISkin);
@@ -134,17 +142,17 @@ public class MainMenuScreen extends GameScreen {
 	}
 
 	private void addUnitsToPlayer() {
-		playerMonsters.add(new PlayerEntity(EntityTypes.ALIEN));
+		playerMonsters.add(new PlayerEntity(EntityTypes.BEAST_OGRE));
 		playerMonsters.add(new PlayerEntity(EntityTypes.BLACK_CAT));
-		playerMonsters.add(new PlayerEntity(EntityTypes.BLACK_GHOST));
-		playerMonsters.add(new PlayerEntity(EntityTypes.BLACK_SKELETAL));
+		playerMonsters.add(new PlayerEntity(EntityTypes.BLACK_DOG));
+		playerMonsters.add(new PlayerEntity(EntityTypes.BLACK_GHOST_BALL));
 		playerMonsters.add(new PlayerEntity(EntityTypes.BLACK_SLIME));
-		playerMonsters.add(new PlayerEntity(EntityTypes.BROWN_CAT));
-		playerMonsters.add(new PlayerEntity(EntityTypes.BROWN_DOG));
-		playerMonsters.add(new PlayerEntity(EntityTypes.CREEPY_NURSE_GREEN));
-		playerMonsters.add(new PlayerEntity(EntityTypes.CREEPY_NURSE_WHITE));
-		playerMonsters.add(new PlayerEntity(EntityTypes.FROST_GHOSTY));
-		playerMonsters.add(new PlayerEntity(EntityTypes.GHOSTY));
+		playerMonsters.add(new PlayerEntity(EntityTypes.BLACK_SKELETON));
+		playerMonsters.add(new PlayerEntity(EntityTypes.BLACK_SLIME_BLUE_EYES));
+		playerMonsters.add(new PlayerEntity(EntityTypes.BLACK_SLIME_DARK_BLUE_EYES));
+		playerMonsters.add(new PlayerEntity(EntityTypes.BLUE_GHOSTY));
+		playerMonsters.add(new PlayerEntity(EntityTypes.FEMALE_EIGHT));
+		playerMonsters.add(new PlayerEntity(EntityTypes.FEMALE_ONE));
 
 		Player.getInstance().setTeam(playerMonsters);
 	}
@@ -196,7 +204,7 @@ public class MainMenuScreen extends GameScreen {
 	@Override
 	public void dispose() {
 		stage.dispose();
-		Utility.unloadAsset(defaultBackgroundPath);
+		AssetManagerUtility.unloadAsset(defaultBackgroundPath);
 		backgroundbatch.dispose();
 	}
 }

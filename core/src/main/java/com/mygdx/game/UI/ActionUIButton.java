@@ -5,7 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
-import Utility.Utility;
+import Utility.AssetManagerUtility;
 
 public class ActionUIButton {
 
@@ -23,9 +23,8 @@ public class ActionUIButton {
 
 	private boolean hovering = false;
 
-	public ActionUIButton(String imageFileName) {
-		Utility.loadTextureAsset(imageFileName);
-		tr = new TextureRegion(Utility.getTextureAsset(imageFileName));
+	public ActionUIButton(String imageName) {
+		tr = new TextureRegion(AssetManagerUtility.getSpriteSheetTexture(imageName));
 		buttonImage = new TextureRegionDrawable(tr);
 		btnStyle = new ImageButtonStyle();
 		btnStyle.up = buttonImage;
@@ -91,5 +90,8 @@ public class ActionUIButton {
 }
 
 enum Action {
-	MOVE, ATTACK, SPELL, SKIP
+	MOVE,
+	ATTACK,
+	SPELL,
+	SKIP
 }

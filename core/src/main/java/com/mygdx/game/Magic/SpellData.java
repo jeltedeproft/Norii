@@ -4,7 +4,7 @@ public class SpellData {
 
 	private int id;
 	private String name;
-	private String iconSpritePath;
+	private String iconSpriteName;
 	private int apCost;
 	private int mpCost;
 	private String lineOfSight;
@@ -16,7 +16,7 @@ public class SpellData {
 	private String infoText;
 
 	public SpellData() {
-
+		// no-op
 	}
 
 	public int getId() {
@@ -35,12 +35,12 @@ public class SpellData {
 		this.name = name;
 	}
 
-	public String getIconSpritePath() {
-		return iconSpritePath;
+	public String getIconSpriteName() {
+		return iconSpriteName;
 	}
 
-	public void setIconSpritePath(final String iconSpritePath) {
-		this.iconSpritePath = iconSpritePath;
+	public void setIconSpriteName(final String iconSpriteName) {
+		this.iconSpriteName = iconSpriteName;
 	}
 
 	public int getApCost() {

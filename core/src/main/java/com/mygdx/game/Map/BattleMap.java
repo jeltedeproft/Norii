@@ -13,8 +13,8 @@ import com.mygdx.game.Battle.BattleManager;
 import com.mygdx.game.Particles.ParticleMaker;
 import com.mygdx.game.Particles.ParticleType;
 
+import Utility.AssetManagerUtility;
 import Utility.TiledMapPosition;
-import Utility.Utility;
 
 public class BattleMap extends Map {
 	private static final String TAG = BattleMap.class.getSimpleName();
@@ -27,7 +27,7 @@ public class BattleMap extends Map {
 	BattleMap(final String mapPath) {
 		super(MapFactory.MapType.BATTLE_MAP_THE_CELLS, mapPath);
 
-		if (!Utility.isAssetLoaded(mapPath)) {
+		if (!AssetManagerUtility.isAssetLoaded(mapPath)) {
 			Gdx.app.debug(TAG, "Map not loaded");
 			return;
 		}

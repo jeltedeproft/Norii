@@ -1,14 +1,13 @@
 package com.mygdx.game.UI;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 
-import Utility.Utility;
+import Utility.AssetManagerUtility;
 
 public abstract class UIWindow extends Window {
 	protected float tileWidthPixel;
@@ -24,10 +23,9 @@ public abstract class UIWindow extends Window {
 	protected static final float BUTTON_HEIGHT_FACTOR = 20;
 
 	protected UIWindow(String name, float width, float height) {
-		super(name, Utility.getSkin());
+		super(name, AssetManagerUtility.getSkin());
 
 		initVariables(width, height);
-		// setFadeBackgroundEffect();
 	}
 
 	protected void initVariables(float width, float height) {
@@ -35,13 +33,6 @@ public abstract class UIWindow extends Window {
 		tileHeightPixel = Gdx.graphics.getHeight() / (float) TILE_TO_PIXEL_RATIO;
 		windowWidth = width;
 		windowHeight = height;
-		// final WindowStyle styleTransparent = Utility.getSkin().get("pixthulhu", WindowStyle.class);
-		// setStyle(styleTransparent);
-	}
-
-	private void setFadeBackgroundEffect() {
-		final Color newColor = this.getColor();
-		newColor.a = ALPHA;
 	}
 
 	public void update() {

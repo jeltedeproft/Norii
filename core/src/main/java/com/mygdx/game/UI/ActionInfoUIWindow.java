@@ -1,11 +1,11 @@
 package com.mygdx.game.UI;
 
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.utils.Align;
 
-import Utility.Utility;
+import Utility.AssetManagerUtility;
 
 public class ActionInfoUIWindow extends UIWindow {
 	private Label actionInfoLabel;
@@ -46,7 +46,9 @@ public class ActionInfoUIWindow extends UIWindow {
 
 	@Override
 	protected void createWidgets() {
-		final LabelStyle labelStyle = Utility.createLabelStyle("fonts/sporty.ttf", 15, 1, Color.LIGHT_GRAY, 1, 1);
+		final BitmapFont bitmapFont = AssetManagerUtility.getFreeTypeFontAsset("15_fonts/sporty.ttf");
+		LabelStyle labelStyle = new LabelStyle();
+		labelStyle.font = bitmapFont;
 		actionInfoLabel = new Label(actionInfo, labelStyle);
 		actionInfoLabel.setWrap(true);
 		actionnameLabel = new Label(actionName, labelStyle);

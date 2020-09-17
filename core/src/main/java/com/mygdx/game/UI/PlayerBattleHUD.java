@@ -24,7 +24,7 @@ import com.mygdx.game.Profile.ProfileManager;
 import com.mygdx.game.Profile.ProfileObserver;
 import com.mygdx.game.Screen.BattleScreen;
 
-import Utility.Utility;
+import Utility.AssetManagerUtility;
 
 public class PlayerBattleHUD extends Table implements ProfileObserver {
 	private Stage stage;
@@ -54,8 +54,8 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
 	}
 
 	private void createTileHoverParticle() {
-		Utility.loadTextureAsset(Utility.ON_TILE_HOVER_FILE_PATH);
-		final TextureRegion tr = new TextureRegion(Utility.getTextureAsset(Utility.ON_TILE_HOVER_FILE_PATH));
+		AssetManagerUtility.loadTextureAsset(AssetManagerUtility.ON_TILE_HOVER_FILE_PATH);
+		final TextureRegion tr = new TextureRegion(AssetManagerUtility.getTextureAsset(AssetManagerUtility.ON_TILE_HOVER_FILE_PATH));
 		final TextureRegionDrawable trd = new TextureRegionDrawable(tr);
 		onTileHover = new Image(trd);
 		onTileHover.setPosition(-1, -1);

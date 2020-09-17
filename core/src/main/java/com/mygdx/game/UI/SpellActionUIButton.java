@@ -8,8 +8,8 @@ import com.mygdx.game.Magic.Ability;
 public class SpellActionUIButton extends ActionUIButton {
 	private final Ability ability;
 
-	public SpellActionUIButton(final String imageFileName, final PlayerEntity linkedUnit, final Ability ability) {
-		super(imageFileName);
+	public SpellActionUIButton(final String imageName, final PlayerEntity linkedUnit, final Ability ability) {
+		super(imageName);
 		active = true;
 		this.ability = ability;
 		infotext = ability.getSpellInfo();

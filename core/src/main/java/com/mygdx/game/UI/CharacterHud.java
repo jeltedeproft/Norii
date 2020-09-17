@@ -17,10 +17,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.mygdx.game.Entities.Entity;
 
-import Utility.Utility;
+import Utility.AssetManagerUtility;
 
 public class CharacterHud extends Window {
-	private static final String UNKNOWN_HERO_IMAGE_LOCATION = "sprites/gui/portraits/nochar.png";
+	private static final String UNKNOWN_HERO_IMAGE = "nochar";
 
 	private int heroHP;
 	private int heroAP;
@@ -48,7 +48,7 @@ public class CharacterHud extends Window {
 	private static final int TILE_TO_PIXEL_RATIO = 25;
 
 	public CharacterHud(final List<Entity> allUnits) {
-		super("", Utility.getSkin());
+		super("", AssetManagerUtility.getSkin());
 		initVariables();
 		linkUnitsToMenu(allUnits);
 		initElementsForUI();
@@ -72,7 +72,7 @@ public class CharacterHud extends Window {
 	}
 
 	private void initWindow() {
-		final WindowStyle styleTransparent = Utility.getSkin().get("transparent", WindowStyle.class);
+		final WindowStyle styleTransparent = AssetManagerUtility.getSkin().get("transparent", WindowStyle.class);
 		setStyle(styleTransparent);
 		pad(0);
 		setPosition(0, Gdx.graphics.getHeight());
@@ -85,18 +85,18 @@ public class CharacterHud extends Window {
 	}
 
 	private void initPortrait() {
-		heroImageButton = new ImageButton(Utility.getSkin().get("Portrait", ImageButtonStyle.class));
+		heroImageButton = new ImageButton(AssetManagerUtility.getSkin().get("Portrait", ImageButtonStyle.class));
 		heroImageButton.setPosition(0, 0);
 	}
 
 	private void createFont() {
-		final BitmapFont font = Utility.getFreeTypeFontAsset("fonts/sporty.ttf");
+		final BitmapFont font = AssetManagerUtility.getFreeTypeFontAsset("24_fonts/sporty.ttf");
 		labelStyle = new LabelStyle();
 		labelStyle.font = font;
 	}
 
 	private void initStatsMenu() {
-		final Skin statusUISkin = Utility.getSkin();
+		final Skin statusUISkin = AssetManagerUtility.getSkin();
 		statsGroup = new Window("", statusUISkin.get("default", WindowStyle.class));
 		statsGroup.setResizable(true);
 		statsGroup.top();
@@ -121,13 +121,16 @@ public class CharacterHud extends Window {
 		statsGroup.add(ap).align(Align.left).padRight(STATS_MENU_ELEMENT_PADDING).expandX();
 	}
 
-	private void changeHeroImage(final String heroImageLink) {
-		Utility.loadTextureAsset(heroImageLink);
-		final TextureRegion tr = new TextureRegion(Utility.getTextureAsset(heroImageLink));
+	private void changeHeroImage(final String heroImageName) {
+		final TextureRegion tr = new TextureRegion(AssetManagerUtility.getSpriteSheetTexture(heroImageName));
 		final TextureRegionDrawable trd = new TextureRegionDrawable(tr);
 		final ImageButtonStyle oldStyle = heroImageButton.getStyle();
 		oldStyle.imageUp = trd;
 		heroImageButton.setStyle(oldStyle);
+	}
+
+	private void changeHeroImage() {
+		changeHeroImage(UNKNOWN_HERO_IMAGE);
 	}
 
 	private void populateHeroImage() {
@@ -164,7 +167,7 @@ public class CharacterHud extends Window {
 
 	private void resetStats() {
 		heroNameLabel.setText("");
-		changeHeroImage(UNKNOWN_HERO_IMAGE_LOCATION);
+		changeHeroImage();
 	}
 
 	public void update() {

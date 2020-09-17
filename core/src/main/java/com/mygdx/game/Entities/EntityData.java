@@ -5,7 +5,7 @@ public class EntityData {
 	private int id;
 	private String name;
 	private String portraitSpritePath;
-	private String entitySpriteFilePath;
+	private String entitySpriteName;
 	private int maxAP;
 	private int maxHP;
 	private int level;
@@ -46,12 +46,12 @@ public class EntityData {
 		this.portraitSpritePath = portraitSpritePath;
 	}
 
-	public String getEntitySpriteFilePath() {
-		return entitySpriteFilePath;
+	public String getEntitySpriteName() {
+		return entitySpriteName;
 	}
 
-	public void setEntitySpriteFilePath(final String entitySpriteFilePath) {
-		this.entitySpriteFilePath = entitySpriteFilePath;
+	public void setEntitySpriteName(final String entitySpriteName) {
+		this.entitySpriteName = entitySpriteName;
 	}
 
 	public int getMaxAP() {
@@ -137,7 +137,7 @@ public class EntityData {
 
 	@Override
 	public String toString() {
-		return "id : " + id + "\n" + "name : " + name + "\n" + "portraitSpritePath : " + portraitSpritePath + "\n" + "entitySpriteFilePath : " + entitySpriteFilePath + "\n" + "maxAP : " + maxAP + "\n" + "maxHP : " + maxHP + "\n" + "level : " + level + "\n" + "xp : " + xp + "\n" + "maxXP : " + maxXP + "\n" + "attackRange : " + attackRange + "\n"
+		return "id : " + id + "\n" + "name : " + name + "\n" + "portraitSpritePath : " + portraitSpritePath + "\n" + "entitySpriteFilePath : " + entitySpriteName + "\n" + "maxAP : " + maxAP + "\n" + "maxHP : " + maxHP + "\n" + "level : " + level + "\n" + "xp : " + xp + "\n" + "maxXP : " + maxXP + "\n" + "attackRange : " + attackRange + "\n"
 				+ "attackPower : " + attackPower + "\n" + "basicAttackCost : " + basicAttackCost + "\n";
 	}
 

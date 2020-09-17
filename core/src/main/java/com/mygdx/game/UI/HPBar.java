@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Screen.BattleScreen;
 
-import Utility.Utility;
+import Utility.AssetManagerUtility;
 
 public class HPBar {
 	private ProgressBar healthBar;
@@ -16,12 +16,10 @@ public class HPBar {
 
 	private float tileWidthPixel;
 	private float tileHeightPixel;
-	private float offsetY;
 	private ProgressBarStyle progressBarStyle;
 
 	private static final float BAR_WIDTH = 1.0f;
 	private static final float BAR_HEIGHT = 0.3f;
-	private static final int TILE_TO_SCREEN_RATIO = 40;
 
 	public HPBar(final Entity entity) {
 		linkedEntity = entity;
@@ -35,7 +33,7 @@ public class HPBar {
 	}
 
 	private void createDynamicHpBar() {
-		final Skin statusUISkin = Utility.getSkin();
+		final Skin statusUISkin = AssetManagerUtility.getSkin();
 		progressBarStyle = statusUISkin.get("default-horizontal", ProgressBarStyle.class);
 		healthBar = new ProgressBar(0.0f, 10.0f, 1.0f, false, progressBarStyle);
 		healthBar.setValue(10.0f);

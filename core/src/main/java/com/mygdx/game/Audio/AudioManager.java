@@ -6,7 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 
-import Utility.Utility;
+import Utility.AssetManagerUtility;
 
 public class AudioManager implements AudioObserver {
 	private static final String TAG = AudioManager.class.getSimpleName();
@@ -33,7 +33,7 @@ public class AudioManager implements AudioObserver {
 	public void onNotify(AudioCommand command, AudioTypeEvent event) {
 		switch (command) {
 		case MUSIC_LOAD:
-			Utility.loadMusicAsset(event.getValue());
+			AssetManagerUtility.loadMusicAsset(event.getValue());
 			break;
 		case MUSIC_PLAY_ONCE:
 			playMusic(false, event.getValue());
@@ -53,7 +53,7 @@ public class AudioManager implements AudioObserver {
 			}
 			break;
 		case SOUND_LOAD:
-			Utility.loadSoundAsset(event.getValue());
+			AssetManagerUtility.loadSoundAsset(event.getValue());
 			break;
 		case SOUND_PLAY_LOOP:
 			playSound(true, event.getValue());
@@ -89,8 +89,8 @@ public class AudioManager implements AudioObserver {
 		if (music != null) {
 			music.setLooping(isLooping);
 			music.play();
-		} else if (Utility.isAssetLoaded(fullFilePath)) {
-			music = Utility.getMusicAsset(fullFilePath);
+		} else if (AssetManagerUtility.isAssetLoaded(fullFilePath)) {
+			music = AssetManagerUtility.getMusicAsset(fullFilePath);
 			music.setLooping(isLooping);
 			music.play();
 			queuedMusic.put(fullFilePath, music);
@@ -106,8 +106,8 @@ public class AudioManager implements AudioObserver {
 		if (sound != null) {
 			long soundId = sound.play();
 			sound.setLooping(soundId, isLooping);
-		} else if (Utility.isAssetLoaded(fullFilePath)) {
-			sound = Utility.getSoundAsset(fullFilePath);
+		} else if (AssetManagerUtility.isAssetLoaded(fullFilePath)) {
+			sound = AssetManagerUtility.getSoundAsset(fullFilePath);
 			long soundId = sound.play();
 			sound.setLooping(soundId, isLooping);
 			queuedSounds.put(fullFilePath, sound);

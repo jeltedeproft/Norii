@@ -2,7 +2,7 @@
   {
     "id": 0,
     "name": "Fireball",
-    "iconSpritePath": "sprites/spells/fireball.png",
+    "iconSpriteName": "fireball",
     "apCost": 1,
     "mpCost": 0,
     "lineOfSight": "LINE",
@@ -17,7 +17,7 @@
   {
     "id": 1,
     "name": "Petrification",
-    "iconSpritePath": "sprites/spells/petrification.png",
+    "iconSpriteName": "petrification",
     "apCost": 1,
     "mpCost": 0,
     "lineOfSight": "LINE",
@@ -32,7 +32,7 @@
   {
     "id": 2,
     "name": "Swap",
-    "iconSpritePath": "sprites/spells/swap.png",
+    "iconSpriteName": "swap",
     "apCost": 1,
     "mpCost": 0,
     "lineOfSight": "LINE",
@@ -47,7 +47,7 @@
   {
     "id": 3,
     "name": "Hammerback",
-    "iconSpritePath": "sprites/spells/hammer.png",
+    "iconSpriteName": "hammer",
     "apCost": 1,
     "mpCost": 0,
     "lineOfSight": "LINE",

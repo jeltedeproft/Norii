@@ -2,22 +2,22 @@ package com.mygdx.game.Entities;
 
 public enum EntityAnimationType {
 
-	SPELLCAST(0),
-	THRUST(0),
-	WALK(0),
-	SLASH(0),
-	SHOOT(0),
-	HURT(0),
-	IDLE(0);
+	SPELLCAST("Spellcast"),
+	THRUST("Thrust"),
+	WALK("Walk"),
+	SLASH("Slash"),
+	SHOOT("Shoot"),
+	HURT("Hurt"),
+	IDLE("idle");
 
-	private int positionInSpriteSheet;
+	private String typeAsString;
 
-	public int getYPosition() {
-		return positionInSpriteSheet;
+	public String getTypeAsString() {
+		return typeAsString;
 	}
 
-	EntityAnimationType(final int yPosition) {
-		this.positionInSpriteSheet = yPosition;
+	EntityAnimationType(final String typeAsString) {
+		this.typeAsString = typeAsString;
 	}
 
 }

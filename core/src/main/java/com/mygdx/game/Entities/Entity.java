@@ -29,8 +29,8 @@ import com.mygdx.game.Particles.ParticleMaker;
 import com.mygdx.game.UI.CharacterHud;
 import com.mygdx.game.UI.StatusUI;
 
+import Utility.AssetManagerUtility;
 import Utility.TiledMapPosition;
-import Utility.Utility;
 
 public class Entity extends Actor implements EntitySubject, AudioSubject {
 	protected final EntityData entityData;
@@ -74,7 +74,7 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 	public Entity(final EntityTypes type) {
 		entityData = EntityFileReader.getUnitData().get(type.ordinal());
 		entityData.setEntity(this);
-		entityAnimation = new EntityAnimation(entityData.getEntitySpriteFilePath());
+		entityAnimation = new EntityAnimation(entityData.getEntitySpriteName());
 		initEntity();
 	}
 
@@ -133,7 +133,7 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 	}
 
 	public void dispose() {
-		Utility.unloadAsset(entityAnimation.getSpritePath());
+		AssetManagerUtility.unloadAsset(entityAnimation.getSpriteName());
 	}
 
 	public TiledMapPosition getCurrentPosition() {

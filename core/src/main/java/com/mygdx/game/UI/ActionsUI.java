@@ -17,9 +17,9 @@ public class ActionsUI extends UIWindow {
 	private static final int ICON_PADDING = 10;
 	private static final int MAIN_WINDOW_PADDING = 5;
 	private static final float EXTRA_WINDOW_SIZE = (MAIN_WINDOW_PADDING + ICON_PADDING) * 0.0625f;
-	private static final String MOVE_BUTTON_SPRITEPATH = "sprites/gui/move.png";
-	private static final String ATTACK_BUTTON_SPRITEPATH = "sprites/gui/attack.png";
-	private static final String SKIP_BUTTON_SPRITEPATH = "sprites/gui/skip.png";
+	private static final String MOVE_BUTTON_SPRITE_NAME = "move";
+	private static final String ATTACK_BUTTON_SPRITE_NAME = "attack";
+	private static final String SKIP_BUTTON_SPRITE_NAME = "skip";
 
 	private MoveActionUIButton moveActionUIButton;
 	private AttackActionUIButton attackActionUIButton;
@@ -58,9 +58,9 @@ public class ActionsUI extends UIWindow {
 	}
 
 	private void createButtons() {
-		moveActionUIButton = new MoveActionUIButton(MOVE_BUTTON_SPRITEPATH, linkedEntity);
-		attackActionUIButton = new AttackActionUIButton(ATTACK_BUTTON_SPRITEPATH, linkedEntity);
-		skipActionUIButton = new SkipActionUIButton(this, SKIP_BUTTON_SPRITEPATH, linkedEntity);
+		moveActionUIButton = new MoveActionUIButton(MOVE_BUTTON_SPRITE_NAME, linkedEntity);
+		attackActionUIButton = new AttackActionUIButton(ATTACK_BUTTON_SPRITE_NAME, linkedEntity);
+		skipActionUIButton = new SkipActionUIButton(this, SKIP_BUTTON_SPRITE_NAME, linkedEntity);
 	}
 
 	private void storeButtons() {
@@ -96,7 +96,7 @@ public class ActionsUI extends UIWindow {
 		final float buttonHeight = BUTTON_HEIGHT * tileHeightPixel;
 
 		for (final Ability ability : linkedEntity.getAbilities()) {
-			final SpellActionUIButton spellActionUIButton = new SpellActionUIButton(ability.getSpellData().getIconSpritePath(), linkedEntity, ability);
+			final SpellActionUIButton spellActionUIButton = new SpellActionUIButton(ability.getSpellData().getIconSpriteName(), linkedEntity, ability);
 			buttons.add(spellActionUIButton);
 			this.add(spellActionUIButton.getButton()).size(buttonWidth, buttonHeight).pad(ICON_PADDING);
 		}

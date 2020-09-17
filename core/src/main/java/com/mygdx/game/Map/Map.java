@@ -11,7 +11,7 @@ import com.mygdx.game.Audio.AudioObserver;
 import com.mygdx.game.Audio.AudioSubject;
 import com.mygdx.game.Battle.BattleManager;
 
-import Utility.Utility;
+import Utility.AssetManagerUtility;
 
 public abstract class Map implements AudioSubject {
 	private static final String TAG = Map.class.getSimpleName();
@@ -59,9 +59,9 @@ public abstract class Map implements AudioSubject {
 
 		disposeMapAndStage();
 
-		Utility.loadMapAsset(fullMapPath);
-		if (Utility.isAssetLoaded(fullMapPath)) {
-			currentMap = Utility.getMapAsset(fullMapPath);
+		AssetManagerUtility.loadMapAsset(fullMapPath);
+		if (AssetManagerUtility.isAssetLoaded(fullMapPath)) {
+			currentMap = AssetManagerUtility.getMapAsset(fullMapPath);
 		} else {
 			Gdx.app.debug(TAG, "Map not loaded");
 			return;

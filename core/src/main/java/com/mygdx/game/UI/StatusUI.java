@@ -9,7 +9,7 @@ import com.badlogic.gdx.utils.Align;
 import com.mygdx.game.Entities.Entity;
 import com.mygdx.game.Screen.BattleScreen;
 
-import Utility.Utility;
+import Utility.AssetManagerUtility;
 
 public class StatusUI extends UIWindow {
 	private int levelVal;
@@ -72,7 +72,7 @@ public class StatusUI extends UIWindow {
 	}
 
 	private void createFont() {
-		final BitmapFont font = Utility.getFreeTypeFontAsset("fonts/sporty.ttf");
+		final BitmapFont font = AssetManagerUtility.getFreeTypeFontAsset("24_fonts/sporty.ttf");
 		labelStyle = new LabelStyle();
 		labelStyle.font = font;
 	}

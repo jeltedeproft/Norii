@@ -2,8 +2,8 @@
   {
     "id": 0,
     "name": "Commander",
-    "portraitSpritePath": "sprites/characters/portraits/commanderProfileSmall.png",
-    "entitySpriteFilePath": "sprites/characters/Commander.png",
+    "portraitSpritePath": "commanderProfileSmall",
+    "entitySpriteName": "Commander",
     "maxAP": 10,
     "maxHP": 10,
     "level": 1,
@@ -18,8 +18,8 @@
   {
     "id": 1,
     "name": "Icarus",
-    "portraitSpritePath": "sprites/characters/portraits/icarusProfileSmall.png",
-    "entitySpriteFilePath": "sprites/characters/Icarus.png",
+    "portraitSpritePath": "icarusProfileSmall",
+    "entitySpriteName": "Icarus",
     "maxAP": 10,
     "maxHP": 1,
     "level": 1,
@@ -34,8 +34,8 @@
   {
     "id": 2,
     "name": "Demon",
-    "portraitSpritePath": "sprites/characters/portraits/demonProfileSmall.png",
-    "entitySpriteFilePath": "sprites/characters/Demon.png",
+    "portraitSpritePath": "demonProfileSmall",
+    "entitySpriteName": "Demon",
     "maxAP": 10,
     "maxHP": 10,
     "level": 1,
@@ -50,8 +50,8 @@
   {
     "id": 3,
     "name": "Shaman",
-    "portraitSpritePath": "sprites/characters/portraits/shamanProfileSmall.png",
-    "entitySpriteFilePath": "sprites/characters/Shaman.png",
+    "portraitSpritePath": "shamanProfileSmall",
+    "entitySpriteName": "Shaman",
     "maxAP": 10,
     "maxHP": 10,
     "level": 1,
@@ -65,9 +65,9 @@
 
   {
     "id": 4,
-    "name": "Monk",
-    "portraitSpritePath": "sprites/characters/portraits/shamanProfileSmall.png",
-    "entitySpriteFilePath": "sprites/characters/monk.png",
+    "name": "Beast Ogre",
+    "portraitSpritePath": "shamanProfileSmall",
+    "entitySpriteName": "BeastOgre",
     "maxAP": 10,
     "maxHP": 10,
     "level": 1,
@@ -81,9 +81,9 @@
 
   {
     "id": 5,
-    "name": "Skeleton",
-    "portraitSpritePath": "sprites/characters/portraits/shamanProfileSmall.png",
-    "entitySpriteFilePath": "sprites/characters/skeleton.png",
+    "name": "Black Cat",
+    "portraitSpritePath": "shamanProfileSmall",
+    "entitySpriteName": "BlackCat",
     "maxAP": 10,
     "maxHP": 10,
     "level": 1,
@@ -92,14 +92,14 @@
     "attackRange": 1,
     "attackPower": 3,
     "basicAttackCost" : 1,
-    "abilities":[ "TURN_TO_STONE"]
+    "abilities":[ "FIREBALL"]
   },
 
   {
     "id": 6,
-    "name": "Orc",
-    "portraitSpritePath": "sprites/characters/portraits/shamanProfileSmall.png",
-    "entitySpriteFilePath": "sprites/characters/orc.png",
+    "name": "Black Dog",
+    "portraitSpritePath": "shamanProfileSmall",
+    "entitySpriteName": "BlackDog",
     "maxAP": 10,
     "maxHP": 10,
     "level": 1,
@@ -108,14 +108,14 @@
     "attackRange": 1,
     "attackPower": 3,
     "basicAttackCost" : 1,
-    "abilities":[ "SWAP"]
+    "abilities":[ "FIREBALL"]
   },
 
   {
     "id": 7,
-    "name": "Knight",
-    "portraitSpritePath": "sprites/characters/portraits/shamanProfileSmall.png",
-    "entitySpriteFilePath": "sprites/characters/knight.png",
+    "name": "Black Ghost Ball",
+    "portraitSpritePath": "shamanProfileSmall",
+    "entitySpriteName": "BlackGhostBall",
     "maxAP": 10,
     "maxHP": 10,
     "level": 1,
@@ -124,14 +124,14 @@
     "attackRange": 1,
     "attackPower": 3,
     "basicAttackCost" : 1,
-    "abilities":[ "HAMMERBACK"]
+    "abilities":[ "FIREBALL"]
   },
 
   {
     "id": 8,
-    "name": "White Cat",
-    "portraitSpritePath": "sprites/characters/portraits/shamanProfileSmall.png",
-    "entitySpriteFilePath": "sprites/characters/pipoya/Animal/Cat 01-1.png",
+    "name": "Black Skeleton",
+    "portraitSpritePath": "shamanProfileSmall",
+    "entitySpriteName": "BlackSkeleton",
     "maxAP": 10,
     "maxHP": 10,
     "level": 1,
@@ -142,11 +142,12 @@
     "basicAttackCost" : 1,
     "abilities":[ "FIREBALL"]
   },
+
   {
     "id": 9,
-    "name": "Black Cat",
-    "portraitSpritePath": "sprites/characters/portraits/shamanProfileSmall.png",
-    "entitySpriteFilePath": "sprites/characters/pipoya/Animal/Cat 01-2.png",
+    "name": "Black Slime Dark Blue Eyes",
+    "portraitSpritePath": "shamanProfileSmall",
+    "entitySpriteName": "BlackSlimeDarkBlueEyes",
     "maxAP": 10,
     "maxHP": 10,
     "level": 1,
@@ -157,11 +158,12 @@
     "basicAttackCost" : 1,
     "abilities":[ "FIREBALL"]
   },
+
   {
     "id": 10,
-    "name": "Brown Cat",
-    "portraitSpritePath": "sprites/characters/portraits/shamanProfileSmall.png",
-    "entitySpriteFilePath": "sprites/characters/pipoya/Animal/Cat 01-3.png",
+    "name": "Black Slime Green Eyes",
+    "portraitSpritePath": "shamanProfileSmall",
+    "entitySpriteName": "BlackSlimeGreenEyes",
     "maxAP": 10,
     "maxHP": 10,
     "level": 1,
@@ -172,11 +174,12 @@
     "basicAttackCost" : 1,
     "abilities":[ "FIREBALL"]
   },
+
   {
     "id": 11,
-    "name": "Brown Dog",
-    "portraitSpritePath": "sprites/characters/portraits/shamanProfileSmall.png",
-    "entitySpriteFilePath": "sprites/characters/pipoya/Animal/Dog 01-1.png",
+    "name": "Black Slime Pink Eyes",
+    "portraitSpritePath": "shamanProfileSmall",
+    "entitySpriteName": "BlackSlimePinkEyes",
     "maxAP": 10,
     "maxHP": 10,
     "level": 1,
@@ -187,11 +190,12 @@
     "basicAttackCost" : 1,
     "abilities":[ "FIREBALL"]
   },
+
   {
     "id": 12,
-    "name": "Gray Dog",
-    "portraitSpritePath": "sprites/characters/portraits/shamanProfileSmall.png",
-    "entitySpriteFilePath": "sprites/characters/pipoya/Animal/Dog 01-1.png",
+    "name": "Black Slime Purple Eyes",
+    "portraitSpritePath": "shamanProfileSmall",
+    "entitySpriteName": "BlackSlimePurpleEyes",
     "maxAP": 10,
     "maxHP": 10,
     "level": 1,
@@ -202,11 +206,12 @@
     "basicAttackCost" : 1,
     "abilities":[ "FIREBALL"]
   },
+
   {
     "id": 13,
-    "name": "White Dog",
-    "portraitSpritePath": "sprites/characters/portraits/shamanProfileSmall.png",
-    "entitySpriteFilePath": "sprites/characters/pipoya/Animal/Dog 01-1.png",
+    "name": "Black Slime Red Eyes",
+    "portraitSpritePath": "shamanProfileSmall",
+    "entitySpriteName": "BlackSlimeRedEyes",
     "maxAP": 10,
     "maxHP": 10,
     "level": 1,
@@ -217,11 +222,12 @@
     "basicAttackCost" : 1,
     "abilities":[ "FIREBALL"]
   },
+
   {
     "id": 14,
-    "name": "Slither",
-    "portraitSpritePath": "sprites/characters/portraits/shamanProfileSmall.png",
-    "entitySpriteFilePath": "sprites/characters/pipoya/Enemy/Enemy 01-1.png",
+    "name": "Black Slime",
+    "portraitSpritePath": "shamanProfileSmall",
+    "entitySpriteName": "BlackSlime",
     "maxAP": 10,
     "maxHP": 10,
     "level": 1,
@@ -232,11 +238,12 @@
     "basicAttackCost" : 1,
     "abilities":[ "FIREBALL"]
   },
+
   {
     "id": 15,
-    "name": "Purple Mage",
-    "portraitSpritePath": "sprites/characters/portraits/shamanProfileSmall.png",
-    "entitySpriteFilePath": "sprites/characters/pipoya/Enemy/Enemy 02-1.png",
+    "name": "Black Slime Blue Eyes",
+    "portraitSpritePath": "shamanProfileSmall",
+    "entitySpriteName": "BlackSlimeBlueEyes",
     "maxAP": 10,
     "maxHP": 10,
     "level": 1,
@@ -247,11 +254,12 @@
     "basicAttackCost" : 1,
     "abilities":[ "FIREBALL"]
   },
+
   {
     "id": 16,
-    "name": "Pumpkin Head",
-    "portraitSpritePath": "sprites/characters/portraits/shamanProfileSmall.png",
-    "entitySpriteFilePath": "sprites/characters/pipoya/Enemy/Enemy 03-1.png",
+    "name": "Black Slime White Eyes",
+    "portraitSpritePath": "shamanProfileSmall",
+    "entitySpriteName": "BlackSlimeWhiteEyes",
     "maxAP": 10,
     "maxHP": 10,
     "level": 1,
@@ -262,11 +270,12 @@
     "basicAttackCost" : 1,
     "abilities":[ "FIREBALL"]
   },
+
   {
     "id": 17,
-    "name": "Skeletal Knight",
-    "portraitSpritePath": "sprites/characters/portraits/shamanProfileSmall.png",
-    "entitySpriteFilePath": "sprites/characters/pipoya/Enemy/Enemy 04-1.png",
+    "name": "Black Slime Yellow Eyes",
+    "portraitSpritePath": "shamanProfileSmall",
+    "entitySpriteName": "BlackSlimeYellowEyes",
     "maxAP": 10,
     "maxHP": 10,
     "level": 1,
@@ -277,11 +286,12 @@
     "basicAttackCost" : 1,
     "abilities":[ "FIREBALL"]
   },
+
   {
     "id": 18,
-    "name": "Black Skeletal",
-    "portraitSpritePath": "sprites/characters/portraits/shamanProfileSmall.png",
-    "entitySpriteFilePath": "sprites/characters/pipoya/Enemy/Enemy 05-1.png",
+    "name": "Blue Ghosty",
+    "portraitSpritePath": "shamanProfileSmall",
+    "entitySpriteName": "BlueGhosty",
     "maxAP": 10,
     "maxHP": 10,
     "level": 1,
@@ -292,11 +302,12 @@
     "basicAttackCost" : 1,
     "abilities":[ "FIREBALL"]
   },
+
   {
     "id": 19,
-    "name": "Mini Skeletal",
-    "portraitSpritePath": "sprites/characters/portraits/shamanProfileSmall.png",
-    "entitySpriteFilePath": "sprites/characters/pipoya/Enemy/Enemy 06-1.png",
+    "name": "Blue Slime",
+    "portraitSpritePath": "shamanProfileSmall",
+    "entitySpriteName": "BlueSlime",
     "maxAP": 10,
     "maxHP": 10,
     "level": 1,
@@ -307,11 +318,12 @@
     "basicAttackCost" : 1,
     "abilities":[ "FIREBALL"]
   },
+
   {
     "id": 20,
-    "name": "Creepy Nurse green",
-    "portraitSpritePath": "sprites/characters/portraits/shamanProfileSmall.png",
-    "entitySpriteFilePath": "sprites/characters/pipoya/Enemy/Enemy 07-1.png",
+    "name": "Dark Blue Slime",
+    "portraitSpritePath": "shamanProfileSmall",
+    "entitySpriteName": "DarkBlueSlime",
     "maxAP": 10,
     "maxHP": 10,
     "level": 1,
@@ -322,11 +334,12 @@
     "basicAttackCost" : 1,
     "abilities":[ "FIREBALL"]
   },
+
   {
     "id": 21,
-    "name": "Creepy Nurse White",
-    "portraitSpritePath": "sprites/characters/portraits/shamanProfileSmall.png",
-    "entitySpriteFilePath": "sprites/characters/pipoya/Enemy/Enemy 08-1.png",
+    "name": "Female Eight",
+    "portraitSpritePath": "shamanProfileSmall",
+    "entitySpriteName": "FemaleEight",
     "maxAP": 10,
     "maxHP": 10,
     "level": 1,
@@ -337,11 +350,12 @@
     "basicAttackCost" : 1,
     "abilities":[ "FIREBALL"]
   },
+
   {
     "id": 22,
-    "name": "ghosty",
-    "portraitSpritePath": "sprites/characters/portraits/shamanProfileSmall.png",
-    "entitySpriteFilePath": "sprites/characters/pipoya/Enemy/Enemy 09-1.png",
+    "name": "Female Eleven",
+    "portraitSpritePath": "shamanProfileSmall",
+    "entitySpriteName": "FemaleEleven",
     "maxAP": 10,
     "maxHP": 10,
     "level": 1,
@@ -352,11 +366,12 @@
     "basicAttackCost" : 1,
     "abilities":[ "FIREBALL"]
   },
+
   {
     "id": 23,
-    "name": "Gray Ghosty",
-    "portraitSpritePath": "sprites/characters/portraits/shamanProfileSmall.png",
-    "entitySpriteFilePath": "sprites/characters/pipoya/Enemy/Enemy 10-1.png",
+    "name": "Female Fifteen",
+    "portraitSpritePath": "shamanProfileSmall",
+    "entitySpriteName": "FemaleFifteen",
     "maxAP": 10,
     "maxHP": 10,
     "level": 1,
@@ -367,11 +382,12 @@
     "basicAttackCost" : 1,
     "abilities":[ "FIREBALL"]
   },
+
   {
     "id": 24,
-    "name": "Frost Ghosty",
-    "portraitSpritePath": "sprites/characters/portraits/shamanProfileSmall.png",
-    "entitySpriteFilePath": "sprites/characters/pipoya/Enemy/Enemy 11-1.png",
+    "name": "Female Fifty Five",
+    "portraitSpritePath": "shamanProfileSmall",
+    "entitySpriteName": "FemaleFiftyFive",
     "maxAP": 10,
     "maxHP": 10,
     "level": 1,
@@ -382,11 +398,12 @@
     "basicAttackCost" : 1,
     "abilities":[ "FIREBALL"]
   },
+
   {
     "id": 25,
-    "name": "Alien",
-    "portraitSpritePath": "sprites/characters/portraits/shamanProfileSmall.png",
-    "entitySpriteFilePath": "sprites/characters/pipoya/Enemy/Enemy 13-1.png",
+    "name": "Female Fifty Four",
+    "portraitSpritePath": "shamanProfileSmall",
+    "entitySpriteName": "FemaleFiftyFour",
     "maxAP": 10,
     "maxHP": 10,
     "level": 1,
@@ -397,11 +414,12 @@
     "basicAttackCost" : 1,
     "abilities":[ "FIREBALL"]
   },
+
   {
     "id": 26,
-    "name": "Black Ghost",
-    "portraitSpritePath": "sprites/characters/portraits/shamanProfileSmall.png",
-    "entitySpriteFilePath": "sprites/characters/pipoya/Enemy/Enemy 15-1.png",
+    "name": "Female Fifty",
+    "portraitSpritePath": "shamanProfileSmall",
+    "entitySpriteName": "FemaleFifty",
     "maxAP": 10,
     "maxHP": 10,
     "level": 1,
@@ -412,11 +430,12 @@
     "basicAttackCost" : 1,
     "abilities":[ "FIREBALL"]
   },
+
   {
     "id": 27,
-    "name": "Black Slime",
-    "portraitSpritePath": "sprites/characters/portraits/shamanProfileSmall.png",
-    "entitySpriteFilePath": "sprites/characters/pipoya/Enemy/Enemy 16-1.png",
+    "name": "Female Five",
+    "portraitSpritePath": "shamanProfileSmall",
+    "entitySpriteName": "FemaleFive",
     "maxAP": 10,
     "maxHP": 10,
     "level": 1,
@@ -427,11 +446,12 @@
     "basicAttackCost" : 1,
     "abilities":[ "FIREBALL"]
   },
+
   {
     "id": 28,
-    "name": "Posh Girl",
-    "portraitSpritePath": "sprites/characters/portraits/shamanProfileSmall.png",
-    "entitySpriteFilePath": "sprites/characters/pipoya/Female/Female 01-1.png",
+    "name": "Female Four",
+    "portraitSpritePath": "shamanProfileSmall",
+    "entitySpriteName": "FemaleFour",
     "maxAP": 10,
     "maxHP": 10,
     "level": 1,
@@ -442,11 +462,12 @@
     "basicAttackCost" : 1,
     "abilities":[ "FIREBALL"]
   },
+
   {
     "id": 29,
-    "name": "Valiant Knight",
-    "portraitSpritePath": "sprites/characters/portraits/shamanProfileSmall.png",
-    "entitySpriteFilePath": "sprites/characters/pipoya/Male/Male 01-1.png",
+    "name": "Female Nine",
+    "portraitSpritePath": "shamanProfileSmall",
+    "entitySpriteName": "FemaleNine",
     "maxAP": 10,
     "maxHP": 10,
     "level": 1,
@@ -457,11 +478,12 @@
     "basicAttackCost" : 1,
     "abilities":[ "FIREBALL"]
   },
+
   {
     "id": 30,
-    "name": "Shadow",
-    "portraitSpritePath": "sprites/characters/portraits/shamanProfileSmall.png",
-    "entitySpriteFilePath": "sprites/characters/pipoya/Shadow/Shadow  3 Animal.png",
+    "name": "Female Nineteen",
+    "portraitSpritePath": "shamanProfileSmall",
+    "entitySpriteName": "FemaleNineteen",
     "maxAP": 10,
     "maxHP": 10,
     "level": 1,
@@ -472,11 +494,12 @@
     "basicAttackCost" : 1,
     "abilities":[ "FIREBALL"]
   },
+
   {
     "id": 31,
-    "name": "Soldier",
-    "portraitSpritePath": "sprites/characters/portraits/shamanProfileSmall.png",
-    "entitySpriteFilePath": "sprites/characters/pipoya/Soldier/Soldier 01-1.png",
+    "name": "Female One",
+    "portraitSpritePath": "shamanProfileSmall",
+    "entitySpriteName": "FemaleOne",
     "maxAP": 10,
     "maxHP": 10,
     "level": 1,
@@ -486,5 +509,6 @@
     "attackPower": 3,
     "basicAttackCost" : 1,
     "abilities":[ "FIREBALL"]
-  }
+  },
+  
 ]

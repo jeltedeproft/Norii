@@ -15,7 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import Utility.Utility;
+import Utility.AssetManagerUtility;
 
 public class PauseMenuScreen implements Screen {
 	private static String defaultBackgroundPath = "sprites/gui/bg.jpg";
@@ -51,7 +51,7 @@ public class PauseMenuScreen implements Screen {
 	}
 
 	private void createUI() {
-		final Skin statusUISkin = Utility.getSkin();
+		final Skin statusUISkin = AssetManagerUtility.getSkin();
 		title = new Label("Pause", statusUISkin);
 		title.setFontScale(TITLE_FONT_SCALE);
 		resumeButton = new TextButton("Resume", statusUISkin);
@@ -108,6 +108,7 @@ public class PauseMenuScreen implements Screen {
 
 	@Override
 	public void show() {
+		// no-op
 	}
 
 	@Override
@@ -125,17 +126,17 @@ public class PauseMenuScreen implements Screen {
 
 	@Override
 	public void pause() {
-
+		// no-op
 	}
 
 	@Override
 	public void resume() {
-
+		// no-op
 	}
 
 	@Override
 	public void hide() {
-
+		// no-op
 	}
 
 	@Override

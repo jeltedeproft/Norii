@@ -23,7 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 
-import Utility.Utility;
+import Utility.AssetManagerUtility;
 
 public class SettingsScreen implements Screen {
 	private static final float FRAME_DURATION = 0.2f;
@@ -55,7 +55,7 @@ public class SettingsScreen implements Screen {
 	}
 
 	private void createButtons() {
-		final Skin statusUISkin = Utility.getSkin();
+		final Skin statusUISkin = AssetManagerUtility.getSkin();
 
 		titleLabel = new Label("SETTINGS", statusUISkin);
 		titleLabel.setFontScale(3);
@@ -63,7 +63,7 @@ public class SettingsScreen implements Screen {
 		settingsLabel = new Label("aspect ratio", statusUISkin);
 
 		final String[] displayModeStrings = getDisplayModeStrings();
-		aspectRatioSelectBox = new SelectBox<String>(statusUISkin);
+		aspectRatioSelectBox = new SelectBox<>(statusUISkin);
 		aspectRatioSelectBox.setItems(displayModeStrings);
 
 		exit = new TextButton("exit", statusUISkin);
@@ -75,7 +75,7 @@ public class SettingsScreen implements Screen {
 	}
 
 	private void initializeBgAnimation() {
-		bganimation = Utility.getGIFAsset(defaultBackgroundPath);
+		bganimation = AssetManagerUtility.getGIFAsset(defaultBackgroundPath);
 		bganimation.setFrameDuration(FRAME_DURATION);
 	}
 
@@ -163,12 +163,12 @@ public class SettingsScreen implements Screen {
 
 	@Override
 	public void pause() {
-		// TODO Auto-generated method stub
+		// no-op
 	}
 
 	@Override
 	public void resume() {
-		// TODO Auto-generated method stub
+		// no-op
 	}
 
 	@Override
