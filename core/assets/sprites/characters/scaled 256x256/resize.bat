@@ -1,0 +1,1 @@
+magick mogrify -resize 256x256 *.png
