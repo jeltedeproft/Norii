@@ -36,6 +36,7 @@ public class DeploymentBattleState extends BattleState {
 
 	@Override
 	public void clickedOnTile(final TiledMapActor actor) {
+		System.out.println("clicked on tilemapactor in deployment state");
 		deployUnit(actor);
 	}
 

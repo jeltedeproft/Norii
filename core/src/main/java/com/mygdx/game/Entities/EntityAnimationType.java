@@ -8,7 +8,7 @@ public enum EntityAnimationType {
 	SLASH("Slash"),
 	SHOOT("Shoot"),
 	HURT("Hurt"),
-	IDLE("idle");
+	IDLE("Idle");
 
 	private String typeAsString;
 

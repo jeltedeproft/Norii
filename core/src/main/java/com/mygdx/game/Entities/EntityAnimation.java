@@ -19,7 +19,7 @@ public class EntityAnimation {
 	private Direction currentDirection = Direction.DOWN;
 	private Animation<TextureRegion> currentAnimation;
 	private EnumMap<EntityAnimationType, Animation.PlayMode> playmodePerAnimationType;
-	private EntityAnimationType currentAnimationType = EntityAnimationType.WALK;
+	private EntityAnimationType currentAnimationType = EntityAnimationType.IDLE;
 
 	public EntityAnimation(final String spriteName) {
 		initVariables(spriteName);

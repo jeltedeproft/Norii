@@ -2,10 +2,8 @@ package Utility;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.assets.loaders.AssetLoader;
 import com.badlogic.gdx.assets.loaders.MusicLoader;
 import com.badlogic.gdx.assets.loaders.ParticleEffectLoader;
-import com.badlogic.gdx.assets.loaders.SkinLoader;
 import com.badlogic.gdx.assets.loaders.SoundLoader;
 import com.badlogic.gdx.assets.loaders.TextureAtlasLoader;
 import com.badlogic.gdx.assets.loaders.TextureLoader;
@@ -25,7 +23,6 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoaderParameter;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Map.MyNavTmxMapLoader;
 import com.mygdx.game.UI.MySkin;
@@ -33,17 +30,26 @@ import com.mygdx.game.UI.MySkin;
 public class AssetManagerUtility {
 	private static final String TAG = AssetManagerUtility.class.getSimpleName();
 
-	public static final String SPRITES_ATLAS_PATH = "sprites/Norii.atlas";
+	public static final String SPRITES_ATLAS_PATH = "sprites/noriiSprites.atlas";
 	public static final String SKIN_TEXTURE_ATLAS_PATH = "skins/norii.atlas";
 	public static final String SKIN_JSON_PATH = "skins/norii.json";
 	public static final String ON_TILE_HOVER_FILE_PATH = "sprites/gui/selectedTile.png";
 
+	private static boolean loadersSet = false;
+
 	public static final AssetManager assetManager = new AssetManager();
-	private static InternalFileHandleResolver filePathResolver = new InternalFileHandleResolver();
 	private static MySkin statusUISkin;
+	private static InternalFileHandleResolver filePathResolver = new InternalFileHandleResolver();
+
+	private static MyNavTmxMapLoader myNavTmxMapLoader = new MyNavTmxMapLoader(filePathResolver);
+	private static TextureLoader textureLoader = new TextureLoader(filePathResolver);
+	private static ParticleEffectLoader particleEffectLoader = new ParticleEffectLoader(filePathResolver);
+	private static SoundLoader soundLoader = new SoundLoader(filePathResolver);
+	private static MusicLoader musicLoader = new MusicLoader(filePathResolver);
+	private static TextureAtlasLoader textureAtlasLoader = new TextureAtlasLoader(filePathResolver);
 
 	public static void loadMapAsset(final String mapFilenamePath) {
-		loadAsset(mapFilenamePath, TiledMap.class, new MyNavTmxMapLoader(filePathResolver));
+		loadAsset(mapFilenamePath, TiledMap.class);
 	}
 
 	public static TiledMap getMapAsset(final String mapFilenamePath) {
@@ -51,7 +57,7 @@ public class AssetManagerUtility {
 	}
 
 	public static void loadTextureAsset(final String textureFilenamePath) {
-		loadAsset(textureFilenamePath, Texture.class, new TextureLoader(filePathResolver));
+		loadAsset(textureFilenamePath, Texture.class);
 	}
 
 	public static Texture getTextureAsset(final String textureFilenamePath) {
@@ -59,7 +65,7 @@ public class AssetManagerUtility {
 	}
 
 	public static void loadParticleAsset(final String particleFilenamePath) {
-		loadAsset(particleFilenamePath, ParticleEffect.class, new ParticleEffectLoader(filePathResolver));
+		loadAsset(particleFilenamePath, ParticleEffect.class);
 	}
 
 	public static ParticleEffect getParticleAsset(final String particleFilenamePath) {
@@ -67,7 +73,7 @@ public class AssetManagerUtility {
 	}
 
 	public static void loadSoundAsset(final String soundFilenamePath) {
-		loadAsset(soundFilenamePath, Sound.class, new SoundLoader(filePathResolver));
+		loadAsset(soundFilenamePath, Sound.class);
 	}
 
 	public static Sound getSoundAsset(final String soundFilenamePath) {
@@ -75,7 +81,7 @@ public class AssetManagerUtility {
 	}
 
 	public static void loadMusicAsset(final String musicFilenamePath) {
-		loadAsset(musicFilenamePath, Music.class, new MusicLoader(filePathResolver));
+		loadAsset(musicFilenamePath, Music.class);
 	}
 
 	public static Music getMusicAsset(final String musicFilenamePath) {
@@ -83,15 +89,11 @@ public class AssetManagerUtility {
 	}
 
 	public static void loadTextureAtlas(final String textureAtlasFilenamePath) {
-		loadAsset(textureAtlasFilenamePath, TextureAtlas.class, new TextureAtlasLoader(filePathResolver));
+		loadAsset(textureAtlasFilenamePath, TextureAtlas.class);
 	}
 
 	public static TextureAtlas getTextureAtlas(final String textureAtlasFilenamePath) {
 		return (TextureAtlas) getAsset(textureAtlasFilenamePath, TextureAtlas.class);
-	}
-
-	public static void loadSkin(final String skinFilenamePath) {
-		loadAsset(skinFilenamePath, Skin.class, new SkinLoader(filePathResolver));
 	}
 
 	public static MySkin getSkin() {
@@ -132,10 +134,13 @@ public class AssetManagerUtility {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static void loadAsset(final String assetName, final Class className, final AssetLoader loader) {
-		if ((!isAssetLoaded(assetName)) && (checkValidString(assetName))) {
+	public static void loadAsset(final String assetName, final Class className) {
+		if (!loadersSet) {
+			setLoaders();
+		}
+
+		if (!isAssetLoaded(assetName) && checkValidString(assetName)) {
 			if (filePathResolver.resolve(assetName).exists()) {
-				assetManager.setLoader(className, loader);
 				assetManager.load(assetName, className);
 				assetManager.finishLoadingAsset(assetName);// block
 				Gdx.app.debug(TAG, className.getSimpleName() + " loaded: " + assetName);
@@ -201,11 +206,21 @@ public class AssetManagerUtility {
 	}
 
 	private static boolean checkValidString(final String string) {
-		return (!(string == null || string.isEmpty()));
+		return !(string == null || string.isEmpty());
 	}
 
 	private AssetManagerUtility() {
 
+	}
+
+	private static void setLoaders() {
+		assetManager.setLoader(TiledMap.class, myNavTmxMapLoader);
+		assetManager.setLoader(Texture.class, textureLoader);
+		assetManager.setLoader(ParticleEffect.class, particleEffectLoader);
+		assetManager.setLoader(Sound.class, soundLoader);
+		assetManager.setLoader(Music.class, musicLoader);
+		assetManager.setLoader(TextureAtlas.class, textureAtlasLoader);
+		loadersSet = true;
 	}
 
 }

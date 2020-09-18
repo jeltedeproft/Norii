@@ -26,7 +26,7 @@ public abstract class BattleState implements AudioSubject {
 	}
 
 	public void clickedOnTile(TiledMapActor actor) {
-
+		System.out.println("clicked on tilemapactor");
 	}
 
 	public void clickedOnUnit(Entity entity) {

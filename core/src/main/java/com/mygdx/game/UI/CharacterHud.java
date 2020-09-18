@@ -61,7 +61,7 @@ public class CharacterHud extends Window {
 	}
 
 	private void linkUnitsToMenu(final List<Entity> allUnits) {
-		allUnits.forEach((entity) -> entity.setbottomMenu(this));
+		allUnits.forEach(entity -> entity.setbottomMenu(this));
 	}
 
 	private void initElementsForUI() {
@@ -122,7 +122,7 @@ public class CharacterHud extends Window {
 	}
 
 	private void changeHeroImage(final String heroImageName) {
-		final TextureRegion tr = new TextureRegion(AssetManagerUtility.getSpriteSheetTexture(heroImageName));
+		final TextureRegion tr = new TextureRegion(AssetManagerUtility.getSprite(heroImageName));
 		final TextureRegionDrawable trd = new TextureRegionDrawable(tr);
 		final ImageButtonStyle oldStyle = heroImageButton.getStyle();
 		oldStyle.imageUp = trd;

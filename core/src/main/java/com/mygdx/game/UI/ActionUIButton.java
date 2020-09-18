@@ -24,7 +24,7 @@ public class ActionUIButton {
 	private boolean hovering = false;
 
 	public ActionUIButton(String imageName) {
-		tr = new TextureRegion(AssetManagerUtility.getSpriteSheetTexture(imageName));
+		tr = new TextureRegion(AssetManagerUtility.getSprite(imageName));
 		buttonImage = new TextureRegionDrawable(tr);
 		btnStyle = new ImageButtonStyle();
 		btnStyle.up = buttonImage;
