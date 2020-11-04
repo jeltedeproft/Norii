@@ -22,3 +22,4 @@ public class DesktopLauncher {
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 	}
 }
+

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
 	<name>Norii-desktop</name>
-	<comment></comment>
+	<comment>Project Norii-desktop created by Buildship.</comment>
 	<projects>
 	</projects>
 	<buildSpec>
@@ -24,7 +24,7 @@
 		<link>
 			<name>assets</name>
 			<type>2</type>
-			<locationURI>PARENT-1-PROJECT_LOC/core/assets</locationURI>
+			<location>D:/Eclipse/html-workspace/Norii/core/assets</location>
 		</link>
 	</linkedResources>
 </projectDescription>
