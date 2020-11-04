@@ -37,7 +37,6 @@ public class Particle extends Actor {
 		if (Boolean.TRUE.equals(shown)) {
 			particleEffect.draw(spriteBatch, delta);
 		}
-
 	}
 
 	public void delete() {

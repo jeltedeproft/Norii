@@ -24,8 +24,6 @@ import com.mygdx.game.Magic.AbilitiesEnum;
 import com.mygdx.game.Magic.Ability;
 import com.mygdx.game.Magic.Modifier;
 import com.mygdx.game.Magic.ModifiersEnum;
-import com.mygdx.game.Particles.Particle;
-import com.mygdx.game.Particles.ParticleMaker;
 import com.mygdx.game.UI.CharacterHud;
 import com.mygdx.game.UI.StatusUI;
 
@@ -69,8 +67,6 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 	private Runnable stopWalkAction;
 	private Runnable cleanup;
 
-	protected Particle ringParticle;
-
 	public Entity(final EntityTypes type) {
 		entityData = EntityFileReader.getUnitData().get(type.ordinal());
 		entityData.setEntity(this);
@@ -113,7 +109,6 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 
 	public void update(final float delta) {
 		entityAnimation.update(delta);
-		ringParticle.setPosition(currentPlayerPosition);
 	}
 
 	public EntityData getEntityData() {
@@ -208,18 +203,16 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 	}
 
 	private void cleanUpDeadUnit() {
-		ParticleMaker.deactivateParticle(ParticleMaker.getParticle(ringParticle.getParticleType(), currentPlayerPosition));
 		hp = 0;
 		isDead = true;
 		inBattle = false;
 		isActive = false;
 		getEntityactor().setPosition(-100, -100);
 		setVisible(false);
-		ringParticle.delete();
 	}
 
 	public boolean canMove() {
-		return (ap > 0);
+		return ap > 0;
 	}
 
 	public boolean isInBattle() {
@@ -341,14 +334,6 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 		}
 	}
 
-	public void hideTurnParticle() {
-		ringParticle.setShown(false);
-	}
-
-	public void showTurnParticle() {
-		ringParticle.setShown(true);
-	}
-
 	public Collection<Ability> getAbilities() {
 		return abilities;
 	}
@@ -414,11 +399,11 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 	}
 
 	private float decideRotation(GridCell oldCell, GridCell cell) {
-		if ((oldCell.x == cell.x) && (oldCell.y > cell.y)) {
+		if (oldCell.x == cell.x && oldCell.y > cell.y) {
 			return 0.0f;
-		} else if ((oldCell.x == cell.x) && (oldCell.y < cell.y)) {
+		} else if (oldCell.x == cell.x && oldCell.y < cell.y) {
 			return 180.0f;
-		} else if ((oldCell.x > cell.x) && (oldCell.y == cell.y)) {
+		} else if (oldCell.x > cell.x && oldCell.y == cell.y) {
 			return 270.0f;
 		}
 		return 90.0f;

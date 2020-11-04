@@ -47,6 +47,12 @@ com.badlogic.gdx.graphics.Color: {
 		b: 0.29133344
 		a: 1
 	}
+	blue: {
+		r: 0.07680005
+		g: 0.25071412
+		b: 0.7199999
+		a: 0.92333335
+	}
 	white: {
 		r: 1
 		g: 1
@@ -66,9 +72,15 @@ com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
 	}
 }
 com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable: {
-	android-horizontal-scrollbar-knob-tiled: {
+	red-hp-bar: {
 		region: android-horizontal-scrollbar-knob
 		color: red
+		minWidth: 0
+		minHeight: 8
+	}
+	blue-hp-bar: {
+		region: android-horizontal-scrollbar-knob
+		color: blue
 		minWidth: 0
 		minHeight: 8
 	}
@@ -158,7 +170,15 @@ com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle: {
 com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle: {
 	default-horizontal: {
 		background: progressbar-horizontal
-		knobBefore: android-horizontal-scrollbar-knob-tiled
+		knobBefore: red-hp-bar
+	}
+	red-hp-bar: {
+		background: progressbar-horizontal
+		knobBefore: red-hp-bar
+	}
+	blue-hp-bar: {
+		background: progressbar-horizontal
+		knobBefore: blue-hp-bar
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {

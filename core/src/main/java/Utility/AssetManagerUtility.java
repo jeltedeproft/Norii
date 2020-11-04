@@ -13,6 +13,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -179,13 +180,13 @@ public class AssetManagerUtility {
 		return getTextureAtlas(SPRITES_ATLAS_PATH).findRegion(textureName).getTexture();
 	}
 
-	public static Animation<TextureRegion> getAnimation(String animationName, float animationSpeed) {
+	public static Animation<TextureRegion> getAnimation(String animationName, float animationSpeed, PlayMode playMode) {
 		Array<TextureAtlas.AtlasRegion> regions = getTextureAtlas(SPRITES_ATLAS_PATH).findRegions(animationName);
 
 		if (regions == null) {
 			return null;
 		} else {
-			return new Animation<>(animationSpeed, regions);
+			return new Animation<>(animationSpeed, regions, playMode);
 		}
 	}
 

@@ -1,7 +1,7 @@
 arguments=
 auto.sync=false
 build.scans.enabled=false
-connection.gradle.distribution=GRADLE_DISTRIBUTION(LOCAL_INSTALLATION(E\:\\programming\\gradle\\gradle-2.8))
+connection.gradle.distribution=GRADLE_DISTRIBUTION(VERSION(6.8-milestone-1))
 connection.project.dir=
 eclipse.preferences.version=1
 gradle.user.home=

@@ -15,6 +15,7 @@ public class DesktopLauncher {
 		config.height = 1120;
 		config.fullscreen = false;
 		config.initialBackgroundColor = Color.BLACK;
+		config.resizable = false;
 
 		final Application app = new LwjglApplication(new Norii(), config);
 		Gdx.app = app;

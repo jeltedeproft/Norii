@@ -13,6 +13,7 @@ buildscript {
     }
 }
 
+
 allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
@@ -20,11 +21,11 @@ allprojects {
     version = '1.0'
     ext {
         appName = "Norii"
-        gdxVersion = '1.9.8'
-        roboVMVersion = '2.3.10'
-        box2DLightsVersion = '1.4'
-        ashleyVersion = '1.7.0'
-        aiVersion = '1.8.0'
+        gdxVersion = '1.9.12'
+        roboVMVersion = '2.3.11'
+        box2DLightsVersion = '1.5'
+        ashleyVersion = '1.7.3'
+        aiVersion = '1.8.2'
         junitVersion = '5.5.2'
         visuiVersion = '1.4.1'
     }
@@ -36,6 +37,8 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
         maven { url 'https://jitpack.io' }
+        maven { url "https://artifactory.nimblygames.com/artifactory/ng-public-snapshot/" }
+   		maven { url "https://artifactory.nimblygames.com/artifactory/ng-public-release/" }
     }
 }
 
@@ -51,6 +54,10 @@ project(":desktop") {
         implementation "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
         implementation "com.github.xaguzman:pathfinding-gdx-bridge:0.2.6"
         implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+        implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
+        implementation "com.badlogicgames.packr:packr:3.0.0"
+        implementation 'org.apache.commons:commons-collections4:4.4'
+        implementation group: 'org.apache.commons', name: 'commons-compress', version: '1.8'
         testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
         testImplementation 'org.mockito:mockito-all:2.0.2-beta'
     }
@@ -70,8 +77,11 @@ project(":core") {
         implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         implementation 'org.lwjgl.lwjgl:lwjgl:2.8.2'
         implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
+        implementation group: 'org.apache.commons', name: 'commons-compress', version: '1.8'
         implementation "com.kotcrab.vis:vis-ui:$visuiVersion"
         implementation 'com.github.raeleus.TenPatch:tenpatch:5.0.0'
+        implementation "com.badlogicgames.packr:packr:3.0.0"
+        implementation 'org.apache.commons:commons-collections4:4.4'
         testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
         testImplementation 'org.mockito:mockito-all:2.0.2-beta'
     }
@@ -105,6 +115,6 @@ tasks.eclipse.doLast {
 }
 
 wrapper {
-    gradleVersion = '5.6.2'
+    gradleVersion = '6.8-milestone-2'
     distributionType = Wrapper.DistributionType.ALL
 }

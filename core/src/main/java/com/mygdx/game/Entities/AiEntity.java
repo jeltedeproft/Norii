@@ -2,15 +2,11 @@ package com.mygdx.game.Entities;
 
 import com.mygdx.game.Entities.EntityObserver.EntityCommand;
 import com.mygdx.game.Magic.Ability;
-import com.mygdx.game.Particles.ParticleMaker;
-import com.mygdx.game.Particles.ParticleType;
 
 public class AiEntity extends Entity {
 	public AiEntity(EntityTypes type) {
 		super(type);
 		isPlayerUnit = false;
-		ParticleMaker.addParticle(ParticleType.RED_CIRCLE, currentPlayerPosition, entityID);
-		ringParticle = ParticleMaker.getParticle(ParticleType.RED_CIRCLE, currentPlayerPosition, entityID);
 	}
 
 	public void setActive(final boolean isActive) {

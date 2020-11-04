@@ -11,7 +11,7 @@ import Utility.AssetManagerUtility;
 public class EntityAnimation {
 	private static final String TAG = EntityAnimation.class.getSimpleName();
 
-	private static final float ANIMATION_DURATION = 0.30f;
+	private static final float ANIMATION_DURATION = 0.3f;
 
 	private String spriteName;
 	protected float frameTime = 0f;
@@ -30,10 +30,11 @@ public class EntityAnimation {
 		playmodePerAnimationType = new EnumMap<>(EntityAnimationType.class);
 		initPlaymodePerAnimationType();
 		String animationName = spriteName + currentAnimationType.getTypeAsString() + currentDirection.getDirectionAsString();
-		currentAnimation = AssetManagerUtility.getAnimation(animationName, ANIMATION_DURATION);
+		currentAnimation = AssetManagerUtility.getAnimation(animationName, ANIMATION_DURATION, playmodePerAnimationType.get(currentAnimationType));
 
 		if (currentAnimation == null) {
 			animationName = spriteName + "Walk" + currentDirection.getDirectionAsString();
+			currentAnimation = AssetManagerUtility.getAnimation(animationName, ANIMATION_DURATION, playmodePerAnimationType.get(currentAnimationType));
 		}
 	}
 
@@ -93,6 +94,8 @@ public class EntityAnimation {
 	public void setCurrentAnimationType(EntityAnimationType currentAnimationType) {
 		this.currentAnimationType = currentAnimationType;
 		frameTime = 0;
+		String animationName = spriteName + currentAnimationType.getTypeAsString() + currentDirection.getDirectionAsString();
+		currentAnimation = AssetManagerUtility.getAnimation(animationName, ANIMATION_DURATION, playmodePerAnimationType.get(currentAnimationType));
 	}
 
 	public enum Direction {

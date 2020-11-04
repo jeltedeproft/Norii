@@ -1,9 +1,5 @@
 package com.mygdx.game.Screen;
 
-import org.lwjgl.LWJGLException;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -29,6 +25,7 @@ public class SettingsScreen implements Screen {
 	private static final float FRAME_DURATION = 0.2f;
 
 	private static String defaultBackgroundPath = "sprites/gui/gifs/forestbg.gif";
+	private final static String[] displayModes = { "2048 x 1080" };
 
 	private Label titleLabel;
 	private Label settingsLabel;
@@ -36,7 +33,6 @@ public class SettingsScreen implements Screen {
 	private TextButton exit;
 	private final Stage stage;
 	private final Table table;
-	private DisplayMode[] displayModes;
 	private Animation<TextureRegion> bganimation;
 	private SpriteBatch backgroundbatch;
 
@@ -62,9 +58,8 @@ public class SettingsScreen implements Screen {
 		titleLabel.setAlignment(Align.top);
 		settingsLabel = new Label("aspect ratio", statusUISkin);
 
-		final String[] displayModeStrings = getDisplayModeStrings();
 		aspectRatioSelectBox = new SelectBox<>(statusUISkin);
-		aspectRatioSelectBox.setItems(displayModeStrings);
+		aspectRatioSelectBox.setItems(displayModes);
 
 		exit = new TextButton("exit", statusUISkin);
 	}
@@ -77,24 +72,6 @@ public class SettingsScreen implements Screen {
 	private void initializeBgAnimation() {
 		bganimation = AssetManagerUtility.getGIFAsset(defaultBackgroundPath);
 		bganimation.setFrameDuration(FRAME_DURATION);
-	}
-
-	private String[] getDisplayModeStrings() {
-		displayModes = getDisplayModes();
-		final String[] displayModeStrings = new String[displayModes.length];
-		for (int i = 0; i < displayModes.length; i++) {
-			displayModeStrings[i] = displayModes[i].toString();
-		}
-		return displayModeStrings;
-	}
-
-	private DisplayMode[] getDisplayModes() {
-		try {
-			return Display.getAvailableDisplayModes();
-		} catch (final LWJGLException e) {
-			e.printStackTrace();
-		}
-		return new DisplayMode[0];
 	}
 
 	private void addButtons() {
