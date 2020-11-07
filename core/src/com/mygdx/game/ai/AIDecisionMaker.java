@@ -2,8 +2,9 @@ package com.mygdx.game.ai;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import org.apache.commons.collections4.ListUtils;
 import org.xguzm.pathfinding.grid.GridCell;
 
 import com.mygdx.game.entities.AiEntity;
@@ -47,9 +48,10 @@ public class AIDecisionMaker {
 	}
 
 	private void rule1CanKill(final AiEntity unit, List<PlayerEntity> playerUnits, List<AiEntity> aiUnits) {
-		final List<Entity> entities = ListUtils.union(playerUnits, aiUnits);
+		List<Entity> entities = Stream.concat(playerUnits.stream(), aiUnits.stream()).collect(Collectors.toList());
 		for (final Entity target : entities) {
-			if (isEnemy(unit, target) && canMoveAttack(unit, target) && canKill(unit, target) && canMoveNextToUnit(unit, target)) {
+			if (isEnemy(unit, target) && canMoveAttack(unit, target) && canKill(unit, target)
+					&& canMoveNextToUnit(unit, target)) {
 				walkOverAndAttack(unit, target);
 				actionTaken = true;
 			}
@@ -57,7 +59,8 @@ public class AIDecisionMaker {
 	}
 
 	private boolean canMoveNextToUnit(AiEntity unit, Entity target) {
-		// TODO create path, check if end tile is aken, try another path without that tile, return false
+		// TODO create path, check if end tile is aken, try another path without that
+		// tile, return false
 		return false;
 	}
 
@@ -70,7 +73,7 @@ public class AIDecisionMaker {
 		final int distance = Utility.getDistanceBetweenUnits(attacker, target) - 1;
 		final int ap = attacker.getAp();
 		final int basicAttackPoints = attacker.getEntityData().getBasicAttackCost();
-		return (ap >= (distance + basicAttackPoints - attackRange));
+		return (ap >= ((distance + basicAttackPoints) - attackRange));
 	}
 
 	private boolean canKill(final AiEntity attacker, final Entity target) {
@@ -97,7 +100,8 @@ public class AIDecisionMaker {
 	}
 
 	private void runToSafety(final AiEntity unit, List<PlayerEntity> playerUnits, List<AiEntity> aiUnits) {
-		final List<Entity> entities = ListUtils.union(playerUnits, aiUnits);
+		final List<Entity> entities = Stream.concat(playerUnits.stream(), aiUnits.stream())
+				.collect(Collectors.toList());
 		final List<TiledMapPosition> positions = Utility.collectPositionsEnemyUnits(entities, unit.isPlayerUnit());
 		unit.move(getSafestPath(unit, positions));
 	}
@@ -122,7 +126,8 @@ public class AIDecisionMaker {
 	}
 
 	private void rule3Engage(final AiEntity unit, List<PlayerEntity> playerUnits, List<AiEntity> aiUnits) {
-		final List<Entity> entities = ListUtils.union(playerUnits, aiUnits);
+		final List<Entity> entities = Stream.concat(playerUnits.stream(), aiUnits.stream())
+				.collect(Collectors.toList());
 		final List<TiledMapPosition> positions = Utility.collectPositionsEnemyUnits(entities, unit.isPlayerUnit());
 		final TiledMapPosition centerOfGravity = calculateCenterOfGravity(positions);
 		unit.move(aiTeam.getMyPathFinder().pathTowards(unit.getCurrentPosition(), centerOfGravity, unit.getAp()));

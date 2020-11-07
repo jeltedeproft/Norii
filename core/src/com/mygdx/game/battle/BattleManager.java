@@ -1,8 +1,8 @@
 package com.mygdx.game.battle;
 
 import java.util.List;
-
-import org.apache.commons.collections4.ListUtils;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.mygdx.game.ai.AITeamLeader;
 import com.mygdx.game.battle.battleStates.ActionBattleState;
@@ -37,7 +37,8 @@ public class BattleManager {
 	private List<AiEntity> aiUnits;
 	private Entity lockedUnit;
 
-	public BattleManager(final List<PlayerEntity> playerUnits, final List<AiEntity> aiUnits, AITeamLeader aiTeamLeader) {
+	public BattleManager(final List<PlayerEntity> playerUnits, final List<AiEntity> aiUnits,
+			AITeamLeader aiTeamLeader) {
 		initVariables(playerUnits, aiUnits, aiTeamLeader);
 
 		deploymentBattleState = new DeploymentBattleState(this);
@@ -51,7 +52,8 @@ public class BattleManager {
 		currentBattleState.entry();
 	}
 
-	private void initVariables(final List<PlayerEntity> playerUnits, final List<AiEntity> aiUnits, AITeamLeader aiTeamLeader) {
+	private void initVariables(final List<PlayerEntity> playerUnits, final List<AiEntity> aiUnits,
+			AITeamLeader aiTeamLeader) {
 		this.playerUnits = playerUnits;
 		this.aiUnits = aiUnits;
 		this.aiTeamLeader = aiTeamLeader;
@@ -186,6 +188,7 @@ public class BattleManager {
 	}
 
 	public List<Entity> getUnits() {
-		return ListUtils.union(playerUnits, aiUnits);
+		return Stream.concat(playerUnits.stream(), aiUnits.stream()).collect(Collectors.toList());
+
 	}
 }

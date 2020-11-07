@@ -3,8 +3,8 @@ package com.mygdx.game.ui;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.commons.collections4.ListUtils;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
@@ -36,7 +36,7 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
 	private Image onTileHover;
 
 	public PlayerBattleHUD(Camera camera, List<PlayerEntity> playerUnits, List<AiEntity> aiUnits) {
-		List<Entity> allUnits = ListUtils.union(playerUnits, aiUnits);
+		List<Entity> allUnits = Stream.concat(playerUnits.stream(), aiUnits.stream()).collect(Collectors.toList());
 		initVariables(camera, allUnits);
 		createTileHoverParticle();
 		createCharacterHUDs(allUnits);
@@ -55,7 +55,8 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
 
 	private void createTileHoverParticle() {
 		AssetManagerUtility.loadTextureAsset(AssetManagerUtility.ON_TILE_HOVER_FILE_PATH);
-		final TextureRegion tr = new TextureRegion(AssetManagerUtility.getTextureAsset(AssetManagerUtility.ON_TILE_HOVER_FILE_PATH));
+		final TextureRegion tr = new TextureRegion(
+				AssetManagerUtility.getTextureAsset(AssetManagerUtility.ON_TILE_HOVER_FILE_PATH));
 		final TextureRegionDrawable trd = new TextureRegionDrawable(tr);
 		onTileHover = new Image(trd);
 		onTileHover.setPosition(-1, -1);
