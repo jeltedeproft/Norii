@@ -1,4 +1,4 @@
-package Utility;
+package utility;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
@@ -25,8 +25,8 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoaderParameter;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.utils.Array;
-import com.mygdx.game.Map.MyNavTmxMapLoader;
-import com.mygdx.game.UI.MySkin;
+import com.mygdx.game.map.MyNavTmxMapLoader;
+import com.mygdx.game.ui.MySkin;
 
 public class AssetManagerUtility {
 	private static final String TAG = AssetManagerUtility.class.getSimpleName();

@@ -1,5 +1,5 @@
 
-package Utility;
+package utility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.Entities.Entity;
+import com.mygdx.game.entities.Entity;
 
 public final class Utility {
 	private static final String TAG = Utility.class.getSimpleName();

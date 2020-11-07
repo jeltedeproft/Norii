@@ -1,8 +1,8 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Game;
-import com.mygdx.game.Screen.ScreenEnum;
-import com.mygdx.game.Screen.ScreenManager;
+import com.mygdx.game.screen.ScreenEnum;
+import com.mygdx.game.screen.ScreenManager;
 
 public class Norii extends Game {
 	public static final String GAME_IDENTIFIER = "com.mygdx.game";

@@ -8,11 +8,6 @@
 	<inherits name='Box2DLights' />
 	<inherits name='com.badlogic.gdx.controllers.controllers-gwt' />
 	<inherits name='com.kotcrab.vis.vis-ui' />
-	<inherits name='libgdx-utils' />
-	<inherits name='libgdx-utils-box2d' />
-	<inherits name='com.github.czyzby.lml.vis.GdxLmlVis' />
-	<inherits name='com.github.czyzby.lml.GdxLml' />
-
     <inherits name='com.mygdx.game.GdxDefinition' />
     
     <collapse-all-properties />

@@ -1,9 +1,9 @@
-package Utility;
+package utility;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.mygdx.game.Map.Map;
-import com.mygdx.game.Screen.BattleScreen;
+import com.mygdx.game.map.Map;
+import com.mygdx.game.screen.BattleScreen;
 
 public class TiledMapPosition {
 	private Point tileCoordinates;

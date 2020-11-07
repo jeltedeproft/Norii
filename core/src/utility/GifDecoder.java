@@ -1,4 +1,4 @@
-package Utility;
+package utility;
 
 /* Copyright by Johannes Borchardt */
 /* LibGdx conversion 2014 by Anton Persson */
