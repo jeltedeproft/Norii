@@ -1,4 +1,4 @@
-package com.mygdx.game.Audio;
+package com.mygdx.game.audio;
 
 public interface AudioSubject {
     public void addAudioObserver(AudioObserver audioObserver);

@@ -1,4 +1,4 @@
-package com.mygdx.game.Map;
+package com.mygdx.game.map;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,11 +10,11 @@ import org.xguzm.pathfinding.grid.NavigationGridGraphNode;
 import org.xguzm.pathfinding.grid.finders.AStarGridFinder;
 import org.xguzm.pathfinding.grid.finders.GridFinderOptions;
 
-import com.mygdx.game.Entities.Entity;
-import com.mygdx.game.Entities.EntityAnimation.Direction;
+import com.mygdx.game.entities.Entity;
+import com.mygdx.game.entities.EntityAnimation.Direction;
 
-import Utility.TiledMapPosition;
-import Utility.Utility;
+import utility.TiledMapPosition;
+import utility.Utility;
 
 public class MyPathFinder {
 	private NavigationGridGraph<GridCell> navGrid;

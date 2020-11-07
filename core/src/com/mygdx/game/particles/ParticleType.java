@@ -1,4 +1,4 @@
-package com.mygdx.game.Particles;
+package com.mygdx.game.particles;
 
 public enum ParticleType {
 	SPAWN("particles/spawn.p"),

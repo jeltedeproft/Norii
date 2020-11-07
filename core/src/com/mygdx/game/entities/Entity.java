@@ -1,4 +1,4 @@
-package com.mygdx.game.Entities;
+package com.mygdx.game.entities;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveTo;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.run;
@@ -15,20 +15,20 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.utils.Array;
-import com.mygdx.game.Audio.AudioManager;
-import com.mygdx.game.Audio.AudioObserver;
-import com.mygdx.game.Audio.AudioSubject;
-import com.mygdx.game.Entities.EntityAnimation.Direction;
-import com.mygdx.game.Entities.EntityObserver.EntityCommand;
-import com.mygdx.game.Magic.AbilitiesEnum;
-import com.mygdx.game.Magic.Ability;
-import com.mygdx.game.Magic.Modifier;
-import com.mygdx.game.Magic.ModifiersEnum;
-import com.mygdx.game.UI.CharacterHud;
-import com.mygdx.game.UI.StatusUI;
+import com.mygdx.game.audio.AudioManager;
+import com.mygdx.game.audio.AudioObserver;
+import com.mygdx.game.audio.AudioSubject;
+import com.mygdx.game.entities.EntityAnimation.Direction;
+import com.mygdx.game.entities.EntityObserver.EntityCommand;
+import com.mygdx.game.magic.AbilitiesEnum;
+import com.mygdx.game.magic.Ability;
+import com.mygdx.game.magic.Modifier;
+import com.mygdx.game.magic.ModifiersEnum;
+import com.mygdx.game.ui.CharacterHud;
+import com.mygdx.game.ui.StatusUI;
 
-import Utility.AssetManagerUtility;
-import Utility.TiledMapPosition;
+import utility.AssetManagerUtility;
+import utility.TiledMapPosition;
 
 public class Entity extends Actor implements EntitySubject, AudioSubject {
 	protected final EntityData entityData;

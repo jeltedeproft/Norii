@@ -1,4 +1,4 @@
-package com.mygdx.game.Screen;
+package com.mygdx.game.screen;
 
 import java.util.ArrayList;
 
@@ -18,16 +18,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.mygdx.game.AI.AITeamFileReader;
-import com.mygdx.game.AI.AITeams;
-import com.mygdx.game.Audio.AudioObserver;
-import com.mygdx.game.Entities.EntityFileReader;
-import com.mygdx.game.Entities.EntityTypes;
-import com.mygdx.game.Entities.Player;
-import com.mygdx.game.Entities.PlayerEntity;
-import com.mygdx.game.Magic.SpellFileReader;
+import com.mygdx.game.ai.AITeamFileReader;
+import com.mygdx.game.ai.AITeams;
+import com.mygdx.game.audio.AudioObserver;
+import com.mygdx.game.entities.EntityFileReader;
+import com.mygdx.game.entities.EntityTypes;
+import com.mygdx.game.entities.Player;
+import com.mygdx.game.entities.PlayerEntity;
+import com.mygdx.game.magic.SpellFileReader;
 
-import Utility.AssetManagerUtility;
+import utility.AssetManagerUtility;
 
 public class MainMenuScreen extends GameScreen {
 	private static final float FRAME_DURATION = 0.2f;

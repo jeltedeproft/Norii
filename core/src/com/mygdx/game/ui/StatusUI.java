@@ -1,4 +1,4 @@
-package com.mygdx.game.UI;
+package com.mygdx.game.ui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -6,10 +6,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.utils.Align;
-import com.mygdx.game.Entities.Entity;
-import com.mygdx.game.Screen.BattleScreen;
+import com.mygdx.game.entities.Entity;
+import com.mygdx.game.screen.BattleScreen;
 
-import Utility.AssetManagerUtility;
+import utility.AssetManagerUtility;
 
 public class StatusUI extends UIWindow {
 	private int levelVal;

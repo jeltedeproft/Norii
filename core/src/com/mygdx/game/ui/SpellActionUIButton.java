@@ -1,9 +1,9 @@
-package com.mygdx.game.UI;
+package com.mygdx.game.ui;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.mygdx.game.Entities.PlayerEntity;
-import com.mygdx.game.Magic.Ability;
+import com.mygdx.game.entities.PlayerEntity;
+import com.mygdx.game.magic.Ability;
 
 public class SpellActionUIButton extends ActionUIButton {
 	private final Ability ability;

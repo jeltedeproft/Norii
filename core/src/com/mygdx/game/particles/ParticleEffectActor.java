@@ -1,4 +1,4 @@
-package com.mygdx.game.Particles;
+package com.mygdx.game.particles;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;

@@ -1,22 +1,22 @@
-package com.mygdx.game.Battle;
+package com.mygdx.game.battle;
 
 import java.util.List;
 
 import org.apache.commons.collections4.ListUtils;
 
-import com.mygdx.game.AI.AITeamLeader;
-import com.mygdx.game.Battle.BattleStates.ActionBattleState;
-import com.mygdx.game.Battle.BattleStates.AttackBattleState;
-import com.mygdx.game.Battle.BattleStates.BattleState;
-import com.mygdx.game.Battle.BattleStates.DeploymentBattleState;
-import com.mygdx.game.Battle.BattleStates.MovementBattleState;
-import com.mygdx.game.Battle.BattleStates.SelectUnitBattleState;
-import com.mygdx.game.Battle.BattleStates.SpellBattleState;
-import com.mygdx.game.Entities.AiEntity;
-import com.mygdx.game.Entities.Entity;
-import com.mygdx.game.Entities.PlayerEntity;
-import com.mygdx.game.Magic.Ability;
-import com.mygdx.game.Map.MyPathFinder;
+import com.mygdx.game.ai.AITeamLeader;
+import com.mygdx.game.battle.battleStates.ActionBattleState;
+import com.mygdx.game.battle.battleStates.AttackBattleState;
+import com.mygdx.game.battle.battleStates.BattleState;
+import com.mygdx.game.battle.battleStates.DeploymentBattleState;
+import com.mygdx.game.battle.battleStates.MovementBattleState;
+import com.mygdx.game.battle.battleStates.SelectUnitBattleState;
+import com.mygdx.game.battle.battleStates.SpellBattleState;
+import com.mygdx.game.entities.AiEntity;
+import com.mygdx.game.entities.Entity;
+import com.mygdx.game.entities.PlayerEntity;
+import com.mygdx.game.magic.Ability;
+import com.mygdx.game.map.MyPathFinder;
 
 public class BattleManager {
 	private BattleState deploymentBattleState;

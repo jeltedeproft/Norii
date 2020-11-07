@@ -1,6 +1,6 @@
-package com.mygdx.game.Magic;
+package com.mygdx.game.magic;
 
-import com.mygdx.game.Entities.Entity;
+import com.mygdx.game.entities.Entity;
 
 public class Modifier {
 	private ModifiersEnum type;

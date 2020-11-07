@@ -1,8 +1,8 @@
-package com.mygdx.game.Battle.BattleStates;
+package com.mygdx.game.battle.battleStates;
 
-import com.mygdx.game.Battle.BattleManager;
-import com.mygdx.game.Entities.Entity;
-import com.mygdx.game.Magic.ModifiersEnum;
+import com.mygdx.game.battle.BattleManager;
+import com.mygdx.game.entities.Entity;
+import com.mygdx.game.magic.ModifiersEnum;
 
 public class SelectUnitBattleState extends BattleState {
 	private final BattleManager battlemanager;

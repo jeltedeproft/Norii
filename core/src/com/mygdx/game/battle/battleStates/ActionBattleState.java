@@ -1,10 +1,10 @@
-package com.mygdx.game.Battle.BattleStates;
+package com.mygdx.game.battle.battleStates;
 
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
-import com.mygdx.game.Battle.BattleManager;
-import com.mygdx.game.Entities.Entity;
-import com.mygdx.game.Entities.EntityAnimation.Direction;
+import com.mygdx.game.battle.BattleManager;
+import com.mygdx.game.entities.Entity;
+import com.mygdx.game.entities.EntityAnimation.Direction;
 
 public class ActionBattleState extends BattleState {
 	private final BattleManager battlemanager;

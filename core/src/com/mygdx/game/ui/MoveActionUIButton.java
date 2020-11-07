@@ -1,8 +1,8 @@
-package com.mygdx.game.UI;
+package com.mygdx.game.ui;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.mygdx.game.Entities.PlayerEntity;
+import com.mygdx.game.entities.PlayerEntity;
 
 public class MoveActionUIButton extends ActionUIButton {
 	public MoveActionUIButton(final String imageFileName, final PlayerEntity linkedUnit) {

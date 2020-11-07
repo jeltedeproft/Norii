@@ -1,12 +1,13 @@
-package com.mygdx.game.Profile;
+package com.mygdx.game.profile;
+
+import java.util.HashMap;
+import java.util.Iterator;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.ObjectMap;
-import java.util.HashMap;
-import java.util.Iterator;
 
 public class ProfileManager extends ProfileSubject {
 	private static final String TAG = ProfileManager.class.getSimpleName();

@@ -1,7 +1,7 @@
-package com.mygdx.game.Screen;
+package com.mygdx.game.screen;
 
 import com.badlogic.gdx.Screen;
-import com.mygdx.game.AI.AITeams;
+import com.mygdx.game.ai.AITeams;
 
 public enum ScreenEnum {
 

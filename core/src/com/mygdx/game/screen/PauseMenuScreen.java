@@ -1,4 +1,4 @@
-package com.mygdx.game.Screen;
+package com.mygdx.game.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -15,7 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import Utility.AssetManagerUtility;
+import utility.AssetManagerUtility;
 
 public class PauseMenuScreen implements Screen {
 	private static String defaultBackgroundPath = "sprites/gui/bg.jpg";

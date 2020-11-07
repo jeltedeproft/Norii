@@ -1,4 +1,4 @@
-package com.mygdx.game.Map;
+package com.mygdx.game.map;
 
 import org.xguzm.pathfinding.grid.GridCell;
 

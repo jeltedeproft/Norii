@@ -1,11 +1,11 @@
-package com.mygdx.game.AI.SelectUnitStrategy;
+package com.mygdx.game.ai.selectUnitStrategy;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.Random;
 
-import com.mygdx.game.Entities.AiEntity;
+import com.mygdx.game.entities.AiEntity;
 
 public class SelectNextUnitRandomly implements SelectUnitStrategy {
 	private Random random;

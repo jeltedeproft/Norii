@@ -1,11 +1,11 @@
-package com.mygdx.game.Map;
+package com.mygdx.game.map;
 
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
-import com.mygdx.game.Map.TiledMapObserver.TilemapCommand;
+import com.mygdx.game.map.TiledMapObserver.TilemapCommand;
 
-import Utility.TiledMapPosition;
+import utility.TiledMapPosition;
 
 public class TiledMapActor extends Actor implements TiledMapSubject {
 	private final Map tiledMap;

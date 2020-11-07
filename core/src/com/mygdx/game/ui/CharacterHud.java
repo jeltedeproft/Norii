@@ -1,4 +1,4 @@
-package com.mygdx.game.UI;
+package com.mygdx.game.ui;
 
 import java.util.List;
 
@@ -15,9 +15,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-import com.mygdx.game.Entities.Entity;
+import com.mygdx.game.entities.Entity;
 
-import Utility.AssetManagerUtility;
+import utility.AssetManagerUtility;
 
 public class CharacterHud extends Window {
 	private static final String UNKNOWN_HERO_IMAGE = "nochar";

@@ -1,5 +1,5 @@
 
-package com.mygdx.game.Map;
+package com.mygdx.game.map;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,13 +8,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.Audio.AudioObserver;
-import com.mygdx.game.Battle.BattleManager;
-import com.mygdx.game.Particles.ParticleMaker;
-import com.mygdx.game.Particles.ParticleType;
+import com.mygdx.game.audio.AudioObserver;
+import com.mygdx.game.battle.BattleManager;
+import com.mygdx.game.particles.ParticleMaker;
+import com.mygdx.game.particles.ParticleType;
 
-import Utility.AssetManagerUtility;
-import Utility.TiledMapPosition;
+import utility.AssetManagerUtility;
+import utility.TiledMapPosition;
 
 public class BattleMap extends Map {
 	private static final String TAG = BattleMap.class.getSimpleName();

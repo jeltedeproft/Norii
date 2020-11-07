@@ -1,4 +1,4 @@
-package com.mygdx.game.Entities;
+package com.mygdx.game.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Json;

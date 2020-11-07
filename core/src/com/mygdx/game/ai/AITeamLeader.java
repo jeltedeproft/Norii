@@ -1,20 +1,20 @@
-package com.mygdx.game.AI;
+package com.mygdx.game.ai;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.mygdx.game.AI.SelectUnitStrategy.SelectNextUnitRandomly;
-import com.mygdx.game.AI.SelectUnitStrategy.SelectUnitStrategy;
-import com.mygdx.game.Entities.AiEntity;
-import com.mygdx.game.Entities.Entity;
-import com.mygdx.game.Entities.EntityObserver.EntityCommand;
-import com.mygdx.game.Entities.EntityTypes;
-import com.mygdx.game.Entities.PlayerEntity;
-import com.mygdx.game.Map.MyPathFinder;
+import com.mygdx.game.ai.selectUnitStrategy.SelectNextUnitRandomly;
+import com.mygdx.game.ai.selectUnitStrategy.SelectUnitStrategy;
+import com.mygdx.game.entities.AiEntity;
+import com.mygdx.game.entities.Entity;
+import com.mygdx.game.entities.EntityObserver.EntityCommand;
+import com.mygdx.game.entities.EntityTypes;
+import com.mygdx.game.entities.PlayerEntity;
+import com.mygdx.game.map.MyPathFinder;
 
-import Utility.TiledMapPosition;
+import utility.TiledMapPosition;
 
 public class AITeamLeader {
 	private static final String TAG = AITeamLeader.class.getSimpleName();

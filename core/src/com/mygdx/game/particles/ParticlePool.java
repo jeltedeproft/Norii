@@ -1,9 +1,9 @@
-package com.mygdx.game.Particles;
+package com.mygdx.game.particles;
 
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
 
-import Utility.AssetManagerUtility;
+import utility.AssetManagerUtility;
 
 public class ParticlePool {
 

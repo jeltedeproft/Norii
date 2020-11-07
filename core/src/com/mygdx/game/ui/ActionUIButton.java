@@ -1,11 +1,11 @@
-package com.mygdx.game.UI;
+package com.mygdx.game.ui;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
-import Utility.AssetManagerUtility;
+import utility.AssetManagerUtility;
 
 public class ActionUIButton {
 

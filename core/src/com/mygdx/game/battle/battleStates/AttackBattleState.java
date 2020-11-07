@@ -1,15 +1,15 @@
-package com.mygdx.game.Battle.BattleStates;
+package com.mygdx.game.battle.battleStates;
 
 import com.badlogic.gdx.Input.Buttons;
-import com.mygdx.game.Audio.AudioObserver;
-import com.mygdx.game.Battle.BattleManager;
-import com.mygdx.game.Entities.Entity;
-import com.mygdx.game.Entities.EntityObserver.EntityCommand;
-import com.mygdx.game.Map.TiledMapActor;
-import com.mygdx.game.Particles.ParticleMaker;
-import com.mygdx.game.Particles.ParticleType;
+import com.mygdx.game.audio.AudioObserver;
+import com.mygdx.game.battle.BattleManager;
+import com.mygdx.game.entities.Entity;
+import com.mygdx.game.entities.EntityObserver.EntityCommand;
+import com.mygdx.game.map.TiledMapActor;
+import com.mygdx.game.particles.ParticleMaker;
+import com.mygdx.game.particles.ParticleType;
 
-import Utility.Utility;
+import utility.Utility;
 
 public class AttackBattleState extends BattleState {
 	private final BattleManager battlemanager;

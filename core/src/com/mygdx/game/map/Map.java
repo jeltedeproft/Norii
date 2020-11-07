@@ -1,4 +1,4 @@
-package com.mygdx.game.Map;
+package com.mygdx.game.map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.MapLayer;
@@ -6,12 +6,12 @@ import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
-import com.mygdx.game.Audio.AudioManager;
-import com.mygdx.game.Audio.AudioObserver;
-import com.mygdx.game.Audio.AudioSubject;
-import com.mygdx.game.Battle.BattleManager;
+import com.mygdx.game.audio.AudioManager;
+import com.mygdx.game.audio.AudioObserver;
+import com.mygdx.game.audio.AudioSubject;
+import com.mygdx.game.battle.BattleManager;
 
-import Utility.AssetManagerUtility;
+import utility.AssetManagerUtility;
 
 public abstract class Map implements AudioSubject {
 	private static final String TAG = Map.class.getSimpleName();

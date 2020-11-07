@@ -1,4 +1,4 @@
-package com.mygdx.game.Entities;
+package com.mygdx.game.entities;
 
 import java.util.EnumMap;
 
@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-import Utility.AssetManagerUtility;
+import utility.AssetManagerUtility;
 
 public class EntityAnimation {
 	private static final String TAG = EntityAnimation.class.getSimpleName();

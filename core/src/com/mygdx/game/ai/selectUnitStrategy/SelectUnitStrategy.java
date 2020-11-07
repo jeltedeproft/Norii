@@ -1,8 +1,8 @@
-package com.mygdx.game.AI.SelectUnitStrategy;
+package com.mygdx.game.ai.selectUnitStrategy;
 
 import java.util.List;
 
-import com.mygdx.game.Entities.AiEntity;
+import com.mygdx.game.entities.AiEntity;
 
 public interface SelectUnitStrategy {
 

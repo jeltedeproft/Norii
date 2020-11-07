@@ -1,9 +1,9 @@
-package com.mygdx.game.Entities;
+package com.mygdx.game.entities;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.mygdx.game.Entities.EntityObserver.EntityCommand;
+import com.mygdx.game.entities.EntityObserver.EntityCommand;
 
 public class EntityClickListener extends ClickListener {
 	private final EntityActor actor;

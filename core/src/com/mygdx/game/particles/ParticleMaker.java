@@ -1,14 +1,14 @@
-package com.mygdx.game.Particles;
+package com.mygdx.game.particles;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
 
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.mygdx.game.Map.Map;
+import com.mygdx.game.map.Map;
 
-import Utility.AssetManagerUtility;
-import Utility.TiledMapPosition;
+import utility.AssetManagerUtility;
+import utility.TiledMapPosition;
 
 public class ParticleMaker {
 	private static EnumMap<ParticleType, ParticlePool> particlePools;

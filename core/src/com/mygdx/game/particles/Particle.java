@@ -1,10 +1,10 @@
-package com.mygdx.game.Particles;
+package com.mygdx.game.particles;
 
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
-import Utility.TiledMapPosition;
+import utility.TiledMapPosition;
 
 public class Particle extends Actor {
 

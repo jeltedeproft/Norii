@@ -1,11 +1,11 @@
-package com.mygdx.game.Screen;
+package com.mygdx.game.screen;
 
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ai.msg.MessageManager;
 import com.badlogic.gdx.utils.Array;
-import com.mygdx.game.Audio.AudioManager;
-import com.mygdx.game.Audio.AudioObserver;
-import com.mygdx.game.Audio.AudioSubject;
+import com.mygdx.game.audio.AudioManager;
+import com.mygdx.game.audio.AudioObserver;
+import com.mygdx.game.audio.AudioSubject;
 
 public class GameScreen implements Screen, AudioSubject {
 	private final Array<AudioObserver> observers;

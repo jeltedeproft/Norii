@@ -1,9 +1,9 @@
-package com.mygdx.game.UI;
+package com.mygdx.game.ui;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.mygdx.game.Entities.EntityObserver.EntityCommand;
-import com.mygdx.game.Entities.PlayerEntity;
+import com.mygdx.game.entities.EntityObserver.EntityCommand;
+import com.mygdx.game.entities.PlayerEntity;
 
 public class SkipActionUIButton extends ActionUIButton {
 	public SkipActionUIButton(final ActionsUI ui, final String imageFileName, final PlayerEntity linkedUnit) {

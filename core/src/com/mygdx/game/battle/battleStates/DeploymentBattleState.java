@@ -1,17 +1,17 @@
-package com.mygdx.game.Battle.BattleStates;
+package com.mygdx.game.battle.battleStates;
 
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
-import com.mygdx.game.Battle.BattleManager;
-import com.mygdx.game.Entities.Entity;
-import com.mygdx.game.Entities.Player;
-import com.mygdx.game.Entities.PlayerEntity;
-import com.mygdx.game.Map.TiledMapActor;
-import com.mygdx.game.Particles.ParticleMaker;
-import com.mygdx.game.Particles.ParticleType;
+import com.mygdx.game.battle.BattleManager;
+import com.mygdx.game.entities.Entity;
+import com.mygdx.game.entities.Player;
+import com.mygdx.game.entities.PlayerEntity;
+import com.mygdx.game.map.TiledMapActor;
+import com.mygdx.game.particles.ParticleMaker;
+import com.mygdx.game.particles.ParticleType;
 
-import Utility.TiledMapPosition;
+import utility.TiledMapPosition;
 
 public class DeploymentBattleState extends BattleState {
 	private static final String TAG = DeploymentBattleState.class.getSimpleName();

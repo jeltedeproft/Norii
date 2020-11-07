@@ -1,4 +1,4 @@
-package com.mygdx.game.Magic;
+package com.mygdx.game.magic;
 
 public class SpellData {
 

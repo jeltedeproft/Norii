@@ -1,7 +1,7 @@
-package com.mygdx.game.Entities;
+package com.mygdx.game.entities;
 
-import com.mygdx.game.Entities.EntityObserver.EntityCommand;
-import com.mygdx.game.Magic.Ability;
+import com.mygdx.game.entities.EntityObserver.EntityCommand;
+import com.mygdx.game.magic.Ability;
 
 public class AiEntity extends Entity {
 	public AiEntity(EntityTypes type) {

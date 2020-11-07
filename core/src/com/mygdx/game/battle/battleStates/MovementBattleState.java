@@ -1,4 +1,4 @@
-package com.mygdx.game.Battle.BattleStates;
+package com.mygdx.game.battle.battleStates;
 
 import java.util.List;
 
@@ -6,14 +6,14 @@ import org.xguzm.pathfinding.grid.GridCell;
 
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
-import com.mygdx.game.Battle.BattleManager;
-import com.mygdx.game.Entities.EntityObserver.EntityCommand;
-import com.mygdx.game.Entities.PlayerEntity;
-import com.mygdx.game.Map.TiledMapActor;
-import com.mygdx.game.Particles.ParticleMaker;
-import com.mygdx.game.Particles.ParticleType;
+import com.mygdx.game.battle.BattleManager;
+import com.mygdx.game.entities.EntityObserver.EntityCommand;
+import com.mygdx.game.entities.PlayerEntity;
+import com.mygdx.game.map.TiledMapActor;
+import com.mygdx.game.particles.ParticleMaker;
+import com.mygdx.game.particles.ParticleType;
 
-import Utility.TiledMapPosition;
+import utility.TiledMapPosition;
 
 public class MovementBattleState extends BattleState {
 	private final BattleManager battlemanager;

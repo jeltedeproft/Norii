@@ -1,4 +1,4 @@
-package com.mygdx.game.Audio;
+package com.mygdx.game.audio;
 
 import java.util.HashMap;
 
@@ -6,7 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 
-import Utility.AssetManagerUtility;
+import utility.AssetManagerUtility;
 
 public class AudioManager implements AudioObserver {
 	private static final String TAG = AudioManager.class.getSimpleName();

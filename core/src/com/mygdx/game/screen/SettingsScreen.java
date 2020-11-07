@@ -1,4 +1,4 @@
-package com.mygdx.game.Screen;
+package com.mygdx.game.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -19,7 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 
-import Utility.AssetManagerUtility;
+import utility.AssetManagerUtility;
 
 public class SettingsScreen implements Screen {
 	private static final float FRAME_DURATION = 0.2f;

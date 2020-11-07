@@ -1,4 +1,4 @@
-package com.mygdx.game.Entities;
+package com.mygdx.game.entities;
 
 public interface EntitySubject {
 	public void addEntityObserver(EntityObserver entityObserver);

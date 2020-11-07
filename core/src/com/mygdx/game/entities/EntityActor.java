@@ -1,8 +1,8 @@
-package com.mygdx.game.Entities;
+package com.mygdx.game.entities;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
-import Utility.TiledMapPosition;
+import utility.TiledMapPosition;
 
 public class EntityActor extends Actor {
 	private Boolean isHovering;

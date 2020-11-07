@@ -1,10 +1,11 @@
-package com.mygdx.game.Map;
+package com.mygdx.game.map;
 
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.mygdx.game.Battle.BattleManager;
-import Utility.TiledMapPosition;
+import com.mygdx.game.battle.BattleManager;
+
+import utility.TiledMapPosition;
 
 public class TiledMapStage extends Stage {
 	private TiledMapActor[][] actors;

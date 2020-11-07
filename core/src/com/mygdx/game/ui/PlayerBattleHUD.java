@@ -1,5 +1,5 @@
 
-package com.mygdx.game.UI;
+package com.mygdx.game.ui;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,15 +16,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.mygdx.game.Entities.AiEntity;
-import com.mygdx.game.Entities.Entity;
-import com.mygdx.game.Entities.Player;
-import com.mygdx.game.Entities.PlayerEntity;
-import com.mygdx.game.Profile.ProfileManager;
-import com.mygdx.game.Profile.ProfileObserver;
-import com.mygdx.game.Screen.BattleScreen;
+import com.mygdx.game.entities.AiEntity;
+import com.mygdx.game.entities.Entity;
+import com.mygdx.game.entities.Player;
+import com.mygdx.game.entities.PlayerEntity;
+import com.mygdx.game.profile.ProfileManager;
+import com.mygdx.game.profile.ProfileObserver;
+import com.mygdx.game.screen.BattleScreen;
 
-import Utility.AssetManagerUtility;
+import utility.AssetManagerUtility;
 
 public class PlayerBattleHUD extends Table implements ProfileObserver {
 	private Stage stage;

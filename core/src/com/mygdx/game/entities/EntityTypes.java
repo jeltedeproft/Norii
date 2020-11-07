@@ -1,4 +1,4 @@
-package com.mygdx.game.Entities;
+package com.mygdx.game.entities;
 
 //keep this in sync with JSON files.
 public enum EntityTypes {

@@ -1,11 +1,11 @@
-package com.mygdx.game.Battle.BattleStates;
+package com.mygdx.game.battle.battleStates;
 
 import com.badlogic.gdx.utils.Array;
-import com.mygdx.game.Audio.AudioManager;
-import com.mygdx.game.Audio.AudioObserver;
-import com.mygdx.game.Audio.AudioSubject;
-import com.mygdx.game.Entities.Entity;
-import com.mygdx.game.Map.TiledMapActor;
+import com.mygdx.game.audio.AudioManager;
+import com.mygdx.game.audio.AudioObserver;
+import com.mygdx.game.audio.AudioSubject;
+import com.mygdx.game.entities.Entity;
+import com.mygdx.game.map.TiledMapActor;
 
 public abstract class BattleState implements AudioSubject {
 	private Array<AudioObserver> observers;

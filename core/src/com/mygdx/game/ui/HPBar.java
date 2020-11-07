@@ -1,13 +1,13 @@
-package com.mygdx.game.UI;
+package com.mygdx.game.ui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar.ProgressBarStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.mygdx.game.Entities.Entity;
-import com.mygdx.game.Screen.BattleScreen;
+import com.mygdx.game.entities.Entity;
+import com.mygdx.game.screen.BattleScreen;
 
-import Utility.AssetManagerUtility;
+import utility.AssetManagerUtility;
 
 public class HPBar {
 	private ProgressBar healthBar;

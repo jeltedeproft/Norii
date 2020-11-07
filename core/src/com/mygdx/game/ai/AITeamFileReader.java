@@ -1,4 +1,4 @@
-package com.mygdx.game.AI;
+package com.mygdx.game.ai;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Json;

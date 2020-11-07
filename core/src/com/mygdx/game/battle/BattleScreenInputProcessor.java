@@ -1,10 +1,10 @@
-package com.mygdx.game.Battle;
+package com.mygdx.game.battle;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.mygdx.game.Screen.BattleScreen;
+import com.mygdx.game.screen.BattleScreen;
 
 public class BattleScreenInputProcessor implements InputProcessor {
 

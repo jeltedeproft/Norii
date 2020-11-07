@@ -1,4 +1,4 @@
-package com.mygdx.game.AI;
+package com.mygdx.game.ai;
 
 public class AITeamData {
 

@@ -1,6 +1,6 @@
-package com.mygdx.game.Entities;
+package com.mygdx.game.entities;
 
-import com.mygdx.game.Magic.Ability;
+import com.mygdx.game.magic.Ability;
 
 public interface EntityObserver {
 

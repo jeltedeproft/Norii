@@ -1,6 +1,6 @@
-package com.mygdx.game.Map;
+package com.mygdx.game.map;
 
-import Utility.TiledMapPosition;
+import utility.TiledMapPosition;
 
 public interface TiledMapObserver {
     public enum TilemapCommand {

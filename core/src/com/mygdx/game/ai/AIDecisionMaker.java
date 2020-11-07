@@ -1,4 +1,4 @@
-package com.mygdx.game.AI;
+package com.mygdx.game.ai;
 
 import java.util.Collection;
 import java.util.List;
@@ -6,15 +6,15 @@ import java.util.List;
 import org.apache.commons.collections4.ListUtils;
 import org.xguzm.pathfinding.grid.GridCell;
 
-import com.mygdx.game.Entities.AiEntity;
-import com.mygdx.game.Entities.Entity;
-import com.mygdx.game.Entities.EntityObserver.EntityCommand;
-import com.mygdx.game.Entities.PlayerEntity;
-import com.mygdx.game.Magic.Ability;
-import com.mygdx.game.Map.MyPathFinder;
+import com.mygdx.game.entities.AiEntity;
+import com.mygdx.game.entities.Entity;
+import com.mygdx.game.entities.EntityObserver.EntityCommand;
+import com.mygdx.game.entities.PlayerEntity;
+import com.mygdx.game.magic.Ability;
+import com.mygdx.game.map.MyPathFinder;
 
-import Utility.TiledMapPosition;
-import Utility.Utility;
+import utility.TiledMapPosition;
+import utility.Utility;
 
 public class AIDecisionMaker {
 	private final AITeamLeader aiTeam;

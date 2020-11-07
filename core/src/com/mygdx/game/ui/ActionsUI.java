@@ -1,12 +1,12 @@
-package com.mygdx.game.UI;
+package com.mygdx.game.ui;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
-import com.mygdx.game.Entities.PlayerEntity;
-import com.mygdx.game.Magic.Ability;
-import com.mygdx.game.Screen.BattleScreen;
+import com.mygdx.game.entities.PlayerEntity;
+import com.mygdx.game.magic.Ability;
+import com.mygdx.game.screen.BattleScreen;
 
 public class ActionsUI extends UIWindow {
 	private static final float Y_OFFSET = 5f;

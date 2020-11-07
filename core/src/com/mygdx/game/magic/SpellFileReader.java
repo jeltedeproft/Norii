@@ -1,4 +1,4 @@
-package com.mygdx.game.Magic;
+package com.mygdx.game.magic;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Json;

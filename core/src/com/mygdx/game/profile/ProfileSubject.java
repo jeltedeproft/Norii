@@ -1,4 +1,4 @@
-package com.mygdx.game.Profile;
+package com.mygdx.game.profile;
 
 import com.badlogic.gdx.utils.Array;
 
