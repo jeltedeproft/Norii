@@ -1,10 +1,13 @@
-sourceCompatibility = 15
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+eclipse.project.name = appName + '-core'
 
-sourceSets.main.java.srcDirs = [ "src/" ]
-
-eclipse.project.name = appName + "-core"
-
-jar {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+dependencies {
+	api "com.badlogicgames.gdx:gdx:$gdxVersion"
+	api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+	api "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
+	api "com.badlogicgames.box2dlights:box2dlights:$box2dlightsVersion"
+	api "com.badlogicgames.gdx:gdx-ai:$aiVersion"
+	api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+	implementation "com.github.xaguzman:pathfinding:0.2.6"
+	implementation 'com.github.raeleus.TenPatch:tenpatch:5.0.0'
 }

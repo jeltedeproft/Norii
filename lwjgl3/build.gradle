@@ -1,0 +1,40 @@
+apply plugin: 'application'
+
+sourceSets.main.resources.srcDirs += [ rootProject.file('assets').path ]
+mainClassName = 'com.jelte.norii.lwjgl3.Lwjgl3Launcher'
+eclipse.project.name = appName + '-lwjgl3'
+sourceCompatibility = 11.0
+
+dependencies {
+	implementation project(':core')
+	implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+	implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+	implementation "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+	implementation "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
+	implementation "com.badlogicgames.gdx:gdx-controllers-lwjgl3:$gdxVersion"
+	api "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+}
+
+import org.gradle.internal.os.OperatingSystem
+
+run {
+	workingDir = rootProject.file('assets').path
+	setIgnoreExitValue(true)
+	
+	if (OperatingSystem.current() == OperatingSystem.MAC_OS) {
+		// Required to run LWJGL3 Java apps on MacOS
+		jvmArgs += "-XstartOnFirstThread"
+	}
+}
+jar {
+	archiveBaseName = appName
+	dependsOn configurations.runtimeClasspath
+	from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } } 
+	manifest {
+		attributes 'Main-Class': project.mainClassName
+	}
+	doLast {
+		file(archivePath).setExecutable(true, false)
+	}
+}
+

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.8.2//EN" "http://www.gwtproject.org/doctype/2.8.2/gwt-module.dtd">
+<module>
+	<inherits name='com.badlogic.gdx.backends.gdx_backends_gwt' />
+	<inherits name="com.badlogic.gdx.graphics.g2d.freetype.freetype-gwt" />
+	<inherits name='com.badlogic.gdx.physics.box2d.box2d-gwt' />
+
+	<source path="com/jelte/norii" />
+	
+	<extend-configuration-property name="gdx.reflect.include" value="com.jelte.norii.entities.EntityData" />
+	<extend-configuration-property name="gdx.reflect.include" value="java.util.ArrayList" />
+</module>

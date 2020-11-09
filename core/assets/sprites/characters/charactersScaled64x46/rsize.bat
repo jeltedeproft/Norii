@@ -1,1 +1,0 @@
-magick mogrify -resize 64x64 *.png

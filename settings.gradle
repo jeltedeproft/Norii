@@ -1,1 +1,2 @@
-include 'desktop', 'html', 'core'
+include 'core', 'lwjgl3', 'html'
+rootProject.name='Norii'
