@@ -65,7 +65,7 @@ runtime {
 			   'jdk.unsupported']
 
 	jpackage {
-		installerOptions += [ '--vendor', 'jeltedeproft.dev', '--description', 'Turn based strategy game' ]
+		installerOptions += [ '--vendor', 'jeltedeproft.dev', '--description', 'Turn based strategy game', '--app-version', '0.0.2' ]
 		mainJar = jar.archiveFileName.get()
 		installerName = imageName = appName
 
