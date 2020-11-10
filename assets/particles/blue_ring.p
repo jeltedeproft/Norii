@@ -31,9 +31,11 @@ timelineCount: 3
 timeline0: 0.0
 timeline1: 0.66
 timeline2: 1.0
+independent: false
 - Life Offset - 
 active: false
-- X Offset -
+independent: false
+- X Offset - 
 active: true
 lowMin: 16.0
 lowMax: 16.0
@@ -44,7 +46,7 @@ scalingCount: 1
 scaling0: 1.0
 timelineCount: 1
 timeline0: 0.0
-- Y Offset -
+- Y Offset - 
 active: true
 lowMin: 16.0
 lowMax: 16.0

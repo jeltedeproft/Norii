@@ -27,6 +27,7 @@ scalingCount: 1
 scaling0: 1.0
 timelineCount: 1
 timeline0: 0.0
+independent: false
 - Life Offset - 
 active: true
 lowMin: 0.0
@@ -38,6 +39,7 @@ scalingCount: 1
 scaling0: 1.0
 timelineCount: 1
 timeline0: 0.0
+independent: false
 - X Offset - 
 active: true
 lowMin: 16.0

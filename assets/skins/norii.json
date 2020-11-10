@@ -74,13 +74,11 @@ com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
 com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable: {
 	red-hp-bar: {
 		region: android-horizontal-scrollbar-knob
-		color: red
 		minWidth: 0
 		minHeight: 8
 	}
 	blue-hp-bar: {
 		region: android-horizontal-scrollbar-knob
-		color: blue
 		minWidth: 0
 		minHeight: 8
 	}

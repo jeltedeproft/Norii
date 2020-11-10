@@ -53,7 +53,7 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
 	}
 
 	private void createTileHoverParticle() {
-		final TextureRegion tr = new TextureRegion(AssetManagerUtility.getSpriteSheetTexture(AssetManagerUtility.TILE_HOVER_IMAGE));
+		final TextureRegion tr = new TextureRegion(AssetManagerUtility.getSprite(AssetManagerUtility.TILE_HOVER_IMAGE));
 		final TextureRegionDrawable trd = new TextureRegionDrawable(tr);
 		onTileHover = new Image(trd);
 		onTileHover.setPosition(-1, -1);

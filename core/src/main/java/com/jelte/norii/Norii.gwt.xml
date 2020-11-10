@@ -8,5 +8,9 @@
 	<source path="com/jelte/norii" />
 	
 	<extend-configuration-property name="gdx.reflect.include" value="com.jelte.norii.entities.EntityData" />
+	<extend-configuration-property name="gdx.reflect.include" value="com.jelte.norii.entities.Entity" />
+	<extend-configuration-property name="gdx.reflect.include" value="com.jelte.norii.ai.AITeamData" />
+	<extend-configuration-property name="gdx.reflect.include" value="com.jelte.norii.magic.SpellData" />
 	<extend-configuration-property name="gdx.reflect.include" value="java.util.ArrayList" />
+	<extend-configuration-property name="gdx.reflect.include" value="com.badlogic.gdx.utils.ObjectMap" />
 </module>
