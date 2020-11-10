@@ -241,11 +241,8 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	}
 
 	private void updateCameras() {
-		mapCamera.position.x = Utility.clamp(mapCamera.position.x,
-				currentMap.getTilemapWidthInTiles() - (mapCamera.viewportWidth / 2), 0 + (mapCamera.viewportWidth / 2));
-		mapCamera.position.y = Utility.clamp(mapCamera.position.y,
-				currentMap.getTilemapHeightInTiles() - (mapCamera.viewportHeight / 2),
-				0 + (mapCamera.viewportHeight / 2));
+		mapCamera.position.x = Utility.clamp(mapCamera.position.x, currentMap.getTilemapWidthInTiles() - (mapCamera.viewportWidth / 2), 0 + (mapCamera.viewportWidth / 2));
+		mapCamera.position.y = Utility.clamp(mapCamera.position.y, currentMap.getTilemapHeightInTiles() - (mapCamera.viewportHeight / 2), 0 + (mapCamera.viewportHeight / 2));
 		mapCamera.update();
 		hudCamera.update();
 	}
@@ -403,12 +400,10 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	}
 
 	private void prepareMove(final Entity unit) {
-		final List<GridCell> path = currentMap.getPathfinder().getCellsWithinCircle(
-				unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getAp());
+		final List<GridCell> path = currentMap.getPathfinder().getCellsWithinCircle(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getAp());
 		for (final GridCell cell : path) {
 			if (!isUnitOnCell(cell)) {
-				final TiledMapPosition positionToPutMoveParticle = new TiledMapPosition().setPositionFromTiles(cell.x,
-						cell.y);
+				final TiledMapPosition positionToPutMoveParticle = new TiledMapPosition().setPositionFromTiles(cell.x, cell.y);
 				ParticleMaker.addParticle(ParticleType.MOVE, positionToPutMoveParticle, 0);
 				battlemanager.setCurrentBattleState(battlemanager.getMovementBattleState());
 			}
@@ -416,27 +411,21 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	}
 
 	private void prepareAttack(final Entity unit) {
-		final List<GridCell> attackPath = currentMap.getPathfinder().getCellsWithinCircle(
-				unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(),
-				unit.getEntityData().getAttackRange());
+		final List<GridCell> attackPath = currentMap.getPathfinder().getCellsWithinCircle(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getEntityData().getAttackRange());
 		for (final GridCell cell : attackPath) {
-			final TiledMapPosition positionToPutAttackParticle = new TiledMapPosition().setPositionFromTiles(cell.x,
-					cell.y);
+			final TiledMapPosition positionToPutAttackParticle = new TiledMapPosition().setPositionFromTiles(cell.x, cell.y);
 			ParticleMaker.addParticle(ParticleType.ATTACK, positionToPutAttackParticle, 0);
 		}
 		battlemanager.setCurrentBattleState(battlemanager.getAttackBattleState());
 	}
 
 	private void prepareSpell(final Entity unit, final Ability ability) {
-		final List<Entity> allEntities = Stream.concat(playerUnits.stream(), aiUnits.stream())
-				.collect(Collectors.toList());
-		final List<TiledMapPosition> positions = allEntities.stream().map(Entity::getCurrentPosition)
-				.collect(Collectors.toList());
+		final List<Entity> allEntities = Stream.concat(playerUnits.stream(), aiUnits.stream()).collect(Collectors.toList());
+		final List<TiledMapPosition> positions = allEntities.stream().map(Entity::getCurrentPosition).collect(Collectors.toList());
 		final List<GridCell> spellPath = calculateSpellPath(unit, ability, positions);
 
 		for (final GridCell cell : spellPath) {
-			final TiledMapPosition positionToPutSpellParticle = new TiledMapPosition().setPositionFromTiles(cell.x,
-					cell.y);
+			final TiledMapPosition positionToPutSpellParticle = new TiledMapPosition().setPositionFromTiles(cell.x, cell.y);
 			ParticleMaker.addParticle(ParticleType.SPELL, positionToPutSpellParticle, 0);
 		}
 
@@ -444,22 +433,19 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 		battlemanager.setCurrentBattleState(battlemanager.getSpellBattleState());
 	}
 
-	private List<GridCell> calculateSpellPath(final Entity unit, final Ability ability,
-			final List<TiledMapPosition> positions) {
+	private List<GridCell> calculateSpellPath(final Entity unit, final Ability ability, final List<TiledMapPosition> positions) {
 		List<GridCell> spellPath = null;
 
 		switch (ability.getLineOfSight()) {
 		case CIRCLE:
-			spellPath = currentMap.getPathfinder().getLineOfSightWithinCircle(unit.getCurrentPosition().getTileX(),
-					unit.getCurrentPosition().getTileY(), ability.getSpellData().getRange(), positions);
+			spellPath = currentMap.getPathfinder().getLineOfSightWithinCircle(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), ability.getSpellData().getRange(), positions);
 			break;
 		case CROSS:
 			// TODO
 			break;
 		case LINE:
-			spellPath = currentMap.getPathfinder().getLineOfSightWithinLine(unit.getCurrentPosition().getTileX(),
-					unit.getCurrentPosition().getTileY(), ability.getSpellData().getRange(),
-					unit.getEntityAnimation().getCurrentDirection(), positions);
+			spellPath = currentMap.getPathfinder().getLineOfSightWithinLine(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), ability.getSpellData().getRange(), unit.getEntityAnimation().getCurrentDirection(),
+					positions);
 			break;
 		default:
 			break;

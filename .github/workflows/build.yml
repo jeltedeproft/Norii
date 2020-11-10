@@ -1,0 +1,119 @@
+name: Build Norii and upload it to itch.io
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up JDK 14
+        uses: actions/setup-java@v1
+        with:
+          java-version: 14
+
+      - name: Download butler
+        run: wget https://broth.itch.ovh/butler/linux-amd64/LATEST/archive/default -O butler.zip
+
+      - name: Unzip buttler
+        run: unzip butler.zip
+
+      - name: Fix permissions
+        run: chmod +x butler && chmod +x gradlew
+
+      - name: Build jar
+        run: ./gradlew lwjgl3:jar
+
+      - name: Build package image
+        run: ./gradlew lwjgl3:jpackageImage
+
+      - name: Build deb/rpm
+        run: ./gradlew lwjgl3:jpackage
+
+      - name: Fix file names
+        run: mv lwjgl3/build/lib/*.jar Norii_linux.jar && mv lwjgl3/build/jpackage/*.deb Norii.deb && mv lwjgl3/build/jpackage/*.rpm Norii.rpm
+
+
+      - run: ./butler push Norii_linux.jar jeltedeproft/Norii:linux-jar
+
+      - run: ./butler push lwjgl3/build/jpackage/Norii jeltedeproft/Norii:linux-image
+
+      - run: ./butler push Norii.deb jeltedeproft/Norii:linux-deb
+      - run: ./butler push Norii.rpm jeltedeproft/Norii:linux-rpm
+
+
+
+  linux-gwt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up JDK 14
+        uses: actions/setup-java@v1
+        with:
+          java-version: 14
+
+      - name: Download butler
+        run: wget https://broth.itch.ovh/butler/linux-amd64/LATEST/archive/default -O butler.zip
+
+      - name: Unzip buttler
+        run: unzip butler.zip
+
+
+      - name: Fix permissions
+        run: chmod +x butler && chmod +x gradlew
+
+
+      - name: Build gwt
+        run: ./gradlew html:dist
+
+
+      - run: ./butler push html/build/dist jeltedeproft/Norii:html
+
+
+
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up JDK 14
+        uses: actions/setup-java@v1
+        with:
+          java-version: 14
+
+
+      - name: Download Butler
+        run: Invoke-WebRequest -Uri https://broth.itch.ovh/butler/windows-amd64/LATEST/archive/default -OutFile butler.zip
+
+      - name: Extract butler
+        run: Expand-Archive -DestinationPath . butler.zip
+
+
+      - name: Build jar
+        run: ./gradlew.bat lwjgl3:jar
+
+      - name: Build package image
+        run: ./gradlew.bat lwjgl3:jpackageImage
+
+      - name: Build exe/msi
+        run: ./gradlew.bat lwjgl3:jpackage
+
+      - name: Fix file names
+        run: mv lwjgl3/build/lib/*.jar Norii_windows.jar && mv lwjgl3/build/jpackage/*.exe Norii.exe && mv lwjgl3/build/jpackage/*.msi Norii.msi
+
+
+      - run: ./butler push Norii_windows.jar jeltedeproft/Norii:windows-jar
+
+      - run: ./butler push lwjgl3/build/jpackage/Norii jeltedeproft/Norii:windows-image
+
+      - run: ./butler push Norii.exe jeltedeproft/Norii:windows-exe
+      - run: ./butler push Norii.msi jeltedeproft/Norii:windows-msi
