@@ -58,7 +58,7 @@ public class PauseMenuScreen implements Screen {
 
 	private void createLayout() {
 
-		menuTable.background(new TextureRegionDrawable(new TextureRegion(AssetManagerUtility.getSpriteSheetTexture(PAUSE_BACKGROUND))));
+		menuTable.background(new TextureRegionDrawable(new TextureRegion(AssetManagerUtility.getSprite(PAUSE_BACKGROUND))));
 		menuTable.row();
 		menuTable.add(title).spaceBottom(BOTTOM_PAD).padTop(TOP_PAD).row();
 		menuTable.add(resumeButton).spaceBottom(BOTTOM_PAD).row();
