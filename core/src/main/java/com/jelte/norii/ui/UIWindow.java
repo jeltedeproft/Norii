@@ -12,8 +12,6 @@ public abstract class UIWindow extends Window {
 	protected float tileHeightPixel;
 
 	protected static final int ALPHA = 80;
-	protected static final float BUTTON_WIDTH_FACTOR = 20;
-	protected static final float BUTTON_HEIGHT_FACTOR = 20;
 
 	protected UIWindow(String name, float width, float height) {
 		super(name, AssetManagerUtility.getSkin());
@@ -23,7 +21,7 @@ public abstract class UIWindow extends Window {
 
 	protected void initVariables(float width, float height) {
 		this.setSize(width, height);
-		for (Cell cell : this.getCells()) {
+		for (final Cell cell : this.getCells()) {
 			cell.setActorBounds(5, 5, 1, 1);
 		}
 	}
@@ -49,14 +47,14 @@ public abstract class UIWindow extends Window {
 
 	private void updateSizeLabels(Actor actor) {
 		final Label label = (Label) actor;
-		label.setFontScale(10, 10);
+		label.setFontScale(1, 1);
 	}
 
 	private void updateSizeImageButtons(Actor actor) {
 		final ImageButton button = (ImageButton) actor;
 		if (button.getImage() != null) {
 			final Cell<Actor> cell = this.getCell(actor);
-			cell.size(50, 50);
+			cell.size(1, 1);
 			button.setBounds(10, 10, 1, 1);
 		}
 	}

@@ -17,7 +17,7 @@ public class ActionInfoUIWindow extends UIWindow {
 
 	private static final float WIDTH_TILES = 6;
 	private static final float HEIGHT_TILES = 3;
-	private static final float ACTION_NAME_LABEL_WIDTH = 150;
+	private static final float ACTION_NAME_LABEL_WIDTH = 5;
 
 	public ActionInfoUIWindow(final ActionUIButton actionUIButton) {
 		super("", WIDTH_TILES, HEIGHT_TILES);
@@ -56,13 +56,13 @@ public class ActionInfoUIWindow extends UIWindow {
 
 	@Override
 	protected void addWidgets() {
-		this.add(actionnameLabel).align(Align.left).expandX().width(ACTION_NAME_LABEL_WIDTH).height(30);
+		this.add(actionnameLabel).align(Align.left).expandX().width(ACTION_NAME_LABEL_WIDTH).height(1);
 		row();
 
-		this.add(underline).align(Align.left).expandX().width(ACTION_NAME_LABEL_WIDTH).height(25).top();
+		this.add(underline).align(Align.left).expandX().width(ACTION_NAME_LABEL_WIDTH).height(1).top();
 		row();
 
-		this.add(actionInfoLabel).align(Align.left).expandX().colspan(5).height(75);
+		this.add(actionInfoLabel).align(Align.left).expandX().colspan(5).height(1);
 		this.pack();
 	}
 
@@ -74,7 +74,7 @@ public class ActionInfoUIWindow extends UIWindow {
 	}
 
 	private void updateSizeElements() {
-		setSize(WIDTH_TILES * tileWidthPixel, HEIGHT_TILES * tileHeightPixel);
+		setSize(WIDTH_TILES, HEIGHT_TILES);
 		invalidate();
 	}
 

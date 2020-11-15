@@ -43,7 +43,7 @@ public class StatusUI extends UIWindow {
 		createWidgets();
 		addWidgets();
 		this.setBounds(10, 10, WIDTH_TILES, HEIGHT_TILES);
-		this.setDebug(true, true);
+
 	}
 
 	@Override
@@ -66,7 +66,7 @@ public class StatusUI extends UIWindow {
 	}
 
 	private void createFont() {
-		final BitmapFont font = AssetManagerUtility.getFreeTypeFontAsset("01_fonts/sporty.ttf");
+		final BitmapFont font = AssetManagerUtility.getFreeTypeFontAsset("24_fonts/sporty.ttf");
 		labelStyle = new LabelStyle();
 		labelStyle.font = font;
 	}

@@ -64,6 +64,7 @@ public class MainMenuScreen extends GameScreen {
 	private void loadAssets() {
 		AssetManagerUtility.loadFreeTypeFontAsset("24_fonts/sporty.ttf", 24, 1, Color.LIGHT_GRAY, 1, 1);
 		AssetManagerUtility.loadFreeTypeFontAsset("04_fonts/sporty.ttf", 4, 1, Color.LIGHT_GRAY, 1, 1);
+		AssetManagerUtility.loadFreeTypeFontAsset("08_fonts/sporty.ttf", 8, 1, Color.LIGHT_GRAY, 1, 1);
 		AssetManagerUtility.loadFreeTypeFontAsset("01_fonts/sporty.ttf", 1, 1, Color.LIGHT_GRAY, 1, 1);
 		AssetManagerUtility.loadFreeTypeFontAsset("15_fonts/sporty.ttf", 15, 1, Color.LIGHT_GRAY, 1, 1);
 		AssetManagerUtility.loadFreeTypeFontAsset("95_fonts/sporty.ttf", 95, 1, Color.LIGHT_GRAY, 1, 1);
