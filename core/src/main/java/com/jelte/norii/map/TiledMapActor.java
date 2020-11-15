@@ -48,7 +48,7 @@ public class TiledMapActor extends Actor implements TiledMapSubject {
 		this.cell = cell;
 		isFreeSpawn = false;
 		isHovered = false;
-		observers = new Array<TiledMapObserver>();
+		observers = new Array<>();
 	}
 
 	public Map getTiledMap() {

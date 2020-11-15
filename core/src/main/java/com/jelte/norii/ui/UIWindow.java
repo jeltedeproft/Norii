@@ -1,6 +1,5 @@
 package com.jelte.norii.ui;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -12,11 +11,6 @@ public abstract class UIWindow extends Window {
 	protected float tileWidthPixel;
 	protected float tileHeightPixel;
 
-	private float windowWidth;
-	private float windowHeight;
-
-	private static final int TILE_TO_PIXEL_RATIO = 20;
-	private static final float FONT_SCALE_FACTOR = 0.0015f;
 	protected static final int ALPHA = 80;
 	protected static final float BUTTON_WIDTH_FACTOR = 20;
 	protected static final float BUTTON_HEIGHT_FACTOR = 20;
@@ -28,17 +22,14 @@ public abstract class UIWindow extends Window {
 	}
 
 	protected void initVariables(float width, float height) {
-		tileWidthPixel = Gdx.graphics.getWidth() / (float) TILE_TO_PIXEL_RATIO;
-		tileHeightPixel = Gdx.graphics.getHeight() / (float) TILE_TO_PIXEL_RATIO;
-		windowWidth = width;
-		windowHeight = height;
+		this.setSize(width, height);
+		for (Cell cell : this.getCells()) {
+			cell.setActorBounds(5, 5, 1, 1);
+		}
 	}
 
 	public void update() {
 		if (this.isVisible()) {
-			tileWidthPixel = Gdx.graphics.getWidth() / (float) TILE_TO_PIXEL_RATIO;
-			tileHeightPixel = Gdx.graphics.getHeight() / (float) TILE_TO_PIXEL_RATIO;
-			this.setSize(windowWidth * tileWidthPixel, windowHeight * tileHeightPixel);
 			updatePos();
 			updateSize();
 		}
@@ -58,15 +49,15 @@ public abstract class UIWindow extends Window {
 
 	private void updateSizeLabels(Actor actor) {
 		final Label label = (Label) actor;
-		label.setFontScale(Gdx.graphics.getWidth() * FONT_SCALE_FACTOR, Gdx.graphics.getHeight() * FONT_SCALE_FACTOR);
+		label.setFontScale(10, 10);
 	}
 
 	private void updateSizeImageButtons(Actor actor) {
 		final ImageButton button = (ImageButton) actor;
 		if (button.getImage() != null) {
 			final Cell<Actor> cell = this.getCell(actor);
-			cell.size(Gdx.graphics.getWidth() / BUTTON_WIDTH_FACTOR, Gdx.graphics.getHeight() / BUTTON_HEIGHT_FACTOR);
-			button.setBounds(cell.getActorX(), cell.getActorY(), Gdx.graphics.getWidth() / BUTTON_WIDTH_FACTOR, Gdx.graphics.getHeight() / BUTTON_HEIGHT_FACTOR);
+			cell.size(50, 50);
+			button.setBounds(10, 10, 1, 1);
 		}
 	}
 

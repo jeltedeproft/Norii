@@ -15,7 +15,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.jelte.norii.ai.AITeamLeader;
 import com.jelte.norii.ai.AITeams;
 import com.jelte.norii.audio.AudioObserver;
@@ -47,6 +47,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	private static OrthographicCamera mapCamera = null;
 
 	private OrthogonalTiledMapRenderer mapRenderer = null;
+	private SpriteBatch spriteBatch;
 	private MapManager mapMgr;
 	private BattleMap currentMap;
 	private BattleManager battlemanager;
@@ -91,6 +92,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 		playerUnits = Player.getInstance().getPlayerUnits();
 		mapCamera = new OrthographicCamera();
 		mapCamera.setToOrtho(false, VISIBLE_WIDTH, VISIBLE_HEIGHT);
+		spriteBatch = new SpriteBatch();
 		isPaused = false;
 	}
 
@@ -107,15 +109,15 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	private void initializeHUD() {
 		hudCamera = new OrthographicCamera();
 		hudCamera.setToOrtho(false, VIEWPORT.physicalWidth, VIEWPORT.physicalHeight);
-		playerBattleHUD = new PlayerBattleHUD(hudCamera, playerUnits, aiUnits);
+		playerBattleHUD = new PlayerBattleHUD(hudCamera, playerUnits, aiUnits, spriteBatch);
 	}
 
 	private void initializePauseMenu() {
-		pauseMenu = new PauseMenuScreen(hudCamera, this);
+		pauseMenu = new PauseMenuScreen(hudCamera, this, spriteBatch);
 	}
 
 	private void initializeInput() {
-		battlescreenInputProcessor = new BattleScreenInputProcessor(this, mapCamera);
+		battlescreenInputProcessor = new BattleScreenInputProcessor(this, mapCamera, playerBattleHUD.getStage().getCamera());
 		multiplexer = new InputMultiplexer();
 		multiplexer.addProcessor(battlescreenInputProcessor);
 		multiplexer.addProcessor(playerBattleHUD.getStage());
@@ -168,11 +170,11 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 
 		setupViewport(VISIBLE_WIDTH, VISIBLE_HEIGHT);
 		mapCamera.position.set(currentMap.getMapWidth() / 2f, currentMap.getMapHeight() / 2f, 0f);
-		mapRenderer = new OrthogonalTiledMapRenderer(mapMgr.getCurrentTiledMap(), Map.UNIT_SCALE);
+		mapRenderer = new OrthogonalTiledMapRenderer(mapMgr.getCurrentTiledMap(), Map.UNIT_SCALE, spriteBatch);
 		mapRenderer.setView(mapCamera);
 		currentMap.makeSpawnParticles();
 
-		final StretchViewport vp = new StretchViewport(VISIBLE_WIDTH, VISIBLE_HEIGHT, mapCamera);
+		final ExtendViewport vp = new ExtendViewport(VISIBLE_WIDTH, VISIBLE_HEIGHT, mapCamera);
 		currentMap.getTiledMapStage().setViewport(vp);
 		entityStage.setViewport(vp);
 	}
@@ -259,27 +261,29 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	}
 
 	private void renderMap() {
+		spriteBatch.setProjectionMatrix(mapCamera.combined);
 		mapRenderer.setView(mapCamera);
 		currentMap.getTiledMapStage().getViewport().apply();
 		mapRenderer.render();
 	}
 
 	private void renderUnits() {
-		mapRenderer.getBatch().begin();
+		spriteBatch.begin();
 		entityStage.getViewport().apply();
-		Player.getInstance().renderUnits(mapRenderer.getBatch());
-		aiTeamLeader.renderUnits(mapRenderer.getBatch());
-		mapRenderer.getBatch().end();
+		Player.getInstance().renderUnits(spriteBatch);
+		aiTeamLeader.renderUnits(spriteBatch);
+		spriteBatch.end();
 	}
 
 	private void renderParticles(final float delta) {
-		mapRenderer.getBatch().begin();
-		ParticleMaker.drawAllActiveParticles((SpriteBatch) mapRenderer.getBatch(), delta);
-		mapRenderer.getBatch().end();
+		spriteBatch.begin();
+		ParticleMaker.drawAllActiveParticles(spriteBatch, delta);
+		spriteBatch.end();
 	}
 
 	private void renderHUD(final float delta) {
-		playerBattleHUD.getStage().getViewport().apply();
+		spriteBatch.setProjectionMatrix(playerBattleHUD.getStage().getCamera().combined);
+		// playerBattleHUD.getStage().getViewport().apply();
 		playerBattleHUD.render(delta);
 	}
 
@@ -471,7 +475,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	public void onTiledMapNotify(final TilemapCommand command, final TiledMapPosition pos) {
 		switch (command) {
 		case HOVER_CHANGED:
-			playerBattleHUD.getTileHoverImage().setPosition(pos.getCameraX(), pos.getCameraY());
+			playerBattleHUD.getTileHoverImage().setPosition(pos.getTileX(), pos.getTileY());
 			break;
 		}
 	}

@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -33,10 +33,11 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
 	private CharacterHud bottomMenu;
 	private ActionsUI[] actionUIs;
 	private Image onTileHover;
+	private SpriteBatch spriteBatch;
 
-	public PlayerBattleHUD(Camera camera, List<PlayerEntity> playerUnits, List<AiEntity> aiUnits) {
+	public PlayerBattleHUD(Camera camera, List<PlayerEntity> playerUnits, List<AiEntity> aiUnits, SpriteBatch spriteBatch) {
 		final List<Entity> allUnits = Stream.concat(playerUnits.stream(), aiUnits.stream()).collect(Collectors.toList());
-		initVariables(camera, allUnits);
+		initVariables(camera, allUnits, spriteBatch);
 		createTileHoverParticle();
 		createCharacterHUDs(allUnits);
 		createHPBars(allUnits);
@@ -45,11 +46,12 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
 		initializeActionPopUps();
 	}
 
-	private void initVariables(Camera camera, List<Entity> allUnits) {
+	private void initVariables(Camera camera, List<Entity> allUnits, SpriteBatch spriteBatch) {
+		this.spriteBatch = spriteBatch;
 		statusUIs = new StatusUI[allUnits.size()];
 		actionUIs = new ActionsUI[Player.getInstance().getPlayerUnits().size()];
 		hpBars = new HPBar[allUnits.size()];
-		stage = new Stage(new ExtendViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera));
+		stage = new Stage(new ExtendViewport(BattleScreen.VISIBLE_WIDTH, BattleScreen.VISIBLE_HEIGHT), spriteBatch);
 	}
 
 	private void createTileHoverParticle() {
@@ -57,6 +59,9 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
 		final TextureRegionDrawable trd = new TextureRegionDrawable(tr);
 		onTileHover = new Image(trd);
 		onTileHover.setPosition(-1, -1);
+		onTileHover.setSize(1, 1);
+		onTileHover.getDrawable().setMinHeight(1);
+		onTileHover.getDrawable().setMinWidth(1);
 
 		stage.addActor(onTileHover);
 	}
@@ -127,7 +132,6 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
 		updateStatusUIs();
 		updateActionUIs();
 		updateHPBars();
-		updateHoverParticle();
 		updatePopUps();
 	}
 
@@ -150,7 +154,6 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
 		updateStatusUIs();
 		updateActionUIs();
 		updateHPBars();
-		updateHoverParticle();
 	}
 
 	private void updateStatusUIs() {
@@ -175,14 +178,6 @@ public class PlayerBattleHUD extends Table implements ProfileObserver {
 		for (final ActionInfoUIWindow popUp : actionInfoUIWindows) {
 			popUp.update();
 		}
-	}
-
-	private void updateHoverParticle() {
-		final float tilePixelWidth = Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH;
-		final float tilePixelHeight = Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT;
-		onTileHover.setSize(tilePixelWidth, tilePixelHeight);
-		onTileHover.getDrawable().setMinHeight(tilePixelHeight);
-		onTileHover.getDrawable().setMinWidth(tilePixelWidth);
 	}
 
 	public void render(float delta) {

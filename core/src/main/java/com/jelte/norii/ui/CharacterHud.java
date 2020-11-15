@@ -81,6 +81,7 @@ public class CharacterHud extends Window {
 		setMovable(true);
 		padTop(30);
 		padLeft(10);
+		setVisible(false);// TO-DO REMOVE
 	}
 
 	private void initPortrait() {

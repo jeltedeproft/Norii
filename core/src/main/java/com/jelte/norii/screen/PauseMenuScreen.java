@@ -2,6 +2,7 @@ package com.jelte.norii.screen;
 
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -18,6 +19,7 @@ public class PauseMenuScreen implements Screen {
 	private static final String PAUSE_BACKGROUND = "bg";
 
 	private Stage stage;
+	private SpriteBatch spriteBatch;
 	private BattleScreen battleScreen;
 	private Table menuTable;
 	private Label title;
@@ -31,15 +33,16 @@ public class PauseMenuScreen implements Screen {
 	private static final int BOTTOM_PAD = 10;
 	private static final int TOP_PAD = 50;
 
-	public PauseMenuScreen(Camera camera, BattleScreen battleScreen) {
-		initVariables(camera, battleScreen);
+	public PauseMenuScreen(Camera camera, BattleScreen battleScreen, SpriteBatch spriteBatch) {
+		initVariables(camera, battleScreen, spriteBatch);
 		createUI();
 		createLayout();
 		addListeners();
 	}
 
-	private void initVariables(Camera camera, BattleScreen battleScreen) {
-		stage = new Stage(new ScreenViewport(camera));
+	private void initVariables(Camera camera, BattleScreen battleScreen, SpriteBatch spriteBatch) {
+		this.spriteBatch = spriteBatch;
+		stage = new Stage(new ScreenViewport(camera), spriteBatch);
 		menuTable = new Table();
 		menuTable.setDebug(false);
 		menuTable.setFillParent(true);

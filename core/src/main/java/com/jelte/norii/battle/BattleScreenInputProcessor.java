@@ -3,6 +3,7 @@ package com.jelte.norii.battle;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.jelte.norii.screen.BattleScreen;
 
@@ -15,12 +16,14 @@ public class BattleScreenInputProcessor implements InputProcessor {
 	private boolean isPaused;
 	private final BattleScreen battleScreen;
 	private final OrthographicCamera mapCamera;
+	private final OrthographicCamera hudCamera;
 	private BattleManager bm;
 
 	private static final int CAMERA_SPEED = 10;
 
-	public BattleScreenInputProcessor(BattleScreen battleScreen, OrthographicCamera camera) {
+	public BattleScreenInputProcessor(BattleScreen battleScreen, OrthographicCamera camera, Camera camera2) {
 		this.mapCamera = camera;
+		this.hudCamera = (OrthographicCamera) camera2;
 		this.battleScreen = battleScreen;
 		isPaused = false;
 	}
@@ -173,7 +176,7 @@ public class BattleScreenInputProcessor implements InputProcessor {
 
 	@Override
 	public boolean scrolled(float amountX, float amountY) {
-		// TODO Auto-generated method stub
+		hudCamera.zoom += amountY;
 		return false;
 	}
 

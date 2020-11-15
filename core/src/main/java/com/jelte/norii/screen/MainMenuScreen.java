@@ -63,6 +63,8 @@ public class MainMenuScreen extends GameScreen {
 
 	private void loadAssets() {
 		AssetManagerUtility.loadFreeTypeFontAsset("24_fonts/sporty.ttf", 24, 1, Color.LIGHT_GRAY, 1, 1);
+		AssetManagerUtility.loadFreeTypeFontAsset("04_fonts/sporty.ttf", 4, 1, Color.LIGHT_GRAY, 1, 1);
+		AssetManagerUtility.loadFreeTypeFontAsset("01_fonts/sporty.ttf", 1, 1, Color.LIGHT_GRAY, 1, 1);
 		AssetManagerUtility.loadFreeTypeFontAsset("15_fonts/sporty.ttf", 15, 1, Color.LIGHT_GRAY, 1, 1);
 		AssetManagerUtility.loadFreeTypeFontAsset("95_fonts/sporty.ttf", 95, 1, Color.LIGHT_GRAY, 1, 1);
 		AssetManagerUtility.loadTextureAtlas(AssetManagerUtility.SKIN_TEXTURE_ATLAS_PATH);
@@ -115,8 +117,7 @@ public class MainMenuScreen extends GameScreen {
 	private void addListeners() {
 		newGameButton.addListener(new InputListener() {
 			@Override
-			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer,
-					final int button) {
+			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
 				addUnitsToPlayer();
 				ScreenManager.getInstance().showScreenSafe(ScreenEnum.BATTLE, selectedLevel);
 				return true;
@@ -125,8 +126,7 @@ public class MainMenuScreen extends GameScreen {
 
 		settingsButton.addListener(new InputListener() {
 			@Override
-			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer,
-					final int button) {
+			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
 				ScreenManager.getInstance().showScreenSafe(ScreenEnum.SETTINGS, selectedLevel);
 				return true;
 			}
@@ -134,8 +134,7 @@ public class MainMenuScreen extends GameScreen {
 
 		exitButton.addListener(new InputListener() {
 			@Override
-			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer,
-					final int button) {
+			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
 				Gdx.app.exit();
 				return true;
 			}
@@ -174,8 +173,7 @@ public class MainMenuScreen extends GameScreen {
 
 		currentFrame = bganimation.getKeyFrame(frameTime, true);
 		backgroundbatch.begin();
-		backgroundbatch.draw(currentFrame, 0, 0, stage.getViewport().getWorldWidth(),
-				stage.getViewport().getWorldHeight());
+		backgroundbatch.draw(currentFrame, 0, 0, stage.getViewport().getWorldWidth(), stage.getViewport().getWorldHeight());
 		backgroundbatch.end();
 	}
 

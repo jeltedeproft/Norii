@@ -1,13 +1,12 @@
 package com.jelte.norii.ui;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.utils.Align;
 import com.jelte.norii.entities.Entity;
-import com.jelte.norii.screen.BattleScreen;
 import com.jelte.norii.utility.AssetManagerUtility;
 
 public class StatusUI extends UIWindow {
@@ -34,12 +33,8 @@ public class StatusUI extends UIWindow {
 	private Entity linkedEntity;
 	private boolean actionsUIIsHovering = false;
 
-	private float statsUIOffsetX;
-	private float statsUIOffsetY;
-
-	private static final float WIDTH_TILES = 5;
-	private static final float HEIGHT_TILES = 6;
-	private static final float LABEL_WIDTH = 50;
+	private static final float WIDTH_TILES = 10;
+	private static final float HEIGHT_TILES = 3;
 
 	public StatusUI(final Entity entity) {
 		super("", WIDTH_TILES, HEIGHT_TILES);
@@ -47,11 +42,13 @@ public class StatusUI extends UIWindow {
 		configureMainWindow();
 		createWidgets();
 		addWidgets();
+		this.setBounds(10, 10, WIDTH_TILES, HEIGHT_TILES);
+		this.setDebug(true, true);
 	}
 
 	@Override
 	protected void configureMainWindow() {
-		setVisible(false);
+		// setVisible(false);
 		setResizable(true);
 	}
 
@@ -59,8 +56,6 @@ public class StatusUI extends UIWindow {
 		linkedEntity = entity;
 		entity.setStatusui(this);
 		updateStats();
-		statsUIOffsetX = Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH;
-		statsUIOffsetY = Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT;
 	}
 
 	@Override
@@ -71,7 +66,7 @@ public class StatusUI extends UIWindow {
 	}
 
 	private void createFont() {
-		final BitmapFont font = AssetManagerUtility.getFreeTypeFontAsset("24_fonts/sporty.ttf");
+		final BitmapFont font = AssetManagerUtility.getFreeTypeFontAsset("01_fonts/sporty.ttf");
 		labelStyle = new LabelStyle();
 		labelStyle.font = font;
 	}
@@ -99,10 +94,11 @@ public class StatusUI extends UIWindow {
 
 	@Override
 	protected void addWidgets() {
+		this.add(new Image(AssetManagerUtility.getSprite("SnakeQueenIdleDown")));
 		this.add(heroName).colspan(3);
 		row();
 
-		this.add(hpLabel).align(Align.left).expandX().width(LABEL_WIDTH);
+		this.add(hpLabel).align(Align.left).expandX();
 		this.add(hp).align(Align.left);
 		row();
 
@@ -118,17 +114,16 @@ public class StatusUI extends UIWindow {
 		this.add(xp).align(Align.left);
 		row();
 
+		pack();
+
 	}
 
 	@Override
 	public void update() {
 		super.update();
-		statsUIOffsetX = Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH;
-		statsUIOffsetY = Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT;
 
 		updateStats();
 		updateLabels();
-		updateSizeElements();
 
 		final boolean isHovering = linkedEntity.getEntityactor().getIsHovering();
 
@@ -145,8 +140,7 @@ public class StatusUI extends UIWindow {
 
 	@Override
 	protected void updatePos() {
-		this.setPosition((linkedEntity.getCurrentPosition().getCameraX()) + statsUIOffsetX,
-				(linkedEntity.getCurrentPosition().getCameraY()) + statsUIOffsetY);
+		this.setPosition((linkedEntity.getCurrentPosition().getTileX()) + 1, (linkedEntity.getCurrentPosition().getTileY()) + 1);
 	}
 
 	private void updateStats() {
@@ -164,11 +158,6 @@ public class StatusUI extends UIWindow {
 		ap.setText(String.valueOf(apVal) + "/" + maxApVal);
 		xp.setText(String.valueOf(xpVal) + "/" + maxXpVal);
 		levelValLabel.setText(String.valueOf(levelVal));
-	}
-
-	private void updateSizeElements() {
-		setSize(WIDTH_TILES * tileWidthPixel, HEIGHT_TILES * tileHeightPixel);
-		invalidate();
 	}
 
 	public void setActionsUIHovering(boolean actionsUIHovering) {
