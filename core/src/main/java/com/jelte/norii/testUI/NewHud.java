@@ -71,7 +71,7 @@ public class NewHud implements ProfileObserver {
 	private void createCharacterHUDs(List<Entity> allUnits) {
 		portraitAndStats = new PortraitAndStats(allUnits, mapWidth, mapHeight);
 		portraitAndStats.setHero(allUnits.get(0));
-		stage.addActor(portraitAndStats.getHorizontalGroup());
+		stage.addActor(portraitAndStats.getTable());
 	}
 
 	public void setPositionTileHover(int tileX, int tileY) {

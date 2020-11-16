@@ -60,6 +60,20 @@ com.badlogic.gdx.graphics.Color: {
 		a: 1
 	}
 }
+com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable: {
+	CommanderProfileSmall: {
+		region: CommanderProfileSmall
+		minWidth: 110
+		minHeight: 110
+	}
+}
+com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable: {
+	button: {
+		patch: button
+		minWidth: 130
+		minHeight: 130
+	}
+}
 com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
 	window-darkgray: {
 		name: window
@@ -74,11 +88,13 @@ com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
 com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable: {
 	red-hp-bar: {
 		region: android-horizontal-scrollbar-knob
+		color: red
 		minWidth: 0
 		minHeight: 8
 	}
 	blue-hp-bar: {
 		region: android-horizontal-scrollbar-knob
+		color: blue
 		minWidth: 0
 		minHeight: 8
 	}
@@ -87,6 +103,9 @@ com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
 	default: {
 		up: nine
 		down: twelve
+	}
+	portrait: {
+		up: CommanderProfileSmall
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {

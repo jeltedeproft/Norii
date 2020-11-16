@@ -5,16 +5,15 @@ import java.util.List;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Align;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.utility.AssetManagerUtility;
 
@@ -27,7 +26,7 @@ public class PortraitAndStats {
 	private final int mapHeight;
 
 	private ImageButton heroImageButton;
-	private HorizontalGroup horizontalGroup;
+	private Table table;
 	private Window statsGroup;
 
 	private Entity linkedEntity;
@@ -61,18 +60,23 @@ public class PortraitAndStats {
 	}
 
 	private void createFont() {
-		final BitmapFont font = AssetManagerUtility.getFreeTypeFontAsset("08_fonts/sporty.ttf");
+		final BitmapFont font = AssetManagerUtility.getFreeTypeFontAsset("15_fonts/sporty.ttf");
 		labelStyle = new LabelStyle();
 		labelStyle.font = font;
 	}
 
 	private void initPortrait() {
-		heroImageButton = new ImageButton(AssetManagerUtility.getSkin().get("Portrait", ImageButtonStyle.class));
-		heroImageButton.setFillParent(true);
+		final ImageButtonStyle imageButtonStyle = AssetManagerUtility.getSkin().get("Portrait", ImageButtonStyle.class);
+		imageButtonStyle.imageUp.setMinHeight(8);
+		imageButtonStyle.imageUp.setMinWidth(8);
+		imageButtonStyle.up.setMinHeight(10);
+		imageButtonStyle.up.setMinWidth(10);
+		heroImageButton = new ImageButton(imageButtonStyle);
+		// heroImageButton.setFillParent(true);
 		heroImageButton.debugAll();
-		heroImageButton.align(Align.bottomLeft);
+		// heroImageButton.align(Align.bottomLeft);
 		// heroImageButton.setScale(0.5f);
-		heroImageButton.pack();
+		// heroImageButton.pack();
 	}
 
 	private void initStatsMenu() {
@@ -87,16 +91,7 @@ public class PortraitAndStats {
 	}
 
 	private void addLabelsToStatsGroup() {
-		statsGroup.add(heroNameLabel).align(Align.topLeft).colspan(3);
-		statsGroup.row();
 
-		statsGroup.add(hpLabel).align(Align.topLeft).expandX().width(HP_LABEL_WIDTH);
-		statsGroup.add(hp).align(Align.topLeft).padRight(STATS_MENU_ELEMENT_PADDING).expandX();
-		statsGroup.row();
-
-		statsGroup.add(apLabel).align(Align.left).expandX();
-		statsGroup.add(ap).align(Align.left).padRight(STATS_MENU_ELEMENT_PADDING).expandX();
-		statsGroup.pack();
 	}
 
 	private void changeHeroImage(final String heroImageName) {
@@ -106,14 +101,11 @@ public class PortraitAndStats {
 		oldStyle.imageUp = trd;
 		oldStyle.imageUp.setMinHeight(8);
 		oldStyle.imageUp.setMinWidth(8);
-		;
-		oldStyle.up.setMinHeight(8);
-		oldStyle.up.setMinWidth(8);
 		heroImageButton.setStyle(oldStyle);
-		heroImageButton.getBackground().setMinHeight(8);
-		heroImageButton.getBackground().setMinWidth(8);
+//		heroImageButton.getBackground().setMinHeight(8);
+//		heroImageButton.getBackground().setMinWidth(8);
 		// heroImageButton.getImage().setFillParent(true);
-		heroImageButton.getImage().setAlign(Align.bottomLeft);
+		// heroImageButton.getImage().setAlign(Align.bottomLeft);
 	}
 
 	private void changeHeroImage() {
@@ -121,15 +113,33 @@ public class PortraitAndStats {
 	}
 
 	private void populateHeroImage() {
-		horizontalGroup = new HorizontalGroup();
-		horizontalGroup.addActor(heroImageButton);
-		horizontalGroup.fill();
-		horizontalGroup.setSize(16, 16);
-		horizontalGroup.setPosition(0, 100);
-		horizontalGroup.layout();
-		horizontalGroup.debugAll();
+		table = new Table();
+		table.setPosition(5, 75);
+		table.add(heroImageButton).size(8);
+		// table.addActor(heroImageButton);
+//		horizontalGroup.fill();
+//		horizontalGroup.setSize(16, 16);
+//		horizontalGroup.setPosition(0, 100);
+		// table.layout();
+		table.debugAll();
 
-		horizontalGroup.addActor(statsGroup);
+		statsGroup.add(heroNameLabel);
+//		statsGroup.row();
+//
+//		statsGroup.add(hpLabel).align(Align.topLeft).expandX();
+//		statsGroup.add(hp).align(Align.topLeft).expandX();
+//		statsGroup.row();
+//
+//		statsGroup.add(apLabel).align(Align.left).expandX();
+//		statsGroup.add(ap).align(Align.left).expandX();
+//		statsGroup.debugAll();
+
+		table.add(statsGroup).size(100, 100);
+		statsGroup.validate();
+
+		table.invalidateHierarchy();
+		table.pack();
+
 	}
 
 	public void setHero(final Entity entity) {
@@ -170,7 +180,7 @@ public class PortraitAndStats {
 			heroAP = linkedEntity.getAp();
 
 			if (Boolean.TRUE.equals(linkedEntity.getEntityactor().getIsHovering())) {
-				horizontalGroup.setVisible(true);
+				table.setVisible(true);
 			}
 		}
 	}
@@ -186,8 +196,8 @@ public class PortraitAndStats {
 		}
 	}
 
-	public HorizontalGroup getHorizontalGroup() {
-		return horizontalGroup;
+	public Table getTable() {
+		return table;
 	}
 
 }
