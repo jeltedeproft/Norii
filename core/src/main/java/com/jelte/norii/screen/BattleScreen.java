@@ -37,8 +37,8 @@ import com.jelte.norii.particles.ParticleMaker;
 import com.jelte.norii.particles.ParticleType;
 import com.jelte.norii.profile.ProfileManager;
 import com.jelte.norii.testUI.NewHud;
+import com.jelte.norii.testUI.StatusUi;
 import com.jelte.norii.ui.PlayerBattleHUD;
-import com.jelte.norii.ui.StatusUI;
 import com.jelte.norii.utility.TiledMapPosition;
 import com.jelte.norii.utility.Utility;
 
@@ -113,7 +113,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	private void initializeHUD() {
 		hudCamera = new OrthographicCamera();
 		hudCamera.setToOrtho(false, VIEWPORT.physicalWidth, VIEWPORT.physicalHeight);
-		playerBattleHUD = new PlayerBattleHUD(hudCamera, playerUnits, aiUnits, spriteBatch);
+		// playerBattleHUD = new PlayerBattleHUD(hudCamera, playerUnits, aiUnits, spriteBatch);
 		newHud = new NewHud(playerUnits, aiUnits, spriteBatch, currentMap.getMapWidth(), currentMap.getMapHeight());
 	}
 
@@ -125,7 +125,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 		battlescreenInputProcessor = new BattleScreenInputProcessor(this, mapCamera, newHud.getStage().getCamera());
 		multiplexer = new InputMultiplexer();
 		multiplexer.addProcessor(battlescreenInputProcessor);
-		multiplexer.addProcessor(playerBattleHUD.getStage());
+		// multiplexer.addProcessor(playerBattleHUD.getStage());
 		multiplexer.addProcessor(newHud.getStage());
 		multiplexer.addProcessor(entityStage);
 		multiplexer.addProcessor(pauseMenu.getStage());
@@ -209,7 +209,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	}
 
 	private void updateElements(final float delta) {
-		playerBattleHUD.update();
+		// playerBattleHUD.update();
 		newHud.update();
 		battlescreenInputProcessor.update();
 		updateAI(delta);
@@ -236,14 +236,14 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 				hoverResult = true;
 			}
 		}
-		for (final StatusUI ui : playerBattleHUD.getStatusuis()) {
+		for (final StatusUi ui : newHud.getStatusUIs()) {
 			ui.setActionsUIHovering(hoverResult);
 		}
 	}
 
 	private void updateStages() {
 		entityStage.act();
-		playerBattleHUD.getStage().act();
+		// playerBattleHUD.getStage().act();
 		newHud.getStage().act();
 		currentMap.getTiledMapStage().act();
 	}

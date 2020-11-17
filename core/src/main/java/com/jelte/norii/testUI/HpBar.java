@@ -17,10 +17,10 @@ public class HpBar {
 		healthBar = new ProgressBar(0.0f, 10.0f, 1.0f, false, progressBarStyle);
 		healthBar.setValue(10.0f);
 		healthBar.setAnimateDuration(0.25f);
-		healthBar.setPosition(entity.getCurrentPosition().getTileX() * (NewHud.UI_VIEWPORT_WIDTH / mapWidth), ((entity.getCurrentPosition().getTileY() * (NewHud.UI_VIEWPORT_HEIGHT / mapHeight)) + 1));
+		healthBar.setPosition(entity.getCurrentPosition().getTileX() * (NewHud.UI_VIEWPORT_WIDTH / mapWidth), ((entity.getCurrentPosition().getTileY() * (NewHud.UI_VIEWPORT_HEIGHT / mapHeight)) + 12));
 		healthBar.setWidth(NewHud.UI_VIEWPORT_WIDTH / mapWidth);
-		progressBarStyle.background.setMinHeight(1);
-		progressBarStyle.knobBefore.setMinHeight(1);
+		progressBarStyle.background.setMinHeight(4);
+		progressBarStyle.knobBefore.setMinHeight(4);
 	}
 
 	public Entity getEntity() {

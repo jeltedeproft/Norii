@@ -9,11 +9,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
-import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.utility.AssetManagerUtility;
 
@@ -27,7 +25,6 @@ public class PortraitAndStats {
 
 	private ImageButton heroImageButton;
 	private Table table;
-	private Window statsGroup;
 
 	private Entity linkedEntity;
 
@@ -37,9 +34,6 @@ public class PortraitAndStats {
 	private Label apLabel;
 	private Label ap;
 	private LabelStyle labelStyle;
-
-	private static final int STATS_MENU_ELEMENT_PADDING = 1;
-	private static final int HP_LABEL_WIDTH = 4;
 
 	public PortraitAndStats(final List<Entity> allUnits, int mapWidth, int mapHeight) {
 		this.mapWidth = mapWidth;
@@ -67,31 +61,17 @@ public class PortraitAndStats {
 
 	private void initPortrait() {
 		final ImageButtonStyle imageButtonStyle = AssetManagerUtility.getSkin().get("Portrait", ImageButtonStyle.class);
-		imageButtonStyle.imageUp.setMinHeight(8);
-		imageButtonStyle.imageUp.setMinWidth(8);
-		imageButtonStyle.up.setMinHeight(10);
-		imageButtonStyle.up.setMinWidth(10);
+		imageButtonStyle.imageUp.setMinHeight(45);
+		imageButtonStyle.imageUp.setMinWidth(45);
 		heroImageButton = new ImageButton(imageButtonStyle);
-		// heroImageButton.setFillParent(true);
-		heroImageButton.debugAll();
-		// heroImageButton.align(Align.bottomLeft);
-		// heroImageButton.setScale(0.5f);
-		// heroImageButton.pack();
 	}
 
 	private void initStatsMenu() {
-		final Skin statusUISkin = AssetManagerUtility.getSkin();
-		statsGroup = new Window("", statusUISkin.get("default", WindowStyle.class));
 		heroNameLabel = new Label("", labelStyle);
 		hpLabel = new Label(" hp:", labelStyle);
 		hp = new Label("", labelStyle);
 		apLabel = new Label(" ap:", labelStyle);
 		ap = new Label("", labelStyle);
-		addLabelsToStatsGroup();
-	}
-
-	private void addLabelsToStatsGroup() {
-
 	}
 
 	private void changeHeroImage(final String heroImageName) {
@@ -99,13 +79,9 @@ public class PortraitAndStats {
 		final TextureRegionDrawable trd = new TextureRegionDrawable(tr);
 		final ImageButtonStyle oldStyle = heroImageButton.getStyle();
 		oldStyle.imageUp = trd;
-		oldStyle.imageUp.setMinHeight(8);
-		oldStyle.imageUp.setMinWidth(8);
+		oldStyle.imageUp.setMinHeight(45);
+		oldStyle.imageUp.setMinWidth(45);
 		heroImageButton.setStyle(oldStyle);
-//		heroImageButton.getBackground().setMinHeight(8);
-//		heroImageButton.getBackground().setMinWidth(8);
-		// heroImageButton.getImage().setFillParent(true);
-		// heroImageButton.getImage().setAlign(Align.bottomLeft);
 	}
 
 	private void changeHeroImage() {
@@ -114,28 +90,23 @@ public class PortraitAndStats {
 
 	private void populateHeroImage() {
 		table = new Table();
-		table.setPosition(5, 75);
-		table.add(heroImageButton).size(8);
-		// table.addActor(heroImageButton);
-//		horizontalGroup.fill();
-//		horizontalGroup.setSize(16, 16);
-//		horizontalGroup.setPosition(0, 100);
-		// table.layout();
-		table.debugAll();
+		table.setPosition(20, 330);
+		table.add(heroImageButton).size(50);
+		final Table subtable = new Table();
+		subtable.pad(0);
+		subtable.add(heroNameLabel).height(5).align(Align.topLeft).width(75);
+		subtable.row();
 
-		statsGroup.add(heroNameLabel);
-//		statsGroup.row();
-//
-//		statsGroup.add(hpLabel).align(Align.topLeft).expandX();
-//		statsGroup.add(hp).align(Align.topLeft).expandX();
-//		statsGroup.row();
-//
-//		statsGroup.add(apLabel).align(Align.left).expandX();
-//		statsGroup.add(ap).align(Align.left).expandX();
-//		statsGroup.debugAll();
+		subtable.add(hpLabel).align(Align.left).expandX().width(20);
+		subtable.add(hp).align(Align.left).expandX();
+		subtable.row();
 
-		table.add(statsGroup).size(100, 100);
-		statsGroup.validate();
+		subtable.add(apLabel).align(Align.left).expandX().width(20);
+		subtable.add(ap).align(Align.left).expandX();
+		subtable.setBackground(AssetManagerUtility.getSkin().getDrawable("window-noborder"));
+		table.add(subtable).height(50);
+
+		table.validate();
 
 		table.invalidateHierarchy();
 		table.pack();

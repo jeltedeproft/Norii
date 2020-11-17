@@ -3,23 +3,23 @@ package com.jelte.norii.entities;
 import com.jelte.norii.entities.EntityObserver.EntityCommand;
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.magic.ModifiersEnum;
-import com.jelte.norii.ui.ActionsUI;
+import com.jelte.norii.testUI.ActionsUi;
 
 public class PlayerEntity extends Entity {
 
-	private ActionsUI actionsui;
+	private ActionsUi actionsui;
 
 	public PlayerEntity(EntityTypes type) {
 		super(type);
 		isPlayerUnit = true;
 	}
 
-	public ActionsUI getActionsui() {
+	public ActionsUi getActionsui() {
 		return actionsui;
 	}
 
-	public void setActionsui(final ActionsUI actionsui) {
-		this.actionsui = actionsui;
+	public void setActionsui(final ActionsUi actionsUi2) {
+		this.actionsui = actionsUi2;
 	}
 
 	public void setActive(final boolean isActive) {

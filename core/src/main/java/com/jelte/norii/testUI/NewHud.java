@@ -8,6 +8,8 @@ import java.util.stream.Stream;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -24,12 +26,15 @@ public class NewHud implements ProfileObserver {
 	private Image onTileHover;
 	private ArrayList<HpBar> hpBars;
 	private PortraitAndStats portraitAndStats;
+	private ArrayList<StatusUi> statusUIs;
+	private ArrayList<ActionInfoUiWindow> actionInfoUIWindows;
+	private ArrayList<ActionsUi> actionUIs;
 
 	private final int mapWidth;
 	private final int mapHeight;
 
-	public static final int UI_VIEWPORT_WIDTH = 100;
-	public static final int UI_VIEWPORT_HEIGHT = 100;
+	public static final int UI_VIEWPORT_WIDTH = 400;
+	public static final int UI_VIEWPORT_HEIGHT = 400;
 
 	public NewHud(List<PlayerEntity> playerUnits, List<AiEntity> aiUnits, SpriteBatch spriteBatch, int mapWidth, int mapHeight) {
 		this.mapWidth = mapWidth;
@@ -39,6 +44,9 @@ public class NewHud implements ProfileObserver {
 		createTileHoverParticle();
 		createHpBars(allUnits);
 		createCharacterHUDs(allUnits);
+		createStatusUIs(allUnits);
+		createActionUIs(playerUnits);
+		initializeActionPopUps();
 	}
 
 	private void initVariables(List<Entity> allUnits, SpriteBatch spriteBatch) {
@@ -74,13 +82,73 @@ public class NewHud implements ProfileObserver {
 		stage.addActor(portraitAndStats.getTable());
 	}
 
+	private void createStatusUIs(List<Entity> allUnits) {
+		statusUIs = new ArrayList<>();
+		for (int i = 0; i < allUnits.size(); i++) {
+			final Entity entity = allUnits.get(i);
+			statusUIs.add(new StatusUi(entity, mapWidth, mapHeight));
+			final StatusUi statusui = statusUIs.get(i);
+
+			statusui.addListener(new InputListener() {
+				@Override
+				public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+					return true;
+				}
+			});
+
+			stage.addActor(statusui);
+		}
+	}
+
+	private void createActionUIs(List<PlayerEntity> playerUnits) {
+		actionUIs = new ArrayList<>();
+		for (int i = 0; i < playerUnits.size(); i++) {
+			if (playerUnits.get(i).isPlayerUnit()) {
+				final PlayerEntity entity = playerUnits.get(i);
+				actionUIs.add(new ActionsUi(entity, mapWidth, mapHeight));
+				final ActionsUi actionui = actionUIs.get(i);
+
+				actionui.addListener(new InputListener() {
+					@Override
+					public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+						return true;
+					}
+				});
+
+				stage.addActor(actionui);
+			}
+		}
+	}
+
+	private void initializeActionPopUps() {
+		actionInfoUIWindows = new ArrayList<>();
+		for (final ActionsUi actionUI : actionUIs) {
+			for (final ActionInfoUiWindow popUp : actionUI.getPopUps()) {
+				actionInfoUIWindows.add(popUp);
+				stage.addActor(popUp);
+			}
+		}
+	}
+
 	public void setPositionTileHover(int tileX, int tileY) {
 		onTileHover.setPosition(tileX * (UI_VIEWPORT_WIDTH / mapWidth), tileY * (UI_VIEWPORT_HEIGHT / mapHeight));
 	}
 
 	public void update() {
 		for (final HpBar bar : hpBars) {
-			bar.getHealthBar().setPosition(bar.getEntity().getCurrentPosition().getTileX() * (UI_VIEWPORT_WIDTH / mapWidth), ((bar.getEntity().getCurrentPosition().getTileY() * (UI_VIEWPORT_HEIGHT / mapHeight)) + 3));
+			bar.getHealthBar().setPosition(bar.getEntity().getCurrentPosition().getTileX() * (UI_VIEWPORT_WIDTH / mapWidth), ((bar.getEntity().getCurrentPosition().getTileY() * (UI_VIEWPORT_HEIGHT / mapHeight)) + 12));
+		}
+
+		for (final StatusUi statusUI : statusUIs) {
+			statusUI.update();
+		}
+
+		for (final ActionsUi actionsUi : actionUIs) {
+			actionsUi.update();
+		}
+
+		for (final ActionInfoUiWindow popUp : actionInfoUIWindows) {
+			popUp.update();
 		}
 	}
 
@@ -108,6 +176,14 @@ public class NewHud implements ProfileObserver {
 	@Override
 	public void onNotify(ProfileManager profileManager, ProfileEvent event) {
 		// no-op
+	}
+
+	public ArrayList<ActionsUi> getActionUIs() {
+		return actionUIs;
+	}
+
+	public ArrayList<StatusUi> getStatusUIs() {
+		return statusUIs;
 	}
 
 }

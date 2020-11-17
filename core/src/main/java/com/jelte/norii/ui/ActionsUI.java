@@ -6,6 +6,7 @@ import java.util.List;
 import com.jelte.norii.entities.PlayerEntity;
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.screen.BattleScreen;
+import com.jelte.norii.testUI.ActionUIButton;
 
 public class ActionsUI extends UIWindow {
 	private static final int Y_OFFSET = 1;
@@ -46,7 +47,7 @@ public class ActionsUI extends UIWindow {
 	private void initVariables(final PlayerEntity entity) {
 		buttons = new ArrayList<>();
 		linkedEntity = entity;
-		entity.setActionsui(this);
+		// entity.setActionsui(this);
 	}
 
 	@Override
@@ -56,9 +57,10 @@ public class ActionsUI extends UIWindow {
 	}
 
 	private void createButtons() {
-		moveActionUIButton = new MoveActionUIButton(MOVE_BUTTON_SPRITE_NAME, linkedEntity);
-		attackActionUIButton = new AttackActionUIButton(ATTACK_BUTTON_SPRITE_NAME, linkedEntity);
-		skipActionUIButton = new SkipActionUIButton(this, SKIP_BUTTON_SPRITE_NAME, linkedEntity);
+//		moveActionUIButton = new MoveActionUIButton(MOVE_BUTTON_SPRITE_NAME, linkedEntity);
+//		attackActionUIButton = new AttackActionUIButton(ATTACK_BUTTON_SPRITE_NAME, linkedEntity);
+		// skipActionUIButton = new SkipActionUIButton(this, SKIP_BUTTON_SPRITE_NAME,
+		// linkedEntity);
 	}
 
 	private void storeButtons() {
@@ -70,7 +72,7 @@ public class ActionsUI extends UIWindow {
 	private void initPopUps() {
 		popUps = new ArrayList<>();
 		for (final ActionUIButton button : buttons) {
-			popUps.add(button.getPopUp());
+			// popUps.add(button.getPopUp());
 		}
 	}
 
@@ -94,9 +96,12 @@ public class ActionsUI extends UIWindow {
 		final float buttonHeight = BUTTON_HEIGHT;
 
 		for (final Ability ability : linkedEntity.getAbilities()) {
-			final SpellActionUIButton spellActionUIButton = new SpellActionUIButton(ability.getSpellData().getIconSpriteName(), linkedEntity, ability);
-			buttons.add(spellActionUIButton);
-			this.add(spellActionUIButton.getButton()).size(buttonWidth, buttonHeight).pad(ICON_PADDING);
+			// final SpellActionUIButton spellActionUIButton = new
+			// SpellActionUIButton(ability.getSpellData().getIconSpriteName(), linkedEntity,
+			// ability);
+			// buttons.add(spellActionUIButton);
+			// this.add(spellActionUIButton.getButton()).size(buttonWidth,
+			// buttonHeight).pad(ICON_PADDING);
 		}
 	}
 
@@ -105,7 +110,6 @@ public class ActionsUI extends UIWindow {
 		this.setPosition(linkedEntity.getCurrentPosition().getTileX(), linkedEntity.getCurrentPosition().getTileY() + Y_OFFSET);
 		adjustPosition();
 		adjustPopUps();
-		setHovering();
 	}
 
 	private void adjustPopUps() {
@@ -140,16 +144,4 @@ public class ActionsUI extends UIWindow {
 		return popUps;
 	}
 
-	private void setHovering() {
-		for (final ActionUIButton button : buttons) {
-			if (button.isHovering() && button.entered) {
-				linkedEntity.getEntityactor().setActionsHovering(true);
-			}
-
-			if (button.exited) {
-				linkedEntity.getEntityactor().setActionsHovering(false);
-				button.exited = false;
-			}
-		}
-	}
 }

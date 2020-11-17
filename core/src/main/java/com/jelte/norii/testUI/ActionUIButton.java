@@ -1,9 +1,10 @@
-package com.jelte.norii.ui;
+package com.jelte.norii.testUI;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.jelte.norii.ui.ActionUIButtonHoverListener;
 import com.jelte.norii.utility.AssetManagerUtility;
 
 public class ActionUIButton {
@@ -13,7 +14,7 @@ public class ActionUIButton {
 	protected TextureRegion tr;
 	protected TextureRegionDrawable buttonImage;
 	protected ImageButtonStyle btnStyle;
-	protected ActionInfoUIWindow popUpWindow;
+	protected ActionInfoUiWindow popUpWindow;
 	protected boolean isHovering;
 	protected boolean entered = false;
 	protected boolean exited = false;
@@ -31,8 +32,8 @@ public class ActionUIButton {
 		button.addListener(new ActionUIButtonHoverListener(this));
 	}
 
-	protected void initPopUp() {
-		popUpWindow = new ActionInfoUIWindow(this);
+	protected void initPopUp(int mapWidth, int mapHeight) {
+		popUpWindow = new ActionInfoUiWindow(this, mapWidth, mapHeight);
 	}
 
 	public ImageButton getButton() {
@@ -67,7 +68,7 @@ public class ActionUIButton {
 		return hovering;
 	}
 
-	public ActionInfoUIWindow getPopUp() {
+	public ActionInfoUiWindow getPopUp() {
 		return popUpWindow;
 	}
 

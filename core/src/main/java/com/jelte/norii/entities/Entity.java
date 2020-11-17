@@ -25,7 +25,7 @@ import com.jelte.norii.magic.Ability;
 import com.jelte.norii.magic.Modifier;
 import com.jelte.norii.magic.ModifiersEnum;
 import com.jelte.norii.testUI.PortraitAndStats;
-import com.jelte.norii.ui.StatusUI;
+import com.jelte.norii.testUI.StatusUi;
 import com.jelte.norii.utility.AssetManagerUtility;
 import com.jelte.norii.utility.TiledMapPosition;
 
@@ -49,7 +49,7 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 	protected TiledMapPosition currentPlayerPosition;
 	protected Direction direction;
 
-	private StatusUI statusui;
+	private StatusUi statusui;
 	private PortraitAndStats characterHUD;
 
 	protected EntityAnimation entityAnimation;
@@ -114,12 +114,12 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 		return entityData;
 	}
 
-	public StatusUI getStatusui() {
+	public StatusUi getStatusui() {
 		return statusui;
 	}
 
-	public void setStatusui(final StatusUI statusui) {
-		this.statusui = statusui;
+	public void setStatusui(final StatusUi statusUi2) {
+		this.statusui = statusUi2;
 	}
 
 	public void setbottomMenu(final PortraitAndStats portraitAndStats) {
