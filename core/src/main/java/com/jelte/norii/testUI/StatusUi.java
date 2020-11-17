@@ -1,15 +1,15 @@
-package com.jelte.norii.ui;
+package com.jelte.norii.testUI;
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.Align;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.utility.AssetManagerUtility;
 
-public class StatusUI extends UIWindow {
+public class StatusUi extends Window {
 	private int levelVal;
 	private int hpVal;
 	private int maxHpVal;
@@ -17,6 +17,9 @@ public class StatusUI extends UIWindow {
 	private int maxApVal;
 	private int xpVal;
 	private int maxXpVal;
+
+	private final int mapWidth;
+	private final int mapHeight;
 
 	private Label heroName;
 	private Label hp;
@@ -33,40 +36,40 @@ public class StatusUI extends UIWindow {
 	private Entity linkedEntity;
 	private boolean actionsUIIsHovering = false;
 
-	private static final float WIDTH_TILES = 10;
-	private static final float HEIGHT_TILES = 3;
+	private static final float WIDTH_TILES = 8;
+	private static final float HEIGHT_TILES = 7;
 
-	public StatusUI(final Entity entity) {
-		super("", WIDTH_TILES, HEIGHT_TILES);
+	public StatusUi(final Entity entity, int mapWidth, int mapHeight) {
+		super("", AssetManagerUtility.getSkin());
+		this.mapHeight = mapHeight;
+		this.mapWidth = mapWidth;
 		initVariables(entity);
 		configureMainWindow();
 		createWidgets();
 		addWidgets();
-		this.setBounds(10, 10, WIDTH_TILES, HEIGHT_TILES);
-
+		this.setSize((NewHud.UI_VIEWPORT_WIDTH / mapWidth) * WIDTH_TILES, (NewHud.UI_VIEWPORT_HEIGHT / mapHeight) * HEIGHT_TILES);
+		this.pad(0);
 	}
 
-	@Override
-	protected void configureMainWindow() {
-		// setVisible(false);
+	private void configureMainWindow() {
+		setVisible(false);
 		setResizable(true);
 	}
 
 	private void initVariables(final Entity entity) {
 		linkedEntity = entity;
-		// entity.setStatusui(this);
+		entity.setStatusui(this);
 		updateStats();
 	}
 
-	@Override
-	protected void createWidgets() {
+	private void createWidgets() {
 		createFont();
 		createLabels();
 		createGroups();
 	}
 
 	private void createFont() {
-		final BitmapFont font = AssetManagerUtility.getFreeTypeFontAsset("24_fonts/sporty.ttf");
+		final BitmapFont font = AssetManagerUtility.getFreeTypeFontAsset("15_fonts/sporty.ttf");
 		labelStyle = new LabelStyle();
 		labelStyle.font = font;
 	}
@@ -92,9 +95,7 @@ public class StatusUI extends UIWindow {
 		defaults().expand().fill();
 	}
 
-	@Override
-	protected void addWidgets() {
-		this.add(new Image(AssetManagerUtility.getSprite("SnakeQueenIdleDown")));
+	private void addWidgets() {
 		this.add(heroName).colspan(3);
 		row();
 
@@ -118,10 +119,7 @@ public class StatusUI extends UIWindow {
 
 	}
 
-	@Override
 	public void update() {
-		super.update();
-
 		updateStats();
 		updateLabels();
 
@@ -138,9 +136,8 @@ public class StatusUI extends UIWindow {
 		updatePos();
 	}
 
-	@Override
-	protected void updatePos() {
-		this.setPosition((linkedEntity.getCurrentPosition().getTileX()) + 1, (linkedEntity.getCurrentPosition().getTileY()) + 1);
+	private void updatePos() {
+		this.setPosition((linkedEntity.getCurrentPosition().getTileX() * (NewHud.UI_VIEWPORT_WIDTH / mapWidth)) + 16, ((linkedEntity.getCurrentPosition().getTileY() * (NewHud.UI_VIEWPORT_HEIGHT / mapHeight)) + 16));
 	}
 
 	private void updateStats() {
