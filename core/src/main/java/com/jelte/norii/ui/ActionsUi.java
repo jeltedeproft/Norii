@@ -13,8 +13,6 @@ public class ActionsUi extends Window {
 	private static final int MOVE_AMOUNT_OUT_OF_BOUND_Y = 32;
 	private static final int HEIGHT_TILES = 2;
 	private static final int WIDTH_TILES = 5;
-	private static final int BUTTON_WIDTH = 16;
-	private static final int BUTTON_HEIGHT = 16;
 	private static final float ICON_PADDING = 2f;
 	private static final float MAIN_WINDOW_PADDING = 0f;
 	private static final String MOVE_BUTTON_SPRITE_NAME = "move";
@@ -23,6 +21,9 @@ public class ActionsUi extends Window {
 
 	private final int mapWidth;
 	private final int mapHeight;
+
+	private final float tilePixelWidth;
+	private final float tilePixelHeight;
 
 	private MoveActionUIButton moveActionUIButton;
 	private AttackActionUIButton attackActionUIButton;
@@ -34,14 +35,19 @@ public class ActionsUi extends Window {
 
 	public ActionsUi(final PlayerEntity entity, int mapWidth, int mapHeight) {
 		super("", AssetManagerUtility.getSkin());
+
 		this.mapHeight = mapHeight;
 		this.mapWidth = mapWidth;
+		tilePixelWidth = Hud.UI_VIEWPORT_WIDTH / mapWidth;
+		tilePixelHeight = Hud.UI_VIEWPORT_HEIGHT / mapHeight;
+
 		configureMainWindow();
 		initVariables(entity);
 		createWidgets();
 		addWidgets();
 		initPopUps();
-		this.setSize((Hud.UI_VIEWPORT_WIDTH / mapWidth) * WIDTH_TILES, (Hud.UI_VIEWPORT_HEIGHT / mapHeight) * HEIGHT_TILES);
+
+		this.setSize(tilePixelWidth * WIDTH_TILES, tilePixelHeight * HEIGHT_TILES);
 		this.pad(MAIN_WINDOW_PADDING);
 	}
 
@@ -86,16 +92,16 @@ public class ActionsUi extends Window {
 	}
 
 	private void addButtons() {
-		add(attackActionUIButton.getButton()).size(BUTTON_WIDTH, BUTTON_HEIGHT).pad(ICON_PADDING);
-		add(moveActionUIButton.getButton()).size(BUTTON_WIDTH, BUTTON_HEIGHT).pad(ICON_PADDING);
-		add(skipActionUIButton.getButton()).size(BUTTON_WIDTH, BUTTON_HEIGHT).pad(ICON_PADDING);
+		add(attackActionUIButton.getButton()).size(tilePixelWidth, tilePixelHeight).pad(ICON_PADDING);
+		add(moveActionUIButton.getButton()).size(tilePixelWidth, tilePixelHeight).pad(ICON_PADDING);
+		add(skipActionUIButton.getButton()).size(tilePixelWidth, tilePixelHeight).pad(ICON_PADDING);
 	}
 
 	private void addSpells() {
 		for (final Ability ability : linkedEntity.getAbilities()) {
 			final SpellActionUIButton spellActionUIButton = new SpellActionUIButton(ability.getSpellData().getIconSpriteName(), linkedEntity, ability, mapWidth, mapHeight);
 			buttons.add(spellActionUIButton);
-			add(spellActionUIButton.getButton()).size(BUTTON_WIDTH, BUTTON_HEIGHT).pad(ICON_PADDING);
+			add(spellActionUIButton.getButton()).size(tilePixelWidth, tilePixelHeight).pad(ICON_PADDING);
 		}
 	}
 
@@ -106,7 +112,7 @@ public class ActionsUi extends Window {
 	}
 
 	public void updatePos() {
-		this.setPosition((linkedEntity.getCurrentPosition().getTileX() * (Hud.UI_VIEWPORT_WIDTH / mapWidth)) + 16, ((linkedEntity.getCurrentPosition().getTileY() * (Hud.UI_VIEWPORT_HEIGHT / mapHeight)) + 16));
+		this.setPosition((linkedEntity.getCurrentPosition().getTileX() * tilePixelWidth) + tilePixelWidth, ((linkedEntity.getCurrentPosition().getTileY() * tilePixelHeight) + tilePixelHeight));
 		adjustPosition();
 		adjustPopUps();
 		setHovering();
@@ -114,7 +120,7 @@ public class ActionsUi extends Window {
 
 	private void adjustPopUps() {
 		for (final ActionInfoUiWindow popUp : popUps) {
-			popUp.setPosition(getX(), getY() + (BUTTON_HEIGHT * 2f));
+			popUp.setPosition(getX(), getY() + (tilePixelHeight * 2f));
 		}
 	}
 

@@ -18,8 +18,8 @@ public class StatusUi extends Window {
 	private int xpVal;
 	private int maxXpVal;
 
-	private final int mapWidth;
-	private final int mapHeight;
+	private final float tilePixelWidth;
+	private final float tilePixelHeight;
 
 	private Label heroName;
 	private Label hp;
@@ -38,17 +38,23 @@ public class StatusUi extends Window {
 
 	private static final float WIDTH_TILES = 8;
 	private static final float HEIGHT_TILES = 7;
+	private static final float WINDOW_PADDING = 0;
+	private static final int HERO_NAME_COLSPAN = 3;
+	private static final String FONT_FILENAME = "15_fonts/sporty.ttf";
 
 	public StatusUi(final Entity entity, int mapWidth, int mapHeight) {
 		super("", AssetManagerUtility.getSkin());
-		this.mapHeight = mapHeight;
-		this.mapWidth = mapWidth;
+
+		tilePixelWidth = Hud.UI_VIEWPORT_WIDTH / mapWidth;
+		tilePixelHeight = Hud.UI_VIEWPORT_HEIGHT / mapHeight;
+
 		initVariables(entity);
 		configureMainWindow();
 		createWidgets();
 		addWidgets();
-		this.setSize((Hud.UI_VIEWPORT_WIDTH / mapWidth) * WIDTH_TILES, (Hud.UI_VIEWPORT_HEIGHT / mapHeight) * HEIGHT_TILES);
-		this.pad(0);
+
+		this.setSize(tilePixelWidth * WIDTH_TILES, tilePixelHeight * HEIGHT_TILES);
+		this.pad(WINDOW_PADDING);
 	}
 
 	private void configureMainWindow() {
@@ -69,7 +75,7 @@ public class StatusUi extends Window {
 	}
 
 	private void createFont() {
-		final BitmapFont font = AssetManagerUtility.getFreeTypeFontAsset("15_fonts/sporty.ttf");
+		final BitmapFont font = AssetManagerUtility.getFreeTypeFontAsset(FONT_FILENAME);
 		labelStyle = new LabelStyle();
 		labelStyle.font = font;
 	}
@@ -96,7 +102,7 @@ public class StatusUi extends Window {
 	}
 
 	private void addWidgets() {
-		this.add(heroName).colspan(3);
+		this.add(heroName).colspan(HERO_NAME_COLSPAN);
 		row();
 
 		this.add(hpLabel).align(Align.left).expandX();
@@ -137,7 +143,7 @@ public class StatusUi extends Window {
 	}
 
 	private void updatePos() {
-		this.setPosition((linkedEntity.getCurrentPosition().getTileX() * (Hud.UI_VIEWPORT_WIDTH / mapWidth)) + 16, ((linkedEntity.getCurrentPosition().getTileY() * (Hud.UI_VIEWPORT_HEIGHT / mapHeight)) + 16));
+		this.setPosition((linkedEntity.getCurrentPosition().getTileX() * tilePixelWidth) + tilePixelWidth, ((linkedEntity.getCurrentPosition().getTileY() * tilePixelHeight) + tilePixelHeight));
 	}
 
 	private void updateStats() {

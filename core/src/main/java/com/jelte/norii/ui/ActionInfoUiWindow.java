@@ -8,31 +8,36 @@ import com.badlogic.gdx.utils.Align;
 import com.jelte.norii.utility.AssetManagerUtility;
 
 public class ActionInfoUiWindow extends Window {
+	private static final String FONT_FILENAME = "15_fonts/sporty.ttf";
+	private static final float WIDTH_TILES = 13;
+	private static final float HEIGHT_TILES = 5;
+	private static final float ACTION_NAME_LABEL_WIDTH = 50;
+	private static final int PADDING = 0;
+
 	private Label actionInfoLabel;
 	private Label actionnameLabel;
 	private Label underline;
 	private String actionName;
 	private String actionInfo;
 
-	private final int mapWidth;
-	private final int mapHeight;
+	private final float tilePixelWidth;
+	private final float tilePixelHeight;
 
 	private ActionUIButton linkedActionUIButton;
 
-	private static final float WIDTH_TILES = 13;
-	private static final float HEIGHT_TILES = 5;
-	private static final float ACTION_NAME_LABEL_WIDTH = 50;
-
 	public ActionInfoUiWindow(final ActionUIButton actionUIButton, int mapWidth, int mapHeight) {
 		super("", AssetManagerUtility.getSkin());
-		this.mapHeight = mapHeight;
-		this.mapWidth = mapWidth;
+
+		tilePixelWidth = Hud.UI_VIEWPORT_WIDTH / mapWidth;
+		tilePixelHeight = Hud.UI_VIEWPORT_HEIGHT / mapHeight;
+
 		initVariables(actionUIButton);
 		configureMainWindow();
 		createWidgets();
 		addWidgets();
-		this.setSize((Hud.UI_VIEWPORT_WIDTH / mapWidth) * WIDTH_TILES, (Hud.UI_VIEWPORT_HEIGHT / mapHeight) * HEIGHT_TILES);
-		this.pad(0);
+
+		this.setSize(tilePixelWidth * WIDTH_TILES, tilePixelHeight * HEIGHT_TILES);
+		this.pad(PADDING);
 	}
 
 	private void configureMainWindow() {
@@ -51,7 +56,7 @@ public class ActionInfoUiWindow extends Window {
 	}
 
 	private void createWidgets() {
-		final BitmapFont bitmapFont = AssetManagerUtility.getFreeTypeFontAsset("15_fonts/sporty.ttf");
+		final BitmapFont bitmapFont = AssetManagerUtility.getFreeTypeFontAsset(FONT_FILENAME);
 		final LabelStyle labelStyle = new LabelStyle();
 		labelStyle.font = bitmapFont;
 		actionInfoLabel = new Label(actionInfo, labelStyle);
@@ -61,13 +66,13 @@ public class ActionInfoUiWindow extends Window {
 	}
 
 	private void addWidgets() {
-		this.add(actionnameLabel).align(Align.left).expandX().width(ACTION_NAME_LABEL_WIDTH).height(16);
+		this.add(actionnameLabel).align(Align.left).expandX().width(ACTION_NAME_LABEL_WIDTH).height(tilePixelHeight);
 		row();
 
-		this.add(underline).align(Align.left).expandX().width(ACTION_NAME_LABEL_WIDTH).height(16).top();
+		this.add(underline).align(Align.left).expandX().width(ACTION_NAME_LABEL_WIDTH).height(tilePixelHeight).top();
 		row();
 
-		this.add(actionInfoLabel).align(Align.left).expandX().colspan(5).height(16);
+		this.add(actionInfoLabel).align(Align.left).expandX().colspan(5).height(tilePixelHeight);
 		this.pack();
 	}
 

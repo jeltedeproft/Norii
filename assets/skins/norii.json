@@ -1,24 +1,6 @@
 {
 com.badlogic.gdx.graphics.g2d.BitmapFont: {
-	font-button-export: {
-		file: font-button-export.fnt
-	}
-	font-export: {
-		file: font-export.fnt
-	}
-	font-title-export: {
-		file: font-title-export.fnt
-	}
 	neutral: {
-		file: font-export.fnt
-	}
-	neutral-export: {
-		file: font-title-export.fnt
-	}
-	pixthulhu: {
-		file: font-export.fnt
-	}
-	pixtulhu-big: {
 		file: font-export.fnt
 	}
 }
@@ -33,12 +15,6 @@ com.badlogic.gdx.graphics.Color: {
 		r: 0.4263
 		g: 0.5382557
 		b: 0.6299999
-		a: 1
-	}
-	pixthulhu: {
-		r: 0
-		g: 0.27450982
-		b: 0.23529412
 		a: 1
 	}
 	red: {
@@ -58,20 +34,6 @@ com.badlogic.gdx.graphics.Color: {
 		g: 1
 		b: 1
 		a: 1
-	}
-}
-com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable: {
-	CommanderProfileSmall: {
-		region: CommanderProfileSmall
-		minWidth: 110
-		minHeight: 110
-	}
-}
-com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable: {
-	button: {
-		patch: button
-		minWidth: 130
-		minHeight: 130
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
@@ -97,22 +59,6 @@ com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable: {
 		minHeight: 8
 	}
 }
-com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
-	default: {
-		up: nine
-		down: twelve
-	}
-	portrait: {
-		up: CommanderProfileSmall
-	}
-}
-com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {
-	default: {
-		checkboxOn: checkbox-pressed
-		checkboxOff: checkbox
-		font: font-button-export
-	}
-}
 com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
 	default: {
 		up: button
@@ -120,7 +66,6 @@ com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
 	}
 	Portrait: {
 		imageUp: CommanderProfileSmall
-		imageDown: Webp.net-resizeimage2
 		up: button
 		down: button-pressed
 	}
@@ -134,10 +79,10 @@ com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle: {
 	default: {
 		font: neutral
-		fontColorSelected: metal
-		fontColorUnselected: white
-		selection: file-menu-list-button-over
-		background: file-menu-list
+		fontColorSelected: white
+		fontColorUnselected: black
+		selection: selection
+		background: window-noborder
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle: {
@@ -156,7 +101,7 @@ com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle: {
 }
 com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
 	default: {
-		background: window-darkgray
+		background: window-noborder
 		corner: scroll_corner
 		hScroll: scroll-bar-horizontal
 		hScrollKnob: scroll_horizontal_knob
@@ -174,23 +119,17 @@ com.badlogic.gdx.scenes.scene2d.ui.SelectBox$SelectBoxStyle: {
 		listStyle: default
 	}
 }
-com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
-	default-horizontal: {
-		background: slider-fancy
-	}
-}
 com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 	default: {
 		font: neutral
 		fontColor: white
-		up: eightteen
-		down: twentytwo
+		up: button
+		down: button-pressed
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle: {
 	default: {
 		label: default
-		background: window-round
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
@@ -198,15 +137,6 @@ com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
 		background: window-noborder
 		titleFont: neutral
 		titleFontColor: white
-	}
-	transparent: {
-		background: transparentPixel
-		titleFont: neutral
-		stageBackground: transparentPixel
-	}
-	pixthulhu: {
-		background: window-round
-		titleFont: font-export
 	}
 }
 }

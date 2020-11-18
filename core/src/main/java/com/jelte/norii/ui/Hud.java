@@ -32,11 +32,11 @@ public class Hud implements ProfileObserver {
 	private int mapWidth;
 	private int mapHeight;
 
-	private int tilePixelWidth;
-	private int tilePixelHeight;
+	private float tilePixelWidth;
+	private float tilePixelHeight;
 
-	public static final int UI_VIEWPORT_WIDTH = 400;
-	public static final int UI_VIEWPORT_HEIGHT = 400;
+	public static final float UI_VIEWPORT_WIDTH = 400f;
+	public static final float UI_VIEWPORT_HEIGHT = 400f;
 	public static final int HEALTHBAR_Y_OFFSET = 12;
 
 	public Hud(List<PlayerEntity> playerUnits, List<AiEntity> aiUnits, SpriteBatch spriteBatch, int mapWidth, int mapHeight) {

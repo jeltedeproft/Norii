@@ -14,13 +14,13 @@ public class ActionUIButton {
 	protected TextureRegionDrawable buttonImage;
 	protected ImageButtonStyle btnStyle;
 	protected ActionInfoUiWindow popUpWindow;
-	protected boolean isHovering;
+	protected boolean hovering;
 	protected boolean entered = false;
 	protected boolean exited = false;
 	protected String infotext;
 	protected String actionName = "action";
 
-	private boolean hovering = false;
+	private boolean visible = false;
 
 	public ActionUIButton(String imageName) {
 		tr = new TextureRegion(AssetManagerUtility.getSprite(imageName));
@@ -56,15 +56,15 @@ public class ActionUIButton {
 	}
 
 	public void showPopUp() {
-		hovering = true;
+		visible = true;
 	}
 
 	public void hidePopUp() {
-		hovering = false;
+		visible = false;
 	}
 
 	public boolean getVisible() {
-		return hovering;
+		return visible;
 	}
 
 	public ActionInfoUiWindow getPopUp() {
@@ -72,11 +72,11 @@ public class ActionUIButton {
 	}
 
 	public void setIsHovering(boolean state) {
-		this.isHovering = state;
+		this.hovering = state;
 	}
 
 	public boolean isHovering() {
-		return isHovering;
+		return hovering;
 	}
 
 	public void setEntered(boolean entered) {

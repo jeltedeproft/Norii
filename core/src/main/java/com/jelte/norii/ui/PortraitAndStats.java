@@ -17,15 +17,22 @@ import com.jelte.norii.utility.AssetManagerUtility;
 
 public class PortraitAndStats {
 	private static final String UNKNOWN_HERO_IMAGE = "nochar";
+	private static final String FONT_FILENAME = "15_fonts/sporty.ttf";
+	private static final int NUMBER_OF_STATS_SHOWN = 3;
+	private static final int PORTRAIT_WIDTH_PADDING = 5;
+	private static final int PORTRAIT_HEIGHT_PADDING = 5;
+	private static final int WINDOW_PADDING = 0;
+	private static final int HERO_NAME_LABEL_HEIGHT = 5;
+	private static final int HERO_NAME_LABEL_WIDTH = 75;
+	private static final int STATS_WIDTH = 20;
 
 	private int heroHP;
 	private int heroAP;
-	private final int mapWidth;
-	private final int mapHeight;
+	private final float tilePixelWidth;
+	private final float tilePixelHeight;
 
 	private ImageButton heroImageButton;
 	private Table table;
-
 	private Entity linkedEntity;
 
 	private Label heroNameLabel;
@@ -36,8 +43,9 @@ public class PortraitAndStats {
 	private LabelStyle labelStyle;
 
 	public PortraitAndStats(final List<Entity> allUnits, int mapWidth, int mapHeight) {
-		this.mapWidth = mapWidth;
-		this.mapHeight = mapHeight;
+		tilePixelWidth = Hud.UI_VIEWPORT_WIDTH / mapWidth;
+		tilePixelHeight = Hud.UI_VIEWPORT_HEIGHT / mapHeight;
+
 		linkUnitsToMenu(allUnits);
 		initElementsForUI();
 		populateHeroImage();
@@ -54,15 +62,15 @@ public class PortraitAndStats {
 	}
 
 	private void createFont() {
-		final BitmapFont font = AssetManagerUtility.getFreeTypeFontAsset("15_fonts/sporty.ttf");
+		final BitmapFont font = AssetManagerUtility.getFreeTypeFontAsset(FONT_FILENAME);
 		labelStyle = new LabelStyle();
 		labelStyle.font = font;
 	}
 
 	private void initPortrait() {
 		final ImageButtonStyle imageButtonStyle = AssetManagerUtility.getSkin().get("Portrait", ImageButtonStyle.class);
-		imageButtonStyle.imageUp.setMinHeight(45);
-		imageButtonStyle.imageUp.setMinWidth(45);
+		imageButtonStyle.imageUp.setMinHeight(tilePixelHeight * NUMBER_OF_STATS_SHOWN);
+		imageButtonStyle.imageUp.setMinWidth(tilePixelWidth * NUMBER_OF_STATS_SHOWN);
 		heroImageButton = new ImageButton(imageButtonStyle);
 	}
 
@@ -79,8 +87,8 @@ public class PortraitAndStats {
 		final TextureRegionDrawable trd = new TextureRegionDrawable(tr);
 		final ImageButtonStyle oldStyle = heroImageButton.getStyle();
 		oldStyle.imageUp = trd;
-		oldStyle.imageUp.setMinHeight(45);
-		oldStyle.imageUp.setMinWidth(45);
+		oldStyle.imageUp.setMinHeight(tilePixelHeight * NUMBER_OF_STATS_SHOWN);
+		oldStyle.imageUp.setMinWidth(tilePixelWidth * NUMBER_OF_STATS_SHOWN);
 		heroImageButton.setStyle(oldStyle);
 	}
 
@@ -90,21 +98,21 @@ public class PortraitAndStats {
 
 	private void populateHeroImage() {
 		table = new Table();
-		table.setPosition(20, 330);
-		table.add(heroImageButton).size(50);
+		table.setPosition(tilePixelWidth, Hud.UI_VIEWPORT_HEIGHT - (tilePixelHeight * NUMBER_OF_STATS_SHOWN) - tilePixelHeight);
+		table.add(heroImageButton).width((tilePixelWidth * NUMBER_OF_STATS_SHOWN) + PORTRAIT_WIDTH_PADDING).height((tilePixelHeight * NUMBER_OF_STATS_SHOWN) + PORTRAIT_HEIGHT_PADDING);
 		final Table subtable = new Table();
-		subtable.pad(0);
-		subtable.add(heroNameLabel).height(5).align(Align.topLeft).width(75);
+		subtable.pad(WINDOW_PADDING);
+		subtable.add(heroNameLabel).height(HERO_NAME_LABEL_HEIGHT).align(Align.topLeft).width(HERO_NAME_LABEL_WIDTH);
 		subtable.row();
 
-		subtable.add(hpLabel).align(Align.left).expandX().width(20);
+		subtable.add(hpLabel).align(Align.left).expandX().width(STATS_WIDTH);
 		subtable.add(hp).align(Align.left).expandX();
 		subtable.row();
 
-		subtable.add(apLabel).align(Align.left).expandX().width(20);
+		subtable.add(apLabel).align(Align.left).expandX().width(STATS_WIDTH);
 		subtable.add(ap).align(Align.left).expandX();
 		subtable.setBackground(AssetManagerUtility.getSkin().getDrawable("window-noborder"));
-		table.add(subtable).height(50);
+		table.add(subtable).height((tilePixelHeight * NUMBER_OF_STATS_SHOWN) + PORTRAIT_HEIGHT_PADDING);
 
 		table.validate();
 
