@@ -1,4 +1,4 @@
-package com.jelte.norii.testUI;
+package com.jelte.norii.ui;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,10 +6,6 @@ import java.util.List;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.jelte.norii.entities.PlayerEntity;
 import com.jelte.norii.magic.Ability;
-import com.jelte.norii.ui.AttackActionUIButton;
-import com.jelte.norii.ui.MoveActionUIButton;
-import com.jelte.norii.ui.SkipActionUIButton;
-import com.jelte.norii.ui.SpellActionUIButton;
 import com.jelte.norii.utility.AssetManagerUtility;
 
 public class ActionsUi extends Window {
@@ -45,7 +41,7 @@ public class ActionsUi extends Window {
 		createWidgets();
 		addWidgets();
 		initPopUps();
-		this.setSize((NewHud.UI_VIEWPORT_WIDTH / mapWidth) * WIDTH_TILES, (NewHud.UI_VIEWPORT_HEIGHT / mapHeight) * HEIGHT_TILES);
+		this.setSize((Hud.UI_VIEWPORT_WIDTH / mapWidth) * WIDTH_TILES, (Hud.UI_VIEWPORT_HEIGHT / mapHeight) * HEIGHT_TILES);
 		this.pad(MAIN_WINDOW_PADDING);
 	}
 
@@ -110,7 +106,7 @@ public class ActionsUi extends Window {
 	}
 
 	public void updatePos() {
-		this.setPosition((linkedEntity.getCurrentPosition().getTileX() * (NewHud.UI_VIEWPORT_WIDTH / mapWidth)) + 16, ((linkedEntity.getCurrentPosition().getTileY() * (NewHud.UI_VIEWPORT_HEIGHT / mapHeight)) + 16));
+		this.setPosition((linkedEntity.getCurrentPosition().getTileX() * (Hud.UI_VIEWPORT_WIDTH / mapWidth)) + 16, ((linkedEntity.getCurrentPosition().getTileY() * (Hud.UI_VIEWPORT_HEIGHT / mapHeight)) + 16));
 		adjustPosition();
 		adjustPopUps();
 		setHovering();
@@ -123,8 +119,8 @@ public class ActionsUi extends Window {
 	}
 
 	private void adjustPosition() {
-		final Boolean right = getX() > NewHud.UI_VIEWPORT_WIDTH;
-		final Boolean up = getY() > NewHud.UI_VIEWPORT_HEIGHT;
+		final Boolean right = getX() > Hud.UI_VIEWPORT_WIDTH;
+		final Boolean up = getY() > Hud.UI_VIEWPORT_HEIGHT;
 		final Boolean left = getX() < 0;
 		final Boolean down = getY() < 0;
 

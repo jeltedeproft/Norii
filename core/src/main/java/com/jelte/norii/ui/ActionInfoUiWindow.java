@@ -1,4 +1,4 @@
-package com.jelte.norii.testUI;
+package com.jelte.norii.ui;
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -31,7 +31,7 @@ public class ActionInfoUiWindow extends Window {
 		configureMainWindow();
 		createWidgets();
 		addWidgets();
-		this.setSize((NewHud.UI_VIEWPORT_WIDTH / mapWidth) * WIDTH_TILES, (NewHud.UI_VIEWPORT_HEIGHT / mapHeight) * HEIGHT_TILES);
+		this.setSize((Hud.UI_VIEWPORT_WIDTH / mapWidth) * WIDTH_TILES, (Hud.UI_VIEWPORT_HEIGHT / mapHeight) * HEIGHT_TILES);
 		this.pad(0);
 	}
 

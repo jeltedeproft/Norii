@@ -4,7 +4,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.jelte.norii.entities.PlayerEntity;
 import com.jelte.norii.magic.Ability;
-import com.jelte.norii.testUI.ActionUIButton;
 
 public class SpellActionUIButton extends ActionUIButton {
 	private final Ability ability;

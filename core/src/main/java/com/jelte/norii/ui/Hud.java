@@ -1,5 +1,4 @@
-
-package com.jelte.norii.testUI;
+package com.jelte.norii.ui;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +20,7 @@ import com.jelte.norii.profile.ProfileManager;
 import com.jelte.norii.profile.ProfileObserver;
 import com.jelte.norii.utility.AssetManagerUtility;
 
-public class NewHud implements ProfileObserver {
+public class Hud implements ProfileObserver {
 	private Stage stage;
 	private Image onTileHover;
 	private ArrayList<HpBar> hpBars;
@@ -30,26 +29,32 @@ public class NewHud implements ProfileObserver {
 	private ArrayList<ActionInfoUiWindow> actionInfoUIWindows;
 	private ArrayList<ActionsUi> actionUIs;
 
-	private final int mapWidth;
-	private final int mapHeight;
+	private int mapWidth;
+	private int mapHeight;
+
+	private int tilePixelWidth;
+	private int tilePixelHeight;
 
 	public static final int UI_VIEWPORT_WIDTH = 400;
 	public static final int UI_VIEWPORT_HEIGHT = 400;
+	public static final int HEALTHBAR_Y_OFFSET = 12;
 
-	public NewHud(List<PlayerEntity> playerUnits, List<AiEntity> aiUnits, SpriteBatch spriteBatch, int mapWidth, int mapHeight) {
-		this.mapWidth = mapWidth;
-		this.mapHeight = mapHeight;
+	public Hud(List<PlayerEntity> playerUnits, List<AiEntity> aiUnits, SpriteBatch spriteBatch, int mapWidth, int mapHeight) {
 		final List<Entity> allUnits = Stream.concat(playerUnits.stream(), aiUnits.stream()).collect(Collectors.toList());
-		initVariables(allUnits, spriteBatch);
+		initVariables(spriteBatch, mapWidth, mapHeight);
 		createTileHoverParticle();
 		createHpBars(allUnits);
 		createCharacterHUDs(allUnits);
 		createStatusUIs(allUnits);
 		createActionUIs(playerUnits);
-		initializeActionPopUps();
+		createActionPopUps();
 	}
 
-	private void initVariables(List<Entity> allUnits, SpriteBatch spriteBatch) {
+	private void initVariables(SpriteBatch spriteBatch, int mapWidth, int mapHeight) {
+		this.mapWidth = mapWidth;
+		this.mapHeight = mapHeight;
+		tilePixelWidth = UI_VIEWPORT_WIDTH / mapWidth;
+		tilePixelHeight = UI_VIEWPORT_HEIGHT / mapHeight;
 		stage = new Stage(new FitViewport(UI_VIEWPORT_WIDTH, UI_VIEWPORT_HEIGHT), spriteBatch);
 	}
 
@@ -58,9 +63,9 @@ public class NewHud implements ProfileObserver {
 		final TextureRegionDrawable trd = new TextureRegionDrawable(tr);
 		onTileHover = new Image(trd);
 		onTileHover.setPosition(-1, -1);
-		onTileHover.setSize(UI_VIEWPORT_WIDTH / mapWidth, UI_VIEWPORT_HEIGHT / mapHeight);
-		onTileHover.getDrawable().setMinHeight(UI_VIEWPORT_HEIGHT / mapHeight);
-		onTileHover.getDrawable().setMinWidth(UI_VIEWPORT_WIDTH / mapWidth);
+		onTileHover.setSize(tilePixelWidth, tilePixelHeight);
+		onTileHover.getDrawable().setMinHeight(tilePixelHeight);
+		onTileHover.getDrawable().setMinWidth(tilePixelWidth);
 
 		stage.addActor(onTileHover);
 	}
@@ -120,7 +125,7 @@ public class NewHud implements ProfileObserver {
 		}
 	}
 
-	private void initializeActionPopUps() {
+	private void createActionPopUps() {
 		actionInfoUIWindows = new ArrayList<>();
 		for (final ActionsUi actionUI : actionUIs) {
 			for (final ActionInfoUiWindow popUp : actionUI.getPopUps()) {
@@ -131,12 +136,12 @@ public class NewHud implements ProfileObserver {
 	}
 
 	public void setPositionTileHover(int tileX, int tileY) {
-		onTileHover.setPosition(tileX * (UI_VIEWPORT_WIDTH / mapWidth), tileY * (UI_VIEWPORT_HEIGHT / mapHeight));
+		onTileHover.setPosition(tileX * tilePixelWidth, tileY * tilePixelHeight);
 	}
 
 	public void update() {
 		for (final HpBar bar : hpBars) {
-			bar.getHealthBar().setPosition(bar.getEntity().getCurrentPosition().getTileX() * (UI_VIEWPORT_WIDTH / mapWidth), ((bar.getEntity().getCurrentPosition().getTileY() * (UI_VIEWPORT_HEIGHT / mapHeight)) + 12));
+			bar.getHealthBar().setPosition(bar.getEntity().getCurrentPosition().getTileX() * tilePixelWidth, ((bar.getEntity().getCurrentPosition().getTileY() * tilePixelHeight) + HEALTHBAR_Y_OFFSET));
 		}
 
 		for (final StatusUi statusUI : statusUIs) {
@@ -178,11 +183,11 @@ public class NewHud implements ProfileObserver {
 		// no-op
 	}
 
-	public ArrayList<ActionsUi> getActionUIs() {
+	public List<ActionsUi> getActionUIs() {
 		return actionUIs;
 	}
 
-	public ArrayList<StatusUi> getStatusUIs() {
+	public List<StatusUi> getStatusUIs() {
 		return statusUIs;
 	}
 

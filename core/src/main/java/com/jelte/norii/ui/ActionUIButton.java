@@ -1,10 +1,9 @@
-package com.jelte.norii.testUI;
+package com.jelte.norii.ui;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.jelte.norii.ui.ActionUIButtonHoverListener;
 import com.jelte.norii.utility.AssetManagerUtility;
 
 public class ActionUIButton {

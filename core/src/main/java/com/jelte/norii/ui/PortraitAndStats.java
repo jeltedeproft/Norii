@@ -1,4 +1,4 @@
-package com.jelte.norii.testUI;
+package com.jelte.norii.ui;
 
 import java.util.List;
 

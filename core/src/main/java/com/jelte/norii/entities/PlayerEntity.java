@@ -3,7 +3,7 @@ package com.jelte.norii.entities;
 import com.jelte.norii.entities.EntityObserver.EntityCommand;
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.magic.ModifiersEnum;
-import com.jelte.norii.testUI.ActionsUi;
+import com.jelte.norii.ui.ActionsUi;
 
 public class PlayerEntity extends Entity {
 
