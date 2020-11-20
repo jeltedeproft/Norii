@@ -1,8 +1,7 @@
 package com.jelte.norii.ui;
 
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.Align;
@@ -27,7 +26,6 @@ public class StatusUi extends Window {
 	private Label xp;
 	private Label levelValLabel;
 
-	private LabelStyle labelStyle;
 	private Label hpLabel;
 	private Label apLabel;
 	private Label xpLabel;
@@ -40,7 +38,6 @@ public class StatusUi extends Window {
 	private static final float HEIGHT_TILES = 7;
 	private static final float WINDOW_PADDING = 0;
 	private static final int HERO_NAME_COLSPAN = 3;
-	private static final String FONT_FILENAME = "15_fonts/sporty.ttf";
 
 	public StatusUi(final Entity entity, int mapWidth, int mapHeight) {
 		super("", AssetManagerUtility.getSkin());
@@ -69,27 +66,21 @@ public class StatusUi extends Window {
 	}
 
 	private void createWidgets() {
-		createFont();
 		createLabels();
 		createGroups();
 	}
 
-	private void createFont() {
-		final BitmapFont font = AssetManagerUtility.getFreeTypeFontAsset(FONT_FILENAME);
-		labelStyle = new LabelStyle();
-		labelStyle.font = font;
-	}
-
 	private void createLabels() {
-		heroName = new Label(linkedEntity.getEntityData().getName(), labelStyle);
-		hpLabel = new Label(" hp:", labelStyle);
-		hp = new Label(String.valueOf(hpVal) + "/" + maxHpVal, labelStyle);
-		apLabel = new Label(" ap:", labelStyle);
-		ap = new Label(String.valueOf(apVal) + "/" + maxApVal, labelStyle);
-		xpLabel = new Label(" xp:", labelStyle);
-		xp = new Label(String.valueOf(xpVal) + "/" + maxXpVal, labelStyle);
-		levelLabel = new Label(" lv:", labelStyle);
-		levelValLabel = new Label(String.valueOf(levelVal), labelStyle);
+		final Skin statusUISkin = AssetManagerUtility.getSkin();
+		heroName = new Label(linkedEntity.getEntityData().getName(), statusUISkin);
+		hpLabel = new Label(" hp:", statusUISkin);
+		hp = new Label(String.valueOf(hpVal) + "/" + maxHpVal, statusUISkin);
+		apLabel = new Label(" ap:", statusUISkin);
+		ap = new Label(String.valueOf(apVal) + "/" + maxApVal, statusUISkin);
+		xpLabel = new Label(" xp:", statusUISkin);
+		xp = new Label(String.valueOf(xpVal) + "/" + maxXpVal, statusUISkin);
+		levelLabel = new Label(" lv:", statusUISkin);
+		levelValLabel = new Label(String.valueOf(levelVal), statusUISkin);
 	}
 
 	private void createGroups() {
@@ -136,7 +127,7 @@ public class StatusUi extends Window {
 		}
 
 		if (actionsUIIsHovering) {
-			// setVisible(false);
+			setVisible(false);
 		}
 
 		updatePos();

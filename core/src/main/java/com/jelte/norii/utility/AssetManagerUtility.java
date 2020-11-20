@@ -4,13 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.MusicLoader;
 import com.badlogic.gdx.assets.loaders.ParticleEffectLoader;
+import com.badlogic.gdx.assets.loaders.ParticleEffectLoader.ParticleEffectParameter;
 import com.badlogic.gdx.assets.loaders.SoundLoader;
 import com.badlogic.gdx.assets.loaders.TextureAtlasLoader;
 import com.badlogic.gdx.assets.loaders.TextureLoader;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
@@ -22,7 +22,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
-import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoaderParameter;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.map.MyNavTmxMapLoader;
@@ -66,7 +65,10 @@ public class AssetManagerUtility {
 	}
 
 	public static void loadParticleAsset(final String particleFilenamePath) {
-		loadAsset(particleFilenamePath, ParticleEffect.class);
+		final ParticleEffectParameter pep = new ParticleEffectParameter();
+		pep.atlasFile = SPRITES_ATLAS_PATH;
+		assetManager.load(particleFilenamePath, ParticleEffect.class, pep);
+		assetManager.finishLoadingAsset(particleFilenamePath);
 	}
 
 	public static ParticleEffect getParticleAsset(final String particleFilenamePath) {
@@ -103,31 +105,6 @@ public class AssetManagerUtility {
 		}
 
 		return statusUISkin;
-	}
-
-	public static void loadFreeTypeFontAsset(final String fontPath, final int size, final int borderWidth, final Color color, final int shadowX, final int shadowY) {
-		if (checkValidString(fontPath)) {
-			assetManager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(filePathResolver));
-			assetManager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(filePathResolver));
-
-			final FreeTypeFontLoaderParameter myFont = createFontParameter(fontPath, size, borderWidth, color, shadowX, shadowY);
-			assetManager.load(fontPath, BitmapFont.class, myFont);
-		}
-	}
-
-	private static FreeTypeFontLoaderParameter createFontParameter(final String fontPath, final int size, final int borderWidth, final Color color, final int shadowX, final int shadowY) {
-		final FreeTypeFontLoaderParameter myFont = new FreeTypeFontLoaderParameter();
-		myFont.fontFileName = fontPath.substring(3);
-		myFont.fontParameters.size = size;
-		myFont.fontParameters.borderWidth = borderWidth;
-		myFont.fontParameters.color = color;
-		myFont.fontParameters.shadowOffsetX = shadowX;
-		myFont.fontParameters.shadowOffsetY = shadowY;
-		return myFont;
-	}
-
-	public static BitmapFont getFreeTypeFontAsset(final String fontPath) {
-		return (BitmapFont) getAsset(fontPath, BitmapFont.class);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -172,10 +149,6 @@ public class AssetManagerUtility {
 		return getTextureAtlas(SPRITES_ATLAS_PATH).createSprite(spriteName);
 	}
 
-	public static Texture getSpriteSheetTexture(String textureName) {
-		return getTextureAtlas(SPRITES_ATLAS_PATH).findRegion(textureName).getTexture();
-	}
-
 	public static Animation<TextureRegion> getAnimation(String animationName, float animationSpeed, PlayMode playMode) {
 		final Array<TextureAtlas.AtlasRegion> regions = getTextureAtlas(SPRITES_ATLAS_PATH).findRegions(animationName);
 
@@ -211,6 +184,8 @@ public class AssetManagerUtility {
 	}
 
 	private static void setLoaders() {
+		assetManager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(filePathResolver));
+		assetManager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(filePathResolver));
 		assetManager.setLoader(TiledMap.class, myNavTmxMapLoader);
 		assetManager.setLoader(Texture.class, textureLoader);
 		assetManager.setLoader(ParticleEffect.class, particleEffectLoader);

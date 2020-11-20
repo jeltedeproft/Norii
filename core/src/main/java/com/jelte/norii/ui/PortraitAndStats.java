@@ -3,12 +3,11 @@ package com.jelte.norii.ui;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
@@ -40,7 +39,6 @@ public class PortraitAndStats {
 	private Label hp;
 	private Label apLabel;
 	private Label ap;
-	private LabelStyle labelStyle;
 
 	public PortraitAndStats(final List<Entity> allUnits, int mapWidth, int mapHeight) {
 		tilePixelWidth = Hud.UI_VIEWPORT_WIDTH / mapWidth;
@@ -56,15 +54,8 @@ public class PortraitAndStats {
 	}
 
 	private void initElementsForUI() {
-		createFont();
 		initPortrait();
 		initStatsMenu();
-	}
-
-	private void createFont() {
-		final BitmapFont font = AssetManagerUtility.getFreeTypeFontAsset(FONT_FILENAME);
-		labelStyle = new LabelStyle();
-		labelStyle.font = font;
 	}
 
 	private void initPortrait() {
@@ -75,11 +66,12 @@ public class PortraitAndStats {
 	}
 
 	private void initStatsMenu() {
-		heroNameLabel = new Label("", labelStyle);
-		hpLabel = new Label(" hp:", labelStyle);
-		hp = new Label("", labelStyle);
-		apLabel = new Label(" ap:", labelStyle);
-		ap = new Label("", labelStyle);
+		final Skin statusUISkin = AssetManagerUtility.getSkin();
+		heroNameLabel = new Label("", statusUISkin);
+		hpLabel = new Label(" hp:", statusUISkin);
+		hp = new Label("", statusUISkin);
+		apLabel = new Label(" ap:", statusUISkin);
+		ap = new Label("", statusUISkin);
 	}
 
 	private void changeHeroImage(final String heroImageName) {

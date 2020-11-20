@@ -34,11 +34,6 @@ public class ScreenManager {
 		}
 	}
 
-	public void showScreenSafe(ScreenEnum screenEnum, Object... params) {
-		final Screen newScreen = screenEnum.getScreen(params);
-		game.setScreen(newScreen);
-	}
-
 	public static Screen getMainMenu() {
 		return mainMenu;
 	}

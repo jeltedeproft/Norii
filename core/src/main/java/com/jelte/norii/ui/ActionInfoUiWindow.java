@@ -1,8 +1,7 @@
 package com.jelte.norii.ui;
 
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.Align;
 import com.jelte.norii.utility.AssetManagerUtility;
@@ -56,13 +55,11 @@ public class ActionInfoUiWindow extends Window {
 	}
 
 	private void createWidgets() {
-		final BitmapFont bitmapFont = AssetManagerUtility.getFreeTypeFontAsset(FONT_FILENAME);
-		final LabelStyle labelStyle = new LabelStyle();
-		labelStyle.font = bitmapFont;
-		actionInfoLabel = new Label(actionInfo, labelStyle);
+		final Skin statusUISkin = AssetManagerUtility.getSkin();
+		actionInfoLabel = new Label(actionInfo, statusUISkin);
 		actionInfoLabel.setWrap(true);
-		actionnameLabel = new Label(actionName, labelStyle);
-		underline = new Label("_____________", labelStyle);
+		actionnameLabel = new Label(actionName, statusUISkin);
+		underline = new Label("_____________", statusUISkin);
 	}
 
 	private void addWidgets() {

@@ -81,7 +81,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 		playerUnits = Player.getInstance().getPlayerUnits();
 		mapCamera = new OrthographicCamera();
 		mapCamera.setToOrtho(false, VISIBLE_WIDTH, VISIBLE_HEIGHT);
-		spriteBatch = new SpriteBatch();
+		spriteBatch = new SpriteBatch(900);
 		isPaused = false;
 		mapMgr = new MapManager();
 		currentMap = (BattleMap) mapMgr.getCurrentMap();
@@ -108,7 +108,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	}
 
 	private void initializeInput() {
-		battlescreenInputProcessor = new BattleScreenInputProcessor(this, mapCamera, newHud.getStage().getCamera());
+		battlescreenInputProcessor = new BattleScreenInputProcessor(this, mapCamera);
 		multiplexer = new InputMultiplexer();
 		multiplexer.addProcessor(battlescreenInputProcessor);
 		multiplexer.addProcessor(newHud.getStage());
@@ -174,6 +174,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 
 	@Override
 	public void render(final float delta) {
+		System.out.println("max sprites in batch : " + spriteBatch.maxSpritesInBatch);
 		if (isPaused) {
 			updatePauseMenu();
 			renderPauseMenu(delta);
@@ -242,9 +243,9 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		Gdx.graphics.setTitle("fps = " + Gdx.graphics.getFramesPerSecond());
 		renderMap();
-		renderGrid();
 		renderUnits();
 		renderParticles(delta);
+		renderGrid();
 		renderHUD(delta);
 	}
 
@@ -260,11 +261,9 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 		entityStage.getViewport().apply();
 		Player.getInstance().renderUnits(spriteBatch);
 		aiTeamLeader.renderUnits(spriteBatch);
-		spriteBatch.end();
 	}
 
 	private void renderParticles(final float delta) {
-		spriteBatch.begin();
 		ParticleMaker.drawAllActiveParticles(spriteBatch, delta);
 		spriteBatch.end();
 	}
