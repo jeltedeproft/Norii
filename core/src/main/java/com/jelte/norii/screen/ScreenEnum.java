@@ -8,12 +8,7 @@ public enum ScreenEnum {
 	MAIN_MENU {
 		@Override
 		public Screen getScreen(Object... params) {
-			final Screen main = ScreenManager.getMainMenu();
-			if (main == null) {
-				return new MainMenuScreen();
-			} else {
-				return ScreenManager.getMainMenu();
-			}
+			return new MainMenuScreen();
 		}
 	},
 	BATTLE {

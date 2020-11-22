@@ -36,9 +36,8 @@ import com.jelte.norii.map.TiledMapObserver;
 import com.jelte.norii.particles.ParticleMaker;
 import com.jelte.norii.particles.ParticleType;
 import com.jelte.norii.profile.ProfileManager;
-import com.jelte.norii.testUI.NewHud;
-import com.jelte.norii.testUI.StatusUi;
-import com.jelte.norii.ui.PlayerBattleHUD;
+import com.jelte.norii.ui.Hud;
+import com.jelte.norii.ui.StatusUi;
 import com.jelte.norii.utility.TiledMapPosition;
 import com.jelte.norii.utility.Utility;
 
@@ -56,26 +55,15 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	private InputMultiplexer multiplexer;
 	private BattleScreenInputProcessor battlescreenInputProcessor;
 	private OrthographicCamera hudCamera;
-	private PlayerBattleHUD playerBattleHUD;
-	private NewHud newHud;
+	private Hud newHud;
 	private PauseMenuScreen pauseMenu;
 	private List<PlayerEntity> playerUnits;
 	private List<AiEntity> aiUnits;
 	private List<Entity> allUnits;
 	private EntityStage entityStage;
+	private final String fpsTitle = "fps = ";
 
 	private boolean isPaused;
-
-	private static class VIEWPORT {
-		static float viewportWidth;
-		static float viewportHeight;
-		static float virtualWidth;
-		static float virtualHeight;
-		static float physicalWidth;
-		static float physicalHeight;
-		static float aspectRatio;
-
-	}
 
 	public BattleScreen(AITeams aiTeams) {
 		initializeVariables();
@@ -94,7 +82,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 		playerUnits = Player.getInstance().getPlayerUnits();
 		mapCamera = new OrthographicCamera();
 		mapCamera.setToOrtho(false, VISIBLE_WIDTH, VISIBLE_HEIGHT);
-		spriteBatch = new SpriteBatch();
+		spriteBatch = new SpriteBatch(900);
 		isPaused = false;
 		mapMgr = new MapManager();
 		currentMap = (BattleMap) mapMgr.getCurrentMap();
@@ -112,9 +100,8 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 
 	private void initializeHUD() {
 		hudCamera = new OrthographicCamera();
-		hudCamera.setToOrtho(false, VIEWPORT.physicalWidth, VIEWPORT.physicalHeight);
-		// playerBattleHUD = new PlayerBattleHUD(hudCamera, playerUnits, aiUnits, spriteBatch);
-		newHud = new NewHud(playerUnits, aiUnits, spriteBatch, currentMap.getMapWidth(), currentMap.getMapHeight());
+		hudCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		newHud = new Hud(playerUnits, aiUnits, spriteBatch, currentMap.getMapWidth(), currentMap.getMapHeight());
 	}
 
 	private void initializePauseMenu() {
@@ -122,10 +109,9 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	}
 
 	private void initializeInput() {
-		battlescreenInputProcessor = new BattleScreenInputProcessor(this, mapCamera, newHud.getStage().getCamera());
+		battlescreenInputProcessor = new BattleScreenInputProcessor(this, mapCamera);
 		multiplexer = new InputMultiplexer();
 		multiplexer.addProcessor(battlescreenInputProcessor);
-		// multiplexer.addProcessor(playerBattleHUD.getStage());
 		multiplexer.addProcessor(newHud.getStage());
 		multiplexer.addProcessor(entityStage);
 		multiplexer.addProcessor(pauseMenu.getStage());
@@ -172,7 +158,6 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 		multiplexer.addProcessor(currentMap.getTiledMapStage());
 		Gdx.input.setInputProcessor(multiplexer);
 
-		setupViewport(VISIBLE_WIDTH, VISIBLE_HEIGHT);
 		mapCamera.position.set(currentMap.getMapWidth() / 2f, currentMap.getMapHeight() / 2f, 0f);
 		mapRenderer = new OrthogonalTiledMapRenderer(mapMgr.getCurrentTiledMap(), Map.UNIT_SCALE, spriteBatch);
 		mapRenderer.setView(mapCamera);
@@ -190,6 +175,8 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 
 	@Override
 	public void render(final float delta) {
+		// System.out.println("max sprites in batch : " + spriteBatch.maxSpritesInBatch);
+		// System.out.println("spritebatch render calls : " + spriteBatch.renderCalls);
 		if (isPaused) {
 			updatePauseMenu();
 			renderPauseMenu(delta);
@@ -209,7 +196,6 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	}
 
 	private void updateElements(final float delta) {
-		// playerBattleHUD.update();
 		newHud.update();
 		battlescreenInputProcessor.update();
 		updateAI(delta);
@@ -243,7 +229,6 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 
 	private void updateStages() {
 		entityStage.act();
-		// playerBattleHUD.getStage().act();
 		newHud.getStage().act();
 		currentMap.getTiledMapStage().act();
 	}
@@ -258,11 +243,11 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	private void renderElements(final float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		Gdx.graphics.setTitle("fps = " + Gdx.graphics.getFramesPerSecond());
+		Gdx.graphics.setTitle(fpsTitle + Gdx.graphics.getFramesPerSecond());
 		renderMap();
-		renderGrid();
 		renderUnits();
 		renderParticles(delta);
+		renderGrid();
 		renderHUD(delta);
 	}
 
@@ -278,11 +263,9 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 		entityStage.getViewport().apply();
 		Player.getInstance().renderUnits(spriteBatch);
 		aiTeamLeader.renderUnits(spriteBatch);
-		spriteBatch.end();
 	}
 
 	private void renderParticles(final float delta) {
-		spriteBatch.begin();
 		ParticleMaker.drawAllActiveParticles(spriteBatch, delta);
 		spriteBatch.end();
 	}
@@ -331,28 +314,6 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 		mapRenderer.dispose();
 		pauseMenu.dispose();
 		currentMap.dispose();
-	}
-
-	private static void setupViewport(final int width, final int height) {
-		VIEWPORT.virtualWidth = width;
-		VIEWPORT.virtualHeight = height;
-
-		VIEWPORT.viewportWidth = VIEWPORT.virtualWidth;
-		VIEWPORT.viewportHeight = VIEWPORT.virtualHeight;
-
-		VIEWPORT.physicalWidth = Gdx.graphics.getWidth();
-		VIEWPORT.physicalHeight = Gdx.graphics.getHeight();
-
-		VIEWPORT.aspectRatio = (VIEWPORT.virtualWidth / VIEWPORT.virtualHeight);
-
-		// letterbox
-		if ((VIEWPORT.physicalWidth / VIEWPORT.physicalHeight) >= VIEWPORT.aspectRatio) {
-			VIEWPORT.viewportWidth = VIEWPORT.viewportHeight * (VIEWPORT.physicalWidth / VIEWPORT.physicalHeight);
-			VIEWPORT.viewportHeight = VIEWPORT.virtualHeight;
-		} else {
-			VIEWPORT.viewportWidth = VIEWPORT.virtualWidth;
-			VIEWPORT.viewportHeight = VIEWPORT.viewportWidth * (VIEWPORT.physicalHeight / VIEWPORT.physicalWidth);
-		}
 	}
 
 	@Override

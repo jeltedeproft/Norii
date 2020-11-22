@@ -11,8 +11,8 @@ fast=false
 filterMag=Nearest
 filterMin=Nearest
 ignoreBlankImages=true
-maxHeight=2048
-maxWidth=2048
+maxHeight=4096
+maxWidth=4096
 minHeight=16
 minWidth=16
 paddingX=2
@@ -21,7 +21,7 @@ pot=true
 mof=false
 rotation=false
 stripWhitespaceX=false
-stripWhitespaceY=false
+stripWhitespaceY=true
 wrapX=ClampToEdge
 wrapY=ClampToEdge
 premultiplyAlpha=false
@@ -32,12 +32,12 @@ limitMemory=true
 useIndexes=true
 
 scaleFactors=[{suffix:"",factor:1,resampling:bicubic}]
-inputFiles=[{path:../../../../../Norri files/assets - new/characters/pipoya/Animal,type:Input,dirFilePrefix:null,recursive:false,flattenPaths:false},{path:../../../../../Norri files/assets - new/characters/pipoya/Soldier,type:Input,dirFilePrefix:null,recursive:false,flattenPaths:false},{path:../../../../../Norri files/assets - new/characters/pipoya/Boss,type:Input,dirFilePrefix:null,recursive:false,flattenPaths:false},{path:../../../../../Norri files/assets - new/characters/pipoya/Enemy,type:Input,dirFilePrefix:null,recursive:false,flattenPaths:false},{path:../../../../../Norri files/assets - new/characters/pipoya/Female,type:Input,dirFilePrefix:null,recursive:false,flattenPaths:false},{path:../../../../../Norri files/assets - new/characters/pipoya/Male,type:Input,dirFilePrefix:null,recursive:false,flattenPaths:false},{path:../../../../../Norri files/assets - new/characters/pipoya/Shadow,type:Input,dirFilePrefix:null,recursive:false,flattenPaths:false},{path:../../../../../Norri files/assets - new/characters/portraits,type:Input,dirFilePrefix:null,recursive:false,flattenPaths:false},{path:../../../../../Norri files/assets - new/characters,type:Input,dirFilePrefix:null,recursive:false,flattenPaths:false},{path:../../../../../Norri files/assets - new/gui/gifs/mainmenu,type:Input,dirFilePrefix:null,recursive:false,flattenPaths:false},{path:../../../../../Norri files/assets - new/gui/guiPictures,type:Input,dirFilePrefix:null,recursive:false,flattenPaths:false},{path:../../../../../Norri files/assets - new/gui/portraits,type:Input,dirFilePrefix:null,recursive:false,flattenPaths:false},{path:../../../../../Norri files/assets - new/gui,type:Input,dirFilePrefix:null,recursive:false,flattenPaths:false},{path:../../../../../Norri files/assets - new/spells,type:Input,dirFilePrefix:null,recursive:false,flattenPaths:false}]
+inputFiles=[{path:../../../../../Norri files/assets - new/characters/pipoya/Animal,type:Input,dirFilePrefix:null,recursive:false,flattenPaths:false},{path:../../../../../Norri files/assets - new/characters/pipoya/Soldier,type:Input,dirFilePrefix:null,recursive:false,flattenPaths:false},{path:../../../../../Norri files/assets - new/characters/pipoya/Boss,type:Input,dirFilePrefix:null,recursive:false,flattenPaths:false},{path:../../../../../Norri files/assets - new/characters/pipoya/Enemy,type:Input,dirFilePrefix:null,recursive:false,flattenPaths:false},{path:../../../../../Norri files/assets - new/characters/pipoya/Female,type:Input,dirFilePrefix:null,recursive:false,flattenPaths:false},{path:../../../../../Norri files/assets - new/characters/pipoya/Male,type:Input,dirFilePrefix:null,recursive:false,flattenPaths:false},{path:../../../../../Norri files/assets - new/characters/pipoya/Shadow,type:Input,dirFilePrefix:null,recursive:false,flattenPaths:false},{path:../../../../../Norri files/assets - new/characters/portraits,type:Input,dirFilePrefix:null,recursive:false,flattenPaths:false},{path:../../../../../Norri files/assets - new/characters,type:Input,dirFilePrefix:null,recursive:false,flattenPaths:false},{path:../../../../../Norri files/assets - new/gui/portraits,type:Input,dirFilePrefix:null,recursive:false,flattenPaths:false},{path:../../../../../Norri files/assets - new/gui,type:Input,dirFilePrefix:null,recursive:false,flattenPaths:false},{path:../../../../../Norri files/assets - new/spells,type:Input,dirFilePrefix:null,recursive:false,flattenPaths:false},{path:../../../../../Norri files/assets - new/gui/paralax,type:Input,dirFilePrefix:null,recursive:false,flattenPaths:false},{path:../../../../../Norri files/assets - new/particles,type:Input,dirFilePrefix:null,recursive:false,flattenPaths:false}]
 
 
 -PROJ-
 
-version=4.8.2
+version=4.9.0
 fileTypeType=png
 fileTypeData={encoding:RGBA8888}
 previewBackgroundColor=ffffffff

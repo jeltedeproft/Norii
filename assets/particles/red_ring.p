@@ -154,7 +154,7 @@ timeline4: 1.0
 attached: false
 continuous: true
 aligned: false
-additive: true
+additive: false
 behind: false
 premultipliedAlpha: false
 spriteMode: single

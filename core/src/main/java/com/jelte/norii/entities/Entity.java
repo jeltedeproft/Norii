@@ -24,8 +24,8 @@ import com.jelte.norii.magic.AbilitiesEnum;
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.magic.Modifier;
 import com.jelte.norii.magic.ModifiersEnum;
-import com.jelte.norii.testUI.PortraitAndStats;
-import com.jelte.norii.testUI.StatusUi;
+import com.jelte.norii.ui.PortraitAndStats;
+import com.jelte.norii.ui.StatusUi;
 import com.jelte.norii.utility.AssetManagerUtility;
 import com.jelte.norii.utility.TiledMapPosition;
 

@@ -1,6 +1,5 @@
 package com.jelte.norii.screen;
 
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -15,7 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.jelte.norii.utility.AssetManagerUtility;
 
-public class PauseMenuScreen implements Screen {
+public class PauseMenuScreen extends GameScreen {
 	private static final String PAUSE_BACKGROUND = "bg";
 
 	private Stage stage;

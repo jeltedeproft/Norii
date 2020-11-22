@@ -47,11 +47,9 @@ public class AIDecisionMaker {
 	}
 
 	private void rule1CanKill(final AiEntity unit, List<PlayerEntity> playerUnits, List<AiEntity> aiUnits) {
-		final List<Entity> entities = Stream.concat(playerUnits.stream(), aiUnits.stream())
-				.collect(Collectors.toList());
+		final List<Entity> entities = Stream.concat(playerUnits.stream(), aiUnits.stream()).collect(Collectors.toList());
 		for (final Entity target : entities) {
-			if (isEnemy(unit, target) && canMoveAttack(unit, target) && canKill(unit, target)
-					&& canMoveNextToUnit(unit, target)) {
+			if (isEnemy(unit, target) && canMoveAttack(unit, target) && canKill(unit, target) && canMoveNextToUnit(unit, target)) {
 				walkOverAndAttack(unit, target);
 				actionTaken = true;
 			}
@@ -100,8 +98,7 @@ public class AIDecisionMaker {
 	}
 
 	private void runToSafety(final AiEntity unit, List<PlayerEntity> playerUnits, List<AiEntity> aiUnits) {
-		final List<Entity> entities = Stream.concat(playerUnits.stream(), aiUnits.stream())
-				.collect(Collectors.toList());
+		final List<Entity> entities = Stream.concat(playerUnits.stream(), aiUnits.stream()).collect(Collectors.toList());
 		final List<TiledMapPosition> positions = Utility.collectPositionsEnemyUnits(entities, unit.isPlayerUnit());
 		unit.move(getSafestPath(unit, positions));
 	}
@@ -126,8 +123,7 @@ public class AIDecisionMaker {
 	}
 
 	private void rule3Engage(final AiEntity unit, List<PlayerEntity> playerUnits, List<AiEntity> aiUnits) {
-		final List<Entity> entities = Stream.concat(playerUnits.stream(), aiUnits.stream())
-				.collect(Collectors.toList());
+		final List<Entity> entities = Stream.concat(playerUnits.stream(), aiUnits.stream()).collect(Collectors.toList());
 		final List<TiledMapPosition> positions = Utility.collectPositionsEnemyUnits(entities, unit.isPlayerUnit());
 		final TiledMapPosition centerOfGravity = calculateCenterOfGravity(positions);
 		unit.move(aiTeam.getMyPathFinder().pathTowards(unit.getCurrentPosition(), centerOfGravity, unit.getAp()));

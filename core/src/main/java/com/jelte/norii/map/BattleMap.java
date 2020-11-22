@@ -10,6 +10,7 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.Vector2;
 import com.jelte.norii.audio.AudioObserver;
 import com.jelte.norii.battle.BattleManager;
+import com.jelte.norii.map.MapFactory.MapType;
 import com.jelte.norii.particles.ParticleMaker;
 import com.jelte.norii.particles.ParticleType;
 import com.jelte.norii.utility.AssetManagerUtility;
@@ -23,8 +24,8 @@ public class BattleMap extends Map {
 	protected TiledMapPosition convertedUnits;
 	protected ArrayList<TiledMapPosition> enemyStartPositions;
 
-	BattleMap(final String mapPath) {
-		super(MapFactory.MapType.BATTLE_MAP_THE_CELLS, mapPath);
+	BattleMap(MapType mapType, final String mapPath) {
+		super(mapType, mapPath);
 
 		if (!AssetManagerUtility.isAssetLoaded(mapPath)) {
 			Gdx.app.debug(TAG, "Map not loaded");
@@ -76,8 +77,7 @@ public class BattleMap extends Map {
 
 	private void addPositions(MapObject object, ArrayList<TiledMapPosition> startPositions, boolean isHuman) {
 		((RectangleMapObject) object).getRectangle().getPosition(playerStartPositionRect);
-		final TiledMapPosition spawnPos = new TiledMapPosition().setPositionFromTiled(playerStartPositionRect.x,
-				playerStartPositionRect.y);
+		final TiledMapPosition spawnPos = new TiledMapPosition().setPositionFromTiled(playerStartPositionRect.x, playerStartPositionRect.y);
 		startPositions.add(spawnPos);
 
 		final TiledMapActor tiledactor = getActorAtScreenCoordinate(spawnPos);

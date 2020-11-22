@@ -42,7 +42,7 @@ dependencies {
 	implementation "com.github.intrigus.gdx-freetype-gwt:gdx-freetype-gwt:1.9.10.1"
     implementation "com.github.intrigus.gdx-freetype-gwt:gdx-freetype-gwt:1.9.10.1:sources"
     implementation "com.github.xaguzman:pathfinding:0.2.6:sources"
-
+    implementation 'com.github.raeleus:stripe:master-SNAPSHOT:sources'
 }
 
 import org.akhikhl.gretty.AppBeforeIntegrationTestTask

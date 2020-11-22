@@ -183,7 +183,7 @@ timeline3: 1.0
 attached: false
 continuous: false
 aligned: false
-additive: true
+additive: false
 behind: false
 premultipliedAlpha: false
 spriteMode: single

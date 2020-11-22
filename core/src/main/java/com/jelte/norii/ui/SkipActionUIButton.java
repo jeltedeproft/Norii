@@ -4,8 +4,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.jelte.norii.entities.EntityObserver.EntityCommand;
 import com.jelte.norii.entities.PlayerEntity;
-import com.jelte.norii.testUI.ActionUIButton;
-import com.jelte.norii.testUI.ActionsUi;
 
 public class SkipActionUIButton extends ActionUIButton {
 	public SkipActionUIButton(final ActionsUi actionsUi, final String imageFileName, final PlayerEntity linkedUnit, int mapWidth, int mapHeight) {

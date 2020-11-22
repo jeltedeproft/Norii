@@ -3,6 +3,7 @@ package com.jelte.norii.particles;
 import java.util.ArrayList;
 import java.util.EnumMap;
 
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.jelte.norii.map.Map;
@@ -25,6 +26,7 @@ public class ParticleMaker {
 	}
 
 	public static void drawAllActiveParticles(final SpriteBatch spriteBatch, final float delta) {
+		spriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE); // performance-optim.: manually set blend function to additive!
 		for (final ArrayList<Particle> particleTypeList : allParticles.values()) {
 			for (final Particle particle : particleTypeList) {
 				if (particle.isActive()) {
@@ -38,6 +40,7 @@ public class ParticleMaker {
 				}
 			}
 		}
+		spriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA); // performance-optim.: manually reset blend function!
 	}
 
 	public static void deactivateAllParticlesOfType(final ParticleType particletype) {
@@ -67,8 +70,7 @@ public class ParticleMaker {
 		return particlePool;
 	}
 
-	private static Particle createPooledParticle(final ParticleType particletype, final TiledMapPosition pos,
-			final ParticlePool particlePool, final int id) {
+	private static Particle createPooledParticle(final ParticleType particletype, final TiledMapPosition pos, final ParticlePool particlePool, final int id) {
 		final PooledEffect particle = particlePool.getParticleEffect();
 		particle.setPosition(pos.getTileX(), pos.getTileY());
 		particle.scaleEffect(Map.UNIT_SCALE);

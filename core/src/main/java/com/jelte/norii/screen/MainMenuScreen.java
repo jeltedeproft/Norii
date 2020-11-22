@@ -3,21 +3,21 @@ package com.jelte.norii.screen;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.jelte.norii.ai.AITeamFileReader;
 import com.jelte.norii.ai.AITeams;
 import com.jelte.norii.audio.AudioObserver;
@@ -26,27 +26,30 @@ import com.jelte.norii.entities.EntityTypes;
 import com.jelte.norii.entities.Player;
 import com.jelte.norii.entities.PlayerEntity;
 import com.jelte.norii.magic.SpellFileReader;
+import com.jelte.norii.map.MapFactory.MapType;
 import com.jelte.norii.utility.AssetManagerUtility;
+import com.jelte.norii.utility.parallax.ParallaxBackground;
+import com.jelte.norii.utility.parallax.ParallaxUtils.WH;
+import com.jelte.norii.utility.parallax.TextureRegionParallaxLayer;
 
 public class MainMenuScreen extends GameScreen {
-	private static final float FRAME_DURATION = 0.2f;
-
-	private static String MAIN_MENU_GIF = "mainMenuGif";
-
 	private Stage stage;
+	private SpriteBatch backgroundbatch;
+	private OrthographicCamera parallaxcamera;
+	private ParallaxBackground parallaxBackground;
+
 	private Table mainMenuTableOfButtons;
-	private TextButton newGameButton;
+	private TextButton playButton;
+	private TextButton setTeamButton;
 	private TextButton settingsButton;
 	private TextButton exitButton;
 	private Label title;
+
 	private ArrayList<PlayerEntity> playerMonsters;
-	private Animation<TextureRegion> bganimation;
-	private SpriteBatch backgroundbatch;
 	private AITeams selectedLevel;
 
 	protected float frameTime = 0f;
 	protected Sprite frameSprite = null;
-	protected TextureRegion currentFrame = null;
 
 	public MainMenuScreen() {
 		loadAssets();
@@ -62,13 +65,6 @@ public class MainMenuScreen extends GameScreen {
 	}
 
 	private void loadAssets() {
-		AssetManagerUtility.loadFreeTypeFontAsset("24_fonts/sporty.ttf", 24, 1, Color.LIGHT_GRAY, 1, 1);
-		AssetManagerUtility.loadFreeTypeFontAsset("12_fonts/sporty.ttf", 12, 1, Color.LIGHT_GRAY, 1, 1);
-		AssetManagerUtility.loadFreeTypeFontAsset("04_fonts/sporty.ttf", 4, 1, Color.LIGHT_GRAY, 1, 1);
-		AssetManagerUtility.loadFreeTypeFontAsset("08_fonts/sporty.ttf", 8, 1, Color.LIGHT_GRAY, 1, 1);
-		AssetManagerUtility.loadFreeTypeFontAsset("01_fonts/sporty.ttf", 1, 1, Color.LIGHT_GRAY, 1, 1);
-		AssetManagerUtility.loadFreeTypeFontAsset("15_fonts/sporty.ttf", 15, 1, Color.LIGHT_GRAY, 1, 1);
-		AssetManagerUtility.loadFreeTypeFontAsset("95_fonts/sporty.ttf", 95, 1, Color.LIGHT_GRAY, 1, 1);
 		AssetManagerUtility.loadTextureAtlas(AssetManagerUtility.SKIN_TEXTURE_ATLAS_PATH);
 		AssetManagerUtility.loadTextureAtlas(AssetManagerUtility.SPRITES_ATLAS_PATH);
 		EntityFileReader.loadUnitStatsInMemory();
@@ -76,40 +72,58 @@ public class MainMenuScreen extends GameScreen {
 		AITeamFileReader.loadLevelsInMemory();
 	}
 
+	private void loadLevelAssets() {
+		AssetManagerUtility.loadMapAsset(MapType.BATTLE_MAP_THE_DARK_SWAMP.toString());
+	}
+
 	private void initializeClassVariables() {
+		backgroundbatch = new SpriteBatch();
 		playerMonsters = new ArrayList<>();
-		stage = new Stage();
+		stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), backgroundbatch);
+		parallaxcamera = new OrthographicCamera();
+		parallaxcamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		parallaxcamera.update();
 		mainMenuTableOfButtons = new Table();
 		mainMenuTableOfButtons.setFillParent(true);
 		selectedLevel = AITeams.DESERT_TEAM;
-		ScreenManager.setMainMenu(this);
 	}
 
 	private void createBackground() {
-		backgroundbatch = new SpriteBatch();
-		initializeBgAnimation();
-	}
+		final int worldWidth = Gdx.graphics.getWidth();
+		final int worldHeight = Gdx.graphics.getHeight();
 
-	private void initializeBgAnimation() {
-		bganimation = AssetManagerUtility.getAnimation(MAIN_MENU_GIF, 0.3f, Animation.PlayMode.LOOP);
-		bganimation.setFrameDuration(FRAME_DURATION);
+		final TextureAtlas atlas = AssetManagerUtility.getTextureAtlas(AssetManagerUtility.SPRITES_ATLAS_PATH);
+
+		final TextureRegion backTrees = atlas.findRegion("background-back-trees");
+		final TextureRegionParallaxLayer backTreesLayer = new TextureRegionParallaxLayer(backTrees, worldHeight, new Vector2(.3f, .3f), WH.height);
+
+		final TextureRegion lights = atlas.findRegion("background-light");
+		final TextureRegionParallaxLayer lightsLayer = new TextureRegionParallaxLayer(lights, worldHeight, new Vector2(.6f, .6f), WH.height);
+
+		final TextureRegion middleTrees = atlas.findRegion("background-middle-trees");
+		final TextureRegionParallaxLayer middleTreesLayer = new TextureRegionParallaxLayer(middleTrees, worldHeight, new Vector2(.75f, .75f), WH.height);
+
+		final TextureRegion frontTrees = atlas.findRegion("foreground");
+		final TextureRegionParallaxLayer frontTreesLayer = new TextureRegionParallaxLayer(frontTrees, worldHeight, new Vector2(.6f, .6f), WH.height);
+
+		parallaxBackground = new ParallaxBackground();
+		parallaxBackground.addLayers(backTreesLayer, lightsLayer, middleTreesLayer, frontTreesLayer);
 	}
 
 	private void createButtons() {
 		final Skin statusUISkin = AssetManagerUtility.getSkin();
-		final BitmapFont bitmapFont = AssetManagerUtility.getFreeTypeFontAsset("95_fonts/sporty.ttf");
-		final LabelStyle labelStyle = new LabelStyle();
-		labelStyle.font = bitmapFont;
 
-		title = new Label("Norii:", labelStyle);
-		newGameButton = new TextButton("New Game", statusUISkin);
+		title = new Label("Norii:", statusUISkin, "bigFont");
+		playButton = new TextButton("Play", statusUISkin);
+		setTeamButton = new TextButton("Set Team", statusUISkin);
 		settingsButton = new TextButton("Settings", statusUISkin);
 		exitButton = new TextButton("Exit", statusUISkin);
 	}
 
 	private void createLayout() {
 		mainMenuTableOfButtons.add(title).row();
-		mainMenuTableOfButtons.add(newGameButton).height(75).width(200).spaceBottom(20).padTop(30).row();
+		mainMenuTableOfButtons.add(playButton).height(75).width(200).spaceBottom(20).padTop(30).row();
+		mainMenuTableOfButtons.add(setTeamButton).height(75).width(200).spaceBottom(20).padTop(30).row();
 		mainMenuTableOfButtons.add(settingsButton).height(75).width(200).spaceBottom(20).row();
 		mainMenuTableOfButtons.add(exitButton).height(75).width(200).spaceBottom(20).row();
 
@@ -117,11 +131,12 @@ public class MainMenuScreen extends GameScreen {
 	}
 
 	private void addListeners() {
-		newGameButton.addListener(new InputListener() {
+		playButton.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
 				addUnitsToPlayer();
-				ScreenManager.getInstance().showScreenSafe(ScreenEnum.BATTLE, selectedLevel);
+				loadLevelAssets();
+				ScreenManager.getInstance().showScreen(ScreenEnum.BATTLE, selectedLevel);
 				return true;
 			}
 		});
@@ -129,7 +144,7 @@ public class MainMenuScreen extends GameScreen {
 		settingsButton.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
-				ScreenManager.getInstance().showScreenSafe(ScreenEnum.SETTINGS, selectedLevel);
+				ScreenManager.getInstance().showScreen(ScreenEnum.SETTINGS);
 				return true;
 			}
 		});
@@ -168,14 +183,13 @@ public class MainMenuScreen extends GameScreen {
 		stage.getViewport().apply();
 		stage.act(delta);
 		stage.draw();
+
+		parallaxcamera.translate(2, 0, 0);
 	}
 
 	public void updatebg(final float delta) {
-		frameTime = (frameTime + delta) % 70; // Want to avoid overflow
-
-		currentFrame = bganimation.getKeyFrame(frameTime, true);
 		backgroundbatch.begin();
-		backgroundbatch.draw(currentFrame, 0, 0, stage.getViewport().getWorldWidth(), stage.getViewport().getWorldHeight());
+		parallaxBackground.draw(parallaxcamera, backgroundbatch);
 		backgroundbatch.end();
 	}
 
@@ -207,5 +221,6 @@ public class MainMenuScreen extends GameScreen {
 	public void dispose() {
 		stage.dispose();
 		backgroundbatch.dispose();
+		parallaxBackground = null;
 	}
 }
