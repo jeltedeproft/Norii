@@ -4,6 +4,8 @@
 	<source path="" />
 	<inherits name="com.badlogic.gdx.backends.gdx_backends_gwt" />
 	<inherits name="com.badlogic.gdx.graphics.g2d.freetype.freetype-gwt" />
+	<inherits name="regexodus"/>
+	<inherits name="com.ray3k.stripe" />
 	<inherits name="Box2DLights" />
 	<inherits name="com.badlogic.gdx.ai" />
 	<inherits name="com.badlogic.gdx.controllers.controllers-gwt" />
