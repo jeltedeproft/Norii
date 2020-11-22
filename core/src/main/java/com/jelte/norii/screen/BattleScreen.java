@@ -61,6 +61,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	private List<AiEntity> aiUnits;
 	private List<Entity> allUnits;
 	private EntityStage entityStage;
+	private final String fpsTitle = "fps = ";
 
 	private boolean isPaused;
 
@@ -174,8 +175,8 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 
 	@Override
 	public void render(final float delta) {
-		System.out.println("max sprites in batch : " + spriteBatch.maxSpritesInBatch);
-		System.out.println("spritebatch render calls : " + spriteBatch.renderCalls);
+		// System.out.println("max sprites in batch : " + spriteBatch.maxSpritesInBatch);
+		// System.out.println("spritebatch render calls : " + spriteBatch.renderCalls);
 		if (isPaused) {
 			updatePauseMenu();
 			renderPauseMenu(delta);
@@ -242,7 +243,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	private void renderElements(final float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		Gdx.graphics.setTitle("fps = " + Gdx.graphics.getFramesPerSecond());
+		Gdx.graphics.setTitle(fpsTitle + Gdx.graphics.getFramesPerSecond());
 		renderMap();
 		renderUnits();
 		renderParticles(delta);

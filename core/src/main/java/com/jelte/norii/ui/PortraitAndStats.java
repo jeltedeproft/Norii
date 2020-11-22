@@ -90,6 +90,7 @@ public class PortraitAndStats {
 
 	private void populateHeroImage() {
 		table = new Table();
+		table.setTransform(false);
 		table.setPosition(tilePixelWidth, Hud.UI_VIEWPORT_HEIGHT - (tilePixelHeight * NUMBER_OF_STATS_SHOWN) - tilePixelHeight);
 		table.add(heroImageButton).width((tilePixelWidth * NUMBER_OF_STATS_SHOWN) + PORTRAIT_WIDTH_PADDING).height((tilePixelHeight * NUMBER_OF_STATS_SHOWN) + PORTRAIT_HEIGHT_PADDING);
 		final Table subtable = new Table();

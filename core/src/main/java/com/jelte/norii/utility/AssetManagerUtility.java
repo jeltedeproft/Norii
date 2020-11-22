@@ -24,10 +24,11 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Disposable;
 import com.jelte.norii.map.MyNavTmxMapLoader;
 import com.jelte.norii.ui.MySkin;
 
-public class AssetManagerUtility {
+public class AssetManagerUtility implements Disposable {
 	private static final String TAG = AssetManagerUtility.class.getSimpleName();
 
 	public static final String SPRITES_ATLAS_PATH = "sprites/noriiSprites.atlas";
@@ -193,6 +194,11 @@ public class AssetManagerUtility {
 		assetManager.setLoader(Music.class, musicLoader);
 		assetManager.setLoader(TextureAtlas.class, textureAtlasLoader);
 		loadersSet = true;
+	}
+
+	@Override
+	public void dispose() {
+		assetManager.dispose();
 	}
 
 }

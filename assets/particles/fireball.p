@@ -178,7 +178,7 @@ timeline3: 0.8957476
 attached: true
 continuous: false
 aligned: false
-additive: true
+additive: false
 behind: false
 premultipliedAlpha: false
 spriteMode: single

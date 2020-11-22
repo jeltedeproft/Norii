@@ -38,6 +38,8 @@ public class StatusUi extends Window {
 	private static final float HEIGHT_TILES = 7;
 	private static final float WINDOW_PADDING = 0;
 	private static final int HERO_NAME_COLSPAN = 3;
+	private static final String SEPARATOR = "/";
+	private static final String FONT_NAME_LABEL_STYLE = "smallFont";
 
 	public StatusUi(final Entity entity, int mapWidth, int mapHeight) {
 		super("", AssetManagerUtility.getSkin());
@@ -52,6 +54,7 @@ public class StatusUi extends Window {
 
 		this.setSize(tilePixelWidth * WIDTH_TILES, tilePixelHeight * HEIGHT_TILES);
 		this.pad(WINDOW_PADDING);
+		this.setTransform(false);
 	}
 
 	private void configureMainWindow() {
@@ -72,15 +75,15 @@ public class StatusUi extends Window {
 
 	private void createLabels() {
 		final Skin statusUISkin = AssetManagerUtility.getSkin();
-		heroName = new Label(linkedEntity.getEntityData().getName(), statusUISkin, "smallFont");
-		hpLabel = new Label(" hp:", statusUISkin, "smallFont");
-		hp = new Label(String.valueOf(hpVal) + "/" + maxHpVal, statusUISkin, "smallFont");
-		apLabel = new Label(" ap:", statusUISkin, "smallFont");
-		ap = new Label(String.valueOf(apVal) + "/" + maxApVal, statusUISkin, "smallFont");
-		xpLabel = new Label(" xp:", statusUISkin, "smallFont");
-		xp = new Label(String.valueOf(xpVal) + "/" + maxXpVal, statusUISkin, "smallFont");
-		levelLabel = new Label(" lv:", statusUISkin, "smallFont");
-		levelValLabel = new Label(String.valueOf(levelVal), statusUISkin, "smallFont");
+		heroName = new Label(linkedEntity.getEntityData().getName(), statusUISkin, FONT_NAME_LABEL_STYLE);
+		hpLabel = new Label(" hp:", statusUISkin, FONT_NAME_LABEL_STYLE);
+		hp = new Label(String.valueOf(hpVal) + SEPARATOR + maxHpVal, statusUISkin, FONT_NAME_LABEL_STYLE);
+		apLabel = new Label(" ap:", statusUISkin, FONT_NAME_LABEL_STYLE);
+		ap = new Label(String.valueOf(apVal) + SEPARATOR + maxApVal, statusUISkin, FONT_NAME_LABEL_STYLE);
+		xpLabel = new Label(" xp:", statusUISkin, FONT_NAME_LABEL_STYLE);
+		xp = new Label(String.valueOf(xpVal) + SEPARATOR + maxXpVal, statusUISkin, FONT_NAME_LABEL_STYLE);
+		levelLabel = new Label(" lv:", statusUISkin, FONT_NAME_LABEL_STYLE);
+		levelValLabel = new Label(String.valueOf(levelVal), statusUISkin, FONT_NAME_LABEL_STYLE);
 	}
 
 	private void createGroups() {
@@ -148,9 +151,9 @@ public class StatusUi extends Window {
 	}
 
 	private void updateLabels() {
-		hp.setText(String.valueOf(hpVal) + "/" + maxHpVal);
-		ap.setText(String.valueOf(apVal) + "/" + maxApVal);
-		xp.setText(String.valueOf(xpVal) + "/" + maxXpVal);
+		hp.setText(String.valueOf(hpVal) + SEPARATOR + maxHpVal);
+		ap.setText(String.valueOf(apVal) + SEPARATOR + maxApVal);
+		xp.setText(String.valueOf(xpVal) + SEPARATOR + maxXpVal);
 		levelValLabel.setText(String.valueOf(levelVal));
 	}
 
