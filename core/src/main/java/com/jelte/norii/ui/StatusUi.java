@@ -72,15 +72,15 @@ public class StatusUi extends Window {
 
 	private void createLabels() {
 		final Skin statusUISkin = AssetManagerUtility.getSkin();
-		heroName = new Label(linkedEntity.getEntityData().getName(), statusUISkin);
-		hpLabel = new Label(" hp:", statusUISkin);
-		hp = new Label(String.valueOf(hpVal) + "/" + maxHpVal, statusUISkin);
-		apLabel = new Label(" ap:", statusUISkin);
-		ap = new Label(String.valueOf(apVal) + "/" + maxApVal, statusUISkin);
-		xpLabel = new Label(" xp:", statusUISkin);
-		xp = new Label(String.valueOf(xpVal) + "/" + maxXpVal, statusUISkin);
-		levelLabel = new Label(" lv:", statusUISkin);
-		levelValLabel = new Label(String.valueOf(levelVal), statusUISkin);
+		heroName = new Label(linkedEntity.getEntityData().getName(), statusUISkin, "smallFont");
+		hpLabel = new Label(" hp:", statusUISkin, "smallFont");
+		hp = new Label(String.valueOf(hpVal) + "/" + maxHpVal, statusUISkin, "smallFont");
+		apLabel = new Label(" ap:", statusUISkin, "smallFont");
+		ap = new Label(String.valueOf(apVal) + "/" + maxApVal, statusUISkin, "smallFont");
+		xpLabel = new Label(" xp:", statusUISkin, "smallFont");
+		xp = new Label(String.valueOf(xpVal) + "/" + maxXpVal, statusUISkin, "smallFont");
+		levelLabel = new Label(" lv:", statusUISkin, "smallFont");
+		levelValLabel = new Label(String.valueOf(levelVal), statusUISkin, "smallFont");
 	}
 
 	private void createGroups() {

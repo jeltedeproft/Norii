@@ -1,7 +1,6 @@
 package com.jelte.norii.screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -25,8 +24,12 @@ import com.jelte.norii.utility.parallax.ParallaxBackground;
 import com.jelte.norii.utility.parallax.ParallaxUtils.WH;
 import com.jelte.norii.utility.parallax.TextureRegionParallaxLayer;
 
-public class SettingsScreen implements Screen {
+public class SettingsScreen extends GameScreen {
 	private static final String[] displayModes = { "2048 x 1080" };
+	private static final String TITLE_FONT = "bigFont";
+	private static final String TITLE = "SETTINGS";
+	private static final String EXIT = "exit";
+	private static final String ASPECT_RATIO = "aspect ratio";
 
 	private Label titleLabel;
 	private Label settingsLabel;
@@ -59,41 +62,36 @@ public class SettingsScreen implements Screen {
 	private void createButtons() {
 		final Skin statusUISkin = AssetManagerUtility.getSkin();
 
-		titleLabel = new Label("SETTINGS", statusUISkin, "bigFont");
+		titleLabel = new Label(TITLE, statusUISkin, TITLE_FONT);
 		titleLabel.setAlignment(Align.top);
-		settingsLabel = new Label("aspect ratio", statusUISkin);
+		settingsLabel = new Label(ASPECT_RATIO, statusUISkin);
 
 		aspectRatioSelectBox = new SelectBox<>(statusUISkin);
 		aspectRatioSelectBox.setItems(displayModes);
 
-		exit = new TextButton("exit", statusUISkin);
+		exit = new TextButton(EXIT, statusUISkin);
 	}
 
 	private void createBackground() {
 		final int worldWidth = Gdx.graphics.getWidth();
 		final int worldHeight = Gdx.graphics.getHeight();
+
 		final TextureAtlas atlas = AssetManagerUtility.getTextureAtlas(AssetManagerUtility.SPRITES_ATLAS_PATH);
-		final TextureRegion mountainsRegionA = atlas.findRegion("bgtooga4");
-		final TextureRegionParallaxLayer mountainsLayerA = new TextureRegionParallaxLayer(mountainsRegionA, worldWidth, new Vector2(.3f, .3f), WH.width);
 
-		final TextureRegion mountainsRegionB = atlas.findRegion("bgtooga3");
-		final TextureRegionParallaxLayer mountainsLayerB = new TextureRegionParallaxLayer(mountainsRegionB, worldWidth * .7275f, new Vector2(.6f, .6f), WH.width);
-		mountainsLayerB.setPadLeft(.2725f * worldWidth);
+		final TextureRegion backTrees = atlas.findRegion("background-back-trees");
+		final TextureRegionParallaxLayer backTreesLayer = new TextureRegionParallaxLayer(backTrees, worldHeight, new Vector2(.3f, .3f), WH.height);
 
-		final TextureRegion cloudsRegion = atlas.findRegion("bgtooga5");
-		final TextureRegionParallaxLayer cloudsLayer = new TextureRegionParallaxLayer(cloudsRegion, worldWidth, new Vector2(.6f, .6f), WH.width);
-		cloudsLayer.setPadBottom(worldHeight * .467f);
+		final TextureRegion lights = atlas.findRegion("background-light");
+		final TextureRegionParallaxLayer lightsLayer = new TextureRegionParallaxLayer(lights, worldHeight, new Vector2(.6f, .6f), WH.height);
 
-		final TextureRegion buildingsRegionA = atlas.findRegion("bgtooga2");
-		final TextureRegionParallaxLayer buildingsLayerA = new TextureRegionParallaxLayer(buildingsRegionA, worldWidth, new Vector2(.75f, .75f), WH.width);
+		final TextureRegion middleTrees = atlas.findRegion("background-middle-trees");
+		final TextureRegionParallaxLayer middleTreesLayer = new TextureRegionParallaxLayer(middleTrees, worldHeight, new Vector2(.75f, .75f), WH.height);
 
-		final TextureRegion buildingsRegionB = atlas.findRegion("bgtooga1");
-		final TextureRegionParallaxLayer buildingsLayerB = new TextureRegionParallaxLayer(buildingsRegionB, worldWidth * .8575f, new Vector2(1, 1), WH.width);
-		buildingsLayerB.setPadLeft(.07125f * worldWidth);
-		buildingsLayerB.setPadRight(buildingsLayerB.getPadLeft());
+		final TextureRegion frontTrees = atlas.findRegion("foreground");
+		final TextureRegionParallaxLayer frontTreesLayer = new TextureRegionParallaxLayer(frontTrees, worldHeight, new Vector2(.6f, .6f), WH.height);
 
 		parallaxBackground = new ParallaxBackground();
-		parallaxBackground.addLayers(mountainsLayerA, mountainsLayerB, cloudsLayer, buildingsLayerA, buildingsLayerB);
+		parallaxBackground.addLayers(backTreesLayer, lightsLayer, middleTreesLayer, frontTreesLayer);
 	}
 
 	private void addButtons() {

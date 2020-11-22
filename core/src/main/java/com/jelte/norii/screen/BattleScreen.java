@@ -175,6 +175,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	@Override
 	public void render(final float delta) {
 		System.out.println("max sprites in batch : " + spriteBatch.maxSpritesInBatch);
+		System.out.println("spritebatch render calls : " + spriteBatch.renderCalls);
 		if (isPaused) {
 			updatePauseMenu();
 			renderPauseMenu(delta);

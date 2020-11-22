@@ -12,9 +12,7 @@ public class ParticlePool {
 
 	public ParticlePool(ParticleType particletype) {
 		AssetManagerUtility.loadParticleAsset(particletype.getParticleFileLocation());
-		particleEffectPool = new ParticleEffectPool(
-				AssetManagerUtility.getParticleAsset(particletype.getParticleFileLocation()), INITIAL_CAPACITY,
-				MAX_PARTICLES_IN_POOL);
+		particleEffectPool = new ParticleEffectPool(AssetManagerUtility.getParticleAsset(particletype.getParticleFileLocation()), INITIAL_CAPACITY, MAX_PARTICLES_IN_POOL);
 	}
 
 	public PooledEffect getParticleEffect() {
