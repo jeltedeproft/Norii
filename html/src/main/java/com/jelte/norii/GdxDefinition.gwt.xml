@@ -10,7 +10,6 @@
 	<inherits name="com.badlogic.gdx.physics.box2d.box2d-gwt" />
 	<inherits name="com.jelte.norii.Norii" />
 	<inherits name='org.xguzm.pathfinding' />
-	<inherits name="com.ray3k.stripe" />
 	
 	<entry-point class="com.jelte.norii.gwt.GwtLauncher" />
 	<set-configuration-property name="gdx.assetpath" value="../assets" />

@@ -10,5 +10,4 @@ dependencies {
 	api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
 	implementation "com.github.xaguzman:pathfinding:0.2.6"
 	implementation 'com.github.raeleus.TenPatch:tenpatch:5.0.0'
-	implementation 'com.github.raeleus:stripe:master-SNAPSHOT'
 }
