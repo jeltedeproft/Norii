@@ -16,14 +16,14 @@ import com.jelte.norii.utility.AssetManagerUtility;
 
 public class PortraitAndStats {
 	private static final String UNKNOWN_HERO_IMAGE = "nochar";
-	private static final String FONT_FILENAME = "15_fonts/sporty.ttf";
-	private static final int NUMBER_OF_STATS_SHOWN = 3;
+	private static final int NUMBER_OF_STATS_SHOWN = 4;
 	private static final int PORTRAIT_WIDTH_PADDING = 5;
 	private static final int PORTRAIT_HEIGHT_PADDING = 5;
 	private static final int WINDOW_PADDING = 0;
-	private static final int HERO_NAME_LABEL_HEIGHT = 5;
+	private static final int HERO_NAME_LABEL_HEIGHT = 25;
 	private static final int HERO_NAME_LABEL_WIDTH = 75;
 	private static final int STATS_WIDTH = 20;
+	private static final int STATS_HEIGHT = 20;
 
 	private int heroHP;
 	private int heroAP;
@@ -95,16 +95,16 @@ public class PortraitAndStats {
 		table.add(heroImageButton).width((tilePixelWidth * NUMBER_OF_STATS_SHOWN) + PORTRAIT_WIDTH_PADDING).height((tilePixelHeight * NUMBER_OF_STATS_SHOWN) + PORTRAIT_HEIGHT_PADDING);
 		final Table subtable = new Table();
 		subtable.pad(WINDOW_PADDING);
-		subtable.add(heroNameLabel).height(HERO_NAME_LABEL_HEIGHT).align(Align.topLeft).width(HERO_NAME_LABEL_WIDTH);
+		subtable.add(heroNameLabel).height(HERO_NAME_LABEL_HEIGHT).align(Align.left).width(HERO_NAME_LABEL_WIDTH).colspan(2);
 		subtable.row();
 
-		subtable.add(hpLabel).align(Align.left).expandX().width(STATS_WIDTH);
-		subtable.add(hp).align(Align.left).expandX();
+		subtable.add(hpLabel).align(Align.bottomLeft).width(STATS_WIDTH).height(STATS_HEIGHT);
+		subtable.add(hp).align(Align.center).expandX().height(STATS_HEIGHT);
 		subtable.row();
 
-		subtable.add(apLabel).align(Align.left).expandX().width(STATS_WIDTH);
-		subtable.add(ap).align(Align.left).expandX();
-		subtable.setBackground(AssetManagerUtility.getSkin().getDrawable("window-noborder"));
+		subtable.add(apLabel).align(Align.left).width(STATS_WIDTH).height(STATS_HEIGHT);
+		subtable.add(ap).align(Align.center).expandX().height(STATS_HEIGHT);
+		subtable.setBackground(AssetManagerUtility.getSkin().getDrawable("windowgray"));
 		table.add(subtable).height((tilePixelHeight * NUMBER_OF_STATS_SHOWN) + PORTRAIT_HEIGHT_PADDING);
 
 		table.validate();

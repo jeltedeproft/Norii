@@ -6,14 +6,14 @@ filter: Linear,Linear
 repeat: none
 CommanderProfileSmall
   rotate: false
-  xy: 1, 134
+  xy: 1, 135
   size: 120, 120
   orig: 120, 120
   offset: 0, 0
   index: -1
 android-horizontal-scrollbar-knob
   rotate: false
-  xy: 123, 139
+  xy: 97, 1
   size: 10, 4
   split: 1, 1, 1, 1
   pad: 1, 1, 0, 0
@@ -22,7 +22,7 @@ android-horizontal-scrollbar-knob
   index: -1
 button
   rotate: false
-  xy: 101, 82
+  xy: 101, 21
   size: 52, 50
   split: 8, 8, 7, 8
   pad: 4, 4, 4, 5
@@ -31,28 +31,28 @@ button
   index: -1
 button-pressed
   rotate: false
-  xy: 101, 30
+  xy: 157, 94
   size: 52, 50
   orig: 52, 50
   offset: 0, 0
   index: -1
 font-export
   rotate: false
-  xy: 1, 34
+  xy: 1, 35
   size: 98, 98
   orig: 98, 98
   offset: 0, 0
   index: -1
 progressbar-horizontal
   rotate: false
-  xy: 232, 139
+  xy: 97, 7
   size: 23, 12
   orig: 23, 12
   offset: 0, 0
   index: -1
 scroll-bar-horizontal
   rotate: false
-  xy: 200, 100
+  xy: 211, 81
   size: 28, 19
   split: 7, 8, 0, 0
   pad: 0, 0, 0, 0
@@ -61,7 +61,7 @@ scroll-bar-horizontal
   index: -1
 scroll-bar-vertical
   rotate: false
-  xy: 219, 34
+  xy: 189, 153
   size: 19, 28
   split: 0, 0, 8, 7
   pad: 0, 0, 0, 0
@@ -70,7 +70,7 @@ scroll-bar-vertical
   index: -1
 scroll_corner
   rotate: false
-  xy: 189, 153
+  xy: 204, 183
   size: 43, 43
   split: 21, 21, 21, 21
   orig: 43, 43
@@ -78,7 +78,7 @@ scroll_corner
   index: -1
 scroll_horizontal_knob
   rotate: false
-  xy: 123, 211
+  xy: 123, 212
   size: 79, 43
   split: 37, 39, 21, 21
   pad: 19, 19, 18, 18
@@ -87,7 +87,7 @@ scroll_horizontal_knob
   index: -1
 scroll_vertical_knob
   rotate: false
-  xy: 155, 64
+  xy: 211, 102
   size: 43, 79
   split: 21, 21, 37, 39
   pad: 18, 18, 19, 19
@@ -96,14 +96,14 @@ scroll_vertical_knob
   index: -1
 scrollbar
   rotate: false
-  xy: 189, 199
+  xy: 241, 90
   size: 10, 10
   orig: 10, 10
   offset: 0, 0
   index: -1
 select-box
   rotate: false
-  xy: 97, 1
+  xy: 157, 65
   size: 46, 27
   split: 5, 12, 4, 18
   pad: 4, 15, 3, 2
@@ -112,7 +112,7 @@ select-box
   index: -1
 select-box-disabled
   rotate: false
-  xy: 204, 227
+  xy: 1, 6
   size: 46, 27
   split: 5, 12, 4, 18
   pad: 4, 15, 3, 2
@@ -121,7 +121,7 @@ select-box-disabled
   index: -1
 select-box-over
   rotate: false
-  xy: 1, 5
+  xy: 204, 228
   size: 46, 27
   split: 5, 12, 4, 18
   pad: 4, 15, 3, 2
@@ -130,7 +130,7 @@ select-box-over
   index: -1
 select-box-pressed
   rotate: false
-  xy: 204, 198
+  xy: 155, 36
   size: 46, 27
   split: 5, 12, 4, 18
   pad: 4, 15, 3, 2
@@ -139,7 +139,7 @@ select-box-pressed
   index: -1
 select-box-pressed-alt
   rotate: false
-  xy: 49, 5
+  xy: 49, 6
   size: 46, 27
   split: 5, 12, 4, 18
   pad: 4, 15, 3, 2
@@ -148,14 +148,14 @@ select-box-pressed-alt
   index: -1
 selection
   rotate: false
-  xy: 155, 29
+  xy: 155, 1
   size: 33, 33
   orig: 33, 33
   offset: 0, 0
   index: -1
 textfield
   rotate: false
-  xy: 200, 121
+  xy: 190, 4
   size: 30, 30
   split: 4, 4, 4, 4
   pad: 4, 4, 1, 1
@@ -164,7 +164,7 @@ textfield
   index: -1
 tooltip
   rotate: false
-  xy: 123, 145
+  xy: 123, 146
   size: 64, 64
   split: 13, 13, 12, 12
   pad: 10, 10, 10, 10
@@ -173,21 +173,21 @@ tooltip
   index: -1
 tree-minus
   rotate: false
-  xy: 232, 120
+  xy: 122, 2
   size: 22, 17
   orig: 22, 17
   offset: 0, 0
   index: -1
 tree-plus
   rotate: false
-  xy: 234, 178
+  xy: 234, 61
   size: 21, 18
   orig: 21, 18
   offset: 0, 0
   index: -1
 window
   rotate: false
-  xy: 200, 64
+  xy: 205, 45
   size: 27, 34
   split: 5, 4, 26, 3
   orig: 27, 34
@@ -195,9 +195,18 @@ window
   index: -1
 window-noborder
   rotate: false
-  xy: 190, 28
+  xy: 222, 9
   size: 27, 34
   split: 5, 4, 26, 3
   orig: 27, 34
+  offset: 0, 0
+  index: -1
+windowgray
+  rotate: false
+  xy: 101, 73
+  size: 54, 60
+  split: 5, 5, 33, 4
+  pad: 2, 2, 33, 4
+  orig: 54, 60
   offset: 0, 0
   index: -1

@@ -3,7 +3,9 @@ package com.jelte.norii.ui;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.utility.AssetManagerUtility;
 
 public class ActionUIButton {
@@ -17,8 +19,8 @@ public class ActionUIButton {
 	protected boolean hovering;
 	protected boolean entered = false;
 	protected boolean exited = false;
-	protected String infotext;
 	protected String actionName = "action";
+	protected Array<Label> labels;
 
 	private boolean visible = false;
 
@@ -29,6 +31,7 @@ public class ActionUIButton {
 		btnStyle.up = buttonImage;
 		button = new ImageButton(btnStyle);
 		button.addListener(new ActionUIButtonHoverListener(this));
+		labels = new Array<>();
 	}
 
 	protected void initPopUp(int mapWidth, int mapHeight) {
@@ -41,10 +44,6 @@ public class ActionUIButton {
 
 	public TextureRegionDrawable getButtonImage() {
 		return buttonImage;
-	}
-
-	public String getInfoText() {
-		return infotext;
 	}
 
 	public String getName() {
@@ -85,6 +84,10 @@ public class ActionUIButton {
 
 	public void setExited(boolean exited) {
 		this.exited = exited;
+	}
+
+	public Array<Label> getLabels() {
+		return labels;
 	}
 }
 

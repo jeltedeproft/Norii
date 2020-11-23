@@ -8,7 +8,6 @@ public class AttackActionUIButton extends ActionUIButton {
 	public AttackActionUIButton(final String imageFileName, final PlayerEntity linkedUnit, int mapWidth, int mapHeight) {
 		super(imageFileName);
 		active = true;
-		infotext = "use this button to attack";
 		actionName = "Attack";
 		initPopUp(mapWidth, mapHeight);
 

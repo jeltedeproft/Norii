@@ -9,7 +9,6 @@ public class SkipActionUIButton extends ActionUIButton {
 	public SkipActionUIButton(final ActionsUi actionsUi, final String imageFileName, final PlayerEntity linkedUnit, int mapWidth, int mapHeight) {
 		super(imageFileName);
 		active = true;
-		infotext = "use this button to \n skip your turn";
 		actionName = "Skip";
 		initPopUp(mapWidth, mapHeight);
 

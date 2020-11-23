@@ -8,7 +8,6 @@ public class MoveActionUIButton extends ActionUIButton {
 	public MoveActionUIButton(final String imageFileName, final PlayerEntity linkedUnit, int mapWidth, int mapHeight) {
 		super(imageFileName);
 		active = true;
-		infotext = "use this button to move";
 		actionName = "Move";
 		initPopUp(mapWidth, mapHeight);
 

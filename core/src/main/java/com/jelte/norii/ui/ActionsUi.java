@@ -38,6 +38,8 @@ public class ActionsUi extends Window {
 
 		this.mapHeight = mapHeight;
 		this.mapWidth = mapWidth;
+		this.setBackground(AssetManagerUtility.getSkin().getDrawable("window-noborder"));
+
 		tilePixelWidth = Hud.UI_VIEWPORT_WIDTH / mapWidth;
 		tilePixelHeight = Hud.UI_VIEWPORT_HEIGHT / mapHeight;
 

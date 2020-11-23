@@ -38,6 +38,8 @@ public class StatusUi extends Window {
 	private static final float HEIGHT_TILES = 7;
 	private static final float WINDOW_PADDING = 0;
 	private static final int HERO_NAME_COLSPAN = 3;
+	private static final int STATS_WIDTH = 20;
+	private static final int STATS_HEIGHT = 20;
 	private static final String SEPARATOR = "/";
 	private static final String FONT_NAME_LABEL_STYLE = "smallFont";
 
@@ -99,20 +101,20 @@ public class StatusUi extends Window {
 		this.add(heroName).colspan(HERO_NAME_COLSPAN);
 		row();
 
-		this.add(hpLabel).align(Align.left).expandX();
-		this.add(hp).align(Align.left);
+		this.add(hpLabel).align(Align.left).expandX().width(STATS_WIDTH).height(STATS_HEIGHT);
+		this.add(hp).align(Align.left).width(STATS_WIDTH).height(STATS_HEIGHT);
 		row();
 
-		this.add(apLabel).align(Align.left).expandX();
-		this.add(ap).align(Align.left);
+		this.add(apLabel).align(Align.left).expandX().width(STATS_WIDTH).height(STATS_HEIGHT);
+		this.add(ap).align(Align.left).width(STATS_WIDTH).height(STATS_HEIGHT);
 		row();
 
-		this.add(levelLabel).align(Align.left).expandX();
-		this.add(levelValLabel).align(Align.left);
+		this.add(levelLabel).align(Align.left).expandX().width(STATS_WIDTH).height(STATS_HEIGHT);
+		this.add(levelValLabel).align(Align.left).width(STATS_WIDTH).height(STATS_HEIGHT);
 		row();
 
-		this.add(xpLabel).align(Align.left).expandX();
-		this.add(xp).align(Align.left);
+		this.add(xpLabel).align(Align.left).expandX().width(STATS_WIDTH).height(STATS_HEIGHT);
+		this.add(xp).align(Align.left).width(STATS_WIDTH).height(STATS_HEIGHT);
 		row();
 
 		pack();
