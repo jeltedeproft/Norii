@@ -25,7 +25,13 @@ public class HpBar {
 		tilePixelHeight = Hud.UI_VIEWPORT_HEIGHT / mapHeight;
 
 		final Skin statusUISkin = AssetManagerUtility.getSkin();
-		final ProgressBarStyle progressBarStyle = statusUISkin.get("blue-hp-bar", ProgressBarStyle.class);
+
+		ProgressBarStyle progressBarStyle;
+		if (entity.isPlayerUnit()) {
+			progressBarStyle = statusUISkin.get("blue-hp-bar", ProgressBarStyle.class);
+		} else {
+			progressBarStyle = statusUISkin.get("red-hp-bar", ProgressBarStyle.class);
+		}
 
 		healthBar = new ProgressBar(MIN_VALUE, MAX_VALUE, STEP_SIZE, false, progressBarStyle);
 		healthBar.setValue(MAX_VALUE);
@@ -35,6 +41,9 @@ public class HpBar {
 
 		progressBarStyle.background.setMinHeight(tilePixelHeight / 4f);
 		progressBarStyle.knobBefore.setMinHeight(tilePixelHeight / 4f);
+
+		progressBarStyle.background.setMinWidth(tilePixelWidth);
+		progressBarStyle.knobBefore.setMinWidth(tilePixelWidth);
 	}
 
 	public Entity getEntity() {

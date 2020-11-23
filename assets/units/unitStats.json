@@ -2,7 +2,7 @@
   {
     "id": 0,
     "name": "Commander",
-    "portraitSpritePath": "commanderProfileSmall",
+    "portraitSpritePath": "CommanderIdleDown",
     "entitySpriteName": "Commander",
     "maxAP": 10,
     "maxHP": 10,
@@ -18,7 +18,7 @@
   {
     "id": 1,
     "name": "Icarus",
-    "portraitSpritePath": "icarusProfileSmall",
+    "portraitSpritePath": "IcarusIdleDown",
     "entitySpriteName": "Icarus",
     "maxAP": 10,
     "maxHP": 1,
@@ -34,7 +34,7 @@
   {
     "id": 2,
     "name": "Demon",
-    "portraitSpritePath": "demonProfileSmall",
+    "portraitSpritePath": "DemonIdleDown",
     "entitySpriteName": "Demon",
     "maxAP": 10,
     "maxHP": 10,
@@ -50,7 +50,7 @@
   {
     "id": 3,
     "name": "Shaman",
-    "portraitSpritePath": "shamanProfileSmall",
+    "portraitSpritePath": "ShamanIdleDown",
     "entitySpriteName": "Shaman",
     "maxAP": 10,
     "maxHP": 10,
@@ -66,7 +66,7 @@
   {
     "id": 4,
     "name": "Beast Ogre",
-    "portraitSpritePath": "shamanProfileSmall",
+    "portraitSpritePath": "BeastOgreIdleDown",
     "entitySpriteName": "BeastOgre",
     "maxAP": 10,
     "maxHP": 10,
@@ -82,7 +82,7 @@
   {
     "id": 5,
     "name": "Black Cat",
-    "portraitSpritePath": "shamanProfileSmall",
+    "portraitSpritePath": "BlackCatIdleDown",
     "entitySpriteName": "BlackCat",
     "maxAP": 10,
     "maxHP": 10,
@@ -98,7 +98,7 @@
   {
     "id": 6,
     "name": "Black Dog",
-    "portraitSpritePath": "shamanProfileSmall",
+    "portraitSpritePath": "BlackDogIdleDown",
     "entitySpriteName": "BlackDog",
     "maxAP": 10,
     "maxHP": 10,
@@ -114,7 +114,7 @@
   {
     "id": 7,
     "name": "Black Ghost Ball",
-    "portraitSpritePath": "shamanProfileSmall",
+    "portraitSpritePath": "BlackGhostBallIdleDown",
     "entitySpriteName": "BlackGhostBall",
     "maxAP": 10,
     "maxHP": 10,
@@ -130,7 +130,7 @@
   {
     "id": 8,
     "name": "Black Skeleton",
-    "portraitSpritePath": "shamanProfileSmall",
+    "portraitSpritePath": "BlackSkeletonIdleDown",
     "entitySpriteName": "BlackSkeleton",
     "maxAP": 10,
     "maxHP": 10,
@@ -146,7 +146,7 @@
   {
     "id": 9,
     "name": "Black Slime Dark Blue Eyes",
-    "portraitSpritePath": "shamanProfileSmall",
+    "portraitSpritePath": "BlackSlimeIdleDown",
     "entitySpriteName": "BlackSlimeDarkBlueEyes",
     "maxAP": 10,
     "maxHP": 10,
@@ -162,7 +162,7 @@
   {
     "id": 10,
     "name": "Black Slime Green Eyes",
-    "portraitSpritePath": "shamanProfileSmall",
+    "portraitSpritePath": "BlackSlimeGreenEyesIdleDown",
     "entitySpriteName": "BlackSlimeGreenEyes",
     "maxAP": 10,
     "maxHP": 10,
@@ -178,7 +178,7 @@
   {
     "id": 11,
     "name": "Black Slime Pink Eyes",
-    "portraitSpritePath": "shamanProfileSmall",
+    "portraitSpritePath": "BlackSlimePinkEyesIdleDown",
     "entitySpriteName": "BlackSlimePinkEyes",
     "maxAP": 10,
     "maxHP": 10,
@@ -194,7 +194,7 @@
   {
     "id": 12,
     "name": "Black Slime Purple Eyes",
-    "portraitSpritePath": "shamanProfileSmall",
+    "portraitSpritePath": "BlackSlimePurpleEyesIdleDown",
     "entitySpriteName": "BlackSlimePurpleEyes",
     "maxAP": 10,
     "maxHP": 10,
@@ -210,7 +210,7 @@
   {
     "id": 13,
     "name": "Black Slime Red Eyes",
-    "portraitSpritePath": "shamanProfileSmall",
+    "portraitSpritePath": "BlackSlimeRedEyesIdleDown",
     "entitySpriteName": "BlackSlimeRedEyes",
     "maxAP": 10,
     "maxHP": 10,
@@ -226,7 +226,7 @@
   {
     "id": 14,
     "name": "Black Slime",
-    "portraitSpritePath": "shamanProfileSmall",
+    "portraitSpritePath": "BlackSlimeIdleDown",
     "entitySpriteName": "BlackSlime",
     "maxAP": 10,
     "maxHP": 10,
@@ -242,7 +242,7 @@
   {
     "id": 15,
     "name": "Black Slime Blue Eyes",
-    "portraitSpritePath": "shamanProfileSmall",
+    "portraitSpritePath": "BlackSlimeBlueEyesIdleDown",
     "entitySpriteName": "BlackSlimeBlueEyes",
     "maxAP": 10,
     "maxHP": 10,
@@ -258,7 +258,7 @@
   {
     "id": 16,
     "name": "Black Slime White Eyes",
-    "portraitSpritePath": "shamanProfileSmall",
+    "portraitSpritePath": "BlackSlimeWhiteEyesIdleDown",
     "entitySpriteName": "BlackSlimeWhiteEyes",
     "maxAP": 10,
     "maxHP": 10,
@@ -274,7 +274,7 @@
   {
     "id": 17,
     "name": "Black Slime Yellow Eyes",
-    "portraitSpritePath": "shamanProfileSmall",
+    "portraitSpritePath": "BlackSlimeYellowEyesIdleDown",
     "entitySpriteName": "BlackSlimeYellowEyes",
     "maxAP": 10,
     "maxHP": 10,
@@ -290,7 +290,7 @@
   {
     "id": 18,
     "name": "Blue Ghosty",
-    "portraitSpritePath": "shamanProfileSmall",
+    "portraitSpritePath": "BlueGhostyIdleDown",
     "entitySpriteName": "BlueGhosty",
     "maxAP": 10,
     "maxHP": 10,
@@ -306,7 +306,7 @@
   {
     "id": 19,
     "name": "Blue Slime",
-    "portraitSpritePath": "shamanProfileSmall",
+    "portraitSpritePath": "BlueSlimeIdleDown",
     "entitySpriteName": "BlueSlime",
     "maxAP": 10,
     "maxHP": 10,
@@ -322,7 +322,7 @@
   {
     "id": 20,
     "name": "Dark Blue Slime",
-    "portraitSpritePath": "shamanProfileSmall",
+    "portraitSpritePath": "DarkBlueSlimeIdleDown",
     "entitySpriteName": "DarkBlueSlime",
     "maxAP": 10,
     "maxHP": 10,
@@ -338,7 +338,7 @@
   {
     "id": 21,
     "name": "Female Eight",
-    "portraitSpritePath": "shamanProfileSmall",
+    "portraitSpritePath": "FemaleEightIdleDown",
     "entitySpriteName": "FemaleEight",
     "maxAP": 10,
     "maxHP": 10,
@@ -354,7 +354,7 @@
   {
     "id": 22,
     "name": "Female Eleven",
-    "portraitSpritePath": "shamanProfileSmall",
+    "portraitSpritePath": "FemaleElevenIdleDown",
     "entitySpriteName": "FemaleEleven",
     "maxAP": 10,
     "maxHP": 10,
@@ -370,7 +370,7 @@
   {
     "id": 23,
     "name": "Female Fifteen",
-    "portraitSpritePath": "shamanProfileSmall",
+    "portraitSpritePath": "FemaleFifteenIdleDown",
     "entitySpriteName": "FemaleFifteen",
     "maxAP": 10,
     "maxHP": 10,
@@ -386,7 +386,7 @@
   {
     "id": 24,
     "name": "Female Fifty Five",
-    "portraitSpritePath": "shamanProfileSmall",
+    "portraitSpritePath": "FemaleFiftyFiveIdleDown",
     "entitySpriteName": "FemaleFiftyFive",
     "maxAP": 10,
     "maxHP": 10,
@@ -402,7 +402,7 @@
   {
     "id": 25,
     "name": "Female Fifty Four",
-    "portraitSpritePath": "shamanProfileSmall",
+    "portraitSpritePath": "FemaleFiftyFourIdleDown",
     "entitySpriteName": "FemaleFiftyFour",
     "maxAP": 10,
     "maxHP": 10,
@@ -418,7 +418,7 @@
   {
     "id": 26,
     "name": "Female Fifty",
-    "portraitSpritePath": "shamanProfileSmall",
+    "portraitSpritePath": "FemaleFiftyIdleDown",
     "entitySpriteName": "FemaleFifty",
     "maxAP": 10,
     "maxHP": 10,
@@ -434,7 +434,7 @@
   {
     "id": 27,
     "name": "Female Five",
-    "portraitSpritePath": "shamanProfileSmall",
+    "portraitSpritePath": "FemaleFiveIdleDown",
     "entitySpriteName": "FemaleFive",
     "maxAP": 10,
     "maxHP": 10,
@@ -450,7 +450,7 @@
   {
     "id": 28,
     "name": "Female Four",
-    "portraitSpritePath": "shamanProfileSmall",
+    "portraitSpritePath": "FemaleFourIdleDown",
     "entitySpriteName": "FemaleFour",
     "maxAP": 10,
     "maxHP": 10,
@@ -466,7 +466,7 @@
   {
     "id": 29,
     "name": "Female Nine",
-    "portraitSpritePath": "shamanProfileSmall",
+    "portraitSpritePath": "FemaleNineIdleDown",
     "entitySpriteName": "FemaleNine",
     "maxAP": 10,
     "maxHP": 10,
@@ -482,7 +482,7 @@
   {
     "id": 30,
     "name": "Female Nineteen",
-    "portraitSpritePath": "shamanProfileSmall",
+    "portraitSpritePath": "FemaleNineteenIdleDown",
     "entitySpriteName": "FemaleNineteen",
     "maxAP": 10,
     "maxHP": 10,
@@ -498,7 +498,7 @@
   {
     "id": 31,
     "name": "Female One",
-    "portraitSpritePath": "shamanProfileSmall",
+    "portraitSpritePath": "FemaleOneIdleDown",
     "entitySpriteName": "FemaleOne",
     "maxAP": 10,
     "maxHP": 10,

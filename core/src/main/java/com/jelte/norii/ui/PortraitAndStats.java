@@ -21,7 +21,7 @@ public class PortraitAndStats {
 	private static final int PORTRAIT_HEIGHT_PADDING = 5;
 	private static final int WINDOW_PADDING = 0;
 	private static final int HERO_NAME_LABEL_HEIGHT = 25;
-	private static final int HERO_NAME_LABEL_WIDTH = 75;
+	private static final int HERO_NAME_LABEL_WIDTH = 95;
 	private static final int STATS_WIDTH = 20;
 	private static final int STATS_HEIGHT = 20;
 
@@ -95,6 +95,7 @@ public class PortraitAndStats {
 		table.add(heroImageButton).width((tilePixelWidth * NUMBER_OF_STATS_SHOWN) + PORTRAIT_WIDTH_PADDING).height((tilePixelHeight * NUMBER_OF_STATS_SHOWN) + PORTRAIT_HEIGHT_PADDING);
 		final Table subtable = new Table();
 		subtable.pad(WINDOW_PADDING);
+		subtable.padLeft(5);
 		subtable.add(heroNameLabel).height(HERO_NAME_LABEL_HEIGHT).align(Align.left).width(HERO_NAME_LABEL_WIDTH).colspan(2);
 		subtable.row();
 

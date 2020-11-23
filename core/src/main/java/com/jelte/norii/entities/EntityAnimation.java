@@ -28,15 +28,12 @@ public class EntityAnimation {
 		this.spriteName = spriteName;
 		playmodePerAnimationType = new EnumMap<>(EntityAnimationType.class);
 		initPlaymodePerAnimationType();
-		String animationName = spriteName + currentAnimationType.getTypeAsString()
-				+ currentDirection.getDirectionAsString();
-		currentAnimation = AssetManagerUtility.getAnimation(animationName, ANIMATION_DURATION,
-				playmodePerAnimationType.get(currentAnimationType));
+		String animationName = spriteName + currentAnimationType.getTypeAsString() + currentDirection.getDirectionAsString();
+		currentAnimation = AssetManagerUtility.getAnimation(animationName, ANIMATION_DURATION, playmodePerAnimationType.get(currentAnimationType));
 
 		if (currentAnimation == null) {
 			animationName = spriteName + "Walk" + currentDirection.getDirectionAsString();
-			currentAnimation = AssetManagerUtility.getAnimation(animationName, ANIMATION_DURATION,
-					playmodePerAnimationType.get(currentAnimationType));
+			currentAnimation = AssetManagerUtility.getAnimation(animationName, ANIMATION_DURATION, playmodePerAnimationType.get(currentAnimationType));
 		}
 	}
 
@@ -82,7 +79,9 @@ public class EntityAnimation {
 
 	public void setDirection(final Direction direction) {
 		currentDirection = direction;
-		updateFrame();
+		frameTime = 0;
+		final String animationName = spriteName + currentAnimationType.getTypeAsString() + currentDirection.getDirectionAsString();
+		currentAnimation = AssetManagerUtility.getAnimation(animationName, ANIMATION_DURATION, playmodePerAnimationType.get(currentAnimationType));
 	}
 
 	public Direction getCurrentDirection() {
@@ -96,10 +95,8 @@ public class EntityAnimation {
 	public void setCurrentAnimationType(EntityAnimationType currentAnimationType) {
 		this.currentAnimationType = currentAnimationType;
 		frameTime = 0;
-		final String animationName = spriteName + currentAnimationType.getTypeAsString()
-				+ currentDirection.getDirectionAsString();
-		currentAnimation = AssetManagerUtility.getAnimation(animationName, ANIMATION_DURATION,
-				playmodePerAnimationType.get(currentAnimationType));
+		final String animationName = spriteName + currentAnimationType.getTypeAsString() + currentDirection.getDirectionAsString();
+		currentAnimation = AssetManagerUtility.getAnimation(animationName, ANIMATION_DURATION, playmodePerAnimationType.get(currentAnimationType));
 	}
 
 	public enum Direction {

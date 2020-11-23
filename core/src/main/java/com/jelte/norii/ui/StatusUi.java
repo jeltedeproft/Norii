@@ -56,6 +56,7 @@ public class StatusUi extends Window {
 
 		this.setSize(tilePixelWidth * WIDTH_TILES, tilePixelHeight * HEIGHT_TILES);
 		this.pad(WINDOW_PADDING);
+		this.padLeft(10);
 		this.setTransform(false);
 	}
 
@@ -98,7 +99,7 @@ public class StatusUi extends Window {
 	}
 
 	private void addWidgets() {
-		this.add(heroName).colspan(HERO_NAME_COLSPAN);
+		this.add(heroName).colspan(HERO_NAME_COLSPAN).height(30);
 		row();
 
 		this.add(hpLabel).align(Align.left).expandX().width(STATS_WIDTH).height(STATS_HEIGHT);
