@@ -12,6 +12,7 @@ import org.xguzm.pathfinding.grid.GridCell;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.utils.Array;
@@ -145,8 +146,13 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 	public void setCurrentPosition(final TiledMapPosition pos) {
 		currentPlayerPosition = pos;
 		entityactor.setPos();
-
 		updateUI();
+	}
+
+	public void setCurrentPositionFromScreen(int x, int y) {
+		if ((x != currentPlayerPosition.getTileX()) || (y != currentPlayerPosition.getTileY())) {
+			setCurrentPosition(new TiledMapPosition().setPositionFromScreen(x, y));
+		}
 	}
 
 	public void updateUI() {
@@ -224,6 +230,8 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 
 	public void setInDeploymentPhase(final boolean isInDeploymentPhase) {
 		if (isInDeploymentPhase) {
+			setInBattle(true);
+			entityactor.setTouchable(Touchable.disabled);
 			characterHUD.setHero(this);
 			notifyEntityObserver(EntityCommand.UNIT_ACTIVE);
 		}

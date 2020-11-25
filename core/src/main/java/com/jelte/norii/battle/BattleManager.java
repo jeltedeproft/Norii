@@ -37,8 +37,7 @@ public class BattleManager {
 	private List<AiEntity> aiUnits;
 	private Entity lockedUnit;
 
-	public BattleManager(final List<PlayerEntity> playerUnits, final List<AiEntity> aiUnits,
-			AITeamLeader aiTeamLeader) {
+	public BattleManager(final List<PlayerEntity> playerUnits, final List<AiEntity> aiUnits, AITeamLeader aiTeamLeader) {
 		initVariables(playerUnits, aiUnits, aiTeamLeader);
 
 		deploymentBattleState = new DeploymentBattleState(this);
@@ -52,8 +51,7 @@ public class BattleManager {
 		currentBattleState.entry();
 	}
 
-	private void initVariables(final List<PlayerEntity> playerUnits, final List<AiEntity> aiUnits,
-			AITeamLeader aiTeamLeader) {
+	private void initVariables(final List<PlayerEntity> playerUnits, final List<AiEntity> aiUnits, AITeamLeader aiTeamLeader) {
 		this.playerUnits = playerUnits;
 		this.aiUnits = aiUnits;
 		this.aiTeamLeader = aiTeamLeader;

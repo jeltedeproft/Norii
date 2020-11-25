@@ -62,4 +62,8 @@ public abstract class BattleState implements AudioSubject {
 			observer.onNotify(command, event);
 		}
 	}
+
+	public void hoveredOnTile(TiledMapActor actor) {
+		// no-op
+	}
 }

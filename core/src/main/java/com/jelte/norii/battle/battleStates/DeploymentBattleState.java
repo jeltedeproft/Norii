@@ -3,6 +3,7 @@ package com.jelte.norii.battle.battleStates;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.Player;
@@ -71,11 +72,17 @@ public class DeploymentBattleState extends BattleState {
 	private void initiateUnitInBattle(final Entity unit, final TiledMapPosition pos) {
 		unit.setInBattle(true);
 		unit.setCurrentPosition(pos);
+		unit.getEntityactor().setTouchable(Touchable.enabled);
 	}
 
 	private void checkIfLastUnit() {
 		if (deployingUnitNumber >= playerUnits.size()) {
 			exit();
 		}
+	}
+
+	@Override
+	public void hoveredOnTile(TiledMapActor actor) {
+		playerUnits.get(deployingUnitNumber).setCurrentPosition(actor.getActorPos());
 	}
 }

@@ -133,7 +133,7 @@ public class StatusUi extends Window {
 		}
 
 		if (actionsUIIsHovering) {
-			setVisible(false);
+			// setVisible(false);
 		}
 
 		updatePos();

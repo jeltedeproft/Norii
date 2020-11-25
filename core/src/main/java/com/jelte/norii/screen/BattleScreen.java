@@ -198,6 +198,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	private void updateElements(final float delta) {
 		newHud.update();
 		battlescreenInputProcessor.update();
+		battlemanager.getCurrentBattleState().update();
 		updateAI(delta);
 		updateUnits(delta);
 		updateUIHover();
