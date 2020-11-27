@@ -74,8 +74,7 @@ public class AITeamLeader {
 	public void renderUnits(final Batch batch) {
 		for (final Entity entity : team) {
 			if (entity.isInBattle()) {
-				batch.draw(entity.getFrame(), entity.getCurrentPosition().getTileX(),
-						entity.getCurrentPosition().getTileY() - 0.0f, 1.0f, 1.0f);
+				batch.draw(entity.getFrame(), entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY() - 0.0f, 1.0f, 1.0f);
 			}
 		}
 	}

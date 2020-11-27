@@ -53,6 +53,17 @@ public class ParticleMaker {
 		}
 	}
 
+	public static void deactivateParticle(final ParticleType particletype, final TiledMapPosition pos, final int id) {
+		if (allParticles.get(particletype) != null) {
+			for (final Particle particle : allParticles.get(particletype)) {
+				if ((particle.getPosition().isTileEqualTo(pos)) && (particle.getId() == id)) {
+					particle.deactivate();
+				}
+			}
+			particlesChanged = true;
+		}
+	}
+
 	public static void addParticle(final ParticleType particletype, final TiledMapPosition pos, final int id) {
 		final ParticlePool particlePool = initiatePool(particletype);
 		final Particle newParticle = createPooledParticle(particletype, pos, particlePool, id);
@@ -97,6 +108,13 @@ public class ParticleMaker {
 			if ((particle.getPosition().isTileEqualTo(pos)) && (particle.getId() == id)) {
 				return particle;
 			}
+		}
+		return null;
+	}
+
+	public static Particle getParticle(final ParticleType particletype) {
+		for (final Particle particle : allParticles.get(particletype)) {
+			return particle;
 		}
 		return null;
 	}

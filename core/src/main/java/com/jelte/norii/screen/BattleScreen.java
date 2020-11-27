@@ -38,6 +38,7 @@ import com.jelte.norii.particles.ParticleType;
 import com.jelte.norii.profile.ProfileManager;
 import com.jelte.norii.ui.Hud;
 import com.jelte.norii.ui.StatusUi;
+import com.jelte.norii.utility.AssetManagerUtility;
 import com.jelte.norii.utility.TiledMapPosition;
 import com.jelte.norii.utility.Utility;
 
@@ -261,6 +262,9 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 
 	private void renderUnits() {
 		spriteBatch.begin();
+		if (battlemanager.getActiveUnit().isActive()) {
+			spriteBatch.draw(AssetManagerUtility.getSprite("purple"), battlemanager.getActiveUnit().getCurrentPosition().getTileX(), battlemanager.getActiveUnit().getCurrentPosition().getTileY(), 1.0f, 1.0f);
+		}
 		entityStage.getViewport().apply();
 		Player.getInstance().renderUnits(spriteBatch);
 		aiTeamLeader.renderUnits(spriteBatch);

@@ -3,6 +3,7 @@ package com.jelte.norii.entities;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.jelte.norii.utility.AssetManagerUtility;
 
 public class Player {
 	private static Player instance;
@@ -32,7 +33,11 @@ public class Player {
 	public void renderUnits(final Batch batch) {
 		for (final Entity entity : team) {
 			if (entity.isInBattle()) {
-				batch.draw(entity.getFrame(), entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY() - 0.0f, 1.0f, 1.0f);
+				batch.draw(entity.getFrame(), entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY(), 1.0f, 1.0f);
+			}
+
+			if (entity.isLocked()) {
+				batch.draw(AssetManagerUtility.getSprite("lock"), entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY() + 1.0f, 1.0f, 1.0f);
 			}
 		}
 	}
