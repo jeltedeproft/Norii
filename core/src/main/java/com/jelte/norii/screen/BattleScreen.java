@@ -119,7 +119,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	}
 
 	private void initializeMap() {
-		battlemanager = new BattleManager(playerUnits, aiUnits, aiTeamLeader);
+		battlemanager = new BattleManager(playerUnits, aiUnits, aiTeamLeader, currentMap.getMapWidth(), currentMap.getMapHeight());
 		battlescreenInputProcessor.setBattleManager(battlemanager);
 		currentMap.setStage(battlemanager);
 		battlemanager.setPathFinder(currentMap.getPathfinder());
@@ -341,6 +341,9 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 			battlemanager.setCurrentBattleState(battlemanager.getActionBattleState());
 			battlemanager.getCurrentBattleState().exit();
 			break;
+		case UPDATE_HP:
+			battlemanager.updateStateOfBattlePos(unit);
+			break;
 		default:
 			break;
 		}
@@ -369,6 +372,17 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 		switch (command) {
 		case IN_SPELL_PHASE:
 			prepareSpell(unit, ability);
+			break;
+		default:
+			break;
+		}
+	}
+
+	@Override
+	public void onEntityNotify(EntityCommand command, Entity unit, TiledMapPosition pos) {
+		switch (command) {
+		case UPDATE_POS:
+			battlemanager.updateStateOfBattlePos(unit, pos);
 			break;
 		default:
 			break;

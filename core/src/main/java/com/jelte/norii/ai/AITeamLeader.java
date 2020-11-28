@@ -5,11 +5,9 @@ import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.jelte.norii.ai.selectUnitStrategy.SelectNextUnitRandomly;
-import com.jelte.norii.ai.selectUnitStrategy.SelectUnitStrategy;
+import com.jelte.norii.battle.battleStates.StateOfBattle;
 import com.jelte.norii.entities.AiEntity;
 import com.jelte.norii.entities.Entity;
-import com.jelte.norii.entities.EntityObserver.EntityCommand;
 import com.jelte.norii.entities.EntityTypes;
 import com.jelte.norii.entities.PlayerEntity;
 import com.jelte.norii.map.MyPathFinder;
@@ -22,12 +20,10 @@ public class AITeamLeader {
 	private final AITeamData aiTeamData;
 	private final AIDecisionMaker aiDecisionMaker;
 	private MyPathFinder myPathFinder;
-	private final SelectUnitStrategy selectUnitStrategy;
 
 	public AITeamLeader(final AITeams type) {
 		aiTeamData = AITeamFileReader.getAITeamData().get(type.ordinal());
 		aiDecisionMaker = new AIDecisionMaker(this);
-		selectUnitStrategy = new SelectNextUnitRandomly();
 		initiateUnits();
 	}
 
@@ -57,10 +53,8 @@ public class AITeamLeader {
 		}
 	}
 
-	public void act(List<PlayerEntity> playerUnits, List<AiEntity> aiUnits) {
-		final AiEntity entity = selectUnitStrategy.selectNextEntity(aiUnits);
-		entity.notifyEntityObserver(EntityCommand.FOCUS_CAMERA);
-		aiUnitAct(entity, playerUnits, aiUnits);
+	public void act(List<PlayerEntity> playerUnits, List<AiEntity> aiUnits, StateOfBattle stateOfBattle) {
+		aiDecisionMaker.makeDecision(aiUnits, stateOfBattle);
 	}
 
 	public void updateUnits(final float delta) {
@@ -77,10 +71,6 @@ public class AITeamLeader {
 				batch.draw(entity.getFrame(), entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY() - 0.0f, 1.0f, 1.0f);
 			}
 		}
-	}
-
-	public void aiUnitAct(AiEntity unit, List<PlayerEntity> playerUnits, List<AiEntity> aiUnits) {
-		aiDecisionMaker.makeDecision(unit, playerUnits, aiUnits);
 	}
 
 	public void setPathFinder(MyPathFinder pathfinder) {

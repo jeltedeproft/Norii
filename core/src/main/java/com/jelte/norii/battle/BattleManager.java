@@ -12,11 +12,13 @@ import com.jelte.norii.battle.battleStates.DeploymentBattleState;
 import com.jelte.norii.battle.battleStates.MovementBattleState;
 import com.jelte.norii.battle.battleStates.SelectUnitBattleState;
 import com.jelte.norii.battle.battleStates.SpellBattleState;
+import com.jelte.norii.battle.battleStates.StateOfBattle;
 import com.jelte.norii.entities.AiEntity;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.PlayerEntity;
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.map.MyPathFinder;
+import com.jelte.norii.utility.TiledMapPosition;
 
 public class BattleManager {
 	private BattleState deploymentBattleState;
@@ -31,14 +33,15 @@ public class BattleManager {
 	private AITeamLeader aiTeamLeader;
 	private Ability currentSpell;
 	private MyPathFinder pathFinder;
+	private StateOfBattle stateOfBattle;
 	private boolean playerTurn;
 
 	private List<PlayerEntity> playerUnits;
 	private List<AiEntity> aiUnits;
 	private Entity lockedUnit;
 
-	public BattleManager(final List<PlayerEntity> playerUnits, final List<AiEntity> aiUnits, AITeamLeader aiTeamLeader) {
-		initVariables(playerUnits, aiUnits, aiTeamLeader);
+	public BattleManager(final List<PlayerEntity> playerUnits, final List<AiEntity> aiUnits, AITeamLeader aiTeamLeader, int width, int height) {
+		initVariables(playerUnits, aiUnits, aiTeamLeader, width, height);
 
 		deploymentBattleState = new DeploymentBattleState(this);
 		selectUnitBattleState = new SelectUnitBattleState(this);
@@ -51,13 +54,25 @@ public class BattleManager {
 		currentBattleState.entry();
 	}
 
-	private void initVariables(final List<PlayerEntity> playerUnits, final List<AiEntity> aiUnits, AITeamLeader aiTeamLeader) {
+	private void initVariables(final List<PlayerEntity> playerUnits, final List<AiEntity> aiUnits, AITeamLeader aiTeamLeader, int width, int height) {
 		this.playerUnits = playerUnits;
 		this.aiUnits = aiUnits;
 		this.aiTeamLeader = aiTeamLeader;
 		activeUnit = playerUnits.get(0);
 		playerTurn = true;
 		lockedUnit = null;
+		stateOfBattle = new StateOfBattle(width, height);
+		initializeStateOfBattle(playerUnits, aiUnits);
+	}
+
+	private void initializeStateOfBattle(final List<PlayerEntity> playerUnits, final List<AiEntity> aiUnits) {
+		for (final PlayerEntity unit : playerUnits) {
+			stateOfBattle.set(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getHp() * (-1));
+		}
+
+		for (final AiEntity unit : aiUnits) {
+			stateOfBattle.set(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getHp());
+		}
 	}
 
 	public void setUnitActive(Entity entity) {
@@ -77,12 +92,27 @@ public class BattleManager {
 		playerTurn = !playerTurn;
 
 		if (!playerTurn) {
-			aiTeamLeader.act(playerUnits, aiUnits);
+			aiTeamLeader.act(playerUnits, aiUnits, stateOfBattle);
 		}
 
 		setCurrentBattleState(getSelectUnitBattleState());
 		getCurrentBattleState().entry();
 
+	}
+
+	public void updateStateOfBattlePos(Entity unit) {
+		int factor;
+		if (unit.isPlayerUnit()) {
+			factor = -1;
+		} else {
+			factor = 1;
+		}
+		stateOfBattle.set(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getHp() * factor);
+	}
+
+	public void updateStateOfBattlePos(Entity unit, TiledMapPosition oldPos) {
+		stateOfBattle.set(oldPos.getTileX(), oldPos.getTileY(), 0);
+		updateStateOfBattlePos(unit);
 	}
 
 	public void setPathFinder(MyPathFinder myPathFinder) {

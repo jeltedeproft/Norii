@@ -144,6 +144,7 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 	}
 
 	public void setCurrentPosition(final TiledMapPosition pos) {
+		notifyEntityObserver(EntityCommand.UPDATE_POS, pos);
 		currentPlayerPosition = pos;
 		entityactor.setPos();
 		updateUI();
@@ -197,6 +198,17 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 		}
 
 		updateUI();
+		notifyEntityObserver(EntityCommand.UPDATE_HP);
+	}
+
+	public void heal(final int healAmount) {
+		hp = hp + healAmount;
+		if (hp > entityData.getMaxHP()) {
+			hp = entityData.getMaxHP();
+		}
+
+		updateUI();
+		notifyEntityObserver(EntityCommand.UPDATE_HP);
 	}
 
 	private void removeUnit() {
@@ -272,11 +284,6 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 
 	public int getHp() {
 		return hp;
-	}
-
-	public void setHp(final int hp) {
-		this.hp = hp;
-		updateUI();
 	}
 
 	public int getEntityID() {
@@ -361,15 +368,21 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 	}
 
 	@Override
-	public void notifyEntityObserver(final EntityObserver.EntityCommand command) {
+	public void notifyEntityObserver(final EntityCommand command) {
 		for (int i = 0; i < entityObservers.size; i++) {
 			entityObservers.get(i).onEntityNotify(command, this);
 		}
 	}
 
-	public void notifyEntityObserver(final EntityObserver.EntityCommand command, final Ability ability) {
+	public void notifyEntityObserver(final EntityCommand command, final Ability ability) {
 		for (int i = 0; i < entityObservers.size; i++) {
 			entityObservers.get(i).onEntityNotify(command, this, ability);
+		}
+	}
+
+	private void notifyEntityObserver(final EntityCommand command, TiledMapPosition pos) {
+		for (int i = 0; i < entityObservers.size; i++) {
+			entityObservers.get(i).onEntityNotify(command, this, pos);
 		}
 	}
 
@@ -417,8 +430,8 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 	}
 
 	private void updatePositionFromActor() {
-		this.setCurrentPosition(new TiledMapPosition().setPositionFromTiles((int) this.getEntityactor().getX(), (int) this.getEntityactor().getY()));
-		this.setDirection(decideDirection(this.getEntityactor().getRotation()));
+		setCurrentPosition(new TiledMapPosition().setPositionFromTiles((int) this.getEntityactor().getX(), (int) this.getEntityactor().getY()));
+		setDirection(decideDirection(this.getEntityactor().getRotation()));
 	}
 
 	private void stopWalkingAction() {

@@ -1,112 +1,71 @@
 package com.jelte.norii.ai;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
-import org.xguzm.pathfinding.grid.GridCell;
-
+import com.badlogic.gdx.utils.Array;
+import com.jelte.norii.battle.battleStates.StateOfBattle;
 import com.jelte.norii.entities.AiEntity;
 import com.jelte.norii.entities.Entity;
-import com.jelte.norii.entities.EntityObserver.EntityCommand;
-import com.jelte.norii.entities.PlayerEntity;
 import com.jelte.norii.magic.Ability;
-import com.jelte.norii.map.MyPathFinder;
+import com.jelte.norii.magic.Ability.AffectedTeams;
+import com.jelte.norii.magic.Ability.AreaOfEffect;
+import com.jelte.norii.magic.Ability.LineOfSight;
+import com.jelte.norii.magic.Ability.Target;
 import com.jelte.norii.utility.TiledMapPosition;
-import com.jelte.norii.utility.Utility;
 
 public class AIDecisionMaker {
 	private final AITeamLeader aiTeam;
-	private boolean actionTaken = false;
+	private final boolean actionTaken = false;
+	private final SortedMap<Integer, StateOfBattle> statesWithScores;
+
+	private static final int NUMBER_OF_LAYERS = 3;
 
 	public AIDecisionMaker(final AITeamLeader aiTeam) {
 		this.aiTeam = aiTeam;
+		statesWithScores = new TreeMap<>();
 	}
 
-	public void makeDecision(AiEntity unit, List<PlayerEntity> playerUnits, List<AiEntity> aiUnits) {
-		rule1CanKill(unit, playerUnits, aiUnits);
-
-		if (!actionTaken) {
-			rule2ShouldRun(unit, playerUnits, aiUnits);
-		}
-
-		if (!actionTaken) {
-			rule3Engage(unit, playerUnits, aiUnits);
-		}
-
-		if (!actionTaken) {
-			rule4SpellSpecific(unit, playerUnits, aiUnits);
-		}
-
-		if (!actionTaken) {
-			unit.notifyEntityObserver(EntityCommand.AI_FINISHED_TURN);
-		}
-
-		actionTaken = false;
-	}
-
-	private void rule1CanKill(final AiEntity unit, List<PlayerEntity> playerUnits, List<AiEntity> aiUnits) {
-		final List<Entity> entities = Stream.concat(playerUnits.stream(), aiUnits.stream()).collect(Collectors.toList());
-		for (final Entity target : entities) {
-			if (isEnemy(unit, target) && canMoveAttack(unit, target) && canKill(unit, target) && canMoveNextToUnit(unit, target)) {
-				walkOverAndAttack(unit, target);
-				actionTaken = true;
+	public void makeDecision(List<AiEntity> aiUnits, StateOfBattle stateOfBattle) {
+		int iteration = NUMBER_OF_LAYERS;
+		while (iteration > 0) {
+			for (final AiEntity ai : aiUnits) {
+				generatePossibleMoves(ai, stateOfBattle);
 			}
+			iteration--;
+		}
+
+		// entity.notifyEntityObserver(EntityCommand.FOCUS_CAMERA);
+
+	}
+
+	private void generatePossibleMoves(AiEntity ai, StateOfBattle stateOfBattle) {
+		for (final Ability ability : ai.getAbilities()) {
+			final StateOfBattle newState = performActionOnState(ai, stateOfBattle, ability);
+			statesWithScores.put(newState.getScore(), newState);
 		}
 	}
 
-	private boolean canMoveNextToUnit(AiEntity unit, Entity target) {
-		// TODO create path, check if end tile is aken, try another path without that
-		// tile, return false
-		return false;
+	private StateOfBattle performActionOnState(AiEntity ai, StateOfBattle stateOfBattle, Ability ability) {
+		final Array<Entity> targets = findTargets(ai.getCurrentPosition(), ability, stateOfBattle);
 	}
 
-	private boolean isEnemy(final AiEntity attacker, final Entity target) {
-		return attacker.isPlayerUnit() != target.isPlayerUnit();
+	private Array<Entity> findTargets(TiledMapPosition center, Ability ability, StateOfBattle stateOfBattle) {
+		final AffectedTeams affectedTeams = ability.getAffectedTeams();
+		final AreaOfEffect area = ability.getAreaOfEffect();
+		final LineOfSight lineOfSight = ability.getLineOfSight();
+		final Target target = ability.getTarget();
+		final int range = ability.getSpellData().getRange();
+
+		final Array<Integer> possibleCenterCells = getPossibleCenterCells(center, LineOfSight);
 	}
 
-	private boolean canMoveAttack(final AiEntity attacker, final Entity target) {
-		final int attackRange = attacker.getEntityData().getAttackRange();
-		final int distance = Utility.getDistanceBetweenUnits(attacker, target) - 1;
-		final int ap = attacker.getAp();
-		final int basicAttackPoints = attacker.getEntityData().getBasicAttackCost();
-		return (ap >= ((distance + basicAttackPoints) - attackRange));
-	}
+	private Array<Integer> getPossibleCenterCells(TiledMapPosition center, LineOfSight lineOfSight) {
+		switch (lineOfSight) {
+		case LINE:
 
-	private boolean canKill(final AiEntity attacker, final Entity target) {
-		return target.getHp() < attacker.getEntityData().getAttackPower();
-	}
-
-	private void walkOverAndAttack(final AiEntity attacker, final Entity target) {
-		final MyPathFinder pathFinder = aiTeam.getMyPathFinder();
-		final List<GridCell> path = pathFinder.getPathFromUnitToUnit(attacker, target);
-		attacker.moveAttack(path, target);
-	}
-
-	private void rule2ShouldRun(final AiEntity unit, List<PlayerEntity> playerUnits, List<AiEntity> aiUnits) {
-		if (healthIsLow(unit)) {
-			runToSafety(unit, playerUnits, aiUnits);
-			actionTaken = true;
 		}
-	}
-
-	private boolean healthIsLow(final Entity unit) {
-		final int currentHP = unit.getHp();
-		final int maxHP = unit.getEntityData().getMaxHP();
-		return (currentHP / maxHP) <= 0.1f;
-	}
-
-	private void runToSafety(final AiEntity unit, List<PlayerEntity> playerUnits, List<AiEntity> aiUnits) {
-		final List<Entity> entities = Stream.concat(playerUnits.stream(), aiUnits.stream()).collect(Collectors.toList());
-		final List<TiledMapPosition> positions = Utility.collectPositionsEnemyUnits(entities, unit.isPlayerUnit());
-		unit.move(getSafestPath(unit, positions));
-	}
-
-	private List<GridCell> getSafestPath(final AiEntity unit, final List<TiledMapPosition> positions) {
-		final TiledMapPosition centerOfGravity = calculateCenterOfGravity(positions);
-		final TiledMapPosition furthestPoint = aiTeam.getMyPathFinder().getPositionFurthestAwayFrom(centerOfGravity);
-		return aiTeam.getMyPathFinder().pathTowards(unit.getCurrentPosition(), furthestPoint, unit.getAp());
 	}
 
 	private TiledMapPosition calculateCenterOfGravity(final List<TiledMapPosition> positions) {
@@ -122,18 +81,4 @@ public class AIDecisionMaker {
 		return new TiledMapPosition().setPositionFromTiles(sumX / numberOfElements, sumY / numberOfElements);
 	}
 
-	private void rule3Engage(final AiEntity unit, List<PlayerEntity> playerUnits, List<AiEntity> aiUnits) {
-		final List<Entity> entities = Stream.concat(playerUnits.stream(), aiUnits.stream()).collect(Collectors.toList());
-		final List<TiledMapPosition> positions = Utility.collectPositionsEnemyUnits(entities, unit.isPlayerUnit());
-		final TiledMapPosition centerOfGravity = calculateCenterOfGravity(positions);
-		unit.move(aiTeam.getMyPathFinder().pathTowards(unit.getCurrentPosition(), centerOfGravity, unit.getAp()));
-		actionTaken = true;
-	}
-
-	private void rule4SpellSpecific(final AiEntity unit, List<PlayerEntity> playerUnits, List<AiEntity> aiUnits) {
-		final Collection<Ability> abilities = unit.getAbilities();
-
-		unit.notifyEntityObserver(EntityCommand.AI_FINISHED_TURN);
-		actionTaken = true;
-	}
 }
