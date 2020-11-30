@@ -1,5 +1,6 @@
 package com.jelte.norii.battle.battleStates;
 
+import java.awt.Point;
 import java.util.List;
 
 import com.badlogic.gdx.Input.Buttons;
@@ -125,11 +126,9 @@ public class SpellBattleState extends BattleState {
 		return checkIfInLine(caster, targetPos, range, direction);
 	}
 
-	private boolean checkIfInLine(final Entity caster, final TiledMapPosition targetPos, final int range,
-			final Direction direction) {
+	private boolean checkIfInLine(final Entity caster, final TiledMapPosition targetPos, final int range, final Direction direction) {
 		final TiledMapPosition casterPos = caster.getCurrentPosition();
-		if ((Math.abs(casterPos.getTileX() - targetPos.getTileX())
-				+ (Math.abs(casterPos.getTileY() - targetPos.getTileY()))) <= range) {
+		if ((Math.abs(casterPos.getTileX() - targetPos.getTileX()) + (Math.abs(casterPos.getTileY() - targetPos.getTileY()))) <= range) {
 			switch (direction) {
 			case UP:
 				return (casterPos.getTileX() == targetPos.getTileX()) && (casterPos.getTileY() <= targetPos.getTileY());
@@ -164,23 +163,36 @@ public class SpellBattleState extends BattleState {
 	}
 
 	private boolean checkTarget(Ability ability, Target targetType) {
-		return ((ability.getTarget() == targetType) || (ability.getTarget() == Target.BOTH));
+		return (ability.getTarget() == targetType);
 	}
 
-	private void selectSpell(final Entity target, final Ability ability, final Entity currentUnit,
-			final TiledMapPosition targetPos) {
+	public void executeSpellForAi(Entity entity, Ability ability, Point target) {
+		final TiledMapPosition targetPos = new TiledMapPosition().setPositionFromTiles(target.x, target.y);
+		final List<Entity> units = battlemanager.getUnits();
+		for (final Entity unit : units) {
+			if (unit.getCurrentPosition().isTileEqualTo(targetPos)) {
+				selectSpell(unit, ability, entity, targetPos);
+			}
+		}
+	}
+
+	private void selectSpell(final Entity target, final Ability ability, final Entity currentUnit, final TiledMapPosition targetPos) {
 		switch (ability.getAbilityEnum()) {
 		case FIREBALL:
 			castFireBall(currentUnit, targetPos, ability);
+			System.out.println("casted fireball");
 			break;
 		case SWAP:
 			castSwap(currentUnit, target, ability);
+			System.out.println("casted swap");
 			break;
 		case TURN_TO_STONE:
 			castTurnToStone(currentUnit, target, ability);
+			System.out.println("casted stone");
 			break;
 		case HAMMERBACK:
 			castHammerback(currentUnit, targetPos, ability);
+			System.out.println("casted hammerback");
 			break;
 		default:
 			break;

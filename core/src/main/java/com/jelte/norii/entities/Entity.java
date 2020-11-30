@@ -3,6 +3,7 @@ package com.jelte.norii.entities;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveTo;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.run;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -474,6 +475,12 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 	public void notifyAudio(AudioObserver.AudioCommand command, AudioObserver.AudioTypeEvent event) {
 		for (final AudioObserver observer : audioObservers) {
 			observer.onNotify(command, event);
+		}
+	}
+
+	public void notifyEntityObserver(EntityCommand command, Ability abilityUsed, Point target) {
+		for (int i = 0; i < entityObservers.size; i++) {
+			entityObservers.get(i).onEntityNotify(command, this, abilityUsed, target);
 		}
 	}
 }

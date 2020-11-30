@@ -5,11 +5,11 @@ public class Ability {
 	private final AbilitiesEnum abilityEnum;
 
 	public enum LineOfSight {
-		LINE, CIRCLE, CROSS
+		LINE, CIRCLE, CROSS, SQUARE
 	}
 
 	public enum AreaOfEffect {
-		CELL, LINE, CIRCLE, CROSS, SQUARE
+		CELL, HORIZONTAL_LINE_RIGHT, VERTICAL_LINE_UP, VERTICAL_LINE_DOWN, CIRCLE, CROSS, SQUARE, HORIZONTAL_LINE_LEFT
 	}
 
 	public enum AffectedTeams {
@@ -17,7 +17,11 @@ public class Ability {
 	}
 
 	public enum Target {
-		UNIT, CELL, BOTH
+		UNIT, CELL, CELL_BUT_NO_UNIT, SELF, NO_TARGET;
+
+		public boolean needsUnit(Target target) {
+			return target.equals(CELL) || target.equals(UNIT);
+		}
 	}
 
 	public Ability(final AbilitiesEnum abilityEnum) {

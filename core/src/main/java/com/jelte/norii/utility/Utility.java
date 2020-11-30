@@ -33,7 +33,7 @@ public final class Utility {
 		return positions;
 	}
 
-	public static List<TiledMapPosition> collectPositionsEnemyUnits(final List<Entity> units, final boolean isPlayer) {
+	public static List<TiledMapPosition> collectPositionsTeamUnits(final List<Entity> units, final boolean isPlayer) {
 		final ArrayList<TiledMapPosition> enemyPositions = new ArrayList<>();
 
 		for (final Entity unit : units) {

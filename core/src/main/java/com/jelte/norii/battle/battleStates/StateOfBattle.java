@@ -1,10 +1,17 @@
 package com.jelte.norii.battle.battleStates;
 
+import java.awt.Point;
 import java.util.stream.IntStream;
+
+import com.jelte.norii.entities.Entity;
+import com.jelte.norii.magic.Ability;
 
 public class StateOfBattle {
 	private final int[][] stateOfField;
 	private int score;
+	private Ability abilityUsed;
+	private Point target;
+	private Entity ai;
 
 	public static final int NO_UNIT = 0;
 
@@ -24,10 +31,12 @@ public class StateOfBattle {
 	}
 
 	public void set(int width, int height, int value) {
-		final int original = stateOfField[width][height];
-		final int difference = value - original;
-		score += difference;
-		stateOfField[width][height] = value;
+		if ((height > 0) && (width > 0)) {
+			final int original = stateOfField[width][height];
+			final int difference = value - original;
+			score += difference;
+			stateOfField[width][height] = value;
+		}
 	}
 
 	public int get(int width, int height) {
@@ -55,5 +64,37 @@ public class StateOfBattle {
 			sum += IntStream.of(row).sum();
 		}
 		return sum;
+	}
+
+	public int getWidth() {
+		return stateOfField[0].length;
+	}
+
+	public int getHeight() {
+		return stateOfField.length;
+	}
+
+	public Ability getAbilityUsed() {
+		return abilityUsed;
+	}
+
+	public void setAbilityUsed(Ability abilityUsed) {
+		this.abilityUsed = abilityUsed;
+	}
+
+	public Point getTarget() {
+		return target;
+	}
+
+	public void setTarget(Point target) {
+		this.target = target;
+	}
+
+	public Entity getAi() {
+		return ai;
+	}
+
+	public void setAi(Entity ai) {
+		this.ai = ai;
 	}
 }

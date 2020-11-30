@@ -26,7 +26,7 @@ public class SelectUnitBattleState extends BattleState {
 
 	private boolean isUnitSelectable(Entity entity) {
 		final Entity lockedEntity = battlemanager.getLockedUnit();
-		if ((lockedEntity != null) && (lockedEntity.getEntityID() != entity.getEntityID())) {
+		if ((lockedEntity != null) && (lockedEntity.getEntityID() != entity.getEntityID()) && entity.isPlayerUnit()) {
 			return false;
 		}
 		return !entity.hasModifier(ModifiersEnum.STUNNED);

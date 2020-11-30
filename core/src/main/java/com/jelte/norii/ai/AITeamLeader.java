@@ -54,7 +54,7 @@ public class AITeamLeader {
 	}
 
 	public void act(List<PlayerEntity> playerUnits, List<AiEntity> aiUnits, StateOfBattle stateOfBattle) {
-		aiDecisionMaker.makeDecision(aiUnits, stateOfBattle);
+		aiDecisionMaker.makeDecision(playerUnits, aiUnits, stateOfBattle);
 	}
 
 	public void updateUnits(final float delta) {

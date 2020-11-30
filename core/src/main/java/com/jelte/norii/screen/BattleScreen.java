@@ -1,5 +1,6 @@
 package com.jelte.norii.screen;
 
+import java.awt.Point;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -21,6 +22,7 @@ import com.jelte.norii.ai.AITeams;
 import com.jelte.norii.audio.AudioObserver;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.battle.BattleScreenInputProcessor;
+import com.jelte.norii.battle.battleStates.SpellBattleState;
 import com.jelte.norii.entities.AiEntity;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityObserver;
@@ -468,5 +470,15 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 
 	public boolean isPaused() {
 		return isPaused;
+	}
+
+	@Override
+	public void onEntityNotify(EntityCommand command, Entity entity, Ability abilityUsed, Point target) {
+		switch (command) {
+		case CAST_SPELL_AI:
+			final SpellBattleState spellBattleState = (SpellBattleState) battlemanager.getSpellBattleState();
+			spellBattleState.executeSpellForAi(entity, abilityUsed, target);
+			break;
+		}
 	}
 }

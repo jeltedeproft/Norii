@@ -23,13 +23,16 @@ public class TiledMapPosition {
 	}
 
 	public TiledMapPosition setPositionFromScreen(float x, float y) {
-		tileCoordinates = new Point(Math.round(x / (Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH)),
-				Math.round(y / (Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT)));
+		tileCoordinates = new Point(Math.round(x / (Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH)), Math.round(y / (Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT)));
 		return this;
 	}
 
 	public boolean isTileEqualTo(TiledMapPosition pos) {
 		return ((pos.tileCoordinates.x == tileCoordinates.x) && (pos.tileCoordinates.y == tileCoordinates.y));
+	}
+
+	public boolean isTileEqualTo(Point point) {
+		return ((point.x == tileCoordinates.x) && (point.y == tileCoordinates.y));
 	}
 
 	public float getCameraX() {
