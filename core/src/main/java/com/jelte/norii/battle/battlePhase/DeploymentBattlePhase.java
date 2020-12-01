@@ -1,4 +1,4 @@
-package com.jelte.norii.battle.battleStates;
+package com.jelte.norii.battle.battlePhase;
 
 import java.util.List;
 
@@ -13,14 +13,14 @@ import com.jelte.norii.particles.ParticleMaker;
 import com.jelte.norii.particles.ParticleType;
 import com.jelte.norii.utility.TiledMapPosition;
 
-public class DeploymentBattleState extends BattleState {
-	private static final String TAG = DeploymentBattleState.class.getSimpleName();
+public class DeploymentBattlePhase extends BattlePhase {
+	private static final String TAG = DeploymentBattlePhase.class.getSimpleName();
 
 	private final BattleManager battlemanager;
 	private int deployingUnitNumber;
 	private final List<PlayerEntity> playerUnits;
 
-	public DeploymentBattleState(final BattleManager battlemanager) {
+	public DeploymentBattlePhase(final BattleManager battlemanager) {
 		this.battlemanager = battlemanager;
 		deployingUnitNumber = 0;
 		playerUnits = Player.getInstance().getPlayerUnits();

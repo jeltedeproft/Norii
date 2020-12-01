@@ -1,4 +1,4 @@
-package com.jelte.norii.battle.battleStates;
+package com.jelte.norii.battle.battlePhase;
 
 import java.util.List;
 
@@ -14,10 +14,10 @@ import com.jelte.norii.particles.ParticleMaker;
 import com.jelte.norii.particles.ParticleType;
 import com.jelte.norii.utility.TiledMapPosition;
 
-public class MovementBattleState extends BattleState {
+public class MovementBattlePhase extends BattlePhase {
 	private final BattleManager battlemanager;
 
-	public MovementBattleState(BattleManager battlemanager) {
+	public MovementBattlePhase(BattleManager battlemanager) {
 		this.battlemanager = battlemanager;
 	}
 

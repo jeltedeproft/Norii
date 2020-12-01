@@ -1,13 +1,13 @@
-package com.jelte.norii.battle.battleStates;
+package com.jelte.norii.battle.battlePhase;
 
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.magic.ModifiersEnum;
 
-public class SelectUnitBattleState extends BattleState {
+public class SelectUnitBattlePhase extends BattlePhase {
 	private final BattleManager battlemanager;
 
-	public SelectUnitBattleState(final BattleManager battlemanager) {
+	public SelectUnitBattlePhase(final BattleManager battlemanager) {
 		this.battlemanager = battlemanager;
 	}
 

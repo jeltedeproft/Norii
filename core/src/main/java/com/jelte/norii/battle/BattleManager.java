@@ -5,14 +5,14 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.jelte.norii.ai.AITeamLeader;
-import com.jelte.norii.battle.battleStates.ActionBattleState;
-import com.jelte.norii.battle.battleStates.AttackBattleState;
-import com.jelte.norii.battle.battleStates.BattleState;
-import com.jelte.norii.battle.battleStates.DeploymentBattleState;
-import com.jelte.norii.battle.battleStates.MovementBattleState;
-import com.jelte.norii.battle.battleStates.SelectUnitBattleState;
-import com.jelte.norii.battle.battleStates.SpellBattleState;
-import com.jelte.norii.battle.battleStates.StateOfBattle;
+import com.jelte.norii.battle.battlePhase.ActionBattlePhase;
+import com.jelte.norii.battle.battlePhase.AttackBattlePhase;
+import com.jelte.norii.battle.battlePhase.BattlePhase;
+import com.jelte.norii.battle.battlePhase.DeploymentBattlePhase;
+import com.jelte.norii.battle.battlePhase.MovementBattlePhase;
+import com.jelte.norii.battle.battlePhase.SelectUnitBattlePhase;
+import com.jelte.norii.battle.battlePhase.SpellBattlePhase;
+import com.jelte.norii.battleState.BattleState;
 import com.jelte.norii.entities.AiEntity;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.PlayerEntity;
@@ -21,19 +21,19 @@ import com.jelte.norii.map.MyPathFinder;
 import com.jelte.norii.utility.TiledMapPosition;
 
 public class BattleManager {
-	private BattleState deploymentBattleState;
-	private BattleState selectUnitBattleState;
-	private BattleState movementBattleState;
-	private BattleState attackBattleState;
-	private BattleState spellBattleState;
-	private BattleState actionBattleState;
-	private BattleState currentBattleState;
+	private BattlePhase deploymentBattleState;
+	private BattlePhase selectUnitBattleState;
+	private BattlePhase movementBattleState;
+	private BattlePhase attackBattleState;
+	private BattlePhase spellBattleState;
+	private BattlePhase actionBattleState;
+	private BattlePhase currentBattleState;
 
 	private PlayerEntity activeUnit;
 	private AITeamLeader aiTeamLeader;
 	private Ability currentSpell;
 	private MyPathFinder pathFinder;
-	private StateOfBattle stateOfBattle;
+	private BattleState stateOfBattle;
 	private boolean playerTurn;
 
 	private List<PlayerEntity> playerUnits;
@@ -43,12 +43,12 @@ public class BattleManager {
 	public BattleManager(final List<PlayerEntity> playerUnits, final List<AiEntity> aiUnits, AITeamLeader aiTeamLeader, int width, int height) {
 		initVariables(playerUnits, aiUnits, aiTeamLeader, width, height);
 
-		deploymentBattleState = new DeploymentBattleState(this);
-		selectUnitBattleState = new SelectUnitBattleState(this);
-		movementBattleState = new MovementBattleState(this);
-		attackBattleState = new AttackBattleState(this);
-		spellBattleState = new SpellBattleState(this);
-		actionBattleState = new ActionBattleState(this);
+		deploymentBattleState = new DeploymentBattlePhase(this);
+		selectUnitBattleState = new SelectUnitBattlePhase(this);
+		movementBattleState = new MovementBattlePhase(this);
+		attackBattleState = new AttackBattlePhase(this);
+		spellBattleState = new SpellBattlePhase(this);
+		actionBattleState = new ActionBattlePhase(this);
 
 		currentBattleState = deploymentBattleState;
 		currentBattleState.entry();
@@ -61,7 +61,7 @@ public class BattleManager {
 		activeUnit = playerUnits.get(0);
 		playerTurn = true;
 		lockedUnit = null;
-		stateOfBattle = new StateOfBattle(width, height);
+		stateOfBattle = new BattleState(width, height);
 		initializeStateOfBattle(playerUnits, aiUnits);
 	}
 
@@ -159,59 +159,59 @@ public class BattleManager {
 		this.lockedUnit = lockedUnit;
 	}
 
-	public BattleState getDeploymentBattleState() {
+	public BattlePhase getDeploymentBattleState() {
 		return deploymentBattleState;
 	}
 
-	public void setDeploymentBattleState(final BattleState deploymentBattleState) {
+	public void setDeploymentBattleState(final BattlePhase deploymentBattleState) {
 		this.deploymentBattleState = deploymentBattleState;
 	}
 
-	public BattleState getMovementBattleState() {
+	public BattlePhase getMovementBattleState() {
 		return movementBattleState;
 	}
 
-	public void setMovementBattleState(final BattleState movementBattleState) {
+	public void setMovementBattleState(final BattlePhase movementBattleState) {
 		this.movementBattleState = movementBattleState;
 	}
 
-	public BattleState getAttackBattleState() {
+	public BattlePhase getAttackBattleState() {
 		return attackBattleState;
 	}
 
-	public void setAttackBattleState(final BattleState attackBattleState) {
+	public void setAttackBattleState(final BattlePhase attackBattleState) {
 		this.attackBattleState = attackBattleState;
 	}
 
-	public BattleState getSpellBattleState() {
+	public BattlePhase getSpellBattleState() {
 		return spellBattleState;
 	}
 
-	public void setSpellBattleState(final BattleState spellBattleState) {
+	public void setSpellBattleState(final BattlePhase spellBattleState) {
 		this.spellBattleState = spellBattleState;
 	}
 
-	public BattleState getActionBattleState() {
+	public BattlePhase getActionBattleState() {
 		return actionBattleState;
 	}
 
-	public void setActionBattleState(final BattleState actionBattleState) {
+	public void setActionBattleState(final BattlePhase actionBattleState) {
 		this.actionBattleState = actionBattleState;
 	}
 
-	public BattleState getCurrentBattleState() {
+	public BattlePhase getCurrentBattleState() {
 		return currentBattleState;
 	}
 
-	public void setCurrentBattleState(final BattleState currentBattleState) {
+	public void setCurrentBattleState(final BattlePhase currentBattleState) {
 		this.currentBattleState = currentBattleState;
 	}
 
-	public BattleState getSelectUnitBattleState() {
+	public BattlePhase getSelectUnitBattleState() {
 		return selectUnitBattleState;
 	}
 
-	public void setSelectUnitBattleState(BattleState selectUnitBattleState) {
+	public void setSelectUnitBattleState(BattlePhase selectUnitBattleState) {
 		this.selectUnitBattleState = selectUnitBattleState;
 	}
 

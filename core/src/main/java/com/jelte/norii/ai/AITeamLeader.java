@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.jelte.norii.battle.battleStates.StateOfBattle;
+import com.jelte.norii.battleState.BattleState;
 import com.jelte.norii.entities.AiEntity;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityTypes;
@@ -53,7 +53,7 @@ public class AITeamLeader {
 		}
 	}
 
-	public void act(List<PlayerEntity> playerUnits, List<AiEntity> aiUnits, StateOfBattle stateOfBattle) {
+	public void act(List<PlayerEntity> playerUnits, List<AiEntity> aiUnits, BattleState stateOfBattle) {
 		aiDecisionMaker.makeDecision(playerUnits, aiUnits, stateOfBattle);
 	}
 

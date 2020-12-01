@@ -1,4 +1,4 @@
-package com.jelte.norii.battle.battleStates;
+package com.jelte.norii.battle.battlePhase;
 
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
@@ -6,10 +6,10 @@ import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityAnimation.Direction;
 
-public class ActionBattleState extends BattleState {
+public class ActionBattlePhase extends BattlePhase {
 	private final BattleManager battlemanager;
 
-	public ActionBattleState(final BattleManager battlemanager) {
+	public ActionBattlePhase(final BattleManager battlemanager) {
 		this.battlemanager = battlemanager;
 	}
 

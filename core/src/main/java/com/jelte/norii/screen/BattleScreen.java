@@ -22,7 +22,7 @@ import com.jelte.norii.ai.AITeams;
 import com.jelte.norii.audio.AudioObserver;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.battle.BattleScreenInputProcessor;
-import com.jelte.norii.battle.battleStates.SpellBattleState;
+import com.jelte.norii.battle.battlePhase.SpellBattlePhase;
 import com.jelte.norii.entities.AiEntity;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityObserver;
@@ -476,7 +476,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	public void onEntityNotify(EntityCommand command, Entity entity, Ability abilityUsed, Point target) {
 		switch (command) {
 		case CAST_SPELL_AI:
-			final SpellBattleState spellBattleState = (SpellBattleState) battlemanager.getSpellBattleState();
+			final SpellBattlePhase spellBattleState = (SpellBattlePhase) battlemanager.getSpellBattleState();
 			spellBattleState.executeSpellForAi(entity, abilityUsed, target);
 			break;
 		}

@@ -35,6 +35,10 @@ public class TiledMapPosition {
 		return ((point.x == tileCoordinates.x) && (point.y == tileCoordinates.y));
 	}
 
+	public int getDistance(TiledMapPosition pos) {
+		return (Math.abs(tileCoordinates.x - pos.getTileX()) + (Math.abs(tileCoordinates.y - pos.getTileY())));
+	}
+
 	public float getCameraX() {
 		final OrthographicCamera cam = BattleScreen.getCamera();
 		final float xDifference = cam.position.x - (cam.viewportWidth / 2);

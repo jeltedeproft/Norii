@@ -1,4 +1,4 @@
-package com.jelte.norii.battle.battleStates;
+package com.jelte.norii.battle.battlePhase;
 
 import java.awt.Point;
 import java.util.List;
@@ -22,10 +22,10 @@ import com.jelte.norii.particles.ParticleType;
 import com.jelte.norii.utility.TiledMapPosition;
 import com.jelte.norii.utility.Utility;
 
-public class SpellBattleState extends BattleState {
+public class SpellBattlePhase extends BattlePhase {
 	private final BattleManager battlemanager;
 
-	public SpellBattleState(final BattleManager battlemanager) {
+	public SpellBattlePhase(final BattleManager battlemanager) {
 		this.battlemanager = battlemanager;
 	}
 

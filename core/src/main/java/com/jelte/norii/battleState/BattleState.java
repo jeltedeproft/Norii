@@ -1,4 +1,4 @@
-package com.jelte.norii.battle.battleStates;
+package com.jelte.norii.battleState;
 
 import java.awt.Point;
 import java.util.stream.IntStream;
@@ -6,26 +6,27 @@ import java.util.stream.IntStream;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.magic.Ability;
 
-public class StateOfBattle {
+public class BattleState {
 	private final int[][] stateOfField;
 	private int score;
 	private Ability abilityUsed;
 	private Point target;
+	private Point moveTo;
 	private Entity ai;
 
 	public static final int NO_UNIT = 0;
 
-	public StateOfBattle(int width, int height) {
+	public BattleState(int width, int height) {
 		stateOfField = new int[width][height];
 		score = 0;
 	}
 
-	public StateOfBattle(int[][] field) {
+	public BattleState(int[][] field) {
 		stateOfField = field;
 		score = 0;
 	}
 
-	public StateOfBattle(int[][] field, int score) {
+	public BattleState(int[][] field, int score) {
 		stateOfField = field;
 		this.score = score;
 	}
@@ -43,7 +44,7 @@ public class StateOfBattle {
 		return stateOfField[width][height];
 	}
 
-	public StateOfBattle makeCopy() {
+	public BattleState makeCopy() {
 		final int[][] copy = new int[stateOfField.length][];
 		for (int i = 0; i < stateOfField.length; i++) {
 			final int[] row = stateOfField[i];
@@ -51,7 +52,7 @@ public class StateOfBattle {
 			copy[i] = new int[height];
 			System.arraycopy(row, 0, copy[i], 0, height);
 		}
-		return new StateOfBattle(copy, score);
+		return new BattleState(copy, score);
 	}
 
 	public int getScore() {
@@ -96,5 +97,13 @@ public class StateOfBattle {
 
 	public void setAi(Entity ai) {
 		this.ai = ai;
+	}
+
+	public Point getMoveTo() {
+		return moveTo;
+	}
+
+	public void setMoveTo(Point moveTo) {
+		this.moveTo = moveTo;
 	}
 }

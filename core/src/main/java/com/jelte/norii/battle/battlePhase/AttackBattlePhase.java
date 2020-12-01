@@ -1,4 +1,4 @@
-package com.jelte.norii.battle.battleStates;
+package com.jelte.norii.battle.battlePhase;
 
 import com.badlogic.gdx.Input.Buttons;
 import com.jelte.norii.audio.AudioObserver;
@@ -10,10 +10,10 @@ import com.jelte.norii.particles.ParticleMaker;
 import com.jelte.norii.particles.ParticleType;
 import com.jelte.norii.utility.Utility;
 
-public class AttackBattleState extends BattleState {
+public class AttackBattlePhase extends BattlePhase {
 	private final BattleManager battlemanager;
 
-	public AttackBattleState(BattleManager battlemanager) {
+	public AttackBattlePhase(BattleManager battlemanager) {
 		this.battlemanager = battlemanager;
 	}
 

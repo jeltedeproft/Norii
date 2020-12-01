@@ -1,4 +1,4 @@
-package com.jelte.norii.battle.battleStates;
+package com.jelte.norii.battle.battlePhase;
 
 import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.audio.AudioManager;
@@ -7,12 +7,12 @@ import com.jelte.norii.audio.AudioSubject;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.map.TiledMapActor;
 
-public abstract class BattleState implements AudioSubject {
+public abstract class BattlePhase implements AudioSubject {
 	private final Array<AudioObserver> observers;
 
 	public abstract void exit();
 
-	public BattleState() {
+	public BattlePhase() {
 		observers = new Array<>();
 		this.addAudioObserver(AudioManager.getInstance());
 	}
