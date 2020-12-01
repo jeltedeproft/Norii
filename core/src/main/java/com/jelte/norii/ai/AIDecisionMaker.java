@@ -52,8 +52,8 @@ public class AIDecisionMaker {
 			System.out.println("casting : " + highestState.getAbilityUsed().getName() + " on position : (" + highestState.getTarget().getX() + "," + highestState.getTarget().getY() + ")");
 			highestState.getAi().notifyEntityObserver(EntityObserver.EntityCommand.CAST_SPELL_AI, highestState.getAbilityUsed(), highestState.getTarget());
 		}
-		System.out.println("and also moving now after maybe an action");
-		final TiledMapPosition centerOfGravity = calculateCenterOfGravity(playerUnits);
+		System.out.println("move towards an enemy");
+		final TiledMapPosition centerOfGravity = getClosestPlayerUnit(playerUnits);
 		aiUnits.get(0).move(pathFinder.pathTowards(aiUnits.get(0).getCurrentPosition(), centerOfGravity, aiUnits.get(0).getAp()));
 	}
 
@@ -336,6 +336,14 @@ public class AIDecisionMaker {
 	}
 
 	private TiledMapPosition calculateCenterOfGravity(List<PlayerEntity> playerUnits) {
+		final List<Point> positions = new ArrayList<>();
+		for (final PlayerEntity entity : playerUnits) {
+			positions.add(new Point(entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY()));
+		}
+		return calculateCenterOfGravityFromPositions(positions);
+	}
+
+	private TiledMapPosition getClosestPlayerUnit(List<PlayerEntity> playerUnits) {
 		final List<Point> positions = new ArrayList<>();
 		for (final PlayerEntity entity : playerUnits) {
 			positions.add(new Point(entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY()));
