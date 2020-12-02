@@ -2,7 +2,9 @@ package com.jelte.norii.ai;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -81,7 +83,7 @@ public class AIDecisionMaker {
 		}
 
 		if (target.needsUnit(target)) {
-			Array<Point> targets = battleStateGridHelper.findTargets(new Point(ai.getCurrentPosition().getTileX(), ai.getCurrentPosition().getTileY()), ability, stateOfBattle);
+			Set<Point> targets = battleStateGridHelper.findTargets(new Point(ai.getCurrentPosition().getTileX(), ai.getCurrentPosition().getTileY()), ability, stateOfBattle);
 
 			if (targets.isEmpty()) {
 				targets = tryMoveAndTarget(ai, ability, stateOfBattle);
@@ -106,8 +108,8 @@ public class AIDecisionMaker {
 	private Point findRandomPointWithoutUnitOn(Point center, Ability ability, BattleState stateOfBattle) {
 		final LineOfSight lineOfSight = ability.getLineOfSight();
 		final int range = ability.getSpellData().getRange();
-
-		final Array<Point> possibleCenterCells = battleStateGridHelper.getPossibleCenterCells(center, lineOfSight, range, stateOfBattle.getWidth(), stateOfBattle.getHeight());
+		final Set<Point> possibleCenterCells = new HashSet<>();
+		battleStateGridHelper.getPossibleCenterCells(possibleCenterCells, center, lineOfSight, range);
 		for (final Point point : possibleCenterCells) {
 			if (stateOfBattle.get(point.x, point.y) == 0) {
 				return point;
@@ -116,12 +118,10 @@ public class AIDecisionMaker {
 		return null;
 	}
 
-	private Array<Point> tryMoveAndTarget(AiEntity ai, Ability ability, BattleState stateOfBattle) {
-		final Point unitStartingPoint = new Point(ai.getCurrentPosition().getTileX(), ai.getCurrentPosition().getTileY());
-		final AffectedTeams affectedTeams = ability.getAffectedTeams();
-		final AreaOfEffect area = ability.getAreaOfEffect();
-		final LineOfSight lineOfSight = ability.getLineOfSight();
-		final int range = ability.getSpellData().getRange();
+	private Set<Point> tryMoveAndTarget(AiEntity ai, Ability ability, BattleState stateOfBattle) {
+		final Ability abilityExtraRange = new Ability(ability.getAbilityEnum());
+		abilityExtraRange.getSpellData().setRange(ability.getSpellData().getRange() + ai.getAp());
+		return battleStateGridHelper.findTargets(new Point(ai.getCurrentPosition().getTileX(), ai.getCurrentPosition().getTileY()), abilityExtraRange, stateOfBattle);
 	}
 
 	private BattleState castAbilityOn(Ability ability, Point point, BattleState stateOfBattle) {

@@ -2,6 +2,7 @@ package com.jelte.norii.battleState;
 
 import java.awt.Point;
 import java.util.HashSet;
+import java.util.Set;
 
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.magic.Ability.AffectedTeams;
@@ -9,195 +10,122 @@ import com.jelte.norii.magic.Ability.AreaOfEffect;
 import com.jelte.norii.magic.Ability.LineOfSight;
 
 public class BattleStateGridHelper {
-	BattleState battleState;
-
-	public HashSet<Point> findTargets(Point center, Ability ability, BattleState battleState) {
-		this.battleState = battleState;
+	public Set<Point> findTargets(Point center, Ability ability, BattleState battleState) {
 		final AffectedTeams affectedTeams = ability.getAffectedTeams();
 		final AreaOfEffect area = ability.getAreaOfEffect();
 		final LineOfSight lineOfSight = ability.getLineOfSight();
 		final int range = ability.getSpellData().getRange();
 
-		final HashSet<Point> targets = new HashSet<>();
-		final HashSet<Point> possibleCenterCells = getPossibleCenterCells(center, lineOfSight, range, battleState.getWidth(), battleState.getHeight());
+		final Set<Point> possibleCenterCells = new HashSet<>();
+		possibleCenterCells.addAll(getPossibleCenterCells(possibleCenterCells, center, lineOfSight, range));
+		checkpointBounds(possibleCenterCells, battleState);
+
+		final Set<Point> targets = new HashSet<>();
 		for (final Point point : possibleCenterCells) {
-			targets.addAll(collectTargets(point, area, affectedTeams, battleState, ability.getSpellData().getAreaOfEffectRange(), battleState.getWidth(), battleState.getHeight()));
+			targets.addAll(collectTargets(point, area, affectedTeams, battleState, ability.getSpellData().getAreaOfEffectRange()));
 		}
-		return checkpointBounds(targets, battleState);
+		return targets;
 	}
 
-	public HashSet<Point> getPossibleCenterCells(Point center, LineOfSight lineOfSight, int range, int maxWidth, int maxheight) {
+	public Set<Point> getPossibleCenterCells(Set<Point> points, Point center, LineOfSight lineOfSight, int range) {
 		switch (lineOfSight) {
 		case LINE:
-			return getLines(center, range, maxWidth, maxheight);
+			return addLines(points, center, range);
+		case CIRCLE_BORDER:
+			return addUnfilledCircleAroundCentre(points, center, range);
 		case CIRCLE:
-			return getCircleCells(center, range, maxWidth, maxheight);
+			return addFilledCircleAroundCentre(points, center, range);
 		case CROSS:
-			return getLines(center, range, maxWidth, maxheight);
+			return addCrossAroundCentre(points, center, range);
+		case SQUARE_BORDER:
+			return addUnfilledSquareAroundCentre(points, center, range);
 		case SQUARE:
-			return getSquareCells(center, range, maxWidth, maxheight);
+			return addFilledSquareAroundCentre(points, center, range);
+		case DIAGONAL_RIGHT:
+			return addDiagonalTopRightAroundCentre(points, center, range);
+		case DIAGONAL_LEFT:
+			return addDiagonalTopLeftAroundCentre(points, center, range);
 		default:
-			return null;
+			return new HashSet<>();
 		}
 	}
 
-	private HashSet<Point> getLines(Point center, int range, int maxWidth, int maxheight) {
-		final HashSet<Point> cells = new HashSet<>();
-		final int centerX = center.x;
-		final int centerY = center.y;
-
-		for (int i = 1; i <= range; i++) {
-			addWithBoundariesField(cells, new Point(centerX, centerY + i), maxWidth, maxheight);
-			addWithBoundariesField(cells, new Point(centerX, centerY - i), maxWidth, maxheight);
-			addWithBoundariesField(cells, new Point(centerX + i, centerY), maxWidth, maxheight);
-			addWithBoundariesField(cells, new Point(centerX - i, centerY), maxWidth, maxheight);
-		}
-
-		return cells;
-	}
-
-	private HashSet<Point> getHorizontalLineLeft(Point center, int range, int maxWidth, int maxheight) {
-		final HashSet<Point> cells = new HashSet<>();
-		final int centerX = center.x;
-		final int centerY = center.y;
-
-		for (int i = 1; i <= range; i++) {
-			addWithBoundariesField(cells, new Point(centerX - i, centerY), maxWidth, maxheight);
-		}
-
-		return cells;
-	}
-
-	private HashSet<Point> getHorizontalLineRight(Point center, int range, int maxWidth, int maxheight) {
-		final HashSet<Point> cells = new HashSet<>();
-		final int centerX = center.x;
-		final int centerY = center.y;
-
-		for (int i = 1; i <= range; i++) {
-			addWithBoundariesField(cells, new Point(centerX + i, centerY), maxWidth, maxheight);
-		}
-
-		return cells;
-	}
-
-	private HashSet<Point> getVerticalLineDown(Point center, int range, int maxWidth, int maxheight) {
-		final HashSet<Point> cells = new HashSet<>();
-		final int centerX = center.x;
-		final int centerY = center.y;
-
-		for (int i = 1; i <= range; i++) {
-			addWithBoundariesField(cells, new Point(centerX, centerY - i), maxWidth, maxheight);
-		}
-
-		return cells;
-	}
-
-	private HashSet<Point> getVerticalLineUp(Point center, int range, int maxWidth, int maxheight) {
-		final HashSet<Point> cells = new HashSet<>();
-		final int centerX = center.x;
-		final int centerY = center.y;
-
-		for (int i = 1; i <= range; i++) {
-			addWithBoundariesField(cells, new Point(centerX, centerY + i), maxWidth, maxheight);
-		}
-
-		return cells;
-	}
-
-	// makes doubles
-	private HashSet<Point> getCircleCells(Point center, int range, int maxWidth, int maxheight) {
-		final HashSet<Point> cells = new HashSet<>();
-		final int centerX = center.x;
-		final int centerY = center.y;
-		final int distance = 0;
-
-		while (distance <= range) {
-			for (int i = 0; i <= range; i++) {
-				for (int j = 0; j <= range; j++) {
-					if ((i + j) == distance) {
-						addWithBoundariesField(cells, new Point(centerX + i, centerY + j), maxWidth, maxheight);
-						addWithBoundariesField(cells, new Point(centerX - i, centerY + j), maxWidth, maxheight);
-						addWithBoundariesField(cells, new Point(centerX + i, centerY - j), maxWidth, maxheight);
-						addWithBoundariesField(cells, new Point(centerX - i, centerY - j), maxWidth, maxheight);
-					}
-				}
-			}
-		}
-
-		return cells;
-	}
-
-	private HashSet<Point> getSquareCells(Point center, int range, int maxWidth, int maxheight) {
-		final HashSet<Point> cells = new HashSet<>();
-		final int centerX = center.x;
-		final int centerY = center.y;
-
-		for (int i = centerX - range; i <= (centerX + range); i++) {
-			for (int j = centerY - range; j <= (centerY + range); j++) {
-				addWithBoundariesField(cells, new Point(i, j), maxWidth, maxheight);
-			}
-		}
-
-		return cells;
-	}
-
-	private void addWithBoundariesField(HashSet<Point> cells, Point point, int maxWidth, int maxheight) {
-		if ((point.x >= 0) && (point.x < maxWidth) && (point.y >= 0) && (point.y < maxheight)) {
-			cells.add(point);
-		}
-	}
-
-	private HashSet<Point> collectTargets(Point center, AreaOfEffect area, AffectedTeams affectedTeams, BattleState stateOfBattle, int areaOfEffectRange, int maxWidth, int maxheight) {
-		final HashSet<Point> spotsToCheck = new HashSet<>();
+	private Set<Point> collectTargets(Point center, AreaOfEffect area, AffectedTeams affectedTeams, BattleState stateOfBattle, int areaOfEffectRange) {
+		final Set<Point> spotsToCheck = new HashSet<>();
 		switch (area) {
 		case CELL:
 			spotsToCheck.add(center);
-			return getSpotsWithUnitsOn(spotsToCheck, affectedTeams, stateOfBattle);
+			break;
 		case HORIZONTAL_LINE_LEFT:
 			spotsToCheck.add(center);
-			return getSpotsWithUnitsOn(getHorizontalLineLeft(center, areaOfEffectRange, maxWidth, maxheight), affectedTeams, stateOfBattle);
+			addLineLeft(spotsToCheck, center, areaOfEffectRange);
+			break;
 		case VERTICAL_LINE_UP:
 			spotsToCheck.add(center);
-			return getSpotsWithUnitsOn(getVerticalLineUp(center, areaOfEffectRange, maxWidth, maxheight), affectedTeams, stateOfBattle);
+			addLineUpwards(spotsToCheck, center, areaOfEffectRange);
+			break;
 		case HORIZONTAL_LINE_RIGHT:
 			spotsToCheck.add(center);
-			return getSpotsWithUnitsOn(getHorizontalLineRight(center, areaOfEffectRange, maxWidth, maxheight), affectedTeams, stateOfBattle);
+			addLineRight(spotsToCheck, center, areaOfEffectRange);
+			break;
 		case VERTICAL_LINE_DOWN:
 			spotsToCheck.add(center);
-			return getSpotsWithUnitsOn(getVerticalLineDown(center, areaOfEffectRange, maxWidth, maxheight), affectedTeams, stateOfBattle);
+			addLineDownwards(spotsToCheck, center, areaOfEffectRange);
+			break;
 		case CIRCLE:
 			spotsToCheck.add(center);
-			return getSpotsWithUnitsOn(getCircleCells(center, areaOfEffectRange, maxWidth, maxheight), affectedTeams, stateOfBattle);
+			addFilledCircleAroundCentre(spotsToCheck, center, areaOfEffectRange);
+			break;
 		case CROSS:
-			return getSpotsWithUnitsOn(getLines(center, areaOfEffectRange, maxWidth, maxheight), affectedTeams, stateOfBattle);
+			addCrossAroundCentre(spotsToCheck, center, areaOfEffectRange);
+			break;
 		case SQUARE:
 			spotsToCheck.add(center);
-			return getSpotsWithUnitsOn(getSquareCells(center, areaOfEffectRange, maxWidth, maxheight), affectedTeams, stateOfBattle);
+			addFilledSquareAroundCentre(spotsToCheck, center, areaOfEffectRange);
+			break;
+		case DIAGONAL_RIGHT:
+			spotsToCheck.add(center);
+			addDiagonalTopRightAroundCentre(spotsToCheck, center, areaOfEffectRange);
+			break;
+		case DIAGONAL_LEFT:
+			spotsToCheck.add(center);
+			addDiagonalTopLeftAroundCentre(spotsToCheck, center, areaOfEffectRange);
+			break;
+		case SQUARE_BORDER:
+			spotsToCheck.add(center);
+			addUnfilledSquareAroundCentre(spotsToCheck, center, areaOfEffectRange);
+			break;
+		case CIRCLE_BORDER:
+			spotsToCheck.add(center);
+			addUnfilledCircleAroundCentre(spotsToCheck, center, areaOfEffectRange);
+			break;
 		default:
 			return spotsToCheck;
 		}
+		checkpointBounds(spotsToCheck, stateOfBattle);
+		return getSpotsWithUnitsOn(spotsToCheck, affectedTeams, stateOfBattle);
 	}
 
-	private HashSet<Point> getSpotsWithUnitsOn(HashSet<Point> spotsToCheck, AffectedTeams affectedTeams, BattleState stateOfBattle) {
-		final HashSet<Point> units = new HashSet<>();
+	private Set<Point> getSpotsWithUnitsOn(Set<Point> spotsToCheck, AffectedTeams affectedTeams, BattleState stateOfBattle) {
+		final Set<Point> units = new HashSet<>();
 		switch (affectedTeams) {
 		case FRIENDLY:
 			for (final Point point : spotsToCheck) {
-				if (checkIfAiOnSpot(point, stateOfBattle)) {
+				if (hasCellAiUnit(point, stateOfBattle)) {
 					units.add(point);
 				}
 			}
 			break;
 		case ENEMY:
 			for (final Point point : spotsToCheck) {
-				if (checkIfPlayerOnSpot(point, stateOfBattle)) {
+				if (hasCellPlayerUnit(point, stateOfBattle)) {
 					units.add(point);
 				}
 			}
 			break;
 		case BOTH:
 			for (final Point point : spotsToCheck) {
-				if (checkIfBothOnSpot(point, stateOfBattle)) {
+				if (hasCellUnit(point, stateOfBattle)) {
 					units.add(point);
 				}
 			}
@@ -206,69 +134,55 @@ public class BattleStateGridHelper {
 		return units;
 	}
 
-	private boolean checkIfAiOnSpot(Point point, BattleState stateOfBattle) {
+	private boolean hasCellAiUnit(Point point, BattleState stateOfBattle) {
 		return stateOfBattle.get(point.x, point.y) > 0;
 	}
 
-	private boolean checkIfPlayerOnSpot(Point point, BattleState stateOfBattle) {
+	private boolean hasCellPlayerUnit(Point point, BattleState stateOfBattle) {
 		return stateOfBattle.get(point.x, point.y) < 0;
 	}
 
-	private boolean checkIfBothOnSpot(Point point, BattleState stateOfBattle) {
+	private boolean hasCellUnit(Point point, BattleState stateOfBattle) {
 		return stateOfBattle.get(point.x, point.y) != 0;
 	}
 
-	// FOUNDATION
-	private boolean isCellEmpty(Point point) {
-		return battleState.get(point.x, point.y) == 0;
+	private boolean isCellEmpty(Point point, BattleState stateOfBattle) {
+		return stateOfBattle.get(point.x, point.y) == 0;
 	}
 
-	private boolean hasCellUnit(Point point) {
-		return battleState.get(point.x, point.y) != 0;
+	private Set<Point> addLines(Set<Point> points, Point centre, int range) {
+		addLineUpwards(points, centre, range);
+		addLineLeft(points, centre, range);
+		addLineRight(points, centre, range);
+		addLineDownwards(points, centre, range);
+		return points;
 	}
 
-	private boolean hasCellPlayerUnit(Point point) {
-		return battleState.get(point.x, point.y) < 0;
-	}
-
-	private boolean hasCellAiUnit(Point point) {
-		return battleState.get(point.x, point.y) > 0;
-	}
-
-	private HashSet<Point> getLineUpwards(Point centre, int range) {
-		final HashSet<Point> points = new HashSet<>();
+	private void addLineUpwards(Set<Point> points, Point centre, int range) {
 		for (int i = 1; i <= range; i++) {
 			points.add(new Point(centre.x, centre.y + i));
 		}
-		return points;
 	}
 
-	private HashSet<Point> getLineLeft(Point centre, int range) {
-		final HashSet<Point> points = new HashSet<>();
+	private void addLineLeft(Set<Point> points, Point centre, int range) {
 		for (int i = 1; i <= range; i++) {
 			points.add(new Point(centre.x - i, centre.y));
 		}
-		return points;
 	}
 
-	private HashSet<Point> getLineRight(Point centre, int range) {
-		final HashSet<Point> points = new HashSet<>();
+	private void addLineRight(Set<Point> points, Point centre, int range) {
 		for (int i = 1; i <= range; i++) {
 			points.add(new Point(centre.x + i, centre.y));
 		}
-		return points;
 	}
 
-	private HashSet<Point> getLineDownwards(Point centre, int range) {
-		final HashSet<Point> points = new HashSet<>();
+	private void addLineDownwards(Set<Point> points, Point centre, int range) {
 		for (int i = 1; i <= range; i++) {
 			points.add(new Point(centre.x, centre.y - i));
 		}
-		return points;
 	}
 
-	private HashSet<Point> getUnfilledSquareAroundCentre(Point centre, int range) {
-		final HashSet<Point> points = new HashSet<>();
+	private Set<Point> addUnfilledSquareAroundCentre(Set<Point> points, Point centre, int range) {
 		points.add(new Point(centre.x + range, centre.y));
 		points.add(new Point(centre.x - range, centre.y));
 		points.add(new Point(centre.x, centre.y + range));
@@ -287,8 +201,8 @@ public class BattleStateGridHelper {
 		return points;
 	}
 
-	private HashSet<Point> getfilledSquareAroundCentre(Point centre, int range) {
-		final HashSet<Point> points = getUnfilledSquareAroundCentre(centre, range);
+	private Set<Point> addFilledSquareAroundCentre(Set<Point> points, Point centre, int range) {
+		addUnfilledSquareAroundCentre(points, centre, range);
 		for (int i = centre.x - range; i <= (centre.x + range); i++) {
 			for (int j = centre.y - range; j <= (centre.y + range); j++) {
 				points.add(new Point(i, j));
@@ -297,8 +211,7 @@ public class BattleStateGridHelper {
 		return points;
 	}
 
-	private HashSet<Point> getUnfilledCircleAroundCentre(Point centre, int range) {
-		final HashSet<Point> points = new HashSet<>();
+	private Set<Point> addUnfilledCircleAroundCentre(Set<Point> points, Point centre, int range) {
 		final int centerX = centre.x;
 		final int centerY = centre.y;
 
@@ -315,16 +228,14 @@ public class BattleStateGridHelper {
 		return points;
 	}
 
-	private HashSet<Point> getFilledCircleAroundCentre(Point centre, int range) {
-		final HashSet<Point> points = new HashSet<>();
+	private Set<Point> addFilledCircleAroundCentre(Set<Point> points, Point centre, int range) {
 		for (int i = 1; i <= range; i++) {
-			points.addAll(getUnfilledCircleAroundCentre(centre, range));
+			points.addAll(addUnfilledCircleAroundCentre(points, centre, range));
 		}
 		return points;
 	}
 
-	private HashSet<Point> getCrossAroundCentre(Point centre, int range) {
-		final HashSet<Point> points = new HashSet<>();
+	private Set<Point> addCrossAroundCentre(Set<Point> points, Point centre, int range) {
 		final int centerX = centre.x;
 		final int centerY = centre.y;
 
@@ -338,8 +249,7 @@ public class BattleStateGridHelper {
 		return points;
 	}
 
-	private HashSet<Point> getDiagonalTopRightAroundCentre(Point centre, int range) {
-		final HashSet<Point> points = new HashSet<>();
+	private Set<Point> addDiagonalTopRightAroundCentre(Set<Point> points, Point centre, int range) {
 		final int centerX = centre.x;
 		final int centerY = centre.y;
 
@@ -351,8 +261,7 @@ public class BattleStateGridHelper {
 		return points;
 	}
 
-	private HashSet<Point> getDiagonalTopLeftAroundCentre(Point centre, int range) {
-		final HashSet<Point> points = new HashSet<>();
+	private Set<Point> addDiagonalTopLeftAroundCentre(Set<Point> points, Point centre, int range) {
 		final int centerX = centre.x;
 		final int centerY = centre.y;
 
@@ -364,15 +273,14 @@ public class BattleStateGridHelper {
 		return points;
 	}
 
-	private HashSet<Point> checkpointBounds(HashSet<Point> points, BattleState stateOfBattle) {
-		int maxWidth = stateOfBattle.getWidth();
-		int maxHeight = stateOfBattle.getHeight();
-		for (Point point : points) {
+	private void checkpointBounds(Set<Point> points, BattleState stateOfBattle) {
+		final int maxWidth = stateOfBattle.getWidth();
+		final int maxHeight = stateOfBattle.getHeight();
+		for (final Point point : points) {
 			if ((point.x > maxWidth) || (point.y > maxHeight) || (point.x < 0) || (point.y < 0)) {
 				points.remove(point);
 			}
 		}
-		return points;
 	}
 
 }
