@@ -274,13 +274,9 @@ public class BattleStateGridHelper {
 	}
 
 	private void checkpointBounds(Set<Point> points, BattleState stateOfBattle) {
-		final int maxWidth = stateOfBattle.getWidth();
-		final int maxHeight = stateOfBattle.getHeight();
-		for (final Point point : points) {
-			if ((point.x > maxWidth) || (point.y > maxHeight) || (point.x < 0) || (point.y < 0)) {
-				points.remove(point);
-			}
-		}
+		final int maxWidth = stateOfBattle.getWidth() - 1;
+		final int maxHeight = stateOfBattle.getHeight() - 1;
+		points.removeIf(point -> (point.x > maxWidth) || (point.y > maxHeight) || (point.x < 0) || (point.y < 0));
 	}
 
 }
