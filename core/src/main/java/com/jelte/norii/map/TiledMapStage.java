@@ -3,29 +3,20 @@ package com.jelte.norii.map;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.jelte.norii.battle.BattleManager;
+import com.jelte.norii.screen.BattleScreen;
 import com.jelte.norii.utility.TiledMapPosition;
 
 public class TiledMapStage extends Stage {
 	private final TiledMapActor[][] actors;
 	private final Map tiledMap;
-	private BattleManager battlemanager;
+	private final BattleScreen battleScreen;
 
-	public TiledMapStage(Map tiledMap, String layername, BattleManager battlemanager) {
+	public TiledMapStage(Map tiledMap, String layername, BattleScreen battleScreen) {
 		this.tiledMap = tiledMap;
-		this.battlemanager = battlemanager;
-		final TiledMapTileLayer tiledLayer = (TiledMapTileLayer) tiledMap.getCurrentTiledMap().getLayers()
-				.get(layername);
+		this.battleScreen = battleScreen;
+		final TiledMapTileLayer tiledLayer = (TiledMapTileLayer) tiledMap.getCurrentTiledMap().getLayers().get(layername);
 		actors = new TiledMapActor[tiledLayer.getWidth()][tiledLayer.getHeight()];
 		createActorsForLayer(tiledLayer);
-	}
-
-	public BattleManager getBattlemanager() {
-		return battlemanager;
-	}
-
-	public void setBattlemanager(BattleManager battlemanager) {
-		this.battlemanager = battlemanager;
 	}
 
 	private void createActorsForLayer(TiledMapTileLayer tiledLayer) {
@@ -54,5 +45,9 @@ public class TiledMapStage extends Stage {
 
 	public TiledMapActor[][] getTiledMapActors() {
 		return this.actors;
+	}
+
+	public BattleScreen getBattleScreen() {
+		return battleScreen;
 	}
 }

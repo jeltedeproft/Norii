@@ -2,18 +2,15 @@ package com.jelte.norii.map;
 
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.utils.Array;
-import com.jelte.norii.map.TiledMapObserver.TilemapCommand;
 import com.jelte.norii.utility.TiledMapPosition;
 
-public class TiledMapActor extends Actor implements TiledMapSubject {
+public class TiledMapActor extends Actor {
 	private final Map tiledMap;
 	private final TiledMapTileLayer tiledLayer;
 	private Boolean isFreeSpawn;
 	private Boolean isAISpawn;
 	private Boolean isHovered;
 	private TiledMapPosition actorPos = new TiledMapPosition();
-	private final Array<TiledMapObserver> observers;
 
 	public Boolean getIsFreeSpawn() {
 		return isFreeSpawn;
@@ -37,7 +34,6 @@ public class TiledMapActor extends Actor implements TiledMapSubject {
 
 	public void setIsHovered(final Boolean isHovered) {
 		this.isHovered = isHovered;
-		notifyTilemapObserver(TilemapCommand.HOVER_CHANGED);
 	}
 
 	TiledMapTileLayer.Cell cell;
@@ -48,7 +44,6 @@ public class TiledMapActor extends Actor implements TiledMapSubject {
 		this.cell = cell;
 		isFreeSpawn = false;
 		isHovered = false;
-		observers = new Array<>();
 	}
 
 	public Map getTiledMap() {
@@ -65,28 +60,6 @@ public class TiledMapActor extends Actor implements TiledMapSubject {
 
 	public TiledMapTileLayer getTiledLayer() {
 		return tiledLayer;
-	}
-
-	@Override
-	public void addTilemapObserver(final TiledMapObserver tileMapObserver) {
-		observers.add(tileMapObserver);
-	}
-
-	@Override
-	public void removeObserver(final TiledMapObserver tileMapObserver) {
-		observers.removeValue(tileMapObserver, true);
-	}
-
-	@Override
-	public void removeAllObservers() {
-		observers.removeAll(observers, true);
-	}
-
-	@Override
-	public void notifyTilemapObserver(final TilemapCommand command) {
-		for (final TiledMapObserver observer : observers) {
-			observer.onTiledMapNotify(command, actorPos);
-		}
 	}
 
 	@Override

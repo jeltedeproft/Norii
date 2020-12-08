@@ -9,7 +9,6 @@ import com.badlogic.gdx.utils.Json;
 import com.jelte.norii.audio.AudioManager;
 import com.jelte.norii.audio.AudioObserver;
 import com.jelte.norii.audio.AudioSubject;
-import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.utility.AssetManagerUtility;
 
 public abstract class Map implements AudioSubject {
@@ -36,7 +35,6 @@ public abstract class Map implements AudioSubject {
 	protected Json json;
 	protected TiledMap currentMap = null;
 	protected TiledMapStage tiledmapstage;
-	protected BattleManager battlemanager;
 	protected MapLayer collisionLayer = null;
 	protected MapLayer spawnsLayer = null;
 	protected MyNavigationTiledMapLayer navLayer = null;

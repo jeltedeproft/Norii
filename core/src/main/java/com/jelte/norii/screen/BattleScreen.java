@@ -34,7 +34,6 @@ import com.jelte.norii.map.BattleMap;
 import com.jelte.norii.map.Map;
 import com.jelte.norii.map.MapManager;
 import com.jelte.norii.map.TiledMapActor;
-import com.jelte.norii.map.TiledMapObserver;
 import com.jelte.norii.particles.ParticleMaker;
 import com.jelte.norii.particles.ParticleType;
 import com.jelte.norii.profile.ProfileManager;
@@ -44,7 +43,7 @@ import com.jelte.norii.utility.AssetManagerUtility;
 import com.jelte.norii.utility.TiledMapPosition;
 import com.jelte.norii.utility.Utility;
 
-public class BattleScreen extends GameScreen implements EntityObserver, TiledMapObserver {
+public class BattleScreen extends GameScreen implements EntityObserver {
 	public static final int VISIBLE_WIDTH = 25;
 	public static final int VISIBLE_HEIGHT = 25;
 	private static OrthographicCamera mapCamera = null;
@@ -123,7 +122,7 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 	private void initializeMap() {
 		battlemanager = new BattleManager(playerUnits, aiUnits, aiTeamLeader, currentMap.getMapWidth(), currentMap.getMapHeight());
 		battlescreenInputProcessor.setBattleManager(battlemanager);
-		currentMap.setStage(battlemanager);
+		currentMap.setStage(this);
 		battlemanager.setPathFinder(currentMap.getPathfinder());
 	}
 
@@ -140,12 +139,6 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 
 	private void initializeObservers() {
 		ProfileManager.getInstance().addObserver(newHud);
-
-		for (final TiledMapActor[] tmpa : currentMap.getTiledMapStage().getTiledMapActors()) {
-			for (final TiledMapActor actor : tmpa) {
-				actor.addTilemapObserver(this);
-			}
-		}
 	}
 
 	public BattleManager getBattlemanager() {
@@ -459,15 +452,6 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 		return mapCamera;
 	}
 
-	@Override
-	public void onTiledMapNotify(final TilemapCommand command, final TiledMapPosition pos) {
-		switch (command) {
-		case HOVER_CHANGED:
-			newHud.setPositionTileHover(pos.getTileX(), pos.getTileY());
-			break;
-		}
-	}
-
 	public boolean isPaused() {
 		return isPaused;
 	}
@@ -480,5 +464,14 @@ public class BattleScreen extends GameScreen implements EntityObserver, TiledMap
 			spellBattleState.executeSpellForAi(entity, abilityUsed, target);
 			break;
 		}
+	}
+
+	public void clickedOnTileMapActor(TiledMapActor actor) {
+		battlemanager.getCurrentBattleState().clickedOnTile(actor);
+	}
+
+	public void hoveredOnTileMapActor(TiledMapActor actor) {
+		battlemanager.getCurrentBattleState().hoveredOnTile(actor);
+		newHud.setPositionTileHover(actor.getActorPos().getTileX(), actor.getActorPos().getTileY());
 	}
 }

@@ -17,13 +17,13 @@ public class TiledMapClickListener extends ClickListener {
 	@Override
 	public void clicked(InputEvent event, float x, float y) {
 		System.out.println("clicking tile : " + actor.getActorPos().getTileX() + " , " + actor.getActorPos().getTileY());
-		stage.getBattlemanager().getCurrentBattleState().clickedOnTile(actor);
+		stage.getBattleScreen().clickedOnTileMapActor(actor);
 	}
 
 	@Override
 	public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
 		actor.setIsHovered(true);
-		stage.getBattlemanager().getCurrentBattleState().hoveredOnTile(actor);
+		stage.getBattleScreen().hoveredOnTileMapActor(actor);
 	}
 
 	@Override

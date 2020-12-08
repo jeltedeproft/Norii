@@ -49,7 +49,6 @@ public class AIDecisionMaker {
 			if (highestState.getAbilityUsed() != null) {
 				highestState.getAi().notifyEntityObserver(EntityObserver.EntityCommand.CAST_SPELL_AI, highestState.getAbilityUsed(), highestState.getTarget());
 			}
-
 		}
 		System.out.println("move towards an enemy");
 		final TiledMapPosition centerOfGravity = getClosestPlayerUnit(aiUnits.get(0), playerUnits);

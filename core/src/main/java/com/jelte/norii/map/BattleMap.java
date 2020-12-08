@@ -9,10 +9,10 @@ import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.Vector2;
 import com.jelte.norii.audio.AudioObserver;
-import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.map.MapFactory.MapType;
 import com.jelte.norii.particles.ParticleMaker;
 import com.jelte.norii.particles.ParticleType;
+import com.jelte.norii.screen.BattleScreen;
 import com.jelte.norii.utility.AssetManagerUtility;
 import com.jelte.norii.utility.TiledMapPosition;
 
@@ -51,8 +51,8 @@ public class BattleMap extends Map {
 		pathfinder = new MyPathFinder(this);
 	}
 
-	public void setStage(final BattleManager battlemanager) {
-		tiledmapstage = new TiledMapStage(this, BACKGROUND_LAYER, battlemanager);
+	public void setStage(final BattleScreen battleScreen) {
+		tiledmapstage = new TiledMapStage(this, BACKGROUND_LAYER, battleScreen);
 
 		if (spawnsLayer == null) {
 			Gdx.app.debug(TAG, "No spawn layer!");
