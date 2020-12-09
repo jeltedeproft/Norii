@@ -16,6 +16,7 @@ import com.jelte.norii.magic.Ability.AffectedTeams;
 import com.jelte.norii.magic.Ability.LineOfSight;
 import com.jelte.norii.magic.Ability.Target;
 import com.jelte.norii.magic.ModifiersEnum;
+import com.jelte.norii.map.MyPathFinder;
 import com.jelte.norii.map.TiledMapActor;
 import com.jelte.norii.particles.ParticleMaker;
 import com.jelte.norii.particles.ParticleType;
@@ -37,10 +38,9 @@ public class SpellBattlePhase extends BattlePhase {
 	}
 
 	private void possibleTileSpell(final TiledMapPosition targetPos) {
-		final Ability ability = battlemanager.getCurrentSpell();
 		final Entity currentUnit = battlemanager.getActiveUnit();
 
-		if (isValidTileTarget(currentUnit, targetPos)) {
+		if (isValidTileTarget(currentUnit, targetPos, ability)) {
 			currentUnit.getEntityAnimation().setCurrentAnimationType(EntityAnimationType.WALK);
 			selectSpell(null, ability, currentUnit, targetPos);
 			currentUnit.getEntityAnimation().setCurrentAnimationType(EntityAnimationType.WALK);
@@ -48,9 +48,7 @@ public class SpellBattlePhase extends BattlePhase {
 		exit();
 	}
 
-	private boolean isValidTileTarget(Entity caster, TiledMapPosition targetPos) {
-		final Ability ability = battlemanager.getCurrentSpell();
-
+	private boolean isValidTileTarget(Entity caster, TiledMapPosition targetPos, Ability ability) {
 		final boolean correctAreaOfEffect = checkAreaOfEffect(caster, targetPos, ability);
 		final boolean correctVisibility = checkVisibility(caster, targetPos);
 		final boolean correctTarget = checkTarget(ability, Target.CELL);
@@ -71,7 +69,6 @@ public class SpellBattlePhase extends BattlePhase {
 	}
 
 	private void possibleUnitTargetSpell(final Entity target) {
-		final Ability ability = battlemanager.getCurrentSpell();
 		final Entity currentUnit = battlemanager.getActiveUnit();
 
 		if (isValidUnitTarget(currentUnit, target)) {
@@ -83,7 +80,6 @@ public class SpellBattlePhase extends BattlePhase {
 	}
 
 	private boolean isValidUnitTarget(Entity caster, Entity target) {
-		final Ability ability = battlemanager.getCurrentSpell();
 		final AffectedTeams affectedTeams = ability.getAffectedTeams();
 
 		final boolean correctTeam = checkTeams(caster, target, affectedTeams);
@@ -159,7 +155,7 @@ public class SpellBattlePhase extends BattlePhase {
 	}
 
 	private boolean checkVisibility(Entity caster, TiledMapPosition targetPos) {
-		return battlemanager.getPathFinder().lineOfSight(caster, targetPos, battlemanager.getUnits());
+		return MyPathFinder.getInstance().lineOfSight(caster, targetPos, battlemanager.getUnits());
 	}
 
 	private boolean checkTarget(Ability ability, Target targetType) {
@@ -180,19 +176,15 @@ public class SpellBattlePhase extends BattlePhase {
 		switch (ability.getAbilityEnum()) {
 		case FIREBALL:
 			castFireBall(currentUnit, targetPos, ability);
-			System.out.println("casted fireball");
 			break;
 		case SWAP:
 			castSwap(currentUnit, target, ability);
-			System.out.println("casted swap");
 			break;
 		case TURN_TO_STONE:
 			castTurnToStone(currentUnit, target, ability);
-			System.out.println("casted stone");
 			break;
 		case HAMMERBACK:
 			castHammerback(currentUnit, targetPos, ability);
-			System.out.println("casted hammerback");
 			break;
 		default:
 			break;
@@ -240,6 +232,11 @@ public class SpellBattlePhase extends BattlePhase {
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public void setAbility(Ability ability) {
+		this.ability = ability;
 	}
 
 	@Override

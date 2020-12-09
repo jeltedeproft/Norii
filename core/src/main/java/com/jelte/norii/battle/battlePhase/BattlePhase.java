@@ -5,10 +5,12 @@ import com.jelte.norii.audio.AudioManager;
 import com.jelte.norii.audio.AudioObserver;
 import com.jelte.norii.audio.AudioSubject;
 import com.jelte.norii.entities.Entity;
+import com.jelte.norii.magic.Ability;
 import com.jelte.norii.map.TiledMapActor;
 
 public abstract class BattlePhase implements AudioSubject {
 	private final Array<AudioObserver> observers;
+	protected Ability ability;
 
 	public abstract void exit();
 
@@ -26,7 +28,7 @@ public abstract class BattlePhase implements AudioSubject {
 	}
 
 	public void clickedOnTile(TiledMapActor actor) {
-		System.out.println("clicked on tilemapactor");
+
 	}
 
 	public void clickedOnUnit(Entity entity) {
@@ -65,5 +67,9 @@ public abstract class BattlePhase implements AudioSubject {
 
 	public void hoveredOnTile(TiledMapActor actor) {
 		// no-op
+	}
+
+	public void setAbility(Ability ability) {
+		this.ability = ability;
 	}
 }

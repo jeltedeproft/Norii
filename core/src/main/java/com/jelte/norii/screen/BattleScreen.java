@@ -33,6 +33,7 @@ import com.jelte.norii.magic.Ability;
 import com.jelte.norii.map.BattleMap;
 import com.jelte.norii.map.Map;
 import com.jelte.norii.map.MapManager;
+import com.jelte.norii.map.MyPathFinder;
 import com.jelte.norii.map.TiledMapActor;
 import com.jelte.norii.particles.ParticleMaker;
 import com.jelte.norii.particles.ParticleType;
@@ -123,13 +124,13 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		battlemanager = new BattleManager(playerUnits, aiUnits, aiTeamLeader, currentMap.getMapWidth(), currentMap.getMapHeight());
 		battlescreenInputProcessor.setBattleManager(battlemanager);
 		currentMap.setStage(this);
-		battlemanager.setPathFinder(currentMap.getPathfinder());
+		MyPathFinder.getInstance().setMap(currentMap);
 	}
 
 	private void spawnAI() {
 		final List<TiledMapPosition> enemyStartPositions = currentMap.getEnemyStartPositions();
 		aiTeamLeader.spawnAiUnits(enemyStartPositions);
-		aiTeamLeader.setPathFinder(currentMap.getPathfinder());
+		aiTeamLeader.setPathFinder(MyPathFinder.getInstance());
 	}
 
 	private void initializeUnits() {
@@ -385,7 +386,7 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 	}
 
 	private void prepareMove(final Entity unit) {
-		final List<GridCell> path = currentMap.getPathfinder().getCellsWithinCircle(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getAp());
+		final List<GridCell> path = MyPathFinder.getInstance().getCellsWithinCircle(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getAp());
 		for (final GridCell cell : path) {
 			if (!isUnitOnCell(cell)) {
 				final TiledMapPosition positionToPutMoveParticle = new TiledMapPosition().setPositionFromTiles(cell.x, cell.y);
@@ -396,7 +397,7 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 	}
 
 	private void prepareAttack(final Entity unit) {
-		final List<GridCell> attackPath = currentMap.getPathfinder().getCellsWithinCircle(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getEntityData().getAttackRange());
+		final List<GridCell> attackPath = MyPathFinder.getInstance().getCellsWithinCircle(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getEntityData().getAttackRange());
 		for (final GridCell cell : attackPath) {
 			final TiledMapPosition positionToPutAttackParticle = new TiledMapPosition().setPositionFromTiles(cell.x, cell.y);
 			ParticleMaker.addParticle(ParticleType.ATTACK, positionToPutAttackParticle, 0);
@@ -414,7 +415,7 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 			ParticleMaker.addParticle(ParticleType.SPELL, positionToPutSpellParticle, 0);
 		}
 
-		battlemanager.setCurrentSpell(ability);
+		battlemanager.getSpellBattleState().setAbility(ability);
 		battlemanager.setCurrentBattleState(battlemanager.getSpellBattleState());
 	}
 
@@ -423,13 +424,13 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 
 		switch (ability.getLineOfSight()) {
 		case CIRCLE:
-			spellPath = currentMap.getPathfinder().getLineOfSightWithinCircle(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), ability.getSpellData().getRange(), positions);
+			spellPath = MyPathFinder.getInstance().getLineOfSightWithinCircle(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), ability.getSpellData().getRange(), positions);
 			break;
 		case CROSS:
 			// TODO
 			break;
 		case LINE:
-			spellPath = currentMap.getPathfinder().getLineOfSightWithinLine(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), ability.getSpellData().getRange(), unit.getEntityAnimation().getCurrentDirection(),
+			spellPath = MyPathFinder.getInstance().getLineOfSightWithinLine(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), ability.getSpellData().getRange(), unit.getEntityAnimation().getCurrentDirection(),
 					positions);
 			break;
 		default:

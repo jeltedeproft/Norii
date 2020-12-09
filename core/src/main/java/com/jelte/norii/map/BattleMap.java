@@ -48,7 +48,6 @@ public class BattleMap extends Map {
 
 		spawnsLayer = currentMap.getLayers().get(MAP_SPAWNS_LAYER);
 		navLayer = (MyNavigationTiledMapLayer) currentMap.getLayers().get(NAVIGATION_LAYER);
-		pathfinder = new MyPathFinder(this);
 	}
 
 	public void setStage(final BattleScreen battleScreen) {

@@ -16,8 +16,6 @@ import com.jelte.norii.battleState.BattleState;
 import com.jelte.norii.entities.AiEntity;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.PlayerEntity;
-import com.jelte.norii.magic.Ability;
-import com.jelte.norii.map.MyPathFinder;
 import com.jelte.norii.utility.TiledMapPosition;
 
 public class BattleManager {
@@ -31,8 +29,6 @@ public class BattleManager {
 
 	private PlayerEntity activeUnit;
 	private AITeamLeader aiTeamLeader;
-	private Ability currentSpell;
-	private MyPathFinder pathFinder;
 	private BattleState stateOfBattle;
 	private boolean playerTurn;
 
@@ -115,14 +111,6 @@ public class BattleManager {
 		updateStateOfBattlePos(unit);
 	}
 
-	public void setPathFinder(MyPathFinder myPathFinder) {
-		this.pathFinder = myPathFinder;
-	}
-
-	public MyPathFinder getPathFinder() {
-		return pathFinder;
-	}
-
 	public PlayerEntity getActiveUnit() {
 		return activeUnit;
 	}
@@ -133,14 +121,6 @@ public class BattleManager {
 
 	public List<AiEntity> getAiUnits() {
 		return aiUnits;
-	}
-
-	public Ability getCurrentSpell() {
-		return currentSpell;
-	}
-
-	public void setCurrentSpell(final Ability currentSpell) {
-		this.currentSpell = currentSpell;
 	}
 
 	public boolean isPlayerTurn() {

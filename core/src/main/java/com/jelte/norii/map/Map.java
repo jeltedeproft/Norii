@@ -38,7 +38,6 @@ public abstract class Map implements AudioSubject {
 	protected MapLayer collisionLayer = null;
 	protected MapLayer spawnsLayer = null;
 	protected MyNavigationTiledMapLayer navLayer = null;
-	protected MyPathFinder pathfinder;
 
 	protected MapFactory.MapType currentMapType;
 	protected MapProperties prop;
@@ -89,8 +88,8 @@ public abstract class Map implements AudioSubject {
 				tiledmapstage.dispose();
 			}
 		}
-		if (pathfinder != null) {
-			pathfinder.dispose();
+		if (MyPathFinder.getInstance() != null) {
+			MyPathFinder.getInstance().dispose();
 		}
 	}
 
@@ -130,10 +129,6 @@ public abstract class Map implements AudioSubject {
 
 	public void setMapHeight(final int mapHeight) {
 		this.mapHeight = mapHeight;
-	}
-
-	public MyPathFinder getPathfinder() {
-		return pathfinder;
 	}
 
 	public int getTilemapWidthInTiles() {

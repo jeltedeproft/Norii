@@ -9,6 +9,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.entities.EntityObserver.EntityCommand;
 import com.jelte.norii.entities.PlayerEntity;
+import com.jelte.norii.map.MyPathFinder;
 import com.jelte.norii.map.TiledMapActor;
 import com.jelte.norii.particles.ParticleMaker;
 import com.jelte.norii.particles.ParticleType;
@@ -38,24 +39,23 @@ public class MovementBattlePhase extends BattlePhase {
 	}
 
 	private void possibleMove(TiledMapActor actor) {
-		if (actor.getTiledMap().getPathfinder().canUnitWalkTo(battlemanager.getActiveUnit(), actor.getActorPos())) {
-			moveUnit(actor.getActorPos());
+		if (MyPathFinder.getInstance().canUnitWalkTo(battlemanager.getActiveUnit(), actor.getActorPos())) {
+			moveUnit(actor);
 		}
 	}
 
-	private void moveUnit(TiledMapPosition pos) {
+	private void moveUnit(TiledMapActor actor) {
 		ParticleMaker.deactivateAllParticlesOfType(ParticleType.MOVE);
 		battlemanager.getActiveUnit().setLocked(true);
 		battlemanager.getActiveUnit().notifyEntityObserver(EntityCommand.UNIT_LOCKED);
-		updateUnit(pos);
+		updateUnit(actor);
 		battlemanager.getCurrentBattleState().exit();
 	}
 
-	private void updateUnit(TiledMapPosition pos) {
+	private void updateUnit(TiledMapActor actor) {
 		final PlayerEntity currentUnit = battlemanager.getActiveUnit();
-		final TiledMapPosition newUnitPos = new TiledMapPosition().setPositionFromTiles(pos.getTileX(), pos.getTileY());
-		final List<GridCell> path = battlemanager.getPathFinder().pathTowards(currentUnit.getCurrentPosition(),
-				newUnitPos, currentUnit.getAp());
+		final TiledMapPosition newUnitPos = new TiledMapPosition().setPositionFromTiles(actor.getActorPos().getTileX(), actor.getActorPos().getTileY());
+		final List<GridCell> path = MyPathFinder.getInstance().pathTowards(currentUnit.getCurrentPosition(), newUnitPos, currentUnit.getAp());
 		currentUnit.move(path);
 		currentUnit.setInActionPhase(true);
 		currentUnit.setInMovementPhase(false);
