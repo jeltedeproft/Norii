@@ -38,7 +38,7 @@ public class ActionsUi extends Window {
 
 		this.mapHeight = mapHeight;
 		this.mapWidth = mapWidth;
-		this.setBackground(AssetManagerUtility.getSkin().getDrawable("window-noborder"));
+		setBackground(AssetManagerUtility.getSkin().getDrawable("window-noborder"));
 
 		tilePixelWidth = Hud.UI_VIEWPORT_WIDTH / mapWidth;
 		tilePixelHeight = Hud.UI_VIEWPORT_HEIGHT / mapHeight;
@@ -49,8 +49,8 @@ public class ActionsUi extends Window {
 		addWidgets();
 		initPopUps();
 
-		this.setSize(tilePixelWidth * WIDTH_TILES, tilePixelHeight * HEIGHT_TILES);
-		this.pad(MAIN_WINDOW_PADDING);
+		setSize(tilePixelWidth * WIDTH_TILES, tilePixelHeight * HEIGHT_TILES);
+		pad(MAIN_WINDOW_PADDING);
 	}
 
 	private void configureMainWindow() {

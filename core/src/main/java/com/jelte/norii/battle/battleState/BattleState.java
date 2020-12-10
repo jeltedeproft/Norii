@@ -1,4 +1,4 @@
-package com.jelte.norii.battleState;
+package com.jelte.norii.battle.battleState;
 
 import java.awt.Point;
 import java.util.stream.IntStream;

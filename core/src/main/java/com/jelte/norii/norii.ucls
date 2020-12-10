@@ -1,462 +1,423 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class-diagram version="1.2.4" icons="true" automaticImage="PNG" always-add-relationships="true" generalizations="true" 
-  realizations="true" associations="true" dependencies="true" nesting-relationships="true" router="FAN">  
-  <class id="1" language="java" name="com.jelte.norii.battle.BattleManager" project="Norii-core" 
-    file="/Norii-core/src/main/java/com/jelte/norii/battle/BattleManager.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="2574" y="70"/>    
-    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="false" 
+<class-diagram version="1.2.4" icons="true" automaticImage="PNG" always-add-relationships="false" 
+  generalizations="false" realizations="false" associations="false" dependencies="true" nesting-relationships="false" 
+  router="FAN">  
+  <class id="1" language="java" name="com.jelte.norii.battle.battleState.BattleState" project="Norii-core" 
+    file="/Norii-core/src/main/java/com/jelte/norii/battle/battleState/BattleState.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="345" y="518"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="false" 
       sort-features="false" accessors="true" visibility="false">      
       <attributes public="false" package="false" protected="false" private="false" static="false"/>      
       <operations public="false" package="false" protected="false" private="false" static="false"/>    
     </display>  
   </class>  
-  <class id="2" language="java" name="com.jelte.norii.battle.battlePhase.BattlePhase" project="Norii-core" 
+  <class id="2" language="java" name="com.jelte.norii.battle.battleState.BattleStateGridHelper" project="Norii-core" 
+    file="/Norii-core/src/main/java/com/jelte/norii/battle/battleState/BattleStateGridHelper.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="313" y="310"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="false" 
+      sort-features="false" accessors="true" visibility="false">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="3" language="java" name="com.jelte.norii.battle.BattleManager" project="Norii-core" 
+    file="/Norii-core/src/main/java/com/jelte/norii/battle/BattleManager.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1234" y="323"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="false" 
+      sort-features="false" accessors="true" visibility="false">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" name="com.jelte.norii.battle.battlePhase.BattlePhase" project="Norii-core" 
     file="/Norii-core/src/main/java/com/jelte/norii/battle/battlePhase/BattlePhase.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="365" y="73"/>    
-    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="false" 
+    <position height="-1" width="-1" x="1119" y="709"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="false" 
       sort-features="false" accessors="true" visibility="false">      
       <attributes public="false" package="false" protected="false" private="false" static="false"/>      
       <operations public="false" package="false" protected="false" private="false" static="false"/>    
     </display>  
   </class>  
-  <class id="3" language="java" name="com.jelte.norii.battle.BattleScreenInputProcessor" project="Norii-core" 
+  <class id="5" language="java" name="com.jelte.norii.battle.BattleScreenInputProcessor" project="Norii-core" 
     file="/Norii-core/src/main/java/com/jelte/norii/battle/BattleScreenInputProcessor.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1214" y="256"/>    
-    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="false" 
+    <position height="-1" width="-1" x="1832" y="320"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="false" 
       sort-features="false" accessors="true" visibility="false">      
       <attributes public="false" package="false" protected="false" private="false" static="false"/>      
       <operations public="false" package="false" protected="false" private="false" static="false"/>    
     </display>  
   </class>  
-  <class id="4" language="java" name="com.jelte.norii.battle.battlePhase.AttackBattlePhase" project="Norii-core" 
+  <class id="6" language="java" name="com.jelte.norii.battle.battlePhase.AttackBattlePhase" project="Norii-core" 
     file="/Norii-core/src/main/java/com/jelte/norii/battle/battlePhase/AttackBattlePhase.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="935" y="791"/>    
-    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="false" 
+    <position height="-1" width="-1" x="537" y="518"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="false" 
       sort-features="false" accessors="true" visibility="false">      
       <attributes public="false" package="false" protected="false" private="false" static="false"/>      
       <operations public="false" package="false" protected="false" private="false" static="false"/>    
     </display>  
   </class>  
-  <class id="5" language="java" name="com.jelte.norii.battle.battlePhase.MovementBattlePhase" project="Norii-core" 
+  <class id="7" language="java" name="com.jelte.norii.battle.battlePhase.MovementBattlePhase" project="Norii-core" 
     file="/Norii-core/src/main/java/com/jelte/norii/battle/battlePhase/MovementBattlePhase.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="689" y="661"/>    
-    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="false" 
+    <position height="-1" width="-1" x="780" y="518"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="false" 
       sort-features="false" accessors="true" visibility="false">      
       <attributes public="false" package="false" protected="false" private="false" static="false"/>      
       <operations public="false" package="false" protected="false" private="false" static="false"/>    
     </display>  
   </class>  
-  <class id="6" language="java" name="com.jelte.norii.battle.battlePhase.DeploymentBattlePhase" project="Norii-core" 
+  <class id="8" language="java" name="com.jelte.norii.battle.battlePhase.DeploymentBattlePhase" project="Norii-core" 
     file="/Norii-core/src/main/java/com/jelte/norii/battle/battlePhase/DeploymentBattlePhase.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1416" y="648"/>    
-    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="false" 
+    <position height="-1" width="-1" x="1049" y="518"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="false" 
       sort-features="false" accessors="true" visibility="false">      
       <attributes public="false" package="false" protected="false" private="false" static="false"/>      
       <operations public="false" package="false" protected="false" private="false" static="false"/>    
     </display>  
   </class>  
-  <class id="7" language="java" name="com.jelte.norii.battle.battlePhase.SpellBattlePhase" project="Norii-core" 
+  <class id="9" language="java" name="com.jelte.norii.battle.battlePhase.SpellBattlePhase" project="Norii-core" 
     file="/Norii-core/src/main/java/com/jelte/norii/battle/battlePhase/SpellBattlePhase.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="402" y="915"/>    
-    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="false" 
+    <position height="-1" width="-1" x="1293" y="518"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="false" 
       sort-features="false" accessors="true" visibility="false">      
       <attributes public="false" package="false" protected="false" private="false" static="false"/>      
       <operations public="false" package="false" protected="false" private="false" static="false"/>    
     </display>  
   </class>  
-  <class id="8" language="java" name="com.jelte.norii.battle.battlePhase.ActionBattlePhase" project="Norii-core" 
+  <class id="10" language="java" name="com.jelte.norii.battle.battlePhase.ActionBattlePhase" project="Norii-core" 
     file="/Norii-core/src/main/java/com/jelte/norii/battle/battlePhase/ActionBattlePhase.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="86" y="713"/>    
-    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="false" 
+    <position height="-1" width="-1" x="1511" y="515"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="false" 
       sort-features="false" accessors="true" visibility="false">      
       <attributes public="false" package="false" protected="false" private="false" static="false"/>      
       <operations public="false" package="false" protected="false" private="false" static="false"/>    
     </display>  
   </class>  
-  <class id="9" language="java" name="com.jelte.norii.battle.battlePhase.SelectUnitBattlePhase" project="Norii-core" 
+  <class id="11" language="java" name="com.jelte.norii.battle.battlePhase.SelectUnitBattlePhase" project="Norii-core" 
     file="/Norii-core/src/main/java/com/jelte/norii/battle/battlePhase/SelectUnitBattlePhase.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="2048" y="564"/>    
-    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="false" 
-      sort-features="false" accessors="true" visibility="false">      
-      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
-      <operations public="false" package="false" protected="false" private="false" static="false"/>    
-    </display>  
-  </class>  
-  <class id="10" language="java" name="com.jelte.norii.ai.AITeamLeader" project="Norii-core" 
-    file="/Norii-core/src/main/java/com/jelte/norii/ai/AITeamLeader.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="28" width="151" x="1855" y="231"/>    
+    <position height="-1" width="-1" x="1754" y="518"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="false" 
       sort-features="false" accessors="true" visibility="false">      
       <attributes public="false" package="false" protected="false" private="false" static="false"/>      
       <operations public="false" package="false" protected="false" private="false" static="false"/>    
     </display>  
   </class>  
-  <class id="11" language="java" name="com.jelte.norii.entities.Entity" project="Norii-core" 
-    file="/Norii-core/src/main/java/com/jelte/norii/entities/Entity.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1059" y="501"/>    
+  <class id="12" language="java" name="com.jelte.norii.ui.ActionInfoUiWindow" project="Norii-core" 
+    file="/Norii-core/src/main/java/com/jelte/norii/ui/ActionInfoUiWindow.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1993" y="876"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="false" 
       sort-features="false" accessors="true" visibility="false">      
       <attributes public="false" package="false" protected="false" private="false" static="false"/>      
       <operations public="false" package="false" protected="false" private="false" static="false"/>    
     </display>  
   </class>  
-  <class id="12" language="java" name="com.jelte.norii.battleState.BattleState" project="Norii-core" 
-    file="/Norii-core/src/main/java/com/jelte/norii/battleState/BattleState.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1725" y="893"/>    
+  <class id="13" language="java" name="com.jelte.norii.ui.ActionUIButton" project="Norii-core" 
+    file="/Norii-core/src/main/java/com/jelte/norii/ui/ActionUIButton.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1762" y="944"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="false" 
       sort-features="false" accessors="true" visibility="false">      
       <attributes public="false" package="false" protected="false" private="false" static="false"/>      
       <operations public="false" package="false" protected="false" private="false" static="false"/>    
     </display>  
   </class>  
-  <enumeration id="13" language="java" name="com.jelte.norii.magic.Ability.AreaOfEffect" project="Norii-core" 
-    file="/Norii-core/src/main/java/com/jelte/norii/magic/Ability.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="834" y="1118"/>    
+  <class id="14" language="java" name="com.jelte.norii.ui.Hud" project="Norii-core" 
+    file="/Norii-core/src/main/java/com/jelte/norii/ui/Hud.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2147" y="944"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="false" 
+      sort-features="false" accessors="true" visibility="false">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="15" language="java" name="com.jelte.norii.ui.HpBar" project="Norii-core" 
+    file="/Norii-core/src/main/java/com/jelte/norii/ui/HpBar.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1951" y="1012"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="false" 
+      sort-features="false" accessors="true" visibility="false">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="16" language="java" name="com.jelte.norii.ui.ActionsUi" project="Norii-core" 
+    file="/Norii-core/src/main/java/com/jelte/norii/ui/ActionsUi.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1947" y="808"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="false" 
+      sort-features="false" accessors="true" visibility="false">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="17" language="java" name="com.jelte.norii.ui.AttackActionUIButton" project="Norii-core" 
+    file="/Norii-core/src/main/java/com/jelte/norii/ui/AttackActionUIButton.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1248" y="876"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="false" 
+      sort-features="false" accessors="true" visibility="false">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="18" language="java" name="com.jelte.norii.ui.SkipActionUIButton" project="Norii-core" 
+    file="/Norii-core/src/main/java/com/jelte/norii/ui/SkipActionUIButton.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1491" y="876"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="false" 
+      sort-features="false" accessors="true" visibility="false">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="19" language="java" name="com.jelte.norii.ui.StatusUi" project="Norii-core" 
+    file="/Norii-core/src/main/java/com/jelte/norii/ui/StatusUi.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2078" y="1012"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="false" 
+      sort-features="false" accessors="true" visibility="false">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="20" language="java" name="com.jelte.norii.ui.MySkin" project="Norii-core" 
+    file="/Norii-core/src/main/java/com/jelte/norii/ui/MySkin.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2211" y="1080"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="false" 
+      sort-features="false" accessors="true" visibility="false">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="21" language="java" name="com.jelte.norii.ui.PortraitAndStats" project="Norii-core" 
+    file="/Norii-core/src/main/java/com/jelte/norii/ui/PortraitAndStats.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2250" y="1012"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="false" 
+      sort-features="false" accessors="true" visibility="false">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="22" language="java" name="com.jelte.norii.ui.MoveActionUIButton" project="Norii-core" 
+    file="/Norii-core/src/main/java/com/jelte/norii/ui/MoveActionUIButton.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1730" y="876"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="false" 
+      sort-features="false" accessors="true" visibility="false">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="23" language="java" name="com.jelte.norii.ui.ActionUIButtonHoverListener" project="Norii-core" 
+    file="/Norii-core/src/main/java/com/jelte/norii/ui/ActionUIButtonHoverListener.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1710" y="1012"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="false" 
+      sort-features="false" accessors="true" visibility="false">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <enumeration id="24" language="java" name="com.jelte.norii.ui.Action" project="Norii-core" 
+    file="/Norii-core/src/main/java/com/jelte/norii/ui/ActionUIButton.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1498" y="808"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="false" 
       sort-features="false" accessors="true" visibility="false">      
       <attributes public="false" package="false" protected="false" private="false" static="false"/>      
       <operations public="false" package="false" protected="false" private="false" static="false"/>    
     </display>  
   </enumeration>  
-  <enumeration id="14" language="java" name="com.jelte.norii.magic.Ability.AffectedTeams" project="Norii-core" 
-    file="/Norii-core/src/main/java/com/jelte/norii/magic/Ability.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1020" y="1118"/>    
-    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="false" 
-      sort-features="false" accessors="true" visibility="false">      
-      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
-      <operations public="false" package="false" protected="false" private="false" static="false"/>    
-    </display>  
-  </enumeration>  
-  <class id="15" language="java" name="com.jelte.norii.magic.Ability" project="Norii-core" 
-    file="/Norii-core/src/main/java/com/jelte/norii/magic/Ability.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1066" y="1050"/>    
+  <class id="25" language="java" name="com.jelte.norii.ui.SpellActionUIButton" project="Norii-core" 
+    file="/Norii-core/src/main/java/com/jelte/norii/ui/SpellActionUIButton.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2234" y="876"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="false" 
       sort-features="false" accessors="true" visibility="false">      
       <attributes public="false" package="false" protected="false" private="false" static="false"/>      
       <operations public="false" package="false" protected="false" private="false" static="false"/>    
     </display>  
   </class>  
-  <enumeration id="16" language="java" name="com.jelte.norii.magic.Ability.Target" project="Norii-core" 
-    file="/Norii-core/src/main/java/com/jelte/norii/magic/Ability.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1177" y="1118"/>    
-    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="false" 
-      sort-features="false" accessors="true" visibility="false">      
-      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
-      <operations public="false" package="false" protected="false" private="false" static="false"/>    
-    </display>  
-  </enumeration>  
-  <enumeration id="17" language="java" name="com.jelte.norii.magic.Ability.LineOfSight" project="Norii-core" 
-    file="/Norii-core/src/main/java/com/jelte/norii/magic/Ability.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1320" y="1118"/>    
-    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="false" 
-      sort-features="false" accessors="true" visibility="false">      
-      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
-      <operations public="false" package="false" protected="false" private="false" static="false"/>    
-    </display>  
-  </enumeration>  
-  <association id="18">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="19" name="stateOfBattle"/>      
-      <multiplicity id="20" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="12" navigable="true"/>    
-    <display labels="false" multiplicity="true"/>  
-  </association>  
-  <dependency id="21">    
-    <end type="SOURCE" refId="1"/>    
-    <end type="TARGET" refId="8"/>  
-  </dependency>  
-  <generalization id="22">    
+  <dependency id="26">    
+    <bendpoint x="1915" y="436"/>    
+    <bendpoint x="1915" y="504"/>    
     <end type="SOURCE" refId="5"/>    
-    <end type="TARGET" refId="2"/>  
-  </generalization>  
-  <dependency id="23">    
-    <end type="SOURCE" refId="7"/>    
-    <end type="TARGET" refId="16"/>  
-  </dependency>  
-  <dependency id="24">    
-    <end type="SOURCE" refId="1"/>    
-    <end type="TARGET" refId="7"/>  
-  </dependency>  
-  <nesting id="25">    
-    <end type="SOURCE" refId="15"/>    
-    <end type="TARGET" refId="13"/>  
-  </nesting>  
-  <association id="26">    
-    <bendpoint x="836" y="209"/>    
-    <end type="SOURCE" refId="4" navigable="false">      
-      <attribute id="27" name="battlemanager"/>      
-      <multiplicity id="28" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="1" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <dependency id="29">    
-    <end type="SOURCE" refId="1"/>    
-    <end type="TARGET" refId="9"/>  
-  </dependency>  
-  <dependency id="30">    
-    <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="11"/>  
-  </dependency>  
-  <dependency id="31">    
-    <end type="SOURCE" refId="1"/>    
     <end type="TARGET" refId="4"/>  
   </dependency>  
-  <dependency id="32">    
-    <end type="SOURCE" refId="8"/>    
-    <end type="TARGET" refId="11"/>  
-  </dependency>  
-  <association id="33">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="34" name="movementBattleState"/>      
-      <multiplicity id="35" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <dependency id="36">    
+  <dependency id="27">    
     <end type="SOURCE" refId="9"/>    
-    <end type="TARGET" refId="11"/>  
+    <end type="TARGET" refId="4"/>  
   </dependency>  
-  <dependency id="37">    
-    <end type="SOURCE" refId="10"/>    
-    <end type="TARGET" refId="12"/>  
+  <dependency id="28">    
+    <bendpoint x="1881" y="930"/>    
+    <bendpoint x="1881" y="998"/>    
+    <end type="SOURCE" refId="12"/>    
+    <end type="TARGET" refId="20"/>  
   </dependency>  
-  <nesting id="38">    
-    <end type="SOURCE" refId="15"/>    
-    <end type="TARGET" refId="16"/>  
-  </nesting>  
-  <generalization id="39">    
-    <end type="SOURCE" refId="7"/>    
-    <end type="TARGET" refId="2"/>  
-  </generalization>  
-  <association id="40">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="41" name="aiTeamLeader"/>      
-      <multiplicity id="42" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="10" navigable="true"/>    
-    <display labels="false" multiplicity="true"/>  
-  </association>  
-  <association id="43">    
-    <bendpoint x="977" y="209"/>    
-    <end type="SOURCE" refId="9" navigable="false">      
-      <attribute id="44" name="battlemanager"/>      
-      <multiplicity id="45" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="1" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="46">    
-    <end type="SOURCE" refId="4"/>    
-    <end type="TARGET" refId="2"/>  
-  </generalization>  
-  <association id="47">    
-    <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="48" name="bm"/>      
-      <multiplicity id="49" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="1" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="50">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="51" name="selectUnitBattleState"/>      
-      <multiplicity id="52" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="53">    
-    <end type="SOURCE" refId="8"/>    
-    <end type="TARGET" refId="2"/>  
-  </generalization>  
-  <nesting id="54">    
-    <end type="SOURCE" refId="15"/>    
-    <end type="TARGET" refId="17"/>  
-  </nesting>  
-  <association id="55">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="56" name="attackBattleState"/>      
-      <multiplicity id="57" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <dependency id="58">    
-    <end type="SOURCE" refId="4"/>    
-    <end type="TARGET" refId="11"/>  
+  <dependency id="29">    
+    <bendpoint x="1862" y="862"/>    
+    <end type="SOURCE" refId="16"/>    
+    <end type="TARGET" refId="13"/>  
   </dependency>  
-  <association id="59">    
-    <bendpoint x="325" y="209"/>    
-    <end type="SOURCE" refId="8" navigable="false">      
-      <attribute id="60" name="battlemanager"/>      
-      <multiplicity id="61" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="1" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="62">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="63" name="lockedUnit"/>      
-      <multiplicity id="64" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="11" navigable="true"/>    
-    <display labels="false" multiplicity="true"/>  
-  </association>  
-  <dependency id="65">    
-    <end type="SOURCE" refId="2"/>    
-    <end type="TARGET" refId="11"/>  
-  </dependency>  
-  <dependency id="66">    
-    <end type="SOURCE" refId="1"/>    
-    <end type="TARGET" refId="6"/>  
-  </dependency>  
-  <dependency id="67">    
-    <end type="SOURCE" refId="7"/>    
-    <end type="TARGET" refId="17"/>  
-  </dependency>  
-  <dependency id="68">    
-    <end type="SOURCE" refId="1"/>    
-    <end type="TARGET" refId="5"/>  
-  </dependency>  
-  <association id="69">    
-    <end type="SOURCE" refId="12" navigable="false">      
-      <attribute id="70" name="ai"/>      
-      <multiplicity id="71" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="11" navigable="true"/>    
-    <display labels="false" multiplicity="true"/>  
-  </association>  
-  <dependency id="72">    
-    <bendpoint x="771" y="123"/>    
-    <end type="SOURCE" refId="3"/>    
-    <end type="TARGET" refId="2"/>  
-  </dependency>  
-  <association id="73">    
-    <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="74" name="ability"/>      
-      <multiplicity id="75" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="15" navigable="true"/>    
-    <display labels="false" multiplicity="true"/>  
-  </association>  
-  <dependency id="76">    
-    <end type="SOURCE" refId="7"/>    
+  <dependency id="30">    
+    <end type="SOURCE" refId="14"/>    
     <end type="TARGET" refId="15"/>  
   </dependency>  
-  <association id="77">    
-    <bendpoint x="452" y="209"/>    
-    <end type="SOURCE" refId="7" navigable="false">      
-      <attribute id="78" name="battlemanager"/>      
-      <multiplicity id="79" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="1" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="80">    
-    <end type="SOURCE" refId="12" navigable="false">      
-      <attribute id="81" name="abilityUsed"/>      
-      <multiplicity id="82" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="15" navigable="true"/>    
-    <display labels="false" multiplicity="true"/>  
-  </association>  
-  <association id="83">    
-    <bendpoint x="857" y="209"/>    
-    <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="84" name="battlemanager"/>      
-      <multiplicity id="85" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="1" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <dependency id="86">    
-    <end type="SOURCE" refId="7"/>    
+  <dependency id="31">    
+    <end type="SOURCE" refId="14"/>    
+    <end type="TARGET" refId="19"/>  
+  </dependency>  
+  <dependency id="32">    
+    <end type="SOURCE" refId="12"/>    
+    <end type="TARGET" refId="13"/>  
+  </dependency>  
+  <dependency id="33">    
+    <end type="SOURCE" refId="25"/>    
+    <end type="TARGET" refId="13"/>  
+  </dependency>  
+  <dependency id="34">    
+    <end type="SOURCE" refId="3"/>    
     <end type="TARGET" refId="11"/>  
   </dependency>  
-  <nesting id="87">    
-    <end type="SOURCE" refId="15"/>    
-    <end type="TARGET" refId="14"/>  
-  </nesting>  
-  <generalization id="88">    
+  <dependency id="35">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="1"/>  
+  </dependency>  
+  <dependency id="36">    
+    <end type="SOURCE" refId="16"/>    
+    <end type="TARGET" refId="17"/>  
+  </dependency>  
+  <dependency id="37">    
+    <end type="SOURCE" refId="19"/>    
+    <end type="TARGET" refId="20"/>  
+  </dependency>  
+  <dependency id="38">    
+    <bendpoint x="1894" y="504"/>    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="4"/>  
+  </dependency>  
+  <dependency id="39">    
+    <bendpoint x="2364" y="862"/>    
+    <end type="SOURCE" refId="14"/>    
+    <end type="TARGET" refId="16"/>  
+  </dependency>  
+  <dependency id="40">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="1"/>  
+  </dependency>  
+  <dependency id="41">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="7"/>  
+  </dependency>  
+  <dependency id="42">    
+    <end type="SOURCE" refId="14"/>    
+    <end type="TARGET" refId="21"/>  
+  </dependency>  
+  <dependency id="43">    
     <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="2"/>  
-  </generalization>  
-  <association id="89">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="90" name="deploymentBattleState"/>      
-      <multiplicity id="91" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <dependency id="92">    
-    <end type="SOURCE" refId="10"/>    
-    <end type="TARGET" refId="11"/>  
+    <end type="TARGET" refId="4"/>  
   </dependency>  
-  <association id="93">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="94" name="currentBattleState"/>      
-      <multiplicity id="95" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <dependency id="96">    
+  <dependency id="44">    
+    <end type="SOURCE" refId="17"/>    
+    <end type="TARGET" refId="13"/>  
+  </dependency>  
+  <dependency id="45">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="10"/>  
+  </dependency>  
+  <dependency id="46">    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="4"/>  
+  </dependency>  
+  <dependency id="47">    
+    <end type="SOURCE" refId="16"/>    
+    <end type="TARGET" refId="25"/>  
+  </dependency>  
+  <dependency id="48">    
+    <bendpoint x="2385" y="862"/>    
+    <bendpoint x="2385" y="930"/>    
+    <bendpoint x="2385" y="998"/>    
+    <end type="SOURCE" refId="16"/>    
+    <end type="TARGET" refId="20"/>  
+  </dependency>  
+  <dependency id="49">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="9"/>  
+  </dependency>  
+  <dependency id="50">    
     <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="4"/>  
+  </dependency>  
+  <dependency id="51">    
+    <end type="SOURCE" refId="22"/>    
+    <end type="TARGET" refId="13"/>  
+  </dependency>  
+  <dependency id="52">    
+    <end type="SOURCE" refId="21"/>    
+    <end type="TARGET" refId="20"/>  
+  </dependency>  
+  <dependency id="53">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="3"/>  
+  </dependency>  
+  <dependency id="54">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="4"/>  
+  </dependency>  
+  <dependency id="55">    
+    <end type="SOURCE" refId="13"/>    
+    <end type="TARGET" refId="23"/>  
+  </dependency>  
+  <dependency id="56">    
+    <end type="SOURCE" refId="11"/>    
+    <end type="TARGET" refId="4"/>  
+  </dependency>  
+  <dependency id="57">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="6"/>  
+  </dependency>  
+  <dependency id="58">    
+    <end type="SOURCE" refId="15"/>    
+    <end type="TARGET" refId="20"/>  
+  </dependency>  
+  <dependency id="59">    
+    <end type="SOURCE" refId="16"/>    
+    <end type="TARGET" refId="12"/>  
+  </dependency>  
+  <dependency id="60">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="8"/>  
+  </dependency>  
+  <dependency id="61">    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="16"/>  
+  </dependency>  
+  <dependency id="62">    
+    <end type="SOURCE" refId="18"/>    
+    <end type="TARGET" refId="13"/>  
+  </dependency>  
+  <dependency id="63">    
+    <bendpoint x="2364" y="930"/>    
+    <bendpoint x="2364" y="998"/>    
+    <end type="SOURCE" refId="25"/>    
+    <end type="TARGET" refId="20"/>  
+  </dependency>  
+  <dependency id="64">    
+    <end type="SOURCE" refId="16"/>    
+    <end type="TARGET" refId="18"/>  
+  </dependency>  
+  <dependency id="65">    
+    <end type="SOURCE" refId="12"/>    
     <end type="TARGET" refId="14"/>  
   </dependency>  
-  <association id="97">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="98" name="spellBattleState"/>      
-      <multiplicity id="99" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="100">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="101" name="actionBattleState"/>      
-      <multiplicity id="102" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="103">    
-    <end type="SOURCE" refId="9"/>    
-    <end type="TARGET" refId="2"/>  
-  </generalization>  
-  <association id="104">    
-    <end type="SOURCE" refId="11" navigable="false">      
-      <attribute id="105" name="abilities"/>      
-      <multiplicity id="106" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="15" navigable="true"/>    
-    <display labels="false" multiplicity="true"/>  
-  </association>  
-  <association id="107">    
-    <bendpoint x="560" y="209"/>    
-    <end type="SOURCE" refId="5" navigable="false">      
-      <attribute id="108" name="battlemanager"/>      
-      <multiplicity id="109" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="1" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <classifier-display autosize="true" stereotype="false" package="false" initial-value="false" signature="false" 
+  <dependency id="66">    
+    <end type="SOURCE" refId="16"/>    
+    <end type="TARGET" refId="22"/>  
+  </dependency>  
+  <classifier-display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
     sort-features="false" accessors="true" visibility="false">    
     <attributes public="false" package="false" protected="false" private="false" static="false"/>    
     <operations public="false" package="false" protected="false" private="false" static="false"/>  
   </classifier-display>  
-  <association-display labels="false" multiplicity="true"/>
+  <association-display labels="true" multiplicity="true"/>
 </class-diagram>

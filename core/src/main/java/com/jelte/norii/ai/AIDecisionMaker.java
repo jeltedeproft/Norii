@@ -8,8 +8,8 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import com.jelte.norii.battleState.BattleState;
-import com.jelte.norii.battleState.BattleStateGridHelper;
+import com.jelte.norii.battle.battleState.BattleState;
+import com.jelte.norii.battle.battleState.BattleStateGridHelper;
 import com.jelte.norii.entities.AiEntity;
 import com.jelte.norii.entities.EntityObserver;
 import com.jelte.norii.entities.PlayerEntity;
