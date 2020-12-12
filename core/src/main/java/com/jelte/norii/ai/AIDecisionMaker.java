@@ -123,7 +123,8 @@ public class AIDecisionMaker {
 		while (ap > 0) {
 			// move 1 step closer and try again
 			final TiledMapPosition centerOfGravity = getClosestPlayerUnit(ai, playerUnits);
-			ai.move(pathFinder.pathTowards(ai.getCurrentPosition(), centerOfGravity, 1));
+			final TiledMapPosition aiPos = ai.getCurrentPosition();
+			stateOfBattle.moveUnitFromTo(ai, new Point(aiPos.getTileX(), aiPos.getTileY()), stateOfBattle.stepFromTowards(new Point(aiPos.getTileX(), aiPos.getTileY()), new Point(centerOfGravity.getTileX(), centerOfGravity.getTileY())));
 			ap--;
 			final Set<Point> targets = battleStateGridHelper.findTargets(new Point(ai.getCurrentPosition().getTileX(), ai.getCurrentPosition().getTileY()), ability, stateOfBattle);
 

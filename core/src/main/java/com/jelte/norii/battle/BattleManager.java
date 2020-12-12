@@ -12,7 +12,7 @@ import com.jelte.norii.battle.battlePhase.DeploymentBattlePhase;
 import com.jelte.norii.battle.battlePhase.MovementBattlePhase;
 import com.jelte.norii.battle.battlePhase.SelectUnitBattlePhase;
 import com.jelte.norii.battle.battlePhase.SpellBattlePhase;
-import com.jelte.norii.battleState.BattleState;
+import com.jelte.norii.battle.battleState.BattleState;
 import com.jelte.norii.entities.AiEntity;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.PlayerEntity;

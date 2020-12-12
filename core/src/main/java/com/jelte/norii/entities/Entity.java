@@ -26,13 +26,12 @@ import com.jelte.norii.magic.AbilitiesEnum;
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.magic.Modifier;
 import com.jelte.norii.magic.ModifiersEnum;
-import com.jelte.norii.ui.ActionsUi;
 import com.jelte.norii.ui.PortraitAndStats;
 import com.jelte.norii.ui.StatusUi;
 import com.jelte.norii.utility.AssetManagerUtility;
 import com.jelte.norii.utility.TiledMapPosition;
 
-public abstract class Entity extends Actor implements EntitySubject, AudioSubject {
+public class Entity extends Actor implements EntitySubject, AudioSubject {
 	protected final EntityData entityData;
 
 	protected int ap;
@@ -68,14 +67,6 @@ public abstract class Entity extends Actor implements EntitySubject, AudioSubjec
 	private Runnable aiFinishTurn;
 	private Runnable stopWalkAction;
 	private Runnable cleanup;
-
-	abstract void setActive(final boolean isActive);
-	abstract void setInMovementPhase(final boolean isInMovementPhase);
-	abstract void setInAttackPhase(final boolean isInAttackPhase);
-	abstract void setInSpellPhase(final boolean isInSpellPhase, final Ability ability);
-	abstract void setInActionPhase(final boolean isInActionPhase);
-	abstract ActionsUi getActionsui();
-	abstract void setActionsui(final ActionsUi actionsUi2);
 
 	public Entity(final EntityTypes type) {
 		entityData = EntityFileReader.getUnitData().get(type.ordinal());

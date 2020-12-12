@@ -3,6 +3,7 @@ package com.jelte.norii.battle.battleState;
 import java.awt.Point;
 import java.util.stream.IntStream;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.magic.Ability;
 
@@ -42,6 +43,37 @@ public class BattleState {
 
 	public int get(int width, int height) {
 		return stateOfField[width][height];
+	}
+
+	public void moveUnitFromTo(Entity unit, Point from, Point to) {
+		set(from.x, from.y, NO_UNIT);
+		set(to.x, to.y, unit.getHp());
+	}
+
+	public Point stepFromTowards(Point from, Point to) {
+		final int random = MathUtils.random.nextInt(1);
+
+		if (random == 0) {
+			if (to.x > from.x) {
+				return new Point(from.x + 1, from.y);
+			} else if (to.x < from.x) {
+				return new Point(from.x - 1, from.y);
+			} else {
+				return yUpOrYDown(from, to);
+			}
+		} else {
+			return yUpOrYDown(from, to);
+		}
+	}
+
+	private Point yUpOrYDown(Point from, Point to) {
+		if (to.y > from.y) {
+			return new Point(from.x, from.y + 1);
+		} else if (to.y < from.y) {
+			return new Point(from.x, from.y - 1);
+		} else {
+			return new Point(from.x, from.y);
+		}
 	}
 
 	public BattleState makeCopy() {
