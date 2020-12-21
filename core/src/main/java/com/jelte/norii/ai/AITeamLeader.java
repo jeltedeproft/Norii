@@ -10,7 +10,6 @@ import com.jelte.norii.entities.AiEntity;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityTypes;
 import com.jelte.norii.entities.PlayerEntity;
-import com.jelte.norii.map.MyPathFinder;
 import com.jelte.norii.utility.TiledMapPosition;
 
 public class AITeamLeader {
@@ -19,11 +18,10 @@ public class AITeamLeader {
 	private List<AiEntity> team;
 	private final AITeamData aiTeamData;
 	private final AIDecisionMaker aiDecisionMaker;
-	private MyPathFinder myPathFinder;
 
 	public AITeamLeader(final AITeams type) {
 		aiTeamData = AITeamFileReader.getAITeamData().get(type.ordinal());
-		aiDecisionMaker = new AIDecisionMaker(this);
+		aiDecisionMaker = new AIDecisionMaker();
 		initiateUnits();
 	}
 
@@ -71,14 +69,6 @@ public class AITeamLeader {
 				batch.draw(entity.getFrame(), entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY() - 0.0f, 1.0f, 1.0f);
 			}
 		}
-	}
-
-	public void setPathFinder(MyPathFinder pathfinder) {
-		this.myPathFinder = pathfinder;
-	}
-
-	public MyPathFinder getMyPathFinder() {
-		return myPathFinder;
 	}
 
 	public void setTeam(final List<AiEntity> team) {

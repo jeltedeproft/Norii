@@ -2,192 +2,214 @@ package com.jelte.norii.ai;
 
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import org.xguzm.pathfinding.grid.GridCell;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.battle.battleState.BattleState;
-import com.jelte.norii.battle.battleState.BattleStateGridHelper;
+import com.jelte.norii.battle.battleState.BattleStateGridHelperFromUnits;
+import com.jelte.norii.battle.battleState.HypotheticalUnit;
+import com.jelte.norii.battle.battleState.Move;
+import com.jelte.norii.battle.battleState.MoveType;
 import com.jelte.norii.entities.AiEntity;
-import com.jelte.norii.entities.EntityObserver;
+import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.PlayerEntity;
 import com.jelte.norii.magic.Ability;
-import com.jelte.norii.magic.Ability.LineOfSight;
-import com.jelte.norii.magic.Ability.Target;
 import com.jelte.norii.map.MyPathFinder;
 import com.jelte.norii.utility.TiledMapPosition;
+import com.jelte.norii.utility.Utility;
 
 public class AIDecisionMaker {
-	private final AITeamLeader aiTeam;
 	private final SortedMap<Integer, BattleState> statesWithScores;
-	private final BattleStateGridHelper battleStateGridHelper;
-	private MyPathFinder pathFinder;
+	private final BattleStateGridHelperFromUnits battleStateGridHelper;
 
 	private static final int NUMBER_OF_LAYERS = 3;
+	private static final String TAG = AIDecisionMaker.class.getSimpleName();
 
-	public AIDecisionMaker(final AITeamLeader aiTeam) {
-		this.aiTeam = aiTeam;
-		battleStateGridHelper = new BattleStateGridHelper();
+	public AIDecisionMaker() {
+		battleStateGridHelper = new BattleStateGridHelperFromUnits();
 		statesWithScores = new TreeMap<>();
 	}
 
-	public void makeDecision(List<PlayerEntity> playerUnits, List<AiEntity> aiUnits, BattleState stateOfBattle) {
-		if (pathFinder == null) {
-			pathFinder = aiTeam.getMyPathFinder();
-		}
-
-		for (final AiEntity ai : aiUnits) {
-			generatePossibleMoves(playerUnits, ai, stateOfBattle);
-		}
-
-		if (!statesWithScores.isEmpty()) {
-			final BattleState highestState = statesWithScores.get(statesWithScores.lastKey());
-			highestState.getAi().notifyEntityObserver(EntityObserver.EntityCommand.FOCUS_CAMERA);
-
-			if (highestState.getAbilityUsed() != null) {
-				highestState.getAi().notifyEntityObserver(EntityObserver.EntityCommand.CAST_SPELL_AI, highestState.getAbilityUsed(), highestState.getTarget());
+	public void makeDecision(BattleState battleState) {
+		Array<HypotheticalUnit> players = battleState.getPlayerUnits();
+		Array<HypotheticalUnit> ais = battleState.getAiUnits();
+		// for every aiUnit, generate all his moves and store them
+		for (HypotheticalUnit aiUnit : ais) {
+			for (Ability ability : aiUnit.getAbilities()) {
+				generateMoves(ability, aiUnit, battleState);
 			}
 		}
-		System.out.println("move towards an enemy");
-		final TiledMapPosition centerOfGravity = getClosestPlayerUnit(aiUnits.get(0), playerUnits);
-		aiUnits.get(0).move(pathFinder.pathTowards(aiUnits.get(0).getCurrentPosition(), centerOfGravity, aiUnits.get(0).getAp()));
+
+		// generate 2 more moves for each of them (only keep changes to score)
+
+		// calculate score
+
+		// sort
+
+		// return move for highest score
 	}
 
-	private void generatePossibleMoves(List<PlayerEntity> playerUnits, AiEntity ai, BattleState stateOfBattle) {
-		for (final Ability ability : ai.getAbilities()) {
-			addAllPosibilitiesForAbility(playerUnits, ai, stateOfBattle, ability);
+	private Array<UnitTurn> generateMoves(Ability ability, AiEntity aiUnit, BattleState battleState) {
+		Array<UnitTurn> unitTurns = new Array<>();
+
+		// get the distance between unit and possible targets
+		TreeMap<Integer, HypotheticalUnit> distancesWithAbilityTargetUnits = (TreeMap<Integer, HypotheticalUnit>) getDistancesToTargets(aiUnit, battleState, ability);
+
+		if (!distancesWithAbilityTargetUnits.isEmpty() && (distancesWithAbilityTargetUnits.firstKey() > (ability.getSpellData().getRange() + ability.getSpellData().getAreaOfEffectRange() + aiUnit.getAp()))) {
+			if (distancesWithAbilityTargetUnits.firstKey() > (aiUnit.getAttackRange() + aiUnit.getAp())) {
+				// just walk
+				HypotheticalUnit closestUnit = distancesWithAbilityTargetUnits.firstEntry().getValue();
+				TiledMapPosition closestUnitPos = new TiledMapPosition().setPositionFromTiles(closestUnit.getX(), closestUnit.getY());
+				List<GridCell> path = MyPathFinder.getInstance().pathTowards(aiUnit.getCurrentPosition(), closestUnitPos, aiUnit.getAp());
+				Point goal = new Point(path.get(path.size() - 1).x, path.get(path.size() - 1).y);
+				unitTurns.add(new UnitTurn(aiUnit.getEntityID(),new Move(MoveType.MOVE,goal)));
+				return unitTurns;
+			}else {
+				//move attack
+				HypotheticalUnit closestUnit = distancesWithAbilityTargetUnits.firstEntry().getValue();
+				TiledMapPosition closestUnitPos = new TiledMapPosition().setPositionFromTiles(closestUnit.getX(), closestUnit.getY());
+				List<GridCell> path = MyPathFinder.getInstance().pathTowards(aiUnit.getCurrentPosition(), closestUnitPos, aiUnit.getAp());
+				Point moveGoal = new Point(path.get(path.size() - 1).x, path.get(path.size() - 1).y);
+				Point attackGoal = new Point(distancesWithAbilityTargetUnits.firstEntry().getValue().getX(), distancesWithAbilityTargetUnits.firstEntry().getValue().getY());
+				UnitTurn moveAttack = new UnitTurn(aiUnit.getEntityID(),new Move(MoveType.MOVE,moveGoal));
+				moveAttack.addMove(new Move(MoveType.ATTACK,attackGoal));
+				unitTurns.add(moveAttack);
+				return unitTurns;
+			}
 		}
+
+		// decide where to cast spell
+		Array<Point> abilityTargets = getAbilityTargets(ability, aiUnit, battleState);
+		if(!abilityTargets.isEmpty()) {
+			for(Point target : abilityTargets) {
+				Set<Point> positionsToCastSpell = battleStateGridHelper.getAllPointsWhereTargetIsHit(ability,target,new Point(aiUnit.getCurrentPosition().getTileX(),aiUnit.getCurrentPosition().getTileY()),battleState);
+				Move moveAfterSpell = decideMove(ability, aiUnit, battleState);
+				for(Point point : positionsToCastSpell) {
+					UnitTurn spellAndMove = new UnitTurn(aiUnit.getEntityID(),new Move(MoveType.SPELL,positionToCastSpell));
+					spellAndMove.addMove(MoveType.MOVE,);
+				}
+			}
+		}
+
+
+		while (abilityTargets.isEmpty() && (aiUnit.getAp() > 0)) {
+
+		}
+		// decide where to move
+
+		// decide who to attack (if possible)
+
 	}
 
-	private void addAllPosibilitiesForAbility(List<PlayerEntity> playerUnits, AiEntity ai, BattleState stateOfBattle, Ability ability) {
-		final Target target = ability.getTarget();
-		if (target.equals(Target.SELF) || target.equals(Target.NO_TARGET)) {
-			final Point targetPoint = new Point(ai.getCurrentPosition().getTileX(), ai.getCurrentPosition().getTileY());
-			final BattleState newState = castAbilityOn(ability, targetPoint, stateOfBattle);
-			newState.setAbilityUsed(ability);
-			newState.setTarget(targetPoint);
-			newState.setAi(ai);
-			statesWithScores.put(newState.getScore(), newState);
+	private Move decideMove(Ability ability, AiEntity aiUnit, BattleState battleState) {
+		Point centerOfGravityEnemies = Utility.getCenterOfGravityPlayers(battleState);
+		Point centerOfGravityAllies = Utility.getCenterOfGravityAi(battleState);
+		Point centerOfGravityAllUnits = Utility.getCenterOfGravityAllUnits(battleState);
+
+		// if low hp run away
+		if (aiUnit.getHp() <= ((aiUnit.getEntityData().getMaxHP() / 100.0f) * 10)) {
+			Point originalGoal = MyPathFinder.getInstance().getPositionFurthestAwayFrom(centerOfGravityEnemies);
+			Point trimmedGoal = trimPathConsideringApAndReachable(originalGoal, aiUnit);
+			return new Move(MoveType.MOVE, trimmedGoal);
 		}
 
-		if (target.equals(Target.CELL_BUT_NO_UNIT)) {
-			final Point targetPoint = findRandomPointWithoutUnitOn(new Point(ai.getCurrentPosition().getTileX(), ai.getCurrentPosition().getTileY()), ability, stateOfBattle);
-			final BattleState newState = castAbilityOn(ability, targetPoint, stateOfBattle);
-			newState.setAbilityUsed(ability);
-			newState.setTarget(targetPoint);
-			newState.setAi(ai);
-			statesWithScores.put(newState.getScore(), newState);
-		}
-
-		if (target.needsUnit(target)) {
-			Set<Point> targets = battleStateGridHelper.findTargets(new Point(ai.getCurrentPosition().getTileX(), ai.getCurrentPosition().getTileY()), ability, stateOfBattle);
-
-			if (targets.isEmpty()) {
-				targets = tryMoveAndTarget(playerUnits, ai, ability, stateOfBattle);
-			}
-
-			// cant use spell, and also cant move and use spell
-			if (targets.isEmpty()) {
-				final BattleState newState = stateOfBattle.makeCopy();
-				newState.setAi(ai);
-				statesWithScores.put(newState.getScore(), newState);
-			}
-
-			for (final Point targetPoint : targets) {
-				final BattleState newState = castAbilityOn(ability, targetPoint, stateOfBattle);
-				newState.setAbilityUsed(ability);
-				newState.setTarget(targetPoint);
-				newState.setAi(ai);
-				statesWithScores.put(newState.getScore(), newState);
-			}
-		}
-	}
-
-	private Point findRandomPointWithoutUnitOn(Point center, Ability ability, BattleState stateOfBattle) {
-		final LineOfSight lineOfSight = ability.getLineOfSight();
-		final int range = ability.getSpellData().getRange();
-		final Set<Point> possibleCenterCells = new HashSet<>();
-		battleStateGridHelper.getPossibleCenterCells(possibleCenterCells, center, lineOfSight, range);
-		for (final Point point : possibleCenterCells) {
-			if (stateOfBattle.get(point.x, point.y) == 0) {
-				return point;
-			}
-		}
-		return null;
-	}
-
-	private Set<Point> tryMoveAndTarget(List<PlayerEntity> playerUnits, AiEntity ai, Ability ability, BattleState stateOfBattle) {
-		int ap = ai.getAp();
-		while (ap > 0) {
-			// move 1 step closer and try again
-			final TiledMapPosition centerOfGravity = getClosestPlayerUnit(ai, playerUnits);
-			final TiledMapPosition aiPos = ai.getCurrentPosition();
-			stateOfBattle.moveUnitFromTo(ai, new Point(aiPos.getTileX(), aiPos.getTileY()), stateOfBattle.stepFromTowards(new Point(aiPos.getTileX(), aiPos.getTileY()), new Point(centerOfGravity.getTileX(), centerOfGravity.getTileY())));
-			ap--;
-			final Set<Point> targets = battleStateGridHelper.findTargets(new Point(ai.getCurrentPosition().getTileX(), ai.getCurrentPosition().getTileY()), ability, stateOfBattle);
-
-			if (!targets.isEmpty()) {
-				return targets;
-			}
-		}
-		return new HashSet<>();
-	}
-
-	private BattleState castAbilityOn(Ability ability, Point point, BattleState stateOfBattle) {
-		switch (ability.getAbilityEnum()) {
-		case FIREBALL:
-			final int originalValue = stateOfBattle.get(point.x, point.y);
-			int newValue = originalValue - ability.getSpellData().getDamage();
-			if (newValue < 0) {
-				newValue = 0;
-			}
-			stateOfBattle.set(point.x, point.y, newValue);
-			return stateOfBattle;
-		case TURN_TO_STONE:
-			return stateOfBattle;
-		case SWAP:
-			return stateOfBattle;
-		case HAMMERBACK:
-			return stateOfBattle;
+		switch (ability.getAffectedTeams()) {
+		case FRIENDLY:
+			return new Move(MoveType.MOVE, trimPathConsideringApAndReachable(centerOfGravityAllies, aiUnit));
+		case ENEMY:
+			return new Move(MoveType.MOVE, trimPathConsideringApAndReachable(centerOfGravityEnemies, aiUnit));
+		case BOTH:
+			return new Move(MoveType.MOVE, trimPathConsideringApAndReachable(centerOfGravityAllUnits, aiUnit));
+		case NONE:
+			return new Move(MoveType.MOVE, trimPathConsideringApAndReachable(centerOfGravityAllUnits, aiUnit));
 		default:
-			return stateOfBattle;
+			Gdx.app.debug(TAG, "ability does not have one of these affected teams : FRIENDLY, ENEMY, BOTH or NONE, returning null");
+			return null;
 		}
-
 	}
 
-	private TiledMapPosition calculateCenterOfGravityFromPositions(final List<Point> positions) {
-		final int numberOfElements = positions.size();
-		int sumX = 0;
-		int sumY = 0;
-
-		for (int i = 0; i < numberOfElements; i++) {
-			sumX += positions.get(i).x;
-			sumY += positions.get(i).y;
-		}
-
-		return new TiledMapPosition().setPositionFromTiles(sumX / numberOfElements, sumY / numberOfElements);
+	private Point trimPathConsideringApAndReachable(Point originalGoal, AiEntity aiUnit) {
+		TiledMapPosition start = new TiledMapPosition().setPositionFromTiles(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY());
+		TiledMapPosition goal = new TiledMapPosition().setPositionFromTiles(originalGoal.x, originalGoal.y);
+		List<GridCell> path = MyPathFinder.getInstance().pathTowards(start, goal, aiUnit.getAp());
+		return new Point(path.get(path.size() - 1).x, path.get(path.size() - 1).y);
 	}
 
-	private TiledMapPosition calculateCenterOfGravity(List<PlayerEntity> playerUnits) {
-		final List<Point> positions = new ArrayList<>();
-		for (final PlayerEntity entity : playerUnits) {
-			positions.add(new Point(entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY()));
-		}
-		return calculateCenterOfGravityFromPositions(positions);
-	}
-
-	private TiledMapPosition getClosestPlayerUnit(AiEntity aiEntity, List<PlayerEntity> playerUnits) {
-		PlayerEntity closestEntity = playerUnits.get(0);
-		int distance = closestEntity.getCurrentPosition().getDistance(aiEntity.getCurrentPosition());
-		for (final PlayerEntity entity : playerUnits) {
-			if (entity.getCurrentPosition().getDistance(aiEntity.getCurrentPosition()) < distance) {
-				distance = entity.getCurrentPosition().getDistance(aiEntity.getCurrentPosition());
-				closestEntity = entity;
+	private Map<Integer, HypotheticalUnit> getDistancesToTargets(AiEntity aiUnit, BattleState battleState, Ability ability) {
+		Map<Integer, HypotheticalUnit> distances = new TreeMap<>();
+		switch (ability.getAffectedTeams()) {
+		case FRIENDLY:
+			for (HypotheticalUnit entity : battleState.getAiUnits()) {
+				distances.put(calculateDistanceTwoUnits(aiUnit, entity), entity);
 			}
+			break;
+		case ENEMY:
+			for (HypotheticalUnit entity : battleState.getPlayerUnits()) {
+				distances.put(calculateDistanceTwoUnits(aiUnit, entity), entity);
+			}
+			break;
+		case BOTH:
+			for (HypotheticalUnit entity : battleState.getAllUnits()) {
+				distances.put(calculateDistanceTwoUnits(aiUnit, entity), entity);
+			}
+			break;
+		case NONE:
+			return distances;
 		}
-		return closestEntity.getCurrentPosition();
+		return distances;
+	}
+
+	private Integer calculateDistanceTwoUnits(AiEntity aiUnit, HypotheticalUnit entity) {
+		TiledMapPosition aiUnitPosition = aiUnit.getCurrentPosition();
+		TiledMapPosition entityPosition = new TiledMapPosition().setPositionFromTiles(entity.getX(), entity.getY());
+		return aiUnitPosition.getDistance(entityPosition);
+	}
+
+	private Array<Point> getAbilityTargets(Ability ability, AiEntity aiUnit, BattleState battleState) {
+		Point casterPos = new Point(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY());
+		Array<Point> unitPositions = getUnitPositions(aiUnit, ability, battleState);
+		return battleStateGridHelper.getTargetPositionsInRangeAbility(casterPos, ability, unitPositions);
+	}
+
+	private Array<Point> getUnitPositions(Entity unit, Ability ability, BattleState battleState) {
+		switch (ability.getAffectedTeams()) {
+		case FRIENDLY:
+			if (unit.isPlayerUnit()) {
+				return collectPoints(battleState.getPlayerUnits());
+			} else {
+				return collectPoints(battleState.getAiUnits());
+			}
+		case ENEMY:
+			if (!unit.isPlayerUnit()) {
+				return collectPoints(battleState.getPlayerUnits());
+			} else {
+				return collectPoints(battleState.getAiUnits());
+			}
+		case BOTH:
+			return collectPoints(battleState.getAllUnits());
+		case NONE:
+			return new Array<>();
+		default:
+			Gdx.app.debug(TAG, "ability does not have one of these affected teams : FRIENDLY, ENEMY, BOTH or NONE, returning null");
+			return null;
+		}
+	}
+
+	private Array<Point> collectPoints(Array<HypotheticalUnit> allUnits) {
+		Array<Point> points = new Array<>();
+		for (HypotheticalUnit unit : allUnits) {
+			points.add(new Point(unit.getX(), unit.getY()));
+		}
+		return points;
 	}
 
 }

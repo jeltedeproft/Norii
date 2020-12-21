@@ -1,15 +1,18 @@
 package com.jelte.norii.battle.battleState;
 
 import java.awt.Point;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.magic.Ability;
+import com.jelte.norii.magic.Ability.AreaOfEffect;
 
 public class BattleStateGridHelperFromUnits {
 
-	public Array<Point> getTargetPositionsInRangeAbility(Point casterPos, Ability ability, Array<Point> targetPositions) {
+	public Array<Point> getTargetPositionsInRangeAbility(Point casterPos, Ability ability, Array<Point> unitPositions) {
 		Array<Point> results = new Array<>();
-		for (Point targetPos : targetPositions) {
+		for (Point targetPos : unitPositions) {
 			if (isUnitInAbilityRange(casterPos, ability, targetPos)) {
 				results.add(targetPos);
 			}
@@ -569,5 +572,208 @@ public class BattleStateGridHelperFromUnits {
 		}
 
 		return ((targetPos.x >= ((casterPos.x + range) - areaOfEffectRange)) || (targetPos.x <= ((casterPos.x + range + areaOfEffectRange) - deltaY)));
+	}
+
+	public Set<Point> getAllPointsWhereTargetIsHit(Ability ability, Point targetPosition, Point casterPosition, BattleState battleState) {
+		Set<Point> castingPoints = new HashSet<>();
+		switch (ability.getLineOfSight()) {
+		case LINE:
+			castingPoints = tryLines(ability, targetPosition, casterPosition);
+			break;
+		case CIRCLE:
+			castingPoints = tryCircles(ability, targetPosition, casterPosition);
+			break;
+		case CROSS:
+			castingPoints = tryLines(ability, targetPosition, casterPosition);
+			break;
+		case SQUARE:
+			castingPoints = trySquares(ability, targetPosition, casterPosition);
+			break;
+		case DIAGONAL_RIGHT:
+			castingPoints = tryDiagonalRightCells(ability, targetPosition, casterPosition);
+			break;
+		case DIAGONAL_LEFT:
+			castingPoints = tryDiagonalLeftCells(ability, targetPosition, casterPosition);
+			break;
+		case CIRCLE_BORDER:
+			castingPoints = tryCircleBorderCells(ability, targetPosition, casterPosition);
+			break;
+		case SQUARE_BORDER:
+			castingPoints = trySquareBorderCells(ability, targetPosition, casterPosition);
+			break;
+		default:
+			return castingPoints;
+		}
+
+		// filter castingPoints for field boundaries and doubles
+		return filter(castingPoints, battleState.getWidth(), battleState.getHeight());
+	}
+
+	private Set<Point> filter(Set<Point> castingPoints, int width, int height) {
+		for (Point point : castingPoints) {
+			if (!((point.x < 0) || (point.x > width) || (point.y < 0) || (point.y > height))) {
+				castingPoints.removeIf(setPoint -> !((setPoint.x < 0) || (setPoint.x > width) || (setPoint.y < 0) || (setPoint.y > height)));
+			}
+		}
+		return castingPoints;
+	}
+
+	private Set<Point> trySquareBorderCells(Ability ability, Point targetPosition, Point casterPosition) {
+		Set<Point> spotsToCastAbilityHittingTarget = new HashSet<>();
+		int range = ability.getSpellData().getRange();
+		int aoeRange = ability.getSpellData().getAreaOfEffectRange();
+		AreaOfEffect area = ability.getAreaOfEffect();
+
+		for (int i = 0; i <= range; i++) {
+			for (int j = 0; j <= range; j++) {
+				if ((j == aoeRange) || (i == aoeRange)) {
+					tryToAddPotentialCenter(targetPosition, new Point(casterPosition.x + i, casterPosition.y + j), spotsToCastAbilityHittingTarget, aoeRange, area);
+					tryToAddPotentialCenter(targetPosition, new Point(casterPosition.x - i, casterPosition.y + j), spotsToCastAbilityHittingTarget, aoeRange, area);
+					tryToAddPotentialCenter(targetPosition, new Point(casterPosition.x + i, casterPosition.y - j), spotsToCastAbilityHittingTarget, aoeRange, area);
+					tryToAddPotentialCenter(targetPosition, new Point(casterPosition.x - i, casterPosition.y - j), spotsToCastAbilityHittingTarget, aoeRange, area);
+				}
+			}
+		}
+		return spotsToCastAbilityHittingTarget;
+	}
+
+	private Set<Point> tryCircleBorderCells(Ability ability, Point targetPosition, Point casterPosition) {
+		Set<Point> spotsToCastAbilityHittingTarget = new HashSet<>();
+		int range = ability.getSpellData().getRange();
+		int aoeRange = ability.getSpellData().getAreaOfEffectRange();
+		AreaOfEffect area = ability.getAreaOfEffect();
+
+		for (int i = 0; i <= range; i++) {
+			for (int j = 0; j <= range; j++) {
+				if (((i + j) == aoeRange) && !((i == 0) && (j == 0))) {
+					tryToAddPotentialCenter(targetPosition, new Point(casterPosition.x + i, casterPosition.y + j), spotsToCastAbilityHittingTarget, aoeRange, area);
+					tryToAddPotentialCenter(targetPosition, new Point(casterPosition.x - i, casterPosition.y + j), spotsToCastAbilityHittingTarget, aoeRange, area);
+					tryToAddPotentialCenter(targetPosition, new Point(casterPosition.x + i, casterPosition.y - j), spotsToCastAbilityHittingTarget, aoeRange, area);
+					tryToAddPotentialCenter(targetPosition, new Point(casterPosition.x - i, casterPosition.y - j), spotsToCastAbilityHittingTarget, aoeRange, area);
+				}
+			}
+		}
+		return spotsToCastAbilityHittingTarget;
+	}
+
+	private Set<Point> tryDiagonalRightCells(Ability ability, Point targetPosition, Point casterPosition) {
+		Set<Point> spotsToCastAbilityHittingTarget = new HashSet<>();
+		int range = ability.getSpellData().getRange();
+		int aoeRange = ability.getSpellData().getAreaOfEffectRange();
+		AreaOfEffect area = ability.getAreaOfEffect();
+
+		for (int i = 1; i <= range; i++) {
+			for (int j = 1; j <= range; j++) {
+				if (i == j) {
+					tryToAddPotentialCenter(targetPosition, new Point(casterPosition.x + i, casterPosition.y + j), spotsToCastAbilityHittingTarget, aoeRange, area);
+					tryToAddPotentialCenter(targetPosition, new Point(casterPosition.x - i, casterPosition.y - j), spotsToCastAbilityHittingTarget, aoeRange, area);
+				}
+			}
+		}
+		return spotsToCastAbilityHittingTarget;
+	}
+
+	private Set<Point> tryDiagonalLeftCells(Ability ability, Point targetPosition, Point casterPosition) {
+		Set<Point> spotsToCastAbilityHittingTarget = new HashSet<>();
+		int range = ability.getSpellData().getRange();
+		int aoeRange = ability.getSpellData().getAreaOfEffectRange();
+		AreaOfEffect area = ability.getAreaOfEffect();
+
+		for (int i = 1; i <= range; i++) {
+			for (int j = 1; j <= range; j++) {
+				if (i == j) {
+					tryToAddPotentialCenter(targetPosition, new Point(casterPosition.x - i, casterPosition.y + j), spotsToCastAbilityHittingTarget, aoeRange, area);
+					tryToAddPotentialCenter(targetPosition, new Point(casterPosition.x + i, casterPosition.y - j), spotsToCastAbilityHittingTarget, aoeRange, area);
+				}
+			}
+		}
+		return spotsToCastAbilityHittingTarget;
+	}
+
+	private Set<Point> trySquares(Ability ability, Point targetPosition, Point casterPosition) {
+		Set<Point> spotsToCastAbilityHittingTarget = new HashSet<>();
+		int range = ability.getSpellData().getRange();
+		int aoeRange = ability.getSpellData().getAreaOfEffectRange();
+		AreaOfEffect area = ability.getAreaOfEffect();
+
+		for (int i = 0; i <= range; i++) {
+			for (int j = 0; j <= range; j++) {
+				if ((j <= aoeRange) && (i <= aoeRange) && !((i == 0) && (j == 0))) {
+					tryToAddPotentialCenter(targetPosition, new Point(casterPosition.x + i, casterPosition.y + j), spotsToCastAbilityHittingTarget, aoeRange, area);
+					tryToAddPotentialCenter(targetPosition, new Point(casterPosition.x - i, casterPosition.y + j), spotsToCastAbilityHittingTarget, aoeRange, area);
+					tryToAddPotentialCenter(targetPosition, new Point(casterPosition.x + i, casterPosition.y - j), spotsToCastAbilityHittingTarget, aoeRange, area);
+					tryToAddPotentialCenter(targetPosition, new Point(casterPosition.x - i, casterPosition.y - j), spotsToCastAbilityHittingTarget, aoeRange, area);
+				}
+			}
+		}
+		return spotsToCastAbilityHittingTarget;
+	}
+
+	private Set<Point> tryCircles(Ability ability, Point targetPosition, Point casterPosition) {
+		Set<Point> spotsToCastAbilityHittingTarget = new HashSet<>();
+		int range = ability.getSpellData().getRange();
+		int aoeRange = ability.getSpellData().getAreaOfEffectRange();
+		AreaOfEffect area = ability.getAreaOfEffect();
+
+		for (int i = 0; i <= range; i++) {
+			for (int j = 0; j <= range; j++) {
+				if (((i + j) <= aoeRange) && !((i == 0) && (j == 0))) {
+					tryToAddPotentialCenter(targetPosition, new Point(casterPosition.x + i, casterPosition.y + j), spotsToCastAbilityHittingTarget, aoeRange, area);
+					tryToAddPotentialCenter(targetPosition, new Point(casterPosition.x - i, casterPosition.y + j), spotsToCastAbilityHittingTarget, aoeRange, area);
+					tryToAddPotentialCenter(targetPosition, new Point(casterPosition.x + i, casterPosition.y - j), spotsToCastAbilityHittingTarget, aoeRange, area);
+					tryToAddPotentialCenter(targetPosition, new Point(casterPosition.x - i, casterPosition.y - j), spotsToCastAbilityHittingTarget, aoeRange, area);
+				}
+			}
+		}
+		return spotsToCastAbilityHittingTarget;
+	}
+
+	private Set<Point> tryLines(Ability ability, Point targetPosition, Point casterPosition) {
+		Set<Point> spotsToCastAbilityHittingTarget = new HashSet<>();
+		int range = ability.getSpellData().getRange();
+		int aoeRange = ability.getSpellData().getAreaOfEffectRange();
+		AreaOfEffect area = ability.getAreaOfEffect();
+
+		for (int i = 1; i <= range; i++) {
+			tryToAddPotentialCenter(targetPosition, new Point(casterPosition.x, casterPosition.y + i), spotsToCastAbilityHittingTarget, aoeRange, area);
+			tryToAddPotentialCenter(targetPosition, new Point(casterPosition.x, casterPosition.y - i), spotsToCastAbilityHittingTarget, aoeRange, area);
+			tryToAddPotentialCenter(targetPosition, new Point(casterPosition.x + i, casterPosition.y), spotsToCastAbilityHittingTarget, aoeRange, area);
+			tryToAddPotentialCenter(targetPosition, new Point(casterPosition.x - i, casterPosition.y), spotsToCastAbilityHittingTarget, aoeRange, area);
+		}
+
+		return spotsToCastAbilityHittingTarget;
+	}
+
+	private void tryToAddPotentialCenter(Point targetPosition, Point center, Set<Point> spotsToCastAbilityHittingTarget, int aoeRange, AreaOfEffect area) {
+		if (checkIfTargetInAreaOfEffect(center, targetPosition, area, aoeRange)) {
+			spotsToCastAbilityHittingTarget.add(center);
+		}
+	}
+
+	private boolean checkIfTargetInAreaOfEffect(Point center, Point target, AreaOfEffect area, int aoeRange) {
+		switch (area) {
+		case CELL:
+			return center.equals(target);
+		case HORIZONTAL_LINE:
+			return (center.y == target.y) && (Math.abs(center.x - target.x) <= aoeRange);
+		case VERTICAL_LINE:
+			return (center.x == target.x) && (Math.abs(center.y - target.y) <= aoeRange);
+		case CIRCLE:
+			return Math.abs((center.x + center.y) - (target.x + target.y)) <= aoeRange;
+		case CROSS:
+			return ((center.y == target.y) && (Math.abs(center.x - target.x) <= aoeRange)) || ((center.x == target.x) && (Math.abs(center.y - target.y) <= aoeRange));
+		case SQUARE:
+			return (Math.abs(center.x - target.x) <= aoeRange) && (Math.abs(center.y - target.y) <= aoeRange);
+		case DIAGONAL:
+			int diffX = Math.abs(center.x - target.x);
+			int diffY = Math.abs(center.y - target.y);
+			return (diffX == diffY) && (diffX <= aoeRange);
+		case SQUARE_BORDER:
+			return (Math.abs(center.x - target.x) == aoeRange) && (Math.abs(center.y - target.y) == aoeRange);
+		case CIRCLE_BORDER:
+			return Math.abs((center.x + center.y) - (target.x + target.y)) == aoeRange;
+		default:
+			return false;
+		}
 	}
 }

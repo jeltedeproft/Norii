@@ -1,6 +1,7 @@
 
 package com.jelte.norii.utility;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -10,6 +11,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
+import com.jelte.norii.battle.battleState.BattleState;
+import com.jelte.norii.battle.battleState.HypotheticalUnit;
 import com.jelte.norii.entities.Entity;
 
 public final class Utility {
@@ -69,6 +73,48 @@ public final class Utility {
 	public static int getDistance(final TiledMapPosition pos1, final Entity unit2) {
 		final TiledMapPosition pos2 = unit2.getCurrentPosition();
 		return (Math.abs(pos1.getTileX() - pos2.getTileX()) + Math.abs(pos1.getTileY() - pos2.getTileY()));
+	}
+
+	public static Point getCenterOfGravityAi(BattleState battleState) {
+		Array<HypotheticalUnit> aiUnits = battleState.getAiUnits();
+		final int numberOfElements = aiUnits.size;
+		int sumX = 0;
+		int sumY = 0;
+
+		for (int i = 0; i < numberOfElements; i++) {
+			sumX += aiUnits.get(i).getX();
+			sumY += aiUnits.get(i).getY();
+		}
+
+		return new Point(sumX / numberOfElements, sumY / numberOfElements);
+	}
+
+	public static Point getCenterOfGravityPlayers(BattleState battleState) {
+		Array<HypotheticalUnit> playerUnits = battleState.getPlayerUnits();
+		final int numberOfElements = playerUnits.size;
+		int sumX = 0;
+		int sumY = 0;
+
+		for (int i = 0; i < numberOfElements; i++) {
+			sumX += playerUnits.get(i).getX();
+			sumY += playerUnits.get(i).getY();
+		}
+
+		return new Point(sumX / numberOfElements, sumY / numberOfElements);
+	}
+
+	public static Point getCenterOfGravityAllUnits(BattleState battleState) {
+		Array<HypotheticalUnit> allUnits = battleState.getAllUnits();
+		final int numberOfElements = allUnits.size;
+		int sumX = 0;
+		int sumY = 0;
+
+		for (int i = 0; i < numberOfElements; i++) {
+			sumX += allUnits.get(i).getX();
+			sumY += allUnits.get(i).getY();
+		}
+
+		return new Point(sumX / numberOfElements, sumY / numberOfElements);
 	}
 
 	public static float clamp(final float var, final float max, final float min) {

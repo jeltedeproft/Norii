@@ -9,6 +9,7 @@ import org.xguzm.pathfinding.grid.NavigationGrid;
 import org.xguzm.pathfinding.grid.NavigationGridGraph;
 
 import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.utils.Array;
 
 public class MyNavigationTiledMapLayer extends MapLayer implements NavigationGridGraph<GridCell> {
 
@@ -103,6 +104,18 @@ public class MyNavigationTiledMapLayer extends MapLayer implements NavigationGri
 	@Override
 	public boolean lineOfSight(final NavigationNode from, final NavigationNode to) {
 		return navGrid.lineOfSight(from, to);
+	}
+
+	public Array<GridCell> getUnwalkableNodes() {
+		Array<GridCell> nodes = new Array<>();
+		for (GridCell[] row : navGrid.getNodes()) {
+			for (GridCell cell : row) {
+				if (cell.isWalkable()) {
+					nodes.add(cell);
+				}
+			}
+		}
+		return nodes;
 	}
 
 }

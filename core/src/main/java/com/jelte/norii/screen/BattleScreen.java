@@ -121,7 +121,7 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 	}
 
 	private void initializeMap() {
-		battlemanager = new BattleManager(playerUnits, aiUnits, aiTeamLeader, currentMap.getMapWidth(), currentMap.getMapHeight());
+		battlemanager = new BattleManager(playerUnits, aiUnits, aiTeamLeader, currentMap.getMapWidth(), currentMap.getMapHeight(), currentMap.getNavLayer().getUnwalkableNodes());
 		battlescreenInputProcessor.setBattleManager(battlemanager);
 		currentMap.setStage(this);
 		MyPathFinder.getInstance().setMap(currentMap);
@@ -130,7 +130,6 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 	private void spawnAI() {
 		final List<TiledMapPosition> enemyStartPositions = currentMap.getEnemyStartPositions();
 		aiTeamLeader.spawnAiUnits(enemyStartPositions);
-		aiTeamLeader.setPathFinder(MyPathFinder.getInstance());
 	}
 
 	private void initializeUnits() {
@@ -172,7 +171,8 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 
 	@Override
 	public void render(final float delta) {
-		// System.out.println("max sprites in batch : " + spriteBatch.maxSpritesInBatch);
+		// System.out.println("max sprites in batch : " +
+		// spriteBatch.maxSpritesInBatch);
 		// System.out.println("spritebatch render calls : " + spriteBatch.renderCalls);
 		if (isPaused) {
 			updatePauseMenu();
@@ -338,7 +338,7 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 			battlemanager.getCurrentBattleState().exit();
 			break;
 		case UPDATE_HP:
-			battlemanager.updateStateOfBattlePos(unit);
+			battlemanager.updateStateOfBattle(unit);
 			break;
 		default:
 			break;
@@ -378,7 +378,7 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 	public void onEntityNotify(EntityCommand command, Entity unit, TiledMapPosition pos) {
 		switch (command) {
 		case UPDATE_POS:
-			battlemanager.updateStateOfBattlePos(unit, pos);
+			battlemanager.updateStateOfBattle(unit, pos);
 			break;
 		default:
 			break;

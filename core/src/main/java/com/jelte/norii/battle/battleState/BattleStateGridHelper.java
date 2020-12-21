@@ -135,19 +135,27 @@ public class BattleStateGridHelper {
 	}
 
 	private boolean hasCellAiUnit(Point point, BattleState stateOfBattle) {
-		return stateOfBattle.get(point.x, point.y) > 0;
+		BattleCell cell = stateOfBattle.get(point.x, point.y);
+		if (cell.isOccupied()) {
+			return !cell.getUnit().isPlayerUnit();
+		}
+		return false;
 	}
 
 	private boolean hasCellPlayerUnit(Point point, BattleState stateOfBattle) {
-		return stateOfBattle.get(point.x, point.y) < 0;
+		BattleCell cell = stateOfBattle.get(point.x, point.y);
+		if (cell.isOccupied()) {
+			return cell.getUnit().isPlayerUnit();
+		}
+		return false;
 	}
 
 	private boolean hasCellUnit(Point point, BattleState stateOfBattle) {
-		return stateOfBattle.get(point.x, point.y) != 0;
+		return stateOfBattle.get(point.x, point.y).isOccupied();
 	}
 
 	private boolean isCellEmpty(Point point, BattleState stateOfBattle) {
-		return stateOfBattle.get(point.x, point.y) == 0;
+		return !stateOfBattle.get(point.x, point.y).isOccupied();
 	}
 
 	private Set<Point> addLines(Set<Point> points, Point centre, int range) {

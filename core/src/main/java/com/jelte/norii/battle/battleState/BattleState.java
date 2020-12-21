@@ -1,53 +1,61 @@
 package com.jelte.norii.battle.battleState;
 
 import java.awt.Point;
-import java.util.stream.IntStream;
 
 import com.badlogic.gdx.math.MathUtils;
-import com.jelte.norii.entities.Entity;
-import com.jelte.norii.magic.Ability;
+import com.badlogic.gdx.utils.Array;
+import com.jelte.norii.magic.Modifier;
 
 public class BattleState {
-	private final int[][] stateOfField;
+	private final BattleCell[][] stateOfField;
 	private int score;
-	private Ability abilityUsed;
-	private Point target;
-	private Point moveTo;
-	private Entity ai;
 
 	public static final int NO_UNIT = 0;
 
 	public BattleState(int width, int height) {
-		stateOfField = new int[width][height];
+		stateOfField = new BattleCell[width][height];
 		score = 0;
 	}
 
-	public BattleState(int[][] field) {
+	public BattleState(BattleCell[][] field) {
 		stateOfField = field;
 		score = 0;
 	}
 
-	public BattleState(int[][] field, int score) {
+	public BattleState(BattleCell[][] field, int score) {
 		stateOfField = field;
 		this.score = score;
 	}
 
-	public void set(int width, int height, int value) {
-		if ((height > 0) && (width > 0)) {
-			final int original = stateOfField[width][height];
-			final int difference = value - original;
-			score += difference;
-			stateOfField[width][height] = value;
+	public void addModifierToUnit(int width, int height, Modifier modifier) {
+		if (stateOfField[width][height].isOccupied()) {
+			stateOfField[width][height].getUnit().addModifier(modifier);
 		}
 	}
 
-	public int get(int width, int height) {
+	public void setEntity(int width, int height, HypotheticalUnit unit) {
+		if ((height > 0) && (width > 0)) {
+			final int originalScore = stateOfField[width][height].getScore();
+			final int newScore = unit.getScore();
+			final int difference = newScore - originalScore;
+			score += difference;
+			unit.setX(width);
+			unit.setY(height);
+			stateOfField[width][height].setUnit(unit);
+		}
+	}
+
+	public BattleCell get(int width, int height) {
 		return stateOfField[width][height];
 	}
 
-	public void moveUnitFromTo(Entity unit, Point from, Point to) {
-		set(from.x, from.y, NO_UNIT);
-		set(to.x, to.y, unit.getHp());
+	public void moveUnitFromTo(Point from, Point to) {
+		stateOfField[to.x][to.y].setOccupied(true);
+		stateOfField[to.x][to.y].setUnit(stateOfField[from.x][from.y].getUnit());
+		stateOfField[to.x][to.y].getUnit().setX(to.x);
+		stateOfField[to.x][to.y].getUnit().setY(to.y);
+		stateOfField[from.x][from.y].setOccupied(false);
+		stateOfField[from.x][from.y].removeUnit();
 	}
 
 	public Point stepFromTowards(Point from, Point to) {
@@ -77,14 +85,9 @@ public class BattleState {
 	}
 
 	public BattleState makeCopy() {
-		final int[][] copy = new int[stateOfField.length][];
-		for (int i = 0; i < stateOfField.length; i++) {
-			final int[] row = stateOfField[i];
-			final int height = row.length;
-			copy[i] = new int[height];
-			System.arraycopy(row, 0, copy[i], 0, height);
-		}
-		return new BattleState(copy, score);
+		BattleCell[][] copyField = stateOfField.clone();
+		return new BattleState(copyField, score);
+
 	}
 
 	public int getScore() {
@@ -93,8 +96,10 @@ public class BattleState {
 
 	public int calculateScore() {
 		int sum = 0;
-		for (final int[] row : stateOfField) {
-			sum += IntStream.of(row).sum();
+		for (final BattleCell[] row : stateOfField) {
+			for (final BattleCell cell : row) {
+				sum += cell.getScore();
+			}
 		}
 		return sum;
 	}
@@ -107,35 +112,44 @@ public class BattleState {
 		return stateOfField.length;
 	}
 
-	public Ability getAbilityUsed() {
-		return abilityUsed;
+	public void updateEntity(int tileX, int tileY, int hp) {
+		get(tileX, tileY).getUnit().setHp(hp);
 	}
 
-	public void setAbilityUsed(Ability abilityUsed) {
-		this.abilityUsed = abilityUsed;
+	public Array<HypotheticalUnit> getPlayerUnits() {
+		Array<HypotheticalUnit> units = new Array<>();
+		for (BattleCell[] row : stateOfField) {
+			for (BattleCell cell : row) {
+				if ((cell.getUnit() != null) && cell.getUnit().isPlayerUnit()) {
+					units.add(cell.getUnit());
+				}
+			}
+		}
+		return units;
 	}
 
-	public Point getTarget() {
-		return target;
+	public Array<HypotheticalUnit> getAiUnits() {
+		Array<HypotheticalUnit> units = new Array<>();
+		for (BattleCell[] row : stateOfField) {
+			for (BattleCell cell : row) {
+				if ((cell.getUnit() != null) && !cell.getUnit().isPlayerUnit()) {
+					units.add(cell.getUnit());
+				}
+			}
+		}
+		return units;
 	}
 
-	public void setTarget(Point target) {
-		this.target = target;
+	public Array<HypotheticalUnit> getAllUnits() {
+		Array<HypotheticalUnit> units = new Array<>();
+		for (BattleCell[] row : stateOfField) {
+			for (BattleCell cell : row) {
+				if (cell.getUnit() != null) {
+					units.add(cell.getUnit());
+				}
+			}
+		}
+		return units;
 	}
 
-	public Entity getAi() {
-		return ai;
-	}
-
-	public void setAi(Entity ai) {
-		this.ai = ai;
-	}
-
-	public Point getMoveTo() {
-		return moveTo;
-	}
-
-	public void setMoveTo(Point moveTo) {
-		this.moveTo = moveTo;
-	}
 }

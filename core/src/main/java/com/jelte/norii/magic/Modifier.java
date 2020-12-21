@@ -16,9 +16,6 @@ public class Modifier {
 
 	public void applyModifier(final Entity unit) {
 		switch (type) {
-		case DAMAGE:
-			unit.damage(amount);
-			break;
 		case REMOVE_AP:
 			unit.setAp(unit.getAp() - amount);
 			break;

@@ -1,9 +1,13 @@
 package com.jelte.norii.battle;
 
+import java.awt.Point;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.xguzm.pathfinding.grid.GridCell;
+
+import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.ai.AITeamLeader;
 import com.jelte.norii.battle.battlePhase.ActionBattlePhase;
 import com.jelte.norii.battle.battlePhase.AttackBattlePhase;
@@ -13,9 +17,11 @@ import com.jelte.norii.battle.battlePhase.MovementBattlePhase;
 import com.jelte.norii.battle.battlePhase.SelectUnitBattlePhase;
 import com.jelte.norii.battle.battlePhase.SpellBattlePhase;
 import com.jelte.norii.battle.battleState.BattleState;
+import com.jelte.norii.battle.battleState.HypotheticalUnit;
 import com.jelte.norii.entities.AiEntity;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.PlayerEntity;
+import com.jelte.norii.magic.Modifier;
 import com.jelte.norii.utility.TiledMapPosition;
 
 public class BattleManager {
@@ -36,8 +42,8 @@ public class BattleManager {
 	private List<AiEntity> aiUnits;
 	private Entity lockedUnit;
 
-	public BattleManager(final List<PlayerEntity> playerUnits, final List<AiEntity> aiUnits, AITeamLeader aiTeamLeader, int width, int height) {
-		initVariables(playerUnits, aiUnits, aiTeamLeader, width, height);
+	public BattleManager(final List<PlayerEntity> playerUnits, final List<AiEntity> aiUnits, AITeamLeader aiTeamLeader, int width, int height, Array<GridCell> unwalkableNodes) {
+		initVariables(playerUnits, aiUnits, aiTeamLeader, width, height, unwalkableNodes);
 
 		deploymentBattleState = new DeploymentBattlePhase(this);
 		selectUnitBattleState = new SelectUnitBattlePhase(this);
@@ -50,7 +56,7 @@ public class BattleManager {
 		currentBattleState.entry();
 	}
 
-	private void initVariables(final List<PlayerEntity> playerUnits, final List<AiEntity> aiUnits, AITeamLeader aiTeamLeader, int width, int height) {
+	private void initVariables(final List<PlayerEntity> playerUnits, final List<AiEntity> aiUnits, AITeamLeader aiTeamLeader, int width, int height, Array<GridCell> unwalkableNodes) {
 		this.playerUnits = playerUnits;
 		this.aiUnits = aiUnits;
 		this.aiTeamLeader = aiTeamLeader;
@@ -58,16 +64,30 @@ public class BattleManager {
 		playerTurn = true;
 		lockedUnit = null;
 		stateOfBattle = new BattleState(width, height);
-		initializeStateOfBattle(playerUnits, aiUnits);
+		initializeStateOfBattle(playerUnits, aiUnits, unwalkableNodes);
 	}
 
-	private void initializeStateOfBattle(final List<PlayerEntity> playerUnits, final List<AiEntity> aiUnits) {
+	private void initializeStateOfBattle(final List<PlayerEntity> playerUnits, final List<AiEntity> aiUnits, Array<GridCell> unwalkableNodes) {
 		for (final PlayerEntity unit : playerUnits) {
-			stateOfBattle.set(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getHp() * (-1));
+			stateOfBattle.setEntity(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(),
+					new HypotheticalUnit(true, unit.getHp(), unit.getEntityData().getAttackRange(), unit.getAp(), unit.getModifiers(), unit.getAbilities()));
+			addModifiers(unit);
 		}
 
 		for (final AiEntity unit : aiUnits) {
-			stateOfBattle.set(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getHp());
+			stateOfBattle.setEntity(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(),
+					new HypotheticalUnit(false, unit.getHp(), unit.getEntityData().getAttackRange(), unit.getAp(), unit.getModifiers(), unit.getAbilities()));
+			addModifiers(unit);
+		}
+
+		for (GridCell cell : unwalkableNodes) {
+			stateOfBattle.get(cell.x, cell.y).setWalkable(false);
+		}
+	}
+
+	private void addModifiers(final Entity unit) {
+		for (Modifier mod : unit.getModifiers()) {
+			stateOfBattle.addModifierToUnit(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), mod);
 		}
 	}
 
@@ -96,19 +116,15 @@ public class BattleManager {
 
 	}
 
-	public void updateStateOfBattlePos(Entity unit) {
-		int factor;
-		if (unit.isPlayerUnit()) {
-			factor = -1;
-		} else {
-			factor = 1;
-		}
-		stateOfBattle.set(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getHp() * factor);
+	public void updateStateOfBattle(Entity unit) {
+		stateOfBattle.updateEntity(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getHp());
 	}
 
-	public void updateStateOfBattlePos(Entity unit, TiledMapPosition oldPos) {
-		stateOfBattle.set(oldPos.getTileX(), oldPos.getTileY(), 0);
-		updateStateOfBattlePos(unit);
+	public void updateStateOfBattle(Entity unit, TiledMapPosition newPos) {
+		Point oldPoint = new Point(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY());
+		Point newPoint = new Point(newPos.getTileX(), newPos.getTileY());
+		stateOfBattle.moveUnitFromTo(oldPoint, newPoint);
+		updateStateOfBattle(unit);
 	}
 
 	public PlayerEntity getActiveUnit() {

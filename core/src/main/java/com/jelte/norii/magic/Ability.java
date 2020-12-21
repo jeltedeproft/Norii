@@ -13,7 +13,7 @@ public class Ability {
 	}
 
 	public enum AffectedTeams {
-		FRIENDLY, ENEMY, BOTH
+		FRIENDLY, ENEMY, BOTH, NONE
 	}
 
 	public enum Target {

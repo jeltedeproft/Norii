@@ -291,6 +291,10 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 		return entityID;
 	}
 
+	public int getAttackRange() {
+		return entityData.getAttackRange();
+	}
+
 	public TextureRegion getFrame() {
 		return entityAnimation.getFrame();
 	}
@@ -347,6 +351,10 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 		if (mod.getTurns() == 0) {
 			mod.removeModifier(this);
 		}
+	}
+
+	public Collection<Modifier> getModifiers() {
+		return modifiers;
 	}
 
 	public Collection<Ability> getAbilities() {

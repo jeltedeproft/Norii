@@ -1,5 +1,6 @@
 package com.jelte.norii.map;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -231,6 +232,11 @@ public class MyPathFinder {
 			}
 		}
 		return null;
+	}
+
+	public Point getPositionFurthestAwayFrom(Point pos) {
+		TiledMapPosition goal = getPositionFurthestAwayFrom(new TiledMapPosition().setPositionFromTiles(pos.x, pos.y));
+		return new Point(goal.getTileX(), goal.getTileY());
 	}
 
 	public TiledMapPosition getPositionFurthestAwayFrom(TiledMapPosition pos) {
