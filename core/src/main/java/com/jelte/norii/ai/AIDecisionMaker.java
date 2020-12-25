@@ -1,14 +1,11 @@
 package com.jelte.norii.ai;
 
 import java.awt.Point;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.xguzm.pathfinding.grid.GridCell;
 
@@ -19,9 +16,6 @@ import com.jelte.norii.battle.battleState.BattleStateGridHelperFromUnits;
 import com.jelte.norii.battle.battleState.HypotheticalUnit;
 import com.jelte.norii.battle.battleState.Move;
 import com.jelte.norii.battle.battleState.MoveType;
-import com.jelte.norii.entities.AiEntity;
-import com.jelte.norii.entities.Entity;
-import com.jelte.norii.entities.PlayerEntity;
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.map.MyPathFinder;
 import com.jelte.norii.utility.TiledMapPosition;
@@ -58,7 +52,7 @@ public class AIDecisionMaker {
 		// return move for highest score
 	}
 
-	private Array<UnitTurn> generateMoves(Ability ability, AiEntity aiUnit, BattleState battleState) {
+	private Array<UnitTurn> generateMoves(Ability ability, HypotheticalUnit aiUnit, BattleState battleState) {
 		Array<UnitTurn> unitTurns = new Array<>();
 
 		// get the distance between unit and possible targets
@@ -69,19 +63,19 @@ public class AIDecisionMaker {
 				// just walk
 				HypotheticalUnit closestUnit = distancesWithAbilityTargetUnits.firstEntry().getValue();
 				TiledMapPosition closestUnitPos = new TiledMapPosition().setPositionFromTiles(closestUnit.getX(), closestUnit.getY());
-				List<GridCell> path = MyPathFinder.getInstance().pathTowards(aiUnit.getCurrentPosition(), closestUnitPos, aiUnit.getAp());
+				List<GridCell> path = MyPathFinder.getInstance().pathTowards(new TiledMapPosition().setPositionFromTiles(aiUnit.getX(), aiUnit.getY()), closestUnitPos, aiUnit.getAp());
 				Point goal = new Point(path.get(path.size() - 1).x, path.get(path.size() - 1).y);
-				unitTurns.add(new UnitTurn(aiUnit.getEntityID(),new Move(MoveType.MOVE,goal)));
+				unitTurns.add(new UnitTurn(aiUnit.getEntityId(), new Move(MoveType.MOVE, goal)));
 				return unitTurns;
-			}else {
-				//move attack
+			} else {
+				// move attack
 				HypotheticalUnit closestUnit = distancesWithAbilityTargetUnits.firstEntry().getValue();
 				TiledMapPosition closestUnitPos = new TiledMapPosition().setPositionFromTiles(closestUnit.getX(), closestUnit.getY());
-				List<GridCell> path = MyPathFinder.getInstance().pathTowards(aiUnit.getCurrentPosition(), closestUnitPos, aiUnit.getAp());
+				List<GridCell> path = MyPathFinder.getInstance().pathTowards(new TiledMapPosition().setPositionFromTiles(aiUnit.getX(), aiUnit.getY()), closestUnitPos, aiUnit.getAp());
 				Point moveGoal = new Point(path.get(path.size() - 1).x, path.get(path.size() - 1).y);
 				Point attackGoal = new Point(distancesWithAbilityTargetUnits.firstEntry().getValue().getX(), distancesWithAbilityTargetUnits.firstEntry().getValue().getY());
-				UnitTurn moveAttack = new UnitTurn(aiUnit.getEntityID(),new Move(MoveType.MOVE,moveGoal));
-				moveAttack.addMove(new Move(MoveType.ATTACK,attackGoal));
+				UnitTurn moveAttack = new UnitTurn(aiUnit.getEntityId(), new Move(MoveType.MOVE, moveGoal));
+				moveAttack.addMove(new Move(MoveType.ATTACK, attackGoal));
 				unitTurns.add(moveAttack);
 				return unitTurns;
 			}
@@ -89,17 +83,17 @@ public class AIDecisionMaker {
 
 		// decide where to cast spell
 		Array<Point> abilityTargets = getAbilityTargets(ability, aiUnit, battleState);
-		if(!abilityTargets.isEmpty()) {
-			for(Point target : abilityTargets) {
-				Set<Point> positionsToCastSpell = battleStateGridHelper.getAllPointsWhereTargetIsHit(ability,target,new Point(aiUnit.getCurrentPosition().getTileX(),aiUnit.getCurrentPosition().getTileY()),battleState);
+		if (!abilityTargets.isEmpty()) {
+			for (Point target : abilityTargets) {
+				Set<Point> positionsToCastSpell = battleStateGridHelper.getAllPointsWhereTargetIsHit(ability, target, new Point(aiUnit.getX(), aiUnit.getY()), battleState);
 				Move moveAfterSpell = decideMove(ability, aiUnit, battleState);
-				for(Point point : positionsToCastSpell) {
-					UnitTurn spellAndMove = new UnitTurn(aiUnit.getEntityID(),new Move(MoveType.SPELL,positionToCastSpell));
-					spellAndMove.addMove(MoveType.MOVE,);
+				for (Point point : positionsToCastSpell) {
+					UnitTurn spellAndMove = new UnitTurn(aiUnit.getEntityId(), new Move(MoveType.SPELL, point));
+					spellAndMove.addMove(moveAfterSpell);
+					unitTurns.add(spellAndMove);
 				}
 			}
 		}
-
 
 		while (abilityTargets.isEmpty() && (aiUnit.getAp() > 0)) {
 
@@ -110,13 +104,13 @@ public class AIDecisionMaker {
 
 	}
 
-	private Move decideMove(Ability ability, AiEntity aiUnit, BattleState battleState) {
+	private Move decideMove(Ability ability, HypotheticalUnit aiUnit, BattleState battleState) {
 		Point centerOfGravityEnemies = Utility.getCenterOfGravityPlayers(battleState);
 		Point centerOfGravityAllies = Utility.getCenterOfGravityAi(battleState);
 		Point centerOfGravityAllUnits = Utility.getCenterOfGravityAllUnits(battleState);
 
 		// if low hp run away
-		if (aiUnit.getHp() <= ((aiUnit.getEntityData().getMaxHP() / 100.0f) * 10)) {
+		if (aiUnit.getHp() <= ((aiUnit.getMaxHp() / 100.0f) * 10)) {
 			Point originalGoal = MyPathFinder.getInstance().getPositionFurthestAwayFrom(centerOfGravityEnemies);
 			Point trimmedGoal = trimPathConsideringApAndReachable(originalGoal, aiUnit);
 			return new Move(MoveType.MOVE, trimmedGoal);
@@ -137,14 +131,14 @@ public class AIDecisionMaker {
 		}
 	}
 
-	private Point trimPathConsideringApAndReachable(Point originalGoal, AiEntity aiUnit) {
-		TiledMapPosition start = new TiledMapPosition().setPositionFromTiles(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY());
+	private Point trimPathConsideringApAndReachable(Point originalGoal, HypotheticalUnit aiUnit) {
+		TiledMapPosition start = new TiledMapPosition().setPositionFromTiles(aiUnit.getX(), aiUnit.getY());
 		TiledMapPosition goal = new TiledMapPosition().setPositionFromTiles(originalGoal.x, originalGoal.y);
 		List<GridCell> path = MyPathFinder.getInstance().pathTowards(start, goal, aiUnit.getAp());
 		return new Point(path.get(path.size() - 1).x, path.get(path.size() - 1).y);
 	}
 
-	private Map<Integer, HypotheticalUnit> getDistancesToTargets(AiEntity aiUnit, BattleState battleState, Ability ability) {
+	private Map<Integer, HypotheticalUnit> getDistancesToTargets(HypotheticalUnit aiUnit, BattleState battleState, Ability ability) {
 		Map<Integer, HypotheticalUnit> distances = new TreeMap<>();
 		switch (ability.getAffectedTeams()) {
 		case FRIENDLY:
@@ -168,28 +162,28 @@ public class AIDecisionMaker {
 		return distances;
 	}
 
-	private Integer calculateDistanceTwoUnits(AiEntity aiUnit, HypotheticalUnit entity) {
-		TiledMapPosition aiUnitPosition = aiUnit.getCurrentPosition();
+	private Integer calculateDistanceTwoUnits(HypotheticalUnit aiUnit, HypotheticalUnit entity) {
+		TiledMapPosition aiUnitPosition = new TiledMapPosition().setPositionFromTiles(aiUnit.getX(), aiUnit.getY());
 		TiledMapPosition entityPosition = new TiledMapPosition().setPositionFromTiles(entity.getX(), entity.getY());
 		return aiUnitPosition.getDistance(entityPosition);
 	}
 
-	private Array<Point> getAbilityTargets(Ability ability, AiEntity aiUnit, BattleState battleState) {
-		Point casterPos = new Point(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY());
+	private Array<Point> getAbilityTargets(Ability ability, HypotheticalUnit aiUnit, BattleState battleState) {
+		Point casterPos = new Point(aiUnit.getX(), aiUnit.getY());
 		Array<Point> unitPositions = getUnitPositions(aiUnit, ability, battleState);
 		return battleStateGridHelper.getTargetPositionsInRangeAbility(casterPos, ability, unitPositions);
 	}
 
-	private Array<Point> getUnitPositions(Entity unit, Ability ability, BattleState battleState) {
+	private Array<Point> getUnitPositions(HypotheticalUnit aiUnit, Ability ability, BattleState battleState) {
 		switch (ability.getAffectedTeams()) {
 		case FRIENDLY:
-			if (unit.isPlayerUnit()) {
+			if (aiUnit.isPlayerUnit()) {
 				return collectPoints(battleState.getPlayerUnits());
 			} else {
 				return collectPoints(battleState.getAiUnits());
 			}
 		case ENEMY:
-			if (!unit.isPlayerUnit()) {
+			if (!aiUnit.isPlayerUnit()) {
 				return collectPoints(battleState.getPlayerUnits());
 			} else {
 				return collectPoints(battleState.getAiUnits());

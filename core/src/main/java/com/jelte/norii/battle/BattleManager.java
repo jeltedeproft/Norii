@@ -70,13 +70,13 @@ public class BattleManager {
 	private void initializeStateOfBattle(final List<PlayerEntity> playerUnits, final List<AiEntity> aiUnits, Array<GridCell> unwalkableNodes) {
 		for (final PlayerEntity unit : playerUnits) {
 			stateOfBattle.setEntity(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(),
-					new HypotheticalUnit(true, unit.getHp(), unit.getEntityData().getAttackRange(), unit.getAp(), unit.getModifiers(), unit.getAbilities()));
+					new HypotheticalUnit(unit.getEntityID(), true, unit.getHp(), unit.getEntityData().getMaxHP(), unit.getEntityData().getAttackRange(), unit.getAp(), unit.getModifiers(), unit.getAbilities()));
 			addModifiers(unit);
 		}
 
 		for (final AiEntity unit : aiUnits) {
 			stateOfBattle.setEntity(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(),
-					new HypotheticalUnit(false, unit.getHp(), unit.getEntityData().getAttackRange(), unit.getAp(), unit.getModifiers(), unit.getAbilities()));
+					new HypotheticalUnit(unit.getEntityID(), false, unit.getHp(), unit.getEntityData().getMaxHP(), unit.getEntityData().getAttackRange(), unit.getAp(), unit.getModifiers(), unit.getAbilities()));
 			addModifiers(unit);
 		}
 

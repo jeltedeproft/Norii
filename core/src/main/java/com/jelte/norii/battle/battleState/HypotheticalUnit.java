@@ -9,14 +9,16 @@ public class HypotheticalUnit {
 
 	private boolean playerUnit;
 	private int hp;
+	private int maxHp;
 	private int attackRange;
 	private int ap;
 	private Collection<Modifier> modifiers;
-	private Collection abilities;
+	private Collection<Ability> abilities;
+	private int entityId;
 	private int x;
 	private int y;
 
-	public HypotheticalUnit(boolean playerUnit, int hp, int attackRange, int ap, Collection<Modifier> modifiers, Collection<Ability> abilities, int x, int y) {
+	public HypotheticalUnit(int entityId, boolean playerUnit, int hp, int maxHp, int attackRange, int ap, Collection<Modifier> modifiers, Collection<Ability> abilities, int x, int y) {
 		super();
 		this.playerUnit = playerUnit;
 		this.hp = hp;
@@ -26,9 +28,10 @@ public class HypotheticalUnit {
 		this.abilities = abilities;
 		this.x = x;
 		this.y = y;
+		this.entityId = entityId;
 	}
 
-	public HypotheticalUnit(boolean playerUnit, int hp, int attackRange, int ap, Collection<Modifier> collection, Collection<Ability> abilities) {
+	public HypotheticalUnit(int entityId, boolean playerUnit, int hp, int maxHp, int attackRange, int ap, Collection<Modifier> collection, Collection<Ability> abilities) {
 		super();
 		this.playerUnit = playerUnit;
 		this.hp = hp;
@@ -38,6 +41,7 @@ public class HypotheticalUnit {
 		this.abilities = abilities;
 		this.x = 0;
 		this.y = 0;
+		this.entityId = entityId;
 	}
 
 	public int getScore() {
@@ -150,6 +154,22 @@ public class HypotheticalUnit {
 
 	public void setAp(int ap) {
 		this.ap = ap;
+	}
+
+	public int getEntityId() {
+		return entityId;
+	}
+
+	public void setEntityId(int entityId) {
+		this.entityId = entityId;
+	}
+
+	public int getMaxHp() {
+		return maxHp;
+	}
+
+	public void setMaxHp(int maxHp) {
+		this.maxHp = maxHp;
 	}
 
 }
