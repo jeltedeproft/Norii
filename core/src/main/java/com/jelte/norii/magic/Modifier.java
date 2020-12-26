@@ -83,4 +83,10 @@ public class Modifier {
 		return "modifier name : " + type;
 	}
 
+	public void decrementTurns() {
+		if (!(turns == 0)) {
+			--turns;
+		}
+	}
+
 }

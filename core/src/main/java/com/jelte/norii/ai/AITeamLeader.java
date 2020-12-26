@@ -9,7 +9,6 @@ import com.jelte.norii.battle.battleState.BattleState;
 import com.jelte.norii.entities.AiEntity;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityTypes;
-import com.jelte.norii.entities.PlayerEntity;
 import com.jelte.norii.utility.TiledMapPosition;
 
 public class AITeamLeader {
@@ -51,8 +50,8 @@ public class AITeamLeader {
 		}
 	}
 
-	public void act(List<PlayerEntity> playerUnits, List<AiEntity> aiUnits, BattleState stateOfBattle) {
-		aiDecisionMaker.makeDecision(stateOfBattle);
+	public UnitTurn act(BattleState stateOfBattle) {
+		return aiDecisionMaker.makeDecision(stateOfBattle);
 	}
 
 	public void updateUnits(final float delta) {

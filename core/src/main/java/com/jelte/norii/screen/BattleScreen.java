@@ -338,7 +338,7 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 			battlemanager.getCurrentBattleState().exit();
 			break;
 		case UPDATE_HP:
-			battlemanager.updateStateOfBattle(unit);
+			battlemanager.updateHp(unit);
 			break;
 		default:
 			break;

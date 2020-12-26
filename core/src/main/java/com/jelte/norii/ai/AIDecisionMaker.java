@@ -36,33 +36,75 @@ public class AIDecisionMaker {
 		statesWithScores = new TreeMap<>();
 	}
 
-	public void makeDecision(BattleState battleState) {
+	public UnitTurn makeDecision(BattleState battleState) {
 		final Array<HypotheticalUnit> players = battleState.getPlayerUnits();
 		final Array<HypotheticalUnit> ais = battleState.getAiUnits();
-		Array<BattleState> states = new Array<>();
+		final Array<BattleState> battleStates = new Array<>();
+		final Array<BattleState> battleStatesLevelTwo = new Array<>();
+		final Array<BattleState> battleStatesLevelThree = new Array<>();
 		// for every aiUnit, generate all his moves and store them
 		for (final HypotheticalUnit aiUnit : ais) {
 			for (final Ability ability : aiUnit.getAbilities()) {
-				Array<UnitTurn> turns = generateMoves(ability, aiUnit, battleState);
-				for (UnitTurn turn : turns) {
-					states.add(applyTurnToBattleState(aiUnit, turn, battleState));
+				final Array<UnitTurn> turns = generateMoves(ability, aiUnit, battleState);
+				for (final UnitTurn turn : turns) {
+					final BattleState newState = applyTurnToBattleState(aiUnit, turn, battleState);
+					newState.setTurn(turn);
+					battleStatesLevelTwo.add(newState);
 				}
 			}
 		}
-		// every loop, reduce count modifiers
+		reduceModifierCount(battleStates);
+		for (final BattleState updatedState : battleStates) {
+			for (final HypotheticalUnit playerUnit : players) {
+				for (final Ability ability : playerUnit.getAbilities()) {
+					final Array<UnitTurn> turns = generateMoves(ability, playerUnit, updatedState);
+					for (final UnitTurn turn : turns) {
+						final BattleState newState = applyTurnToBattleState(playerUnit, turn, updatedState);
+						newState.setParentState(updatedState);
+						newState.setTurn(turn);
+						battleStatesLevelTwo.add(newState);
+					}
+				}
+			}
+		}
+		reduceModifierCount(battleStatesLevelTwo);
+		for (final BattleState updatedState : battleStatesLevelTwo) {
+			for (final HypotheticalUnit aiUnit : ais) {
+				for (final Ability ability : aiUnit.getAbilities()) {
+					final Array<UnitTurn> turns = generateMoves(ability, aiUnit, updatedState);
+					for (final UnitTurn turn : turns) {
+						final BattleState newState = applyTurnToBattleState(aiUnit, turn, updatedState);
+						newState.setParentState(updatedState);
+						newState.setTurn(turn);
+						battleStatesLevelTwo.add(newState);
+					}
 
-		// generate 2 more moves for each of them (only keep changes to score)
+				}
+			}
+		}
+		reduceModifierCount(battleStatesLevelThree);
+		battleStatesLevelThree.sort();
+		return getmoves(battleStatesLevelThree.get(0));
+	}
 
-		// calculate score
+	private UnitTurn getmoves(BattleState battleState) {
+		BattleState initialState = battleState;
+		while (initialState.getParentState() != null) {
+			initialState = battleState.getParentState();
+		}
+		return initialState.getTurn();
+	}
 
-		// sort
+	private void reduceModifierCount(Array<BattleState> battleStates) {
+		for (final BattleState battleState : battleStates) {
+			battleState.reduceModifierCounts();
+		}
 
-		// return move for highest score
 	}
 
 	private BattleState applyTurnToBattleState(HypotheticalUnit aiUnit, UnitTurn turn, BattleState battleState) {
-		BattleState newState = battleState.makeCopy();
-		for (Move move : turn.getMoves()) {
+		final BattleState newState = battleState.makeCopy();
+		for (final Move move : turn.getMoves()) {
 			switch (move.getMoveType()) {
 			case SPELL:
 				applySpellOnBattleState(aiUnit, (SpellMove) move, newState);
@@ -71,7 +113,7 @@ public class AIDecisionMaker {
 				applyAttackOnBattleState(aiUnit, move, newState);
 				break;
 			case MOVE:
-				newState.moveUnitFromTo(new Point(aiUnit.getX(), aiUnit.getY()), move.getLocation());
+				newState.moveUnitFromTo(aiUnit.getEntityId(), new Point(aiUnit.getX(), aiUnit.getY()), move.getLocation());
 				break;
 			default:
 				// do nothing
@@ -81,9 +123,9 @@ public class AIDecisionMaker {
 	}
 
 	private void applyAttackOnBattleState(HypotheticalUnit aiUnit, Move move, BattleState battleState) {
-		Point attackLocation = move.getLocation();
-		int damage = aiUnit.getAttackDamage();
-		int hp = battleState.get(attackLocation.x, attackLocation.y).getUnit().getHp();
+		final Point attackLocation = move.getLocation();
+		final int damage = aiUnit.getAttackDamage();
+		final int hp = battleState.get(attackLocation.x, attackLocation.y).getUnit().getHp();
 		if (damage >= hp) {
 			battleState.updateEntity(attackLocation.x, attackLocation.y, 0);
 		} else {
@@ -92,13 +134,13 @@ public class AIDecisionMaker {
 	}
 
 	private void applySpellOnBattleState(HypotheticalUnit aiUnit, SpellMove move, BattleState battleState) {
-		Point caster = new Point(aiUnit.getX(), aiUnit.getY());
-		Array<Point> targets = move.getAffectedUnits();
+		final Point caster = new Point(aiUnit.getX(), aiUnit.getY());
+		final Array<Point> targets = move.getAffectedUnits();
 		switch (move.getAbility().getAbilityEnum()) {
 		case FIREBALL:
-			for (Point target : targets) {
-				int damage = move.getAbility().getSpellData().getDamage();
-				int hp = battleState.get(target.x, target.y).getUnit().getHp();
+			for (final Point target : targets) {
+				final int damage = move.getAbility().getSpellData().getDamage();
+				final int hp = battleState.get(target.x, target.y).getUnit().getHp();
 				if (damage >= hp) {
 					battleState.updateEntity(target.x, target.y, 0);
 				} else {
@@ -107,13 +149,13 @@ public class AIDecisionMaker {
 			}
 			break;
 		case TURN_TO_STONE:
-			for (Point target : targets) {
+			for (final Point target : targets) {
 				battleState.addModifierToUnit(target.x, target.y, new Modifier(ModifiersEnum.STUNNED, 2, 0));
 			}
 			break;
 		case SWAP:
-			for (Point target : targets) {
-				HypotheticalUnit placeHolder = battleState.get(target.x, target.y).getUnit();
+			for (final Point target : targets) {
+				final HypotheticalUnit placeHolder = battleState.get(target.x, target.y).getUnit();
 				battleState.setEntity(target.x, target.y, battleState.get(caster.x, caster.y).getUnit());
 				battleState.setEntity(caster.x, caster.y, placeHolder);
 			}
@@ -172,7 +214,7 @@ public class AIDecisionMaker {
 			for (final Point target : abilityTargets) {
 				final Set<Point> positionsToCastSpell = battleStateGridHelper.getAllPointsWhereTargetIsHit(ability, target, new Point(aiUnit.getX(), aiUnit.getY()), battleState);
 				for (final Point point : positionsToCastSpell) {
-					Array<Point> affectedUnits = battleStateGridHelper.getTargetsAbility(ability, point, getUnitPositions(false, ability, battleState));
+					final Array<Point> affectedUnits = battleStateGridHelper.getTargetsAbility(ability, point, getUnitPositions(false, ability, battleState));
 					moveAndSpell.addMove(new SpellMove(MoveType.SPELL, point, ability, affectedUnits));
 					unitTurns.add(moveAndSpell);
 				}
@@ -184,7 +226,7 @@ public class AIDecisionMaker {
 				final Set<Point> positionsToCastSpell = battleStateGridHelper.getAllPointsWhereTargetIsHit(ability, target, new Point(aiUnit.getX(), aiUnit.getY()), battleState);
 				final Move moveAfterSpell = decideMove(ability, aiUnit, battleState);
 				for (final Point point : positionsToCastSpell) {
-					Array<Point> affectedUnits = battleStateGridHelper.getTargetsAbility(ability, point, getUnitPositions(false, ability, battleState));
+					final Array<Point> affectedUnits = battleStateGridHelper.getTargetsAbility(ability, point, getUnitPositions(false, ability, battleState));
 					final UnitTurn spellAndMove = new UnitTurn(aiUnit.getEntityId(), new SpellMove(MoveType.SPELL, point, ability, affectedUnits));
 					spellAndMove.addMove(moveAfterSpell);
 					unitTurns.add(spellAndMove);

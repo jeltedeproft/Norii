@@ -9,6 +9,8 @@ import org.xguzm.pathfinding.grid.GridCell;
 
 import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.ai.AITeamLeader;
+import com.jelte.norii.ai.UnitTurn;
+import com.jelte.norii.audio.AudioObserver;
 import com.jelte.norii.battle.battlePhase.ActionBattlePhase;
 import com.jelte.norii.battle.battlePhase.AttackBattlePhase;
 import com.jelte.norii.battle.battlePhase.BattlePhase;
@@ -18,10 +20,13 @@ import com.jelte.norii.battle.battlePhase.SelectUnitBattlePhase;
 import com.jelte.norii.battle.battlePhase.SpellBattlePhase;
 import com.jelte.norii.battle.battleState.BattleState;
 import com.jelte.norii.battle.battleState.HypotheticalUnit;
+import com.jelte.norii.battle.battleState.Move;
+import com.jelte.norii.battle.battleState.SpellMove;
 import com.jelte.norii.entities.AiEntity;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.PlayerEntity;
 import com.jelte.norii.magic.Modifier;
+import com.jelte.norii.map.MyPathFinder;
 import com.jelte.norii.utility.TiledMapPosition;
 
 public class BattleManager {
@@ -80,13 +85,13 @@ public class BattleManager {
 			addModifiers(unit);
 		}
 
-		for (GridCell cell : unwalkableNodes) {
+		for (final GridCell cell : unwalkableNodes) {
 			stateOfBattle.get(cell.x, cell.y).setWalkable(false);
 		}
 	}
 
 	private void addModifiers(final Entity unit) {
-		for (Modifier mod : unit.getModifiers()) {
+		for (final Modifier mod : unit.getModifiers()) {
 			stateOfBattle.addModifierToUnit(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), mod);
 		}
 	}
@@ -108,7 +113,8 @@ public class BattleManager {
 		playerTurn = !playerTurn;
 
 		if (!playerTurn) {
-			aiTeamLeader.act(playerUnits, aiUnits, stateOfBattle);
+			final UnitTurn turn = aiTeamLeader.act(stateOfBattle);
+			executeMoves(turn);
 		}
 
 		setCurrentBattleState(getSelectUnitBattleState());
@@ -116,15 +122,55 @@ public class BattleManager {
 
 	}
 
-	public void updateStateOfBattle(Entity unit) {
+	private void executeMoves(UnitTurn turn) {
+		final int entityID = turn.getEntityID();
+		for (final Move move : turn.getMoves()) {
+			switch (move.getMoveType()) {
+			case SPELL:
+				final SpellMove spellMove = (SpellMove) move;
+				final SpellBattlePhase spellState = (SpellBattlePhase) spellBattleState;
+				spellState.executeSpellForAi(getEntityByID(entityID), spellMove.getAbility(), spellMove.getLocation());
+				break;
+			case MOVE:
+				final Entity entityToMove = getEntityByID(entityID);
+				entityToMove.move(MyPathFinder.getInstance().pathTowards(entityToMove.getCurrentPosition(), new TiledMapPosition().setPositionFromTiles(move.getLocation().x, move.getLocation().y), entityToMove.getAp()));
+				break;
+			case ATTACK:
+				final Entity entityAttacking = getEntityByID(entityID);
+				final Entity entityToAttack = getEntityByID(stateOfBattle.get(move.getLocation().x, move.getLocation().y).getUnit().getEntityId());
+				entityAttacking.attack(entityToAttack);
+				attackBattleState.notifyAudio(AudioObserver.AudioCommand.SOUND_PLAY_ONCE, AudioObserver.AudioTypeEvent.ATTACK_SOUND);
+				break;
+			default:
+				// do nothing
+			}
+		}
+	}
+
+	private Entity getEntityByID(int entityID) {
+		for (final PlayerEntity entity : playerUnits) {
+			if (entity.getEntityID() == entityID) {
+				return entity;
+			}
+		}
+
+		for (final AiEntity entity : aiUnits) {
+			if (entity.getEntityID() == entityID) {
+				return entity;
+			}
+		}
+		return null;
+	}
+
+	public void updateHp(Entity unit) {
 		stateOfBattle.updateEntity(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getHp());
 	}
 
 	public void updateStateOfBattle(Entity unit, TiledMapPosition newPos) {
-		Point oldPoint = new Point(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY());
-		Point newPoint = new Point(newPos.getTileX(), newPos.getTileY());
-		stateOfBattle.moveUnitFromTo(oldPoint, newPoint);
-		updateStateOfBattle(unit);
+		final Point oldPoint = new Point(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY());
+		final Point newPoint = new Point(newPos.getTileX(), newPos.getTileY());
+		stateOfBattle.moveUnitFromTo(unit.getEntityID(), oldPoint, newPoint);
+		stateOfBattle.updateEntity(newPoint.x, newPoint.y, unit.getHp());
 	}
 
 	public PlayerEntity getActiveUnit() {

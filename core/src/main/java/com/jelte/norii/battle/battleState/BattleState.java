@@ -4,17 +4,26 @@ import java.awt.Point;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
+import com.jelte.norii.ai.UnitTurn;
 import com.jelte.norii.magic.Modifier;
 
-public class BattleState {
+public class BattleState implements Comparable<BattleState> {
 	private final BattleCell[][] stateOfField;
 	private int score;
+	private BattleState parentState = null;
+	private UnitTurn turn;
+	private final Array<HypotheticalUnit> outOfBoundsArray = new Array<>();
 
 	public static final int NO_UNIT = 0;
 
 	public BattleState(int width, int height) {
 		stateOfField = new BattleCell[width][height];
 		score = 0;
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
+				stateOfField[i][j] = new BattleCell();
+			}
+		}
 	}
 
 	public BattleState(BattleCell[][] field) {
@@ -42,6 +51,8 @@ public class BattleState {
 			unit.setX(width);
 			unit.setY(height);
 			stateOfField[width][height].setUnit(unit);
+		} else {
+			outOfBoundsArray.add(unit);
 		}
 	}
 
@@ -49,12 +60,25 @@ public class BattleState {
 		return stateOfField[width][height];
 	}
 
-	public void moveUnitFromTo(Point from, Point to) {
+	public void moveUnitFromTo(int entityID, Point from, Point to) {
 		stateOfField[to.x][to.y].setOccupied(true);
-		stateOfField[to.x][to.y].setUnit(stateOfField[from.x][from.y].getUnit());
-		stateOfField[to.x][to.y].getUnit().setX(to.x);
-		stateOfField[to.x][to.y].getUnit().setY(to.y);
-		stateOfField[from.x][from.y].removeUnit();
+
+		if (withinBounds(from)) {
+			stateOfField[to.x][to.y].setUnit(stateOfField[from.x][from.y].getUnit());
+			stateOfField[to.x][to.y].getUnit().setX(to.x);
+			stateOfField[to.x][to.y].getUnit().setY(to.y);
+			stateOfField[from.x][from.y].removeUnit();
+		} else {
+			for (final HypotheticalUnit unit : outOfBoundsArray) {
+				if (unit.getEntityId() == entityID) {
+					stateOfField[to.x][to.y].setUnit(unit);
+				}
+			}
+		}
+	}
+
+	private boolean withinBounds(Point from) {
+		return ((from.x >= 0) && (from.x <= getWidth()) && (from.y >= 0) && (from.y <= getHeight()));
 	}
 
 	public Point stepFromTowards(Point from, Point to) {
@@ -84,7 +108,7 @@ public class BattleState {
 	}
 
 	public BattleState makeCopy() {
-		BattleCell[][] copyField = stateOfField.clone();
+		final BattleCell[][] copyField = stateOfField.clone();
 		return new BattleState(copyField, score);
 
 	}
@@ -120,9 +144,9 @@ public class BattleState {
 	}
 
 	public Array<HypotheticalUnit> getPlayerUnits() {
-		Array<HypotheticalUnit> units = new Array<>();
-		for (BattleCell[] row : stateOfField) {
-			for (BattleCell cell : row) {
+		final Array<HypotheticalUnit> units = new Array<>();
+		for (final BattleCell[] row : stateOfField) {
+			for (final BattleCell cell : row) {
 				if ((cell.getUnit() != null) && cell.getUnit().isPlayerUnit()) {
 					units.add(cell.getUnit());
 				}
@@ -132,9 +156,9 @@ public class BattleState {
 	}
 
 	public Array<HypotheticalUnit> getAiUnits() {
-		Array<HypotheticalUnit> units = new Array<>();
-		for (BattleCell[] row : stateOfField) {
-			for (BattleCell cell : row) {
+		final Array<HypotheticalUnit> units = new Array<>();
+		for (final BattleCell[] row : stateOfField) {
+			for (final BattleCell cell : row) {
 				if ((cell.getUnit() != null) && !cell.getUnit().isPlayerUnit()) {
 					units.add(cell.getUnit());
 				}
@@ -144,15 +168,66 @@ public class BattleState {
 	}
 
 	public Array<HypotheticalUnit> getAllUnits() {
-		Array<HypotheticalUnit> units = new Array<>();
-		for (BattleCell[] row : stateOfField) {
-			for (BattleCell cell : row) {
+		final Array<HypotheticalUnit> units = new Array<>();
+		for (final BattleCell[] row : stateOfField) {
+			for (final BattleCell cell : row) {
 				if (cell.getUnit() != null) {
 					units.add(cell.getUnit());
 				}
 			}
 		}
 		return units;
+	}
+
+	public void reduceModifierCounts() {
+		for (final HypotheticalUnit unit : getAllUnits()) {
+			for (final Modifier mod : unit.getModifiers()) {
+				mod.decrementTurns();
+			}
+		}
+	}
+
+	public BattleState getParentState() {
+		return parentState;
+	}
+
+	public void setParentState(BattleState parentState) {
+		this.parentState = parentState;
+	}
+
+	public UnitTurn getTurn() {
+		return turn;
+	}
+
+	public void setTurn(UnitTurn turn) {
+		this.turn = turn;
+	}
+
+	@Override
+	public int compareTo(BattleState battleState) {
+		final int thisScore = calculateScore();
+		final int otherScore = battleState.calculateScore();
+		if (thisScore == otherScore)
+			return 0;
+		else if (thisScore < otherScore)
+			return 1;
+		else
+			return -1;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		final BattleState battleState = (BattleState) obj;
+		if ((getHeight() == battleState.getHeight()) && (getWidth() == battleState.getWidth())) {
+			for (int i = 0; i < (getWidth() - 1); i++) {
+				for (int j = 0; j < (getHeight() - 1); j++) {
+					if (get(i, j) != battleState.get(i, j)) {
+						return false;
+					}
+				}
+			}
+		}
+		return true;
 	}
 
 }

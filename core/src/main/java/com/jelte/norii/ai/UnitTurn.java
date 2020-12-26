@@ -1,12 +1,11 @@
 package com.jelte.norii.ai;
 
-import java.util.List;
-
+import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.battle.battleState.Move;
 
 public class UnitTurn {
 	private int entityID;
-	private List<Move> moves;
+	private Array<Move> moves;
 
 	public UnitTurn(int entityID, Move move) {
 		this.entityID = entityID;
@@ -25,7 +24,7 @@ public class UnitTurn {
 		this.entityID = entityID;
 	}
 
-	public List<Move> getMoves() {
+	public Array<Move> getMoves() {
 		return moves;
 	}
 }
