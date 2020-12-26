@@ -8,7 +8,6 @@ public class Move {
 	private Point location;
 
 	public Move(MoveType moveType, Point location) {
-		super();
 		this.moveType = moveType;
 		this.location = location;
 	}

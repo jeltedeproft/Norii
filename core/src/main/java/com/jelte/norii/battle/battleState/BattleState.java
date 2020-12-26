@@ -54,7 +54,6 @@ public class BattleState {
 		stateOfField[to.x][to.y].setUnit(stateOfField[from.x][from.y].getUnit());
 		stateOfField[to.x][to.y].getUnit().setX(to.x);
 		stateOfField[to.x][to.y].getUnit().setY(to.y);
-		stateOfField[from.x][from.y].setOccupied(false);
 		stateOfField[from.x][from.y].removeUnit();
 	}
 
@@ -113,7 +112,11 @@ public class BattleState {
 	}
 
 	public void updateEntity(int tileX, int tileY, int hp) {
-		get(tileX, tileY).getUnit().setHp(hp);
+		if (hp == 0) {
+			stateOfField[tileX][tileY].removeUnit();
+		} else {
+			get(tileX, tileY).getUnit().setHp(hp);
+		}
 	}
 
 	public Array<HypotheticalUnit> getPlayerUnits() {

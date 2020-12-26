@@ -45,5 +45,6 @@ public class BattleCell {
 
 	public void removeUnit() {
 		unit = null;
+		occupied = false;
 	}
 }

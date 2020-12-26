@@ -24,4 +24,8 @@ public class UnitTurn {
 	public void setEntityID(int entityID) {
 		this.entityID = entityID;
 	}
+
+	public List<Move> getMoves() {
+		return moves;
+	}
 }

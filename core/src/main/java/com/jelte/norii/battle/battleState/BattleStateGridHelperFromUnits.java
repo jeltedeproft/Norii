@@ -776,4 +776,14 @@ public class BattleStateGridHelperFromUnits {
 			return false;
 		}
 	}
+
+	public Array<Point> getTargetsAbility(Ability ability, Point point, Array<Point> targetPositions) {
+		Array<Point> targets = new Array<>();
+		for (Point targetPosition : targetPositions) {
+			if (checkIfTargetInAreaOfEffect(point, targetPosition, ability.getAreaOfEffect(), ability.getSpellData().getAreaOfEffectRange())) {
+				targets.add(targetPosition);
+			}
+		}
+		return targets;
+	}
 }
