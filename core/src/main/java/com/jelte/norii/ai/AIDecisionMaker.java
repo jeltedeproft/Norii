@@ -112,7 +112,7 @@ public class AIDecisionMaker {
 				applyAttackOnBattleState(aiUnit, move, newState);
 				break;
 			case MOVE:
-				newState.moveUnitTo(aiUnit.getEntityId(), new Point(aiUnit.getX(), aiUnit.getY()), move.getLocation());
+				newState.moveUnitTo(aiUnit, move.getLocation());
 				break;
 			default:
 				// do nothing

@@ -461,7 +461,7 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 
 	@Override
 	public String toString() {
-		return "name : " + entityData.getName() + "   ID:" + entityID;
+		return "name : " + entityData.getName() + "   ID:" + entityID + "   pos : (" + currentPlayerPosition.getTileX() + "," + currentPlayerPosition.getTileY() + ")";
 	}
 
 	@Override

@@ -171,7 +171,7 @@ public class BattleManager {
 		final Point newPoint = new Point(newPos.getTileX(), newPos.getTileY());
 		System.out.println("moving from : (" + oldPoint + ")   to " + newPoint);
 		if (!oldPoint.equals(newPoint)) {
-			stateOfBattle.moveUnitTo(unit.getEntityID(), oldPoint, newPoint);
+			stateOfBattle.moveUnitTo(unit, newPoint);
 		}
 	}
 

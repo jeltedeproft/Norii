@@ -52,6 +52,8 @@ public class BattleState implements Comparable<BattleState> {
 			unit.setX(width);
 			unit.setY(height);
 			stateOfField[width][height].setUnit(unit);
+			stateOfField[width][height].setOccupied(true);
+			units.add(unit);
 		}
 	}
 
@@ -59,25 +61,46 @@ public class BattleState implements Comparable<BattleState> {
 		return stateOfField[width][height];
 	}
 
+	public void moveUnitTo(HypotheticalUnit aiUnit, Point to) {
+		// if we have the unit, move it, if not create it
+		Point from = new Point(aiUnit.getX(), aiUnit.getY());
+		boolean entityFound = false;
+		for (HypotheticalUnit unit : units) {
+			if (unit.getEntityId() == aiUnit.getEntityId()) {
+				stateOfField[to.x][to.y].setUnit(stateOfField[unit.getX()][unit.getY()].getUnit());
+				stateOfField[to.x][to.y].getUnit().setX(to.x);
+				stateOfField[to.x][to.y].getUnit().setY(to.y);
+				stateOfField[from.x][from.y].removeUnit();
+				entityFound = true;
+			}
+		}
+
+		if (!entityFound) {
+			addEntity(to.x, to.y, aiUnit);
+		}
+		stateOfField[to.x][to.y].setOccupied(true);
+	}
+
 	public void moveUnitTo(Entity entity, Point to) {
 		// if we have the unit, move it, if not create it
+		Point from = new Point(entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY());
+		boolean entityFound = false;
+		for (HypotheticalUnit unit : units) {
+			if (unit.getEntityId() == entity.getEntityID()) {
+				stateOfField[to.x][to.y].setUnit(stateOfField[unit.getX()][unit.getY()].getUnit());
+				stateOfField[to.x][to.y].getUnit().setX(to.x);
+				stateOfField[to.x][to.y].getUnit().setY(to.y);
+				stateOfField[from.x][from.y].removeUnit();
+				entityFound = true;
+			}
+		}
+
+		if (!entityFound) {
+			addEntity(to.x, to.y, new HypotheticalUnit(entity.getEntityID(), entity.isPlayerUnit(), entity.getHp(), entity.getEntityData().getMaxHP(), entity.getAttackRange(), entity.getEntityData().getAttackPower(), entity.getAp(),
+					entity.getModifiers(), entity.getAbilities()));
+		}
 		stateOfField[to.x][to.y].setOccupied(true);
 
-		if (withinBounds(from)) {
-			stateOfField[to.x][to.y].setUnit(stateOfField[from.x][from.y].getUnit());
-			stateOfField[to.x][to.y].getUnit().setX(to.x);
-			stateOfField[to.x][to.y].getUnit().setY(to.y);
-			stateOfField[from.x][from.y].removeUnit();
-		} else {
-			HypotheticalUnit foundUnit = null;
-			for (final HypotheticalUnit unit : outOfBoundsArray) {
-				if (unit.getEntityId() == entityID) {
-					stateOfField[to.x][to.y].setUnit(unit);
-					foundUnit = unit;
-				}
-			}
-			outOfBoundsArray.removeValue(foundUnit, false);
-		}
 	}
 
 	private boolean withinBounds(Point from) {
@@ -141,6 +164,13 @@ public class BattleState implements Comparable<BattleState> {
 	public void updateEntity(int tileX, int tileY, int hp) {
 		if (hp == 0) {
 			stateOfField[tileX][tileY].removeUnit();
+			int index = 0;
+			for (int i = 0; i < units.size; i++) {
+				if ((units.get(i).getX() == tileX) && (units.get(i).getY() == tileY)) {
+					index = i;
+					units.removeIndex(index);
+				}
+			}
 		} else {
 			get(tileX, tileY).getUnit().setHp(hp);
 		}
@@ -232,5 +262,4 @@ public class BattleState implements Comparable<BattleState> {
 		}
 		return true;
 	}
-
 }

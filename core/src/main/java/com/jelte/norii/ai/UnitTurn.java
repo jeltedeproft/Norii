@@ -8,6 +8,7 @@ public class UnitTurn {
 	private Array<Move> moves;
 
 	public UnitTurn(int entityID, Move move) {
+		moves = new Array<>();
 		this.entityID = entityID;
 		moves.add(move);
 	}
