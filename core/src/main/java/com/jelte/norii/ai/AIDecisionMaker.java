@@ -112,7 +112,7 @@ public class AIDecisionMaker {
 				applyAttackOnBattleState(aiUnit, move, newState);
 				break;
 			case MOVE:
-				newState.moveUnitFromTo(aiUnit.getEntityId(), new Point(aiUnit.getX(), aiUnit.getY()), move.getLocation());
+				newState.moveUnitTo(aiUnit.getEntityId(), new Point(aiUnit.getX(), aiUnit.getY()), move.getLocation());
 				break;
 			default:
 				// do nothing
@@ -155,8 +155,8 @@ public class AIDecisionMaker {
 		case SWAP:
 			for (final Point target : targets) {
 				final HypotheticalUnit placeHolder = battleState.get(target.x, target.y).getUnit();
-				battleState.setEntity(target.x, target.y, battleState.get(caster.x, caster.y).getUnit());
-				battleState.setEntity(caster.x, caster.y, placeHolder);
+				battleState.addEntity(target.x, target.y, battleState.get(caster.x, caster.y).getUnit());
+				battleState.addEntity(caster.x, caster.y, placeHolder);
 			}
 			break;
 		case HAMMERBACK:
@@ -274,17 +274,23 @@ public class AIDecisionMaker {
 		switch (ability.getAffectedTeams()) {
 		case FRIENDLY:
 			for (final HypotheticalUnit entity : battleState.getAiUnits()) {
-				distances.put(calculateDistanceTwoUnits(aiUnit, entity), entity);
+				if (aiUnit.getEntityId() != entity.getEntityId()) {
+					distances.put(calculateDistanceTwoUnits(aiUnit, entity), entity);
+				}
 			}
 			break;
 		case ENEMY:
 			for (final HypotheticalUnit entity : battleState.getPlayerUnits()) {
-				distances.put(calculateDistanceTwoUnits(aiUnit, entity), entity);
+				if (aiUnit.getEntityId() != entity.getEntityId()) {
+					distances.put(calculateDistanceTwoUnits(aiUnit, entity), entity);
+				}
 			}
 			break;
 		case BOTH:
 			for (final HypotheticalUnit entity : battleState.getAllUnits()) {
-				distances.put(calculateDistanceTwoUnits(aiUnit, entity), entity);
+				if (aiUnit.getEntityId() != entity.getEntityId()) {
+					distances.put(calculateDistanceTwoUnits(aiUnit, entity), entity);
+				}
 			}
 			break;
 		case NONE:

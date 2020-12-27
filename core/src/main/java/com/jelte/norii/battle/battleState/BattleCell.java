@@ -47,4 +47,9 @@ public class BattleCell {
 		unit = null;
 		occupied = false;
 	}
+
+	@Override
+	public String toString() {
+		return occupied + "unit:" + unit.getEntityId() + " with position : " + unit.getX() + ", " + unit.getY();
+	}
 }

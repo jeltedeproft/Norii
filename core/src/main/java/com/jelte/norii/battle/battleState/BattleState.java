@@ -5,6 +5,7 @@ import java.awt.Point;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.ai.UnitTurn;
+import com.jelte.norii.entities.Entity;
 import com.jelte.norii.magic.Modifier;
 
 public class BattleState implements Comparable<BattleState> {
@@ -12,7 +13,7 @@ public class BattleState implements Comparable<BattleState> {
 	private int score;
 	private BattleState parentState = null;
 	private UnitTurn turn;
-	private final Array<HypotheticalUnit> outOfBoundsArray = new Array<>();
+	private final Array<HypotheticalUnit> units = new Array<>();
 
 	public static final int NO_UNIT = 0;
 
@@ -42,8 +43,8 @@ public class BattleState implements Comparable<BattleState> {
 		}
 	}
 
-	public void setEntity(int width, int height, HypotheticalUnit unit) {
-		if ((height > 0) && (width > 0)) {
+	public void addEntity(int width, int height, HypotheticalUnit unit) {
+		if ((height > 0) && (width > 0) && (width <= getWidth()) && (height <= getHeight())) {
 			final int originalScore = stateOfField[width][height].getScore();
 			final int newScore = unit.getScore();
 			final int difference = newScore - originalScore;
@@ -51,8 +52,6 @@ public class BattleState implements Comparable<BattleState> {
 			unit.setX(width);
 			unit.setY(height);
 			stateOfField[width][height].setUnit(unit);
-		} else {
-			outOfBoundsArray.add(unit);
 		}
 	}
 
@@ -60,7 +59,8 @@ public class BattleState implements Comparable<BattleState> {
 		return stateOfField[width][height];
 	}
 
-	public void moveUnitFromTo(int entityID, Point from, Point to) {
+	public void moveUnitTo(Entity entity, Point to) {
+		// if we have the unit, move it, if not create it
 		stateOfField[to.x][to.y].setOccupied(true);
 
 		if (withinBounds(from)) {
@@ -69,11 +69,14 @@ public class BattleState implements Comparable<BattleState> {
 			stateOfField[to.x][to.y].getUnit().setY(to.y);
 			stateOfField[from.x][from.y].removeUnit();
 		} else {
+			HypotheticalUnit foundUnit = null;
 			for (final HypotheticalUnit unit : outOfBoundsArray) {
 				if (unit.getEntityId() == entityID) {
 					stateOfField[to.x][to.y].setUnit(unit);
+					foundUnit = unit;
 				}
 			}
+			outOfBoundsArray.removeValue(foundUnit, false);
 		}
 	}
 

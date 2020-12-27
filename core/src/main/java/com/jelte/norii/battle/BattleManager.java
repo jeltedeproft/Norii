@@ -74,13 +74,13 @@ public class BattleManager {
 
 	private void initializeStateOfBattle(final List<PlayerEntity> playerUnits, final List<AiEntity> aiUnits, Array<GridCell> unwalkableNodes) {
 		for (final PlayerEntity unit : playerUnits) {
-			stateOfBattle.setEntity(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), new HypotheticalUnit(unit.getEntityID(), true, unit.getHp(), unit.getEntityData().getMaxHP(),
+			stateOfBattle.addEntity(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), new HypotheticalUnit(unit.getEntityID(), true, unit.getHp(), unit.getEntityData().getMaxHP(),
 					unit.getEntityData().getAttackRange(), unit.getEntityData().getAttackPower(), unit.getAp(), unit.getModifiers(), unit.getAbilities()));
 			addModifiers(unit);
 		}
 
 		for (final AiEntity unit : aiUnits) {
-			stateOfBattle.setEntity(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), new HypotheticalUnit(unit.getEntityID(), false, unit.getHp(), unit.getEntityData().getMaxHP(),
+			stateOfBattle.addEntity(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), new HypotheticalUnit(unit.getEntityID(), false, unit.getHp(), unit.getEntityData().getMaxHP(),
 					unit.getEntityData().getAttackRange(), unit.getEntityData().getAttackPower(), unit.getAp(), unit.getModifiers(), unit.getAbilities()));
 			addModifiers(unit);
 		}
@@ -171,7 +171,7 @@ public class BattleManager {
 		final Point newPoint = new Point(newPos.getTileX(), newPos.getTileY());
 		System.out.println("moving from : (" + oldPoint + ")   to " + newPoint);
 		if (!oldPoint.equals(newPoint)) {
-			stateOfBattle.moveUnitFromTo(unit.getEntityID(), oldPoint, newPoint);
+			stateOfBattle.moveUnitTo(unit.getEntityID(), oldPoint, newPoint);
 		}
 	}
 

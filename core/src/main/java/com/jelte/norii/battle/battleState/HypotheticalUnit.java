@@ -50,7 +50,7 @@ public class HypotheticalUnit {
 	}
 
 	public int getScore() {
-		int score = getModifiersScore();
+		final int score = getModifiersScore();
 		if (playerUnit) {
 			return score * (-1);
 		} else {
@@ -60,7 +60,7 @@ public class HypotheticalUnit {
 
 	private int getModifiersScore() {
 		int score = hp;
-		for (Modifier modifier : modifiers) {
+		for (final Modifier modifier : modifiers) {
 			switch (modifier.getType()) {
 			case DAMAGE_OVER_TIME:
 				score -= 2;
@@ -183,6 +183,11 @@ public class HypotheticalUnit {
 
 	public void setAttackDamage(int attackDamage) {
 		this.attackDamage = attackDamage;
+	}
+
+	@Override
+	public String toString() {
+		return "ID : " + entityId + "   x:" + x + "   y:" + y;
 	}
 
 }
