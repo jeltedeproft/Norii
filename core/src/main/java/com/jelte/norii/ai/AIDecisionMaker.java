@@ -78,7 +78,6 @@ public class AIDecisionMaker {
 						newState.setTurn(turn);
 						battleStatesLevelTwo.add(newState);
 					}
-
 				}
 			}
 		}
