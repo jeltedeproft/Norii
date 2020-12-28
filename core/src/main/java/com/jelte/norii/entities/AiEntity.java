@@ -47,7 +47,7 @@ public class AiEntity extends Entity {
 
 	@Override
 	public String toString() {
-		return "name : " + entityData.getName() + "   ID:" + entityID;
+		return "name : " + entityData.getName() + "   ID:" + entityID + "   pos : (" + currentPlayerPosition.getTileX() + "," + currentPlayerPosition.getTileY() + ")";
 	}
 
 }

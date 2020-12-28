@@ -1,6 +1,7 @@
 package com.jelte.norii.ai;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -37,6 +38,7 @@ public class AIDecisionMaker {
 	}
 
 	public UnitTurn makeDecision(BattleState battleState) {
+		System.out.println("1");
 		final Array<HypotheticalUnit> players = battleState.getPlayerUnits();
 		final Array<HypotheticalUnit> ais = battleState.getAiUnits();
 		final Array<BattleState> battleStates = new Array<>();
@@ -49,10 +51,11 @@ public class AIDecisionMaker {
 				for (final UnitTurn turn : turns) {
 					final BattleState newState = applyTurnToBattleState(aiUnit, turn, battleState);
 					newState.setTurn(turn);
-					battleStatesLevelTwo.add(newState);
+					battleStates.add(newState);
 				}
 			}
 		}
+		System.out.println("2");
 		reduceModifierCount(battleStates);
 		for (final BattleState updatedState : battleStates) {
 			for (final HypotheticalUnit playerUnit : players) {
@@ -67,22 +70,32 @@ public class AIDecisionMaker {
 				}
 			}
 		}
+		System.out.println("3");
 		reduceModifierCount(battleStatesLevelTwo);
+		System.out.println("3.5");
+		System.out.println("number of states = " + battleStatesLevelTwo.size);
 		for (final BattleState updatedState : battleStatesLevelTwo) {
+			System.out.println("3.5 - inside - level 1");
 			for (final HypotheticalUnit aiUnit : ais) {
+				System.out.println("3.5 - inside - level 2");
 				for (final Ability ability : aiUnit.getAbilities()) {
+					System.out.println("3.5 - inside - level 3");
 					final Array<UnitTurn> turns = generateMoves(ability, aiUnit, updatedState);
 					for (final UnitTurn turn : turns) {
+						System.out.println("3.5 - inside - level 4");
 						final BattleState newState = applyTurnToBattleState(aiUnit, turn, updatedState);
 						newState.setParentState(updatedState);
 						newState.setTurn(turn);
-						battleStatesLevelTwo.add(newState);
+						battleStatesLevelThree.add(newState);
 					}
 				}
 			}
 		}
+		System.out.println("4");
 		reduceModifierCount(battleStatesLevelThree);
+		System.out.println("5");
 		battleStatesLevelThree.sort();
+		System.out.println("6");
 		return getmoves(battleStatesLevelThree.get(0));
 	}
 
@@ -170,12 +183,12 @@ public class AIDecisionMaker {
 		final Array<UnitTurn> unitTurns = new Array<>();
 
 		// get the distance between unit and possible targets
-		final TreeMap<Integer, HypotheticalUnit> distancesWithAbilityTargetUnits = (TreeMap<Integer, HypotheticalUnit>) getDistancesToTargets(aiUnit, battleState, ability);
+		final TreeMap<Integer, List<HypotheticalUnit>> distancesWithAbilityTargetUnits = (TreeMap<Integer, List<HypotheticalUnit>>) getDistancesToTargets(aiUnit, battleState, ability);
 
 		if (!distancesWithAbilityTargetUnits.isEmpty() && (distancesWithAbilityTargetUnits.firstKey() > (ability.getSpellData().getRange() + ability.getSpellData().getAreaOfEffectRange() + aiUnit.getAp()))) {
 			if (distancesWithAbilityTargetUnits.firstKey() > (aiUnit.getAttackRange() + aiUnit.getAp())) {
 				// just walk
-				final HypotheticalUnit closestUnit = distancesWithAbilityTargetUnits.firstEntry().getValue();
+				final HypotheticalUnit closestUnit = distancesWithAbilityTargetUnits.firstEntry().getValue().get(0);
 				final TiledMapPosition closestUnitPos = new TiledMapPosition().setPositionFromTiles(closestUnit.getX(), closestUnit.getY());
 				final List<GridCell> path = MyPathFinder.getInstance().pathTowards(new TiledMapPosition().setPositionFromTiles(aiUnit.getX(), aiUnit.getY()), closestUnitPos, aiUnit.getAp());
 				final Point goal = new Point(path.get(path.size() - 1).x, path.get(path.size() - 1).y);
@@ -183,11 +196,11 @@ public class AIDecisionMaker {
 				return unitTurns;
 			} else {
 				// move attack
-				final HypotheticalUnit closestUnit = distancesWithAbilityTargetUnits.firstEntry().getValue();
+				final HypotheticalUnit closestUnit = distancesWithAbilityTargetUnits.firstEntry().getValue().get(0);
 				final TiledMapPosition closestUnitPos = new TiledMapPosition().setPositionFromTiles(closestUnit.getX(), closestUnit.getY());
 				final List<GridCell> path = MyPathFinder.getInstance().pathTowards(new TiledMapPosition().setPositionFromTiles(aiUnit.getX(), aiUnit.getY()), closestUnitPos, aiUnit.getAp());
 				final Point moveGoal = new Point(path.get(path.size() - 1).x, path.get(path.size() - 1).y);
-				final Point attackGoal = new Point(distancesWithAbilityTargetUnits.firstEntry().getValue().getX(), distancesWithAbilityTargetUnits.firstEntry().getValue().getY());
+				final Point attackGoal = new Point(distancesWithAbilityTargetUnits.firstEntry().getValue().get(0).getX(), distancesWithAbilityTargetUnits.firstEntry().getValue().get(0).getY());
 				final UnitTurn moveAttack = new UnitTurn(aiUnit.getEntityId(), new Move(MoveType.MOVE, moveGoal));
 				moveAttack.addMove(new Move(MoveType.ATTACK, attackGoal));
 				unitTurns.add(moveAttack);
@@ -202,11 +215,13 @@ public class AIDecisionMaker {
 		// no units found in immediate vicinity, so move
 		if (abilityTargets.isEmpty()) {
 			Point endPoint = new Point(aiUnit.getX(), aiUnit.getY());
-			while (abilityTargets.isEmpty() && (aiUnit.getAp() > 0)) {
-				final HypotheticalUnit closestUnit = distancesWithAbilityTargetUnits.firstEntry().getValue();
+			int ap = aiUnit.getAp();
+			while (abilityTargets.isEmpty() && (ap > 0)) {
+				final HypotheticalUnit closestUnit = distancesWithAbilityTargetUnits.firstEntry().getValue().get(0);
 				final TiledMapPosition closestUnitPos = new TiledMapPosition().setPositionFromTiles(closestUnit.getX(), closestUnit.getY());
 				final List<GridCell> path = MyPathFinder.getInstance().pathTowards(new TiledMapPosition().setPositionFromTiles(aiUnit.getX(), aiUnit.getY()), closestUnitPos, aiUnit.getAp());
 				endPoint = new Point(path.get(0).x, path.get(0).y);
+				ap--;
 				abilityTargets = getAbilityTargets(ability, endPoint, aiUnit.isPlayerUnit(), battleState);
 			}
 			final UnitTurn moveAndSpell = new UnitTurn(aiUnit.getEntityId(), new Move(MoveType.MOVE, endPoint));
@@ -269,27 +284,38 @@ public class AIDecisionMaker {
 		return new Point(path.get(path.size() - 1).x, path.get(path.size() - 1).y);
 	}
 
-	private Map<Integer, HypotheticalUnit> getDistancesToTargets(HypotheticalUnit aiUnit, BattleState battleState, Ability ability) {
-		final Map<Integer, HypotheticalUnit> distances = new TreeMap<>();
+	private Map<Integer, List<HypotheticalUnit>> getDistancesToTargets(HypotheticalUnit unit, BattleState battleState, Ability ability) {
+		final Map<Integer, List<HypotheticalUnit>> distances = new TreeMap<>();
+		Array<HypotheticalUnit> unitsToCheck = new Array<>();
 		switch (ability.getAffectedTeams()) {
 		case FRIENDLY:
-			for (final HypotheticalUnit entity : battleState.getAiUnits()) {
-				if (aiUnit.getEntityId() != entity.getEntityId()) {
-					distances.put(calculateDistanceTwoUnits(aiUnit, entity), entity);
+			if (unit.isPlayerUnit()) {
+				unitsToCheck = battleState.getPlayerUnits();
+			} else {
+				unitsToCheck = battleState.getAiUnits();
+			}
+			for (final HypotheticalUnit entity : unitsToCheck) {
+				if (unit.getEntityId() != entity.getEntityId()) {
+					distances.computeIfAbsent(calculateDistanceTwoUnits(unit, entity), k -> new ArrayList<HypotheticalUnit>()).add(entity);
 				}
 			}
 			break;
 		case ENEMY:
-			for (final HypotheticalUnit entity : battleState.getPlayerUnits()) {
-				if (aiUnit.getEntityId() != entity.getEntityId()) {
-					distances.put(calculateDistanceTwoUnits(aiUnit, entity), entity);
+			if (unit.isPlayerUnit()) {
+				unitsToCheck = battleState.getAiUnits();
+			} else {
+				unitsToCheck = battleState.getPlayerUnits();
+			}
+			for (final HypotheticalUnit entity : unitsToCheck) {
+				if (unit.getEntityId() != entity.getEntityId()) {
+					distances.computeIfAbsent(calculateDistanceTwoUnits(unit, entity), k -> new ArrayList<HypotheticalUnit>()).add(entity);
 				}
 			}
 			break;
 		case BOTH:
 			for (final HypotheticalUnit entity : battleState.getAllUnits()) {
-				if (aiUnit.getEntityId() != entity.getEntityId()) {
-					distances.put(calculateDistanceTwoUnits(aiUnit, entity), entity);
+				if (unit.getEntityId() != entity.getEntityId()) {
+					distances.computeIfAbsent(calculateDistanceTwoUnits(unit, entity), k -> new ArrayList<HypotheticalUnit>()).add(entity);
 				}
 			}
 			break;

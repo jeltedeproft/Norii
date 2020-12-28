@@ -169,7 +169,6 @@ public class BattleManager {
 	public void updateStateOfBattle(Entity unit, TiledMapPosition newPos) {
 		final Point oldPoint = new Point(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY());
 		final Point newPoint = new Point(newPos.getTileX(), newPos.getTileY());
-		System.out.println("moving from : (" + oldPoint + ")   to " + newPoint);
 		if (!oldPoint.equals(newPoint)) {
 			stateOfBattle.moveUnitTo(unit, newPoint);
 		}
