@@ -1,6 +1,5 @@
 package com.jelte.norii.screen;
 
-import java.awt.Point;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -41,6 +40,7 @@ import com.jelte.norii.profile.ProfileManager;
 import com.jelte.norii.ui.Hud;
 import com.jelte.norii.ui.StatusUi;
 import com.jelte.norii.utility.AssetManagerUtility;
+import com.jelte.norii.utility.MyPoint;
 import com.jelte.norii.utility.TiledMapPosition;
 import com.jelte.norii.utility.Utility;
 
@@ -458,7 +458,7 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 	}
 
 	@Override
-	public void onEntityNotify(EntityCommand command, Entity entity, Ability abilityUsed, Point target) {
+	public void onEntityNotify(EntityCommand command, Entity entity, Ability abilityUsed, MyPoint target) {
 		switch (command) {
 		case CAST_SPELL_AI:
 			final SpellBattlePhase spellBattleState = (SpellBattlePhase) battlemanager.getSpellBattleState();

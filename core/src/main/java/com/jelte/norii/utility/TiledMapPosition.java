@@ -6,24 +6,24 @@ import com.jelte.norii.map.Map;
 import com.jelte.norii.screen.BattleScreen;
 
 public class TiledMapPosition {
-	private Point tileCoordinates;
+	private MyPoint tileCoordinates;
 
 	public TiledMapPosition() {
-		tileCoordinates = new Point(0, 0);
+		tileCoordinates = new MyPoint(0, 0);
 	}
 
 	public TiledMapPosition setPositionFromTiled(float x, float y) {
-		tileCoordinates = new Point(Math.round(x / Map.TILE_WIDTH), Math.round(y / Map.TILE_HEIGHT));
+		tileCoordinates = new MyPoint(Math.round(x / Map.TILE_WIDTH), Math.round(y / Map.TILE_HEIGHT));
 		return this;
 	}
 
 	public TiledMapPosition setPositionFromTiles(int x, int y) {
-		tileCoordinates = new Point(x, y);
+		tileCoordinates = new MyPoint(x, y);
 		return this;
 	}
 
 	public TiledMapPosition setPositionFromScreen(float x, float y) {
-		tileCoordinates = new Point(Math.round(x / (Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH)), Math.round(y / (Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT)));
+		tileCoordinates = new MyPoint(Math.round(x / (Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH)), Math.round(y / (Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT)));
 		return this;
 	}
 
@@ -31,8 +31,8 @@ public class TiledMapPosition {
 		return ((pos.tileCoordinates.x == tileCoordinates.x) && (pos.tileCoordinates.y == tileCoordinates.y));
 	}
 
-	public boolean isTileEqualTo(Point point) {
-		return ((point.x == tileCoordinates.x) && (point.y == tileCoordinates.y));
+	public boolean isTileEqualTo(MyPoint MyPoint) {
+		return ((MyPoint.x == tileCoordinates.x) && (MyPoint.y == tileCoordinates.y));
 	}
 
 	public int getDistance(TiledMapPosition pos) {

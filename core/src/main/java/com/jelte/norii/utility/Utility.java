@@ -1,7 +1,6 @@
 
 package com.jelte.norii.utility;
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -75,7 +74,7 @@ public final class Utility {
 		return (Math.abs(pos1.getTileX() - pos2.getTileX()) + Math.abs(pos1.getTileY() - pos2.getTileY()));
 	}
 
-	public static Point getCenterOfGravityAi(BattleState battleState) {
+	public static MyPoint getCenterOfGravityAi(BattleState battleState) {
 		Array<HypotheticalUnit> aiUnits = battleState.getAiUnits();
 		final int numberOfElements = aiUnits.size;
 		int sumX = 0;
@@ -86,10 +85,10 @@ public final class Utility {
 			sumY += aiUnits.get(i).getY();
 		}
 
-		return new Point(sumX / numberOfElements, sumY / numberOfElements);
+		return new MyPoint(sumX / numberOfElements, sumY / numberOfElements);
 	}
 
-	public static Point getCenterOfGravityPlayers(BattleState battleState) {
+	public static MyPoint getCenterOfGravityPlayers(BattleState battleState) {
 		Array<HypotheticalUnit> playerUnits = battleState.getPlayerUnits();
 		final int numberOfElements = playerUnits.size;
 		int sumX = 0;
@@ -100,10 +99,10 @@ public final class Utility {
 			sumY += playerUnits.get(i).getY();
 		}
 
-		return new Point(sumX / numberOfElements, sumY / numberOfElements);
+		return new MyPoint(sumX / numberOfElements, sumY / numberOfElements);
 	}
 
-	public static Point getCenterOfGravityAllUnits(BattleState battleState) {
+	public static MyPoint getCenterOfGravityAllUnits(BattleState battleState) {
 		Array<HypotheticalUnit> allUnits = battleState.getAllUnits();
 		final int numberOfElements = allUnits.size;
 		int sumX = 0;
@@ -114,7 +113,7 @@ public final class Utility {
 			sumY += allUnits.get(i).getY();
 		}
 
-		return new Point(sumX / numberOfElements, sumY / numberOfElements);
+		return new MyPoint(sumX / numberOfElements, sumY / numberOfElements);
 	}
 
 	public static float clamp(final float var, final float max, final float min) {

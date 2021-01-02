@@ -1,6 +1,5 @@
 package com.jelte.norii.battle.battleState;
 
-import java.awt.Point;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -8,50 +7,51 @@ import com.jelte.norii.magic.Ability;
 import com.jelte.norii.magic.Ability.AffectedTeams;
 import com.jelte.norii.magic.Ability.AreaOfEffect;
 import com.jelte.norii.magic.Ability.LineOfSight;
+import com.jelte.norii.utility.MyPoint;
 
 public class BattleStateGridHelper {
-	public Set<Point> findTargets(Point center, Ability ability, BattleState battleState) {
+	public Set<MyPoint> findTargets(MyPoint center, Ability ability, BattleState battleState) {
 		final AffectedTeams affectedTeams = ability.getAffectedTeams();
 		final AreaOfEffect area = ability.getAreaOfEffect();
 		final LineOfSight lineOfSight = ability.getLineOfSight();
 		final int range = ability.getSpellData().getRange();
 
-		final Set<Point> possibleCenterCells = new HashSet<>();
+		final Set<MyPoint> possibleCenterCells = new HashSet<>();
 		possibleCenterCells.addAll(getPossibleCenterCells(possibleCenterCells, center, lineOfSight, range));
-		checkpointBounds(possibleCenterCells, battleState);
+		checkMyPointBounds(possibleCenterCells, battleState);
 
-		final Set<Point> targets = new HashSet<>();
-		for (final Point point : possibleCenterCells) {
-			targets.addAll(collectTargets(point, area, affectedTeams, battleState, ability.getSpellData().getAreaOfEffectRange()));
+		final Set<MyPoint> targets = new HashSet<>();
+		for (final MyPoint MyPoint : possibleCenterCells) {
+			targets.addAll(collectTargets(MyPoint, area, affectedTeams, battleState, ability.getSpellData().getAreaOfEffectRange()));
 		}
 		return targets;
 	}
 
-	public Set<Point> getPossibleCenterCells(Set<Point> points, Point center, LineOfSight lineOfSight, int range) {
+	public Set<MyPoint> getPossibleCenterCells(Set<MyPoint> MyPoints, MyPoint center, LineOfSight lineOfSight, int range) {
 		switch (lineOfSight) {
 		case LINE:
-			return addLines(points, center, range);
+			return addLines(MyPoints, center, range);
 		case CIRCLE_BORDER:
-			return addUnfilledCircleAroundCentre(points, center, range);
+			return addUnfilledCircleAroundCentre(MyPoints, center, range);
 		case CIRCLE:
-			return addFilledCircleAroundCentre(points, center, range);
+			return addFilledCircleAroundCentre(MyPoints, center, range);
 		case CROSS:
-			return addCrossAroundCentre(points, center, range);
+			return addCrossAroundCentre(MyPoints, center, range);
 		case SQUARE_BORDER:
-			return addUnfilledSquareAroundCentre(points, center, range);
+			return addUnfilledSquareAroundCentre(MyPoints, center, range);
 		case SQUARE:
-			return addFilledSquareAroundCentre(points, center, range);
+			return addFilledSquareAroundCentre(MyPoints, center, range);
 		case DIAGONAL_RIGHT:
-			return addDiagonalTopRightAroundCentre(points, center, range);
+			return addDiagonalTopRightAroundCentre(MyPoints, center, range);
 		case DIAGONAL_LEFT:
-			return addDiagonalTopLeftAroundCentre(points, center, range);
+			return addDiagonalTopLeftAroundCentre(MyPoints, center, range);
 		default:
 			return new HashSet<>();
 		}
 	}
 
-	private Set<Point> collectTargets(Point center, AreaOfEffect area, AffectedTeams affectedTeams, BattleState stateOfBattle, int areaOfEffectRange) {
-		final Set<Point> spotsToCheck = new HashSet<>();
+	private Set<MyPoint> collectTargets(MyPoint center, AreaOfEffect area, AffectedTeams affectedTeams, BattleState stateOfBattle, int areaOfEffectRange) {
+		final Set<MyPoint> spotsToCheck = new HashSet<>();
 		switch (area) {
 		case CELL:
 			spotsToCheck.add(center);
@@ -102,31 +102,31 @@ public class BattleStateGridHelper {
 		default:
 			return spotsToCheck;
 		}
-		checkpointBounds(spotsToCheck, stateOfBattle);
+		checkMyPointBounds(spotsToCheck, stateOfBattle);
 		return getSpotsWithUnitsOn(spotsToCheck, affectedTeams, stateOfBattle);
 	}
 
-	private Set<Point> getSpotsWithUnitsOn(Set<Point> spotsToCheck, AffectedTeams affectedTeams, BattleState stateOfBattle) {
-		final Set<Point> units = new HashSet<>();
+	private Set<MyPoint> getSpotsWithUnitsOn(Set<MyPoint> spotsToCheck, AffectedTeams affectedTeams, BattleState stateOfBattle) {
+		final Set<MyPoint> units = new HashSet<>();
 		switch (affectedTeams) {
 		case FRIENDLY:
-			for (final Point point : spotsToCheck) {
-				if (hasCellAiUnit(point, stateOfBattle)) {
-					units.add(point);
+			for (final MyPoint MyPoint : spotsToCheck) {
+				if (hasCellAiUnit(MyPoint, stateOfBattle)) {
+					units.add(MyPoint);
 				}
 			}
 			break;
 		case ENEMY:
-			for (final Point point : spotsToCheck) {
-				if (hasCellPlayerUnit(point, stateOfBattle)) {
-					units.add(point);
+			for (final MyPoint MyPoint : spotsToCheck) {
+				if (hasCellPlayerUnit(MyPoint, stateOfBattle)) {
+					units.add(MyPoint);
 				}
 			}
 			break;
 		case BOTH:
-			for (final Point point : spotsToCheck) {
-				if (hasCellUnit(point, stateOfBattle)) {
-					units.add(point);
+			for (final MyPoint MyPoint : spotsToCheck) {
+				if (hasCellUnit(MyPoint, stateOfBattle)) {
+					units.add(MyPoint);
 				}
 			}
 			break;
@@ -134,157 +134,157 @@ public class BattleStateGridHelper {
 		return units;
 	}
 
-	private boolean hasCellAiUnit(Point point, BattleState stateOfBattle) {
-		BattleCell cell = stateOfBattle.get(point.x, point.y);
+	private boolean hasCellAiUnit(MyPoint MyPoint, BattleState stateOfBattle) {
+		BattleCell cell = stateOfBattle.get(MyPoint.x, MyPoint.y);
 		if (cell.isOccupied()) {
 			return !cell.getUnit().isPlayerUnit();
 		}
 		return false;
 	}
 
-	private boolean hasCellPlayerUnit(Point point, BattleState stateOfBattle) {
-		BattleCell cell = stateOfBattle.get(point.x, point.y);
+	private boolean hasCellPlayerUnit(MyPoint MyPoint, BattleState stateOfBattle) {
+		BattleCell cell = stateOfBattle.get(MyPoint.x, MyPoint.y);
 		if (cell.isOccupied()) {
 			return cell.getUnit().isPlayerUnit();
 		}
 		return false;
 	}
 
-	private boolean hasCellUnit(Point point, BattleState stateOfBattle) {
-		return stateOfBattle.get(point.x, point.y).isOccupied();
+	private boolean hasCellUnit(MyPoint MyPoint, BattleState stateOfBattle) {
+		return stateOfBattle.get(MyPoint.x, MyPoint.y).isOccupied();
 	}
 
-	private boolean isCellEmpty(Point point, BattleState stateOfBattle) {
-		return !stateOfBattle.get(point.x, point.y).isOccupied();
+	private boolean isCellEmpty(MyPoint MyPoint, BattleState stateOfBattle) {
+		return !stateOfBattle.get(MyPoint.x, MyPoint.y).isOccupied();
 	}
 
-	private Set<Point> addLines(Set<Point> points, Point centre, int range) {
-		addLineUpwards(points, centre, range);
-		addLineLeft(points, centre, range);
-		addLineRight(points, centre, range);
-		addLineDownwards(points, centre, range);
-		return points;
+	private Set<MyPoint> addLines(Set<MyPoint> MyPoints, MyPoint centre, int range) {
+		addLineUpwards(MyPoints, centre, range);
+		addLineLeft(MyPoints, centre, range);
+		addLineRight(MyPoints, centre, range);
+		addLineDownwards(MyPoints, centre, range);
+		return MyPoints;
 	}
 
-	private void addLineUpwards(Set<Point> points, Point centre, int range) {
+	private void addLineUpwards(Set<MyPoint> MyPoints, MyPoint centre, int range) {
 		for (int i = 1; i <= range; i++) {
-			points.add(new Point(centre.x, centre.y + i));
+			MyPoints.add(new MyPoint(centre.x, centre.y + i));
 		}
 	}
 
-	private void addLineLeft(Set<Point> points, Point centre, int range) {
+	private void addLineLeft(Set<MyPoint> MyPoints, MyPoint centre, int range) {
 		for (int i = 1; i <= range; i++) {
-			points.add(new Point(centre.x - i, centre.y));
+			MyPoints.add(new MyPoint(centre.x - i, centre.y));
 		}
 	}
 
-	private void addLineRight(Set<Point> points, Point centre, int range) {
+	private void addLineRight(Set<MyPoint> MyPoints, MyPoint centre, int range) {
 		for (int i = 1; i <= range; i++) {
-			points.add(new Point(centre.x + i, centre.y));
+			MyPoints.add(new MyPoint(centre.x + i, centre.y));
 		}
 	}
 
-	private void addLineDownwards(Set<Point> points, Point centre, int range) {
+	private void addLineDownwards(Set<MyPoint> MyPoints, MyPoint centre, int range) {
 		for (int i = 1; i <= range; i++) {
-			points.add(new Point(centre.x, centre.y - i));
+			MyPoints.add(new MyPoint(centre.x, centre.y - i));
 		}
 	}
 
-	private Set<Point> addUnfilledSquareAroundCentre(Set<Point> points, Point centre, int range) {
-		points.add(new Point(centre.x + range, centre.y));
-		points.add(new Point(centre.x - range, centre.y));
-		points.add(new Point(centre.x, centre.y + range));
-		points.add(new Point(centre.x, centre.y - range));
+	private Set<MyPoint> addUnfilledSquareAroundCentre(Set<MyPoint> MyPoints, MyPoint centre, int range) {
+		MyPoints.add(new MyPoint(centre.x + range, centre.y));
+		MyPoints.add(new MyPoint(centre.x - range, centre.y));
+		MyPoints.add(new MyPoint(centre.x, centre.y + range));
+		MyPoints.add(new MyPoint(centre.x, centre.y - range));
 		for (int i = 1; i <= range; i++) {
-			points.add(new Point(centre.x + range, centre.y - i));
-			points.add(new Point(centre.x - range, centre.y - i));
-			points.add(new Point(centre.x + range, centre.y + i));
-			points.add(new Point(centre.x - range, centre.y + i));
+			MyPoints.add(new MyPoint(centre.x + range, centre.y - i));
+			MyPoints.add(new MyPoint(centre.x - range, centre.y - i));
+			MyPoints.add(new MyPoint(centre.x + range, centre.y + i));
+			MyPoints.add(new MyPoint(centre.x - range, centre.y + i));
 
-			points.add(new Point(centre.x + i, centre.y - range));
-			points.add(new Point(centre.x - i, centre.y - range));
-			points.add(new Point(centre.x + i, centre.y + range));
-			points.add(new Point(centre.x - i, centre.y + range));
+			MyPoints.add(new MyPoint(centre.x + i, centre.y - range));
+			MyPoints.add(new MyPoint(centre.x - i, centre.y - range));
+			MyPoints.add(new MyPoint(centre.x + i, centre.y + range));
+			MyPoints.add(new MyPoint(centre.x - i, centre.y + range));
 		}
-		return points;
+		return MyPoints;
 	}
 
-	private Set<Point> addFilledSquareAroundCentre(Set<Point> points, Point centre, int range) {
-		addUnfilledSquareAroundCentre(points, centre, range);
+	private Set<MyPoint> addFilledSquareAroundCentre(Set<MyPoint> MyPoints, MyPoint centre, int range) {
+		addUnfilledSquareAroundCentre(MyPoints, centre, range);
 		for (int i = centre.x - range; i <= (centre.x + range); i++) {
 			for (int j = centre.y - range; j <= (centre.y + range); j++) {
-				points.add(new Point(i, j));
+				MyPoints.add(new MyPoint(i, j));
 			}
 		}
-		return points;
+		return MyPoints;
 	}
 
-	private Set<Point> addUnfilledCircleAroundCentre(Set<Point> points, Point centre, int range) {
+	private Set<MyPoint> addUnfilledCircleAroundCentre(Set<MyPoint> MyPoints, MyPoint centre, int range) {
 		final int centerX = centre.x;
 		final int centerY = centre.y;
 
 		for (int i = 0; i <= range; i++) {
 			for (int j = 0; j <= range; j++) {
 				if ((i + j) == range) {
-					points.add(new Point(centerX + i, centerY + j));
-					points.add(new Point(centerX - i, centerY + j));
-					points.add(new Point(centerX + i, centerY - j));
-					points.add(new Point(centerX - i, centerY - j));
+					MyPoints.add(new MyPoint(centerX + i, centerY + j));
+					MyPoints.add(new MyPoint(centerX - i, centerY + j));
+					MyPoints.add(new MyPoint(centerX + i, centerY - j));
+					MyPoints.add(new MyPoint(centerX - i, centerY - j));
 				}
 			}
 		}
-		return points;
+		return MyPoints;
 	}
 
-	private Set<Point> addFilledCircleAroundCentre(Set<Point> points, Point centre, int range) {
+	private Set<MyPoint> addFilledCircleAroundCentre(Set<MyPoint> MyPoints, MyPoint centre, int range) {
 		for (int i = 1; i <= range; i++) {
-			points.addAll(addUnfilledCircleAroundCentre(points, centre, range));
+			MyPoints.addAll(addUnfilledCircleAroundCentre(MyPoints, centre, range));
 		}
-		return points;
+		return MyPoints;
 	}
 
-	private Set<Point> addCrossAroundCentre(Set<Point> points, Point centre, int range) {
+	private Set<MyPoint> addCrossAroundCentre(Set<MyPoint> MyPoints, MyPoint centre, int range) {
 		final int centerX = centre.x;
 		final int centerY = centre.y;
 
 		for (int i = 1; i <= range; i++) {
-			points.add(new Point(centerX + i, centerY + i));
-			points.add(new Point(centerX - i, centerY + i));
-			points.add(new Point(centerX + i, centerY - i));
-			points.add(new Point(centerX - i, centerY - i));
+			MyPoints.add(new MyPoint(centerX + i, centerY + i));
+			MyPoints.add(new MyPoint(centerX - i, centerY + i));
+			MyPoints.add(new MyPoint(centerX + i, centerY - i));
+			MyPoints.add(new MyPoint(centerX - i, centerY - i));
 		}
 
-		return points;
+		return MyPoints;
 	}
 
-	private Set<Point> addDiagonalTopRightAroundCentre(Set<Point> points, Point centre, int range) {
+	private Set<MyPoint> addDiagonalTopRightAroundCentre(Set<MyPoint> MyPoints, MyPoint centre, int range) {
 		final int centerX = centre.x;
 		final int centerY = centre.y;
 
 		for (int i = 1; i <= range; i++) {
-			points.add(new Point(centerX + i, centerY + i));
-			points.add(new Point(centerX - i, centerY - i));
+			MyPoints.add(new MyPoint(centerX + i, centerY + i));
+			MyPoints.add(new MyPoint(centerX - i, centerY - i));
 		}
 
-		return points;
+		return MyPoints;
 	}
 
-	private Set<Point> addDiagonalTopLeftAroundCentre(Set<Point> points, Point centre, int range) {
+	private Set<MyPoint> addDiagonalTopLeftAroundCentre(Set<MyPoint> MyPoints, MyPoint centre, int range) {
 		final int centerX = centre.x;
 		final int centerY = centre.y;
 
 		for (int i = 1; i <= range; i++) {
-			points.add(new Point(centerX - i, centerY + i));
-			points.add(new Point(centerX + i, centerY - i));
+			MyPoints.add(new MyPoint(centerX - i, centerY + i));
+			MyPoints.add(new MyPoint(centerX + i, centerY - i));
 		}
 
-		return points;
+		return MyPoints;
 	}
 
-	private void checkpointBounds(Set<Point> points, BattleState stateOfBattle) {
+	private void checkMyPointBounds(Set<MyPoint> MyPoints, BattleState stateOfBattle) {
 		final int maxWidth = stateOfBattle.getWidth() - 1;
 		final int maxHeight = stateOfBattle.getHeight() - 1;
-		points.removeIf(point -> (point.x > maxWidth) || (point.y > maxHeight) || (point.x < 0) || (point.y < 0));
+		MyPoints.removeIf(MyPoint -> (MyPoint.x > maxWidth) || (MyPoint.y > maxHeight) || (MyPoint.x < 0) || (MyPoint.y < 0));
 	}
 
 }

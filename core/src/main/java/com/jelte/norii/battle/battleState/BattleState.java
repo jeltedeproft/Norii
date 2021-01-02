@@ -1,12 +1,11 @@
 package com.jelte.norii.battle.battleState;
 
-import java.awt.Point;
-
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.ai.UnitTurn;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.magic.Modifier;
+import com.jelte.norii.utility.MyPoint;
 
 public class BattleState implements Comparable<BattleState> {
 	private final BattleCell[][] stateOfField;
@@ -25,6 +24,27 @@ public class BattleState implements Comparable<BattleState> {
 				stateOfField[i][j] = new BattleCell();
 			}
 		}
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("\n");
+		for (BattleCell[] row : stateOfField) {
+			for (BattleCell cell : row) {
+				if (cell.isOccupied() && cell.getUnit().isPlayerUnit()) {
+					sb.append("| P |");
+				} else if (cell.isOccupied() && !cell.getUnit().isPlayerUnit()) {
+					sb.append("| A |");
+				} else if (!cell.isWalkable()) {
+					sb.append("| X |");
+				} else {
+					sb.append("|   |");
+				}
+			}
+			sb.append("\n");
+		}
+		return sb.toString();
 	}
 
 	public BattleState(BattleCell[][] field) {
@@ -61,9 +81,9 @@ public class BattleState implements Comparable<BattleState> {
 		return stateOfField[width][height];
 	}
 
-	public void moveUnitTo(HypotheticalUnit aiUnit, Point to) {
+	public void moveUnitTo(HypotheticalUnit aiUnit, MyPoint to) {
 		// if we have the unit, move it, if not create it
-		Point from = new Point(aiUnit.getX(), aiUnit.getY());
+		MyPoint from = new MyPoint(aiUnit.getX(), aiUnit.getY());
 		boolean entityFound = false;
 		for (HypotheticalUnit unit : units) {
 			if (unit.getEntityId() == aiUnit.getEntityId()) {
@@ -81,9 +101,9 @@ public class BattleState implements Comparable<BattleState> {
 		stateOfField[to.x][to.y].setOccupied(true);
 	}
 
-	public void moveUnitTo(Entity entity, Point to) {
+	public void moveUnitTo(Entity entity, MyPoint to) {
 		// if we have the unit, move it, if not create it
-		Point from = new Point(entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY());
+		MyPoint from = new MyPoint(entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY());
 		boolean entityFound = false;
 		for (HypotheticalUnit unit : units) {
 			if (unit.getEntityId() == entity.getEntityID()) {
@@ -103,18 +123,18 @@ public class BattleState implements Comparable<BattleState> {
 
 	}
 
-	private boolean withinBounds(Point from) {
+	private boolean withinBounds(MyPoint from) {
 		return ((from.x >= 0) && (from.x <= getWidth()) && (from.y >= 0) && (from.y <= getHeight()));
 	}
 
-	public Point stepFromTowards(Point from, Point to) {
+	public MyPoint stepFromTowards(MyPoint from, MyPoint to) {
 		final int random = MathUtils.random.nextInt(1);
 
 		if (random == 0) {
 			if (to.x > from.x) {
-				return new Point(from.x + 1, from.y);
+				return new MyPoint(from.x + 1, from.y);
 			} else if (to.x < from.x) {
-				return new Point(from.x - 1, from.y);
+				return new MyPoint(from.x - 1, from.y);
 			} else {
 				return yUpOrYDown(from, to);
 			}
@@ -123,13 +143,13 @@ public class BattleState implements Comparable<BattleState> {
 		}
 	}
 
-	private Point yUpOrYDown(Point from, Point to) {
+	private MyPoint yUpOrYDown(MyPoint from, MyPoint to) {
 		if (to.y > from.y) {
-			return new Point(from.x, from.y + 1);
+			return new MyPoint(from.x, from.y + 1);
 		} else if (to.y < from.y) {
-			return new Point(from.x, from.y - 1);
+			return new MyPoint(from.x, from.y - 1);
 		} else {
-			return new Point(from.x, from.y);
+			return new MyPoint(from.x, from.y);
 		}
 	}
 

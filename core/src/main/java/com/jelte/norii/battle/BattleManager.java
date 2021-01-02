@@ -1,6 +1,5 @@
 package com.jelte.norii.battle;
 
-import java.awt.Point;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -27,6 +26,7 @@ import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.PlayerEntity;
 import com.jelte.norii.magic.Modifier;
 import com.jelte.norii.map.MyPathFinder;
+import com.jelte.norii.utility.MyPoint;
 import com.jelte.norii.utility.TiledMapPosition;
 
 public class BattleManager {
@@ -167,10 +167,10 @@ public class BattleManager {
 	}
 
 	public void updateStateOfBattle(Entity unit, TiledMapPosition newPos) {
-		final Point oldPoint = new Point(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY());
-		final Point newPoint = new Point(newPos.getTileX(), newPos.getTileY());
-		if (!oldPoint.equals(newPoint)) {
-			stateOfBattle.moveUnitTo(unit, newPoint);
+		final MyPoint oldMyPoint = new MyPoint(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY());
+		final MyPoint newMyPoint = new MyPoint(newPos.getTileX(), newPos.getTileY());
+		if (!oldMyPoint.equals(newMyPoint)) {
+			stateOfBattle.moveUnitTo(unit, newMyPoint);
 		}
 	}
 

@@ -3,7 +3,6 @@ package com.jelte.norii.entities;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveTo;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.run;
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -29,6 +28,7 @@ import com.jelte.norii.magic.ModifiersEnum;
 import com.jelte.norii.ui.PortraitAndStats;
 import com.jelte.norii.ui.StatusUi;
 import com.jelte.norii.utility.AssetManagerUtility;
+import com.jelte.norii.utility.MyPoint;
 import com.jelte.norii.utility.TiledMapPosition;
 
 public class Entity extends Actor implements EntitySubject, AudioSubject {
@@ -486,7 +486,7 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 		}
 	}
 
-	public void notifyEntityObserver(EntityCommand command, Ability abilityUsed, Point target) {
+	public void notifyEntityObserver(EntityCommand command, Ability abilityUsed, MyPoint target) {
 		for (int i = 0; i < entityObservers.size; i++) {
 			entityObservers.get(i).onEntityNotify(command, this, abilityUsed, target);
 		}

@@ -1,8 +1,7 @@
 package com.jelte.norii.entities;
 
-import java.awt.Point;
-
 import com.jelte.norii.magic.Ability;
+import com.jelte.norii.utility.MyPoint;
 import com.jelte.norii.utility.TiledMapPosition;
 
 public interface EntityObserver {
@@ -19,5 +18,5 @@ public interface EntityObserver {
 
 	void onEntityNotify(EntityCommand command, Entity unit, TiledMapPosition pos);
 
-	void onEntityNotify(EntityCommand command, Entity entity, Ability abilityUsed, Point target);
+	void onEntityNotify(EntityCommand command, Entity entity, Ability abilityUsed, MyPoint target);
 }

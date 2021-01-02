@@ -1,6 +1,5 @@
 package com.jelte.norii.battle.battlePhase;
 
-import java.awt.Point;
 import java.util.List;
 
 import com.badlogic.gdx.Input.Buttons;
@@ -20,6 +19,7 @@ import com.jelte.norii.map.MyPathFinder;
 import com.jelte.norii.map.TiledMapActor;
 import com.jelte.norii.particles.ParticleMaker;
 import com.jelte.norii.particles.ParticleType;
+import com.jelte.norii.utility.MyPoint;
 import com.jelte.norii.utility.TiledMapPosition;
 import com.jelte.norii.utility.Utility;
 
@@ -162,7 +162,7 @@ public class SpellBattlePhase extends BattlePhase {
 		return (ability.getTarget() == targetType);
 	}
 
-	public void executeSpellForAi(Entity entity, Ability ability, Point target) {
+	public void executeSpellForAi(Entity entity, Ability ability, MyPoint target) {
 		final TiledMapPosition targetPos = new TiledMapPosition().setPositionFromTiles(target.x, target.y);
 		final List<Entity> units = battlemanager.getUnits();
 		for (final Entity unit : units) {

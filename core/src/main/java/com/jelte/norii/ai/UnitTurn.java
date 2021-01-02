@@ -28,4 +28,14 @@ public class UnitTurn {
 	public Array<Move> getMoves() {
 		return moves;
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		for (Move move : moves) {
+			sb.append(move.toString());
+			sb.append("\n");
+		}
+		return sb.toString();
+	}
 }

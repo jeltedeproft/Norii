@@ -1,13 +1,13 @@
 package com.jelte.norii.battle.battleState;
 
-import java.awt.Point;
+import com.jelte.norii.utility.MyPoint;
 
 public class Move {
 
 	private MoveType moveType;
-	private Point location;
+	private MyPoint location;
 
-	public Move(MoveType moveType, Point location) {
+	public Move(MoveType moveType, MyPoint location) {
 		this.moveType = moveType;
 		this.location = location;
 	}
@@ -20,11 +20,16 @@ public class Move {
 		this.moveType = moveType;
 	}
 
-	public Point getLocation() {
+	public MyPoint getLocation() {
 		return location;
 	}
 
-	public void setLocation(Point location) {
+	public void setLocation(MyPoint location) {
 		this.location = location;
+	}
+
+	@Override
+	public String toString() {
+		return moveType.toString() + " to / at " + location;
 	}
 }

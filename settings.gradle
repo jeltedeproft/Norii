@@ -1,2 +1,2 @@
-include 'core', 'lwjgl3', 'html'
+include 'core', 'lwjgl3', 'html', 'tests'
 rootProject.name='Norii'

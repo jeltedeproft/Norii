@@ -1,6 +1,5 @@
 package com.jelte.norii.map;
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +12,7 @@ import org.xguzm.pathfinding.grid.finders.GridFinderOptions;
 
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityAnimation.Direction;
+import com.jelte.norii.utility.MyPoint;
 import com.jelte.norii.utility.TiledMapPosition;
 import com.jelte.norii.utility.Utility;
 
@@ -234,9 +234,9 @@ public class MyPathFinder {
 		return null;
 	}
 
-	public Point getPositionFurthestAwayFrom(Point pos) {
+	public MyPoint getPositionFurthestAwayFrom(MyPoint pos) {
 		TiledMapPosition goal = getPositionFurthestAwayFrom(new TiledMapPosition().setPositionFromTiles(pos.x, pos.y));
-		return new Point(goal.getTileX(), goal.getTileY());
+		return new MyPoint(goal.getTileX(), goal.getTileY());
 	}
 
 	public TiledMapPosition getPositionFurthestAwayFrom(TiledMapPosition pos) {
@@ -309,10 +309,10 @@ public class MyPathFinder {
 		final int startY = mover.getCurrentPosition().getTileY();
 		final int endX = target.getCurrentPosition().getTileX();
 		final int endY = target.getCurrentPosition().getTileY();
-		return removeEndPoint(aStarGridFinder.findPath(startX, startY, endX, endY, navGrid));
+		return removeEndMyPoint(aStarGridFinder.findPath(startX, startY, endX, endY, navGrid));
 	}
 
-	private List<GridCell> removeEndPoint(List<GridCell> path) {
+	private List<GridCell> removeEndMyPoint(List<GridCell> path) {
 		path.remove(path.size() - 1);
 		return path;
 	}

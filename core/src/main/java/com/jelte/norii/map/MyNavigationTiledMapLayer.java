@@ -110,7 +110,7 @@ public class MyNavigationTiledMapLayer extends MapLayer implements NavigationGri
 		Array<GridCell> nodes = new Array<>();
 		for (GridCell[] row : navGrid.getNodes()) {
 			for (GridCell cell : row) {
-				if (cell.isWalkable()) {
+				if (!cell.isWalkable()) {
 					nodes.add(cell);
 				}
 			}
