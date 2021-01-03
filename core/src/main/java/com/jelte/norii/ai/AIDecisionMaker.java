@@ -229,7 +229,7 @@ public class AIDecisionMaker {
 			}
 			if (!abilityTargets.isEmpty()) {
 				for (final MyPoint target : abilityTargets) {
-					final Set<MyPoint> positionsToCastSpell = battleStateGridHelper.getAllMyPointsWhereTargetIsHit(ability, target, new MyPoint(aiUnit.getX(), aiUnit.getY()), battleState);
+					final Set<MyPoint> positionsToCastSpell = battleStateGridHelper.getAllCastPointsWhereTargetIsHit(ability, target, new MyPoint(aiUnit.getX(), aiUnit.getY()), battleState);
 					for (final MyPoint MyPoint : positionsToCastSpell) {
 						final Array<MyPoint> affectedUnits = battleStateGridHelper.getTargetsAbility(ability, MyPoint, getUnitPositions(false, ability, battleState));
 						moveAndSpell.addMove(new SpellMove(MoveType.SPELL, MyPoint, ability, affectedUnits));
@@ -241,7 +241,7 @@ public class AIDecisionMaker {
 
 		if (!abilityTargets.isEmpty()) {
 			for (final MyPoint target : abilityTargets) {
-				final Set<MyPoint> positionsToCastSpell = battleStateGridHelper.getAllMyPointsWhereTargetIsHit(ability, target, new MyPoint(aiUnit.getX(), aiUnit.getY()), battleState);
+				final Set<MyPoint> positionsToCastSpell = battleStateGridHelper.getAllCastPointsWhereTargetIsHit(ability, target, new MyPoint(aiUnit.getX(), aiUnit.getY()), battleState);
 				final Move moveAfterSpell = decideMove(ability, aiUnit, battleState);
 				for (final MyPoint MyPoint : positionsToCastSpell) {
 					final Array<MyPoint> affectedUnits = battleStateGridHelper.getTargetsAbility(ability, MyPoint, getUnitPositions(false, ability, battleState));

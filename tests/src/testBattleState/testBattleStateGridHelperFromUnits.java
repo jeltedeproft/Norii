@@ -2,12 +2,17 @@ package testBattleState;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.badlogic.gdx.utils.Array;
+import com.jelte.norii.battle.battleState.BattleState;
 import com.jelte.norii.battle.battleState.BattleStateGridHelperFromUnits;
 import com.jelte.norii.magic.AbilitiesEnum;
 import com.jelte.norii.magic.Ability;
@@ -102,6 +107,54 @@ public class testBattleStateGridHelperFromUnits {
 		Array<MyPoint> results = gridHelper.getTargetPositionsInRangeAbility(center, ability, allPoints);
 		unitPositions.sort();
 		results.sort();
+		assertEquals(unitPositions, results);
+	}
+
+	@Test
+	public void testCastPointsTargetHitLineCellRange2AoeRange2() {
+		BattleState battleState = new BattleState(20, 20);
+		Ability ability = new Ability(AbilitiesEnum.FIREBALL);
+		ability.getSpellData().setAreaOfEffect("CELL");
+		ability.getSpellData().setRange(2);
+		ability.getSpellData().setAreaOfEffectRange(2);
+		ability.getSpellData().setLineOfSight("LINE");
+		Set<MyPoint> unitPositions = new HashSet<>(Arrays.asList(testPoints[5][7]));
+		MyPoint target = new MyPoint(5, 7);
+		Set<MyPoint> results = gridHelper.getAllCastPointsWhereTargetIsHit(ability, target, center, battleState);
+		assertEquals(unitPositions, results);
+
+		unitPositions = new HashSet<>();
+		target = new MyPoint(5, 12);
+		results = gridHelper.getAllCastPointsWhereTargetIsHit(ability, target, center, battleState);
+		assertEquals(unitPositions, results);
+
+		unitPositions = new HashSet<>(Arrays.asList(testPoints[3][5]));
+		target = new MyPoint(3, 5);
+		results = gridHelper.getAllCastPointsWhereTargetIsHit(ability, target, center, battleState);
+		assertEquals(unitPositions, results);
+	}
+
+	@Test
+	public void testCastPointsTargetHitLineHorizontalLineRange2AoeRange2() {
+		BattleState battleState = new BattleState(20, 20);
+		Ability ability = new Ability(AbilitiesEnum.FIREBALL);
+		ability.getSpellData().setAreaOfEffect("HORIZONTAL_LINE");
+		ability.getSpellData().setRange(2);
+		ability.getSpellData().setAreaOfEffectRange(2);
+		ability.getSpellData().setLineOfSight("LINE");
+		Set<MyPoint> unitPositions = new HashSet<>(Arrays.asList(testPoints[5][7]));
+		MyPoint target = new MyPoint(5, 7);
+		Set<MyPoint> results = gridHelper.getAllCastPointsWhereTargetIsHit(ability, target, center, battleState);
+		assertEquals(unitPositions, results);
+
+		unitPositions = new HashSet<>();
+		target = new MyPoint(5, 12);
+		results = gridHelper.getAllCastPointsWhereTargetIsHit(ability, target, center, battleState);
+		assertEquals(unitPositions, results);
+
+		unitPositions = new HashSet<>(Arrays.asList(testPoints[3][5]));
+		target = new MyPoint(3, 5);
+		results = gridHelper.getAllCastPointsWhereTargetIsHit(ability, target, center, battleState);
 		assertEquals(unitPositions, results);
 	}
 }

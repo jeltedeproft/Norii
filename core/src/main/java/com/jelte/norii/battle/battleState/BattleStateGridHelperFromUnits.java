@@ -593,7 +593,7 @@ public class BattleStateGridHelperFromUnits {
 		return ((targetPos.x >= ((casterPos.x + range) - areaOfEffectRange)) || (targetPos.x <= ((casterPos.x + range + areaOfEffectRange) - deltaY)));
 	}
 
-	public Set<MyPoint> getAllMyPointsWhereTargetIsHit(Ability ability, MyPoint targetPosition, MyPoint casterPosition, BattleState battleState) {
+	public Set<MyPoint> getAllCastPointsWhereTargetIsHit(Ability ability, MyPoint targetPosition, MyPoint casterPosition, BattleState battleState) {
 		Set<MyPoint> castingMyPoints = new HashSet<>();
 		switch (ability.getLineOfSight()) {
 		case LINE:
@@ -630,7 +630,7 @@ public class BattleStateGridHelperFromUnits {
 
 	private Set<MyPoint> filter(Set<MyPoint> castingMyPoints, int width, int height) {
 		for (MyPoint MyPoint : castingMyPoints) {
-			if (!((MyPoint.x < 0) || (MyPoint.x > width) || (MyPoint.y < 0) || (MyPoint.y > height))) {
+			if (!((MyPoint.x >= 0) && (MyPoint.x < width) && (MyPoint.y >= 0) && (MyPoint.y < height))) {
 				castingMyPoints.removeIf(setMyPoint -> !((setMyPoint.x < 0) || (setMyPoint.x > width) || (setMyPoint.y < 0) || (setMyPoint.y > height)));
 			}
 		}
