@@ -191,7 +191,15 @@ public class AIDecisionMaker {
 				final HypotheticalUnit closestUnit = distancesWithAbilityTargetUnits.firstEntry().getValue().get(0);
 				final TiledMapPosition closestUnitPos = new TiledMapPosition().setPositionFromTiles(closestUnit.getX(), closestUnit.getY());
 				final List<GridCell> path = MyPathFinder.getInstance().pathTowards(new TiledMapPosition().setPositionFromTiles(unit.getX(), unit.getY()), closestUnitPos, unit.getAp());
-				final MyPoint goal = new MyPoint(path.get(path.size() - 1).x, path.get(path.size() - 1).y);
+				MyPoint goal = new MyPoint(path.get(path.size() - 1).x, path.get(path.size() - 1).y);
+				int i = 2;
+				while (checkIfUnitOnPoint(goal, battleState)) {
+					if ((path.size() - i) <= 0) {
+						return unitTurns;
+					}
+					goal = new MyPoint(path.get(path.size() - i).x, path.get(path.size() - i).y);
+					i++;
+				}
 				unitTurns.add(new UnitTurn(unit.getEntityId(), new Move(MoveType.MOVE, goal)));
 				return unitTurns;
 			} else {
@@ -199,7 +207,16 @@ public class AIDecisionMaker {
 				final HypotheticalUnit closestUnit = distancesWithAbilityTargetUnits.firstEntry().getValue().get(0);
 				final TiledMapPosition closestUnitPos = new TiledMapPosition().setPositionFromTiles(closestUnit.getX(), closestUnit.getY());
 				final List<GridCell> path = MyPathFinder.getInstance().pathTowards(new TiledMapPosition().setPositionFromTiles(unit.getX(), unit.getY()), closestUnitPos, unit.getAp());
-				final MyPoint moveGoal = new MyPoint(path.get(path.size() - 1).x, path.get(path.size() - 1).y);
+				MyPoint moveGoal = new MyPoint(path.get(path.size() - 1).x, path.get(path.size() - 1).y);
+				int i = 2;
+				while (checkIfUnitOnPoint(moveGoal, battleState)) {
+					if ((path.size() - i) <= 0) {
+						moveGoal = new MyPoint(unit.getX(), unit.getY());
+						break;
+					}
+					moveGoal = new MyPoint(path.get(path.size() - i).x, path.get(path.size() - i).y);
+					i++;
+				}
 				final MyPoint attackGoal = new MyPoint(distancesWithAbilityTargetUnits.firstEntry().getValue().get(0).getX(), distancesWithAbilityTargetUnits.firstEntry().getValue().get(0).getY());
 				final UnitTurn moveAttack = new UnitTurn(unit.getEntityId(), new Move(MoveType.MOVE, moveGoal));
 				moveAttack.addMove(new Move(MoveType.ATTACK, attackGoal));
@@ -222,6 +239,11 @@ public class AIDecisionMaker {
 				final TiledMapPosition closestUnitPos = new TiledMapPosition().setPositionFromTiles(closestUnit.getX(), closestUnit.getY());
 				final List<GridCell> path = MyPathFinder.getInstance().pathTowards(new TiledMapPosition().setPositionFromTiles(unit.getX(), unit.getY()), closestUnitPos, unit.getAp());
 				endMyPoint = new MyPoint(path.get(0).x, path.get(0).y);
+				int i = 0;
+				while (checkIfUnitOnPoint(endMyPoint, battleState)) {
+					endMyPoint = tryAdjacentPoint(i, new MyPoint(unit.getX(), unit.getY()));
+					i++;
+				}
 				battleState.moveUnitTo(unit, endMyPoint);
 				moveAndSpell.addMove(new Move(MoveType.MOVE, endMyPoint));
 				ap--;
@@ -252,6 +274,35 @@ public class AIDecisionMaker {
 			}
 		}
 		return unitTurns;
+	}
+
+	private MyPoint tryAdjacentPoint(int i, MyPoint unitPoint) {
+		if (i == 0) {
+			return new MyPoint(unitPoint.x + 1, unitPoint.y);
+		}
+
+		if (i == 1) {
+			return new MyPoint(unitPoint.x - 1, unitPoint.y);
+		}
+
+		if (i == 2) {
+			return new MyPoint(unitPoint.x, unitPoint.y + 1);
+		}
+
+		if (i == 3) {
+			return new MyPoint(unitPoint.x, unitPoint.y - 1);
+		} else {
+			return new MyPoint(unitPoint.x, unitPoint.y);
+		}
+	}
+
+	private boolean checkIfUnitOnPoint(MyPoint goal, BattleState battleState) {
+		for (final HypotheticalUnit unit : battleState.getAllUnits()) {
+			if (goal.equals(new MyPoint(unit.getX(), unit.getY()))) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private Move decideMove(Ability ability, HypotheticalUnit aiUnit, BattleState battleState) {

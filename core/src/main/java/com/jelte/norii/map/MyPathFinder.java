@@ -235,7 +235,7 @@ public class MyPathFinder {
 	}
 
 	public MyPoint getPositionFurthestAwayFrom(MyPoint pos) {
-		TiledMapPosition goal = getPositionFurthestAwayFrom(new TiledMapPosition().setPositionFromTiles(pos.x, pos.y));
+		final TiledMapPosition goal = getPositionFurthestAwayFrom(new TiledMapPosition().setPositionFromTiles(pos.x, pos.y));
 		return new MyPoint(goal.getTileX(), goal.getTileY());
 	}
 
