@@ -93,6 +93,13 @@ public class HypotheticalUnit {
 		return score;
 	}
 
+	public HypotheticalUnit makeCopy() {
+		HypotheticalUnit copy = new HypotheticalUnit(entityId, playerUnit, hp, maxHp, attackRange, attackDamage, ap, modifiers, abilities);
+		copy.setX(x);
+		copy.setY(y);
+		return copy;
+	}
+
 	public void addModifier(Modifier modifier) {
 		modifiers.add(modifier);
 	}
@@ -131,6 +138,11 @@ public class HypotheticalUnit {
 
 	public int getY() {
 		return y;
+	}
+
+	public void setXY(int x, int y) {
+		this.x = x;
+		this.y = y;
 	}
 
 	public void setY(int y) {

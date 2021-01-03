@@ -47,14 +47,16 @@ public class BattleState implements Comparable<BattleState> {
 		return sb.toString();
 	}
 
-	public BattleState(BattleCell[][] field) {
+	public BattleState(BattleCell[][] field, Array<HypotheticalUnit> unitsToAdd) {
 		stateOfField = field;
 		score = 0;
+		units.addAll(unitsToAdd);
 	}
 
-	public BattleState(BattleCell[][] field, int score) {
+	public BattleState(BattleCell[][] field, int score, Array<HypotheticalUnit> unitsToAdd) {
 		stateOfField = field;
 		this.score = score;
+		units.addAll(unitsToAdd);
 	}
 
 	public void addModifierToUnit(int width, int height, Modifier modifier) {
@@ -155,7 +157,11 @@ public class BattleState implements Comparable<BattleState> {
 
 	public BattleState makeCopy() {
 		final BattleCell[][] copyField = stateOfField.clone();
-		return new BattleState(copyField, score);
+		Array<HypotheticalUnit> copyUnits = new Array<>();
+		for (HypotheticalUnit unit : units) {
+			copyUnits.add(unit.makeCopy());
+		}
+		return new BattleState(copyField, score, copyUnits);
 
 	}
 
