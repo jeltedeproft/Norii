@@ -30,16 +30,18 @@ public class BattleState implements Comparable<BattleState> {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("\n");
-		for (BattleCell[] row : stateOfField) {
-			for (BattleCell cell : row) {
+		for (int i = stateOfField.length - 1; i >= 0; i--) {
+			BattleCell[] row = stateOfField[i];
+			for (int j = 0; j < row.length; j++) {
+				BattleCell cell = stateOfField[j][i];
 				if (cell.isOccupied() && cell.getUnit().isPlayerUnit()) {
-					sb.append("| P |");
+					sb.append("| " + cell.getUnit().getEntityId() + " -- (" + cell.getUnit().getX() + "," + cell.getUnit().getY() + ") |");
 				} else if (cell.isOccupied() && !cell.getUnit().isPlayerUnit()) {
-					sb.append("| A |");
+					sb.append("| " + cell.getUnit().getEntityId() + " -- (" + cell.getUnit().getX() + "," + cell.getUnit().getY() + ") |");
 				} else if (!cell.isWalkable()) {
-					sb.append("| X |");
+					sb.append("| XXXXXXXX |");
 				} else {
-					sb.append("|   |");
+					sb.append("|          |");
 				}
 			}
 			sb.append("\n");
@@ -87,20 +89,22 @@ public class BattleState implements Comparable<BattleState> {
 		// if we have the unit, move it, if not create it
 		MyPoint from = new MyPoint(aiUnit.getX(), aiUnit.getY());
 		boolean entityFound = false;
-		for (HypotheticalUnit unit : units) {
-			if (unit.getEntityId() == aiUnit.getEntityId()) {
-				stateOfField[to.x][to.y].setUnit(stateOfField[unit.getX()][unit.getY()].getUnit());
-				stateOfField[to.x][to.y].getUnit().setX(to.x);
-				stateOfField[to.x][to.y].getUnit().setY(to.y);
-				stateOfField[from.x][from.y].removeUnit();
-				entityFound = true;
+		if (!from.equals(to)) {
+			for (HypotheticalUnit unit : units) {
+				if (unit.getEntityId() == aiUnit.getEntityId()) {
+					stateOfField[to.x][to.y].setUnit(stateOfField[unit.getX()][unit.getY()].getUnit());
+					stateOfField[to.x][to.y].getUnit().setX(to.x);
+					stateOfField[to.x][to.y].getUnit().setY(to.y);
+					stateOfField[from.x][from.y].removeUnit();
+					entityFound = true;
+				}
 			}
-		}
 
-		if (!entityFound) {
-			addEntity(to.x, to.y, aiUnit);
+			if (!entityFound) {
+				addEntity(to.x, to.y, aiUnit);
+			}
+			stateOfField[to.x][to.y].setOccupied(true);
 		}
-		stateOfField[to.x][to.y].setOccupied(true);
 	}
 
 	public void moveUnitTo(Entity entity, MyPoint to) {
@@ -156,10 +160,18 @@ public class BattleState implements Comparable<BattleState> {
 	}
 
 	public BattleState makeCopy() {
-		final BattleCell[][] copyField = stateOfField.clone();
+		final BattleCell[][] copyField = new BattleCell[getWidth()][getHeight()];
+		for (int i = 0; i < getWidth(); i++) {
+			for (int j = 0; j < getHeight(); j++) {
+				BattleCell oldCell = get(i, j);
+				copyField[i][j] = new BattleCell(oldCell.isOccupied(), oldCell.isWalkable());
+			}
+		}
 		Array<HypotheticalUnit> copyUnits = new Array<>();
 		for (HypotheticalUnit unit : units) {
-			copyUnits.add(unit.makeCopy());
+			HypotheticalUnit copyUnit = unit.makeCopy();
+			copyUnits.add(copyUnit);
+			copyField[copyUnit.getX()][copyUnit.getY()].setUnit(copyUnit);
 		}
 		return new BattleState(copyField, score, copyUnits);
 

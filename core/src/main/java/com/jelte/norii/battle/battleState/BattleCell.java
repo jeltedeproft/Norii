@@ -11,6 +11,19 @@ public class BattleCell {
 		unit = null;
 	}
 
+	public BattleCell(boolean occupied, boolean walkable, HypotheticalUnit unit) {
+		super();
+		this.occupied = occupied;
+		this.walkable = walkable;
+		this.unit = unit;
+	}
+
+	public BattleCell(boolean occupied, boolean walkable) {
+		this.occupied = occupied;
+		this.walkable = walkable;
+		unit = null;
+	}
+
 	public int getScore() {
 		if (occupied) {
 			return unit.getScore();

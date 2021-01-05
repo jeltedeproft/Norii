@@ -39,13 +39,11 @@ public class AIDecisionMaker {
 
 	public UnitTurn makeDecision(BattleState battleState) {
 		System.out.println("1");
-		final Array<HypotheticalUnit> players = battleState.getPlayerUnits();
-		final Array<HypotheticalUnit> ais = battleState.getAiUnits();
 		final Array<BattleState> battleStates = new Array<>();
 		final Array<BattleState> battleStatesLevelTwo = new Array<>();
 		final Array<BattleState> battleStatesLevelThree = new Array<>();
 		// for every aiUnit, generate all his moves and store them
-		for (final HypotheticalUnit aiUnit : ais) {
+		for (final HypotheticalUnit aiUnit : battleState.getAiUnits()) {
 			for (final Ability ability : aiUnit.getAbilities()) {
 				final Array<UnitTurn> turns = generateMoves(ability, aiUnit, battleState);
 				for (final UnitTurn turn : turns) {
@@ -58,7 +56,7 @@ public class AIDecisionMaker {
 		System.out.println("2");
 		reduceModifierCount(battleStates);
 		for (final BattleState updatedState : battleStates) {
-			for (final HypotheticalUnit playerUnit : players) {
+			for (final HypotheticalUnit playerUnit : updatedState.getPlayerUnits()) {
 				for (final Ability ability : playerUnit.getAbilities()) {
 					final Array<UnitTurn> turns = generateMoves(ability, playerUnit, updatedState);
 					for (final UnitTurn turn : turns) {
@@ -76,7 +74,7 @@ public class AIDecisionMaker {
 		System.out.println("number of states = " + battleStatesLevelTwo.size);
 		for (final BattleState updatedState : battleStatesLevelTwo) {
 			System.out.println("3.5 - inside - level 1");
-			for (final HypotheticalUnit aiUnit : ais) {
+			for (final HypotheticalUnit aiUnit : updatedState.getAiUnits()) {
 				System.out.println("3.5 - inside - level 2");
 				for (final Ability ability : aiUnit.getAbilities()) {
 					System.out.println("3.5 - inside - level 3");
@@ -102,7 +100,7 @@ public class AIDecisionMaker {
 	private UnitTurn getmoves(BattleState battleState) {
 		BattleState initialState = battleState;
 		while (initialState.getParentState() != null) {
-			initialState = battleState.getParentState();
+			initialState = initialState.getParentState();
 		}
 		return initialState.getTurn();
 	}
@@ -116,16 +114,17 @@ public class AIDecisionMaker {
 
 	private BattleState applyTurnToBattleState(HypotheticalUnit aiUnit, UnitTurn turn, BattleState battleState) {
 		final BattleState newState = battleState.makeCopy();
+		HypotheticalUnit copyUnit = newState.get(aiUnit.getX(), aiUnit.getY()).getUnit();
 		for (final Move move : turn.getMoves()) {
 			switch (move.getMoveType()) {
 			case SPELL:
-				applySpellOnBattleState(aiUnit, (SpellMove) move, newState);
+				applySpellOnBattleState(copyUnit, (SpellMove) move, newState);
 				break;
 			case ATTACK:
-				applyAttackOnBattleState(aiUnit, move, newState);
+				applyAttackOnBattleState(copyUnit, move, newState);
 				break;
 			case MOVE:
-				newState.moveUnitTo(aiUnit, move.getLocation());
+				newState.moveUnitTo(copyUnit, move.getLocation());
 				break;
 			default:
 				// do nothing
@@ -193,7 +192,7 @@ public class AIDecisionMaker {
 				final List<GridCell> path = MyPathFinder.getInstance().pathTowards(new TiledMapPosition().setPositionFromTiles(unit.getX(), unit.getY()), closestUnitPos, unit.getAp());
 				MyPoint goal = new MyPoint(path.get(path.size() - 1).x, path.get(path.size() - 1).y);
 				int i = 2;
-				while (checkIfUnitOnPoint(goal, battleState)) {
+				while (checkIfUnitOnPoint(goal, battleState, unit)) {
 					if ((path.size() - i) <= 0) {
 						return unitTurns;
 					}
@@ -209,7 +208,7 @@ public class AIDecisionMaker {
 				final List<GridCell> path = MyPathFinder.getInstance().pathTowards(new TiledMapPosition().setPositionFromTiles(unit.getX(), unit.getY()), closestUnitPos, unit.getAp());
 				MyPoint moveGoal = new MyPoint(path.get(path.size() - 1).x, path.get(path.size() - 1).y);
 				int i = 2;
-				while (checkIfUnitOnPoint(moveGoal, battleState)) {
+				while (checkIfUnitOnPoint(moveGoal, battleState, unit)) {
 					if ((path.size() - i) <= 0) {
 						moveGoal = new MyPoint(unit.getX(), unit.getY());
 						break;
@@ -234,26 +233,28 @@ public class AIDecisionMaker {
 			MyPoint endMyPoint = new MyPoint(unit.getX(), unit.getY());
 			final UnitTurn moveAndSpell = new UnitTurn(unit.getEntityId(), new Move(MoveType.MOVE, endMyPoint));
 			int ap = unit.getAp();
+			BattleState copyBattleState = battleState.makeCopy();
+			HypotheticalUnit copyUnit = copyBattleState.get(unit.getX(), unit.getY()).getUnit();
 			while (abilityTargets.isEmpty() && (ap > 0)) {
 				final HypotheticalUnit closestUnit = distancesWithAbilityTargetUnits.firstEntry().getValue().get(0);
 				final TiledMapPosition closestUnitPos = new TiledMapPosition().setPositionFromTiles(closestUnit.getX(), closestUnit.getY());
-				final List<GridCell> path = MyPathFinder.getInstance().pathTowards(new TiledMapPosition().setPositionFromTiles(unit.getX(), unit.getY()), closestUnitPos, unit.getAp());
+				final List<GridCell> path = MyPathFinder.getInstance().pathTowards(new TiledMapPosition().setPositionFromTiles(copyUnit.getX(), copyUnit.getY()), closestUnitPos, copyUnit.getAp());
 				endMyPoint = new MyPoint(path.get(0).x, path.get(0).y);
 				int i = 0;
-				while (checkIfUnitOnPoint(endMyPoint, battleState)) {
-					endMyPoint = tryAdjacentPoint(i, new MyPoint(unit.getX(), unit.getY()));
+				while (checkIfUnitOnPoint(endMyPoint, copyBattleState, copyUnit)) {
+					endMyPoint = tryAdjacentPoint(i, new MyPoint(copyUnit.getX(), copyUnit.getY()), new MyPoint(closestUnit.getX(), closestUnit.getY()));
 					i++;
 				}
-				battleState.moveUnitTo(unit, endMyPoint);
+				copyBattleState.moveUnitTo(copyUnit, endMyPoint);
 				moveAndSpell.addMove(new Move(MoveType.MOVE, endMyPoint));
 				ap--;
-				abilityTargets = getAbilityTargets(ability, endMyPoint, unit.isPlayerUnit(), battleState);
+				abilityTargets = getAbilityTargets(ability, endMyPoint, copyUnit.isPlayerUnit(), copyBattleState);
 			}
 			if (!abilityTargets.isEmpty()) {
 				for (final MyPoint target : abilityTargets) {
-					final Set<MyPoint> positionsToCastSpell = battleStateGridHelper.getAllCastPointsWhereTargetIsHit(ability, target, new MyPoint(unit.getX(), unit.getY()), battleState);
+					final Set<MyPoint> positionsToCastSpell = battleStateGridHelper.getAllCastPointsWhereTargetIsHit(ability, target, new MyPoint(copyUnit.getX(), copyUnit.getY()), copyBattleState);
 					for (final MyPoint MyPoint : positionsToCastSpell) {
-						final Array<MyPoint> affectedUnits = battleStateGridHelper.getTargetsAbility(ability, MyPoint, getUnitPositions(false, ability, battleState));
+						final Array<MyPoint> affectedUnits = battleStateGridHelper.getTargetsAbility(ability, MyPoint, getUnitPositions(false, ability, copyBattleState));
 						moveAndSpell.addMove(new SpellMove(MoveType.SPELL, MyPoint, ability, affectedUnits));
 						unitTurns.add(moveAndSpell);
 					}
@@ -276,17 +277,29 @@ public class AIDecisionMaker {
 		return unitTurns;
 	}
 
-	private MyPoint tryAdjacentPoint(int i, MyPoint unitPoint) {
+	private MyPoint tryAdjacentPoint(int i, MyPoint unitPoint, MyPoint target) {
 		if (i == 0) {
-			return new MyPoint(unitPoint.x + 1, unitPoint.y);
+			if (target.x < unitPoint.x) {
+				i++;
+			} else {
+				return new MyPoint(unitPoint.x + 1, unitPoint.y);
+			}
 		}
 
 		if (i == 1) {
-			return new MyPoint(unitPoint.x - 1, unitPoint.y);
+			if (target.x > unitPoint.x) {
+				i++;
+			} else {
+				return new MyPoint(unitPoint.x - 1, unitPoint.y);
+			}
 		}
 
 		if (i == 2) {
-			return new MyPoint(unitPoint.x, unitPoint.y + 1);
+			if (target.y < unitPoint.y) {
+				i++;
+			} else {
+				return new MyPoint(unitPoint.x, unitPoint.y + 1);
+			}
 		}
 
 		if (i == 3) {
@@ -296,13 +309,13 @@ public class AIDecisionMaker {
 		}
 	}
 
-	private boolean checkIfUnitOnPoint(MyPoint goal, BattleState battleState) {
+	private boolean checkIfUnitOnPoint(MyPoint goal, BattleState battleState, HypotheticalUnit copyUnit) {
 		for (final HypotheticalUnit unit : battleState.getAllUnits()) {
-			if (goal.equals(new MyPoint(unit.getX(), unit.getY()))) {
-				return false;
+			if ((goal.equals(new MyPoint(unit.getX(), unit.getY()))) && !((copyUnit.getX() == unit.getX()) && (copyUnit.getY() == unit.getY()))) {
+				return true;
 			}
 		}
-		return true;
+		return false;
 	}
 
 	private Move decideMove(Ability ability, HypotheticalUnit aiUnit, BattleState battleState) {

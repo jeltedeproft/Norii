@@ -629,12 +629,20 @@ public class BattleStateGridHelperFromUnits {
 	}
 
 	private Set<MyPoint> filter(Set<MyPoint> castingMyPoints, int width, int height) {
-		for (MyPoint MyPoint : castingMyPoints) {
-			if (!((MyPoint.x >= 0) && (MyPoint.x < width) && (MyPoint.y >= 0) && (MyPoint.y < height))) {
-				castingMyPoints.removeIf(setMyPoint -> !((setMyPoint.x < 0) || (setMyPoint.x > width) || (setMyPoint.y < 0) || (setMyPoint.y > height)));
-			}
-		}
+		castingMyPoints.removeIf(point -> ((point.x < 0) || (point.x > width) || (point.y < 0) || (point.y > height)));
 		return castingMyPoints;
+	}
+
+	private Array<MyPoint> filterDoubles(Array<MyPoint> targets) {
+		Array<MyPoint> result = new Array<>();
+		Set<MyPoint> singles = new HashSet<>();
+		for (MyPoint point : targets) {
+			singles.add(point);
+		}
+		for (MyPoint point : singles) {
+			result.add(point);
+		}
+		return result;
 	}
 
 	private Set<MyPoint> trySquareBorderCells(Ability ability, MyPoint targetPosition, MyPoint casterPosition) {
@@ -803,6 +811,6 @@ public class BattleStateGridHelperFromUnits {
 				targets.add(targetPosition);
 			}
 		}
-		return targets;
+		return filterDoubles(targets);
 	}
 }
