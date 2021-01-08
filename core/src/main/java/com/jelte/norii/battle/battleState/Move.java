@@ -32,4 +32,8 @@ public class Move {
 	public String toString() {
 		return moveType.toString() + " to / at " + location;
 	}
+
+	public Move makeCopy() {
+		return new Move(moveType, new MyPoint(location.x, location.y));
+	}
 }

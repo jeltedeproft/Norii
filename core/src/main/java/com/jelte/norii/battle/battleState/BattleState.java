@@ -61,6 +61,13 @@ public class BattleState implements Comparable<BattleState> {
 		units.addAll(unitsToAdd);
 	}
 
+	public BattleState(BattleCell[][] field, int score, Array<HypotheticalUnit> unitsToAdd, UnitTurn turn) {
+		stateOfField = field;
+		this.score = score;
+		units.addAll(unitsToAdd);
+		this.turn = turn;
+	}
+
 	public void addModifierToUnit(int width, int height, Modifier modifier) {
 		if (stateOfField[width][height].isOccupied()) {
 			stateOfField[width][height].getUnit().addModifier(modifier);
@@ -174,7 +181,12 @@ public class BattleState implements Comparable<BattleState> {
 			copyField[copyUnit.getX()][copyUnit.getY()].setUnit(copyUnit);
 		}
 		return new BattleState(copyField, score, copyUnits);
+	}
 
+	public BattleState makeCopyWithTurn() {
+		BattleState copy = makeCopy();
+		copy.setTurn(turn);
+		return copy;
 	}
 
 	public int getScore() {
@@ -188,6 +200,15 @@ public class BattleState implements Comparable<BattleState> {
 				sum += cell.getScore();
 			}
 		}
+
+		if (getPlayerUnits().isEmpty()) {
+			sum += 50;
+		}
+
+		if (getAiUnits().isEmpty()) {
+			sum -= 50;
+		}
+
 		return sum;
 	}
 
@@ -256,6 +277,7 @@ public class BattleState implements Comparable<BattleState> {
 				mod.decrementTurns();
 			}
 		}
+		score = calculateScore();
 	}
 
 	public BattleState getParentState() {

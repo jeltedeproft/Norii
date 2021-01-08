@@ -12,12 +12,14 @@ import org.xguzm.pathfinding.grid.GridCell;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.battle.battleState.BattleState;
+import com.jelte.norii.battle.battleState.BattleStateGridHelper;
 import com.jelte.norii.battle.battleState.BattleStateGridHelperFromUnits;
 import com.jelte.norii.battle.battleState.HypotheticalUnit;
 import com.jelte.norii.battle.battleState.Move;
 import com.jelte.norii.battle.battleState.MoveType;
 import com.jelte.norii.battle.battleState.SpellMove;
 import com.jelte.norii.magic.Ability;
+import com.jelte.norii.magic.Ability.Target;
 import com.jelte.norii.magic.Modifier;
 import com.jelte.norii.magic.ModifiersEnum;
 import com.jelte.norii.map.MyPathFinder;
@@ -27,13 +29,15 @@ import com.jelte.norii.utility.Utility;
 
 public class AIDecisionMaker {
 	private final SortedMap<Integer, BattleState> statesWithScores;
-	private final BattleStateGridHelperFromUnits battleStateGridHelper;
+	private final BattleStateGridHelperFromUnits battleStateGridHelperFromUnits;
+	private final BattleStateGridHelper battleStateGridHelper;
 
 	private static final int NUMBER_OF_LAYERS = 3;
 	private static final String TAG = AIDecisionMaker.class.getSimpleName();
 
 	public AIDecisionMaker() {
-		battleStateGridHelper = new BattleStateGridHelperFromUnits();
+		battleStateGridHelperFromUnits = new BattleStateGridHelperFromUnits();
+		battleStateGridHelper = new BattleStateGridHelper();
 		statesWithScores = new TreeMap<>();
 	}
 
@@ -56,14 +60,18 @@ public class AIDecisionMaker {
 		System.out.println("2");
 		reduceModifierCount(battleStates);
 		for (final BattleState updatedState : battleStates) {
-			for (final HypotheticalUnit playerUnit : updatedState.getPlayerUnits()) {
-				for (final Ability ability : playerUnit.getAbilities()) {
-					final Array<UnitTurn> turns = generateMoves(ability, playerUnit, updatedState);
-					for (final UnitTurn turn : turns) {
-						final BattleState newState = applyTurnToBattleState(playerUnit, turn, updatedState);
-						newState.setParentState(updatedState);
-						newState.setTurn(turn);
-						battleStatesLevelTwo.add(newState);
+			if (checkEndConditions(updatedState)) {
+				battleStatesLevelThree.add(updatedState.makeCopyWithTurn());
+			} else {
+				for (final HypotheticalUnit playerUnit : updatedState.getPlayerUnits()) {
+					for (final Ability ability : playerUnit.getAbilities()) {
+						final Array<UnitTurn> turns = generateMoves(ability, playerUnit, updatedState);
+						for (final UnitTurn turn : turns) {
+							final BattleState newState = applyTurnToBattleState(playerUnit, turn, updatedState);
+							newState.setParentState(updatedState);
+							newState.setTurn(turn);
+							battleStatesLevelTwo.add(newState);
+						}
 					}
 				}
 			}
@@ -73,18 +81,22 @@ public class AIDecisionMaker {
 		System.out.println("3.5");
 		System.out.println("number of states = " + battleStatesLevelTwo.size);
 		for (final BattleState updatedState : battleStatesLevelTwo) {
-			System.out.println("3.5 - inside - level 1");
-			for (final HypotheticalUnit aiUnit : updatedState.getAiUnits()) {
-				System.out.println("3.5 - inside - level 2");
-				for (final Ability ability : aiUnit.getAbilities()) {
-					System.out.println("3.5 - inside - level 3");
-					final Array<UnitTurn> turns = generateMoves(ability, aiUnit, updatedState);
-					for (final UnitTurn turn : turns) {
-						System.out.println("3.5 - inside - level 4");
-						final BattleState newState = applyTurnToBattleState(aiUnit, turn, updatedState);
-						newState.setParentState(updatedState);
-						newState.setTurn(turn);
-						battleStatesLevelThree.add(newState);
+			if (checkEndConditions(updatedState)) {
+				battleStatesLevelThree.add(updatedState.makeCopyWithTurn());
+			} else {
+				System.out.println("3.5 - inside - level 1");
+				for (final HypotheticalUnit aiUnit : updatedState.getAiUnits()) {
+					System.out.println("3.5 - inside - level 2");
+					for (final Ability ability : aiUnit.getAbilities()) {
+						System.out.println("3.5 - inside - level 3");
+						final Array<UnitTurn> turns = generateMoves(ability, aiUnit, updatedState);
+						for (final UnitTurn turn : turns) {
+							System.out.println("3.5 - inside - level 4");
+							final BattleState newState = applyTurnToBattleState(aiUnit, turn, updatedState);
+							newState.setParentState(updatedState);
+							newState.setTurn(turn);
+							battleStatesLevelThree.add(newState);
+						}
 					}
 				}
 			}
@@ -94,10 +106,14 @@ public class AIDecisionMaker {
 		System.out.println("5");
 		battleStatesLevelThree.sort();
 		System.out.println("6");
-		return getmoves(battleStatesLevelThree.get(0));
+		return getInitialMoves(battleStatesLevelThree.get(0));
 	}
 
-	private UnitTurn getmoves(BattleState battleState) {
+	private boolean checkEndConditions(BattleState battleState) {
+		return battleState.getPlayerUnits().isEmpty() || battleState.getAiUnits().isEmpty();
+	}
+
+	private UnitTurn getInitialMoves(BattleState battleState) {
 		BattleState initialState = battleState;
 		while (initialState.getParentState() != null) {
 			initialState = initialState.getParentState();
@@ -126,6 +142,8 @@ public class AIDecisionMaker {
 			case MOVE:
 				newState.moveUnitTo(copyUnit, move.getLocation());
 				break;
+			case DUMMY:
+				// do nothing
 			default:
 				// do nothing
 			}
@@ -172,14 +190,80 @@ public class AIDecisionMaker {
 			}
 			break;
 		case HAMMERBACK:
-			// nothing yet
+			final int damage = move.getAbility().getSpellData().getDamage();
+			for (final MyPoint target : targets) {
+				List<MyPoint> crossedCells = findLine(caster.x, caster.y, target.x, target.y);
+				for (MyPoint point : crossedCells) {
+					if (battleState.get(point.x, point.y).isOccupied()) {
+						final int hp = battleState.get(point.x, point.y).getUnit().getHp();
+						if (damage >= hp) {
+							battleState.updateEntity(point.x, point.y, 0);
+						} else {
+							battleState.updateEntity(point.x, point.y, hp - damage);
+						}
+					}
+				}
+			}
 		default:
 			// nothing
 		}
 	}
 
+	/** Bresenham algorithm to find all cells crossed by a line **/
+	public List<MyPoint> findLine(int x0, int y0, int x1, int y1) {
+		List<MyPoint> line = new ArrayList<>();
+
+		int dx = Math.abs(x1 - x0);
+		int dy = Math.abs(y1 - y0);
+
+		int sx = x0 < x1 ? 1 : -1;
+		int sy = y0 < y1 ? 1 : -1;
+
+		int err = dx - dy;
+		int e2;
+
+		while (true) {
+			line.add(new MyPoint(x0, y0));
+
+			if ((x0 == x1) && (y0 == y1))
+				break;
+
+			e2 = 2 * err;
+			if (e2 > -dy) {
+				err = err - dy;
+				x0 = x0 + sx;
+			}
+
+			if (e2 < dx) {
+				err = err + dx;
+				y0 = y0 + sy;
+			}
+		}
+		return line;
+	}
+
 	private Array<UnitTurn> generateMoves(Ability ability, HypotheticalUnit unit, BattleState battleState) {
 		final Array<UnitTurn> unitTurns = new Array<>();
+
+		// if the ability is cast on self or no target, just cast it and move
+
+		if ((ability.getTarget() == Target.NO_TARGET) || (ability.getTarget() == Target.SELF)) {
+			final UnitTurn spellAndMove = new UnitTurn(unit.getEntityId(), new SpellMove(MoveType.SPELL, new MyPoint(unit.getX(), unit.getY()), ability));
+			spellAndMove.addMove(decideMove(ability, unit, battleState));
+			unitTurns.add(spellAndMove);
+		}
+
+		// if the ability has cell targets, try out all of them + move and make a new
+		// state for each
+		if ((ability.getTarget() == Target.CELL) || (ability.getTarget() == Target.CELL_BUT_NO_UNIT)) {
+			MyPoint center = new MyPoint(unit.getX(), unit.getY());
+			Set<MyPoint> cellsToCastOn = battleStateGridHelper.collectTargets(center, ability.getAreaOfEffect(), ability.getAffectedTeams(), battleState, ability.getSpellData().getAreaOfEffectRange());
+			for (MyPoint point : cellsToCastOn) {
+				final UnitTurn spellAndMove = new UnitTurn(unit.getEntityId(), new SpellMove(MoveType.SPELL, point, ability));
+				spellAndMove.addMove(decideMove(ability, unit, battleState));
+				unitTurns.add(spellAndMove);
+			}
+		}
 
 		// get the distance between unit and possible targets
 		final TreeMap<Integer, List<HypotheticalUnit>> distancesWithAbilityTargetUnits = (TreeMap<Integer, List<HypotheticalUnit>>) getDistancesToTargets(unit, battleState, ability);
@@ -252,22 +336,26 @@ public class AIDecisionMaker {
 			}
 			if (!abilityTargets.isEmpty()) {
 				for (final MyPoint target : abilityTargets) {
-					final Set<MyPoint> positionsToCastSpell = battleStateGridHelper.getAllCastPointsWhereTargetIsHit(ability, target, new MyPoint(copyUnit.getX(), copyUnit.getY()), copyBattleState);
+					final Set<MyPoint> positionsToCastSpell = battleStateGridHelperFromUnits.getAllCastPointsWhereTargetIsHit(ability, target, new MyPoint(copyUnit.getX(), copyUnit.getY()), copyBattleState);
 					for (final MyPoint MyPoint : positionsToCastSpell) {
-						final Array<MyPoint> affectedUnits = battleStateGridHelper.getTargetsAbility(ability, MyPoint, getUnitPositions(false, ability, copyBattleState));
-						moveAndSpell.addMove(new SpellMove(MoveType.SPELL, MyPoint, ability, affectedUnits));
-						unitTurns.add(moveAndSpell);
+						UnitTurn moveAndSpellCopy = moveAndSpell.makeCopy();
+						final Array<MyPoint> affectedUnits = battleStateGridHelperFromUnits.getTargetsAbility(ability, MyPoint, getUnitPositions(false, ability, copyBattleState));
+						moveAndSpellCopy.addMove(new SpellMove(MoveType.SPELL, MyPoint, ability, affectedUnits));
+						unitTurns.add(moveAndSpellCopy);
 					}
 				}
+			} else {
+				// units were in range, but moving did not bring them into line of sight
+				unitTurns.add(moveAndSpell);
 			}
 		}
 
 		if (!abilityTargets.isEmpty()) {
 			for (final MyPoint target : abilityTargets) {
-				final Set<MyPoint> positionsToCastSpell = battleStateGridHelper.getAllCastPointsWhereTargetIsHit(ability, target, new MyPoint(unit.getX(), unit.getY()), battleState);
+				final Set<MyPoint> positionsToCastSpell = battleStateGridHelperFromUnits.getAllCastPointsWhereTargetIsHit(ability, target, new MyPoint(unit.getX(), unit.getY()), battleState);
 				final Move moveAfterSpell = decideMove(ability, unit, battleState);
 				for (final MyPoint MyPoint : positionsToCastSpell) {
-					final Array<MyPoint> affectedUnits = battleStateGridHelper.getTargetsAbility(ability, MyPoint, getUnitPositions(false, ability, battleState));
+					final Array<MyPoint> affectedUnits = battleStateGridHelperFromUnits.getTargetsAbility(ability, MyPoint, getUnitPositions(false, ability, battleState));
 					final UnitTurn spellAndMove = new UnitTurn(unit.getEntityId(), new SpellMove(MoveType.SPELL, MyPoint, ability, affectedUnits));
 					spellAndMove.addMove(moveAfterSpell);
 					unitTurns.add(spellAndMove);
@@ -348,13 +436,19 @@ public class AIDecisionMaker {
 	private MyPoint trimPathConsideringApAndReachable(MyPoint originalGoal, HypotheticalUnit aiUnit) {
 		final TiledMapPosition start = new TiledMapPosition().setPositionFromTiles(aiUnit.getX(), aiUnit.getY());
 		final TiledMapPosition goal = new TiledMapPosition().setPositionFromTiles(originalGoal.x, originalGoal.y);
+		System.out.println("moving from " + start + "  to  : " + goal);
 		final List<GridCell> path = MyPathFinder.getInstance().pathTowards(start, goal, aiUnit.getAp());
+		System.out.println("after trimming : " + path + "  with length  : " + path.size());
+		if (path.isEmpty()) {
+			return new MyPoint(start.getTileX(), start.getTileY());
+		}
+
 		return new MyPoint(path.get(path.size() - 1).x, path.get(path.size() - 1).y);
 	}
 
 	private Map<Integer, List<HypotheticalUnit>> getDistancesToTargets(HypotheticalUnit unit, BattleState battleState, Ability ability) {
 		final Map<Integer, List<HypotheticalUnit>> distances = new TreeMap<>();
-		Array<HypotheticalUnit> unitsToCheck = new Array<>();
+		Array<HypotheticalUnit> unitsToCheck;
 		switch (ability.getAffectedTeams()) {
 		case FRIENDLY:
 			if (unit.isPlayerUnit()) {
@@ -402,7 +496,7 @@ public class AIDecisionMaker {
 	private Array<MyPoint> getAbilityTargets(Ability ability, MyPoint casterPos, boolean isPlayerUnit, BattleState battleState) {
 
 		final Array<MyPoint> unitPositions = getUnitPositions(isPlayerUnit, ability, battleState);
-		return battleStateGridHelper.getTargetPositionsInRangeAbility(casterPos, ability, unitPositions);
+		return battleStateGridHelperFromUnits.getTargetPositionsInRangeAbility(casterPos, ability, unitPositions);
 	}
 
 	private Array<MyPoint> getUnitPositions(boolean isPlayerUnit, Ability ability, BattleState battleState) {

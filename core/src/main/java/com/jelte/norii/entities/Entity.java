@@ -64,7 +64,6 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 	protected Collection<Modifier> modifiers;
 
 	private Runnable updatePositionAction;
-	private Runnable aiFinishTurn;
 	private Runnable stopWalkAction;
 	private Runnable cleanup;
 
@@ -105,7 +104,6 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 		updatePositionAction = this::updatePositionFromActor;
 		stopWalkAction = this::stopWalkingAction;
 		cleanup = this::cleanUpDeadUnit;
-		aiFinishTurn = () -> notifyEntityObserver(EntityCommand.AI_FINISHED_TURN);
 	}
 
 	public void update(final float delta) {
@@ -193,6 +191,7 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 
 	public void damage(final int damage) {
 		if (damage >= hp) {
+			hp = 0;
 			removeUnit();
 		} else {
 			hp = hp - damage;
@@ -397,7 +396,6 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 
 	public void move(List<GridCell> path) {
 		final SequenceAction sequence = createMoveSequence(path);
-		sequence.addAction(run(aiFinishTurn));
 		getEntityactor().addAction(sequence);
 		setAp(getAp() - path.size());
 	}
@@ -405,10 +403,13 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 	public void moveAttack(List<GridCell> path, Entity target) {
 		final SequenceAction sequence = createMoveSequence(path);
 		sequence.addAction(new AttackAction(this, target));
-		sequence.addAction(run(aiFinishTurn));
 
 		getEntityactor().addAction(sequence);
 		setAp(getAp() - path.size() - getEntityData().getBasicAttackCost());
+	}
+
+	public void endTurn() {
+		notifyEntityObserver(EntityCommand.AI_FINISHED_TURN);
 	}
 
 	private SequenceAction createMoveSequence(List<GridCell> path) {
@@ -462,6 +463,28 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 	@Override
 	public String toString() {
 		return "name : " + entityData.getName() + "   ID:" + entityID + "   pos : (" + currentPlayerPosition.getTileX() + "," + currentPlayerPosition.getTileY() + ")";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = (prime * result) + entityID;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Entity other = (Entity) obj;
+		if (entityID != other.entityID)
+			return false;
+		return true;
 	}
 
 	@Override

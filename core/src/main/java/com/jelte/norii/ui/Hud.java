@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.jelte.norii.entities.AiEntity;
@@ -23,6 +24,8 @@ import com.jelte.norii.utility.AssetManagerUtility;
 public class Hud implements ProfileObserver {
 	private Stage stage;
 	private Image onTileHover;
+	private Label playerVictoryMessage;
+	private Label AiVictoryMessage;
 	private ArrayList<HpBar> hpBars;
 	private PortraitAndStats portraitAndStats;
 	private ArrayList<StatusUi> statusUIs;
@@ -42,6 +45,7 @@ public class Hud implements ProfileObserver {
 	public Hud(List<PlayerEntity> playerUnits, List<AiEntity> aiUnits, SpriteBatch spriteBatch, int mapWidth, int mapHeight) {
 		final List<Entity> allUnits = Stream.concat(playerUnits.stream(), aiUnits.stream()).collect(Collectors.toList());
 		initVariables(spriteBatch, mapWidth, mapHeight);
+		createEndGameMessages();
 		createTileHoverParticle();
 		createHpBars(allUnits);
 		createCharacterHUDs(allUnits);
@@ -56,6 +60,20 @@ public class Hud implements ProfileObserver {
 		tilePixelWidth = UI_VIEWPORT_WIDTH / mapWidth;
 		tilePixelHeight = UI_VIEWPORT_HEIGHT / mapHeight;
 		stage = new Stage(new FitViewport(UI_VIEWPORT_WIDTH, UI_VIEWPORT_HEIGHT), spriteBatch);
+	}
+
+	private void createEndGameMessages() {
+		playerVictoryMessage = new Label("You Win!", AssetManagerUtility.getSkin(), "bigFont");
+		AiVictoryMessage = new Label("You Lose!", AssetManagerUtility.getSkin(), "bigFont");
+
+		playerVictoryMessage.setPosition((mapWidth / 8.0f) * tilePixelWidth, (mapHeight / 2.0f) * tilePixelHeight);
+		AiVictoryMessage.setPosition((mapWidth / 8.0f) * tilePixelWidth, (mapHeight / 2.0f) * tilePixelHeight);
+
+		playerVictoryMessage.setVisible(false);
+		AiVictoryMessage.setVisible(false);
+
+		stage.addActor(playerVictoryMessage);
+		stage.addActor(AiVictoryMessage);
 	}
 
 	private void createTileHoverParticle() {
@@ -142,6 +160,10 @@ public class Hud implements ProfileObserver {
 	public void update() {
 		for (final HpBar bar : hpBars) {
 			bar.getHealthBar().setPosition(bar.getEntity().getCurrentPosition().getTileX() * tilePixelWidth, ((bar.getEntity().getCurrentPosition().getTileY() * tilePixelHeight) + HEALTHBAR_Y_OFFSET));
+			bar.getHealthBar().setValue(bar.getEntity().getHp());
+			if (bar.getHealthBar().getValue() == 0) {
+				bar.getHealthBar().setVisible(false);
+			}
 		}
 
 		for (final StatusUi statusUI : statusUIs) {
@@ -155,6 +177,14 @@ public class Hud implements ProfileObserver {
 		for (final ActionInfoUiWindow popUp : actionInfoUIWindows) {
 			popUp.update();
 		}
+	}
+
+	public void showPlayerWin() {
+		playerVictoryMessage.setVisible(true);
+	}
+
+	public void showAiWin() {
+		AiVictoryMessage.setVisible(true);
 	}
 
 	public Stage getStage() {

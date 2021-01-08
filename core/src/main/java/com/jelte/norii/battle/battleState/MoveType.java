@@ -1,5 +1,5 @@
 package com.jelte.norii.battle.battleState;
 
 public enum MoveType {
-	MOVE, ATTACK, SPELL
+	MOVE, ATTACK, SPELL, DUMMY
 }

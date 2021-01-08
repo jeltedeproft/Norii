@@ -2,6 +2,7 @@ package com.jelte.norii.battle.battlePhase;
 
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.jelte.norii.audio.AudioObserver;
 import com.jelte.norii.battle.BattleManager;
@@ -159,7 +160,21 @@ public class SpellBattlePhase extends BattlePhase {
 	}
 
 	private boolean checkTarget(Ability ability, Target targetType) {
-		return (ability.getTarget() == targetType);
+		switch (ability.getTarget()) {
+		case CELL:
+			return ((targetType == Target.CELL) || (targetType == Target.UNIT) || (targetType == Target.CELL_BUT_NO_UNIT));
+		case UNIT:
+			return (targetType == Target.UNIT);
+		case CELL_BUT_NO_UNIT:
+			return ((targetType == Target.CELL) || (targetType == Target.CELL_BUT_NO_UNIT));
+		case SELF:
+			return (targetType == Target.SELF);
+		case NO_TARGET:
+			return (targetType == Target.NO_TARGET);
+		default:
+			Gdx.app.debug("SpellBattlePhase", "ability : " + ability + " has no valid target : " + ability.getTarget());
+			return false;
+		}
 	}
 
 	public void executeSpellForAi(Entity entity, Ability ability, MyPoint target) {

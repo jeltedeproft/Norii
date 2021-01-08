@@ -22,6 +22,7 @@ import com.jelte.norii.audio.AudioObserver;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.battle.BattleScreenInputProcessor;
 import com.jelte.norii.battle.battlePhase.SpellBattlePhase;
+import com.jelte.norii.battle.battleState.HypotheticalUnit;
 import com.jelte.norii.entities.AiEntity;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityObserver;
@@ -62,11 +63,12 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 	private PauseMenuScreen pauseMenu;
 	private List<PlayerEntity> playerUnits;
 	private List<AiEntity> aiUnits;
-	private List<Entity> allUnits;
 	private EntityStage entityStage;
 	private final String fpsTitle = "fps = ";
 
 	private boolean isPaused;
+	private boolean aiWins = false;
+	private boolean playerWins = false;
 
 	public BattleScreen(AITeams aiTeams) {
 		initializeVariables();
@@ -97,8 +99,7 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 	}
 
 	private void initializeEntityStage() {
-		allUnits = Stream.concat(playerUnits.stream(), aiUnits.stream()).collect(Collectors.toList());
-		entityStage = new EntityStage(allUnits);
+		entityStage = new EntityStage(Stream.concat(playerUnits.stream(), aiUnits.stream()).collect(Collectors.toList()));
 	}
 
 	private void initializeHUD() {
@@ -340,6 +341,14 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		case UPDATE_HP:
 			battlemanager.updateHp(unit);
 			break;
+		case AI_WINS:
+			aiWins = true;
+			newHud.showAiWin();
+			break;
+		case PLAYER_WINS:
+			playerWins = true;
+			newHud.showPlayerWin();
+			break;
 		default:
 			break;
 		}
@@ -357,6 +366,17 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 			break;
 		case CLICKED:
 			battlemanager.getCurrentBattleState().clickedOnUnit(aiUnit);
+			break;
+		case UPDATE_HP:
+			battlemanager.updateHp(aiUnit);
+			break;
+		case AI_WINS:
+			aiWins = true;
+			newHud.showAiWin();
+			break;
+		case PLAYER_WINS:
+			playerWins = true;
+			newHud.showPlayerWin();
 			break;
 		default:
 			break;
@@ -441,8 +461,8 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 
 	private boolean isUnitOnCell(final GridCell cell) {
 		final TiledMapPosition cellToTiled = new TiledMapPosition().setPositionFromTiles(cell.x, cell.y);
-		for (final Entity entity : allUnits) {
-			if (entity.getCurrentPosition().isTileEqualTo(cellToTiled)) {
+		for (final HypotheticalUnit entity : battlemanager.getBattleState().getAllUnits()) {
+			if (entity.getPositionAsTiledMapPosition().isTileEqualTo(cellToTiled)) {
 				return true;
 			}
 		}

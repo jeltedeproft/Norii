@@ -50,7 +50,7 @@ public class BattleStateGridHelper {
 		}
 	}
 
-	private Set<MyPoint> collectTargets(MyPoint center, AreaOfEffect area, AffectedTeams affectedTeams, BattleState stateOfBattle, int areaOfEffectRange) {
+	public Set<MyPoint> collectTargets(MyPoint center, AreaOfEffect area, AffectedTeams affectedTeams, BattleState stateOfBattle, int areaOfEffectRange) {
 		final Set<MyPoint> spotsToCheck = new HashSet<>();
 		switch (area) {
 		case CELL:

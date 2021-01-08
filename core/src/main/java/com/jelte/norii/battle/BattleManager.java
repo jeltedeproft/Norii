@@ -23,6 +23,7 @@ import com.jelte.norii.battle.battleState.Move;
 import com.jelte.norii.battle.battleState.SpellMove;
 import com.jelte.norii.entities.AiEntity;
 import com.jelte.norii.entities.Entity;
+import com.jelte.norii.entities.EntityObserver;
 import com.jelte.norii.entities.PlayerEntity;
 import com.jelte.norii.magic.Modifier;
 import com.jelte.norii.map.MyPathFinder;
@@ -141,9 +142,24 @@ public class BattleManager {
 				entityAttacking.attack(entityToAttack);
 				attackBattleState.notifyAudio(AudioObserver.AudioCommand.SOUND_PLAY_ONCE, AudioObserver.AudioTypeEvent.ATTACK_SOUND);
 				break;
+			case DUMMY:
+				// do nothing
 			default:
 				// do nothing
 			}
+			checkVictory();
+		}
+		final Entity entity = getEntityByID(entityID);
+		entity.endTurn();
+	}
+
+	private void checkVictory() {
+		if (stateOfBattle.getAiUnits().isEmpty()) {
+			activeUnit.notifyEntityObserver(EntityObserver.EntityCommand.PLAYER_WINS);
+		}
+
+		if (stateOfBattle.getPlayerUnits().isEmpty()) {
+			activeUnit.notifyEntityObserver(EntityObserver.EntityCommand.AI_WINS);
 		}
 	}
 
@@ -164,6 +180,15 @@ public class BattleManager {
 
 	public void updateHp(Entity unit) {
 		stateOfBattle.updateEntity(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getHp());
+		if (unit.getHp() <= 0) {
+			removeUnit(unit);
+		}
+		checkVictory();
+	}
+
+	private void removeUnit(Entity unit) {
+		playerUnits.remove(unit);
+		aiUnits.remove(unit);
 	}
 
 	public void updateStateOfBattle(Entity unit, TiledMapPosition newPos) {
@@ -172,6 +197,10 @@ public class BattleManager {
 		if (!oldMyPoint.equals(newMyPoint)) {
 			stateOfBattle.moveUnitTo(unit, newMyPoint);
 		}
+	}
+
+	public BattleState getBattleState() {
+		return stateOfBattle;
 	}
 
 	public PlayerEntity getActiveUnit() {
@@ -260,6 +289,5 @@ public class BattleManager {
 
 	public List<Entity> getUnits() {
 		return Stream.concat(playerUnits.stream(), aiUnits.stream()).collect(Collectors.toList());
-
 	}
 }

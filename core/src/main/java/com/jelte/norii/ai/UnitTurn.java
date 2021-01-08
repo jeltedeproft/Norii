@@ -13,6 +13,16 @@ public class UnitTurn {
 		moves.add(move);
 	}
 
+	public UnitTurn(int entityID, Array<Move> moves) {
+		this.moves = moves;
+		this.entityID = entityID;
+	}
+
+	public UnitTurn(int entityID) {
+		this.moves = new Array<>();
+		this.entityID = entityID;
+	}
+
 	public void addMove(Move move) {
 		moves.add(move);
 	}
@@ -37,5 +47,13 @@ public class UnitTurn {
 			sb.append("\n");
 		}
 		return sb.toString();
+	}
+
+	public UnitTurn makeCopy() {
+		UnitTurn copy = new UnitTurn(entityID);
+		for (Move move : moves) {
+			copy.addMove(move.makeCopy());
+		}
+		return copy;
 	}
 }

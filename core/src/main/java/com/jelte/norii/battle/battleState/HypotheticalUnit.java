@@ -4,6 +4,8 @@ import java.util.Collection;
 
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.magic.Modifier;
+import com.jelte.norii.utility.MyPoint;
+import com.jelte.norii.utility.TiledMapPosition;
 
 public class HypotheticalUnit {
 
@@ -195,6 +197,14 @@ public class HypotheticalUnit {
 
 	public void setAttackDamage(int attackDamage) {
 		this.attackDamage = attackDamage;
+	}
+
+	public MyPoint getPositionAsPoint() {
+		return new MyPoint(x, y);
+	}
+
+	public TiledMapPosition getPositionAsTiledMapPosition() {
+		return new TiledMapPosition().setPositionFromTiles(x, y);
 	}
 
 	@Override

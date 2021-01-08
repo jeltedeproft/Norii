@@ -14,6 +14,11 @@ public class SpellMove extends Move {
 		this.affectedUnits = affectedUnits;
 	}
 
+	public SpellMove(MoveType moveType, MyPoint location, Ability ability) {
+		super(moveType, location);
+		this.ability = ability;
+	}
+
 	public Ability getAbility() {
 		return ability;
 	}
