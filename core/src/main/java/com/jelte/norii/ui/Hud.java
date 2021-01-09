@@ -47,14 +47,17 @@ public class Hud implements ProfileObserver {
 		initVariables(spriteBatch, mapWidth, mapHeight);
 		createEndGameMessages();
 		createTileHoverParticle();
-		createHpBars(allUnits);
-		createCharacterHUDs(allUnits);
-		createStatusUIs(allUnits);
-		createActionUIs(playerUnits);
-		createActionPopUps();
+		createCharacterHUD();
+		for (Entity entity : allUnits) {
+			addUnit(entity);
+		}
 	}
 
 	private void initVariables(SpriteBatch spriteBatch, int mapWidth, int mapHeight) {
+		hpBars = new ArrayList<>();
+		statusUIs = new ArrayList<>();
+		actionUIs = new ArrayList<>();
+		actionInfoUIWindows = new ArrayList<>();
 		this.mapWidth = mapWidth;
 		this.mapHeight = mapHeight;
 		tilePixelWidth = UI_VIEWPORT_WIDTH / mapWidth;
@@ -88,68 +91,56 @@ public class Hud implements ProfileObserver {
 		stage.addActor(onTileHover);
 	}
 
-	private void createHpBars(List<Entity> allUnits) {
-		hpBars = new ArrayList<>();
-		for (int i = 0; i < allUnits.size(); i++) {
-			final Entity entity = allUnits.get(i);
-			final HpBar hpBar = new HpBar(entity, mapWidth, mapHeight);
-
-			stage.addActor(hpBar.getHealthBar());
-			hpBars.add(hpBar);
+	public void addUnit(Entity entity) {
+		createHpBar(entity);
+		portraitAndStats.linkUnit(entity);
+		createStatusUI(entity);
+		if (entity.isPlayerUnit()) {
+			createActionUI((PlayerEntity) entity);
 		}
 	}
 
-	private void createCharacterHUDs(List<Entity> allUnits) {
-		portraitAndStats = new PortraitAndStats(allUnits, mapWidth, mapHeight);
-		portraitAndStats.setHero(allUnits.get(0));
+	private void createHpBar(Entity entity) {
+		final HpBar hpBar = new HpBar(entity, mapWidth, mapHeight);
+		stage.addActor(hpBar.getHealthBar());
+		hpBars.add(hpBar);
+	}
+
+	private void createCharacterHUD() {
+		portraitAndStats = new PortraitAndStats(mapWidth, mapHeight);
 		stage.addActor(portraitAndStats.getTable());
 	}
 
-	private void createStatusUIs(List<Entity> allUnits) {
-		statusUIs = new ArrayList<>();
-		for (int i = 0; i < allUnits.size(); i++) {
-			final Entity entity = allUnits.get(i);
-			statusUIs.add(new StatusUi(entity, mapWidth, mapHeight));
-			final StatusUi statusui = statusUIs.get(i);
+	private void createStatusUI(Entity entity) {
+		final StatusUi statusui = new StatusUi(entity, mapWidth, mapHeight);
+		statusUIs.add(statusui);
 
-			statusui.addListener(new InputListener() {
-				@Override
-				public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-					return true;
-				}
-			});
+		statusui.addListener(new InputListener() {
+			@Override
+			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+				return true;
+			}
+		});
 
-			stage.addActor(statusui);
-		}
+		stage.addActor(statusui);
 	}
 
-	private void createActionUIs(List<PlayerEntity> playerUnits) {
-		actionUIs = new ArrayList<>();
-		for (int i = 0; i < playerUnits.size(); i++) {
-			if (playerUnits.get(i).isPlayerUnit()) {
-				final PlayerEntity entity = playerUnits.get(i);
-				actionUIs.add(new ActionsUi(entity, mapWidth, mapHeight));
-				final ActionsUi actionui = actionUIs.get(i);
+	private void createActionUI(PlayerEntity playerUnit) {
+		final ActionsUi actionui = new ActionsUi(playerUnit, mapWidth, mapHeight);
+		actionUIs.add(actionui);
 
-				actionui.addListener(new InputListener() {
-					@Override
-					public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-						return true;
-					}
-				});
-
-				stage.addActor(actionui);
+		actionui.addListener(new InputListener() {
+			@Override
+			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+				return true;
 			}
-		}
-	}
+		});
 
-	private void createActionPopUps() {
-		actionInfoUIWindows = new ArrayList<>();
-		for (final ActionsUi actionUI : actionUIs) {
-			for (final ActionInfoUiWindow popUp : actionUI.getPopUps()) {
-				actionInfoUIWindows.add(popUp);
-				stage.addActor(popUp);
-			}
+		stage.addActor(actionui);
+
+		for (final ActionInfoUiWindow popUp : actionui.getPopUps()) {
+			actionInfoUIWindows.add(popUp);
+			stage.addActor(popUp);
 		}
 	}
 

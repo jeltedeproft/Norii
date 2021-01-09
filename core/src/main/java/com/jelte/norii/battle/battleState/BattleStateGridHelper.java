@@ -16,9 +16,7 @@ public class BattleStateGridHelper {
 		final LineOfSight lineOfSight = ability.getLineOfSight();
 		final int range = ability.getSpellData().getRange();
 
-		final Set<MyPoint> possibleCenterCells = new HashSet<>();
-		possibleCenterCells.addAll(getPossibleCenterCells(possibleCenterCells, center, lineOfSight, range));
-		checkMyPointBounds(possibleCenterCells, battleState);
+		final Set<MyPoint> possibleCenterCells = getPossibleCenterCells(center, lineOfSight, range);
 
 		final Set<MyPoint> targets = new HashSet<>();
 		for (final MyPoint MyPoint : possibleCenterCells) {
@@ -27,24 +25,31 @@ public class BattleStateGridHelper {
 		return targets;
 	}
 
-	public Set<MyPoint> getPossibleCenterCells(Set<MyPoint> MyPoints, MyPoint center, LineOfSight lineOfSight, int range) {
+	public Set<MyPoint> getAllPointsASpellCanHit(MyPoint center, LineOfSight lineOfSight, int range, BattleState battleState) {
+		final Set<MyPoint> points = getPossibleCenterCells(center, lineOfSight, range);
+		checkMyPointBounds(points, battleState);
+		return points;
+	}
+
+	public Set<MyPoint> getPossibleCenterCells(MyPoint center, LineOfSight lineOfSight, int range) {
+		final Set<MyPoint> points = new HashSet<>();
 		switch (lineOfSight) {
 		case LINE:
-			return addLines(MyPoints, center, range);
+			return addLines(points, center, range);
 		case CIRCLE_BORDER:
-			return addUnfilledCircleAroundCentre(MyPoints, center, range);
+			return addUnfilledCircleAroundCentre(points, center, range);
 		case CIRCLE:
-			return addFilledCircleAroundCentre(MyPoints, center, range);
+			return addFilledCircleAroundCentre(points, center, range);
 		case CROSS:
-			return addCrossAroundCentre(MyPoints, center, range);
+			return addCrossAroundCentre(points, center, range);
 		case SQUARE_BORDER:
-			return addUnfilledSquareAroundCentre(MyPoints, center, range);
+			return addUnfilledSquareAroundCentre(points, center, range);
 		case SQUARE:
-			return addFilledSquareAroundCentre(MyPoints, center, range);
+			return addFilledSquareAroundCentre(points, center, range);
 		case DIAGONAL_RIGHT:
-			return addDiagonalTopRightAroundCentre(MyPoints, center, range);
+			return addDiagonalTopRightAroundCentre(points, center, range);
 		case DIAGONAL_LEFT:
-			return addDiagonalTopLeftAroundCentre(MyPoints, center, range);
+			return addDiagonalTopLeftAroundCentre(points, center, range);
 		default:
 			return new HashSet<>();
 		}
@@ -281,10 +286,10 @@ public class BattleStateGridHelper {
 		return MyPoints;
 	}
 
-	private void checkMyPointBounds(Set<MyPoint> MyPoints, BattleState stateOfBattle) {
+	private void checkMyPointBounds(Set<MyPoint> points, BattleState stateOfBattle) {
 		final int maxWidth = stateOfBattle.getWidth() - 1;
 		final int maxHeight = stateOfBattle.getHeight() - 1;
-		MyPoints.removeIf(MyPoint -> (MyPoint.x > maxWidth) || (MyPoint.y > maxHeight) || (MyPoint.x < 0) || (MyPoint.y < 0));
+		points.removeIf(point -> (point.x > maxWidth) || (point.y > maxHeight) || (point.x < 0) || (point.y < 0));
 	}
 
 }

@@ -212,11 +212,11 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 	}
 
 	private void removeUnit() {
-		this.getEntityAnimation().setCurrentAnimationType(EntityAnimationType.WALK);
+		getEntityAnimation().setCurrentAnimationType(EntityAnimationType.WALK);
 		final SequenceAction sequence = Actions.sequence();
 		sequence.addAction(Actions.fadeOut(1));
 		sequence.addAction(run(cleanup));
-		this.getEntityactor().addAction(sequence);
+		getEntityactor().addAction(sequence);
 	}
 
 	private void cleanUpDeadUnit() {

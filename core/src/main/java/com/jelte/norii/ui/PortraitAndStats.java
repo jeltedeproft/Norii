@@ -1,7 +1,5 @@
 package com.jelte.norii.ui;
 
-import java.util.List;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -40,17 +38,16 @@ public class PortraitAndStats {
 	private Label apLabel;
 	private Label ap;
 
-	public PortraitAndStats(final List<Entity> allUnits, int mapWidth, int mapHeight) {
+	public PortraitAndStats(int mapWidth, int mapHeight) {
 		tilePixelWidth = Hud.UI_VIEWPORT_WIDTH / mapWidth;
 		tilePixelHeight = Hud.UI_VIEWPORT_HEIGHT / mapHeight;
 
-		linkUnitsToMenu(allUnits);
 		initElementsForUI();
 		populateHeroImage();
 	}
 
-	private void linkUnitsToMenu(final List<Entity> allUnits) {
-		allUnits.forEach(entity -> entity.setbottomMenu(this));
+	public void linkUnit(final Entity unit) {
+		unit.setbottomMenu(this);
 	}
 
 	private void initElementsForUI() {

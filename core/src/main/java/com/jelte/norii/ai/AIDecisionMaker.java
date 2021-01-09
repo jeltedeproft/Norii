@@ -57,6 +57,7 @@ public class AIDecisionMaker {
 				}
 			}
 		}
+		System.out.println("number of states in lvl 1 = " + battleStates.size);
 		System.out.println("2");
 		reduceModifierCount(battleStates);
 		for (final BattleState updatedState : battleStates) {
@@ -79,7 +80,7 @@ public class AIDecisionMaker {
 		System.out.println("3");
 		reduceModifierCount(battleStatesLevelTwo);
 		System.out.println("3.5");
-		System.out.println("number of states = " + battleStatesLevelTwo.size);
+		System.out.println("number of states in lvl 2 = " + battleStatesLevelTwo.size);
 		for (final BattleState updatedState : battleStatesLevelTwo) {
 			if (checkEndConditions(updatedState)) {
 				battleStatesLevelThree.add(updatedState.makeCopyWithTurn());
@@ -101,6 +102,7 @@ public class AIDecisionMaker {
 				}
 			}
 		}
+		System.out.println("number of states in lvl 3 = " + battleStatesLevelThree.size);
 		System.out.println("4");
 		reduceModifierCount(battleStatesLevelThree);
 		System.out.println("5");
@@ -165,45 +167,42 @@ public class AIDecisionMaker {
 	private void applySpellOnBattleState(HypotheticalUnit aiUnit, SpellMove move, BattleState battleState) {
 		final MyPoint caster = new MyPoint(aiUnit.getX(), aiUnit.getY());
 		final Array<MyPoint> targets = move.getAffectedUnits();
+		final MyPoint location = move.getLocation();
+		final int damage = move.getAbility().getSpellData().getDamage();
 		switch (move.getAbility().getAbilityEnum()) {
 		case FIREBALL:
-			for (final MyPoint target : targets) {
-				final int damage = move.getAbility().getSpellData().getDamage();
-				final int hp = battleState.get(target.x, target.y).getUnit().getHp();
-				if (damage >= hp) {
-					battleState.updateEntity(target.x, target.y, 0);
-				} else {
-					battleState.updateEntity(target.x, target.y, hp - damage);
-				}
+
+			final int hp = battleState.get(location.x, location.y).getUnit().getHp();
+			if (damage >= hp) {
+				battleState.updateEntity(location.x, location.y, 0);
+			} else {
+				battleState.updateEntity(location.x, location.y, hp - damage);
 			}
+
 			break;
 		case TURN_TO_STONE:
-			for (final MyPoint target : targets) {
-				battleState.addModifierToUnit(target.x, target.y, new Modifier(ModifiersEnum.STUNNED, 2, 0));
-			}
+			battleState.addModifierToUnit(location.x, location.y, new Modifier(ModifiersEnum.STUNNED, 2, 0));
 			break;
 		case SWAP:
-			for (final MyPoint target : targets) {
-				final HypotheticalUnit placeHolder = battleState.get(target.x, target.y).getUnit();
-				battleState.addEntity(target.x, target.y, battleState.get(caster.x, caster.y).getUnit());
-				battleState.addEntity(caster.x, caster.y, placeHolder);
-			}
+			final HypotheticalUnit placeHolder = battleState.get(location.x, location.y).getUnit();
+			battleState.addEntity(location.x, location.y, battleState.get(caster.x, caster.y).getUnit());
+			battleState.addEntity(caster.x, caster.y, placeHolder);
 			break;
 		case HAMMERBACK:
-			final int damage = move.getAbility().getSpellData().getDamage();
 			for (final MyPoint target : targets) {
 				List<MyPoint> crossedCells = findLine(caster.x, caster.y, target.x, target.y);
 				for (MyPoint point : crossedCells) {
 					if (battleState.get(point.x, point.y).isOccupied()) {
-						final int hp = battleState.get(point.x, point.y).getUnit().getHp();
-						if (damage >= hp) {
+						final int unitHp = battleState.get(point.x, point.y).getUnit().getHp();
+						if (damage >= unitHp) {
 							battleState.updateEntity(point.x, point.y, 0);
 						} else {
-							battleState.updateEntity(point.x, point.y, hp - damage);
+							battleState.updateEntity(point.x, point.y, unitHp - damage);
 						}
 					}
 				}
 			}
+			break;
 		default:
 			// nothing
 		}
@@ -254,10 +253,10 @@ public class AIDecisionMaker {
 		}
 
 		// if the ability has cell targets, try out all of them + move and make a new
-		// state for each
+		// state for each, todo : cell but no unit needs to not hit units
 		if ((ability.getTarget() == Target.CELL) || (ability.getTarget() == Target.CELL_BUT_NO_UNIT)) {
 			MyPoint center = new MyPoint(unit.getX(), unit.getY());
-			Set<MyPoint> cellsToCastOn = battleStateGridHelper.collectTargets(center, ability.getAreaOfEffect(), ability.getAffectedTeams(), battleState, ability.getSpellData().getAreaOfEffectRange());
+			Set<MyPoint> cellsToCastOn = battleStateGridHelper.getAllPointsASpellCanHit(center, ability.getLineOfSight(), ability.getSpellData().getRange(), battleState);
 			for (MyPoint point : cellsToCastOn) {
 				final UnitTurn spellAndMove = new UnitTurn(unit.getEntityId(), new SpellMove(MoveType.SPELL, point, ability));
 				spellAndMove.addMove(decideMove(ability, unit, battleState));
