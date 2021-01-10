@@ -1,7 +1,8 @@
 package com.jelte.norii.ui;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -17,6 +18,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.jelte.norii.entities.AiEntity;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.PlayerEntity;
+import com.jelte.norii.magic.Ability;
 import com.jelte.norii.profile.ProfileManager;
 import com.jelte.norii.profile.ProfileObserver;
 import com.jelte.norii.screen.BattleScreen;
@@ -27,11 +29,11 @@ public class Hud implements ProfileObserver {
 	private Image onTileHover;
 	private Label playerVictoryMessage;
 	private Label aiVictoryMessage;
-	private ArrayList<HpBar> hpBars;
+	private HashMap<Integer, HpBar> entityIdWithHpBar;
+	private HashMap<Integer, StatusUi> entityIdWithStatusUi;
+	private HashMap<Integer, ActionsUi> entityIdWithActionUi;
+	private HashMap<Integer, ActionInfoUiWindow> entityIdWithActionInfoUiWindow;
 	private PortraitAndStats portraitAndStats;
-	private ArrayList<StatusUi> statusUIs;
-	private ArrayList<ActionInfoUiWindow> actionInfoUIWindows;
-	private ArrayList<ActionsUi> actionUIs;
 	private BattleScreen battleScreen;
 
 	private int mapWidth;
@@ -42,7 +44,6 @@ public class Hud implements ProfileObserver {
 
 	public static final float UI_VIEWPORT_WIDTH = 400f;
 	public static final float UI_VIEWPORT_HEIGHT = 400f;
-	public static final int HEALTHBAR_Y_OFFSET = 12;
 
 	public Hud(List<PlayerEntity> playerUnits, List<AiEntity> aiUnits, SpriteBatch spriteBatch, int mapWidth, int mapHeight, BattleScreen battleScreen) {
 		final List<Entity> allUnits = Stream.concat(playerUnits.stream(), aiUnits.stream()).collect(Collectors.toList());
@@ -50,7 +51,7 @@ public class Hud implements ProfileObserver {
 		createEndGameMessages();
 		createTileHoverParticle();
 		createCharacterHUD();
-		for (Entity entity : allUnits) {
+		for (final Entity entity : allUnits) {
 			addUnit(entity);
 		}
 	}
@@ -61,10 +62,10 @@ public class Hud implements ProfileObserver {
 		this.battleScreen = battleScreen;
 		tilePixelWidth = UI_VIEWPORT_WIDTH / mapWidth;
 		tilePixelHeight = UI_VIEWPORT_HEIGHT / mapHeight;
-		hpBars = new ArrayList<>();
-		statusUIs = new ArrayList<>();
-		actionUIs = new ArrayList<>();
-		actionInfoUIWindows = new ArrayList<>();
+		entityIdWithHpBar = new HashMap<>();
+		entityIdWithStatusUi = new HashMap<>();
+		entityIdWithActionUi = new HashMap<>();
+		entityIdWithActionInfoUiWindow = new HashMap<>();
 		stage = new Stage(new FitViewport(UI_VIEWPORT_WIDTH, UI_VIEWPORT_HEIGHT), spriteBatch);
 	}
 
@@ -104,40 +105,27 @@ public class Hud implements ProfileObserver {
 	}
 
 	public void removeUnit(Entity entity) {
-		statusUIs.remove(entity.getStatusui());
-		entity.getStatusui().remove();
-
-		HpBar hpBarToRemove = null;
-		for (HpBar hpBar : hpBars) {
-			if (hpBar.getEntity().equals(entity)) {
-				hpBarToRemove = hpBar;
-			}
+		final Integer id = entity.getEntityID();
+		if (entityIdWithStatusUi.containsKey(id)) {
+			entityIdWithStatusUi.get(id).remove();
+			entityIdWithStatusUi.remove(id);
 		}
 
-		if (hpBarToRemove != null) {
-			hpBars.remove(hpBarToRemove);
-			hpBarToRemove.getHealthBar().remove();
+		if (entityIdWithHpBar.containsKey(id)) {
+			entityIdWithHpBar.get(id).getHealthBar().remove();
+			entityIdWithHpBar.remove(id);
 		}
 
-		if (entity.isPlayerUnit()) {
-			ActionsUi actionsUIToRemove = null;
-			for (ActionsUi actions : actionUIs) {
-				if (actions.getLinkedEntity().equals(entity)) {
-					actionsUIToRemove = actions;
-				}
-			}
-
-			if (actionsUIToRemove != null) {
-				actionUIs.remove(actionsUIToRemove);
-				actionsUIToRemove.remove();
-			}
+		if (entityIdWithActionUi.containsKey(id)) {
+			entityIdWithActionUi.get(id).remove();
+			entityIdWithActionUi.remove(id);
 		}
 	}
 
 	private void createHpBar(Entity entity) {
 		final HpBar hpBar = new HpBar(entity, mapWidth, mapHeight);
 		stage.addActor(hpBar.getHealthBar());
-		hpBars.add(hpBar);
+		entityIdWithHpBar.put(entity.getEntityID(), hpBar);
 	}
 
 	private void createCharacterHUD() {
@@ -147,7 +135,7 @@ public class Hud implements ProfileObserver {
 
 	private void createStatusUI(Entity entity) {
 		final StatusUi statusui = new StatusUi(entity, mapWidth, mapHeight);
-		statusUIs.add(statusui);
+		entityIdWithStatusUi.put(entity.getEntityID(), statusui);
 
 		statusui.addListener(new InputListener() {
 			@Override
@@ -160,8 +148,8 @@ public class Hud implements ProfileObserver {
 	}
 
 	private void createActionUI(PlayerEntity playerUnit) {
-		final ActionsUi actionui = new ActionsUi(playerUnit, mapWidth, mapHeight);
-		actionUIs.add(actionui);
+		final ActionsUi actionui = new ActionsUi(playerUnit, mapWidth, mapHeight, this);
+		entityIdWithActionUi.put(playerUnit.getEntityID(), actionui);
 
 		actionui.addListener(new InputListener() {
 			@Override
@@ -173,7 +161,7 @@ public class Hud implements ProfileObserver {
 		stage.addActor(actionui);
 
 		for (final ActionInfoUiWindow popUp : actionui.getPopUps()) {
-			actionInfoUIWindows.add(popUp);
+			entityIdWithActionInfoUiWindow.put(playerUnit.getEntityID(), popUp);
 			stage.addActor(popUp);
 		}
 	}
@@ -182,25 +170,13 @@ public class Hud implements ProfileObserver {
 		onTileHover.setPosition(tileX * tilePixelWidth, tileY * tilePixelHeight);
 	}
 
-	public void update() {
-		for (final HpBar bar : hpBars) {
-			bar.getHealthBar().setPosition(bar.getEntity().getCurrentPosition().getTileX() * tilePixelWidth, ((bar.getEntity().getCurrentPosition().getTileY() * tilePixelHeight) + HEALTHBAR_Y_OFFSET));
-			bar.getHealthBar().setValue(bar.getEntity().getHp());
-			if (bar.getHealthBar().getValue() == 0) {
-				bar.getHealthBar().setVisible(false);
-			}
-		}
-
-		for (final StatusUi statusUI : statusUIs) {
-			statusUI.update();
-		}
-
-		for (final ActionsUi actionsUi : actionUIs) {
-			actionsUi.update();
-		}
-
-		for (final ActionInfoUiWindow popUp : actionInfoUIWindows) {
-			popUp.update();
+	public void update(List<Entity> units) {
+		for (final Entity entity : units) {
+			final int id = entity.getEntityID();
+			entityIdWithHpBar.get(id).update(entity);
+			entityIdWithStatusUi.get(id).update(entity);
+			entityIdWithActionUi.get(id).update(entity);
+			entityIdWithActionInfoUiWindow.get(id).update();
 		}
 	}
 
@@ -239,11 +215,30 @@ public class Hud implements ProfileObserver {
 	}
 
 	public List<ActionsUi> getActionUIs() {
-		return actionUIs;
+		return (List<ActionsUi>) entityIdWithActionUi.values();
 	}
 
 	public List<StatusUi> getStatusUIs() {
-		return statusUIs;
+		return (List<StatusUi>) entityIdWithStatusUi.values();
 	}
 
+	public Map<Integer, HpBar> getEntityIdWithHpBar() {
+		return entityIdWithHpBar;
+	}
+
+	public Map<Integer, StatusUi> getEntityIdWithStatusUi() {
+		return entityIdWithStatusUi;
+	}
+
+	public Map<Integer, ActionsUi> getEntityIdWithActionUi() {
+		return entityIdWithActionUi;
+	}
+
+	public Map<Integer, ActionInfoUiWindow> getEntityIdWithActionInfoUiWindow() {
+		return entityIdWithActionInfoUiWindow;
+	}
+
+	public void sendMessage(MessageToBattleScreen message, int entityID, Ability ability) {
+		battleScreen.messageFromUi(message, entityID, ability);
+	}
 }

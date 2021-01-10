@@ -9,9 +9,10 @@ import com.jelte.norii.battle.battleState.BattleState;
 import com.jelte.norii.entities.AiEntity;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityTypes;
+import com.jelte.norii.entities.UnitOwner;
 import com.jelte.norii.utility.TiledMapPosition;
 
-public class AITeamLeader {
+public class AITeamLeader implements UnitOwner {
 	private static final String TAG = AITeamLeader.class.getSimpleName();
 
 	private List<AiEntity> team;

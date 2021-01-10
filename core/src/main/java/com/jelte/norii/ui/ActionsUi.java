@@ -8,6 +8,7 @@ import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.PlayerEntity;
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.utility.AssetManagerUtility;
+import com.jelte.norii.utility.TiledMapPosition;
 
 public class ActionsUi extends Window {
 	private static final int MOVE_AMOUNT_OUT_OF_BOUND_X = 32;
@@ -32,9 +33,8 @@ public class ActionsUi extends Window {
 
 	private ArrayList<ActionUIButton> buttons;
 	private ArrayList<ActionInfoUiWindow> popUps;
-	private PlayerEntity linkedEntity;
 
-	public ActionsUi(final PlayerEntity entity, int mapWidth, int mapHeight) {
+	public ActionsUi(final PlayerEntity entity, int mapWidth, int mapHeight, Hud hud) {
 		super("", AssetManagerUtility.getSkin());
 
 		this.mapHeight = mapHeight;
@@ -46,8 +46,8 @@ public class ActionsUi extends Window {
 
 		configureMainWindow();
 		initVariables(entity);
-		createWidgets();
-		addWidgets();
+		createWidgets(entity, hud);
+		addWidgets(entity, hud);
 		initPopUps();
 
 		setSize(tilePixelWidth * WIDTH_TILES, tilePixelHeight * HEIGHT_TILES);
@@ -61,19 +61,18 @@ public class ActionsUi extends Window {
 
 	private void initVariables(final PlayerEntity entity) {
 		buttons = new ArrayList<>();
-		linkedEntity = entity;
-		entity.setActionsui(this);
 	}
 
-	private void createWidgets() {
-		createButtons();
+	private void createWidgets(PlayerEntity entity, Hud hud) {
+		createButtons(entity, hud);
 		storeButtons();
 	}
 
-	private void createButtons() {
-		moveActionUIButton = new MoveActionUIButton(MOVE_BUTTON_SPRITE_NAME, linkedEntity, mapWidth, mapHeight);
-		attackActionUIButton = new AttackActionUIButton(ATTACK_BUTTON_SPRITE_NAME, linkedEntity, mapWidth, mapHeight);
-		skipActionUIButton = new SkipActionUIButton(this, SKIP_BUTTON_SPRITE_NAME, linkedEntity, mapWidth, mapHeight);
+	private void createButtons(PlayerEntity entity, Hud hud) {
+		final int id = entity.getEntityID();
+		moveActionUIButton = new MoveActionUIButton(MOVE_BUTTON_SPRITE_NAME, id, mapWidth, mapHeight, hud);
+		attackActionUIButton = new AttackActionUIButton(ATTACK_BUTTON_SPRITE_NAME, id, mapWidth, mapHeight, hud);
+		skipActionUIButton = new SkipActionUIButton(SKIP_BUTTON_SPRITE_NAME, id, mapWidth, mapHeight, hud);
 	}
 
 	private void storeButtons() {
@@ -89,9 +88,9 @@ public class ActionsUi extends Window {
 		}
 	}
 
-	private void addWidgets() {
+	private void addWidgets(PlayerEntity entity, Hud hud) {
 		addButtons();
-		addSpells();
+		addSpells(entity, hud);
 	}
 
 	private void addButtons() {
@@ -100,25 +99,26 @@ public class ActionsUi extends Window {
 		add(skipActionUIButton.getButton()).size(tilePixelWidth, tilePixelHeight).pad(ICON_PADDING);
 	}
 
-	private void addSpells() {
-		for (final Ability ability : linkedEntity.getAbilities()) {
-			final SpellActionUIButton spellActionUIButton = new SpellActionUIButton(ability.getSpellData().getIconSpriteName(), linkedEntity, ability, mapWidth, mapHeight);
+	private void addSpells(PlayerEntity entity, Hud hud) {
+		for (final Ability ability : entity.getAbilities()) {
+			final SpellActionUIButton spellActionUIButton = new SpellActionUIButton(ability.getSpellData().getIconSpriteName(), entity.getEntityID(), ability, mapWidth, mapHeight, hud);
 			buttons.add(spellActionUIButton);
 			add(spellActionUIButton.getButton()).size(tilePixelWidth, tilePixelHeight).pad(ICON_PADDING);
 		}
 	}
 
-	public void update() {
+	public void update(Entity entity) {
 		if (this.isVisible()) {
-			updatePos();
+			updatePos(entity);
 		}
 	}
 
-	public void updatePos() {
-		this.setPosition((linkedEntity.getCurrentPosition().getTileX() * tilePixelWidth) + tilePixelWidth, ((linkedEntity.getCurrentPosition().getTileY() * tilePixelHeight) + tilePixelHeight));
+	public void updatePos(Entity entity) {
+		final TiledMapPosition pos = entity.getCurrentPosition();
+		this.setPosition((pos.getTileX() * tilePixelWidth) + tilePixelWidth, ((pos.getTileY() * tilePixelHeight) + tilePixelHeight));
 		adjustPosition();
 		adjustPopUps();
-		setHovering();
+		setHovering(entity);
 	}
 
 	private void adjustPopUps() {
@@ -154,20 +154,16 @@ public class ActionsUi extends Window {
 		return popUps;
 	}
 
-	private void setHovering() {
+	private void setHovering(Entity entity) {
 		for (final ActionUIButton button : buttons) {
 			if (button.isHovering() && button.entered) {
-				linkedEntity.getEntityactor().setActionsHovering(true);
+				entity.getEntityactor().setActionsHovering(true);
 			}
 
 			if (button.exited) {
-				linkedEntity.getEntityactor().setActionsHovering(false);
+				entity.getEntityactor().setActionsHovering(false);
 				button.exited = false;
 			}
 		}
-	}
-
-	public Entity getLinkedEntity() {
-		return linkedEntity;
 	}
 }

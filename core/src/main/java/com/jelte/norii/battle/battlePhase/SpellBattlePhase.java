@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.jelte.norii.audio.AudioObserver;
 import com.jelte.norii.battle.BattleManager;
+import com.jelte.norii.battle.MessageToBattleScreen;
 import com.jelte.norii.battle.battleState.HypotheticalUnit;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityAnimation;
@@ -214,6 +215,8 @@ public class SpellBattlePhase extends BattlePhase {
 		final Entity possibleTarget = getEntityAtPosition(targetPos);
 		if (possibleTarget != null) {
 			possibleTarget.damage(ability.getSpellData().getDamage());
+			battlemanager.updateHp(possibleTarget);
+			battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.UPDATE_UI, possibleTarget);
 		}
 	}
 

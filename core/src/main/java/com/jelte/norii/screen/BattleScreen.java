@@ -28,7 +28,9 @@ import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityObserver;
 import com.jelte.norii.entities.EntityStage;
 import com.jelte.norii.entities.Player;
+import com.jelte.norii.entities.PlayerEntity;
 import com.jelte.norii.magic.Ability;
+import com.jelte.norii.magic.ModifiersEnum;
 import com.jelte.norii.map.BattleMap;
 import com.jelte.norii.map.Map;
 import com.jelte.norii.map.MapManager;
@@ -37,7 +39,9 @@ import com.jelte.norii.map.TiledMapActor;
 import com.jelte.norii.particles.ParticleMaker;
 import com.jelte.norii.particles.ParticleType;
 import com.jelte.norii.profile.ProfileManager;
+import com.jelte.norii.ui.ActionsUi;
 import com.jelte.norii.ui.Hud;
+import com.jelte.norii.ui.MessageToBattleScreen;
 import com.jelte.norii.ui.StatusUi;
 import com.jelte.norii.utility.AssetManagerUtility;
 import com.jelte.norii.utility.MyPoint;
@@ -118,7 +122,7 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 	}
 
 	private void initializeMap() {
-		battlemanager = new BattleManager(aiTeamLeader, currentMap.getMapWidth(), currentMap.getMapHeight(), currentMap.getNavLayer().getUnwalkableNodes());
+		battlemanager = new BattleManager(aiTeamLeader, currentMap.getMapWidth(), currentMap.getMapHeight(), currentMap.getNavLayer().getUnwalkableNodes(), this);
 		battlescreenInputProcessor.setBattleManager(battlemanager);
 		currentMap.setStage(this);
 		MyPathFinder.getInstance().setMap(currentMap);
@@ -190,7 +194,7 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 	}
 
 	private void updateElements(final float delta) {
-		newHud.update();
+		newHud.update(battlemanager.getUnits());
 		battlescreenInputProcessor.update();
 		battlemanager.getCurrentBattleState().update();
 		updateAI(delta);
@@ -317,22 +321,8 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 	@Override
 	public void onEntityNotify(final EntityCommand command, final Entity unit) {
 		switch (command) {
-		case IN_MOVEMENT:
-			prepareMove(unit);
-			break;
-		case IN_ATTACK_PHASE:
-			prepareAttack(unit);
-			break;
 		case CLICKED:
 			battlemanager.getCurrentBattleState().clickedOnUnit(unit);
-			break;
-		case SKIP:
-			battlemanager.setLockedUnit(null);
-			battlemanager.setCurrentBattleState(battlemanager.getActionBattleState());
-			battlemanager.getCurrentBattleState().exit();
-			break;
-		case UPDATE_HP:
-			battlemanager.updateHp(unit);
 			break;
 		case AI_WINS:
 			aiWins = true;
@@ -360,9 +350,6 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		case CLICKED:
 			battlemanager.getCurrentBattleState().clickedOnUnit(aiUnit);
 			break;
-		case UPDATE_HP:
-			battlemanager.updateHp(aiUnit);
-			break;
 		case AI_WINS:
 			aiWins = true;
 			newHud.showAiWin();
@@ -370,17 +357,6 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		case PLAYER_WINS:
 			playerWins = true;
 			newHud.showPlayerWin();
-			break;
-		default:
-			break;
-		}
-	}
-
-	@Override
-	public void onEntityNotify(final EntityCommand command, final Entity unit, final Ability ability) {
-		switch (command) {
-		case IN_SPELL_PHASE:
-			prepareSpell(unit, ability);
 			break;
 		default:
 			break;
@@ -486,5 +462,52 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 	public void hoveredOnTileMapActor(TiledMapActor actor) {
 		battlemanager.getCurrentBattleState().hoveredOnTile(actor);
 		newHud.setPositionTileHover(actor.getActorPos().getTileX(), actor.getActorPos().getTileY());
+	}
+
+	public void messageFromUi(MessageToBattleScreen message, int entityID, Ability ability) {
+		switch (message) {
+		case CLICKED_ON_SKIP:
+			final PlayerEntity skipEntity = (PlayerEntity) battlemanager.getEntityByID(entityID);
+			skipEntity.setActive(false);
+			skipEntity.setFocused(false);
+			skipEntity.setLocked(false);
+			skipEntity.setAp(skipEntity.getEntityData().getMaxAP());
+			battlemanager.setLockedUnit(null);
+			battlemanager.setCurrentBattleState(battlemanager.getActionBattleState());
+			battlemanager.getCurrentBattleState().exit();
+			break;
+		case CLICKED_ON_MOVE:
+			final PlayerEntity moveEntity = (PlayerEntity) battlemanager.getEntityByID(entityID);
+			if (moveEntity.canMove()) {
+				prepareMove(moveEntity);
+			}
+			break;
+		case CLICKED_ON_ATTACK:
+			final PlayerEntity attackEntity = (PlayerEntity) battlemanager.getEntityByID(entityID);
+			if ((attackEntity.getAp() >= attackEntity.getEntityData().getBasicAttackCost()) && attackEntity.canAttack()) {
+				prepareAttack(attackEntity);
+			}
+			break;
+		case CLICKED_ON_ABILITY:
+			final PlayerEntity spellEntity = (PlayerEntity) battlemanager.getEntityByID(entityID);
+			if (spellEntity.getAp() >= ability.getSpellData().getApCost()) {
+				prepareSpell(spellEntity, ability);
+			}
+		}
+	}
+
+	public void messageFromBattleManager(com.jelte.norii.battle.MessageToBattleScreen message, Entity entity) {
+		switch (message) {
+		case UNIT_ACTIVE:
+			final ActionsUi actionsUI = newHud.getEntityIdWithActionUi().get(entity.getEntityID());
+			actionsUI.update(entity);
+			actionsUI.setVisible(!entity.hasModifier(ModifiersEnum.STUNNED));
+			break;
+		case CANCEL_ACTION:
+			final ActionsUi actionsUICancel = newHud.getEntityIdWithActionUi().get(entity.getEntityID());
+			actionsUICancel.setVisible(false);
+		case UPDATE_UI:
+			newHud.update(battlemanager.getUnits());
+		}
 	}
 }

@@ -14,8 +14,6 @@ public interface EntityObserver {
 
 	void onEntityNotify(EntityCommand command, AiEntity unit);
 
-	void onEntityNotify(EntityCommand command, Entity unit, Ability ability);
-
 	void onEntityNotify(EntityCommand command, Entity unit, TiledMapPosition pos);
 
 	void onEntityNotify(EntityCommand command, Entity entity, Ability abilityUsed, MyPoint target);

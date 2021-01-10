@@ -156,7 +156,7 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 	}
 
 	public void updateUI() {
-		statusui.update();
+		statusui.update(this);
 		characterHUD.update();
 	}
 
@@ -198,7 +198,6 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 		}
 
 		updateUI();
-		notifyEntityObserver(EntityCommand.UPDATE_HP);
 	}
 
 	public void heal(final int healAmount) {
@@ -208,7 +207,6 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 		}
 
 		updateUI();
-		notifyEntityObserver(EntityCommand.UPDATE_HP);
 	}
 
 	private void removeUnit() {
@@ -383,12 +381,6 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 		}
 	}
 
-	public void notifyEntityObserver(final EntityCommand command, final Ability ability) {
-		for (int i = 0; i < entityObservers.size; i++) {
-			entityObservers.get(i).onEntityNotify(command, this, ability);
-		}
-	}
-
 	private void notifyEntityObserver(final EntityCommand command, TiledMapPosition pos) {
 		for (int i = 0; i < entityObservers.size; i++) {
 			entityObservers.get(i).onEntityNotify(command, this, pos);
@@ -482,7 +474,7 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Entity other = (Entity) obj;
+		final Entity other = (Entity) obj;
 		if (entityID != other.entityID)
 			return false;
 		return true;

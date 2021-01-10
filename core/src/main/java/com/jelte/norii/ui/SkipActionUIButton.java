@@ -2,11 +2,9 @@ package com.jelte.norii.ui;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.jelte.norii.entities.EntityObserver.EntityCommand;
-import com.jelte.norii.entities.PlayerEntity;
 
 public class SkipActionUIButton extends ActionUIButton {
-	public SkipActionUIButton(final ActionsUi actionsUi, final String imageFileName, final PlayerEntity linkedUnit, int mapWidth, int mapHeight) {
+	public SkipActionUIButton(final String imageFileName, final int entityID, int mapWidth, int mapHeight, Hud hud) {
 		super(imageFileName);
 		active = true;
 		actionName = "Skip";
@@ -15,12 +13,8 @@ public class SkipActionUIButton extends ActionUIButton {
 		button.addListener(new ClickListener() {
 			@Override
 			public void clicked(final InputEvent event, final float x, final float y) {
-				linkedUnit.setActive(false);
-				linkedUnit.setFocused(false);
-				linkedUnit.setLocked(false);
-				linkedUnit.setAp(linkedUnit.getEntityData().getMaxAP());
-				actionsUi.setVisible(false);
-				linkedUnit.notifyEntityObserver(EntityCommand.SKIP);
+				hud.getEntityIdWithActionUi().get(entityID).setVisible(false);
+				hud.sendMessage(MessageToBattleScreen.CLICKED_ON_SKIP, entityID, null);
 			}
 		});
 	}

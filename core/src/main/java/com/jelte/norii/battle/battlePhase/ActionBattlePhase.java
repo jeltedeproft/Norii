@@ -3,6 +3,7 @@ package com.jelte.norii.battle.battlePhase;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.jelte.norii.battle.BattleManager;
+import com.jelte.norii.battle.MessageToBattleScreen;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityAnimation.Direction;
 
@@ -15,7 +16,7 @@ public class ActionBattlePhase extends BattlePhase {
 
 	@Override
 	public void entry() {
-		battlemanager.getActiveUnit().setInActionPhase(true);
+		//
 	}
 
 	@Override
@@ -48,7 +49,7 @@ public class ActionBattlePhase extends BattlePhase {
 	public void buttonPressed(int button) {
 		switch (button) {
 		case Buttons.RIGHT:
-			battlemanager.getActiveUnit().getActionsui().setVisible(false);
+			battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.CANCEL_ACTION, battlemanager.getActiveUnit());
 			battlemanager.setCurrentBattleState(battlemanager.getSelectUnitBattleState());
 			battlemanager.getCurrentBattleState().entry();
 			break;

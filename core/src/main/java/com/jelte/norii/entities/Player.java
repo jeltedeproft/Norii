@@ -5,7 +5,7 @@ import java.util.List;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.jelte.norii.utility.AssetManagerUtility;
 
-public class Player {
+public class Player implements UnitOwner {
 	private static Player instance;
 	private List<PlayerEntity> team;
 
@@ -46,17 +46,13 @@ public class Player {
 		return team;
 	}
 
-	public List<PlayerEntity> getTeam() {
-		return team;
-	}
-
 	public void dispose() {
 		for (final Entity entity : team) {
 			entity.dispose();
 		}
 	}
 
-	public void setTeam(List<PlayerEntity> playerMonsters) {
+	public void setPlayerUnits(List<PlayerEntity> playerMonsters) {
 		team = playerMonsters;
 	}
 

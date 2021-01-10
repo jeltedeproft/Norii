@@ -171,7 +171,7 @@ public class MainMenuScreen extends GameScreen {
 		playerMonsters.add(new PlayerEntity(EntityTypes.FEMALE_EIGHT));
 		playerMonsters.add(new PlayerEntity(EntityTypes.FEMALE_ONE));
 
-		Player.getInstance().setTeam(playerMonsters);
+		Player.getInstance().setPlayerUnits(playerMonsters);
 	}
 
 	@Override

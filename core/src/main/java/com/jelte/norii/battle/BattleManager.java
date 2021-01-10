@@ -28,6 +28,7 @@ import com.jelte.norii.entities.Player;
 import com.jelte.norii.entities.PlayerEntity;
 import com.jelte.norii.magic.Modifier;
 import com.jelte.norii.map.MyPathFinder;
+import com.jelte.norii.screen.BattleScreen;
 import com.jelte.norii.utility.MyPoint;
 import com.jelte.norii.utility.TiledMapPosition;
 
@@ -45,9 +46,10 @@ public class BattleManager {
 	private BattleState stateOfBattle;
 	private boolean playerTurn;
 	private Entity lockedUnit;
+	private BattleScreen battleScreen;
 
-	public BattleManager(AITeamLeader aiTeamLeader, int width, int height, Array<GridCell> unwalkableNodes) {
-		initVariables(aiTeamLeader, width, height, unwalkableNodes);
+	public BattleManager(AITeamLeader aiTeamLeader, int width, int height, Array<GridCell> unwalkableNodes, BattleScreen battleScreen) {
+		initVariables(aiTeamLeader, width, height, unwalkableNodes, battleScreen);
 
 		deploymentBattleState = new DeploymentBattlePhase(this);
 		selectUnitBattleState = new SelectUnitBattlePhase(this);
@@ -60,7 +62,8 @@ public class BattleManager {
 		currentBattleState.entry();
 	}
 
-	private void initVariables(AITeamLeader aiTeamLeader, int width, int height, Array<GridCell> unwalkableNodes) {
+	private void initVariables(AITeamLeader aiTeamLeader, int width, int height, Array<GridCell> unwalkableNodes, BattleScreen battleScreen) {
+		this.battleScreen = battleScreen;
 		this.aiTeamLeader = aiTeamLeader;
 		activeUnit = Player.getInstance().getPlayerUnits().get(0);
 		playerTurn = true;
@@ -111,6 +114,12 @@ public class BattleManager {
 		activeUnit = playerEntity;
 		activeUnit.setFocused(true);
 		activeUnit.setActive(true);
+		sendMessageToBattleScreen(MessageToBattleScreen.UNIT_ACTIVE, entity);
+
+	}
+
+	public void sendMessageToBattleScreen(MessageToBattleScreen message, Entity entity) {
+		battleScreen.messageFromBattleManager(message, entity);
 	}
 
 	public void swapTurn() {
@@ -146,6 +155,8 @@ public class BattleManager {
 				final Entity entityAttacking = getEntityByID(entityID);
 				final Entity entityToAttack = getEntityByID(stateOfBattle.get(move.getLocation().x, move.getLocation().y).getUnit().getEntityId());
 				entityAttacking.attack(entityToAttack);
+				updateHp(entityToAttack);
+				sendMessageToBattleScreen(MessageToBattleScreen.UPDATE_UI, entityToAttack);
 				attackBattleState.notifyAudio(AudioObserver.AudioCommand.SOUND_PLAY_ONCE, AudioObserver.AudioTypeEvent.ATTACK_SOUND);
 				break;
 			case DUMMY:
@@ -169,7 +180,7 @@ public class BattleManager {
 		}
 	}
 
-	private Entity getEntityByID(int entityID) {
+	public Entity getEntityByID(int entityID) {
 		for (final PlayerEntity entity : Player.getInstance().getPlayerUnits()) {
 			if (entity.getEntityID() == entityID) {
 				return entity;

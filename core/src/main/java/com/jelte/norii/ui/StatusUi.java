@@ -31,7 +31,6 @@ public class StatusUi extends Window {
 	private Label xpLabel;
 	private Label levelLabel;
 
-	private Entity linkedEntity;
 	private boolean actionsUIIsHovering = false;
 
 	private static final float WIDTH_TILES = 8;
@@ -51,13 +50,13 @@ public class StatusUi extends Window {
 
 		initVariables(entity);
 		configureMainWindow();
-		createWidgets();
+		createWidgets(entity);
 		addWidgets();
 
-		this.setSize(tilePixelWidth * WIDTH_TILES, tilePixelHeight * HEIGHT_TILES);
-		this.pad(WINDOW_PADDING);
-		this.padLeft(10);
-		this.setTransform(false);
+		setSize(tilePixelWidth * WIDTH_TILES, tilePixelHeight * HEIGHT_TILES);
+		pad(WINDOW_PADDING);
+		padLeft(10);
+		setTransform(false);
 	}
 
 	private void configureMainWindow() {
@@ -66,19 +65,18 @@ public class StatusUi extends Window {
 	}
 
 	private void initVariables(final Entity entity) {
-		linkedEntity = entity;
 		entity.setStatusui(this);
-		updateStats();
+		updateStats(entity);
 	}
 
-	private void createWidgets() {
-		createLabels();
+	private void createWidgets(Entity entity) {
+		createLabels(entity);
 		createGroups();
 	}
 
-	private void createLabels() {
+	private void createLabels(Entity entity) {
 		final Skin statusUISkin = AssetManagerUtility.getSkin();
-		heroName = new Label(linkedEntity.getEntityData().getName(), statusUISkin, FONT_NAME_LABEL_STYLE);
+		heroName = new Label(entity.getEntityData().getName(), statusUISkin, FONT_NAME_LABEL_STYLE);
 		hpLabel = new Label(" hp:", statusUISkin, FONT_NAME_LABEL_STYLE);
 		hp = new Label(String.valueOf(hpVal) + SEPARATOR + maxHpVal, statusUISkin, FONT_NAME_LABEL_STYLE);
 		apLabel = new Label(" ap:", statusUISkin, FONT_NAME_LABEL_STYLE);
@@ -122,11 +120,11 @@ public class StatusUi extends Window {
 
 	}
 
-	public void update() {
-		updateStats();
+	public void update(Entity unit) {
+		updateStats(unit);
 		updateLabels();
 
-		final boolean isHovering = linkedEntity.getEntityactor().getIsHovering();
+		final boolean isHovering = unit.getEntityactor().getIsHovering();
 
 		if (Boolean.TRUE.equals(isHovering)) {
 			setVisible(true);
@@ -136,21 +134,21 @@ public class StatusUi extends Window {
 			// setVisible(false);
 		}
 
-		updatePos();
+		updatePos(unit);
 	}
 
-	private void updatePos() {
-		this.setPosition((linkedEntity.getCurrentPosition().getTileX() * tilePixelWidth) + tilePixelWidth, ((linkedEntity.getCurrentPosition().getTileY() * tilePixelHeight) + tilePixelHeight));
+	private void updatePos(Entity unit) {
+		this.setPosition((unit.getCurrentPosition().getTileX() * tilePixelWidth) + tilePixelWidth, ((unit.getCurrentPosition().getTileY() * tilePixelHeight) + tilePixelHeight));
 	}
 
-	private void updateStats() {
-		levelVal = linkedEntity.getEntityData().getLevel();
-		hpVal = linkedEntity.getHp();
-		maxHpVal = linkedEntity.getEntityData().getMaxHP();
-		apVal = linkedEntity.getAp();
-		maxApVal = linkedEntity.getEntityData().getMaxAP();
-		xpVal = linkedEntity.getEntityData().getXp();
-		maxXpVal = linkedEntity.getEntityData().getMaxXP();
+	private void updateStats(Entity unit) {
+		levelVal = unit.getEntityData().getLevel();
+		hpVal = unit.getHp();
+		maxHpVal = unit.getEntityData().getMaxHP();
+		apVal = unit.getAp();
+		maxApVal = unit.getEntityData().getMaxAP();
+		xpVal = unit.getEntityData().getXp();
+		maxXpVal = unit.getEntityData().getMaxXP();
 	}
 
 	private void updateLabels() {

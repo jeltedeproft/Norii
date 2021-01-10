@@ -2,10 +2,9 @@ package com.jelte.norii.ui;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.jelte.norii.entities.PlayerEntity;
 
 public class AttackActionUIButton extends ActionUIButton {
-	public AttackActionUIButton(final String imageFileName, final PlayerEntity linkedUnit, int mapWidth, int mapHeight) {
+	public AttackActionUIButton(final String imageFileName, final int entityID, int mapWidth, int mapHeight, Hud hud) {
 		super(imageFileName);
 		active = true;
 		actionName = "Attack";
@@ -14,9 +13,8 @@ public class AttackActionUIButton extends ActionUIButton {
 		button.addListener(new ClickListener() {
 			@Override
 			public void clicked(final InputEvent event, final float x, final float y) {
-				if (linkedUnit.getAp() >= linkedUnit.getEntityData().getBasicAttackCost()) {
-					linkedUnit.setInAttackPhase(true);
-				}
+				hud.getEntityIdWithActionUi().get(entityID).setVisible(false);
+				hud.sendMessage(MessageToBattleScreen.CLICKED_ON_ATTACK, entityID, null);
 			}
 		});
 	}
