@@ -58,7 +58,7 @@
         "range": 5,
         "areaOfEffectRange": 2,
         "affectsTeam": "ENEMY",
-        "target": "CELL",
+        "target": "CELL_BUT_NO_UNIT",
         "infoText": "Cast Hammerback.",
     }
 ]

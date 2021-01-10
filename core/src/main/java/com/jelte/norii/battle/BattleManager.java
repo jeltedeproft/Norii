@@ -24,6 +24,7 @@ import com.jelte.norii.battle.battleState.SpellMove;
 import com.jelte.norii.entities.AiEntity;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityObserver;
+import com.jelte.norii.entities.Player;
 import com.jelte.norii.entities.PlayerEntity;
 import com.jelte.norii.magic.Modifier;
 import com.jelte.norii.map.MyPathFinder;
@@ -43,13 +44,10 @@ public class BattleManager {
 	private AITeamLeader aiTeamLeader;
 	private BattleState stateOfBattle;
 	private boolean playerTurn;
-
-	private List<PlayerEntity> playerUnits;
-	private List<AiEntity> aiUnits;
 	private Entity lockedUnit;
 
-	public BattleManager(final List<PlayerEntity> playerUnits, final List<AiEntity> aiUnits, AITeamLeader aiTeamLeader, int width, int height, Array<GridCell> unwalkableNodes) {
-		initVariables(playerUnits, aiUnits, aiTeamLeader, width, height, unwalkableNodes);
+	public BattleManager(AITeamLeader aiTeamLeader, int width, int height, Array<GridCell> unwalkableNodes) {
+		initVariables(aiTeamLeader, width, height, unwalkableNodes);
 
 		deploymentBattleState = new DeploymentBattlePhase(this);
 		selectUnitBattleState = new SelectUnitBattlePhase(this);
@@ -62,32 +60,40 @@ public class BattleManager {
 		currentBattleState.entry();
 	}
 
-	private void initVariables(final List<PlayerEntity> playerUnits, final List<AiEntity> aiUnits, AITeamLeader aiTeamLeader, int width, int height, Array<GridCell> unwalkableNodes) {
-		this.playerUnits = playerUnits;
-		this.aiUnits = aiUnits;
+	private void initVariables(AITeamLeader aiTeamLeader, int width, int height, Array<GridCell> unwalkableNodes) {
 		this.aiTeamLeader = aiTeamLeader;
-		activeUnit = playerUnits.get(0);
+		activeUnit = Player.getInstance().getPlayerUnits().get(0);
 		playerTurn = true;
 		lockedUnit = null;
 		stateOfBattle = new BattleState(width, height);
-		initializeStateOfBattle(playerUnits, aiUnits, unwalkableNodes);
+		initializeStateOfBattle(unwalkableNodes);
 	}
 
-	private void initializeStateOfBattle(final List<PlayerEntity> playerUnits, final List<AiEntity> aiUnits, Array<GridCell> unwalkableNodes) {
-		for (final PlayerEntity unit : playerUnits) {
-			stateOfBattle.addEntity(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), new HypotheticalUnit(unit.getEntityID(), true, unit.getHp(), unit.getEntityData().getMaxHP(),
-					unit.getEntityData().getAttackRange(), unit.getEntityData().getAttackPower(), unit.getAp(), unit.getModifiers(), unit.getAbilities()));
-			addModifiers(unit);
+	private void initializeStateOfBattle(Array<GridCell> unwalkableNodes) {
+		for (final PlayerEntity unit : Player.getInstance().getPlayerUnits()) {
+			addUnit(unit);
 		}
 
-		for (final AiEntity unit : aiUnits) {
-			stateOfBattle.addEntity(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), new HypotheticalUnit(unit.getEntityID(), false, unit.getHp(), unit.getEntityData().getMaxHP(),
-					unit.getEntityData().getAttackRange(), unit.getEntityData().getAttackPower(), unit.getAp(), unit.getModifiers(), unit.getAbilities()));
-			addModifiers(unit);
+		for (final AiEntity unit : aiTeamLeader.getTeam()) {
+			addUnit(unit);
 		}
 
 		for (final GridCell cell : unwalkableNodes) {
 			stateOfBattle.get(cell.x, cell.y).setWalkable(false);
+		}
+	}
+
+	public void addUnit(Entity unit) {
+		if (unit.isPlayerUnit()) {
+			stateOfBattle.addEntity(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), new HypotheticalUnit(unit.getEntityID(), true, unit.getHp(), unit.getEntityData().getMaxHP(),
+					unit.getEntityData().getAttackRange(), unit.getEntityData().getAttackPower(), unit.getAp(), unit.getModifiers(), unit.getAbilities()));
+			addModifiers(unit);
+			Player.getInstance().addUnit((PlayerEntity) unit);
+		} else {
+			stateOfBattle.addEntity(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), new HypotheticalUnit(unit.getEntityID(), false, unit.getHp(), unit.getEntityData().getMaxHP(),
+					unit.getEntityData().getAttackRange(), unit.getEntityData().getAttackPower(), unit.getAp(), unit.getModifiers(), unit.getAbilities()));
+			addModifiers(unit);
+			aiTeamLeader.addUnit((AiEntity) unit);
 		}
 	}
 
@@ -108,8 +114,8 @@ public class BattleManager {
 	}
 
 	public void swapTurn() {
-		playerUnits.forEach(PlayerEntity::applyModifiers);
-		aiUnits.forEach(AiEntity::applyModifiers);
+		Player.getInstance().applyModifiers();
+		aiTeamLeader.applyModifiers();
 
 		playerTurn = !playerTurn;
 
@@ -164,13 +170,13 @@ public class BattleManager {
 	}
 
 	private Entity getEntityByID(int entityID) {
-		for (final PlayerEntity entity : playerUnits) {
+		for (final PlayerEntity entity : Player.getInstance().getPlayerUnits()) {
 			if (entity.getEntityID() == entityID) {
 				return entity;
 			}
 		}
 
-		for (final AiEntity entity : aiUnits) {
+		for (final AiEntity entity : aiTeamLeader.getTeam()) {
 			if (entity.getEntityID() == entityID) {
 				return entity;
 			}
@@ -187,8 +193,8 @@ public class BattleManager {
 	}
 
 	private void removeUnit(Entity unit) {
-		playerUnits.remove(unit);
-		aiUnits.remove(unit);
+		Player.getInstance().removeUnit(unit);
+		aiTeamLeader.removeUnit(unit);
 	}
 
 	public void updateStateOfBattle(Entity unit, TiledMapPosition newPos) {
@@ -208,11 +214,11 @@ public class BattleManager {
 	}
 
 	public List<PlayerEntity> getPlayerUnits() {
-		return playerUnits;
+		return Player.getInstance().getPlayerUnits();
 	}
 
 	public List<AiEntity> getAiUnits() {
-		return aiUnits;
+		return aiTeamLeader.getTeam();
 	}
 
 	public boolean isPlayerTurn() {
@@ -288,6 +294,6 @@ public class BattleManager {
 	}
 
 	public List<Entity> getUnits() {
-		return Stream.concat(playerUnits.stream(), aiUnits.stream()).collect(Collectors.toList());
+		return Stream.concat(Player.getInstance().getPlayerUnits().stream(), aiTeamLeader.getTeam().stream()).collect(Collectors.toList());
 	}
 }

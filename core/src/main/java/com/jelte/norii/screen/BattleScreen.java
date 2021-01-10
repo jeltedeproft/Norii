@@ -28,7 +28,6 @@ import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityObserver;
 import com.jelte.norii.entities.EntityStage;
 import com.jelte.norii.entities.Player;
-import com.jelte.norii.entities.PlayerEntity;
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.map.BattleMap;
 import com.jelte.norii.map.Map;
@@ -61,8 +60,7 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 	private OrthographicCamera hudCamera;
 	private Hud newHud;
 	private PauseMenuScreen pauseMenu;
-	private List<PlayerEntity> playerUnits;
-	private List<AiEntity> aiUnits;
+
 	private EntityStage entityStage;
 	private final String fpsTitle = "fps = ";
 
@@ -84,7 +82,6 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 	}
 
 	private void initializeVariables() {
-		playerUnits = Player.getInstance().getPlayerUnits();
 		mapCamera = new OrthographicCamera();
 		mapCamera.setToOrtho(false, VISIBLE_WIDTH, VISIBLE_HEIGHT);
 		spriteBatch = new SpriteBatch(900);
@@ -95,17 +92,16 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 
 	private void initializeAI(AITeams ai) {
 		aiTeamLeader = new AITeamLeader(ai);
-		aiUnits = aiTeamLeader.getTeam();
 	}
 
 	private void initializeEntityStage() {
-		entityStage = new EntityStage(Stream.concat(playerUnits.stream(), aiUnits.stream()).collect(Collectors.toList()));
+		entityStage = new EntityStage(Stream.concat(Player.getInstance().getPlayerUnits().stream(), aiTeamLeader.getTeam().stream()).collect(Collectors.toList()));
 	}
 
 	private void initializeHUD() {
 		hudCamera = new OrthographicCamera();
 		hudCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		newHud = new Hud(playerUnits, aiUnits, spriteBatch, currentMap.getMapWidth(), currentMap.getMapHeight());
+		newHud = new Hud(Player.getInstance().getPlayerUnits(), aiTeamLeader.getTeam(), spriteBatch, currentMap.getMapWidth(), currentMap.getMapHeight(), this);
 	}
 
 	private void initializePauseMenu() {
@@ -122,7 +118,7 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 	}
 
 	private void initializeMap() {
-		battlemanager = new BattleManager(playerUnits, aiUnits, aiTeamLeader, currentMap.getMapWidth(), currentMap.getMapHeight(), currentMap.getNavLayer().getUnwalkableNodes());
+		battlemanager = new BattleManager(aiTeamLeader, currentMap.getMapWidth(), currentMap.getMapHeight(), currentMap.getNavLayer().getUnwalkableNodes());
 		battlescreenInputProcessor.setBattleManager(battlemanager);
 		currentMap.setStage(this);
 		MyPathFinder.getInstance().setMap(currentMap);
@@ -327,9 +323,6 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		case IN_ATTACK_PHASE:
 			prepareAttack(unit);
 			break;
-		case UNIT_LOCKED:
-			battlemanager.setLockedUnit(unit);
-			break;
 		case CLICKED:
 			battlemanager.getCurrentBattleState().clickedOnUnit(unit);
 			break;
@@ -426,8 +419,7 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 	}
 
 	private void prepareSpell(final Entity unit, final Ability ability) {
-		final List<Entity> allEntities = Stream.concat(playerUnits.stream(), aiUnits.stream()).collect(Collectors.toList());
-		final List<TiledMapPosition> positions = allEntities.stream().map(Entity::getCurrentPosition).collect(Collectors.toList());
+		final List<TiledMapPosition> positions = battlemanager.getUnits().stream().map(Entity::getCurrentPosition).collect(Collectors.toList());
 		final List<GridCell> spellPath = calculateSpellPath(unit, ability, positions);
 
 		for (final GridCell cell : spellPath) {

@@ -6,11 +6,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.jelte.norii.audio.AudioObserver;
 import com.jelte.norii.battle.BattleManager;
+import com.jelte.norii.battle.battleState.HypotheticalUnit;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityAnimation;
 import com.jelte.norii.entities.EntityAnimation.Direction;
 import com.jelte.norii.entities.EntityAnimationType;
-import com.jelte.norii.entities.EntityObserver.EntityCommand;
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.magic.Ability.AffectedTeams;
 import com.jelte.norii.magic.Ability.LineOfSight;
@@ -75,7 +75,7 @@ public class SpellBattlePhase extends BattlePhase {
 		if (isValidUnitTarget(currentUnit, target)) {
 			selectSpell(target, ability, currentUnit, target.getCurrentPosition());
 			currentUnit.setLocked(true);
-			currentUnit.notifyEntityObserver(EntityCommand.UNIT_LOCKED);
+			battlemanager.setLockedUnit(currentUnit);
 		}
 		exit();
 	}
@@ -237,6 +237,7 @@ public class SpellBattlePhase extends BattlePhase {
 	private void castHammerback(final Entity caster, final TiledMapPosition targetPos, final Ability ability) {
 		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
 		notifyAudio(AudioObserver.AudioCommand.SOUND_PLAY_ONCE, AudioObserver.AudioTypeEvent.HAMMER_SOUND);
+		battlemanager.getBattleState().addEntity(targetPos.getTileX(), targetPos.getTileY(), new HypotheticalUnit(0, false, 0, 0, 0, 0, 0, null, null, 0, 0));
 	}
 
 	private Entity getEntityAtPosition(TiledMapPosition targetPos) {

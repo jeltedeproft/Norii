@@ -88,4 +88,8 @@ public class AITeamLeader {
 	public String toString() {
 		return "AITeamLeader with team : " + team;
 	}
+
+	public void applyModifiers() {
+		team.forEach(AiEntity::applyModifiers);
+	}
 }

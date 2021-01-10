@@ -19,18 +19,20 @@ import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.PlayerEntity;
 import com.jelte.norii.profile.ProfileManager;
 import com.jelte.norii.profile.ProfileObserver;
+import com.jelte.norii.screen.BattleScreen;
 import com.jelte.norii.utility.AssetManagerUtility;
 
 public class Hud implements ProfileObserver {
 	private Stage stage;
 	private Image onTileHover;
 	private Label playerVictoryMessage;
-	private Label AiVictoryMessage;
+	private Label aiVictoryMessage;
 	private ArrayList<HpBar> hpBars;
 	private PortraitAndStats portraitAndStats;
 	private ArrayList<StatusUi> statusUIs;
 	private ArrayList<ActionInfoUiWindow> actionInfoUIWindows;
 	private ArrayList<ActionsUi> actionUIs;
+	private BattleScreen battleScreen;
 
 	private int mapWidth;
 	private int mapHeight;
@@ -42,9 +44,9 @@ public class Hud implements ProfileObserver {
 	public static final float UI_VIEWPORT_HEIGHT = 400f;
 	public static final int HEALTHBAR_Y_OFFSET = 12;
 
-	public Hud(List<PlayerEntity> playerUnits, List<AiEntity> aiUnits, SpriteBatch spriteBatch, int mapWidth, int mapHeight) {
+	public Hud(List<PlayerEntity> playerUnits, List<AiEntity> aiUnits, SpriteBatch spriteBatch, int mapWidth, int mapHeight, BattleScreen battleScreen) {
 		final List<Entity> allUnits = Stream.concat(playerUnits.stream(), aiUnits.stream()).collect(Collectors.toList());
-		initVariables(spriteBatch, mapWidth, mapHeight);
+		initVariables(spriteBatch, mapWidth, mapHeight, battleScreen);
 		createEndGameMessages();
 		createTileHoverParticle();
 		createCharacterHUD();
@@ -53,30 +55,31 @@ public class Hud implements ProfileObserver {
 		}
 	}
 
-	private void initVariables(SpriteBatch spriteBatch, int mapWidth, int mapHeight) {
+	private void initVariables(SpriteBatch spriteBatch, int mapWidth, int mapHeight, BattleScreen battleScreen) {
+		this.mapWidth = mapWidth;
+		this.mapHeight = mapHeight;
+		this.battleScreen = battleScreen;
+		tilePixelWidth = UI_VIEWPORT_WIDTH / mapWidth;
+		tilePixelHeight = UI_VIEWPORT_HEIGHT / mapHeight;
 		hpBars = new ArrayList<>();
 		statusUIs = new ArrayList<>();
 		actionUIs = new ArrayList<>();
 		actionInfoUIWindows = new ArrayList<>();
-		this.mapWidth = mapWidth;
-		this.mapHeight = mapHeight;
-		tilePixelWidth = UI_VIEWPORT_WIDTH / mapWidth;
-		tilePixelHeight = UI_VIEWPORT_HEIGHT / mapHeight;
 		stage = new Stage(new FitViewport(UI_VIEWPORT_WIDTH, UI_VIEWPORT_HEIGHT), spriteBatch);
 	}
 
 	private void createEndGameMessages() {
 		playerVictoryMessage = new Label("You Win!", AssetManagerUtility.getSkin(), "bigFont");
-		AiVictoryMessage = new Label("You Lose!", AssetManagerUtility.getSkin(), "bigFont");
+		aiVictoryMessage = new Label("You Lose!", AssetManagerUtility.getSkin(), "bigFont");
 
 		playerVictoryMessage.setPosition((mapWidth / 8.0f) * tilePixelWidth, (mapHeight / 2.0f) * tilePixelHeight);
-		AiVictoryMessage.setPosition((mapWidth / 8.0f) * tilePixelWidth, (mapHeight / 2.0f) * tilePixelHeight);
+		aiVictoryMessage.setPosition((mapWidth / 8.0f) * tilePixelWidth, (mapHeight / 2.0f) * tilePixelHeight);
 
 		playerVictoryMessage.setVisible(false);
-		AiVictoryMessage.setVisible(false);
+		aiVictoryMessage.setVisible(false);
 
 		stage.addActor(playerVictoryMessage);
-		stage.addActor(AiVictoryMessage);
+		stage.addActor(aiVictoryMessage);
 	}
 
 	private void createTileHoverParticle() {
@@ -97,6 +100,37 @@ public class Hud implements ProfileObserver {
 		createStatusUI(entity);
 		if (entity.isPlayerUnit()) {
 			createActionUI((PlayerEntity) entity);
+		}
+	}
+
+	public void removeUnit(Entity entity) {
+		statusUIs.remove(entity.getStatusui());
+		entity.getStatusui().remove();
+
+		HpBar hpBarToRemove = null;
+		for (HpBar hpBar : hpBars) {
+			if (hpBar.getEntity().equals(entity)) {
+				hpBarToRemove = hpBar;
+			}
+		}
+
+		if (hpBarToRemove != null) {
+			hpBars.remove(hpBarToRemove);
+			hpBarToRemove.getHealthBar().remove();
+		}
+
+		if (entity.isPlayerUnit()) {
+			ActionsUi actionsUIToRemove = null;
+			for (ActionsUi actions : actionUIs) {
+				if (actions.getLinkedEntity().equals(entity)) {
+					actionsUIToRemove = actions;
+				}
+			}
+
+			if (actionsUIToRemove != null) {
+				actionUIs.remove(actionsUIToRemove);
+				actionsUIToRemove.remove();
+			}
 		}
 	}
 
@@ -175,7 +209,7 @@ public class Hud implements ProfileObserver {
 	}
 
 	public void showAiWin() {
-		AiVictoryMessage.setVisible(true);
+		aiVictoryMessage.setVisible(true);
 	}
 
 	public Stage getStage() {

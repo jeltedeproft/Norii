@@ -33,6 +33,7 @@ public enum EntityTypes {
 	FEMALE_FOUR("Female Four"),
 	FEMALE_NINE("Female Nine"),
 	FEMALE_NINETEEN("Female Nineteen"),
+	BOOMERANG("Boomerang"),
 	FEMALE_ONE("Female One");
 
 	private String entityName;

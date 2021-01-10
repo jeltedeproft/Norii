@@ -7,7 +7,6 @@ import org.xguzm.pathfinding.grid.GridCell;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.jelte.norii.battle.BattleManager;
-import com.jelte.norii.entities.EntityObserver.EntityCommand;
 import com.jelte.norii.entities.PlayerEntity;
 import com.jelte.norii.map.MyPathFinder;
 import com.jelte.norii.map.TiledMapActor;
@@ -47,7 +46,7 @@ public class MovementBattlePhase extends BattlePhase {
 	private void moveUnit(TiledMapActor actor) {
 		ParticleMaker.deactivateAllParticlesOfType(ParticleType.MOVE);
 		battlemanager.getActiveUnit().setLocked(true);
-		battlemanager.getActiveUnit().notifyEntityObserver(EntityCommand.UNIT_LOCKED);
+		battlemanager.setLockedUnit(battlemanager.getActiveUnit());
 		updateUnit(actor);
 		battlemanager.getCurrentBattleState().exit();
 	}
@@ -58,7 +57,6 @@ public class MovementBattlePhase extends BattlePhase {
 		final List<GridCell> path = MyPathFinder.getInstance().pathTowards(currentUnit.getCurrentPosition(), newUnitPos, currentUnit.getAp());
 		currentUnit.move(path);
 		currentUnit.setInActionPhase(true);
-		currentUnit.setInMovementPhase(false);
 	}
 
 	@Override

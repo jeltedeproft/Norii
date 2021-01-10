@@ -59,4 +59,8 @@ public class Player {
 	public void setTeam(List<PlayerEntity> playerMonsters) {
 		team = playerMonsters;
 	}
+
+	public void applyModifiers() {
+		team.forEach(PlayerEntity::applyModifiers);
+	}
 }

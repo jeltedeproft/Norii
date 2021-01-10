@@ -225,6 +225,7 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 		inBattle = false;
 		isActive = false;
 		getEntityactor().setPosition(-100, -100);
+		getEntityactor().remove();
 		setVisible(false);
 	}
 

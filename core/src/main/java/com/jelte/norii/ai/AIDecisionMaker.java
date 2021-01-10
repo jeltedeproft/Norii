@@ -257,6 +257,9 @@ public class AIDecisionMaker {
 		if ((ability.getTarget() == Target.CELL) || (ability.getTarget() == Target.CELL_BUT_NO_UNIT)) {
 			MyPoint center = new MyPoint(unit.getX(), unit.getY());
 			Set<MyPoint> cellsToCastOn = battleStateGridHelper.getAllPointsASpellCanHit(center, ability.getLineOfSight(), ability.getSpellData().getRange(), battleState);
+			if (ability.getTarget() == Target.CELL_BUT_NO_UNIT) {
+				filterUnits(cellsToCastOn, battleState);
+			}
 			for (MyPoint point : cellsToCastOn) {
 				final UnitTurn spellAndMove = new UnitTurn(unit.getEntityId(), new SpellMove(MoveType.SPELL, point, ability));
 				spellAndMove.addMove(decideMove(ability, unit, battleState));
@@ -362,6 +365,14 @@ public class AIDecisionMaker {
 			}
 		}
 		return unitTurns;
+	}
+
+	private void filterUnits(Set<MyPoint> cellsToCastOn, BattleState battleState) {
+		for (HypotheticalUnit unit : battleState.getAllUnits()) {
+			if (cellsToCastOn.contains(unit.getPositionAsPoint())) {
+				cellsToCastOn.remove(unit.getPositionAsPoint());
+			}
+		}
 	}
 
 	private MyPoint tryAdjacentPoint(int i, MyPoint unitPoint, MyPoint target) {

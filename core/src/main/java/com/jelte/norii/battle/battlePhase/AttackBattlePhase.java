@@ -4,7 +4,6 @@ import com.badlogic.gdx.Input.Buttons;
 import com.jelte.norii.audio.AudioObserver;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.entities.Entity;
-import com.jelte.norii.entities.EntityObserver.EntityCommand;
 import com.jelte.norii.map.TiledMapActor;
 import com.jelte.norii.particles.ParticleMaker;
 import com.jelte.norii.particles.ParticleType;
@@ -37,12 +36,11 @@ public class AttackBattlePhase extends BattlePhase {
 
 	private void possibleAttack(Entity entity) {
 		final Entity currentUnit = battlemanager.getActiveUnit();
-		final boolean closeEnough = Utility.checkIfUnitsWithinDistance(entity, currentUnit.getCurrentPosition(),
-				currentUnit.getEntityData().getAttackRange());
+		final boolean closeEnough = Utility.checkIfUnitsWithinDistance(entity, currentUnit.getCurrentPosition(), currentUnit.getEntityData().getAttackRange());
 		if ((entity.isPlayerUnit() != currentUnit.isPlayerUnit()) && closeEnough) {
 			currentUnit.attack(entity);
 			currentUnit.setLocked(true);
-			currentUnit.notifyEntityObserver(EntityCommand.UNIT_LOCKED);
+			battlemanager.setLockedUnit(entity);
 			notifyAudio(AudioObserver.AudioCommand.SOUND_PLAY_ONCE, AudioObserver.AudioTypeEvent.ATTACK_SOUND);
 		}
 		this.exit();

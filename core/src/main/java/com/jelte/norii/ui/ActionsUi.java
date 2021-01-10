@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.PlayerEntity;
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.utility.AssetManagerUtility;
@@ -164,5 +165,9 @@ public class ActionsUi extends Window {
 				button.exited = false;
 			}
 		}
+	}
+
+	public Entity getLinkedEntity() {
+		return linkedEntity;
 	}
 }
