@@ -172,10 +172,10 @@ public class Hud implements ProfileObserver {
 	public void update(List<Entity> units) {
 		for (final Entity entity : units) {
 			final int id = entity.getEntityID();
-			HpBar bar = entityIdWithHpBar.get(id);
-			StatusUi status = entityIdWithStatusUi.get(id);
-			ActionsUi action = entityIdWithActionUi.get(id);
-			ActionInfoUiWindow info = entityIdWithActionInfoUiWindow.get(id);
+			final HpBar bar = entityIdWithHpBar.get(id);
+			final StatusUi status = entityIdWithStatusUi.get(id);
+			final ActionsUi action = entityIdWithActionUi.get(id);
+			final ActionInfoUiWindow info = entityIdWithActionInfoUiWindow.get(id);
 
 			if (bar != null) {
 				bar.update(entity);

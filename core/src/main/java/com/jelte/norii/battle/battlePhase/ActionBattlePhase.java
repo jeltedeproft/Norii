@@ -49,7 +49,7 @@ public class ActionBattlePhase extends BattlePhase {
 	public void buttonPressed(int button) {
 		switch (button) {
 		case Buttons.RIGHT:
-			battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.CANCEL_ACTION, battlemanager.getActiveUnit());
+			battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.HIDE_ACTIONS, battlemanager.getActiveUnit());
 			battlemanager.setCurrentBattleState(battlemanager.getSelectUnitBattleState());
 			battlemanager.getCurrentBattleState().entry();
 			break;

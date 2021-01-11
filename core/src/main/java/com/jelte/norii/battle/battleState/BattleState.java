@@ -6,6 +6,7 @@ import com.jelte.norii.ai.UnitTurn;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.magic.Modifier;
 import com.jelte.norii.utility.MyPoint;
+import com.jelte.norii.utility.TiledMapPosition;
 
 public class BattleState implements Comparable<BattleState> {
 	private final BattleCell[][] stateOfField;
@@ -28,12 +29,12 @@ public class BattleState implements Comparable<BattleState> {
 
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		sb.append("\n");
 		for (int i = stateOfField.length - 1; i >= 0; i--) {
-			BattleCell[] row = stateOfField[i];
+			final BattleCell[] row = stateOfField[i];
 			for (int j = 0; j < row.length; j++) {
-				BattleCell cell = stateOfField[j][i];
+				final BattleCell cell = stateOfField[j][i];
 				if (cell.isOccupied() && cell.getUnit().isPlayerUnit()) {
 					sb.append("| " + cell.getUnit().getEntityId() + " -- (" + cell.getUnit().getX() + "," + cell.getUnit().getY() + ") |");
 				} else if (cell.isOccupied() && !cell.getUnit().isPlayerUnit()) {
@@ -94,10 +95,10 @@ public class BattleState implements Comparable<BattleState> {
 
 	public void moveUnitTo(HypotheticalUnit aiUnit, MyPoint to) {
 		// if we have the unit, move it, if not create it
-		MyPoint from = new MyPoint(aiUnit.getX(), aiUnit.getY());
+		final MyPoint from = new MyPoint(aiUnit.getX(), aiUnit.getY());
 		boolean entityFound = false;
 		if (!from.equals(to)) {
-			for (HypotheticalUnit unit : units) {
+			for (final HypotheticalUnit unit : units) {
 				if (unit.getEntityId() == aiUnit.getEntityId()) {
 					stateOfField[to.x][to.y].setUnit(stateOfField[unit.getX()][unit.getY()].getUnit());
 					stateOfField[to.x][to.y].getUnit().setX(to.x);
@@ -116,9 +117,9 @@ public class BattleState implements Comparable<BattleState> {
 
 	public void moveUnitTo(Entity entity, MyPoint to) {
 		// if we have the unit, move it, if not create it
-		MyPoint from = new MyPoint(entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY());
+		final MyPoint from = new MyPoint(entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY());
 		boolean entityFound = false;
-		for (HypotheticalUnit unit : units) {
+		for (final HypotheticalUnit unit : units) {
 			if (unit.getEntityId() == entity.getEntityID()) {
 				stateOfField[to.x][to.y].setUnit(stateOfField[unit.getX()][unit.getY()].getUnit());
 				stateOfField[to.x][to.y].getUnit().setX(to.x);
@@ -170,13 +171,13 @@ public class BattleState implements Comparable<BattleState> {
 		final BattleCell[][] copyField = new BattleCell[getWidth()][getHeight()];
 		for (int i = 0; i < getWidth(); i++) {
 			for (int j = 0; j < getHeight(); j++) {
-				BattleCell oldCell = get(i, j);
+				final BattleCell oldCell = get(i, j);
 				copyField[i][j] = new BattleCell(oldCell.isOccupied(), oldCell.isWalkable());
 			}
 		}
-		Array<HypotheticalUnit> copyUnits = new Array<>();
-		for (HypotheticalUnit unit : units) {
-			HypotheticalUnit copyUnit = unit.makeCopy();
+		final Array<HypotheticalUnit> copyUnits = new Array<>();
+		for (final HypotheticalUnit unit : units) {
+			final HypotheticalUnit copyUnit = unit.makeCopy();
 			copyUnits.add(copyUnit);
 			copyField[copyUnit.getX()][copyUnit.getY()].setUnit(copyUnit);
 		}
@@ -184,7 +185,7 @@ public class BattleState implements Comparable<BattleState> {
 	}
 
 	public BattleState makeCopyWithTurn() {
-		BattleState copy = makeCopy();
+		final BattleState copy = makeCopy();
 		copy.setTurn(turn);
 		return copy;
 	}
@@ -321,5 +322,10 @@ public class BattleState implements Comparable<BattleState> {
 			}
 		}
 		return true;
+	}
+
+	public void moveUnitTo(Entity currentUnit, TiledMapPosition newUnitPos) {
+		final MyPoint target = new MyPoint(newUnitPos.getTileX(), newUnitPos.getTileY());
+		moveUnitTo(currentUnit, target);
 	}
 }

@@ -7,7 +7,6 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.Player;
-import com.jelte.norii.entities.Entity;
 import com.jelte.norii.map.TiledMapActor;
 import com.jelte.norii.particles.ParticleMaker;
 import com.jelte.norii.particles.ParticleType;
@@ -72,6 +71,7 @@ public class DeploymentBattlePhase extends BattlePhase {
 		unit.setInBattle(true);
 		unit.setCurrentPosition(pos);
 		unit.getEntityactor().setTouchable(Touchable.enabled);
+		battlemanager.initializeUnit(unit);
 	}
 
 	private void checkIfLastUnit() {

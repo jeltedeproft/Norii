@@ -72,14 +72,6 @@ public class BattleManager {
 	}
 
 	private void initializeStateOfBattle(Array<GridCell> unwalkableNodes) {
-		for (final Entity unit : Player.getInstance().getTeam()) {
-			initializeUnit(unit);
-		}
-
-		for (final Entity unit : aiTeamLeader.getTeam()) {
-			initializeUnit(unit);
-		}
-
 		for (final GridCell cell : unwalkableNodes) {
 			stateOfBattle.get(cell.x, cell.y).setWalkable(false);
 		}
@@ -123,6 +115,7 @@ public class BattleManager {
 	public void setUnitActive(Entity entity) {
 		activeUnit.setFocused(false);
 		activeUnit.setActive(false);
+		sendMessageToBattleScreen(MessageToBattleScreen.HIDE_ACTIONS, entity);
 
 		activeUnit = entity;
 		activeUnit.setFocused(true);
@@ -155,13 +148,18 @@ public class BattleManager {
 		playerTurn = !playerTurn;
 
 		if (!playerTurn) {
-			final UnitTurn turn = aiTeamLeader.act(stateOfBattle);
-			executeMoves(turn);
+			final BattleState newState = aiTeamLeader.act(stateOfBattle);
+			setStateOfBattle(newState);
+			executeMoves(newState.getTurn());
 		}
 
 		setCurrentBattleState(getSelectUnitBattleState());
 		getCurrentBattleState().entry();
 
+	}
+
+	public void setStateOfBattle(BattleState stateOfBattle) {
+		this.stateOfBattle = stateOfBattle;
 	}
 
 	private void executeMoves(UnitTurn turn) {

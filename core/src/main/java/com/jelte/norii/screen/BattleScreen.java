@@ -426,9 +426,9 @@ public class BattleScreen extends GameScreen {
 			actionsUI.update(entity);
 			actionsUI.setVisible(!entity.hasModifier(ModifiersEnum.STUNNED));
 			break;
-		case CANCEL_ACTION:
-			final ActionsUi actionsUICancel = newHud.getEntityIdWithActionUi().get(entity.getEntityID());
-			actionsUICancel.setVisible(false);
+		case HIDE_ACTIONS:
+			final ActionsUi actionsUIToHide = newHud.getEntityIdWithActionUi().get(entity.getEntityID());
+			actionsUIToHide.setVisible(false);
 			break;
 		case UPDATE_UI:
 			newHud.update(battlemanager.getUnits());
@@ -453,6 +453,12 @@ public class BattleScreen extends GameScreen {
 			break;
 		case HIDE_STATUS_UI:
 			newHud.getEntityIdWithStatusUi().get(entity.getEntityID()).setVisible(false);
+			break;
+		case REMOVE_HUD_UNIT:
+			newHud.removeUnit(entity);
+			break;
+		case ADD_UNIT_UI:
+			newHud.addUnit(entity);
 			break;
 		default:
 			break;

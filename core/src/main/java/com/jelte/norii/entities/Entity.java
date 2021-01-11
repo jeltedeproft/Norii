@@ -80,6 +80,7 @@ public class Entity extends Actor implements AudioSubject {
 		isDead = false;
 		inBattle = false;
 		isInAttackPhase = false;
+		statsChanged = true;
 		this.owner = owner;
 		this.isPlayerUnit = owner.isPlayer();
 		locked = false;
@@ -193,6 +194,7 @@ public class Entity extends Actor implements AudioSubject {
 		sequence.addAction(Actions.fadeOut(1));
 		sequence.addAction(run(cleanup));
 		getEntityactor().addAction(sequence);
+		owner.sendMessageToBattleManager(MessageToBattleScreen.REMOVE_HUD_UNIT, this);
 	}
 
 	private void cleanUpDeadUnit() {
@@ -222,7 +224,6 @@ public class Entity extends Actor implements AudioSubject {
 			setInBattle(true);
 			entityactor.setTouchable(Touchable.disabled);
 			owner.sendMessageToBattleManager(MessageToBattleScreen.SET_CHARACTER_HUD, this);
-			owner.sendMessageToBattleManager(MessageToBattleScreen.UNIT_ACTIVE, this);
 		}
 	}
 

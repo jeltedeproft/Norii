@@ -25,6 +25,9 @@ public class Modifier {
 		case IMPROVE_DAMAGE:
 			unit.getEntityData().setAttackPower(unit.getEntityData().getAttackPower() + amount);
 			break;
+		case DAMAGE_OVER_TIME:
+			unit.damage(amount);
+			break;
 		case STUNNED:
 			break;
 		default:

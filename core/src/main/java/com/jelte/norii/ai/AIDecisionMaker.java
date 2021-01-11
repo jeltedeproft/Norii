@@ -41,7 +41,7 @@ public class AIDecisionMaker {
 		statesWithScores = new TreeMap<>();
 	}
 
-	public UnitTurn makeDecision(BattleState battleState) {
+	public BattleState makeDecision(BattleState battleState) {
 		System.out.println("1");
 		final Array<BattleState> battleStates = new Array<>();
 		final Array<BattleState> battleStatesLevelTwo = new Array<>();
@@ -115,12 +115,12 @@ public class AIDecisionMaker {
 		return battleState.getPlayerUnits().isEmpty() || battleState.getAiUnits().isEmpty();
 	}
 
-	private UnitTurn getInitialMoves(BattleState battleState) {
+	private BattleState getInitialMoves(BattleState battleState) {
 		BattleState initialState = battleState;
 		while (initialState.getParentState() != null) {
 			initialState = initialState.getParentState();
 		}
-		return initialState.getTurn();
+		return initialState;
 	}
 
 	private void reduceModifierCount(Array<BattleState> battleStates) {
@@ -132,7 +132,7 @@ public class AIDecisionMaker {
 
 	private BattleState applyTurnToBattleState(HypotheticalUnit aiUnit, UnitTurn turn, BattleState battleState) {
 		final BattleState newState = battleState.makeCopy();
-		HypotheticalUnit copyUnit = newState.get(aiUnit.getX(), aiUnit.getY()).getUnit();
+		final HypotheticalUnit copyUnit = newState.get(aiUnit.getX(), aiUnit.getY()).getUnit();
 		for (final Move move : turn.getMoves()) {
 			switch (move.getMoveType()) {
 			case SPELL:
@@ -189,16 +189,14 @@ public class AIDecisionMaker {
 			battleState.addEntity(caster.x, caster.y, placeHolder);
 			break;
 		case HAMMERBACK:
-			for (final MyPoint target : targets) {
-				List<MyPoint> crossedCells = findLine(caster.x, caster.y, target.x, target.y);
-				for (MyPoint point : crossedCells) {
-					if (battleState.get(point.x, point.y).isOccupied()) {
-						final int unitHp = battleState.get(point.x, point.y).getUnit().getHp();
-						if (damage >= unitHp) {
-							battleState.updateEntity(point.x, point.y, 0);
-						} else {
-							battleState.updateEntity(point.x, point.y, unitHp - damage);
-						}
+			final List<MyPoint> crossedCells = findLine(caster.x, caster.y, location.x, location.y);
+			for (final MyPoint point : crossedCells) {
+				if (battleState.get(point.x, point.y).isOccupied()) {
+					final int unitHp = battleState.get(point.x, point.y).getUnit().getHp();
+					if (damage >= unitHp) {
+						battleState.updateEntity(point.x, point.y, 0);
+					} else {
+						battleState.updateEntity(point.x, point.y, unitHp - damage);
 					}
 				}
 			}
@@ -209,14 +207,14 @@ public class AIDecisionMaker {
 	}
 
 	/** Bresenham algorithm to find all cells crossed by a line **/
-	public List<MyPoint> findLine(int x0, int y0, int x1, int y1) {
-		List<MyPoint> line = new ArrayList<>();
+	public static List<MyPoint> findLine(int x0, int y0, int x1, int y1) {
+		final List<MyPoint> line = new ArrayList<>();
 
-		int dx = Math.abs(x1 - x0);
-		int dy = Math.abs(y1 - y0);
+		final int dx = Math.abs(x1 - x0);
+		final int dy = Math.abs(y1 - y0);
 
-		int sx = x0 < x1 ? 1 : -1;
-		int sy = y0 < y1 ? 1 : -1;
+		final int sx = x0 < x1 ? 1 : -1;
+		final int sy = y0 < y1 ? 1 : -1;
 
 		int err = dx - dy;
 		int e2;
@@ -255,12 +253,12 @@ public class AIDecisionMaker {
 		// if the ability has cell targets, try out all of them + move and make a new
 		// state for each
 		if ((ability.getTarget() == Target.CELL) || (ability.getTarget() == Target.CELL_BUT_NO_UNIT)) {
-			MyPoint center = new MyPoint(unit.getX(), unit.getY());
-			Set<MyPoint> cellsToCastOn = battleStateGridHelper.getAllPointsASpellCanHit(center, ability.getLineOfSight(), ability.getSpellData().getRange(), battleState);
+			final MyPoint center = new MyPoint(unit.getX(), unit.getY());
+			final Set<MyPoint> cellsToCastOn = battleStateGridHelper.getAllPointsASpellCanHit(center, ability.getLineOfSight(), ability.getSpellData().getRange(), battleState);
 			if (ability.getTarget() == Target.CELL_BUT_NO_UNIT) {
 				filterUnits(cellsToCastOn, battleState);
 			}
-			for (MyPoint point : cellsToCastOn) {
+			for (final MyPoint point : cellsToCastOn) {
 				final UnitTurn spellAndMove = new UnitTurn(unit.getEntityId(), new SpellMove(MoveType.SPELL, point, ability));
 				spellAndMove.addMove(decideMove(ability, unit, battleState));
 				unitTurns.add(spellAndMove);
@@ -319,8 +317,8 @@ public class AIDecisionMaker {
 			MyPoint endMyPoint = new MyPoint(unit.getX(), unit.getY());
 			final UnitTurn moveAndSpell = new UnitTurn(unit.getEntityId(), new Move(MoveType.MOVE, endMyPoint));
 			int ap = unit.getAp();
-			BattleState copyBattleState = battleState.makeCopy();
-			HypotheticalUnit copyUnit = copyBattleState.get(unit.getX(), unit.getY()).getUnit();
+			final BattleState copyBattleState = battleState.makeCopy();
+			final HypotheticalUnit copyUnit = copyBattleState.get(unit.getX(), unit.getY()).getUnit();
 			while (abilityTargets.isEmpty() && (ap > 0)) {
 				final HypotheticalUnit closestUnit = distancesWithAbilityTargetUnits.firstEntry().getValue().get(0);
 				final TiledMapPosition closestUnitPos = new TiledMapPosition().setPositionFromTiles(closestUnit.getX(), closestUnit.getY());
@@ -340,7 +338,7 @@ public class AIDecisionMaker {
 				for (final MyPoint target : abilityTargets) {
 					final Set<MyPoint> positionsToCastSpell = battleStateGridHelperFromUnits.getAllCastPointsWhereTargetIsHit(ability, target, new MyPoint(copyUnit.getX(), copyUnit.getY()), copyBattleState);
 					for (final MyPoint MyPoint : positionsToCastSpell) {
-						UnitTurn moveAndSpellCopy = moveAndSpell.makeCopy();
+						final UnitTurn moveAndSpellCopy = moveAndSpell.makeCopy();
 						final Array<MyPoint> affectedUnits = battleStateGridHelperFromUnits.getTargetsAbility(ability, MyPoint, getUnitPositions(false, ability, copyBattleState));
 						moveAndSpellCopy.addMove(new SpellMove(MoveType.SPELL, MyPoint, ability, affectedUnits));
 						unitTurns.add(moveAndSpellCopy);
@@ -368,7 +366,7 @@ public class AIDecisionMaker {
 	}
 
 	private void filterUnits(Set<MyPoint> cellsToCastOn, BattleState battleState) {
-		for (HypotheticalUnit unit : battleState.getAllUnits()) {
+		for (final HypotheticalUnit unit : battleState.getAllUnits()) {
 			if (cellsToCastOn.contains(unit.getPositionAsPoint())) {
 				cellsToCastOn.remove(unit.getPositionAsPoint());
 			}

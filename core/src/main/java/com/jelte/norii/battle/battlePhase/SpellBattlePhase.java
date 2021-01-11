@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.jelte.norii.ai.AIDecisionMaker;
 import com.jelte.norii.audio.AudioObserver;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.battle.MessageToBattleScreen;
@@ -12,6 +14,7 @@ import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityAnimation;
 import com.jelte.norii.entities.EntityAnimation.Direction;
 import com.jelte.norii.entities.EntityAnimationType;
+import com.jelte.norii.entities.EntityTypes;
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.magic.Ability.AffectedTeams;
 import com.jelte.norii.magic.Ability.LineOfSight;
@@ -240,7 +243,28 @@ public class SpellBattlePhase extends BattlePhase {
 	private void castHammerback(final Entity caster, final TiledMapPosition targetPos, final Ability ability) {
 		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
 		notifyAudio(AudioObserver.AudioCommand.SOUND_PLAY_ONCE, AudioObserver.AudioTypeEvent.HAMMER_SOUND);
-		battlemanager.getBattleState().addEntity(targetPos.getTileX(), targetPos.getTileY(), new HypotheticalUnit(0, false, 0, 0, 0, 0, 0, null, null, 0, 0));
+		final Entity hammerEntity = new Entity(EntityTypes.BOOMERANG, caster.getOwner());
+		hammerEntity.setInBattle(true);
+		hammerEntity.setCurrentPosition(targetPos);
+		hammerEntity.getEntityactor().setTouchable(Touchable.enabled);
+		hammerEntity.addModifier(ModifiersEnum.DAMAGE_OVER_TIME, 3, 1);
+		battlemanager.addUnit(hammerEntity);
+		battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.ADD_UNIT_UI, hammerEntity);
+		battlemanager.getBattleState().addEntity(targetPos.getTileX(), targetPos.getTileY(), new HypotheticalUnit(hammerEntity.getEntityID(), hammerEntity.isPlayerUnit(), hammerEntity.getHp(), hammerEntity.getEntityData().getMaxHP(),
+				hammerEntity.getAttackRange(), hammerEntity.getEntityData().getAttackPower(), hammerEntity.getAp(), hammerEntity.getModifiers(), hammerEntity.getAbilities(), targetPos.getTileX(), targetPos.getTileY()));
+		final List<MyPoint> crossedCells = AIDecisionMaker.findLine(caster.getCurrentPosition().getTileX(), caster.getCurrentPosition().getTileY(), targetPos.getTileX(), targetPos.getTileY());
+		// check if correct andapply similar effects in aidecisionMaker
+		battlemanager.getBattleState();
+		for (final MyPoint point : crossedCells) {
+			if (battlemanager.getBattleState().get(point.x, point.y).isOccupied()) {
+				final int unitHp = battlemanager.getBattleState().get(point.x, point.y).getUnit().getHp();
+				if (ability.getSpellData().getDamage() >= unitHp) {
+					battlemanager.getBattleState().updateEntity(point.x, point.y, 0);
+				} else {
+					battlemanager.getBattleState().updateEntity(point.x, point.y, unitHp - ability.getSpellData().getDamage());
+				}
+			}
+		}
 	}
 
 	private Entity getEntityAtPosition(TiledMapPosition targetPos) {

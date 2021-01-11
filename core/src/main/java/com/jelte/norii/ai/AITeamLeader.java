@@ -47,14 +47,16 @@ public class AITeamLeader implements UnitOwner {
 				unit.setPlayerUnit(false);
 				unit.setInBattle(true);
 				spawnPositions.remove(0);
+				battleManager.initializeUnit(unit);
 			} else {
 				Gdx.app.debug(TAG, "maybe no more room to spawn ai units!");
 			}
 		}
 	}
 
-	public UnitTurn act(BattleState stateOfBattle) {
-		return aiDecisionMaker.makeDecision(stateOfBattle);
+	public BattleState act(BattleState stateOfBattle) {
+		stateOfBattle = aiDecisionMaker.makeDecision(stateOfBattle);
+		return stateOfBattle;
 	}
 
 	@Override

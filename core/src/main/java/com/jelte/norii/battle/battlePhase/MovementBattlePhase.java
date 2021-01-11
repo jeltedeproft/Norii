@@ -57,6 +57,7 @@ public class MovementBattlePhase extends BattlePhase {
 		final TiledMapPosition newUnitPos = new TiledMapPosition().setPositionFromTiles(actor.getActorPos().getTileX(), actor.getActorPos().getTileY());
 		final List<GridCell> path = MyPathFinder.getInstance().pathTowards(currentUnit.getCurrentPosition(), newUnitPos, currentUnit.getAp());
 		currentUnit.move(path);
+		battlemanager.getBattleState().moveUnitTo(currentUnit, newUnitPos);
 		battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.UNIT_ACTIVE, battlemanager.getActiveUnit());
 	}
 

@@ -516,7 +516,7 @@
         "portraitSpritePath": "FemaleOneIdleDown",
         "entitySpriteName": "FemaleOne",
         "maxAP": 10,
-        "maxHP": 10,
+        "maxHP": 3,
         "level": 1,
         "xp": 5,
         "maxXP": 10,
