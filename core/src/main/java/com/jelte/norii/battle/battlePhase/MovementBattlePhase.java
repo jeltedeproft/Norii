@@ -8,7 +8,7 @@ import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.battle.MessageToBattleScreen;
-import com.jelte.norii.entities.PlayerEntity;
+import com.jelte.norii.entities.Entity;
 import com.jelte.norii.map.MyPathFinder;
 import com.jelte.norii.map.TiledMapActor;
 import com.jelte.norii.particles.ParticleMaker;
@@ -53,7 +53,7 @@ public class MovementBattlePhase extends BattlePhase {
 	}
 
 	private void updateUnit(TiledMapActor actor) {
-		final PlayerEntity currentUnit = battlemanager.getActiveUnit();
+		final Entity currentUnit = battlemanager.getActiveUnit();
 		final TiledMapPosition newUnitPos = new TiledMapPosition().setPositionFromTiles(actor.getActorPos().getTileX(), actor.getActorPos().getTileY());
 		final List<GridCell> path = MyPathFinder.getInstance().pathTowards(currentUnit.getCurrentPosition(), newUnitPos, currentUnit.getAp());
 		currentUnit.move(path);

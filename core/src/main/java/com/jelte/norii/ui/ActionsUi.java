@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.jelte.norii.entities.Entity;
-import com.jelte.norii.entities.PlayerEntity;
+import com.jelte.norii.entities.Entity;
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.utility.AssetManagerUtility;
 import com.jelte.norii.utility.TiledMapPosition;
@@ -34,7 +34,7 @@ public class ActionsUi extends Window {
 	private ArrayList<ActionUIButton> buttons;
 	private ArrayList<ActionInfoUiWindow> popUps;
 
-	public ActionsUi(final PlayerEntity entity, int mapWidth, int mapHeight, Hud hud) {
+	public ActionsUi(final Entity entity, int mapWidth, int mapHeight, Hud hud) {
 		super("", AssetManagerUtility.getSkin());
 
 		this.mapHeight = mapHeight;
@@ -59,16 +59,16 @@ public class ActionsUi extends Window {
 		setKeepWithinStage(false);
 	}
 
-	private void initVariables(final PlayerEntity entity) {
+	private void initVariables(final Entity entity) {
 		buttons = new ArrayList<>();
 	}
 
-	private void createWidgets(PlayerEntity entity, Hud hud) {
+	private void createWidgets(Entity entity, Hud hud) {
 		createButtons(entity, hud);
 		storeButtons();
 	}
 
-	private void createButtons(PlayerEntity entity, Hud hud) {
+	private void createButtons(Entity entity, Hud hud) {
 		final int id = entity.getEntityID();
 		moveActionUIButton = new MoveActionUIButton(MOVE_BUTTON_SPRITE_NAME, id, mapWidth, mapHeight, hud);
 		attackActionUIButton = new AttackActionUIButton(ATTACK_BUTTON_SPRITE_NAME, id, mapWidth, mapHeight, hud);
@@ -88,7 +88,7 @@ public class ActionsUi extends Window {
 		}
 	}
 
-	private void addWidgets(PlayerEntity entity, Hud hud) {
+	private void addWidgets(Entity entity, Hud hud) {
 		addButtons();
 		addSpells(entity, hud);
 	}
@@ -99,7 +99,7 @@ public class ActionsUi extends Window {
 		add(skipActionUIButton.getButton()).size(tilePixelWidth, tilePixelHeight).pad(ICON_PADDING);
 	}
 
-	private void addSpells(PlayerEntity entity, Hud hud) {
+	private void addSpells(Entity entity, Hud hud) {
 		for (final Ability ability : entity.getAbilities()) {
 			final SpellActionUIButton spellActionUIButton = new SpellActionUIButton(ability.getSpellData().getIconSpriteName(), entity.getEntityID(), ability, mapWidth, mapHeight, hud);
 			buttons.add(spellActionUIButton);

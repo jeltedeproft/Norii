@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.Player;
-import com.jelte.norii.entities.PlayerEntity;
+import com.jelte.norii.entities.Entity;
 import com.jelte.norii.map.TiledMapActor;
 import com.jelte.norii.particles.ParticleMaker;
 import com.jelte.norii.particles.ParticleType;
@@ -18,12 +18,12 @@ public class DeploymentBattlePhase extends BattlePhase {
 
 	private final BattleManager battlemanager;
 	private int deployingUnitNumber;
-	private final List<PlayerEntity> playerUnits;
+	private final List<Entity> playerUnits;
 
 	public DeploymentBattlePhase(final BattleManager battlemanager) {
 		this.battlemanager = battlemanager;
 		deployingUnitNumber = 0;
-		playerUnits = Player.getInstance().getPlayerUnits();
+		playerUnits = Player.getInstance().getTeam();
 		playerUnits.get(0).setInDeploymentPhase(true);
 	}
 

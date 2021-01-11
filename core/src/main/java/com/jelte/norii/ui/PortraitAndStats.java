@@ -30,7 +30,6 @@ public class PortraitAndStats {
 
 	private ImageButton heroImageButton;
 	private Table table;
-	private Entity linkedEntity;
 
 	private Label heroNameLabel;
 	private Label hpLabel;
@@ -44,10 +43,6 @@ public class PortraitAndStats {
 
 		initElementsForUI();
 		populateHeroImage();
-	}
-
-	public void linkUnit(final Entity unit) {
-		unit.setbottomMenu(this);
 	}
 
 	private void initElementsForUI() {
@@ -115,8 +110,7 @@ public class PortraitAndStats {
 	public void setHero(final Entity entity) {
 		if (entity != null) {
 			if (!entity.getEntityData().getName().equalsIgnoreCase(heroNameLabel.getText().toString())) {
-				linkedEntity = entity;
-				initiateHeroStats();
+				initiateHeroStats(entity);
 				populateElementsForUI(entity);
 			}
 		} else {
@@ -124,9 +118,9 @@ public class PortraitAndStats {
 		}
 	}
 
-	private void initiateHeroStats() {
-		heroHP = linkedEntity.getHp();
-		heroAP = linkedEntity.getAp();
+	private void initiateHeroStats(Entity entity) {
+		heroHP = entity.getHp();
+		heroAP = entity.getAp();
 	}
 
 	private void populateElementsForUI(final Entity entity) {
@@ -139,17 +133,17 @@ public class PortraitAndStats {
 		changeHeroImage();
 	}
 
-	public void update() {
-		updateStats();
+	public void update(Entity entity) {
+		updateStats(entity);
 		updateLabels();
 	}
 
-	private void updateStats() {
-		if (linkedEntity != null) {
-			heroHP = linkedEntity.getHp();
-			heroAP = linkedEntity.getAp();
+	private void updateStats(Entity entity) {
+		if (entity != null) {
+			heroHP = entity.getHp();
+			heroAP = entity.getAp();
 
-			if (Boolean.TRUE.equals(linkedEntity.getEntityactor().getIsHovering())) {
+			if (Boolean.TRUE.equals(entity.getEntityactor().getIsHovering())) {
 				table.setVisible(true);
 			}
 		}

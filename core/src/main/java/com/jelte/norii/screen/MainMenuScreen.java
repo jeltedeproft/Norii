@@ -21,10 +21,10 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.jelte.norii.ai.AITeamFileReader;
 import com.jelte.norii.ai.AITeams;
 import com.jelte.norii.audio.AudioObserver;
+import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityFileReader;
 import com.jelte.norii.entities.EntityTypes;
 import com.jelte.norii.entities.Player;
-import com.jelte.norii.entities.PlayerEntity;
 import com.jelte.norii.magic.SpellFileReader;
 import com.jelte.norii.map.MapFactory.MapType;
 import com.jelte.norii.utility.AssetManagerUtility;
@@ -45,7 +45,7 @@ public class MainMenuScreen extends GameScreen {
 	private TextButton exitButton;
 	private Label title;
 
-	private ArrayList<PlayerEntity> playerMonsters;
+	private ArrayList<Entity> playerMonsters;
 	private AITeams selectedLevel;
 
 	protected float frameTime = 0f;
@@ -159,19 +159,19 @@ public class MainMenuScreen extends GameScreen {
 	}
 
 	private void addUnitsToPlayer() {
-		playerMonsters.add(new PlayerEntity(EntityTypes.BEAST_OGRE));
-		playerMonsters.add(new PlayerEntity(EntityTypes.BLACK_CAT));
-		playerMonsters.add(new PlayerEntity(EntityTypes.BLACK_DOG));
-		playerMonsters.add(new PlayerEntity(EntityTypes.BLACK_GHOST_BALL));
-		playerMonsters.add(new PlayerEntity(EntityTypes.BLACK_SLIME));
-		playerMonsters.add(new PlayerEntity(EntityTypes.BLACK_SKELETON));
-		playerMonsters.add(new PlayerEntity(EntityTypes.BLACK_SLIME_BLUE_EYES));
-		playerMonsters.add(new PlayerEntity(EntityTypes.BLACK_SLIME_DARK_BLUE_EYES));
-		playerMonsters.add(new PlayerEntity(EntityTypes.BLUE_GHOSTY));
-		playerMonsters.add(new PlayerEntity(EntityTypes.FEMALE_EIGHT));
-		playerMonsters.add(new PlayerEntity(EntityTypes.FEMALE_ONE));
+		playerMonsters.add(new Entity(EntityTypes.BEAST_OGRE, Player.getInstance()));
+		playerMonsters.add(new Entity(EntityTypes.BLACK_CAT, Player.getInstance()));
+		playerMonsters.add(new Entity(EntityTypes.BLACK_DOG, Player.getInstance()));
+		playerMonsters.add(new Entity(EntityTypes.BLACK_GHOST_BALL, Player.getInstance()));
+		playerMonsters.add(new Entity(EntityTypes.BLACK_SLIME, Player.getInstance()));
+		playerMonsters.add(new Entity(EntityTypes.BLACK_SKELETON, Player.getInstance()));
+		playerMonsters.add(new Entity(EntityTypes.BLACK_SLIME_BLUE_EYES, Player.getInstance()));
+		playerMonsters.add(new Entity(EntityTypes.BLACK_SLIME_DARK_BLUE_EYES, Player.getInstance()));
+		playerMonsters.add(new Entity(EntityTypes.BLUE_GHOSTY, Player.getInstance()));
+		playerMonsters.add(new Entity(EntityTypes.FEMALE_EIGHT, Player.getInstance()));
+		playerMonsters.add(new Entity(EntityTypes.FEMALE_ONE, Player.getInstance()));
 
-		Player.getInstance().setPlayerUnits(playerMonsters);
+		Player.getInstance().setTeam(playerMonsters);
 	}
 
 	@Override

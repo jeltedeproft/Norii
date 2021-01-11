@@ -5,8 +5,9 @@ import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.jelte.norii.battle.BattleManager;
+import com.jelte.norii.battle.MessageToBattleScreen;
 import com.jelte.norii.battle.battleState.BattleState;
-import com.jelte.norii.entities.AiEntity;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityTypes;
 import com.jelte.norii.entities.UnitOwner;
@@ -15,9 +16,10 @@ import com.jelte.norii.utility.TiledMapPosition;
 public class AITeamLeader implements UnitOwner {
 	private static final String TAG = AITeamLeader.class.getSimpleName();
 
-	private List<AiEntity> team;
+	private List<Entity> team;
 	private final AITeamData aiTeamData;
 	private final AIDecisionMaker aiDecisionMaker;
+	private BattleManager battleManager;
 
 	public AITeamLeader(final AITeams type) {
 		aiTeamData = AITeamFileReader.getAITeamData().get(type.ordinal());
@@ -30,7 +32,7 @@ public class AITeamLeader implements UnitOwner {
 		for (final String name : aiTeamData.getUnits()) {
 			for (final EntityTypes type : EntityTypes.values()) {
 				if (name.equals(type.getEntityName())) {
-					final AiEntity entity = new AiEntity(type);
+					final Entity entity = new Entity(type, this);
 					entity.setPlayerUnit(false);
 					team.add(entity);
 				}
@@ -39,7 +41,7 @@ public class AITeamLeader implements UnitOwner {
 	}
 
 	public void spawnAiUnits(List<TiledMapPosition> spawnPositions) {
-		for (final AiEntity unit : team) {
+		for (final Entity unit : team) {
 			if (!spawnPositions.isEmpty()) {
 				unit.setCurrentPosition(spawnPositions.get(0));
 				unit.setPlayerUnit(false);
@@ -55,6 +57,7 @@ public class AITeamLeader implements UnitOwner {
 		return aiDecisionMaker.makeDecision(stateOfBattle);
 	}
 
+	@Override
 	public void updateUnits(final float delta) {
 		team.removeIf(Entity::isDead);
 
@@ -63,6 +66,7 @@ public class AITeamLeader implements UnitOwner {
 		}
 	}
 
+	@Override
 	public void renderUnits(final Batch batch) {
 		for (final Entity entity : team) {
 			if (entity.isInBattle()) {
@@ -71,11 +75,13 @@ public class AITeamLeader implements UnitOwner {
 		}
 	}
 
-	public void setTeam(final List<AiEntity> team) {
+	@Override
+	public void setTeam(final List<Entity> team) {
 		this.team = team;
 	}
 
-	public List<AiEntity> getTeam() {
+	@Override
+	public List<Entity> getTeam() {
 		return team;
 	}
 
@@ -90,7 +96,33 @@ public class AITeamLeader implements UnitOwner {
 		return "AITeamLeader with team : " + team;
 	}
 
+	@Override
 	public void applyModifiers() {
-		team.forEach(AiEntity::applyModifiers);
+		team.forEach(Entity::applyModifiers);
+	}
+
+	@Override
+	public boolean isPlayer() {
+		return false;
+	}
+
+	@Override
+	public void sendMessageToBattleManager(MessageToBattleScreen message, Entity entity) {
+		battleManager.sendMessageToBattleScreen(message, entity);
+	}
+
+	@Override
+	public void setBattleManager(BattleManager battleManager) {
+		this.battleManager = battleManager;
+	}
+
+	@Override
+	public void removeUnit(Entity unit) {
+		team.remove(unit);
+	}
+
+	@Override
+	public void addUnit(Entity unit) {
+		team.add(unit);
 	}
 }

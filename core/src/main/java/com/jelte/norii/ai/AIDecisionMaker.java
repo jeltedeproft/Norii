@@ -253,7 +253,7 @@ public class AIDecisionMaker {
 		}
 
 		// if the ability has cell targets, try out all of them + move and make a new
-		// state for each, todo : cell but no unit needs to not hit units
+		// state for each
 		if ((ability.getTarget() == Target.CELL) || (ability.getTarget() == Target.CELL_BUT_NO_UNIT)) {
 			MyPoint center = new MyPoint(unit.getX(), unit.getY());
 			Set<MyPoint> cellsToCastOn = battleStateGridHelper.getAllPointsASpellCanHit(center, ability.getLineOfSight(), ability.getSpellData().getRange(), battleState);

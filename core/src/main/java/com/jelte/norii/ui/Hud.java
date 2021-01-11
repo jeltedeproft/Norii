@@ -1,5 +1,6 @@
 package com.jelte.norii.ui;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,9 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.jelte.norii.entities.AiEntity;
 import com.jelte.norii.entities.Entity;
-import com.jelte.norii.entities.PlayerEntity;
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.profile.ProfileManager;
 import com.jelte.norii.profile.ProfileObserver;
@@ -45,7 +44,7 @@ public class Hud implements ProfileObserver {
 	public static final float UI_VIEWPORT_WIDTH = 400f;
 	public static final float UI_VIEWPORT_HEIGHT = 400f;
 
-	public Hud(List<PlayerEntity> playerUnits, List<AiEntity> aiUnits, SpriteBatch spriteBatch, int mapWidth, int mapHeight, BattleScreen battleScreen) {
+	public Hud(List<Entity> playerUnits, List<Entity> aiUnits, SpriteBatch spriteBatch, int mapWidth, int mapHeight, BattleScreen battleScreen) {
 		final List<Entity> allUnits = Stream.concat(playerUnits.stream(), aiUnits.stream()).collect(Collectors.toList());
 		initVariables(spriteBatch, mapWidth, mapHeight, battleScreen);
 		createEndGameMessages();
@@ -97,10 +96,10 @@ public class Hud implements ProfileObserver {
 
 	public void addUnit(Entity entity) {
 		createHpBar(entity);
-		portraitAndStats.linkUnit(entity);
+		portraitAndStats.setHero(entity);
 		createStatusUI(entity);
 		if (entity.isPlayerUnit()) {
-			createActionUI((PlayerEntity) entity);
+			createActionUI(entity);
 		}
 	}
 
@@ -147,7 +146,7 @@ public class Hud implements ProfileObserver {
 		stage.addActor(statusui);
 	}
 
-	private void createActionUI(PlayerEntity playerUnit) {
+	private void createActionUI(Entity playerUnit) {
 		final ActionsUi actionui = new ActionsUi(playerUnit, mapWidth, mapHeight, this);
 		entityIdWithActionUi.put(playerUnit.getEntityID(), actionui);
 
@@ -173,10 +172,27 @@ public class Hud implements ProfileObserver {
 	public void update(List<Entity> units) {
 		for (final Entity entity : units) {
 			final int id = entity.getEntityID();
-			entityIdWithHpBar.get(id).update(entity);
-			entityIdWithStatusUi.get(id).update(entity);
-			entityIdWithActionUi.get(id).update(entity);
-			entityIdWithActionInfoUiWindow.get(id).update();
+			HpBar bar = entityIdWithHpBar.get(id);
+			StatusUi status = entityIdWithStatusUi.get(id);
+			ActionsUi action = entityIdWithActionUi.get(id);
+			ActionInfoUiWindow info = entityIdWithActionInfoUiWindow.get(id);
+
+			if (bar != null) {
+				bar.update(entity);
+			}
+			if (status != null) {
+				status.update(entity);
+			}
+			if (action != null) {
+				action.update(entity);
+			}
+			if (info != null) {
+				info.update();
+			}
+
+			if (entity.statsChanged) {
+				portraitAndStats.update(entity);
+			}
 		}
 	}
 
@@ -214,12 +230,12 @@ public class Hud implements ProfileObserver {
 		// no-op
 	}
 
-	public List<ActionsUi> getActionUIs() {
-		return (List<ActionsUi>) entityIdWithActionUi.values();
+	public Collection<ActionsUi> getActionUIs() {
+		return entityIdWithActionUi.values();
 	}
 
-	public List<StatusUi> getStatusUIs() {
-		return (List<StatusUi>) entityIdWithStatusUi.values();
+	public Collection<StatusUi> getStatusUIs() {
+		return entityIdWithStatusUi.values();
 	}
 
 	public Map<Integer, HpBar> getEntityIdWithHpBar() {
@@ -240,5 +256,9 @@ public class Hud implements ProfileObserver {
 
 	public void sendMessage(MessageToBattleScreen message, int entityID, Ability ability) {
 		battleScreen.messageFromUi(message, entityID, ability);
+	}
+
+	public PortraitAndStats getPortraitAndStats() {
+		return portraitAndStats;
 	}
 }

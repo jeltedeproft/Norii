@@ -65,7 +65,6 @@ public class StatusUi extends Window {
 	}
 
 	private void initVariables(final Entity entity) {
-		entity.setStatusui(this);
 		updateStats(entity);
 	}
 

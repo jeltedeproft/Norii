@@ -21,14 +21,10 @@ import com.jelte.norii.ai.AITeams;
 import com.jelte.norii.audio.AudioObserver;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.battle.BattleScreenInputProcessor;
-import com.jelte.norii.battle.battlePhase.SpellBattlePhase;
 import com.jelte.norii.battle.battleState.HypotheticalUnit;
-import com.jelte.norii.entities.AiEntity;
 import com.jelte.norii.entities.Entity;
-import com.jelte.norii.entities.EntityObserver;
 import com.jelte.norii.entities.EntityStage;
 import com.jelte.norii.entities.Player;
-import com.jelte.norii.entities.PlayerEntity;
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.magic.ModifiersEnum;
 import com.jelte.norii.map.BattleMap;
@@ -44,11 +40,10 @@ import com.jelte.norii.ui.Hud;
 import com.jelte.norii.ui.MessageToBattleScreen;
 import com.jelte.norii.ui.StatusUi;
 import com.jelte.norii.utility.AssetManagerUtility;
-import com.jelte.norii.utility.MyPoint;
 import com.jelte.norii.utility.TiledMapPosition;
 import com.jelte.norii.utility.Utility;
 
-public class BattleScreen extends GameScreen implements EntityObserver {
+public class BattleScreen extends GameScreen {
 	public static final int VISIBLE_WIDTH = 25;
 	public static final int VISIBLE_HEIGHT = 25;
 	private static OrthographicCamera mapCamera = null;
@@ -69,8 +64,6 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 	private final String fpsTitle = "fps = ";
 
 	private boolean isPaused;
-	private boolean aiWins = false;
-	private boolean playerWins = false;
 
 	public BattleScreen(AITeams aiTeams) {
 		initializeVariables();
@@ -79,7 +72,6 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		initializeHUD();
 		initializePauseMenu();
 		initializeInput();
-		initializeUnits();
 		initializeMap();
 		initializeObservers();
 		spawnAI();
@@ -99,13 +91,13 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 	}
 
 	private void initializeEntityStage() {
-		entityStage = new EntityStage(Stream.concat(Player.getInstance().getPlayerUnits().stream(), aiTeamLeader.getTeam().stream()).collect(Collectors.toList()));
+		entityStage = new EntityStage(Stream.concat(Player.getInstance().getTeam().stream(), aiTeamLeader.getTeam().stream()).collect(Collectors.toList()));
 	}
 
 	private void initializeHUD() {
 		hudCamera = new OrthographicCamera();
 		hudCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		newHud = new Hud(Player.getInstance().getPlayerUnits(), aiTeamLeader.getTeam(), spriteBatch, currentMap.getMapWidth(), currentMap.getMapHeight(), this);
+		newHud = new Hud(Player.getInstance().getTeam(), aiTeamLeader.getTeam(), spriteBatch, currentMap.getMapWidth(), currentMap.getMapHeight(), this);
 	}
 
 	private void initializePauseMenu() {
@@ -131,11 +123,6 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 	private void spawnAI() {
 		final List<TiledMapPosition> enemyStartPositions = currentMap.getEnemyStartPositions();
 		aiTeamLeader.spawnAiUnits(enemyStartPositions);
-	}
-
-	private void initializeUnits() {
-		playerUnits.forEach(playerEntity -> playerEntity.addEntityObserver(this));
-		aiUnits.forEach(aiEntity -> aiEntity.addEntityObserver(this));
 	}
 
 	private void initializeObservers() {
@@ -214,9 +201,10 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		aiTeamLeader.updateUnits(delta);
 	}
 
+	// TODO check this
 	private void updateUIHover() {
 		boolean hoverResult = false;
-		for (final Entity unit : Player.getInstance().getPlayerUnits()) {
+		for (final Entity unit : Player.getInstance().getTeam()) {
 			if (unit.getEntityactor().isActionsHovering()) {
 				hoverResult = true;
 			}
@@ -318,62 +306,6 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		currentMap.dispose();
 	}
 
-	@Override
-	public void onEntityNotify(final EntityCommand command, final Entity unit) {
-		switch (command) {
-		case CLICKED:
-			battlemanager.getCurrentBattleState().clickedOnUnit(unit);
-			break;
-		case AI_WINS:
-			aiWins = true;
-			newHud.showAiWin();
-			break;
-		case PLAYER_WINS:
-			playerWins = true;
-			newHud.showPlayerWin();
-			break;
-		default:
-			break;
-		}
-	}
-
-	@Override
-	public void onEntityNotify(final EntityCommand command, final AiEntity aiUnit) {
-		switch (command) {
-		case AI_FINISHED_TURN:
-			aiUnit.setAp(aiUnit.getEntityData().getMaxAP());
-			battlemanager.swapTurn();
-			break;
-		case FOCUS_CAMERA:
-			mapCamera.position.set(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY(), 0f);
-			break;
-		case CLICKED:
-			battlemanager.getCurrentBattleState().clickedOnUnit(aiUnit);
-			break;
-		case AI_WINS:
-			aiWins = true;
-			newHud.showAiWin();
-			break;
-		case PLAYER_WINS:
-			playerWins = true;
-			newHud.showPlayerWin();
-			break;
-		default:
-			break;
-		}
-	}
-
-	@Override
-	public void onEntityNotify(EntityCommand command, Entity unit, TiledMapPosition pos) {
-		switch (command) {
-		case UPDATE_POS:
-			battlemanager.updateStateOfBattle(unit, pos);
-			break;
-		default:
-			break;
-		}
-	}
-
 	private void prepareMove(final Entity unit) {
 		final List<GridCell> path = MyPathFinder.getInstance().getCellsWithinCircle(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getAp());
 		for (final GridCell cell : path) {
@@ -445,16 +377,6 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		return isPaused;
 	}
 
-	@Override
-	public void onEntityNotify(EntityCommand command, Entity entity, Ability abilityUsed, MyPoint target) {
-		switch (command) {
-		case CAST_SPELL_AI:
-			final SpellBattlePhase spellBattleState = (SpellBattlePhase) battlemanager.getSpellBattleState();
-			spellBattleState.executeSpellForAi(entity, abilityUsed, target);
-			break;
-		}
-	}
-
 	public void clickedOnTileMapActor(TiledMapActor actor) {
 		battlemanager.getCurrentBattleState().clickedOnTile(actor);
 	}
@@ -467,7 +389,7 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 	public void messageFromUi(MessageToBattleScreen message, int entityID, Ability ability) {
 		switch (message) {
 		case CLICKED_ON_SKIP:
-			final PlayerEntity skipEntity = (PlayerEntity) battlemanager.getEntityByID(entityID);
+			final Entity skipEntity = battlemanager.getEntityByID(entityID);
 			skipEntity.setActive(false);
 			skipEntity.setFocused(false);
 			skipEntity.setLocked(false);
@@ -477,22 +399,23 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 			battlemanager.getCurrentBattleState().exit();
 			break;
 		case CLICKED_ON_MOVE:
-			final PlayerEntity moveEntity = (PlayerEntity) battlemanager.getEntityByID(entityID);
+			final Entity moveEntity = battlemanager.getEntityByID(entityID);
 			if (moveEntity.canMove()) {
 				prepareMove(moveEntity);
 			}
 			break;
 		case CLICKED_ON_ATTACK:
-			final PlayerEntity attackEntity = (PlayerEntity) battlemanager.getEntityByID(entityID);
+			final Entity attackEntity = battlemanager.getEntityByID(entityID);
 			if ((attackEntity.getAp() >= attackEntity.getEntityData().getBasicAttackCost()) && attackEntity.canAttack()) {
 				prepareAttack(attackEntity);
 			}
 			break;
 		case CLICKED_ON_ABILITY:
-			final PlayerEntity spellEntity = (PlayerEntity) battlemanager.getEntityByID(entityID);
+			final Entity spellEntity = battlemanager.getEntityByID(entityID);
 			if (spellEntity.getAp() >= ability.getSpellData().getApCost()) {
 				prepareSpell(spellEntity, ability);
 			}
+			break;
 		}
 	}
 
@@ -506,8 +429,33 @@ public class BattleScreen extends GameScreen implements EntityObserver {
 		case CANCEL_ACTION:
 			final ActionsUi actionsUICancel = newHud.getEntityIdWithActionUi().get(entity.getEntityID());
 			actionsUICancel.setVisible(false);
+			break;
 		case UPDATE_UI:
 			newHud.update(battlemanager.getUnits());
+			break;
+		case SET_CHARACTER_HUD:
+			newHud.getPortraitAndStats().setHero(entity);
+			break;
+		case UNSET_CHARACTER_HUD:
+			newHud.getPortraitAndStats().setHero(null);
+			break;
+		case AI_WINS:
+			newHud.showAiWin();
+			break;
+		case PLAYER_WINS:
+			newHud.showPlayerWin();
+			break;
+		case FOCUS_CAMERA:
+			mapCamera.position.set(entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY(), 0f);
+			break;
+		case SHOW_STATUS_UI:
+			newHud.getEntityIdWithStatusUi().get(entity.getEntityID()).setVisible(true);
+			break;
+		case HIDE_STATUS_UI:
+			newHud.getEntityIdWithStatusUi().get(entity.getEntityID()).setVisible(false);
+			break;
+		default:
+			break;
 		}
 	}
 }

@@ -19,19 +19,16 @@ import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.audio.AudioManager;
 import com.jelte.norii.audio.AudioObserver;
 import com.jelte.norii.audio.AudioSubject;
+import com.jelte.norii.battle.MessageToBattleScreen;
 import com.jelte.norii.entities.EntityAnimation.Direction;
-import com.jelte.norii.entities.EntityObserver.EntityCommand;
 import com.jelte.norii.magic.AbilitiesEnum;
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.magic.Modifier;
 import com.jelte.norii.magic.ModifiersEnum;
-import com.jelte.norii.ui.PortraitAndStats;
-import com.jelte.norii.ui.StatusUi;
 import com.jelte.norii.utility.AssetManagerUtility;
-import com.jelte.norii.utility.MyPoint;
 import com.jelte.norii.utility.TiledMapPosition;
 
-public class Entity extends Actor implements EntitySubject, AudioSubject {
+public class Entity extends Actor implements AudioSubject {
 	protected final EntityData entityData;
 
 	protected int ap;
@@ -45,20 +42,17 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 	protected boolean isPlayerUnit;
 	protected boolean isActive;
 	protected boolean locked;
+	public boolean statsChanged;
 	protected int entityID;
 
 	protected TiledMapPosition oldPlayerPosition;
 	protected TiledMapPosition currentPlayerPosition;
 	protected Direction direction;
 
-	private StatusUi statusui;
-	private PortraitAndStats characterHUD;
-
 	protected EntityAnimation entityAnimation;
 	protected EntityAnimation entityTemporaryAnimation;
 	protected EntityActor entityactor;
 
-	protected Array<EntityObserver> entityObservers;
 	protected Array<AudioObserver> audioObservers;
 	protected Collection<Ability> abilities;
 	protected Collection<Modifier> modifiers;
@@ -67,17 +61,18 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 	private Runnable stopWalkAction;
 	private Runnable cleanup;
 
-	public Entity(final EntityTypes type) {
+	private UnitOwner owner;
+
+	public Entity(final EntityTypes type, UnitOwner owner) {
 		entityData = EntityFileReader.getUnitData().get(type.ordinal());
 		entityData.setEntity(this);
 		entityAnimation = new EntityAnimation(entityData.getEntitySpriteName());
-		initEntity();
+		initEntity(owner);
 	}
 
-	public void initEntity() {
-		entityObservers = new Array<>();
+	public void initEntity(UnitOwner owner) {
 		audioObservers = new Array<>();
-		this.addAudioObserver(AudioManager.getInstance());
+		addAudioObserver(AudioManager.getInstance());
 		oldPlayerPosition = new TiledMapPosition().setPositionFromScreen(-1000, -1000);
 		currentPlayerPosition = new TiledMapPosition().setPositionFromScreen(-1000, -1000);
 		hp = entityData.getMaxHP();
@@ -85,7 +80,8 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 		isDead = false;
 		inBattle = false;
 		isInAttackPhase = false;
-		isPlayerUnit = true;
+		this.owner = owner;
+		this.isPlayerUnit = owner.isPlayer();
 		locked = false;
 		abilities = new ArrayList<>();
 		modifiers = new ArrayList<>();
@@ -114,18 +110,6 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 		return entityData;
 	}
 
-	public StatusUi getStatusui() {
-		return statusui;
-	}
-
-	public void setStatusui(final StatusUi statusUi2) {
-		this.statusui = statusUi2;
-	}
-
-	public void setbottomMenu(final PortraitAndStats portraitAndStats) {
-		this.characterHUD = portraitAndStats;
-	}
-
 	public void dispose() {
 		AssetManagerUtility.unloadAsset(entityAnimation.getSpriteName());
 	}
@@ -143,10 +127,9 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 	}
 
 	public void setCurrentPosition(final TiledMapPosition pos) {
-		notifyEntityObserver(EntityCommand.UPDATE_POS, pos);
 		currentPlayerPosition = pos;
 		entityactor.setPos();
-		updateUI();
+		owner.sendMessageToBattleManager(MessageToBattleScreen.UPDATE_POS, this);
 	}
 
 	public void setCurrentPositionFromScreen(int x, int y) {
@@ -155,9 +138,8 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 		}
 	}
 
-	public void updateUI() {
-		statusui.update(this);
-		characterHUD.update();
+	public void setActive(final boolean isActive) {
+		this.isActive = isActive;
 	}
 
 	public EntityActor getEntityactor() {
@@ -196,8 +178,6 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 		} else {
 			hp = hp - damage;
 		}
-
-		updateUI();
 	}
 
 	public void heal(final int healAmount) {
@@ -205,8 +185,6 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 		if (hp > entityData.getMaxHP()) {
 			hp = entityData.getMaxHP();
 		}
-
-		updateUI();
 	}
 
 	private void removeUnit() {
@@ -243,16 +221,16 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 		if (isInDeploymentPhase) {
 			setInBattle(true);
 			entityactor.setTouchable(Touchable.disabled);
-			characterHUD.setHero(this);
-			notifyEntityObserver(EntityCommand.UNIT_ACTIVE);
+			owner.sendMessageToBattleManager(MessageToBattleScreen.SET_CHARACTER_HUD, this);
+			owner.sendMessageToBattleManager(MessageToBattleScreen.UNIT_ACTIVE, this);
 		}
 	}
 
 	public void setFocused(final boolean isFocused) {
 		if (isFocused) {
-			characterHUD.setHero(this);
+			owner.sendMessageToBattleManager(MessageToBattleScreen.SET_CHARACTER_HUD, this);
 		} else {
-			characterHUD.setHero(null);
+			owner.sendMessageToBattleManager(MessageToBattleScreen.UNSET_CHARACTER_HUD, this);
 		}
 	}
 
@@ -272,13 +250,16 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 		this.isPlayerUnit = isPlayerUnit;
 	}
 
+	public UnitOwner getOwner() {
+		return owner;
+	}
+
 	public int getAp() {
 		return ap;
 	}
 
 	public void setAp(final int ap) {
 		this.ap = ap;
-		updateUI();
 	}
 
 	public int getHp() {
@@ -359,32 +340,12 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 		return abilities;
 	}
 
-	@Override
-	public void addEntityObserver(final EntityObserver entityObserver) {
-		entityObservers.add(entityObserver);
+	public boolean isStatsChanged() {
+		return statsChanged;
 	}
 
-	@Override
-	public void removeObserver(final EntityObserver entityObserver) {
-		entityObservers.removeValue(entityObserver, true);
-	}
-
-	@Override
-	public void removeAllObservers() {
-		entityObservers.removeAll(entityObservers, true);
-	}
-
-	@Override
-	public void notifyEntityObserver(final EntityCommand command) {
-		for (int i = 0; i < entityObservers.size; i++) {
-			entityObservers.get(i).onEntityNotify(command, this);
-		}
-	}
-
-	private void notifyEntityObserver(final EntityCommand command, TiledMapPosition pos) {
-		for (int i = 0; i < entityObservers.size; i++) {
-			entityObservers.get(i).onEntityNotify(command, this, pos);
-		}
+	public void setStatsChanged(boolean statsChanged) {
+		this.statsChanged = statsChanged;
 	}
 
 	public void move(List<GridCell> path) {
@@ -402,7 +363,8 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 	}
 
 	public void endTurn() {
-		notifyEntityObserver(EntityCommand.AI_FINISHED_TURN);
+		setAp(getEntityData().getMaxAP());
+		owner.sendMessageToBattleManager(MessageToBattleScreen.AI_FINISHED_TURN, this);
 	}
 
 	private SequenceAction createMoveSequence(List<GridCell> path) {
@@ -455,7 +417,12 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 
 	@Override
 	public String toString() {
-		return "name : " + entityData.getName() + "   ID:" + entityID + "   pos : (" + currentPlayerPosition.getTileX() + "," + currentPlayerPosition.getTileY() + ")";
+		if (isPlayerUnit) {
+			return "PLAYER: name : " + entityData.getName() + "   ID:" + entityID + "   pos : (" + currentPlayerPosition.getTileX() + "," + currentPlayerPosition.getTileY() + ")";
+		} else {
+			return "AI: name : " + entityData.getName() + "   ID:" + entityID + "   pos : (" + currentPlayerPosition.getTileX() + "," + currentPlayerPosition.getTileY() + ")";
+
+		}
 	}
 
 	@Override
@@ -499,12 +466,6 @@ public class Entity extends Actor implements EntitySubject, AudioSubject {
 	public void notifyAudio(AudioObserver.AudioCommand command, AudioObserver.AudioTypeEvent event) {
 		for (final AudioObserver observer : audioObservers) {
 			observer.onNotify(command, event);
-		}
-	}
-
-	public void notifyEntityObserver(EntityCommand command, Ability abilityUsed, MyPoint target) {
-		for (int i = 0; i < entityObservers.size; i++) {
-			entityObservers.get(i).onEntityNotify(command, this, abilityUsed, target);
 		}
 	}
 }
