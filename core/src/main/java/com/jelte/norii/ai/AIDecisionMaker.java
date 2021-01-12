@@ -18,6 +18,8 @@ import com.jelte.norii.battle.battleState.HypotheticalUnit;
 import com.jelte.norii.battle.battleState.Move;
 import com.jelte.norii.battle.battleState.MoveType;
 import com.jelte.norii.battle.battleState.SpellMove;
+import com.jelte.norii.entities.Entity;
+import com.jelte.norii.entities.EntityTypes;
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.magic.Ability.Target;
 import com.jelte.norii.magic.Modifier;
@@ -200,6 +202,8 @@ public class AIDecisionMaker {
 					}
 				}
 			}
+			final Entity hammerEntity = new Entity(EntityTypes.BOOMERANG, aiUnit.isPlayerUnit());
+			battleState.addEntity(location.x, location.y, new HypotheticalUnit);
 			break;
 		default:
 			// nothing
