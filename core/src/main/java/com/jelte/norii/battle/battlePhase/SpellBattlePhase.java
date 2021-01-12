@@ -253,16 +253,13 @@ public class SpellBattlePhase extends BattlePhase {
 		battlemanager.getBattleState().addEntity(targetPos.getTileX(), targetPos.getTileY(), new HypotheticalUnit(hammerEntity.getEntityID(), hammerEntity.isPlayerUnit(), hammerEntity.getHp(), hammerEntity.getEntityData().getMaxHP(),
 				hammerEntity.getAttackRange(), hammerEntity.getEntityData().getAttackPower(), hammerEntity.getAp(), hammerEntity.getModifiers(), hammerEntity.getAbilities(), targetPos.getTileX(), targetPos.getTileY()));
 		final List<MyPoint> crossedCells = AIDecisionMaker.findLine(caster.getCurrentPosition().getTileX(), caster.getCurrentPosition().getTileY(), targetPos.getTileX(), targetPos.getTileY());
-		// check if correct andapply similar effects in aidecisionMaker
+		// check if correct and apply similar effects in aidecisionMaker
 		battlemanager.getBattleState();
 		for (final MyPoint point : crossedCells) {
 			if (battlemanager.getBattleState().get(point.x, point.y).isOccupied()) {
-				final int unitHp = battlemanager.getBattleState().get(point.x, point.y).getUnit().getHp();
-				if (ability.getSpellData().getDamage() >= unitHp) {
-					battlemanager.getBattleState().updateEntity(point.x, point.y, 0);
-				} else {
-					battlemanager.getBattleState().updateEntity(point.x, point.y, unitHp - ability.getSpellData().getDamage());
-				}
+				HypotheticalUnit unit = battlemanager.getBattleState().get(point.x, point.y).getUnit();
+				battlemanager.getEntityByID(unit.getEntityId()).damage(ability.getSpellData().getDamage());
+				battlemanager.updateHp(battlemanager.getEntityByID(unit.getEntityId()));
 			}
 		}
 	}
