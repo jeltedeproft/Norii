@@ -4,24 +4,24 @@ import com.badlogic.gdx.utils.Array;
 
 public class ProfileSubject {
 
-    private Array<ProfileObserver> observers;
+	private Array<ProfileObserver> observers;
 
-    public ProfileSubject(){
-        observers = new Array<ProfileObserver>();
-    }
+	public ProfileSubject() {
+		observers = new Array<>();
+	}
 
-    public void addObserver(ProfileObserver profileObserver){
-        observers.add(profileObserver);
-    }
+	public void addObserver(ProfileObserver profileObserver) {
+		observers.add(profileObserver);
+	}
 
-    public void removeObserver(ProfileObserver profileObserver){
-        observers.removeValue(profileObserver, true);
-    }
+	public void removeObserver(ProfileObserver profileObserver) {
+		observers.removeValue(profileObserver, true);
+	}
 
-    protected void notify(final ProfileManager profileManager, ProfileObserver.ProfileEvent event){
-        for(ProfileObserver observer: observers){
-            observer.onNotify(profileManager, event);
-        }
-    }
+	protected void notify(final ProfileManager profileManager, ProfileObserver.ProfileEvent event) {
+		for (ProfileObserver observer : observers) {
+			observer.onNotify(profileManager, event);
+		}
+	}
 
 }

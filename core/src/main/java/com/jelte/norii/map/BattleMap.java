@@ -8,7 +8,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.Vector2;
-import com.jelte.norii.audio.AudioObserver;
+import com.jelte.norii.audio.AudioCommand;
+import com.jelte.norii.audio.AudioManager;
+import com.jelte.norii.audio.AudioTypeEvent;
 import com.jelte.norii.map.MapFactory.MapType;
 import com.jelte.norii.particles.ParticleMaker;
 import com.jelte.norii.particles.ParticleType;
@@ -123,20 +125,20 @@ public class BattleMap extends Map {
 
 	@Override
 	public void unloadMusic() {
-		notifyAudio(AudioObserver.AudioCommand.MUSIC_STOP, AudioObserver.AudioTypeEvent.MUSIC_BATTLE);
+		AudioManager.getInstance().onNotify(AudioCommand.MUSIC_STOP, AudioTypeEvent.MUSIC_BATTLE);
 	}
 
 	@Override
 	public void loadMusic() {
-		notifyAudio(AudioObserver.AudioCommand.MUSIC_LOAD, AudioObserver.AudioTypeEvent.MUSIC_BATTLE);
-		notifyAudio(AudioObserver.AudioCommand.SOUND_LOAD, AudioObserver.AudioTypeEvent.ATTACK_SOUND);
-		notifyAudio(AudioObserver.AudioCommand.SOUND_LOAD, AudioObserver.AudioTypeEvent.SPELL_SOUND);
-		notifyAudio(AudioObserver.AudioCommand.SOUND_LOAD, AudioObserver.AudioTypeEvent.WALK_LOOP);
-		notifyAudio(AudioObserver.AudioCommand.SOUND_LOAD, AudioObserver.AudioTypeEvent.FIREBALL_SOUND);
-		notifyAudio(AudioObserver.AudioCommand.SOUND_LOAD, AudioObserver.AudioTypeEvent.SWAP_SOUND);
-		notifyAudio(AudioObserver.AudioCommand.SOUND_LOAD, AudioObserver.AudioTypeEvent.STONE_SOUND);
-		notifyAudio(AudioObserver.AudioCommand.SOUND_LOAD, AudioObserver.AudioTypeEvent.HAMMER_SOUND);
-		notifyAudio(AudioObserver.AudioCommand.MUSIC_PLAY_LOOP, AudioObserver.AudioTypeEvent.MUSIC_BATTLE);
+		AudioManager.getInstance().onNotify(AudioCommand.MUSIC_LOAD, AudioTypeEvent.MUSIC_BATTLE);
+		AudioManager.getInstance().onNotify(AudioCommand.SOUND_LOAD, AudioTypeEvent.ATTACK_SOUND);
+		AudioManager.getInstance().onNotify(AudioCommand.SOUND_LOAD, AudioTypeEvent.SPELL_SOUND);
+		AudioManager.getInstance().onNotify(AudioCommand.SOUND_LOAD, AudioTypeEvent.WALK_LOOP);
+		AudioManager.getInstance().onNotify(AudioCommand.SOUND_LOAD, AudioTypeEvent.FIREBALL_SOUND);
+		AudioManager.getInstance().onNotify(AudioCommand.SOUND_LOAD, AudioTypeEvent.SWAP_SOUND);
+		AudioManager.getInstance().onNotify(AudioCommand.SOUND_LOAD, AudioTypeEvent.STONE_SOUND);
+		AudioManager.getInstance().onNotify(AudioCommand.SOUND_LOAD, AudioTypeEvent.HAMMER_SOUND);
+		AudioManager.getInstance().onNotify(AudioCommand.MUSIC_PLAY_LOOP, AudioTypeEvent.MUSIC_BATTLE);
 	}
 
 	public void dispose() {

@@ -7,7 +7,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.jelte.norii.utility.AssetManagerUtility;
 
-public class AudioManager implements AudioObserver {
+public class AudioManager {
 	private static final String TAG = AudioManager.class.getSimpleName();
 
 	private static AudioManager instance = null;
@@ -28,7 +28,6 @@ public class AudioManager implements AudioObserver {
 		return instance;
 	}
 
-	@Override
 	public void onNotify(AudioCommand command, AudioTypeEvent event) {
 		switch (command) {
 		case MUSIC_LOAD:

@@ -6,7 +6,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.jelte.norii.ai.AIDecisionMaker;
-import com.jelte.norii.audio.AudioObserver;
+import com.jelte.norii.audio.AudioCommand;
+import com.jelte.norii.audio.AudioManager;
+import com.jelte.norii.audio.AudioTypeEvent;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.battle.MessageToBattleScreen;
 import com.jelte.norii.battle.battleState.HypotheticalUnit;
@@ -212,7 +214,7 @@ public class SpellBattlePhase extends BattlePhase {
 
 	private void castFireBall(final Entity caster, final TiledMapPosition targetPos, final Ability ability) {
 		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
-		notifyAudio(AudioObserver.AudioCommand.SOUND_PLAY_ONCE, AudioObserver.AudioTypeEvent.FIREBALL_SOUND);
+		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.FIREBALL_SOUND);
 		ParticleMaker.addParticle(ParticleType.FIREBALL, targetPos, 0);
 
 		final Entity possibleTarget = getEntityAtPosition(targetPos);
@@ -225,7 +227,7 @@ public class SpellBattlePhase extends BattlePhase {
 
 	private void castSwap(final Entity caster, final Entity target, final Ability ability) {
 		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
-		notifyAudio(AudioObserver.AudioCommand.SOUND_PLAY_ONCE, AudioObserver.AudioTypeEvent.SWAP_SOUND);
+		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.SWAP_SOUND);
 		ParticleMaker.addParticle(ParticleType.SWAP, caster.getCurrentPosition(), 0);
 		final TiledMapPosition posCaster = caster.getCurrentPosition();
 		caster.setCurrentPosition(target.getCurrentPosition());
@@ -234,7 +236,7 @@ public class SpellBattlePhase extends BattlePhase {
 
 	private void castTurnToStone(final Entity caster, final Entity target, final Ability ability) {
 		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
-		notifyAudio(AudioObserver.AudioCommand.SOUND_PLAY_ONCE, AudioObserver.AudioTypeEvent.STONE_SOUND);
+		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.STONE_SOUND);
 		target.changeAnimation(new EntityAnimation("Rock"));
 		target.addModifier(ModifiersEnum.IMAGE_CHANGED, 2, 0);
 		target.addModifier(ModifiersEnum.STUNNED, 2, 0);
@@ -242,7 +244,7 @@ public class SpellBattlePhase extends BattlePhase {
 
 	private void castHammerback(final Entity caster, final TiledMapPosition targetPos, final Ability ability) {
 		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
-		notifyAudio(AudioObserver.AudioCommand.SOUND_PLAY_ONCE, AudioObserver.AudioTypeEvent.HAMMER_SOUND);
+		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.HAMMER_SOUND);
 		final Entity hammerEntity = new Entity(EntityTypes.BOOMERANG, caster.getOwner());
 		hammerEntity.setInBattle(true);
 		hammerEntity.setCurrentPosition(targetPos);

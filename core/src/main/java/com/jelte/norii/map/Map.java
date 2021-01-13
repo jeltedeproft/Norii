@@ -4,14 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
-import com.jelte.norii.audio.AudioManager;
-import com.jelte.norii.audio.AudioObserver;
-import com.jelte.norii.audio.AudioSubject;
 import com.jelte.norii.utility.AssetManagerUtility;
 
-public abstract class Map implements AudioSubject {
+public abstract class Map {
 	private static final String TAG = Map.class.getSimpleName();
 
 	public static final float UNIT_SCALE = 1 / 32f;
@@ -19,8 +15,6 @@ public abstract class Map implements AudioSubject {
 	public static final int TILE_WIDTH = 32;
 	private int tilemapWidthInTiles = 32;
 	private int tilemapHeightInTiles = 32;
-
-	private Array<AudioObserver> observers;
 
 	protected static final String MAP_COLLISION_LAYER = "items";
 	protected static final String MAP_SPAWNS_LAYER = "Spawn points";
@@ -65,8 +59,6 @@ public abstract class Map implements AudioSubject {
 
 		setupMapProperties();
 		initializeClassVariables(mapType);
-
-		addAudioObserver(AudioManager.getInstance());
 	}
 
 	private void setupMapProperties() {
@@ -96,7 +88,6 @@ public abstract class Map implements AudioSubject {
 	private void initializeClassVariables(final MapFactory.MapType mapType) {
 		json = new Json();
 		currentMapType = mapType;
-		observers = new Array<>();
 	}
 
 	public MyNavigationTiledMapLayer getNavLayer() {
@@ -142,26 +133,4 @@ public abstract class Map implements AudioSubject {
 	public abstract void unloadMusic();
 
 	public abstract void loadMusic();
-
-	@Override
-	public void addAudioObserver(final AudioObserver audioObserver) {
-		observers.add(audioObserver);
-	}
-
-	@Override
-	public void removeAudioObserver(final AudioObserver audioObserver) {
-		observers.removeValue(audioObserver, true);
-	}
-
-	@Override
-	public void removeAllAudioObservers() {
-		observers.removeAll(observers, true);
-	}
-
-	@Override
-	public void notifyAudio(final AudioObserver.AudioCommand command, final AudioObserver.AudioTypeEvent event) {
-		for (final AudioObserver observer : observers) {
-			observer.onNotify(command, event);
-		}
-	}
 }

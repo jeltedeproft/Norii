@@ -15,10 +15,9 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
-import com.badlogic.gdx.utils.Array;
+import com.jelte.norii.audio.AudioCommand;
 import com.jelte.norii.audio.AudioManager;
-import com.jelte.norii.audio.AudioObserver;
-import com.jelte.norii.audio.AudioSubject;
+import com.jelte.norii.audio.AudioTypeEvent;
 import com.jelte.norii.battle.MessageToBattleScreen;
 import com.jelte.norii.entities.EntityAnimation.Direction;
 import com.jelte.norii.magic.AbilitiesEnum;
@@ -28,7 +27,7 @@ import com.jelte.norii.magic.ModifiersEnum;
 import com.jelte.norii.utility.AssetManagerUtility;
 import com.jelte.norii.utility.TiledMapPosition;
 
-public class Entity extends Actor implements AudioSubject {
+public class Entity extends Actor {
 	protected final EntityData entityData;
 
 	protected int ap;
@@ -53,7 +52,6 @@ public class Entity extends Actor implements AudioSubject {
 	protected EntityAnimation entityTemporaryAnimation;
 	protected EntityActor entityactor;
 
-	protected Array<AudioObserver> audioObservers;
 	protected Collection<Ability> abilities;
 	protected Collection<Modifier> modifiers;
 
@@ -71,8 +69,6 @@ public class Entity extends Actor implements AudioSubject {
 	}
 
 	public void initEntity(UnitOwner owner) {
-		audioObservers = new Array<>();
-		addAudioObserver(AudioManager.getInstance());
 		oldPlayerPosition = new TiledMapPosition().setPositionFromScreen(-1000, -1000);
 		currentPlayerPosition = new TiledMapPosition().setPositionFromScreen(-1000, -1000);
 		hp = entityData.getMaxHP();
@@ -370,7 +366,7 @@ public class Entity extends Actor implements AudioSubject {
 
 	private SequenceAction createMoveSequence(List<GridCell> path) {
 		getEntityactor().setOrigin(getEntityactor().getWidth() / 2, getEntityactor().getHeight() / 2);
-		notifyAudio(AudioObserver.AudioCommand.SOUND_PLAY_LOOP, AudioObserver.AudioTypeEvent.WALK_LOOP);
+		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_LOOP, AudioTypeEvent.WALK_LOOP);
 		getEntityAnimation().setCurrentAnimationType(EntityAnimationType.WALK);
 		GridCell oldCell = new GridCell(getCurrentPosition().getTileX(), getCurrentPosition().getTileY());
 		final SequenceAction sequence = Actions.sequence();
@@ -401,7 +397,7 @@ public class Entity extends Actor implements AudioSubject {
 	}
 
 	private void stopWalkingAction() {
-		notifyAudio(AudioObserver.AudioCommand.SOUND_STOP, AudioObserver.AudioTypeEvent.WALK_LOOP);
+		AudioManager.getInstance().onNotify(AudioCommand.SOUND_STOP, AudioTypeEvent.WALK_LOOP);
 		this.getEntityAnimation().setCurrentAnimationType(EntityAnimationType.WALK);
 	}
 
@@ -446,27 +442,5 @@ public class Entity extends Actor implements AudioSubject {
 		if (entityID != other.entityID)
 			return false;
 		return true;
-	}
-
-	@Override
-	public void addAudioObserver(AudioObserver audioObserver) {
-		audioObservers.add(audioObserver);
-	}
-
-	@Override
-	public void removeAudioObserver(AudioObserver audioObserver) {
-		audioObservers.removeValue(audioObserver, true);
-	}
-
-	@Override
-	public void removeAllAudioObservers() {
-		audioObservers.removeAll(audioObservers, true);
-	}
-
-	@Override
-	public void notifyAudio(AudioObserver.AudioCommand command, AudioObserver.AudioTypeEvent event) {
-		for (final AudioObserver observer : audioObservers) {
-			observer.onNotify(command, event);
-		}
 	}
 }

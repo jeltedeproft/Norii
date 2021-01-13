@@ -9,7 +9,9 @@ import org.xguzm.pathfinding.grid.GridCell;
 import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.ai.AITeamLeader;
 import com.jelte.norii.ai.UnitTurn;
-import com.jelte.norii.audio.AudioObserver;
+import com.jelte.norii.audio.AudioCommand;
+import com.jelte.norii.audio.AudioManager;
+import com.jelte.norii.audio.AudioTypeEvent;
 import com.jelte.norii.battle.battlePhase.ActionBattlePhase;
 import com.jelte.norii.battle.battlePhase.AttackBattlePhase;
 import com.jelte.norii.battle.battlePhase.BattlePhase;
@@ -181,7 +183,7 @@ public class BattleManager {
 				entityAttacking.attack(entityToAttack);
 				updateHp(entityToAttack);
 				sendMessageToBattleScreen(MessageToBattleScreen.UPDATE_UI, entityToAttack);
-				attackBattleState.notifyAudio(AudioObserver.AudioCommand.SOUND_PLAY_ONCE, AudioObserver.AudioTypeEvent.ATTACK_SOUND);
+				AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.ATTACK_SOUND);
 				break;
 			case DUMMY:
 				// do nothing

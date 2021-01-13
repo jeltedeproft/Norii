@@ -1,7 +1,9 @@
 package com.jelte.norii.battle.battlePhase;
 
 import com.badlogic.gdx.Input.Buttons;
-import com.jelte.norii.audio.AudioObserver;
+import com.jelte.norii.audio.AudioCommand;
+import com.jelte.norii.audio.AudioManager;
+import com.jelte.norii.audio.AudioTypeEvent;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.battle.MessageToBattleScreen;
 import com.jelte.norii.entities.Entity;
@@ -44,7 +46,7 @@ public class AttackBattlePhase extends BattlePhase {
 			currentUnit.setLocked(true);
 			battlemanager.setLockedUnit(entity);
 			battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.UPDATE_UI, entity);
-			notifyAudio(AudioObserver.AudioCommand.SOUND_PLAY_ONCE, AudioObserver.AudioTypeEvent.ATTACK_SOUND);
+			AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.ATTACK_SOUND);
 		}
 		this.exit();
 	}

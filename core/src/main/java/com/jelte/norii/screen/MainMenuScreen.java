@@ -20,7 +20,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.jelte.norii.ai.AITeamFileReader;
 import com.jelte.norii.ai.AITeams;
-import com.jelte.norii.audio.AudioObserver;
+import com.jelte.norii.audio.AudioCommand;
+import com.jelte.norii.audio.AudioManager;
+import com.jelte.norii.audio.AudioTypeEvent;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityFileReader;
 import com.jelte.norii.entities.EntityTypes;
@@ -61,7 +63,7 @@ public class MainMenuScreen extends GameScreen {
 
 		addListeners();
 
-		notifyAudio(AudioObserver.AudioCommand.MUSIC_LOAD, AudioObserver.AudioTypeEvent.MUSIC_TITLE2);
+		AudioManager.getInstance().onNotify(AudioCommand.MUSIC_LOAD, AudioTypeEvent.MUSIC_TITLE2);
 	}
 
 	private void loadAssets() {
@@ -201,7 +203,7 @@ public class MainMenuScreen extends GameScreen {
 	@Override
 	public void show() {
 		Gdx.input.setInputProcessor(stage);
-		notifyAudio(AudioObserver.AudioCommand.MUSIC_PLAY_LOOP, AudioObserver.AudioTypeEvent.MUSIC_TITLE2);
+		AudioManager.getInstance().onNotify(AudioCommand.MUSIC_PLAY_LOOP, AudioTypeEvent.MUSIC_TITLE2);
 	}
 
 	@Override

@@ -8,8 +8,6 @@ import org.xguzm.pathfinding.grid.GridCell;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.ai.GdxAI;
-import com.badlogic.gdx.ai.msg.MessageManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -18,7 +16,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.jelte.norii.ai.AITeamLeader;
 import com.jelte.norii.ai.AITeams;
-import com.jelte.norii.audio.AudioObserver;
+import com.jelte.norii.audio.AudioCommand;
+import com.jelte.norii.audio.AudioManager;
+import com.jelte.norii.audio.AudioTypeEvent;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.battle.BattleScreenInputProcessor;
 import com.jelte.norii.battle.battleState.HypotheticalUnit;
@@ -135,7 +135,7 @@ public class BattleScreen extends GameScreen {
 
 	@Override
 	public void show() {
-		notifyAudio(AudioObserver.AudioCommand.MUSIC_STOP, AudioObserver.AudioTypeEvent.MUSIC_TITLE2);
+		AudioManager.getInstance().onNotify(AudioCommand.MUSIC_STOP, AudioTypeEvent.MUSIC_TITLE2);
 		resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		mapMgr.getCurrentTiledMap();
 
@@ -184,16 +184,10 @@ public class BattleScreen extends GameScreen {
 		newHud.update(battlemanager.getUnits());
 		battlescreenInputProcessor.update();
 		battlemanager.getCurrentBattleState().update();
-		updateAI(delta);
 		updateUnits(delta);
 		updateUIHover();
 		updateStages();
 		updateCameras();
-	}
-
-	private void updateAI(float delta) {
-		GdxAI.getTimepiece().update(delta);
-		MessageManager.getInstance().update();
 	}
 
 	private void updateUnits(final float delta) {
@@ -285,15 +279,15 @@ public class BattleScreen extends GameScreen {
 	@Override
 	public void pause() {
 		isPaused = true;
-		notifyAudio(AudioObserver.AudioCommand.MUSIC_PAUSE, AudioObserver.AudioTypeEvent.MUSIC_BATTLE);
-		notifyAudio(AudioObserver.AudioCommand.SOUND_STOP, AudioObserver.AudioTypeEvent.WALK_LOOP);
+		AudioManager.getInstance().onNotify(AudioCommand.MUSIC_PAUSE, AudioTypeEvent.MUSIC_BATTLE);
+		AudioManager.getInstance().onNotify(AudioCommand.SOUND_STOP, AudioTypeEvent.WALK_LOOP);
 		pauseMenu.setVisible(true);
 	}
 
 	@Override
 	public void resume() {
 		isPaused = false;
-		notifyAudio(AudioObserver.AudioCommand.MUSIC_RESUME, AudioObserver.AudioTypeEvent.MUSIC_BATTLE);
+		AudioManager.getInstance().onNotify(AudioCommand.MUSIC_RESUME, AudioTypeEvent.MUSIC_BATTLE);
 		pauseMenu.setVisible(false);
 	}
 
