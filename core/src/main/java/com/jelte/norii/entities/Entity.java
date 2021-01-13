@@ -28,10 +28,12 @@ import com.jelte.norii.utility.AssetManagerUtility;
 import com.jelte.norii.utility.TiledMapPosition;
 
 public class Entity extends Actor {
+	public static final int MAX_XP = 100;
 	protected final EntityData entityData;
 
 	protected int ap;
 	protected int hp;
+	protected int xp;
 
 	protected int basicAttackCost;
 
@@ -73,6 +75,7 @@ public class Entity extends Actor {
 		currentPlayerPosition = new TiledMapPosition().setPositionFromScreen(-1000, -1000);
 		hp = entityData.getMaxHP();
 		ap = entityData.getMaxAP();
+		xp = 0;
 		isDead = false;
 		inBattle = false;
 		isInAttackPhase = false;
@@ -261,6 +264,14 @@ public class Entity extends Actor {
 
 	public int getHp() {
 		return hp;
+	}
+
+	public int getXp() {
+		return xp;
+	}
+
+	public void setXp(int xp) {
+		this.xp = xp;
 	}
 
 	public int getEntityID() {

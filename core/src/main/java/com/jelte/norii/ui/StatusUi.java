@@ -15,7 +15,6 @@ public class StatusUi extends Window {
 	private int apVal;
 	private int maxApVal;
 	private int xpVal;
-	private int maxXpVal;
 
 	private final float tilePixelWidth;
 	private final float tilePixelHeight;
@@ -81,7 +80,7 @@ public class StatusUi extends Window {
 		apLabel = new Label(" ap:", statusUISkin, FONT_NAME_LABEL_STYLE);
 		ap = new Label(String.valueOf(apVal) + SEPARATOR + maxApVal, statusUISkin, FONT_NAME_LABEL_STYLE);
 		xpLabel = new Label(" xp:", statusUISkin, FONT_NAME_LABEL_STYLE);
-		xp = new Label(String.valueOf(xpVal) + SEPARATOR + maxXpVal, statusUISkin, FONT_NAME_LABEL_STYLE);
+		xp = new Label(String.valueOf(xpVal) + SEPARATOR + Entity.MAX_XP, statusUISkin, FONT_NAME_LABEL_STYLE);
 		levelLabel = new Label(" lv:", statusUISkin, FONT_NAME_LABEL_STYLE);
 		levelValLabel = new Label(String.valueOf(levelVal), statusUISkin, FONT_NAME_LABEL_STYLE);
 	}
@@ -146,14 +145,13 @@ public class StatusUi extends Window {
 		maxHpVal = unit.getEntityData().getMaxHP();
 		apVal = unit.getAp();
 		maxApVal = unit.getEntityData().getMaxAP();
-		xpVal = unit.getEntityData().getXp();
-		maxXpVal = unit.getEntityData().getMaxXP();
+		xpVal = unit.getXp();
 	}
 
 	private void updateLabels() {
 		hp.setText(String.valueOf(hpVal) + SEPARATOR + maxHpVal);
 		ap.setText(String.valueOf(apVal) + SEPARATOR + maxApVal);
-		xp.setText(String.valueOf(xpVal) + SEPARATOR + maxXpVal);
+		xp.setText(String.valueOf(xpVal) + SEPARATOR + Entity.MAX_XP);
 		levelValLabel.setText(String.valueOf(levelVal));
 	}
 

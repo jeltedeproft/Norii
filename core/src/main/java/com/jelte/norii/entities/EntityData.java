@@ -9,8 +9,6 @@ public class EntityData {
 	private int maxAP;
 	private int maxHP;
 	private int level;
-	private int xp;
-	private int maxXP;
 	private int attackRange;
 	private int attackPower;
 	private int basicAttackCost;
@@ -60,7 +58,6 @@ public class EntityData {
 
 	public void setMaxAP(final int maxAP) {
 		this.maxAP = maxAP;
-		linkedEntity.setStatsChanged(true);
 	}
 
 	public int getMaxHP() {
@@ -69,16 +66,6 @@ public class EntityData {
 
 	public void setMaxHP(final int maxHP) {
 		this.maxHP = maxHP;
-		linkedEntity.setStatsChanged(true);
-	}
-
-	public int getMaxXP() {
-		return maxXP;
-	}
-
-	public void setMaxXP(final int maxXP) {
-		this.maxXP = maxXP;
-		linkedEntity.setStatsChanged(true);
 	}
 
 	public int getLevel() {
@@ -87,16 +74,6 @@ public class EntityData {
 
 	public void setLevel(final int level) {
 		this.level = level;
-		linkedEntity.setStatsChanged(true);
-	}
-
-	public int getXp() {
-		return xp;
-	}
-
-	public void setXp(final int xp) {
-		this.xp = xp;
-		linkedEntity.setStatsChanged(true);
 	}
 
 	public int getAttackRange() {
@@ -138,7 +115,7 @@ public class EntityData {
 	@Override
 	public String toString() {
 		return "id : " + id + "\n" + "name : " + name + "\n" + "portraitSpritePath : " + portraitSpritePath + "\n" + "entitySpriteFilePath : " + entitySpriteName + "\n" + "maxAP : " + maxAP + "\n" + "maxHP : " + maxHP + "\n" + "level : "
-				+ level + "\n" + "xp : " + xp + "\n" + "maxXP : " + maxXP + "\n" + "attackRange : " + attackRange + "\n" + "attackPower : " + attackPower + "\n" + "basicAttackCost : " + basicAttackCost + "\n";
+				+ level + "\n" + "attackRange : " + attackRange + "\n" + "attackPower : " + attackPower + "\n" + "basicAttackCost : " + basicAttackCost + "\n";
 	}
 
 }
