@@ -43,7 +43,7 @@ public class Entity extends Actor {
 	protected boolean isPlayerUnit;
 	protected boolean isActive;
 	protected boolean locked;
-	public boolean statsChanged;
+	protected boolean statsChanged;
 	protected int entityID;
 
 	protected TiledMapPosition oldPlayerPosition;

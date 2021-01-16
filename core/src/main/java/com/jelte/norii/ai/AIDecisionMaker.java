@@ -18,8 +18,10 @@ import com.jelte.norii.battle.battleState.HypotheticalUnit;
 import com.jelte.norii.battle.battleState.Move;
 import com.jelte.norii.battle.battleState.MoveType;
 import com.jelte.norii.battle.battleState.SpellMove;
-import com.jelte.norii.entities.Entity;
+import com.jelte.norii.entities.EntityData;
+import com.jelte.norii.entities.EntityFileReader;
 import com.jelte.norii.entities.EntityTypes;
+import com.jelte.norii.magic.AbilitiesEnum;
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.magic.Ability.Target;
 import com.jelte.norii.magic.Modifier;
@@ -166,8 +168,8 @@ public class AIDecisionMaker {
 		}
 	}
 
-	private void applySpellOnBattleState(HypotheticalUnit aiUnit, SpellMove move, BattleState battleState) {
-		final MyPoint caster = new MyPoint(aiUnit.getX(), aiUnit.getY());
+	private void applySpellOnBattleState(HypotheticalUnit unit, SpellMove move, BattleState battleState) {
+		final MyPoint caster = new MyPoint(unit.getX(), unit.getY());
 		final Array<MyPoint> targets = move.getAffectedUnits();
 		final MyPoint location = move.getLocation();
 		final int damage = move.getAbility().getSpellData().getDamage();
@@ -202,8 +204,14 @@ public class AIDecisionMaker {
 					}
 				}
 			}
-			final Entity hammerEntity = new Entity(EntityTypes.BOOMERANG, aiUnit.isPlayerUnit());
-			battleState.addEntity(location.x, location.y, new HypotheticalUnit);
+			EntityData entityData = EntityFileReader.getUnitData().get(EntityTypes.BOOMERANG.ordinal());
+			battleState.addEntity(location.x, location.y, new HypotheticalUnit(0, unit.isPlayerUnit(), entityData.getMaxHP(), entityData.getMaxHP(), entityData.getAttackRange(), entityData.getAttackPower(), entityData.getMaxAP(),
+					new ArrayList<>(), new ArrayList<>(), location.x, location.y));
+			battleState.get(location.x, location.y).getUnit().setEntityId(java.lang.System.identityHashCode(battleState.get(location.x, location.y).getUnit()));
+			battleState.get(location.x, location.y).getUnit().addModifier(new Modifier(ModifiersEnum.DAMAGE_OVER_TIME, 3, 1));
+			for (final String abilityString : entityData.getAbilties()) {
+				battleState.get(location.x, location.y).getUnit().addAbility(AbilitiesEnum.valueOf(abilityString));
+			}
 			break;
 		default:
 			// nothing

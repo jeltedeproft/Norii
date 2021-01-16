@@ -190,7 +190,7 @@ public class Hud implements ProfileObserver {
 				info.update();
 			}
 
-			if (entity.statsChanged) {
+			if (entity.isStatsChanged()) {
 				portraitAndStats.update(entity);
 			}
 		}

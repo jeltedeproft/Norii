@@ -2,6 +2,7 @@ package com.jelte.norii.battle.battleState;
 
 import java.util.Collection;
 
+import com.jelte.norii.magic.AbilitiesEnum;
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.magic.Modifier;
 import com.jelte.norii.utility.MyPoint;
@@ -210,6 +211,10 @@ public class HypotheticalUnit {
 	@Override
 	public String toString() {
 		return "ID : " + entityId + "   x:" + x + "   y:" + y;
+	}
+
+	public void addAbility(AbilitiesEnum abilityEnum) {
+		abilities.add(new Ability(abilityEnum));
 	}
 
 }
