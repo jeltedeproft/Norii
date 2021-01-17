@@ -216,5 +216,4 @@ public class HypotheticalUnit {
 	public void addAbility(AbilitiesEnum abilityEnum) {
 		abilities.add(new Ability(abilityEnum));
 	}
-
 }

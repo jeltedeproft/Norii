@@ -1,5 +1,6 @@
 package com.jelte.norii.battle;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -99,19 +100,17 @@ public class BattleManager {
 	private void addHypotheticalAiUnitToField(Entity unit) {
 		stateOfBattle.addEntity(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), new HypotheticalUnit(unit.getEntityID(), false, unit.getHp(), unit.getEntityData().getMaxHP(),
 				unit.getEntityData().getAttackRange(), unit.getEntityData().getAttackPower(), unit.getAp(), unit.getModifiers(), unit.getAbilities()));
-		addModifiers(unit);
+		addModifiers(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getModifiers());
 	}
 
 	private void addHypotheticalPlayerUnitToField(Entity unit) {
 		stateOfBattle.addEntity(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), new HypotheticalUnit(unit.getEntityID(), true, unit.getHp(), unit.getEntityData().getMaxHP(), unit.getEntityData().getAttackRange(),
 				unit.getEntityData().getAttackPower(), unit.getAp(), unit.getModifiers(), unit.getAbilities()));
-		addModifiers(unit);
+		addModifiers(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getModifiers());
 	}
 
-	private void addModifiers(final Entity unit) {
-		for (final Modifier mod : unit.getModifiers()) {
-			stateOfBattle.addModifierToUnit(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), mod);
-		}
+	private void addModifiers(int x, int y, final Collection<Modifier> mods) {
+		stateOfBattle.addModifiersToUnit(x, y, mods);
 	}
 
 	public void setUnitActive(Entity entity) {

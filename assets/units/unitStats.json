@@ -443,7 +443,7 @@
         "attackRange": 1,
         "attackPower": 3,
         "basicAttackCost": 1,
-        "abilities": ["FIREBALL"]
+        "abilities": ["HAMMERBACK"]
     },
 
     {
@@ -457,6 +457,6 @@
         "attackRange": 1,
         "attackPower": 3,
         "basicAttackCost": 1,
-        "abilities": ["HAMMERBACK"]
+        "abilities": ["FIREBALL"]
     }
 ]

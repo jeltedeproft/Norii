@@ -246,6 +246,7 @@ public class SpellBattlePhase extends BattlePhase {
 		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
 		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.HAMMER_SOUND);
 		final Entity hammerEntity = new Entity(EntityTypes.BOOMERANG, caster.getOwner());
+		battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.ADD_UNIT_ENTITYSTAGE, hammerEntity);
 		hammerEntity.setInBattle(true);
 		hammerEntity.setCurrentPosition(targetPos);
 		hammerEntity.getEntityactor().setTouchable(Touchable.enabled);

@@ -31,7 +31,7 @@ public class Hud implements ProfileObserver {
 	private HashMap<Integer, HpBar> entityIdWithHpBar;
 	private HashMap<Integer, StatusUi> entityIdWithStatusUi;
 	private HashMap<Integer, ActionsUi> entityIdWithActionUi;
-	private HashMap<Integer, ActionInfoUiWindow> entityIdWithActionInfoUiWindow;
+	private HashMap<Integer, List<ActionInfoUiWindow>> entityIdWithActionInfoUiWindows;
 	private PortraitAndStats portraitAndStats;
 	private BattleScreen battleScreen;
 
@@ -64,7 +64,7 @@ public class Hud implements ProfileObserver {
 		entityIdWithHpBar = new HashMap<>();
 		entityIdWithStatusUi = new HashMap<>();
 		entityIdWithActionUi = new HashMap<>();
-		entityIdWithActionInfoUiWindow = new HashMap<>();
+		entityIdWithActionInfoUiWindows = new HashMap<>();
 		stage = new Stage(new FitViewport(UI_VIEWPORT_WIDTH, UI_VIEWPORT_HEIGHT), spriteBatch);
 	}
 
@@ -158,9 +158,8 @@ public class Hud implements ProfileObserver {
 		});
 
 		stage.addActor(actionui);
-
+		entityIdWithActionInfoUiWindows.put(playerUnit.getEntityID(), actionui.getPopUps());
 		for (final ActionInfoUiWindow popUp : actionui.getPopUps()) {
-			entityIdWithActionInfoUiWindow.put(playerUnit.getEntityID(), popUp);
 			stage.addActor(popUp);
 		}
 	}
@@ -175,7 +174,7 @@ public class Hud implements ProfileObserver {
 			final HpBar bar = entityIdWithHpBar.get(id);
 			final StatusUi status = entityIdWithStatusUi.get(id);
 			final ActionsUi action = entityIdWithActionUi.get(id);
-			final ActionInfoUiWindow info = entityIdWithActionInfoUiWindow.get(id);
+			final List<ActionInfoUiWindow> infos = entityIdWithActionInfoUiWindows.get(id);
 
 			if (bar != null) {
 				bar.update(entity);
@@ -186,8 +185,10 @@ public class Hud implements ProfileObserver {
 			if (action != null) {
 				action.update(entity);
 			}
-			if (info != null) {
-				info.update();
+			if (infos != null) {
+				for (ActionInfoUiWindow info : infos) {
+					info.update();
+				}
 			}
 
 			if (entity.isStatsChanged()) {
@@ -250,8 +251,8 @@ public class Hud implements ProfileObserver {
 		return entityIdWithActionUi;
 	}
 
-	public Map<Integer, ActionInfoUiWindow> getEntityIdWithActionInfoUiWindow() {
-		return entityIdWithActionInfoUiWindow;
+	public Map<Integer, List<ActionInfoUiWindow>> getEntityIdWithActionInfoUiWindows() {
+		return entityIdWithActionInfoUiWindows;
 	}
 
 	public void sendMessage(MessageToBattleScreen message, int entityID, Ability ability) {

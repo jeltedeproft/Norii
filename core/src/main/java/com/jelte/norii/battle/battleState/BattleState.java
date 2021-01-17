@@ -1,5 +1,7 @@
 package com.jelte.norii.battle.battleState;
 
+import java.util.Collection;
+
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.ai.UnitTurn;
@@ -75,6 +77,12 @@ public class BattleState implements Comparable<BattleState> {
 		}
 	}
 
+	public void addModifiersToUnit(int width, int height, Collection<Modifier> modifiers) {
+		if (stateOfField[width][height].isOccupied()) {
+			stateOfField[width][height].getUnit().setModifiers(modifiers);
+		}
+	}
+
 	public void addEntity(int width, int height, HypotheticalUnit unit) {
 		if ((height > 0) && (width > 0) && (width <= getWidth()) && (height <= getHeight())) {
 			final int originalScore = stateOfField[width][height].getScore();
@@ -105,6 +113,8 @@ public class BattleState implements Comparable<BattleState> {
 					stateOfField[to.x][to.y].getUnit().setY(to.y);
 					stateOfField[from.x][from.y].removeUnit();
 					entityFound = true;
+					unit.setX(to.x);
+					unit.setY(to.y);
 				}
 			}
 
@@ -126,6 +136,8 @@ public class BattleState implements Comparable<BattleState> {
 				stateOfField[to.x][to.y].getUnit().setY(to.y);
 				stateOfField[from.x][from.y].removeUnit();
 				entityFound = true;
+				unit.setX(to.x);
+				unit.setY(to.y);
 			}
 		}
 

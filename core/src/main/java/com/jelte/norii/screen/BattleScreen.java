@@ -454,6 +454,9 @@ public class BattleScreen extends GameScreen {
 		case ADD_UNIT_UI:
 			newHud.addUnit(entity);
 			break;
+		case ADD_UNIT_ENTITYSTAGE:
+			entityStage.addActor(entity);
+			break;
 		default:
 			break;
 		}
