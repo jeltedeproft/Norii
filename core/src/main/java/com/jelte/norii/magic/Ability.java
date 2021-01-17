@@ -65,6 +65,10 @@ public class Ability {
 		return abilityEnum;
 	}
 
+	public boolean getGoesTroughUnits() {
+		return spellData.isGoesTroughUnits();
+	}
+
 	@Override
 	public String toString() {
 		return "ability name : " + spellData.getName();

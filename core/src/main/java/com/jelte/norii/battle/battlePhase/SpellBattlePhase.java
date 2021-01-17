@@ -1,6 +1,7 @@
 package com.jelte.norii.battle.battlePhase;
 
 import java.util.List;
+import java.util.Set;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
@@ -11,6 +12,7 @@ import com.jelte.norii.audio.AudioManager;
 import com.jelte.norii.audio.AudioTypeEvent;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.battle.MessageToBattleScreen;
+import com.jelte.norii.battle.battleState.BattleStateGridHelper;
 import com.jelte.norii.battle.battleState.HypotheticalUnit;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityAnimation;
@@ -44,6 +46,19 @@ public class SpellBattlePhase extends BattlePhase {
 		exit();
 	}
 
+	@Override
+	public void hoveredOnTile(TiledMapActor actor) {
+		showCellsThatSpellWillAffect(actor.getActorPos());
+	}
+
+	private void showCellsThatSpellWillAffect(TiledMapPosition actorPos) {
+		ParticleMaker.deactivateAllParticlesOfType(ParticleType.ATTACK);
+		final Set<MyPoint> pointsToColor = BattleStateGridHelper.getInstance().getAllPointsASpellCanHit(actorPos.getTilePosAsPoint(), ability.getLineOfSight(), ability.getSpellData().getRange(), battlemanager.getBattleState());
+		for (final MyPoint point : pointsToColor) {
+			ParticleMaker.addParticle(ParticleType.ATTACK, point, 0);
+		}
+	}
+
 	private void possibleTileSpell(final TiledMapPosition targetPos) {
 		final Entity currentUnit = battlemanager.getActiveUnit();
 
@@ -57,7 +72,7 @@ public class SpellBattlePhase extends BattlePhase {
 
 	private boolean isValidTileTarget(Entity caster, TiledMapPosition targetPos, Ability ability) {
 		final boolean correctAreaOfEffect = checkAreaOfEffect(caster, targetPos, ability);
-		final boolean correctVisibility = checkVisibility(caster, targetPos);
+		final boolean correctVisibility = checkVisibility(caster, targetPos, ability);
 		final boolean correctTarget = checkTarget(ability, Target.CELL);
 
 		return correctAreaOfEffect && correctVisibility && correctTarget;
@@ -91,7 +106,7 @@ public class SpellBattlePhase extends BattlePhase {
 
 		final boolean correctTeam = checkTeams(caster, target, affectedTeams);
 		final boolean correctAreaOfEffect = checkAreaOfEffect(caster, target.getCurrentPosition(), ability);
-		final boolean correctVisibility = checkVisibility(caster, target.getCurrentPosition());
+		final boolean correctVisibility = checkVisibility(caster, target.getCurrentPosition(), ability);
 		final boolean correctTarget = checkTarget(ability, Target.UNIT);
 
 		return correctAreaOfEffect && correctTeam && correctVisibility && correctTarget;
@@ -161,8 +176,13 @@ public class SpellBattlePhase extends BattlePhase {
 		return (checkX && checkY);
 	}
 
-	private boolean checkVisibility(Entity caster, TiledMapPosition targetPos) {
-		return MyPathFinder.getInstance().lineOfSight(caster, targetPos, battlemanager.getUnits());
+	private boolean checkVisibility(Entity caster, TiledMapPosition targetPos, Ability ability) {
+		if (ability.getGoesTroughUnits()) {
+			return MyPathFinder.getInstance().lineOfSight(caster, targetPos, battlemanager.getUnits(), false);
+		} else {
+			return MyPathFinder.getInstance().lineOfSight(caster, targetPos, battlemanager.getUnits(), true);
+		}
+
 	}
 
 	private boolean checkTarget(Ability ability, Target targetType) {
@@ -260,7 +280,7 @@ public class SpellBattlePhase extends BattlePhase {
 		battlemanager.getBattleState();
 		for (final MyPoint point : crossedCells) {
 			if (battlemanager.getBattleState().get(point.x, point.y).isOccupied()) {
-				HypotheticalUnit unit = battlemanager.getBattleState().get(point.x, point.y).getUnit();
+				final HypotheticalUnit unit = battlemanager.getBattleState().get(point.x, point.y).getUnit();
 				battlemanager.getEntityByID(unit.getEntityId()).damage(ability.getSpellData().getDamage());
 				battlemanager.updateHp(battlemanager.getEntityByID(unit.getEntityId()));
 			}

@@ -249,39 +249,39 @@ public class BattleState implements Comparable<BattleState> {
 	}
 
 	public Array<HypotheticalUnit> getPlayerUnits() {
-		final Array<HypotheticalUnit> units = new Array<>();
+		final Array<HypotheticalUnit> playerUnits = new Array<>();
 		for (final BattleCell[] row : stateOfField) {
 			for (final BattleCell cell : row) {
 				if ((cell.getUnit() != null) && cell.getUnit().isPlayerUnit()) {
-					units.add(cell.getUnit());
+					playerUnits.add(cell.getUnit());
 				}
 			}
 		}
-		return units;
+		return playerUnits;
 	}
 
 	public Array<HypotheticalUnit> getAiUnits() {
-		final Array<HypotheticalUnit> units = new Array<>();
+		final Array<HypotheticalUnit> aiUnits = new Array<>();
 		for (final BattleCell[] row : stateOfField) {
 			for (final BattleCell cell : row) {
 				if ((cell.getUnit() != null) && !cell.getUnit().isPlayerUnit()) {
-					units.add(cell.getUnit());
+					aiUnits.add(cell.getUnit());
 				}
 			}
 		}
-		return units;
+		return aiUnits;
 	}
 
 	public Array<HypotheticalUnit> getAllUnits() {
-		final Array<HypotheticalUnit> units = new Array<>();
+		final Array<HypotheticalUnit> allUnits = new Array<>();
 		for (final BattleCell[] row : stateOfField) {
 			for (final BattleCell cell : row) {
 				if (cell.getUnit() != null) {
-					units.add(cell.getUnit());
+					allUnits.add(cell.getUnit());
 				}
 			}
 		}
-		return units;
+		return allUnits;
 	}
 
 	public void reduceModifierCounts() {

@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.jelte.norii.map.Map;
 import com.jelte.norii.utility.AssetManagerUtility;
+import com.jelte.norii.utility.MyPoint;
 import com.jelte.norii.utility.TiledMapPosition;
 
 public class ParticleMaker {
@@ -70,6 +71,11 @@ public class ParticleMaker {
 		addParticleToTypedParticles(particletype, newParticle);
 	}
 
+	public static void addParticle(ParticleType particletype, MyPoint point, int id) {
+		final TiledMapPosition pos = new TiledMapPosition().setPositionFromTiles(point.x, point.y);
+		addParticle(particletype, pos, id);
+	}
+
 	private static ParticlePool initiatePool(final ParticleType particletype) {
 		ParticlePool particlePool;
 
@@ -113,10 +119,7 @@ public class ParticleMaker {
 	}
 
 	public static Particle getParticle(final ParticleType particletype) {
-		for (final Particle particle : allParticles.get(particletype)) {
-			return particle;
-		}
-		return null;
+		return allParticles.get(particletype).get(0);
 	}
 
 	public static boolean isParticleTypeEmpty(final ParticleType particletype) {

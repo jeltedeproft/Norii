@@ -47,13 +47,13 @@ public class MyPathFinder {
 		return aStarGridFinder;
 	}
 
-	public List<GridCell> getLineOfSightWithinCircle(final int x, final int y, final int range, final List<TiledMapPosition> positions) {
+	public List<GridCell> getLineOfSightWithinCircle(final int x, final int y, final int range, final List<TiledMapPosition> positions, final boolean unitsAreBlocking) {
 		final List<GridCell> cells = new ArrayList<>();
 		final GridCell center = navGrid.getCell(x, y);
 
 		for (final GridCell[] gridcells : navGrid.getNodes()) {
 			for (final GridCell gridcell : gridcells) {
-				if (isCloseEnough(center, gridcell, range) && pathExists(center, gridcell, range) && lineOfSight(center, gridcell, positions)) {
+				if (isCloseEnough(center, gridcell, range) && pathExists(center, gridcell, range) && lineOfSight(center, gridcell, positions, unitsAreBlocking)) {
 					cells.add(gridcell);
 				}
 			}
@@ -61,13 +61,13 @@ public class MyPathFinder {
 		return cells;
 	}
 
-	public List<GridCell> getLineOfSightWithinLine(final int x, final int y, final int range, final Direction direction, final List<TiledMapPosition> positions) {
+	public List<GridCell> getLineOfSightWithinLine(final int x, final int y, final int range, final Direction direction, final List<TiledMapPosition> positions, final boolean unitsAreBlocking) {
 		final List<GridCell> cells = new ArrayList<>();
 		final GridCell center = navGrid.getCell(x, y);
 
 		for (final GridCell[] gridcells : navGrid.getNodes()) {
 			for (final GridCell gridcell : gridcells) {
-				if (checkIfInLine(center, gridcell, range, direction) && lineOfSight(center, gridcell, positions)) {
+				if (checkIfInLine(center, gridcell, range, direction) && lineOfSight(center, gridcell, positions, unitsAreBlocking)) {
 					cells.add(gridcell);
 				}
 			}
@@ -140,31 +140,31 @@ public class MyPathFinder {
 		return ((path != null) && (path.size() <= range) && (!path.isEmpty()));
 	}
 
-	public boolean lineOfSight(Entity unit, final GridCell to, List<Entity> sortedUnits) {
+	public boolean lineOfSight(Entity unit, final GridCell to, List<Entity> sortedUnits, final boolean unitsAreBlocking) {
 		final ArrayList<TiledMapPosition> positionsUnits = (ArrayList<TiledMapPosition>) Utility.collectPositionsUnits(sortedUnits);
 		final GridCell unitCell = navGrid.getCell(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY());
 		final GridCell targetCell = navGrid.getCell(to.getX(), to.getY());
 
-		return lineOfSight(unitCell, targetCell, positionsUnits);
+		return lineOfSight(unitCell, targetCell, positionsUnits, unitsAreBlocking);
 	}
 
-	public boolean lineOfSight(Entity caster, Entity target, List<Entity> sortedUnits) {
+	public boolean lineOfSight(Entity caster, Entity target, List<Entity> sortedUnits, final boolean unitsAreBlocking) {
 		final ArrayList<TiledMapPosition> positionsUnits = (ArrayList<TiledMapPosition>) Utility.collectPositionsUnits(sortedUnits);
 		final GridCell unitCell = navGrid.getCell(caster.getCurrentPosition().getTileX(), caster.getCurrentPosition().getTileY());
 		final GridCell targetCell = navGrid.getCell(target.getCurrentPosition().getTileX(), target.getCurrentPosition().getTileY());
 
-		return lineOfSight(unitCell, targetCell, positionsUnits);
+		return lineOfSight(unitCell, targetCell, positionsUnits, unitsAreBlocking);
 	}
 
-	public boolean lineOfSight(Entity caster, TiledMapPosition targetPos, List<Entity> sortedUnits) {
+	public boolean lineOfSight(Entity caster, TiledMapPosition targetPos, List<Entity> sortedUnits, final boolean unitsAreBlocking) {
 		final ArrayList<TiledMapPosition> positionsUnits = (ArrayList<TiledMapPosition>) Utility.collectPositionsUnits(sortedUnits);
 		final GridCell unitCell = navGrid.getCell(caster.getCurrentPosition().getTileX(), caster.getCurrentPosition().getTileY());
 		final GridCell targetCell = navGrid.getCell(targetPos.getTileX(), targetPos.getTileY());
 
-		return lineOfSight(unitCell, targetCell, positionsUnits);
+		return lineOfSight(unitCell, targetCell, positionsUnits, unitsAreBlocking);
 	}
 
-	public boolean lineOfSight(final NavigationNode from, final NavigationNode to, final List<TiledMapPosition> positionsUnits) {
+	public boolean lineOfSight(final NavigationNode from, final NavigationNode to, final List<TiledMapPosition> positionsUnits, final boolean unitsAreBlocking) {
 		if ((from == null) || (to == null)) {
 			return false;
 		}
@@ -193,9 +193,16 @@ public class MyPathFinder {
 				error += dx;
 				y1 += yinc;
 			}
-			if (!navGrid.isWalkable(x1, y1) || isUnitOnCell(x1, y1, x2, y2, positionsUnits)) {
-				return false;
+			if (unitsAreBlocking) {
+				if (!navGrid.isWalkable(x1, y1) || isUnitOnCell(x1, y1, x2, y2, positionsUnits)) {
+					return false;
+				}
+			} else {
+				if (!navGrid.isWalkable(x1, y1)) {
+					return false;
+				}
 			}
+
 		}
 		return true;
 	}

@@ -21,6 +21,7 @@ import com.jelte.norii.audio.AudioManager;
 import com.jelte.norii.audio.AudioTypeEvent;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.battle.BattleScreenInputProcessor;
+import com.jelte.norii.battle.battleState.BattleStateGridHelper;
 import com.jelte.norii.battle.battleState.HypotheticalUnit;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityStage;
@@ -322,7 +323,7 @@ public class BattleScreen extends GameScreen {
 
 	private void prepareSpell(final Entity unit, final Ability ability) {
 		final List<TiledMapPosition> positions = battlemanager.getUnits().stream().map(Entity::getCurrentPosition).collect(Collectors.toList());
-		final List<GridCell> spellPath = calculateSpellPath(unit, ability, positions);
+		final List<GridCell> spellPath = BattleStateGridHelper.getInstance().calculateSpellPath(unit, ability, positions);
 
 		for (final GridCell cell : spellPath) {
 			final TiledMapPosition positionToPutSpellParticle = new TiledMapPosition().setPositionFromTiles(cell.x, cell.y);
@@ -331,26 +332,6 @@ public class BattleScreen extends GameScreen {
 
 		battlemanager.getSpellBattleState().setAbility(ability);
 		battlemanager.setCurrentBattleState(battlemanager.getSpellBattleState());
-	}
-
-	private List<GridCell> calculateSpellPath(final Entity unit, final Ability ability, final List<TiledMapPosition> positions) {
-		List<GridCell> spellPath = null;
-
-		switch (ability.getLineOfSight()) {
-		case CIRCLE:
-			spellPath = MyPathFinder.getInstance().getLineOfSightWithinCircle(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), ability.getSpellData().getRange(), positions);
-			break;
-		case CROSS:
-			// TODO
-			break;
-		case LINE:
-			spellPath = MyPathFinder.getInstance().getLineOfSightWithinLine(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), ability.getSpellData().getRange(), unit.getEntityAnimation().getCurrentDirection(),
-					positions);
-			break;
-		default:
-			break;
-		}
-		return spellPath;
 	}
 
 	private boolean isUnitOnCell(final GridCell cell) {

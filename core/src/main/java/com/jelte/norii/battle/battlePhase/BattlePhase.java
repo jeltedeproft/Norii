@@ -9,7 +9,7 @@ public abstract class BattlePhase {
 
 	public abstract void exit();
 
-	public BattlePhase() {
+	protected BattlePhase() {
 	}
 
 	public void entry() {

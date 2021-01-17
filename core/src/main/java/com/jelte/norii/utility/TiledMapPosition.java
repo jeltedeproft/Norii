@@ -77,15 +77,8 @@ public class TiledMapPosition {
 		return this;
 	}
 
-	private class Point {
-		private int x;
-		private int y;
-
-		public Point(int x, int y) {
-			this.x = x;
-			this.y = y;
-		}
-
+	public MyPoint getTilePosAsPoint() {
+		return new MyPoint(tileCoordinates.x, tileCoordinates.y);
 	}
 
 	@Override
