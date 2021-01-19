@@ -53,6 +53,7 @@ public class Entity extends Actor {
 	protected EntityAnimation entityAnimation;
 	protected EntityAnimation entityTemporaryAnimation;
 	protected EntityActor entityactor;
+	protected EntityTypes entityType;
 
 	protected Collection<Ability> abilities;
 	protected Collection<Modifier> modifiers;
@@ -65,6 +66,7 @@ public class Entity extends Actor {
 
 	public Entity(final EntityTypes type, UnitOwner owner) {
 		entityData = EntityFileReader.getUnitData().get(type.ordinal());
+		entityType = type;
 		entityData.setEntity(this);
 		entityAnimation = new EntityAnimation(entityData.getEntitySpriteName());
 		initEntity(owner);
@@ -280,6 +282,10 @@ public class Entity extends Actor {
 
 	public int getAttackRange() {
 		return entityData.getAttackRange();
+	}
+
+	public EntityTypes getEntityType() {
+		return entityType;
 	}
 
 	public TextureRegion getFrame() {
