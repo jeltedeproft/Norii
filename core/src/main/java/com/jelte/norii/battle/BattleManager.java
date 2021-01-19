@@ -229,8 +229,16 @@ public class BattleManager {
 	}
 
 	private void removeUnit(Entity unit) {
+		executeOnDeathEffect(unit);
 		Player.getInstance().removeUnit(unit);
 		aiTeamLeader.removeUnit(unit);
+	}
+
+	private void executeOnDeathEffect(Entity unit) {
+		switch (unit.getEntityType()) {
+		case BOOMERANG:
+
+		}
 	}
 
 	public void updateStateOfBattle(Entity unit, TiledMapPosition newPos) {
