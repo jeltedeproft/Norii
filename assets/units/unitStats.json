@@ -457,6 +457,6 @@
         "attackRange": 1,
         "attackPower": 3,
         "basicAttackCost": 1,
-        "abilities": ["HAMMERBACKBACK"]
+        "abilities": []
     }
 ]

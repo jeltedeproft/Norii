@@ -204,8 +204,19 @@ public class AIDecisionMaker {
 					new ArrayList<>(), new ArrayList<>(), location.x, location.y));
 			battleState.get(location.x, location.y).getUnit().setEntityId(java.lang.System.identityHashCode(battleState.get(location.x, location.y).getUnit()));
 			battleState.get(location.x, location.y).getUnit().addModifier(new Modifier(ModifiersEnum.DAMAGE_OVER_TIME, 3, 1));
-			for (final String abilityString : entityData.getAbilties()) {
-				battleState.get(location.x, location.y).getUnit().addAbility(AbilitiesEnum.valueOf(abilityString));
+			battleState.get(location.x, location.y).getUnit().addAbility(AbilitiesEnum.HAMMERBACKBACK, caster);
+			break;
+		case HAMMERBACKBACK:
+			final List<MyPoint> crossedCellsBack = findLine(caster.x, caster.y, location.x, location.y);
+			for (final MyPoint point : crossedCellsBack) {
+				if (battleState.get(point.x, point.y).isOccupied()) {
+					final int unitHp = battleState.get(point.x, point.y).getUnit().getHp();
+					if (damage >= unitHp) {
+						battleState.updateEntity(point.x, point.y, 0);
+					} else {
+						battleState.updateEntity(point.x, point.y, unitHp - damage);
+					}
+				}
 			}
 			break;
 		default:

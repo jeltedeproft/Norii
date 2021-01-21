@@ -25,6 +25,7 @@ import com.jelte.norii.magic.Ability;
 import com.jelte.norii.magic.Modifier;
 import com.jelte.norii.magic.ModifiersEnum;
 import com.jelte.norii.utility.AssetManagerUtility;
+import com.jelte.norii.utility.MyPoint;
 import com.jelte.norii.utility.TiledMapPosition;
 
 public class Entity extends Actor {
@@ -311,6 +312,11 @@ public class Entity extends Actor {
 
 	public void addAbility(final AbilitiesEnum abilityEnum) {
 		final Ability ability = new Ability(abilityEnum);
+		abilities.add(ability);
+	}
+
+	public void addAbility(final AbilitiesEnum abilityEnum, MyPoint location) {
+		final Ability ability = new Ability(abilityEnum, location);
 		abilities.add(ability);
 	}
 

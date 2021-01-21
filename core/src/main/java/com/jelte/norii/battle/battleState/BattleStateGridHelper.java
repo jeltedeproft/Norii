@@ -65,6 +65,23 @@ public class BattleStateGridHelper {
 	}
 
 	public Set<MyPoint> collectTargets(MyPoint center, AreaOfEffect area, AffectedTeams affectedTeams, BattleState stateOfBattle, int areaOfEffectRange) {
+		final Set<MyPoint> spotsToCheck = getSpotsAreaOfEffect(center, area, areaOfEffectRange);
+
+		if (!spotsToCheck.isEmpty()) {
+			checkMyPointBounds(spotsToCheck, stateOfBattle);
+			return getSpotsWithUnitsOn(spotsToCheck, affectedTeams, stateOfBattle);
+		} else {
+			return spotsToCheck;
+		}
+	}
+
+	public Set<MyPoint> getAllPointsASpellCanHit(MyPoint center, AreaOfEffect areaOfEffect, int range, BattleState battleState) {
+		final Set<MyPoint> points = getSpotsAreaOfEffect(center, areaOfEffect, range);
+		checkMyPointBounds(points, battleState);
+		return points;
+	}
+
+	private Set<MyPoint> getSpotsAreaOfEffect(MyPoint center, AreaOfEffect area, int areaOfEffectRange) {
 		final Set<MyPoint> spotsToCheck = new HashSet<>();
 		switch (area) {
 		case CELL:
@@ -116,8 +133,7 @@ public class BattleStateGridHelper {
 		default:
 			return spotsToCheck;
 		}
-		checkMyPointBounds(spotsToCheck, stateOfBattle);
-		return getSpotsWithUnitsOn(spotsToCheck, affectedTeams, stateOfBattle);
+		return spotsToCheck;
 	}
 
 	private Set<MyPoint> getSpotsWithUnitsOn(Set<MyPoint> spotsToCheck, AffectedTeams affectedTeams, BattleState stateOfBattle) {

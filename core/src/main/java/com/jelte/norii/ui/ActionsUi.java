@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.jelte.norii.entities.Entity;
-import com.jelte.norii.entities.Entity;
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.utility.AssetManagerUtility;
 import com.jelte.norii.utility.TiledMapPosition;
@@ -100,10 +99,12 @@ public class ActionsUi extends Window {
 	}
 
 	private void addSpells(Entity entity, Hud hud) {
-		for (final Ability ability : entity.getAbilities()) {
-			final SpellActionUIButton spellActionUIButton = new SpellActionUIButton(ability.getSpellData().getIconSpriteName(), entity.getEntityID(), ability, mapWidth, mapHeight, hud);
-			buttons.add(spellActionUIButton);
-			add(spellActionUIButton.getButton()).size(tilePixelWidth, tilePixelHeight).pad(ICON_PADDING);
+		if (!entity.getAbilities().isEmpty()) {
+			for (final Ability ability : entity.getAbilities()) {
+				final SpellActionUIButton spellActionUIButton = new SpellActionUIButton(ability.getSpellData().getIconSpriteName(), entity.getEntityID(), ability, mapWidth, mapHeight, hud);
+				buttons.add(spellActionUIButton);
+				add(spellActionUIButton.getButton()).size(tilePixelWidth, tilePixelHeight).pad(ICON_PADDING);
+			}
 		}
 	}
 

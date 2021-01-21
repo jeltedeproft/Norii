@@ -1,8 +1,11 @@
 package com.jelte.norii.magic;
 
+import com.jelte.norii.utility.MyPoint;
+
 public class Ability {
 	private final SpellData spellData;
 	private final AbilitiesEnum abilityEnum;
+	private final MyPoint targetLocation; // can be null
 
 	public enum LineOfSight {
 		LINE, CIRCLE, CROSS, SQUARE, DIAGONAL_RIGHT, DIAGONAL_LEFT, SQUARE_BORDER, CIRCLE_BORDER
@@ -26,6 +29,13 @@ public class Ability {
 
 	public Ability(final AbilitiesEnum abilityEnum) {
 		this.abilityEnum = abilityEnum;
+		this.targetLocation = null;
+		spellData = SpellFileReader.getSpellData().get(abilityEnum.ordinal());
+	}
+
+	public Ability(final AbilitiesEnum abilityEnum, MyPoint targetLocation) {
+		this.abilityEnum = abilityEnum;
+		this.targetLocation = targetLocation;
 		spellData = SpellFileReader.getSpellData().get(abilityEnum.ordinal());
 	}
 
@@ -67,6 +77,10 @@ public class Ability {
 
 	public boolean getGoesTroughUnits() {
 		return spellData.isGoesTroughUnits();
+	}
+
+	public MyPoint getTargetLocation() {
+		return targetLocation;
 	}
 
 	@Override

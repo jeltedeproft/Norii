@@ -1,6 +1,8 @@
 package com.jelte.norii.battle.battleState;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
@@ -109,6 +111,9 @@ public class BattleState implements Comparable<BattleState> {
 			for (final HypotheticalUnit unit : units) {
 				if (unit.getEntityId() == aiUnit.getEntityId()) {
 					stateOfField[to.x][to.y].setUnit(stateOfField[unit.getX()][unit.getY()].getUnit());
+					if (((aiUnit.getEntityId() == 1541708640) || (aiUnit.getEntityId() == 1212191909)) && (from.x == 9) && (from.y == 11) && (to.x == 7) && (to.y == 12)) {
+						final int p = 5;
+					}
 					stateOfField[to.x][to.y].getUnit().setX(to.x);
 					stateOfField[to.x][to.y].getUnit().setY(to.y);
 					stateOfField[from.x][from.y].removeUnit();
@@ -235,16 +240,20 @@ public class BattleState implements Comparable<BattleState> {
 
 	public void updateEntity(int tileX, int tileY, int hp) {
 		if (hp == 0) {
-			stateOfField[tileX][tileY].removeUnit();
-			int index = 0;
-			for (int i = 0; i < units.size; i++) {
-				if ((units.get(i).getX() == tileX) && (units.get(i).getY() == tileY)) {
-					index = i;
-					units.removeIndex(index);
-				}
-			}
+			removeEntityFromStateAndListOfUnits(tileX, tileY);
 		} else {
 			get(tileX, tileY).getUnit().setHp(hp);
+		}
+	}
+
+	private void removeEntityFromStateAndListOfUnits(int tileX, int tileY) {
+		stateOfField[tileX][tileY].removeUnit();
+		int index = 0;
+		for (int i = 0; i < units.size; i++) {
+			if ((units.get(i).getX() == tileX) && (units.get(i).getY() == tileY)) {
+				index = i;
+				units.removeIndex(index);
+			}
 		}
 	}
 
@@ -286,11 +295,30 @@ public class BattleState implements Comparable<BattleState> {
 
 	public void reduceModifierCounts() {
 		for (final HypotheticalUnit unit : getAllUnits()) {
-			for (final Modifier mod : unit.getModifiers()) {
-				mod.decrementTurns();
+			final List<Modifier> modifiersToRemove = new ArrayList<>();
+			if (!unit.getModifiers().isEmpty()) {
+				for (final Modifier mod : unit.getModifiers()) {
+					mod.applyModifier(unit);
+					mod.decrementTurns();
+					if (mod.getTurns() == 0) {
+						modifiersToRemove.add(mod);
+					}
+					checkdead();
+				}
+			}
+			for (final Modifier mod : modifiersToRemove) {
+				unit.removeModifier(mod);
 			}
 		}
 		score = calculateScore();
+	}
+
+	private void checkdead() {
+		for (final HypotheticalUnit unit : units) {
+			if (unit.getHp() == 0) {
+				removeEntityFromStateAndListOfUnits(unit.getX(), unit.getY());
+			}
+		}
 	}
 
 	public BattleState getParentState() {

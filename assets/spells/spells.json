@@ -12,7 +12,7 @@
         "areaOfEffectRange": 2,
         "affectsTeam": "ENEMY",
         "target": "UNIT",
-        "infoText": "Cast a Fireball.",
+        "infoText": "Cast a Fireball."
     },
 
     {
@@ -29,7 +29,7 @@
         "areaOfEffectRange": 2,
         "affectsTeam": "BOTH",
         "target": "UNIT",
-        "infoText": "Cast Petrification.",
+        "infoText": "Cast Petrification."
     },
 
     {
@@ -46,7 +46,7 @@
         "areaOfEffectRange": 2,
         "affectsTeam": "BOTH",
         "target": "UNIT",
-        "infoText": "Cast Swap.",
+        "infoText": "Cast Swap."
     },
 
     {
@@ -63,6 +63,23 @@
         "areaOfEffectRange": 2,
         "affectsTeam": "ENEMY",
         "target": "CELL_BUT_NO_UNIT",
-        "infoText": "Cast Hammerback.",
+        "infoText": "Cast Hammerback."
+    },
+
+    {
+        "id": 4,
+        "name": "HammerbackBack",
+        "iconSpriteName": "hammer",
+        "apCost": 1,
+        "mpCost": 0,
+        "lineOfSight": "CIRCLE",
+        "goesTroughUnits": true,
+        "areaOfEffect": "CELL",
+        "damage": 2,
+        "range": 5,
+        "areaOfEffectRange": 2,
+        "affectsTeam": "ENEMY",
+        "target": "CELL_BUT_NO_UNIT",
+        "infoText": "Cast Hammerback."
     }
 ]

@@ -97,7 +97,7 @@ public class HypotheticalUnit {
 	}
 
 	public HypotheticalUnit makeCopy() {
-		HypotheticalUnit copy = new HypotheticalUnit(entityId, playerUnit, hp, maxHp, attackRange, attackDamage, ap, modifiers, abilities);
+		final HypotheticalUnit copy = new HypotheticalUnit(entityId, playerUnit, hp, maxHp, attackRange, attackDamage, ap, modifiers, abilities);
 		copy.setX(x);
 		copy.setY(y);
 		return copy;
@@ -129,6 +129,18 @@ public class HypotheticalUnit {
 
 	public void setModifiers(Collection<Modifier> modifiers) {
 		this.modifiers = modifiers;
+	}
+
+	public void removeModifier(Modifier mod) {
+		modifiers.remove(mod);
+	}
+
+	public void damage(final int damage) {
+		if (damage >= hp) {
+			hp = 0;
+		} else {
+			hp = hp - damage;
+		}
 	}
 
 	public int getX() {
@@ -215,5 +227,9 @@ public class HypotheticalUnit {
 
 	public void addAbility(AbilitiesEnum abilityEnum) {
 		abilities.add(new Ability(abilityEnum));
+	}
+
+	public void addAbility(AbilitiesEnum abilityEnum, MyPoint targetLocation) {
+		abilities.add(new Ability(abilityEnum, targetLocation));
 	}
 }

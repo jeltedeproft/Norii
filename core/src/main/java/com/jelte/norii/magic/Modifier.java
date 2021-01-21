@@ -1,5 +1,6 @@
 package com.jelte.norii.magic;
 
+import com.jelte.norii.battle.battleState.HypotheticalUnit;
 import com.jelte.norii.entities.Entity;
 
 public class Modifier {
@@ -47,6 +48,42 @@ public class Modifier {
 			break;
 		case IMAGE_CHANGED:
 			unit.restoreAnimation();
+			break;
+		default:
+			break;
+		}
+	}
+
+	public void applyModifier(final HypotheticalUnit unit) {
+		switch (type) {
+		case REMOVE_AP:
+			unit.setAp(unit.getAp() - amount);
+			break;
+		case REDUCE_DAMAGE:
+			unit.setAttackDamage(unit.getAttackDamage() - amount);
+			break;
+		case IMPROVE_DAMAGE:
+			unit.setAttackDamage(unit.getAttackDamage() + amount);
+			break;
+		case DAMAGE_OVER_TIME:
+			unit.damage(amount);
+			break;
+		case STUNNED:
+			break;
+		default:
+			break;
+
+		}
+		reduceTurn();
+	}
+
+	public void removeModifier(final HypotheticalUnit unit) {
+		switch (type) {
+		case REDUCE_DAMAGE:
+			unit.setAttackDamage(unit.getAttackDamage() + amount);
+			break;
+		case IMPROVE_DAMAGE:
+			unit.setAttackDamage(unit.getAttackDamage() - amount);
 			break;
 		default:
 			break;

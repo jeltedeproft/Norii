@@ -26,6 +26,7 @@ import com.jelte.norii.battle.battleState.Move;
 import com.jelte.norii.battle.battleState.SpellMove;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.Player;
+import com.jelte.norii.magic.Ability;
 import com.jelte.norii.magic.Modifier;
 import com.jelte.norii.map.MyPathFinder;
 import com.jelte.norii.screen.BattleScreen;
@@ -237,7 +238,12 @@ public class BattleManager {
 	private void executeOnDeathEffect(Entity unit) {
 		switch (unit.getEntityType()) {
 		case BOOMERANG:
-
+			for (final Ability ability : unit.getAbilities()) {
+				if (ability.getTargetLocation() != null) {
+					final SpellBattlePhase spellState = (SpellBattlePhase) spellBattleState;
+					spellState.executeSpellForAi(unit, ability, ability.getTargetLocation());
+				}
+			}
 		}
 	}
 
