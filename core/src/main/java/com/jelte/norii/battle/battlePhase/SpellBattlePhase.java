@@ -44,6 +44,7 @@ public class SpellBattlePhase extends BattlePhase {
 	public void clickedOnTile(final TiledMapActor actor) {
 		possibleTileSpell(actor.getActorPos());
 		ParticleMaker.deactivateAllParticlesOfType(ParticleType.SPELL);
+		ParticleMaker.deactivateAllParticlesOfType(ParticleType.ATTACK);
 		exit();
 	}
 
@@ -83,6 +84,7 @@ public class SpellBattlePhase extends BattlePhase {
 	public void clickedOnUnit(final Entity entity) {
 		possibleUnitTargetSpell(entity);
 		ParticleMaker.deactivateAllParticlesOfType(ParticleType.SPELL);
+		ParticleMaker.deactivateAllParticlesOfType(ParticleType.ATTACK);
 	}
 
 	@Override

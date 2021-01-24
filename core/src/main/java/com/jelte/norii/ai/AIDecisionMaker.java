@@ -126,7 +126,6 @@ public class AIDecisionMaker {
 		for (final BattleState battleState : battleStates) {
 			battleState.reduceModifierCounts();
 		}
-
 	}
 
 	private BattleState applyTurnToBattleState(HypotheticalUnit aiUnit, UnitTurn turn, BattleState battleState) {

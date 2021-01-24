@@ -1,6 +1,7 @@
 package com.jelte.norii.battle;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -145,7 +146,27 @@ public class BattleManager {
 
 	public void swapTurn() {
 		Player.getInstance().applyModifiers();
+		final Iterator<Entity> itr = Player.getInstance().getTeam().iterator();
+		while (itr.hasNext()) {
+			final Entity unit = itr.next();
+			stateOfBattle.updateEntity(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getHp());
+			if (unit.getHp() <= 0) {
+				executeOnDeathEffect(unit);
+				itr.remove();
+			}
+			checkVictory();
+		}
 		aiTeamLeader.applyModifiers();
+		final Iterator<Entity> aiItr = aiTeamLeader.getTeam().iterator();
+		while (aiItr.hasNext()) {
+			final Entity unit = aiItr.next();
+			stateOfBattle.updateEntity(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getHp());
+			if (unit.getHp() <= 0) {
+				executeOnDeathEffect(unit);
+				aiItr.remove();
+			}
+			checkVictory();
+		}
 
 		playerTurn = !playerTurn;
 
