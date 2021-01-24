@@ -369,9 +369,11 @@ public class Entity extends Actor {
 	}
 
 	public void move(List<GridCell> path) {
-		final SequenceAction sequence = createMoveSequence(path);
-		getEntityactor().addAction(sequence);
-		setAp(getAp() - path.size());
+		if (!path.isEmpty()) {
+			final SequenceAction sequence = createMoveSequence(path);
+			getEntityactor().addAction(sequence);
+			setAp(getAp() - path.size());
+		}
 	}
 
 	public void moveAttack(List<GridCell> path, Entity target) {

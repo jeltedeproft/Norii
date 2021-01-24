@@ -1,5 +1,6 @@
 package com.jelte.norii.battle.battleState;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import com.jelte.norii.magic.AbilitiesEnum;
@@ -97,7 +98,17 @@ public class HypotheticalUnit {
 	}
 
 	public HypotheticalUnit makeCopy() {
-		final HypotheticalUnit copy = new HypotheticalUnit(entityId, playerUnit, hp, maxHp, attackRange, attackDamage, ap, modifiers, abilities);
+		Collection<Modifier> copyModifiers = new ArrayList<>();
+		for (Modifier mod : modifiers) {
+			copyModifiers.add(new Modifier(mod.getType(), mod.getTurns(), mod.getAmount()));
+		}
+
+		Collection<Ability> copyAbilities = new ArrayList<>();
+		for (Ability ability : abilities) {
+			copyAbilities.add(new Ability(ability.getAbilityEnum()));
+		}
+
+		final HypotheticalUnit copy = new HypotheticalUnit(entityId, playerUnit, hp, maxHp, attackRange, attackDamage, ap, copyModifiers, copyAbilities);
 		copy.setX(x);
 		copy.setY(y);
 		return copy;

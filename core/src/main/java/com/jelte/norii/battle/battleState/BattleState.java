@@ -114,6 +114,9 @@ public class BattleState implements Comparable<BattleState> {
 					if (((aiUnit.getEntityId() == 1541708640) || (aiUnit.getEntityId() == 1212191909)) && (from.x == 9) && (from.y == 11) && (to.x == 7) && (to.y == 12)) {
 						final int p = 5;
 					}
+					if (stateOfField[to.x][to.y].getUnit() == null) {
+						final int p = 5;
+					}
 					stateOfField[to.x][to.y].getUnit().setX(to.x);
 					stateOfField[to.x][to.y].getUnit().setY(to.y);
 					stateOfField[from.x][from.y].removeUnit();
@@ -242,6 +245,9 @@ public class BattleState implements Comparable<BattleState> {
 		if (hp == 0) {
 			removeEntityFromStateAndListOfUnits(tileX, tileY);
 		} else {
+			if (get(tileX, tileY).getUnit() == null) {
+				int j = 5;
+			}
 			get(tileX, tileY).getUnit().setHp(hp);
 		}
 	}
@@ -299,7 +305,6 @@ public class BattleState implements Comparable<BattleState> {
 			if (!unit.getModifiers().isEmpty()) {
 				for (final Modifier mod : unit.getModifiers()) {
 					mod.applyModifier(unit);
-					mod.decrementTurns();
 					if (mod.getTurns() == 0) {
 						modifiersToRemove.add(mod);
 					}

@@ -7,6 +7,7 @@ import java.util.Set;
 import org.xguzm.pathfinding.grid.GridCell;
 
 import com.badlogic.gdx.utils.Array;
+import com.jelte.norii.ai.AIDecisionMaker;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.magic.Ability.AffectedTeams;
@@ -19,7 +20,7 @@ import com.jelte.norii.utility.TiledMapPosition;
 public class BattleStateGridHelper {
 	private static BattleStateGridHelper instance;
 
-	public Set<MyPoint> findTargets(MyPoint center, Ability ability, BattleState battleState) {
+	public Set<MyPoint> findTargets(MyPoint caster, MyPoint center, Ability ability, BattleState battleState) {
 		final AffectedTeams affectedTeams = ability.getAffectedTeams();
 		final AreaOfEffect area = ability.getAreaOfEffect();
 		final LineOfSight lineOfSight = ability.getLineOfSight();
@@ -29,7 +30,7 @@ public class BattleStateGridHelper {
 
 		final Set<MyPoint> targets = new HashSet<>();
 		for (final MyPoint MyPoint : possibleCenterCells) {
-			targets.addAll(collectTargets(MyPoint, area, affectedTeams, battleState, ability.getSpellData().getAreaOfEffectRange()));
+			targets.addAll(collectTargets(caster, MyPoint, area, affectedTeams, battleState, ability.getSpellData().getAreaOfEffectRange()));
 		}
 		return targets;
 	}
@@ -64,8 +65,8 @@ public class BattleStateGridHelper {
 		}
 	}
 
-	public Set<MyPoint> collectTargets(MyPoint center, AreaOfEffect area, AffectedTeams affectedTeams, BattleState stateOfBattle, int areaOfEffectRange) {
-		final Set<MyPoint> spotsToCheck = getSpotsAreaOfEffect(center, area, areaOfEffectRange);
+	public Set<MyPoint> collectTargets(MyPoint caster, MyPoint center, AreaOfEffect area, AffectedTeams affectedTeams, BattleState stateOfBattle, int areaOfEffectRange) {
+		final Set<MyPoint> spotsToCheck = getSpotsAreaOfEffect(caster, center, area, areaOfEffectRange);
 
 		if (!spotsToCheck.isEmpty()) {
 			checkMyPointBounds(spotsToCheck, stateOfBattle);
@@ -75,17 +76,21 @@ public class BattleStateGridHelper {
 		}
 	}
 
-	public Set<MyPoint> getAllPointsASpellCanHit(MyPoint center, AreaOfEffect areaOfEffect, int range, BattleState battleState) {
-		final Set<MyPoint> points = getSpotsAreaOfEffect(center, areaOfEffect, range);
+	public Set<MyPoint> getAllPointsASpellCanHit(MyPoint caster, MyPoint center, AreaOfEffect areaOfEffect, int range, BattleState battleState) {
+		final Set<MyPoint> points = getSpotsAreaOfEffect(caster, center, areaOfEffect, range);
 		checkMyPointBounds(points, battleState);
 		return points;
 	}
 
-	private Set<MyPoint> getSpotsAreaOfEffect(MyPoint center, AreaOfEffect area, int areaOfEffectRange) {
+	private Set<MyPoint> getSpotsAreaOfEffect(MyPoint caster, MyPoint center, AreaOfEffect area, int areaOfEffectRange) {
 		final Set<MyPoint> spotsToCheck = new HashSet<>();
 		switch (area) {
 		case CELL:
 			spotsToCheck.add(center);
+			break;
+		case STRAIGHT_LINE:
+			spotsToCheck.add(center);
+			spotsToCheck.addAll(AIDecisionMaker.findLine(center.x, center.y, caster.x, caster.y));
 			break;
 		case HORIZONTAL_LINE_LEFT:
 			spotsToCheck.add(center);
@@ -356,6 +361,8 @@ public class BattleStateGridHelper {
 		switch (ability.getAreaOfEffect()) {
 		case CELL:
 			return checkCrossNoCenter(casterPos, targetPos, range);
+		case STRAIGHT_LINE:
+			return checkCrossNoCenter(casterPos, targetPos, range);
 		case HORIZONTAL_LINE:
 			return checkLineHorizontalLine(casterPos, targetPos, range, areaOfEffectRange) || checkLineHorizontalLine(casterPos, targetPos, areaOfEffectRange, range);
 		case VERTICAL_LINE:
@@ -464,6 +471,8 @@ public class BattleStateGridHelper {
 		switch (ability.getAreaOfEffect()) {
 		case CELL:
 			return checkCircle(casterPos, targetPos, range);
+		case STRAIGHT_LINE:
+			return checkCircle(casterPos, targetPos, range);
 		case HORIZONTAL_LINE:
 			return checkCircleHorizontalLine(casterPos, targetPos, range, areaOfEffectRange);
 		case VERTICAL_LINE:
@@ -528,6 +537,8 @@ public class BattleStateGridHelper {
 		switch (ability.getAreaOfEffect()) {
 		case CELL:
 			return checkSquare(casterPos, targetPos, range);
+		case STRAIGHT_LINE:
+			return checkSquare(casterPos, targetPos, range);
 		case HORIZONTAL_LINE:
 			return checkSquareHorizontalLine(casterPos, targetPos, range, areaOfEffectRange);
 		case VERTICAL_LINE:
@@ -575,6 +586,8 @@ public class BattleStateGridHelper {
 		final int areaOfEffectRange = ability.getSpellData().getAreaOfEffectRange();
 		switch (ability.getAreaOfEffect()) {
 		case CELL:
+			return checkDiagonalRight(casterPos, targetPos, range);
+		case STRAIGHT_LINE:
 			return checkDiagonalRight(casterPos, targetPos, range);
 		case HORIZONTAL_LINE:
 			return checkDiagonalRightHorizontalLine(casterPos, targetPos, range, areaOfEffectRange);
@@ -675,6 +688,8 @@ public class BattleStateGridHelper {
 		switch (ability.getAreaOfEffect()) {
 		case CELL:
 			return checkDiagonalLeft(casterPos, targetPos, range);
+		case STRAIGHT_LINE:
+			return checkDiagonalLeft(casterPos, targetPos, range);
 		case HORIZONTAL_LINE:
 			return checkDiagonalLeftHorizontalLine(casterPos, targetPos, range, areaOfEffectRange);
 		case VERTICAL_LINE:
@@ -773,6 +788,8 @@ public class BattleStateGridHelper {
 		final int areaOfEffectRange = ability.getSpellData().getAreaOfEffectRange();
 		switch (ability.getAreaOfEffect()) {
 		case CELL:
+			return checkSquareBorder(casterPos, targetPos, range);
+		case STRAIGHT_LINE:
 			return checkSquareBorder(casterPos, targetPos, range);
 		case HORIZONTAL_LINE:
 			return checkSquareBorderHorizontalLine(casterPos, targetPos, range, areaOfEffectRange);
@@ -1087,6 +1104,8 @@ public class BattleStateGridHelper {
 	private boolean checkIfTargetInAreaOfEffect(MyPoint center, MyPoint target, AreaOfEffect area, int aoeRange) {
 		switch (area) {
 		case CELL:
+			return center.equals(target);
+		case STRAIGHT_LINE:
 			return center.equals(target);
 		case HORIZONTAL_LINE:
 			return (center.y == target.y) && (Math.abs(center.x - target.x) <= aoeRange);

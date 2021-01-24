@@ -11,7 +11,6 @@ public class HpBar {
 
 	private static final int OFFSET_BAR_Y = 12;
 	private static final float MIN_VALUE = 0f;
-	private static final float MAX_VALUE = 10f;
 	private static final float STEP_SIZE = 1f;
 	private static final float ANIMATION_DURATION = 0.25f;
 	public static final int HEALTHBAR_Y_OFFSET = 12;
@@ -33,8 +32,8 @@ public class HpBar {
 			progressBarStyle = statusUISkin.get("red-hp-bar", ProgressBarStyle.class);
 		}
 
-		healthBar = new ProgressBar(MIN_VALUE, MAX_VALUE, STEP_SIZE, false, progressBarStyle);
-		healthBar.setValue(MAX_VALUE);
+		healthBar = new ProgressBar(MIN_VALUE, entity.getEntityData().getMaxHP(), STEP_SIZE, false, progressBarStyle);
+		healthBar.setValue(entity.getEntityData().getMaxHP());
 		healthBar.setAnimateDuration(ANIMATION_DURATION);
 		healthBar.setPosition(entity.getCurrentPosition().getTileX() * tilePixelWidth, ((entity.getCurrentPosition().getTileY() * tilePixelHeight) + OFFSET_BAR_Y));
 		healthBar.setWidth(tilePixelWidth);
@@ -52,9 +51,8 @@ public class HpBar {
 
 	public void update(Entity unit) {
 		final TiledMapPosition posUnit = unit.getCurrentPosition();
-		final int hp = unit.getHp();
 		getHealthBar().setPosition(posUnit.getTileX() * tilePixelWidth, ((posUnit.getTileY() * tilePixelHeight) + HEALTHBAR_Y_OFFSET));
-		getHealthBar().setValue(hp);
+		getHealthBar().setValue(unit.getHp());
 		if (getHealthBar().getValue() == 0) {
 			getHealthBar().setVisible(false);
 		}

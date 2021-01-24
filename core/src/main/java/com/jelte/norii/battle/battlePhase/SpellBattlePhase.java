@@ -54,8 +54,9 @@ public class SpellBattlePhase extends BattlePhase {
 	}
 
 	private void showCellsThatSpellWillAffect(TiledMapPosition actorPos) {
+		MyPoint casterPos = battlemanager.getActiveUnit().getCurrentPosition().getTilePosAsPoint();
 		ParticleMaker.deactivateAllParticlesOfType(ParticleType.ATTACK);
-		final Set<MyPoint> pointsToColor = BattleStateGridHelper.getInstance().getAllPointsASpellCanHit(actorPos.getTilePosAsPoint(), ability.getAreaOfEffect(), ability.getSpellData().getRange(), battlemanager.getBattleState());
+		final Set<MyPoint> pointsToColor = BattleStateGridHelper.getInstance().getAllPointsASpellCanHit(casterPos, actorPos.getTilePosAsPoint(), ability.getAreaOfEffect(), ability.getSpellData().getRange(), battlemanager.getBattleState());
 		for (final MyPoint point : pointsToColor) {
 			ParticleMaker.addParticle(ParticleType.ATTACK, point, 0);
 		}
@@ -271,17 +272,7 @@ public class SpellBattlePhase extends BattlePhase {
 	private void castHammerback(final Entity caster, final TiledMapPosition targetPos, final Ability ability) {
 		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
 		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.HAMMER_SOUND);
-		final Entity hammerEntity = new Entity(EntityTypes.BOOMERANG, caster.getOwner());
-		battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.ADD_UNIT_ENTITYSTAGE, hammerEntity);
-		hammerEntity.setInBattle(true);
-		hammerEntity.setCurrentPosition(targetPos);
-		hammerEntity.getEntityactor().setTouchable(Touchable.enabled);
-		hammerEntity.addModifier(ModifiersEnum.DAMAGE_OVER_TIME, 3, 1);
-		hammerEntity.addAbility(AbilitiesEnum.HAMMERBACKBACK, caster.getCurrentPosition().getTilePosAsPoint());
-		battlemanager.addUnit(hammerEntity);
-		battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.ADD_UNIT_UI, hammerEntity);
-		battlemanager.getBattleState().addEntity(targetPos.getTileX(), targetPos.getTileY(), new HypotheticalUnit(hammerEntity.getEntityID(), hammerEntity.isPlayerUnit(), hammerEntity.getHp(), hammerEntity.getEntityData().getMaxHP(),
-				hammerEntity.getAttackRange(), hammerEntity.getEntityData().getAttackPower(), hammerEntity.getAp(), hammerEntity.getModifiers(), hammerEntity.getAbilities(), targetPos.getTileX(), targetPos.getTileY()));
+
 		final List<MyPoint> crossedCells = AIDecisionMaker.findLine(caster.getCurrentPosition().getTileX(), caster.getCurrentPosition().getTileY(), targetPos.getTileX(), targetPos.getTileY());
 		// check if correct and apply similar effects in aidecisionMaker
 		battlemanager.getBattleState();
@@ -292,6 +283,16 @@ public class SpellBattlePhase extends BattlePhase {
 				battlemanager.updateHp(battlemanager.getEntityByID(unit.getEntityId()));
 			}
 		}
+
+		final Entity hammerEntity = new Entity(EntityTypes.BOOMERANG, caster.getOwner());
+		battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.ADD_UNIT_ENTITYSTAGE, hammerEntity);
+		hammerEntity.setInBattle(true);
+		hammerEntity.setCurrentPosition(targetPos);
+		hammerEntity.getEntityactor().setTouchable(Touchable.enabled);
+		hammerEntity.addModifier(ModifiersEnum.DAMAGE_OVER_TIME, 3, 1);
+		hammerEntity.addAbility(AbilitiesEnum.HAMMERBACKBACK, caster.getCurrentPosition().getTilePosAsPoint());
+		battlemanager.addUnit(hammerEntity);
+		battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.ADD_UNIT_UI, hammerEntity);
 	}
 
 	private void castHammerbackBack(final Entity caster, final TiledMapPosition targetPos, final Ability ability) {
@@ -327,6 +328,7 @@ public class SpellBattlePhase extends BattlePhase {
 		switch (button) {
 		case Buttons.RIGHT:
 			ParticleMaker.deactivateAllParticlesOfType(ParticleType.SPELL);
+			ParticleMaker.deactivateAllParticlesOfType(ParticleType.ATTACK);
 			exit();
 			break;
 		case Buttons.LEFT:
