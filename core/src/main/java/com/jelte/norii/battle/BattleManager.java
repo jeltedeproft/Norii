@@ -45,7 +45,7 @@ public class BattleManager {
 
 	private Entity activeUnit;
 	private AITeamLeader aiTeamLeader;
-	private BattleState stateOfBattle;
+	private BattleState activeBattleState;
 	private boolean playerTurn;
 	private Entity lockedUnit;
 	private BattleScreen battleScreen;
@@ -72,13 +72,13 @@ public class BattleManager {
 		activeUnit = Player.getInstance().getTeam().get(0);
 		playerTurn = true;
 		lockedUnit = null;
-		stateOfBattle = new BattleState(width, height);
+		activeBattleState = new BattleState(width, height);
 		initializeStateOfBattle(unwalkableNodes);
 	}
 
 	private void initializeStateOfBattle(Array<GridCell> unwalkableNodes) {
 		for (final GridCell cell : unwalkableNodes) {
-			stateOfBattle.get(cell.x, cell.y).setWalkable(false);
+			activeBattleState.get(cell.x, cell.y).setWalkable(false);
 		}
 	}
 
@@ -100,19 +100,19 @@ public class BattleManager {
 	}
 
 	private void addHypotheticalAiUnitToField(Entity unit) {
-		stateOfBattle.addEntity(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), new HypotheticalUnit(unit.getEntityID(), false, unit.getHp(), unit.getEntityData().getMaxHP(),
+		activeBattleState.addEntity(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), new HypotheticalUnit(unit.getEntityID(), false, unit.getHp(), unit.getEntityData().getMaxHP(),
 				unit.getEntityData().getAttackRange(), unit.getEntityData().getAttackPower(), unit.getAp(), unit.getModifiers(), unit.getAbilities()));
 		addModifiers(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getModifiers());
 	}
 
 	private void addHypotheticalPlayerUnitToField(Entity unit) {
-		stateOfBattle.addEntity(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), new HypotheticalUnit(unit.getEntityID(), true, unit.getHp(), unit.getEntityData().getMaxHP(), unit.getEntityData().getAttackRange(),
-				unit.getEntityData().getAttackPower(), unit.getAp(), unit.getModifiers(), unit.getAbilities()));
+		activeBattleState.addEntity(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), new HypotheticalUnit(unit.getEntityID(), true, unit.getHp(), unit.getEntityData().getMaxHP(),
+				unit.getEntityData().getAttackRange(), unit.getEntityData().getAttackPower(), unit.getAp(), unit.getModifiers(), unit.getAbilities()));
 		addModifiers(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getModifiers());
 	}
 
 	private void addModifiers(int x, int y, final Collection<Modifier> mods) {
-		stateOfBattle.addModifiersToUnit(x, y, mods);
+		activeBattleState.addModifiersToUnit(x, y, mods);
 	}
 
 	public void setUnitActive(Entity entity) {
@@ -144,12 +144,20 @@ public class BattleManager {
 		}
 	}
 
+	public void sendMessageToBattleScreen(MessageToBattleScreen message, Entity entity, GridCell gridCell) {
+		switch (message) {
+		case MOVING_ENTITY:
+			activeBattleState.moveUnitTo(entity, new MyPoint(gridCell.x, gridCell.y));
+			break;
+		}
+	}
+
 	public void swapTurn() {
 		Player.getInstance().applyModifiers();
 		final Iterator<Entity> itr = Player.getInstance().getTeam().iterator();
 		while (itr.hasNext()) {
 			final Entity unit = itr.next();
-			stateOfBattle.updateEntity(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getHp());
+			activeBattleState.updateEntity(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getHp());
 			if (unit.getHp() <= 0) {
 				executeOnDeathEffect(unit);
 				itr.remove();
@@ -160,7 +168,7 @@ public class BattleManager {
 		final Iterator<Entity> aiItr = aiTeamLeader.getTeam().iterator();
 		while (aiItr.hasNext()) {
 			final Entity unit = aiItr.next();
-			stateOfBattle.updateEntity(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getHp());
+			activeBattleState.updateEntity(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getHp());
 			if (unit.getHp() <= 0) {
 				executeOnDeathEffect(unit);
 				aiItr.remove();
@@ -171,7 +179,7 @@ public class BattleManager {
 		playerTurn = !playerTurn;
 
 		if (!playerTurn) {
-			final BattleState newState = aiTeamLeader.act(stateOfBattle);
+			final BattleState newState = aiTeamLeader.act(activeBattleState);
 			setStateOfBattle(newState);
 			executeMoves(newState.getTurn());
 		}
@@ -182,7 +190,7 @@ public class BattleManager {
 	}
 
 	public void setStateOfBattle(BattleState stateOfBattle) {
-		this.stateOfBattle = stateOfBattle;
+		this.activeBattleState = stateOfBattle;
 	}
 
 	private void executeMoves(UnitTurn turn) {
@@ -197,10 +205,11 @@ public class BattleManager {
 			case MOVE:
 				final Entity entityToMove = getEntityByID(entityID);
 				entityToMove.move(MyPathFinder.getInstance().pathTowards(entityToMove.getCurrentPosition(), new TiledMapPosition().setPositionFromTiles(move.getLocation().x, move.getLocation().y), entityToMove.getAp()));
+				activeBattleState.moveUnitTo(entityToMove, new MyPoint(move.getLocation().x, move.getLocation().y));
 				break;
 			case ATTACK:
 				final Entity entityAttacking = getEntityByID(entityID);
-				final Entity entityToAttack = getEntityByID(stateOfBattle.get(move.getLocation().x, move.getLocation().y).getUnit().getEntityId());
+				final Entity entityToAttack = getEntityByID(activeBattleState.get(move.getLocation().x, move.getLocation().y).getUnit().getEntityId());
 				entityAttacking.attack(entityToAttack);
 				updateHp(entityToAttack);
 				sendMessageToBattleScreen(MessageToBattleScreen.UPDATE_UI, entityToAttack);
@@ -218,11 +227,11 @@ public class BattleManager {
 	}
 
 	private void checkVictory() {
-		if (stateOfBattle.getAiUnits().isEmpty()) {
+		if (activeBattleState.getAiUnits().isEmpty()) {
 			sendMessageToBattleScreen(MessageToBattleScreen.PLAYER_WINS, activeUnit);
 		}
 
-		if (stateOfBattle.getPlayerUnits().isEmpty()) {
+		if (activeBattleState.getPlayerUnits().isEmpty()) {
 			sendMessageToBattleScreen(MessageToBattleScreen.AI_WINS, activeUnit);
 		}
 	}
@@ -243,7 +252,7 @@ public class BattleManager {
 	}
 
 	public void updateHp(Entity unit) {
-		stateOfBattle.updateEntity(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getHp());
+		activeBattleState.updateEntity(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getHp());
 		if (unit.getHp() <= 0) {
 			removeUnit(unit);
 		}
@@ -272,12 +281,12 @@ public class BattleManager {
 		final MyPoint oldMyPoint = new MyPoint(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY());
 		final MyPoint newMyPoint = new MyPoint(newPos.getTileX(), newPos.getTileY());
 		if (!oldMyPoint.equals(newMyPoint)) {
-			stateOfBattle.moveUnitTo(unit, newMyPoint);
+			activeBattleState.moveUnitTo(unit, newMyPoint);
 		}
 	}
 
 	public BattleState getBattleState() {
-		return stateOfBattle;
+		return activeBattleState;
 	}
 
 	public Entity getActiveUnit() {
@@ -367,4 +376,5 @@ public class BattleManager {
 	public List<Entity> getUnits() {
 		return Stream.concat(Player.getInstance().getTeam().stream(), aiTeamLeader.getTeam().stream()).collect(Collectors.toList());
 	}
+
 }

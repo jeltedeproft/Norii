@@ -3,6 +3,8 @@ package com.jelte.norii.ai;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.xguzm.pathfinding.grid.GridCell;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.jelte.norii.battle.BattleManager;
@@ -126,5 +128,10 @@ public class AITeamLeader implements UnitOwner {
 	@Override
 	public void addUnit(Entity unit) {
 		team.add(unit);
+	}
+
+	@Override
+	public void sendMessageToBattleManager(MessageToBattleScreen message, Entity entity, GridCell gridCell) {
+		battleManager.sendMessageToBattleScreen(message, entity, gridCell);
 	}
 }

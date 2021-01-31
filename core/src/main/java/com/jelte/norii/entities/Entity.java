@@ -373,6 +373,7 @@ public class Entity extends Actor {
 			final SequenceAction sequence = createMoveSequence(path);
 			getEntityactor().addAction(sequence);
 			setAp(getAp() - path.size());
+			owner.sendMessageToBattleManager(MessageToBattleScreen.MOVING_ENTITY, this, path.get(path.size() - 1));
 		}
 	}
 

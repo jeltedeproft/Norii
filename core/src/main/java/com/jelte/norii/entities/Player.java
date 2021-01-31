@@ -2,6 +2,8 @@ package com.jelte.norii.entities;
 
 import java.util.List;
 
+import org.xguzm.pathfinding.grid.GridCell;
+
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.battle.MessageToBattleScreen;
@@ -96,5 +98,10 @@ public class Player implements UnitOwner {
 	@Override
 	public void addUnit(Entity unit) {
 		team.add(unit);
+	}
+
+	@Override
+	public void sendMessageToBattleManager(MessageToBattleScreen message, Entity entity, GridCell gridCell) {
+		battleManager.sendMessageToBattleScreen(message, entity, gridCell);
 	}
 }
