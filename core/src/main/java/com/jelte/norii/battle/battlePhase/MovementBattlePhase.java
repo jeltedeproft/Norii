@@ -46,7 +46,7 @@ public class MovementBattlePhase extends BattlePhase {
 
 	private void moveUnit(TiledMapActor actor) {
 		ParticleMaker.deactivateAllParticlesOfType(ParticleType.MOVE);
-		battlemanager.getActiveUnit().setLocked(true);
+		battlemanager.getActiveUnit().getVisualComponent().setLocked(true);
 		battlemanager.setLockedUnit(battlemanager.getActiveUnit());
 		updateUnit(actor);
 		battlemanager.getCurrentBattleState().exit();

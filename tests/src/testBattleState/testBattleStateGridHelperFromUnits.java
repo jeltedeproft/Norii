@@ -13,7 +13,7 @@ import org.junit.runner.RunWith;
 
 import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.battle.battleState.BattleState;
-import com.jelte.norii.battle.battleState.BattleStateGridHelperFromUnits;
+import com.jelte.norii.battle.battleState.BattleStateGridHelper;
 import com.jelte.norii.magic.AbilitiesEnum;
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.magic.SpellFileReader;
@@ -23,7 +23,7 @@ import HeadlessRunnerTest.GdxTestRunner;
 
 @RunWith(GdxTestRunner.class)
 public class testBattleStateGridHelperFromUnits {
-	BattleStateGridHelperFromUnits gridHelper = new BattleStateGridHelperFromUnits();
+	BattleStateGridHelper gridHelper = BattleStateGridHelper.getInstance();
 	final static MyPoint testPoints[][] = new MyPoint[20][20];
 	final static Array<MyPoint> allPoints = new Array<>();
 	final MyPoint center = new MyPoint(5, 5);

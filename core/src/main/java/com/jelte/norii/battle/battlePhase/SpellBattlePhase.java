@@ -5,7 +5,6 @@ import java.util.Set;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.jelte.norii.ai.AIDecisionMaker;
 import com.jelte.norii.audio.AudioCommand;
 import com.jelte.norii.audio.AudioManager;
@@ -13,7 +12,6 @@ import com.jelte.norii.audio.AudioTypeEvent;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.battle.MessageToBattleScreen;
 import com.jelte.norii.battle.battleState.BattleStateGridHelper;
-import com.jelte.norii.battle.battleState.HypotheticalUnit;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityAnimation;
 import com.jelte.norii.entities.EntityAnimation.Direction;
@@ -66,9 +64,9 @@ public class SpellBattlePhase extends BattlePhase {
 		final Entity currentUnit = battlemanager.getActiveUnit();
 
 		if (isValidTileTarget(currentUnit, targetPos, ability)) {
-			currentUnit.getEntityAnimation().setCurrentAnimationType(EntityAnimationType.WALK);
+			currentUnit.getVisualComponent().setAnimationType(EntityAnimationType.WALK);
 			selectSpell(null, ability, currentUnit, targetPos);
-			currentUnit.getEntityAnimation().setCurrentAnimationType(EntityAnimationType.WALK);
+			currentUnit.getVisualComponent().setAnimationType(EntityAnimationType.WALK);
 		}
 		exit();
 	}
@@ -99,7 +97,7 @@ public class SpellBattlePhase extends BattlePhase {
 
 		if (isValidUnitTarget(currentUnit, target)) {
 			selectSpell(target, ability, currentUnit, target.getCurrentPosition());
-			currentUnit.setLocked(true);
+			currentUnit.getVisualComponent().setLocked(true);
 			battlemanager.setLockedUnit(currentUnit);
 		}
 		exit();
@@ -143,7 +141,7 @@ public class SpellBattlePhase extends BattlePhase {
 	}
 
 	private boolean checkLine(Entity caster, TiledMapPosition targetPos, Ability ability) {
-		final Direction direction = caster.getEntityAnimation().getCurrentDirection();
+		final Direction direction = caster.getDirection();
 		final int range = ability.getSpellData().getRange();
 		return checkIfInLine(caster, targetPos, range, direction);
 	}
@@ -264,7 +262,7 @@ public class SpellBattlePhase extends BattlePhase {
 	private void castTurnToStone(final Entity caster, final Entity target, final Ability ability) {
 		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
 		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.STONE_SOUND);
-		target.changeAnimation(new EntityAnimation("Rock"));
+		target.getVisualComponent().changeAnimation(new EntityAnimation("Rock"));
 		target.addModifier(ModifiersEnum.IMAGE_CHANGED, 2, 0);
 		target.addModifier(ModifiersEnum.STUNNED, 2, 0);
 	}
@@ -278,17 +276,16 @@ public class SpellBattlePhase extends BattlePhase {
 		battlemanager.getBattleState();
 		for (final MyPoint point : crossedCells) {
 			if (battlemanager.getBattleState().get(point.x, point.y).isOccupied()) {
-				final HypotheticalUnit unit = battlemanager.getBattleState().get(point.x, point.y).getUnit();
-				battlemanager.getEntityByID(unit.getEntityId()).damage(ability.getSpellData().getDamage());
-				battlemanager.updateHp(battlemanager.getEntityByID(unit.getEntityId()));
+				final Entity unit = battlemanager.getBattleState().get(point.x, point.y).getUnit();
+				battlemanager.getEntityByID(unit.getEntityID()).damage(ability.getSpellData().getDamage());
+				battlemanager.updateHp(battlemanager.getEntityByID(unit.getEntityID()));
 			}
 		}
 
 		final Entity hammerEntity = new Entity(EntityTypes.BOOMERANG, caster.getOwner());
 		battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.ADD_UNIT_ENTITYSTAGE, hammerEntity);
-		hammerEntity.setInBattle(true);
+		hammerEntity.getVisualComponent().initiateInBattle();
 		hammerEntity.setCurrentPosition(targetPos);
-		hammerEntity.getEntityactor().setTouchable(Touchable.enabled);
 		hammerEntity.addModifier(ModifiersEnum.DAMAGE_OVER_TIME, 3, 1);
 		hammerEntity.addAbility(AbilitiesEnum.HAMMERBACKBACK, caster.getCurrentPosition().getTilePosAsPoint());
 		battlemanager.addUnit(hammerEntity);
@@ -301,9 +298,9 @@ public class SpellBattlePhase extends BattlePhase {
 		battlemanager.getBattleState();
 		for (final MyPoint point : crossedCells) {
 			if (battlemanager.getBattleState().get(point.x, point.y).isOccupied()) {
-				final HypotheticalUnit unit = battlemanager.getBattleState().get(point.x, point.y).getUnit();
-				battlemanager.getEntityByID(unit.getEntityId()).damage(ability.getSpellData().getDamage());
-				battlemanager.updateHp(battlemanager.getEntityByID(unit.getEntityId()));
+				final Entity unit = battlemanager.getBattleState().get(point.x, point.y).getUnit();
+				battlemanager.getEntityByID(unit.getEntityID()).damage(ability.getSpellData().getDamage());
+				battlemanager.updateHp(battlemanager.getEntityByID(unit.getEntityID()));
 			}
 		}
 	}

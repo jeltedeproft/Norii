@@ -22,7 +22,6 @@ import com.jelte.norii.battle.battlePhase.MovementBattlePhase;
 import com.jelte.norii.battle.battlePhase.SelectUnitBattlePhase;
 import com.jelte.norii.battle.battlePhase.SpellBattlePhase;
 import com.jelte.norii.battle.battleState.BattleState;
-import com.jelte.norii.battle.battleState.HypotheticalUnit;
 import com.jelte.norii.battle.battleState.Move;
 import com.jelte.norii.battle.battleState.SpellMove;
 import com.jelte.norii.entities.Entity;
@@ -100,14 +99,12 @@ public class BattleManager {
 	}
 
 	private void addHypotheticalAiUnitToField(Entity unit) {
-		activeBattleState.addEntity(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), new HypotheticalUnit(unit.getEntityID(), false, unit.getHp(), unit.getEntityData().getMaxHP(),
-				unit.getEntityData().getAttackRange(), unit.getEntityData().getAttackPower(), unit.getAp(), unit.getModifiers(), unit.getAbilities()));
+		activeBattleState.addEntity(unit);
 		addModifiers(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getModifiers());
 	}
 
 	private void addHypotheticalPlayerUnitToField(Entity unit) {
-		activeBattleState.addEntity(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), new HypotheticalUnit(unit.getEntityID(), true, unit.getHp(), unit.getEntityData().getMaxHP(),
-				unit.getEntityData().getAttackRange(), unit.getEntityData().getAttackPower(), unit.getAp(), unit.getModifiers(), unit.getAbilities()));
+		activeBattleState.addEntity(unit);
 		addModifiers(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getModifiers());
 	}
 
@@ -117,12 +114,12 @@ public class BattleManager {
 
 	public void setUnitActive(Entity entity) {
 		activeUnit.setFocused(false);
-		activeUnit.setActive(false);
+		activeUnit.getVisualComponent().setActive(false);
 		sendMessageToBattleScreen(MessageToBattleScreen.HIDE_ACTIONS, entity);
 
 		activeUnit = entity;
 		activeUnit.setFocused(true);
-		activeUnit.setActive(true);
+		activeUnit.getVisualComponent().setActive(true);
 		sendMessageToBattleScreen(MessageToBattleScreen.UNIT_ACTIVE, entity);
 
 	}
@@ -209,7 +206,7 @@ public class BattleManager {
 				break;
 			case ATTACK:
 				final Entity entityAttacking = getEntityByID(entityID);
-				final Entity entityToAttack = getEntityByID(activeBattleState.get(move.getLocation().x, move.getLocation().y).getUnit().getEntityId());
+				final Entity entityToAttack = getEntityByID(activeBattleState.get(move.getLocation().x, move.getLocation().y).getUnit().getEntityID());
 				entityAttacking.attack(entityToAttack);
 				updateHp(entityToAttack);
 				sendMessageToBattleScreen(MessageToBattleScreen.UPDATE_UI, entityToAttack);

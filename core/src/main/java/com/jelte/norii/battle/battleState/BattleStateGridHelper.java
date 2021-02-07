@@ -1150,8 +1150,8 @@ public class BattleStateGridHelper {
 			// TODO
 			break;
 		case LINE:
-			spellPath = MyPathFinder.getInstance().getLineOfSightWithinLine(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), ability.getSpellData().getRange(), unit.getEntityAnimation().getCurrentDirection(),
-					positions, !ability.getGoesTroughUnits());
+			spellPath = MyPathFinder.getInstance().getLineOfSightWithinLine(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), ability.getSpellData().getRange(), unit.getDirection(), positions,
+					!ability.getGoesTroughUnits());
 			break;
 		default:
 			break;

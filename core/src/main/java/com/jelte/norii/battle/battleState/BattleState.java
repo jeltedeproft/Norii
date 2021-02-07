@@ -2,22 +2,26 @@ package com.jelte.norii.battle.battleState;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.ai.UnitTurn;
 import com.jelte.norii.entities.Entity;
+import com.jelte.norii.entities.UnitOwner;
 import com.jelte.norii.magic.Modifier;
 import com.jelte.norii.utility.MyPoint;
 import com.jelte.norii.utility.TiledMapPosition;
 
 public class BattleState implements Comparable<BattleState> {
+	private static BattleState currentState;
 	private final BattleCell[][] stateOfField;
 	private int score;
 	private BattleState parentState = null;
 	private UnitTurn turn;
-	private final Array<HypotheticalUnit> units = new Array<>();
+	private final List<UnitOwner> owners = new ArrayList<UnitOwner>();
 
 	public static final int NO_UNIT = 0;
 
@@ -31,6 +35,10 @@ public class BattleState implements Comparable<BattleState> {
 		}
 	}
 
+	public static BattleState getCurrentBattleState() {
+		return currentState;
+	}
+
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
@@ -40,9 +48,9 @@ public class BattleState implements Comparable<BattleState> {
 			for (int j = 0; j < row.length; j++) {
 				final BattleCell cell = stateOfField[j][i];
 				if (cell.isOccupied() && cell.getUnit().isPlayerUnit()) {
-					sb.append("| " + cell.getUnit().getEntityId() + " -- (" + cell.getUnit().getX() + "," + cell.getUnit().getY() + ") |");
+					sb.append("| " + cell.getUnit().getEntityID() + " -- (" + cell.getUnit().getX() + "," + cell.getUnit().getY() + ") |");
 				} else if (cell.isOccupied() && !cell.getUnit().isPlayerUnit()) {
-					sb.append("| " + cell.getUnit().getEntityId() + " -- (" + cell.getUnit().getX() + "," + cell.getUnit().getY() + ") |");
+					sb.append("| " + cell.getUnit().getEntityID() + " -- (" + cell.getUnit().getX() + "," + cell.getUnit().getY() + ") |");
 				} else if (!cell.isWalkable()) {
 					sb.append("| XXXXXXXX |");
 				} else {
@@ -54,22 +62,28 @@ public class BattleState implements Comparable<BattleState> {
 		return sb.toString();
 	}
 
-	public BattleState(BattleCell[][] field, Array<HypotheticalUnit> unitsToAdd) {
+	public BattleState(BattleCell[][] field, Array<Entity> unitsToAdd) {
 		stateOfField = field;
 		score = 0;
-		units.addAll(unitsToAdd);
+		for (Entity unit : unitsToAdd) {
+			units.put(unit.getEntityID(), unit);
+		}
 	}
 
-	public BattleState(BattleCell[][] field, int score, Array<HypotheticalUnit> unitsToAdd) {
+	public BattleState(BattleCell[][] field, int score, Array<Entity> unitsToAdd) {
 		stateOfField = field;
 		this.score = score;
-		units.addAll(unitsToAdd);
+		for (Entity unit : unitsToAdd) {
+			units.put(unit.getEntityID(), unit);
+		}
 	}
 
-	public BattleState(BattleCell[][] field, int score, Array<HypotheticalUnit> unitsToAdd, UnitTurn turn) {
+	public BattleState(BattleCell[][] field, int score, Array<Entity> unitsToAdd, UnitTurn turn) {
 		stateOfField = field;
 		this.score = score;
-		units.addAll(unitsToAdd);
+		for (Entity unit : unitsToAdd) {
+			units.put(unit.getEntityID(), unit);
+		}
 		this.turn = turn;
 	}
 
@@ -85,7 +99,9 @@ public class BattleState implements Comparable<BattleState> {
 		}
 	}
 
-	public void addEntity(int width, int height, HypotheticalUnit unit) {
+	public void addEntity(Entity unit) {
+		int height = unit.getCurrentPosition().getTileY();
+		int width = unit.getCurrentPosition().getTileX();
 		if ((height > 0) && (width > 0) && (width <= getWidth()) && (height <= getHeight())) {
 			final int originalScore = stateOfField[width][height].getScore();
 			final int newScore = unit.getScore();
@@ -95,7 +111,7 @@ public class BattleState implements Comparable<BattleState> {
 			unit.setY(height);
 			stateOfField[width][height].setUnit(unit);
 			stateOfField[width][height].setOccupied(true);
-			units.add(unit);
+			units.put(unit.getEntityID(), unit);
 		}
 	}
 
@@ -103,43 +119,14 @@ public class BattleState implements Comparable<BattleState> {
 		return stateOfField[width][height];
 	}
 
-	public void moveUnitTo(HypotheticalUnit aiUnit, MyPoint to) {
-		// if we have the unit, move it, if not create it
-		final MyPoint from = new MyPoint(aiUnit.getX(), aiUnit.getY());
-		boolean entityFound = false;
-		if (!from.equals(to)) {
-			for (final HypotheticalUnit unit : units) {
-				if (unit.getEntityId() == aiUnit.getEntityId()) {
-					stateOfField[to.x][to.y].setUnit(stateOfField[unit.getX()][unit.getY()].getUnit());
-					if (((aiUnit.getEntityId() == 1541708640) || (aiUnit.getEntityId() == 1212191909)) && (from.x == 9) && (from.y == 11) && (to.x == 7) && (to.y == 12)) {
-						final int p = 5;
-					}
-					if (stateOfField[to.x][to.y].getUnit() == null) {
-						final int p = 5;
-					}
-					stateOfField[to.x][to.y].getUnit().setX(to.x);
-					stateOfField[to.x][to.y].getUnit().setY(to.y);
-					stateOfField[from.x][from.y].removeUnit();
-					entityFound = true;
-					unit.setX(to.x);
-					unit.setY(to.y);
-				}
-			}
-
-			if (!entityFound) {
-				addEntity(to.x, to.y, aiUnit);
-			}
-			stateOfField[to.x][to.y].setOccupied(true);
-		}
-	}
-
 	public void moveUnitTo(Entity entity, MyPoint to) {
 		// if we have the unit, move it, if not create it
 		final MyPoint from = new MyPoint(entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY());
 		boolean entityFound = false;
-		for (final HypotheticalUnit unit : units) {
-			if (unit.getEntityId() == entity.getEntityID()) {
-				stateOfField[to.x][to.y].setUnit(stateOfField[unit.getX()][unit.getY()].getUnit());
+		if (!from.equals(to)) {
+		for (final Entity unit : units.values()) {
+			if (unit.getEntityID() == entity.getEntityID()) {
+				stateOfField[to.x][to.y].setUnit(stateOfField[unit.getCurrentPosition().getTileX()][unit.getCurrentPosition().getTileY()].getUnit());
 				stateOfField[to.x][to.y].getUnit().setX(to.x);
 				stateOfField[to.x][to.y].getUnit().setY(to.y);
 				stateOfField[from.x][from.y].removeUnit();
@@ -150,15 +137,10 @@ public class BattleState implements Comparable<BattleState> {
 		}
 
 		if (!entityFound) {
-			addEntity(to.x, to.y, new HypotheticalUnit(entity.getEntityID(), entity.isPlayerUnit(), entity.getHp(), entity.getEntityData().getMaxHP(), entity.getAttackRange(), entity.getEntityData().getAttackPower(), entity.getAp(),
-					entity.getModifiers(), entity.getAbilities()));
+			addEntity(entity);
 		}
 		stateOfField[to.x][to.y].setOccupied(true);
 
-	}
-
-	private boolean withinBounds(MyPoint from) {
-		return ((from.x >= 0) && (from.x <= getWidth()) && (from.y >= 0) && (from.y <= getHeight()));
 	}
 
 	public MyPoint stepFromTowards(MyPoint from, MyPoint to) {
@@ -195,9 +177,9 @@ public class BattleState implements Comparable<BattleState> {
 				copyField[i][j] = new BattleCell(oldCell.isOccupied(), oldCell.isWalkable());
 			}
 		}
-		final Array<HypotheticalUnit> copyUnits = new Array<>();
-		for (final HypotheticalUnit unit : units) {
-			final HypotheticalUnit copyUnit = unit.makeCopy();
+		final Array<Entity> copyUnits = new Array<>();
+		for (final Entity unit : units.values()) {
+			final Entity copyUnit = unit.makeCopy();
 			copyUnits.add(copyUnit);
 			copyField[copyUnit.getX()][copyUnit.getY()].setUnit(copyUnit);
 		}
@@ -255,16 +237,15 @@ public class BattleState implements Comparable<BattleState> {
 	private void removeEntityFromStateAndListOfUnits(int tileX, int tileY) {
 		stateOfField[tileX][tileY].removeUnit();
 		int index = 0;
-		for (int i = 0; i < units.size; i++) {
+		for (int i = 0; i < units.size(); i++) {
 			if ((units.get(i).getX() == tileX) && (units.get(i).getY() == tileY)) {
-				index = i;
-				units.removeIndex(index);
+				units.remove(units.get(i));
 			}
 		}
 	}
 
-	public Array<HypotheticalUnit> getPlayerUnits() {
-		final Array<HypotheticalUnit> playerUnits = new Array<>();
+	public Array<Entity> getPlayerUnits() {
+		final Array<Entity> playerUnits = new Array<>();
 		for (final BattleCell[] row : stateOfField) {
 			for (final BattleCell cell : row) {
 				if ((cell.getUnit() != null) && cell.getUnit().isPlayerUnit()) {
@@ -275,8 +256,8 @@ public class BattleState implements Comparable<BattleState> {
 		return playerUnits;
 	}
 
-	public Array<HypotheticalUnit> getAiUnits() {
-		final Array<HypotheticalUnit> aiUnits = new Array<>();
+	public Array<Entity> getAiUnits() {
+		final Array<Entity> aiUnits = new Array<>();
 		for (final BattleCell[] row : stateOfField) {
 			for (final BattleCell cell : row) {
 				if ((cell.getUnit() != null) && !cell.getUnit().isPlayerUnit()) {
@@ -287,8 +268,8 @@ public class BattleState implements Comparable<BattleState> {
 		return aiUnits;
 	}
 
-	public Array<HypotheticalUnit> getAllUnits() {
-		final Array<HypotheticalUnit> allUnits = new Array<>();
+	public Array<Entity> getAllUnits() {
+		final Array<Entity> allUnits = new Array<>();
 		for (final BattleCell[] row : stateOfField) {
 			for (final BattleCell cell : row) {
 				if (cell.getUnit() != null) {
@@ -299,29 +280,19 @@ public class BattleState implements Comparable<BattleState> {
 		return allUnits;
 	}
 
+	public
+
 	public void reduceModifierCounts() {
-		for (final HypotheticalUnit unit : getAllUnits()) {
-			final List<Modifier> modifiersToRemove = new ArrayList<>();
-			if (!unit.getModifiers().isEmpty()) {
-				for (final Modifier mod : unit.getModifiers()) {
-					mod.applyModifier(unit);
-					if (mod.getTurns() == 0) {
-						modifiersToRemove.add(mod);
-					}
-					checkdead();
-				}
-			}
-			for (final Modifier mod : modifiersToRemove) {
-				unit.removeModifier(mod);
-			}
+		for (final Entity unit : getAllUnits()) {
+			unit.applyModifiers();
 		}
 		score = calculateScore();
 	}
 
 	private void checkdead() {
-		for (final HypotheticalUnit unit : units) {
+		for (final Entity unit : units.values()) {
 			if (unit.getHp() == 0) {
-				removeEntityFromStateAndListOfUnits(unit.getX(), unit.getY());
+				removeEntityFromStateAndListOfUnits(unit);
 			}
 		}
 	}

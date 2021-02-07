@@ -47,7 +47,7 @@ public class AITeamLeader implements UnitOwner {
 			if (!spawnPositions.isEmpty()) {
 				unit.setCurrentPosition(spawnPositions.get(0));
 				unit.setPlayerUnit(false);
-				unit.setInBattle(true);
+				unit.getVisualComponent().spawn();
 				spawnPositions.remove(0);
 				battleManager.initializeUnit(unit);
 			} else {
@@ -73,9 +73,7 @@ public class AITeamLeader implements UnitOwner {
 	@Override
 	public void renderUnits(final Batch batch) {
 		for (final Entity entity : team) {
-			if (entity.isInBattle()) {
-				batch.draw(entity.getFrame(), entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY() - 0.0f, 1.0f, 1.0f);
-			}
+			entity.getVisualComponent().draw(batch);
 		}
 	}
 

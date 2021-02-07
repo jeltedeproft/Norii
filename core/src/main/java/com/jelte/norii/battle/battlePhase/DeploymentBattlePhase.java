@@ -3,7 +3,6 @@ package com.jelte.norii.battle.battlePhase;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.Player;
@@ -23,7 +22,7 @@ public class DeploymentBattlePhase extends BattlePhase {
 		this.battlemanager = battlemanager;
 		deployingUnitNumber = 0;
 		playerUnits = Player.getInstance().getTeam();
-		playerUnits.get(0).setInDeploymentPhase(true);
+		playerUnits.get(0).getVisualComponent().setInDeploymentPhase(true);
 	}
 
 	@Override
@@ -55,23 +54,22 @@ public class DeploymentBattlePhase extends BattlePhase {
 
 	private void deployUnit(final TiledMapPosition newPosition) {
 		final Entity unitToDeploy = playerUnits.get(deployingUnitNumber);
-		unitToDeploy.setInDeploymentPhase(false);
+		unitToDeploy.getVisualComponent().setInDeploymentPhase(false);
 		initiateUnitInBattle(unitToDeploy, newPosition);
 	}
 
 	private void nextDeployment() {
 		deployingUnitNumber++;
 		if (deployingUnitNumber < playerUnits.size()) {
-			playerUnits.get(deployingUnitNumber).setInDeploymentPhase(true);
+			playerUnits.get(deployingUnitNumber).getVisualComponent().setInDeploymentPhase(true);
 		}
 		checkIfLastUnit();
 	}
 
 	private void initiateUnitInBattle(final Entity unit, final TiledMapPosition pos) {
-		unit.setInBattle(true);
 		unit.setCurrentPosition(pos);
-		unit.getEntityactor().setTouchable(Touchable.enabled);
 		battlemanager.initializeUnit(unit);
+		unit.getVisualComponent().initiateInBattle();
 	}
 
 	private void checkIfLastUnit() {

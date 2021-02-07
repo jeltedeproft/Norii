@@ -1,30 +1,18 @@
 package com.jelte.norii.entities;
 
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveTo;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.run;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import org.xguzm.pathfinding.grid.GridCell;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
-import com.jelte.norii.audio.AudioCommand;
-import com.jelte.norii.audio.AudioManager;
-import com.jelte.norii.audio.AudioTypeEvent;
 import com.jelte.norii.battle.MessageToBattleScreen;
 import com.jelte.norii.entities.EntityAnimation.Direction;
 import com.jelte.norii.magic.AbilitiesEnum;
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.magic.Modifier;
 import com.jelte.norii.magic.ModifiersEnum;
-import com.jelte.norii.utility.AssetManagerUtility;
 import com.jelte.norii.utility.MyPoint;
 import com.jelte.norii.utility.TiledMapPosition;
 
@@ -38,30 +26,20 @@ public class Entity extends Actor {
 
 	protected int basicAttackCost;
 
-	protected boolean inBattle;
-	protected boolean isInAttackPhase;
-	protected boolean isDead;
 	protected boolean isPlayerUnit;
-	protected boolean isActive;
-	protected boolean locked;
-	protected boolean statsChanged;
+	protected boolean isDead;
+
 	protected int entityID;
 
 	protected TiledMapPosition oldPlayerPosition;
 	protected TiledMapPosition currentPlayerPosition;
 	protected Direction direction;
 
-	protected EntityAnimation entityAnimation;
-	protected EntityAnimation entityTemporaryAnimation;
-	protected EntityActor entityactor;
 	protected EntityTypes entityType;
 
 	protected Collection<Ability> abilities;
 	protected Collection<Modifier> modifiers;
-
-	private Runnable updatePositionAction;
-	private Runnable stopWalkAction;
-	private Runnable cleanup;
+	protected EntityVisualComponentInterface visualComponent;
 
 	private UnitOwner owner;
 
@@ -69,7 +47,6 @@ public class Entity extends Actor {
 		entityData = EntityFileReader.getUnitData().get(type.ordinal());
 		entityType = type;
 		entityData.setEntity(this);
-		entityAnimation = new EntityAnimation(entityData.getEntitySpriteName());
 		initEntity(owner);
 	}
 
@@ -78,19 +55,17 @@ public class Entity extends Actor {
 		currentPlayerPosition = new TiledMapPosition().setPositionFromScreen(-1000, -1000);
 		hp = entityData.getMaxHP();
 		ap = entityData.getMaxAP();
-		xp = 0;
 		isDead = false;
-		inBattle = false;
-		isInAttackPhase = false;
-		statsChanged = true;
+		xp = 0;
+
 		this.owner = owner;
 		this.isPlayerUnit = owner.isPlayer();
-		locked = false;
+
 		abilities = new ArrayList<>();
 		modifiers = new ArrayList<>();
 		entityID = java.lang.System.identityHashCode(this);
 		initAbilities();
-		initActions();
+		visualComponent = new FakeEntityVisualComponent();
 	}
 
 	private void initAbilities() {
@@ -99,14 +74,8 @@ public class Entity extends Actor {
 		}
 	}
 
-	private void initActions() {
-		updatePositionAction = this::updatePositionFromActor;
-		stopWalkAction = this::stopWalkingAction;
-		cleanup = this::cleanUpDeadUnit;
-	}
-
 	public void update(final float delta) {
-		entityAnimation.update(delta);
+		visualComponent.update(delta);
 	}
 
 	public EntityData getEntityData() {
@@ -114,7 +83,7 @@ public class Entity extends Actor {
 	}
 
 	public void dispose() {
-		AssetManagerUtility.unloadAsset(entityAnimation.getSpriteName());
+		visualComponent.dispose();
 	}
 
 	public TiledMapPosition getCurrentPosition() {
@@ -131,7 +100,7 @@ public class Entity extends Actor {
 
 	public void setCurrentPosition(final TiledMapPosition pos) {
 		currentPlayerPosition = pos;
-		entityactor.setPos();
+		visualComponent.setPos();
 		owner.sendMessageToBattleManager(MessageToBattleScreen.UPDATE_POS, this);
 	}
 
@@ -141,32 +110,8 @@ public class Entity extends Actor {
 		}
 	}
 
-	public void setActive(final boolean isActive) {
-		this.isActive = isActive;
-	}
-
-	public EntityActor getEntityactor() {
-		return entityactor;
-	}
-
-	public void setEntityactor(final EntityActor entityactor) {
-		this.entityactor = entityactor;
-	}
-
-	public boolean isDead() {
-		return isDead;
-	}
-
-	public boolean isActive() {
-		return isActive;
-	}
-
-	public boolean isInAttackPhase() {
-		return isInAttackPhase;
-	}
-
 	public void attack(final Entity target) {
-		getEntityAnimation().setCurrentAnimationType(EntityAnimationType.WALK);
+		visualComponent.setAnimationType(EntityAnimationType.WALK);
 		target.damage(entityData.getAttackPower());
 	}
 
@@ -177,7 +122,9 @@ public class Entity extends Actor {
 	public void damage(final int damage) {
 		if (damage >= hp) {
 			hp = 0;
-			removeUnit();
+			visualComponent.removeUnit();
+			setVisible(false);
+			isDead = true;
 		} else {
 			hp = hp - damage;
 		}
@@ -190,43 +137,12 @@ public class Entity extends Actor {
 		}
 	}
 
-	private void removeUnit() {
-		getEntityAnimation().setCurrentAnimationType(EntityAnimationType.WALK);
-		final SequenceAction sequence = Actions.sequence();
-		sequence.addAction(Actions.fadeOut(1));
-		sequence.addAction(run(cleanup));
-		getEntityactor().addAction(sequence);
-		owner.sendMessageToBattleManager(MessageToBattleScreen.REMOVE_HUD_UNIT, this);
-	}
-
-	private void cleanUpDeadUnit() {
-		hp = 0;
-		isDead = true;
-		inBattle = false;
-		isActive = false;
-		getEntityactor().setPosition(-100, -100);
-		getEntityactor().remove();
-		setVisible(false);
-	}
-
 	public boolean canMove() {
 		return ap > 0;
 	}
 
-	public boolean isInBattle() {
-		return inBattle;
-	}
-
-	public void setInBattle(final boolean inBattle) {
-		this.inBattle = inBattle;
-	}
-
-	public void setInDeploymentPhase(final boolean isInDeploymentPhase) {
-		if (isInDeploymentPhase) {
-			setInBattle(true);
-			entityactor.setTouchable(Touchable.disabled);
-			owner.sendMessageToBattleManager(MessageToBattleScreen.SET_CHARACTER_HUD, this);
-		}
+	public boolean isDead() {
+		return isDead;
 	}
 
 	public void setFocused(final boolean isFocused) {
@@ -235,14 +151,6 @@ public class Entity extends Actor {
 		} else {
 			owner.sendMessageToBattleManager(MessageToBattleScreen.UNSET_CHARACTER_HUD, this);
 		}
-	}
-
-	public boolean isLocked() {
-		return locked;
-	}
-
-	public void setLocked(boolean locked) {
-		this.locked = locked;
 	}
 
 	public boolean isPlayerUnit() {
@@ -255,6 +163,23 @@ public class Entity extends Actor {
 
 	public UnitOwner getOwner() {
 		return owner;
+	}
+
+	public void setVisualComponent(EntityVisualComponentInterface visualComponent) {
+		this.visualComponent = visualComponent;
+	}
+
+	public EntityVisualComponentInterface getVisualComponent() {
+		return visualComponent;
+	}
+
+	public Direction getDirection() {
+		return direction;
+	}
+
+	public void setDirection(final Direction direction) {
+		this.direction = direction;
+		visualComponent.setDirection(direction);
 	}
 
 	public int getAp() {
@@ -289,27 +214,6 @@ public class Entity extends Actor {
 		return entityType;
 	}
 
-	public TextureRegion getFrame() {
-		return entityAnimation.getFrame();
-	}
-
-	public void setDirection(final Direction direction) {
-		entityAnimation.setDirection(direction);
-	}
-
-	public EntityAnimation getEntityAnimation() {
-		return entityAnimation;
-	}
-
-	public void changeAnimation(final EntityAnimation tempAnimation) {
-		entityTemporaryAnimation = entityAnimation;
-		entityAnimation = tempAnimation;
-	}
-
-	public void restoreAnimation() {
-		entityAnimation = entityTemporaryAnimation;
-	}
-
 	public void addAbility(final AbilitiesEnum abilityEnum) {
 		final Ability ability = new Ability(abilityEnum);
 		abilities.add(ability);
@@ -327,6 +231,10 @@ public class Entity extends Actor {
 	public void addModifier(final ModifiersEnum type, final int turns, final int amount) {
 		final Modifier modifier = new Modifier(type, turns, amount);
 		modifiers.add(modifier);
+	}
+
+	public void addModifier(Modifier mod) {
+		modifiers.add(mod);
 	}
 
 	public boolean hasModifier(final ModifiersEnum type) {
@@ -360,82 +268,67 @@ public class Entity extends Actor {
 		return abilities;
 	}
 
-	public boolean isStatsChanged() {
-		return statsChanged;
+	public int getScore() {
+		final int score = getModifiersScore();
+		if (isPlayerUnit) {
+			return score * (-1);
+		} else {
+			return score;
+		}
 	}
 
-	public void setStatsChanged(boolean statsChanged) {
-		this.statsChanged = statsChanged;
+	private int getModifiersScore() {
+		int score = hp;
+		for (final Modifier modifier : modifiers) {
+			switch (modifier.getType()) {
+			case DAMAGE_OVER_TIME:
+				score -= 2;
+				break;
+			case REMOVE_AP:
+				score -= 2;
+				break;
+			case REDUCE_ARMOR:
+				score -= 2;
+				break;
+			case REDUCE_DAMAGE:
+				score -= 2;
+				break;
+			case IMPROVE_DAMAGE:
+				score += 2;
+				break;
+			case STUNNED:
+				score -= 2;
+				break;
+			case ROOTED:
+				score -= 2;
+				break;
+			case SILENCED:
+				score -= 2;
+				break;
+			default:
+				return score;
+			}
+		}
+		return score;
 	}
 
 	public void move(List<GridCell> path) {
 		if (!path.isEmpty()) {
-			final SequenceAction sequence = createMoveSequence(path);
-			getEntityactor().addAction(sequence);
 			setAp(getAp() - path.size());
+			visualComponent.move(path);
 			owner.sendMessageToBattleManager(MessageToBattleScreen.MOVING_ENTITY, this, path.get(path.size() - 1));
 		}
 	}
 
 	public void moveAttack(List<GridCell> path, Entity target) {
-		final SequenceAction sequence = createMoveSequence(path);
-		sequence.addAction(new AttackAction(this, target));
-
-		getEntityactor().addAction(sequence);
 		setAp(getAp() - path.size() - getEntityData().getBasicAttackCost());
+		visualComponent.moveAttack(path, target);
+		owner.sendMessageToBattleManager(MessageToBattleScreen.MOVING_ENTITY, this, path.get(path.size() - 1));
 	}
 
 	public void endTurn() {
 		setAp(getEntityData().getMaxAP());
 		owner.sendMessageToBattleManager(MessageToBattleScreen.AI_FINISHED_TURN, this);
-	}
-
-	private SequenceAction createMoveSequence(List<GridCell> path) {
-		getEntityactor().setOrigin(getEntityactor().getWidth() / 2, getEntityactor().getHeight() / 2);
-		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_LOOP, AudioTypeEvent.WALK_LOOP);
-		getEntityAnimation().setCurrentAnimationType(EntityAnimationType.WALK);
-		GridCell oldCell = new GridCell(getCurrentPosition().getTileX(), getCurrentPosition().getTileY());
-		final SequenceAction sequence = Actions.sequence();
-		for (final GridCell cell : path) {
-			sequence.addAction(Actions.rotateTo(decideRotation(oldCell, cell), 0.05f, Interpolation.swingIn));
-			sequence.addAction(moveTo(cell.getX(), cell.getY(), 0.05f));
-			sequence.addAction(run(updatePositionAction));
-			oldCell = cell;
-		}
-		sequence.addAction(run(stopWalkAction));
-		return sequence;
-	}
-
-	private float decideRotation(GridCell oldCell, GridCell cell) {
-		if ((oldCell.x == cell.x) && (oldCell.y > cell.y)) {
-			return 0.0f;
-		} else if ((oldCell.x == cell.x) && (oldCell.y < cell.y)) {
-			return 180.0f;
-		} else if ((oldCell.x > cell.x) && (oldCell.y == cell.y)) {
-			return 270.0f;
-		}
-		return 90.0f;
-	}
-
-	private void updatePositionFromActor() {
-		setCurrentPosition(new TiledMapPosition().setPositionFromTiles((int) this.getEntityactor().getX(), (int) this.getEntityactor().getY()));
-		setDirection(decideDirection(this.getEntityactor().getRotation()));
-	}
-
-	private void stopWalkingAction() {
-		AudioManager.getInstance().onNotify(AudioCommand.SOUND_STOP, AudioTypeEvent.WALK_LOOP);
-		this.getEntityAnimation().setCurrentAnimationType(EntityAnimationType.WALK);
-	}
-
-	private Direction decideDirection(float rotation) {
-		if ((rotation >= 45) && (rotation < 135)) {
-			return Direction.RIGHT;
-		} else if ((rotation >= 135) && (rotation < 225)) {
-			return Direction.UP;
-		} else if ((rotation >= 225) && (rotation < 315)) {
-			return Direction.LEFT;
-		}
-		return Direction.DOWN;
 	}
 
 	@Override

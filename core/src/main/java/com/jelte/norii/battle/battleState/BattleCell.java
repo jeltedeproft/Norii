@@ -1,9 +1,11 @@
 package com.jelte.norii.battle.battleState;
 
+import com.jelte.norii.entities.Entity;
+
 public class BattleCell {
 	private boolean occupied;
 	private boolean walkable;
-	private HypotheticalUnit unit;
+	private Entity unit;
 
 	public BattleCell() {
 		occupied = false;
@@ -11,7 +13,7 @@ public class BattleCell {
 		unit = null;
 	}
 
-	public BattleCell(boolean occupied, boolean walkable, HypotheticalUnit unit) {
+	public BattleCell(boolean occupied, boolean walkable, Entity unit) {
 		super();
 		this.occupied = occupied;
 		this.walkable = walkable;
@@ -48,11 +50,11 @@ public class BattleCell {
 		this.walkable = walkable;
 	}
 
-	public HypotheticalUnit getUnit() {
+	public Entity getUnit() {
 		return unit;
 	}
 
-	public void setUnit(HypotheticalUnit unit) {
+	public void setUnit(Entity unit) {
 		this.unit = unit;
 	}
 
@@ -63,6 +65,6 @@ public class BattleCell {
 
 	@Override
 	public String toString() {
-		return occupied + "unit:" + unit.getEntityId() + " with position : " + unit.getX() + ", " + unit.getY();
+		return occupied + "unit:" + unit.getEntityID() + " with position : " + unit.getX() + ", " + unit.getY();
 	}
 }

@@ -43,7 +43,7 @@ public class AttackBattlePhase extends BattlePhase {
 		if ((entity.isPlayerUnit() != currentUnit.isPlayerUnit()) && closeEnough) {
 			currentUnit.attack(entity);
 			battlemanager.updateHp(entity);
-			currentUnit.setLocked(true);
+			currentUnit.getVisualComponent().setLocked(true);
 			battlemanager.setLockedUnit(entity);
 			battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.UPDATE_UI, entity);
 			AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.ATTACK_SOUND);
