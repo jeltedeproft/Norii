@@ -143,7 +143,7 @@ public class PortraitAndStats {
 			heroHP = entity.getHp();
 			heroAP = entity.getAp();
 
-			if (Boolean.TRUE.equals(entity.getEntityactor().getIsHovering())) {
+			if (Boolean.TRUE.equals(entity.getVisualComponent().isHovering())) {
 				table.setVisible(true);
 			}
 		}

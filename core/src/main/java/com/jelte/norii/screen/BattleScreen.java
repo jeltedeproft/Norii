@@ -22,7 +22,6 @@ import com.jelte.norii.audio.AudioTypeEvent;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.battle.BattleScreenInputProcessor;
 import com.jelte.norii.battle.battleState.BattleStateGridHelper;
-import com.jelte.norii.battle.battleState.HypotheticalUnit;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityStage;
 import com.jelte.norii.entities.Player;
@@ -200,7 +199,7 @@ public class BattleScreen extends GameScreen {
 	private void updateUIHover() {
 		boolean hoverResult = false;
 		for (final Entity unit : Player.getInstance().getTeam()) {
-			if (unit.getEntityactor().isActionsHovering()) {
+			if (unit.getVisualComponent().isActionsHovering()) {
 				hoverResult = true;
 			}
 		}
@@ -242,7 +241,7 @@ public class BattleScreen extends GameScreen {
 
 	private void renderUnits() {
 		spriteBatch.begin();
-		if (battlemanager.getActiveUnit().isActive()) {
+		if (battlemanager.getActiveUnit().getVisualComponent().isActive()) {
 			spriteBatch.draw(AssetManagerUtility.getSprite("purple"), battlemanager.getActiveUnit().getCurrentPosition().getTileX(), battlemanager.getActiveUnit().getCurrentPosition().getTileY(), 1.0f, 1.0f);
 		}
 		entityStage.getViewport().apply();
@@ -336,8 +335,8 @@ public class BattleScreen extends GameScreen {
 
 	private boolean isUnitOnCell(final GridCell cell) {
 		final TiledMapPosition cellToTiled = new TiledMapPosition().setPositionFromTiles(cell.x, cell.y);
-		for (final HypotheticalUnit entity : battlemanager.getBattleState().getAllUnits()) {
-			if (entity.getPositionAsTiledMapPosition().isTileEqualTo(cellToTiled)) {
+		for (final Entity entity : battlemanager.getBattleState().getAllUnits()) {
+			if (entity.getCurrentPosition().isTileEqualTo(cellToTiled)) {
 				return true;
 			}
 		}
@@ -365,9 +364,9 @@ public class BattleScreen extends GameScreen {
 		switch (message) {
 		case CLICKED_ON_SKIP:
 			final Entity skipEntity = battlemanager.getEntityByID(entityID);
-			skipEntity.setActive(false);
+			skipEntity.getVisualComponent().setActive(false);
 			skipEntity.setFocused(false);
-			skipEntity.setLocked(false);
+			skipEntity.getVisualComponent().setLocked(false);
 			skipEntity.setAp(skipEntity.getEntityData().getMaxAP());
 			battlemanager.setLockedUnit(null);
 			battlemanager.setCurrentBattleState(battlemanager.getActionBattleState());

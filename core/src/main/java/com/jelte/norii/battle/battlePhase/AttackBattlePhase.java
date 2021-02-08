@@ -42,7 +42,6 @@ public class AttackBattlePhase extends BattlePhase {
 		final boolean closeEnough = Utility.checkIfUnitsWithinDistance(entity, currentUnit.getCurrentPosition(), currentUnit.getEntityData().getAttackRange());
 		if ((entity.isPlayerUnit() != currentUnit.isPlayerUnit()) && closeEnough) {
 			currentUnit.attack(entity);
-			battlemanager.updateHp(entity);
 			currentUnit.getVisualComponent().setLocked(true);
 			battlemanager.setLockedUnit(entity);
 			battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.UPDATE_UI, entity);

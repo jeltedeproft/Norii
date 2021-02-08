@@ -12,7 +12,6 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.battle.battleState.BattleState;
-import com.jelte.norii.battle.battleState.HypotheticalUnit;
 import com.jelte.norii.entities.Entity;
 
 public final class Utility {
@@ -75,7 +74,7 @@ public final class Utility {
 	}
 
 	public static MyPoint getCenterOfGravityAi(BattleState battleState) {
-		Array<HypotheticalUnit> aiUnits = battleState.getAiUnits();
+		final Array<Entity> aiUnits = battleState.getAiUnits();
 		final int numberOfElements = aiUnits.size;
 		int sumX = 0;
 		int sumY = 0;
@@ -89,7 +88,7 @@ public final class Utility {
 	}
 
 	public static MyPoint getCenterOfGravityPlayers(BattleState battleState) {
-		Array<HypotheticalUnit> playerUnits = battleState.getPlayerUnits();
+		final Array<Entity> playerUnits = battleState.getPlayerUnits();
 		final int numberOfElements = playerUnits.size;
 		int sumX = 0;
 		int sumY = 0;
@@ -103,7 +102,7 @@ public final class Utility {
 	}
 
 	public static MyPoint getCenterOfGravityAllUnits(BattleState battleState) {
-		Array<HypotheticalUnit> allUnits = battleState.getAllUnits();
+		final Array<Entity> allUnits = battleState.getAllUnits();
 		final int numberOfElements = allUnits.size;
 		int sumX = 0;
 		int sumY = 0;

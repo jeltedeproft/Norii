@@ -186,7 +186,7 @@ public class Hud implements ProfileObserver {
 				action.update(entity);
 			}
 			if (infos != null) {
-				for (ActionInfoUiWindow info : infos) {
+				for (final ActionInfoUiWindow info : infos) {
 					info.update();
 				}
 			}

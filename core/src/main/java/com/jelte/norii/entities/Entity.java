@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.xguzm.pathfinding.grid.GridCell;
 
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.jelte.norii.battle.MessageToBattleScreen;
 import com.jelte.norii.entities.EntityAnimation.Direction;
@@ -23,6 +24,7 @@ public class Entity extends Actor {
 	protected int ap;
 	protected int hp;
 	protected int xp;
+	protected boolean statsChanged;
 
 	protected int basicAttackCost;
 
@@ -56,6 +58,7 @@ public class Entity extends Actor {
 		hp = entityData.getMaxHP();
 		ap = entityData.getMaxAP();
 		isDead = false;
+		statsChanged = true;
 		xp = 0;
 
 		this.owner = owner;
@@ -125,6 +128,7 @@ public class Entity extends Actor {
 			visualComponent.removeUnit();
 			setVisible(false);
 			isDead = true;
+			owner.sendMessageToBattleManager(MessageToBattleScreen.UNIT_DIED, this);
 		} else {
 			hp = hp - damage;
 		}
@@ -143,6 +147,14 @@ public class Entity extends Actor {
 
 	public boolean isDead() {
 		return isDead;
+	}
+
+	public boolean isStatsChanged() {
+		return statsChanged;
+	}
+
+	public void setStatsChanged(boolean statsChanged) {
+		this.statsChanged = statsChanged;
 	}
 
 	public void setFocused(final boolean isFocused) {
@@ -331,6 +343,23 @@ public class Entity extends Actor {
 		owner.sendMessageToBattleManager(MessageToBattleScreen.AI_FINISHED_TURN, this);
 	}
 
+	public Entity makeCopyWithoutVisual() {
+		final Collection<Modifier> copyModifiers = new ArrayList<>();
+		for (final Modifier mod : modifiers) {
+			copyModifiers.add(new Modifier(mod.getType(), mod.getTurns(), mod.getAmount()));
+		}
+
+		final Collection<Ability> copyAbilities = new ArrayList<>();
+		for (final Ability ability : abilities) {
+			copyAbilities.add(new Ability(ability.getAbilityEnum()));
+		}
+
+		final Entity copy = new Entity(entityType, owner);
+		copy.setCurrentPosition(currentPlayerPosition);
+		copy.setVisualComponent(new FakeEntityVisualComponent());
+		return copy;
+	}
+
 	@Override
 	public String toString() {
 		if (isPlayerUnit) {
@@ -361,5 +390,9 @@ public class Entity extends Actor {
 		if (entityID != other.entityID)
 			return false;
 		return true;
+	}
+
+	public void draw(Batch batch) {
+		visualComponent.draw(batch);
 	}
 }

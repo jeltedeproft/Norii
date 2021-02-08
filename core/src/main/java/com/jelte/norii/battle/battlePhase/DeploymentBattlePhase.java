@@ -68,7 +68,7 @@ public class DeploymentBattlePhase extends BattlePhase {
 
 	private void initiateUnitInBattle(final Entity unit, final TiledMapPosition pos) {
 		unit.setCurrentPosition(pos);
-		battlemanager.initializeUnit(unit);
+		battlemanager.addUnit(unit);
 		unit.getVisualComponent().initiateInBattle();
 	}
 

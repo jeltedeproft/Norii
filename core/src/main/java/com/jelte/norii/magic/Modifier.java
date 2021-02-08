@@ -47,7 +47,7 @@ public class Modifier {
 			unit.getEntityData().setAttackPower(unit.getEntityData().getAttackPower() - amount);
 			break;
 		case IMAGE_CHANGED:
-			unit.restoreAnimation();
+			unit.getVisualComponent().restoreAnimation();
 			break;
 		default:
 			break;

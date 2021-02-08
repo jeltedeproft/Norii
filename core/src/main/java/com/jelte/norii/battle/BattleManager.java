@@ -1,7 +1,5 @@
 package com.jelte.norii.battle;
 
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -27,7 +25,6 @@ import com.jelte.norii.battle.battleState.SpellMove;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.Player;
 import com.jelte.norii.magic.Ability;
-import com.jelte.norii.magic.Modifier;
 import com.jelte.norii.map.MyPathFinder;
 import com.jelte.norii.screen.BattleScreen;
 import com.jelte.norii.utility.MyPoint;
@@ -81,35 +78,8 @@ public class BattleManager {
 		}
 	}
 
-	public void initializeUnit(Entity unit) {
-		if (unit.isPlayerUnit()) {
-			addHypotheticalPlayerUnitToField(unit);
-		} else {
-			addHypotheticalAiUnitToField(unit);
-		}
-	}
-
 	public void addUnit(Entity unit) {
-		initializeUnit(unit);
-		if (unit.isPlayerUnit()) {
-			Player.getInstance().addUnit(unit);
-		} else {
-			aiTeamLeader.addUnit(unit);
-		}
-	}
-
-	private void addHypotheticalAiUnitToField(Entity unit) {
 		activeBattleState.addEntity(unit);
-		addModifiers(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getModifiers());
-	}
-
-	private void addHypotheticalPlayerUnitToField(Entity unit) {
-		activeBattleState.addEntity(unit);
-		addModifiers(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getModifiers());
-	}
-
-	private void addModifiers(int x, int y, final Collection<Modifier> mods) {
-		activeBattleState.addModifiersToUnit(x, y, mods);
 	}
 
 	public void setUnitActive(Entity entity) {
@@ -135,6 +105,9 @@ public class BattleManager {
 		case UPDATE_POS:
 			updateStateOfBattle(entity, entity.getCurrentPosition());
 			break;
+		case UNIT_DIED:
+			removeUnit(entity);
+			break;
 		default:
 			battleScreen.messageFromBattleManager(message, entity);
 			break;
@@ -146,32 +119,15 @@ public class BattleManager {
 		case MOVING_ENTITY:
 			activeBattleState.moveUnitTo(entity, new MyPoint(gridCell.x, gridCell.y));
 			break;
+		default:
+			battleScreen.messageFromBattleManager(message, entity);
+			break;
 		}
 	}
 
 	public void swapTurn() {
 		Player.getInstance().applyModifiers();
-		final Iterator<Entity> itr = Player.getInstance().getTeam().iterator();
-		while (itr.hasNext()) {
-			final Entity unit = itr.next();
-			activeBattleState.updateEntity(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getHp());
-			if (unit.getHp() <= 0) {
-				executeOnDeathEffect(unit);
-				itr.remove();
-			}
-			checkVictory();
-		}
 		aiTeamLeader.applyModifiers();
-		final Iterator<Entity> aiItr = aiTeamLeader.getTeam().iterator();
-		while (aiItr.hasNext()) {
-			final Entity unit = aiItr.next();
-			activeBattleState.updateEntity(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getHp());
-			if (unit.getHp() <= 0) {
-				executeOnDeathEffect(unit);
-				aiItr.remove();
-			}
-			checkVictory();
-		}
 
 		playerTurn = !playerTurn;
 
@@ -208,7 +164,6 @@ public class BattleManager {
 				final Entity entityAttacking = getEntityByID(entityID);
 				final Entity entityToAttack = getEntityByID(activeBattleState.get(move.getLocation().x, move.getLocation().y).getUnit().getEntityID());
 				entityAttacking.attack(entityToAttack);
-				updateHp(entityToAttack);
 				sendMessageToBattleScreen(MessageToBattleScreen.UPDATE_UI, entityToAttack);
 				AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.ATTACK_SOUND);
 				break;
@@ -248,20 +203,14 @@ public class BattleManager {
 		return null;
 	}
 
-	public void updateHp(Entity unit) {
-		activeBattleState.updateEntity(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getHp());
-		if (unit.getHp() <= 0) {
-			removeUnit(unit);
-		}
-		checkVictory();
-	}
-
 	private void removeUnit(Entity unit) {
 		executeOnDeathEffect(unit);
 		Player.getInstance().removeUnit(unit);
 		aiTeamLeader.removeUnit(unit);
+		activeBattleState.removeUnit(unit);
 	}
 
+	@SuppressWarnings("incomplete-switch")
 	private void executeOnDeathEffect(Entity unit) {
 		switch (unit.getEntityType()) {
 		case BOOMERANG:

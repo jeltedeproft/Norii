@@ -152,63 +152,41 @@ public class AIDecisionMaker {
 	private void applyAttackOnBattleState(Entity aiUnit, Move move, BattleState battleState) {
 		final MyPoint attackLocation = move.getLocation();
 		final int damage = aiUnit.getEntityData().getAttackPower();
-		final int hp = battleState.get(attackLocation.x, attackLocation.y).getUnit().getHp();
-		if (damage >= hp) {
-			battleState.updateEntity(attackLocation.x, attackLocation.y, 0);
-		} else {
-			battleState.updateEntity(attackLocation.x, attackLocation.y, hp - damage);
-		}
+		battleState.damageUnit(attackLocation, damage);
 	}
 
 	private void applySpellOnBattleState(Entity unit, SpellMove move, BattleState battleState) {
-		final MyPoint caster = new MyPoint(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY());
+		final MyPoint casterPos = new MyPoint(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY());
 		final Array<MyPoint> targets = move.getAffectedUnits();
 		final MyPoint location = move.getLocation();
 		final int damage = move.getAbility().getSpellData().getDamage();
 		switch (move.getAbility().getAbilityEnum()) {
 		case FIREBALL:
-			final int hp = battleState.get(location.x, location.y).getUnit().getHp();
-			if (damage >= hp) {
-				battleState.updateEntity(location.x, location.y, 0);
-			} else {
-				battleState.updateEntity(location.x, location.y, hp - damage);
-			}
-
+			battleState.damageUnit(location, damage);
 			break;
 		case TURN_TO_STONE:
 			battleState.addModifierToUnit(location.x, location.y, new Modifier(ModifiersEnum.STUNNED, 2, 0));
 			break;
 		case SWAP:
 			final Entity placeHolder = battleState.get(location.x, location.y).getUnit();
-			battleState.addEntity(location.x, location.y, battleState.get(caster.x, caster.y).getUnit());
-			battleState.addEntity(caster.x, caster.y, placeHolder);
+			battleState.swapPositions(unit, placeHolder);
 			break;
 		case HAMMERBACK:
-			final List<MyPoint> crossedCells = findLine(caster.x, caster.y, location.x, location.y);
+			final List<MyPoint> crossedCells = findLine(casterPos.x, casterPos.y, location.x, location.y);
 			for (final MyPoint point : crossedCells) {
 				if (battleState.get(point.x, point.y).isOccupied()) {
-					final int unitHp = battleState.get(point.x, point.y).getUnit().getHp();
-					if (damage >= unitHp) {
-						battleState.updateEntity(point.x, point.y, 0);
-					} else {
-						battleState.updateEntity(point.x, point.y, unitHp - damage);
-					}
+					battleState.damageUnit(location, damage);
 				}
 			}
-			battleState.addEntity(location.x, location.y, new Entity(EntityTypes.BOOMERANG, null));
+			battleState.addEntity(new Entity(EntityTypes.BOOMERANG, unit.getOwner()));
 			battleState.get(location.x, location.y).getUnit().addModifier(new Modifier(ModifiersEnum.DAMAGE_OVER_TIME, 3, 1));
-			battleState.get(location.x, location.y).getUnit().addAbility(AbilitiesEnum.HAMMERBACKBACK, caster);
+			battleState.get(location.x, location.y).getUnit().addAbility(AbilitiesEnum.HAMMERBACKBACK, casterPos);
 			break;
 		case HAMMERBACKBACK:
-			final List<MyPoint> crossedCellsBack = findLine(caster.x, caster.y, location.x, location.y);
+			final List<MyPoint> crossedCellsBack = findLine(casterPos.x, casterPos.y, location.x, location.y);
 			for (final MyPoint point : crossedCellsBack) {
 				if (battleState.get(point.x, point.y).isOccupied()) {
-					final int unitHp = battleState.get(point.x, point.y).getUnit().getHp();
-					if (damage >= unitHp) {
-						battleState.updateEntity(point.x, point.y, 0);
-					} else {
-						battleState.updateEntity(point.x, point.y, unitHp - damage);
-					}
+					battleState.damageUnit(location, damage);
 				}
 			}
 			break;

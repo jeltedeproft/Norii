@@ -52,7 +52,7 @@ public class SpellBattlePhase extends BattlePhase {
 	}
 
 	private void showCellsThatSpellWillAffect(TiledMapPosition actorPos) {
-		MyPoint casterPos = battlemanager.getActiveUnit().getCurrentPosition().getTilePosAsPoint();
+		final MyPoint casterPos = battlemanager.getActiveUnit().getCurrentPosition().getTilePosAsPoint();
 		ParticleMaker.deactivateAllParticlesOfType(ParticleType.ATTACK);
 		final Set<MyPoint> pointsToColor = BattleStateGridHelper.getInstance().getAllPointsASpellCanHit(casterPos, actorPos.getTilePosAsPoint(), ability.getAreaOfEffect(), ability.getSpellData().getRange(), battlemanager.getBattleState());
 		for (final MyPoint point : pointsToColor) {
@@ -245,7 +245,6 @@ public class SpellBattlePhase extends BattlePhase {
 		final Entity possibleTarget = getEntityAtPosition(targetPos);
 		if (possibleTarget != null) {
 			possibleTarget.damage(ability.getSpellData().getDamage());
-			battlemanager.updateHp(possibleTarget);
 			battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.UPDATE_UI, possibleTarget);
 		}
 	}
@@ -278,7 +277,6 @@ public class SpellBattlePhase extends BattlePhase {
 			if (battlemanager.getBattleState().get(point.x, point.y).isOccupied()) {
 				final Entity unit = battlemanager.getBattleState().get(point.x, point.y).getUnit();
 				battlemanager.getEntityByID(unit.getEntityID()).damage(ability.getSpellData().getDamage());
-				battlemanager.updateHp(battlemanager.getEntityByID(unit.getEntityID()));
 			}
 		}
 
@@ -300,7 +298,6 @@ public class SpellBattlePhase extends BattlePhase {
 			if (battlemanager.getBattleState().get(point.x, point.y).isOccupied()) {
 				final Entity unit = battlemanager.getBattleState().get(point.x, point.y).getUnit();
 				battlemanager.getEntityByID(unit.getEntityID()).damage(ability.getSpellData().getDamage());
-				battlemanager.updateHp(battlemanager.getEntityByID(unit.getEntityID()));
 			}
 		}
 	}

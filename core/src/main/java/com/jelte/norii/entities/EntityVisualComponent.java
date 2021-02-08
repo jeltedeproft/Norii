@@ -26,7 +26,6 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 	protected boolean isActive;
 	protected boolean inBattle;
 	protected boolean locked;
-	protected boolean statsChanged;
 
 	protected EntityAnimation entityAnimation;// weg
 	protected EntityAnimation entityTemporaryAnimation;// weg
@@ -36,12 +35,11 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 	private Runnable stopWalkAction;// weg
 	private Runnable cleanup;// weg
 
-	private Entity entity;
+	private final Entity entity;
 
 	public EntityVisualComponent(Entity entity) {
 		this.entity = entity;
 		isInAttackPhase = false;
-		statsChanged = true;
 		locked = false;
 		inBattle = false;
 		entityAnimation = new EntityAnimation(entity.getEntityData().getEntitySpriteName());
@@ -73,6 +71,7 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 		return entityactor;
 	}
 
+	@Override
 	public void setEntityactor(final EntityActor entityactor) {
 		this.entityactor = entityactor;
 	}
@@ -99,6 +98,7 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 		this.isActive = isActive;
 	}
 
+	@Override
 	public boolean isActive() {
 		return isActive;
 	}
@@ -114,14 +114,6 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 	@Override
 	public void setLocked(boolean locked) {
 		this.locked = locked;
-	}
-
-	public boolean isStatsChanged() {
-		return statsChanged;
-	}
-
-	public void setStatsChanged(boolean statsChanged) {
-		this.statsChanged = statsChanged;
 	}
 
 	public boolean isInBattle() {
@@ -150,6 +142,7 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 		entityAnimation.setDirection(direction);
 	}
 
+	@Override
 	public void initiateInBattle() {
 		setInBattle(true);
 		getEntityactor().setTouchable(Touchable.enabled);
@@ -159,11 +152,13 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 		return entityAnimation;
 	}
 
+	@Override
 	public void changeAnimation(final EntityAnimation tempAnimation) {
 		entityTemporaryAnimation = entityAnimation;
 		entityAnimation = tempAnimation;
 	}
 
+	@Override
 	public void restoreAnimation() {
 		entityAnimation = entityTemporaryAnimation;
 	}
@@ -239,13 +234,32 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 	@Override
 	public void draw(Batch batch) {
 		if (isInBattle()) {
-			batch.draw(getFrame(), entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY() - 0.0f, 1.0f, 1.0f);
+			batch.draw(getFrame(), entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY(), 1.0f, 1.0f);
+		}
+
+		if (isLocked()) {
+			batch.draw(AssetManagerUtility.getSprite("lock"), entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY() + 1.0f, 1.0f, 1.0f);
 		}
 	}
 
 	@Override
 	public void spawn() {
 		setInBattle(true);
+	}
+
+	@Override
+	public boolean isActionsHovering() {
+		return entityactor.isActionsHovering();
+	}
+
+	@Override
+	public void setActionsHovering(boolean b) {
+		entityactor.setActionsHovering(b);
+	}
+
+	@Override
+	public boolean isHovering() {
+		return entityactor.getIsHovering();
 	}
 
 }

@@ -39,4 +39,16 @@ public interface EntityVisualComponentInterface {
 
 	public void changeAnimation(EntityAnimation entityAnimation);
 
+	public void setEntityactor(EntityActor entityActor);
+
+	public void restoreAnimation();
+
+	public boolean isActionsHovering();
+
+	public boolean isActive();
+
+	public void setActionsHovering(boolean b);;
+
+	public boolean isHovering();
+
 }

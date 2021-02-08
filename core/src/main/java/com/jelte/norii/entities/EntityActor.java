@@ -26,7 +26,7 @@ public class EntityActor extends Actor {
 		this.actorPos.setPositionFromScreen(entity.getX(), entity.getY());
 		this.isHovering = false;
 		isActionsHovering = false;
-		entity.setEntityactor(this);
+		entity.getVisualComponent().setEntityactor(this);
 	}
 
 	public void setPos() {
@@ -47,7 +47,6 @@ public class EntityActor extends Actor {
 
 	@Override
 	public String toString() {
-		return "name : " + entity.getEntityData().getName() + "   pos:" + entity.getCurrentPosition().getTileX() + " , "
-				+ entity.getCurrentPosition().getTileY();
+		return "name : " + entity.getEntityData().getName() + "   pos:" + entity.getCurrentPosition().getTileX() + " , " + entity.getCurrentPosition().getTileY();
 	}
 }

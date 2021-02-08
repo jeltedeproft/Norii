@@ -122,7 +122,7 @@ public class StatusUi extends Window {
 		updateStats(unit);
 		updateLabels();
 
-		final boolean isHovering = unit.getEntityactor().getIsHovering();
+		final boolean isHovering = unit.getVisualComponent().isHovering();
 
 		if (Boolean.TRUE.equals(isHovering)) {
 			setVisible(true);

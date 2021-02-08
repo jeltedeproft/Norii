@@ -49,7 +49,7 @@ public class AITeamLeader implements UnitOwner {
 				unit.setPlayerUnit(false);
 				unit.getVisualComponent().spawn();
 				spawnPositions.remove(0);
-				battleManager.initializeUnit(unit);
+				battleManager.addUnit(unit);
 			} else {
 				Gdx.app.debug(TAG, "maybe no more room to spawn ai units!");
 			}

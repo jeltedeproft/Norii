@@ -7,7 +7,6 @@ import org.xguzm.pathfinding.grid.GridCell;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.battle.MessageToBattleScreen;
-import com.jelte.norii.utility.AssetManagerUtility;
 
 public class Player implements UnitOwner {
 	private static Player instance;
@@ -28,13 +27,7 @@ public class Player implements UnitOwner {
 	@Override
 	public void renderUnits(final Batch batch) {
 		for (final Entity entity : team) {
-			if (entity.isInBattle()) {
-				batch.draw(entity.getFrame(), entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY(), 1.0f, 1.0f);
-			}
-
-			if (entity.isLocked()) {
-				batch.draw(AssetManagerUtility.getSprite("lock"), entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY() + 1.0f, 1.0f, 1.0f);
-			}
+			entity.draw(batch);
 		}
 	}
 

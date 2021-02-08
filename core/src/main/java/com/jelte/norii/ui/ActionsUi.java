@@ -158,11 +158,11 @@ public class ActionsUi extends Window {
 	private void setHovering(Entity entity) {
 		for (final ActionUIButton button : buttons) {
 			if (button.isHovering() && button.entered) {
-				entity.getEntityactor().setActionsHovering(true);
+				entity.getVisualComponent().setActionsHovering(true);
 			}
 
 			if (button.exited) {
-				entity.getEntityactor().setActionsHovering(false);
+				entity.getVisualComponent().setActionsHovering(false);
 				button.exited = false;
 			}
 		}
