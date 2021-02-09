@@ -114,17 +114,6 @@ public class BattleManager {
 		}
 	}
 
-	public void sendMessageToBattleScreen(MessageToBattleScreen message, Entity entity, GridCell gridCell) {
-		switch (message) {
-		case MOVING_ENTITY:
-			activeBattleState.moveUnitTo(entity, new MyPoint(gridCell.x, gridCell.y));
-			break;
-		default:
-			battleScreen.messageFromBattleManager(message, entity);
-			break;
-		}
-	}
-
 	public void swapTurn() {
 		Player.getInstance().applyModifiers();
 		aiTeamLeader.applyModifiers();

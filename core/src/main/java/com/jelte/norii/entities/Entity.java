@@ -68,7 +68,7 @@ public class Entity extends Actor {
 		modifiers = new ArrayList<>();
 		entityID = java.lang.System.identityHashCode(this);
 		initAbilities();
-		visualComponent = new FakeEntityVisualComponent();
+		visualComponent = new EntityVisualComponent(this);
 	}
 
 	private void initAbilities() {
@@ -328,19 +328,16 @@ public class Entity extends Actor {
 		if (!path.isEmpty()) {
 			setAp(getAp() - path.size());
 			visualComponent.move(path);
-			owner.sendMessageToBattleManager(MessageToBattleScreen.MOVING_ENTITY, this, path.get(path.size() - 1));
 		}
 	}
 
 	public void moveAttack(List<GridCell> path, Entity target) {
 		setAp(getAp() - path.size() - getEntityData().getBasicAttackCost());
 		visualComponent.moveAttack(path, target);
-		owner.sendMessageToBattleManager(MessageToBattleScreen.MOVING_ENTITY, this, path.get(path.size() - 1));
 	}
 
 	public void endTurn() {
 		setAp(getEntityData().getMaxAP());
-		owner.sendMessageToBattleManager(MessageToBattleScreen.AI_FINISHED_TURN, this);
 	}
 
 	public Entity makeCopyWithoutVisual() {
@@ -355,8 +352,8 @@ public class Entity extends Actor {
 		}
 
 		final Entity copy = new Entity(entityType, owner);
-		copy.setCurrentPosition(currentPlayerPosition);
 		copy.setVisualComponent(new FakeEntityVisualComponent());
+		copy.setCurrentPosition(currentPlayerPosition);
 		return copy;
 	}
 

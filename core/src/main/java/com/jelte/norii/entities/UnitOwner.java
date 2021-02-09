@@ -2,8 +2,6 @@ package com.jelte.norii.entities;
 
 import java.util.List;
 
-import org.xguzm.pathfinding.grid.GridCell;
-
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.battle.MessageToBattleScreen;
@@ -28,6 +26,4 @@ public interface UnitOwner {
 	public void addUnit(Entity unit);
 
 	public void sendMessageToBattleManager(MessageToBattleScreen message, Entity entity);
-
-	public void sendMessageToBattleManager(MessageToBattleScreen movingEntity, Entity entity, GridCell gridCell);
 }
