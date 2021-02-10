@@ -18,6 +18,7 @@ import com.jelte.norii.battle.battleState.MoveType;
 import com.jelte.norii.battle.battleState.SpellMove;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityTypes;
+import com.jelte.norii.entities.FakeEntityVisualComponent;
 import com.jelte.norii.magic.AbilitiesEnum;
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.magic.Ability.Target;
@@ -175,10 +176,13 @@ public class AIDecisionMaker {
 			final List<MyPoint> crossedCells = findLine(casterPos.x, casterPos.y, location.x, location.y);
 			for (final MyPoint point : crossedCells) {
 				if (battleState.get(point.x, point.y).isOccupied()) {
-					battleState.damageUnit(location, damage);
+					battleState.damageUnit(point, damage);
 				}
 			}
-			battleState.addEntity(new Entity(EntityTypes.BOOMERANG, unit.getOwner()));
+			final Entity hammerBackUnit = new Entity(EntityTypes.BOOMERANG, unit.getOwner());
+			hammerBackUnit.setVisualComponent(new FakeEntityVisualComponent());
+			hammerBackUnit.setCurrentPosition(new TiledMapPosition().setPositionFromTiles(location.x, location.y));
+			battleState.addEntity(hammerBackUnit);
 			battleState.get(location.x, location.y).getUnit().addModifier(new Modifier(ModifiersEnum.DAMAGE_OVER_TIME, 3, 1));
 			battleState.get(location.x, location.y).getUnit().addAbility(AbilitiesEnum.HAMMERBACKBACK, casterPos);
 			break;
@@ -186,7 +190,7 @@ public class AIDecisionMaker {
 			final List<MyPoint> crossedCellsBack = findLine(casterPos.x, casterPos.y, location.x, location.y);
 			for (final MyPoint point : crossedCellsBack) {
 				if (battleState.get(point.x, point.y).isOccupied()) {
-					battleState.damageUnit(location, damage);
+					battleState.damageUnit(point, damage);
 				}
 			}
 			break;

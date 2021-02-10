@@ -111,15 +111,9 @@ public class BattleState implements Comparable<BattleState> {
 			for (final Entity unit : units.values()) {
 				if (unit.getEntityID() == entity.getEntityID()) {
 					stateOfField[to.x][to.y].setUnit(stateOfField[unit.getCurrentPosition().getTileX()][unit.getCurrentPosition().getTileY()].getUnit());
-					if (stateOfField[to.x][to.y].getUnit() == null) {
-						final int j = 5;
-					}
-					stateOfField[to.x][to.y].getUnit().setX(to.x);
-					stateOfField[to.x][to.y].getUnit().setY(to.y);
+					stateOfField[to.x][to.y].getUnit().setCurrentPosition(new TiledMapPosition().setPositionFromTiles(to.x, to.y));
 					stateOfField[from.x][from.y].removeUnit();
 					entityFound = true;
-					unit.setX(to.x);
-					unit.setY(to.y);
 				}
 			}
 

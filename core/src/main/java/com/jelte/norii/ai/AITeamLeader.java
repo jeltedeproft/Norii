@@ -71,7 +71,7 @@ public class AITeamLeader implements UnitOwner {
 	@Override
 	public void renderUnits(final Batch batch) {
 		for (final Entity entity : team) {
-			entity.getVisualComponent().draw(batch);
+			entity.draw(batch);
 		}
 	}
 

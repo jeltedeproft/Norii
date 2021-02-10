@@ -146,8 +146,9 @@ public class BattleManager {
 				break;
 			case MOVE:
 				final Entity entityToMove = getEntityByID(entityID);
-				entityToMove.move(MyPathFinder.getInstance().pathTowards(entityToMove.getCurrentPosition(), new TiledMapPosition().setPositionFromTiles(move.getLocation().x, move.getLocation().y), entityToMove.getAp()));
+				final List<GridCell> path = MyPathFinder.getInstance().pathTowards(entityToMove.getCurrentPosition(), new TiledMapPosition().setPositionFromTiles(move.getLocation().x, move.getLocation().y), entityToMove.getAp());
 				activeBattleState.moveUnitTo(entityToMove, new MyPoint(move.getLocation().x, move.getLocation().y));
+				entityToMove.move(path);
 				break;
 			case ATTACK:
 				final Entity entityAttacking = getEntityByID(entityID);
