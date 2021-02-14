@@ -449,9 +449,11 @@ public class BattleScreen extends GameScreen {
 			break;
 		case UNLOCK_UI:
 			newHud.setLocked(false);
+			newHud.showActions(true, entity);
 			break;
 		case LOCK_UI:
 			newHud.setLocked(true);
+			newHud.showActions(false, entity);
 			break;
 		default:
 			break;

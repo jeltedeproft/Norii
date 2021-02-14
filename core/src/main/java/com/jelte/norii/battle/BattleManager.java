@@ -116,8 +116,9 @@ public class BattleManager {
 		case ACTION_COMPLETED:
 			if (!playerTurn) {
 				executeNextMove();
+			} else {
+				sendMessageToBattleScreen(MessageToBattleScreen.UNLOCK_UI, activeUnit);
 			}
-			sendMessageToBattleScreen(MessageToBattleScreen.UNLOCK_UI, activeUnit);
 			break;
 		default:
 			battleScreen.messageFromBattleManager(message, entity);
@@ -149,7 +150,9 @@ public class BattleManager {
 		final Move move = activeTurn.getNextMove();
 		if (move == null) {
 			aiUnitIsBussy = false;
-			sendMessageToBattleScreen(MessageToBattleScreen.UNLOCK_UI, activeUnit);
+			if (entity.isPlayerUnit()) {
+				sendMessageToBattleScreen(MessageToBattleScreen.UNLOCK_UI, activeUnit);
+			}
 			checkVictory();
 			entity.endTurn();
 			swapTurn();

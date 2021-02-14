@@ -275,4 +275,10 @@ public class Hud implements ProfileObserver {
 	public void setLocked(boolean locked) {
 		this.locked = locked;
 	}
+
+	public void showActions(boolean show, Entity entity) {
+		final int id = entity.getEntityID();
+		final ActionsUi action = entityIdWithActionUi.get(id);
+		action.setVisible(show);
+	}
 }
