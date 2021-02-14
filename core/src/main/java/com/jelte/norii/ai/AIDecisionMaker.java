@@ -40,7 +40,6 @@ public class AIDecisionMaker {
 	}
 
 	public BattleState makeDecision(BattleState battleState) {
-		System.out.println("1");
 		final Array<BattleState> battleStates = new Array<>();
 		final Array<BattleState> battleStatesLevelTwo = new Array<>();
 		final Array<BattleState> battleStatesLevelThree = new Array<>();
@@ -55,8 +54,6 @@ public class AIDecisionMaker {
 				}
 			}
 		}
-		System.out.println("number of states in lvl 1 = " + battleStates.size);
-		System.out.println("2");
 		reduceModifierCount(battleStates);
 		for (final BattleState updatedState : battleStates) {
 			if (checkEndConditions(updatedState)) {
@@ -75,22 +72,15 @@ public class AIDecisionMaker {
 				}
 			}
 		}
-		System.out.println("3");
 		reduceModifierCount(battleStatesLevelTwo);
-		System.out.println("3.5");
-		System.out.println("number of states in lvl 2 = " + battleStatesLevelTwo.size);
 		for (final BattleState updatedState : battleStatesLevelTwo) {
 			if (checkEndConditions(updatedState)) {
 				battleStatesLevelThree.add(updatedState.makeCopyWithTurn());
 			} else {
-				System.out.println("3.5 - inside - level 1");
 				for (final Entity aiUnit : updatedState.getAiUnits()) {
-					System.out.println("3.5 - inside - level 2");
 					for (final Ability ability : aiUnit.getAbilities()) {
-						System.out.println("3.5 - inside - level 3");
 						final Array<UnitTurn> turns = generateMoves(ability, aiUnit, updatedState);
 						for (final UnitTurn turn : turns) {
-							System.out.println("3.5 - inside - level 4");
 							final BattleState newState = applyTurnToBattleState(aiUnit, turn, updatedState);
 							newState.setParentState(updatedState);
 							newState.setTurn(turn);
@@ -100,12 +90,8 @@ public class AIDecisionMaker {
 				}
 			}
 		}
-		System.out.println("number of states in lvl 3 = " + battleStatesLevelThree.size);
-		System.out.println("4");
 		reduceModifierCount(battleStatesLevelThree);
-		System.out.println("5");
 		battleStatesLevelThree.sort();
-		System.out.println("6");
 		return getInitialMoves(battleStatesLevelThree.get(0));
 	}
 
@@ -442,9 +428,7 @@ public class AIDecisionMaker {
 	private MyPoint trimPathConsideringApAndReachable(MyPoint originalGoal, Entity aiUnit) {
 		final TiledMapPosition start = new TiledMapPosition().setPositionFromTiles(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY());
 		final TiledMapPosition goal = new TiledMapPosition().setPositionFromTiles(originalGoal.x, originalGoal.y);
-		System.out.println("moving from " + start + "  to  : " + goal);
 		final List<GridCell> path = MyPathFinder.getInstance().pathTowards(start, goal, aiUnit.getAp());
-		System.out.println("after trimming : " + path + "  with length  : " + path.size());
 		if (path.isEmpty()) {
 			return new MyPoint(start.getTileX(), start.getTileY());
 		}
@@ -509,18 +493,18 @@ public class AIDecisionMaker {
 		switch (ability.getAffectedTeams()) {
 		case FRIENDLY:
 			if (isPlayerUnit) {
-				return collectMyPoints(battleState.getPlayerUnits());
+				return collectPoints(battleState.getPlayerUnits());
 			} else {
-				return collectMyPoints(battleState.getAiUnits());
+				return collectPoints(battleState.getAiUnits());
 			}
 		case ENEMY:
 			if (!isPlayerUnit) {
-				return collectMyPoints(battleState.getPlayerUnits());
+				return collectPoints(battleState.getPlayerUnits());
 			} else {
-				return collectMyPoints(battleState.getAiUnits());
+				return collectPoints(battleState.getAiUnits());
 			}
 		case BOTH:
-			return collectMyPoints(battleState.getAllUnits());
+			return collectPoints(battleState.getAllUnits());
 		case NONE:
 			return new Array<>();
 		default:
@@ -529,12 +513,12 @@ public class AIDecisionMaker {
 		}
 	}
 
-	private Array<MyPoint> collectMyPoints(Array<Entity> allUnits) {
-		final Array<MyPoint> MyPoints = new Array<>();
+	private Array<MyPoint> collectPoints(Array<Entity> allUnits) {
+		final Array<MyPoint> points = new Array<>();
 		for (final Entity unit : allUnits) {
-			MyPoints.add(new MyPoint(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY()));
+			points.add(new MyPoint(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY()));
 		}
-		return MyPoints;
+		return points;
 	}
 
 }

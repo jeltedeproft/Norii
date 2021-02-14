@@ -44,7 +44,7 @@ public class BattleManager {
 	private BattleState activeBattleState;
 	private UnitTurn activeTurn;
 	private boolean playerTurn;
-	private boolean inputLocked = false;
+	private boolean aiUnitIsBussy = false;
 	private Entity lockedUnit;
 	private BattleScreen battleScreen;
 
@@ -100,7 +100,7 @@ public class BattleManager {
 	public void sendMessageToBattleScreen(MessageToBattleScreen message, Entity entity) {
 		switch (message) {
 		case CLICKED:
-			if (!inputLocked) {
+			if (!aiUnitIsBussy) {
 				getCurrentBattleState().clickedOnUnit(entity);
 			}
 			break;
@@ -117,6 +117,7 @@ public class BattleManager {
 			if (!playerTurn) {
 				executeNextMove();
 			}
+			sendMessageToBattleScreen(MessageToBattleScreen.UNLOCK_UI, activeUnit);
 			break;
 		default:
 			battleScreen.messageFromBattleManager(message, entity);
@@ -132,7 +133,7 @@ public class BattleManager {
 
 		if (!playerTurn) {
 			final BattleState newState = aiTeamLeader.act(activeBattleState);
-			inputLocked = true;
+			aiUnitIsBussy = true;
 			activeTurn = newState.getTurn();
 			executeNextMove();
 		}
@@ -142,15 +143,13 @@ public class BattleManager {
 
 	}
 
-	// deactivate UI while performing moves
-	// execute next move, if none are left, send message to battlescreen to
-	// reactivate ui
 	private void executeNextMove() {
 		final int entityID = activeTurn.getEntityID();
 		final Entity entity = getEntityByID(entityID);
 		final Move move = activeTurn.getNextMove();
 		if (move == null) {
-			inputLocked = false;
+			aiUnitIsBussy = false;
+			sendMessageToBattleScreen(MessageToBattleScreen.UNLOCK_UI, activeUnit);
 			checkVictory();
 			entity.endTurn();
 			swapTurn();
@@ -165,7 +164,7 @@ public class BattleManager {
 			break;
 		case MOVE:
 			if (entity == null) {
-				int j = 5;
+				final int j = 5;
 			}
 			final List<GridCell> path = MyPathFinder.getInstance().pathTowards(entity.getCurrentPosition(), new TiledMapPosition().setPositionFromTiles(move.getLocation().x, move.getLocation().y), entity.getAp());
 			activeBattleState.moveUnitTo(entity, new MyPoint(move.getLocation().x, move.getLocation().y));

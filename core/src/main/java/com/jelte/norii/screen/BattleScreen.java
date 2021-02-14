@@ -361,35 +361,39 @@ public class BattleScreen extends GameScreen {
 	}
 
 	public void messageFromUi(MessageToBattleScreen message, int entityID, Ability ability) {
-		switch (message) {
-		case CLICKED_ON_SKIP:
-			final Entity skipEntity = battlemanager.getEntityByID(entityID);
-			skipEntity.getVisualComponent().setActive(false);
-			skipEntity.setFocused(false);
-			skipEntity.getVisualComponent().setLocked(false);
-			skipEntity.setAp(skipEntity.getEntityData().getMaxAP());
-			battlemanager.setLockedUnit(null);
-			battlemanager.setCurrentBattleState(battlemanager.getActionBattleState());
-			battlemanager.getCurrentBattleState().exit();
-			break;
-		case CLICKED_ON_MOVE:
-			final Entity moveEntity = battlemanager.getEntityByID(entityID);
-			if (moveEntity.canMove()) {
-				prepareMove(moveEntity);
+		if (!newHud.isLocked()) {
+			switch (message) {
+			case CLICKED_ON_SKIP:
+				final Entity skipEntity = battlemanager.getEntityByID(entityID);
+				skipEntity.getVisualComponent().setActive(false);
+				skipEntity.setFocused(false);
+				skipEntity.getVisualComponent().setLocked(false);
+				skipEntity.setAp(skipEntity.getEntityData().getMaxAP());
+				battlemanager.setLockedUnit(null);
+				battlemanager.setCurrentBattleState(battlemanager.getActionBattleState());
+				battlemanager.getCurrentBattleState().exit();
+				break;
+			case CLICKED_ON_MOVE:
+				final Entity moveEntity = battlemanager.getEntityByID(entityID);
+				if (moveEntity.canMove()) {
+					prepareMove(moveEntity);
+				}
+				break;
+			case CLICKED_ON_ATTACK:
+				final Entity attackEntity = battlemanager.getEntityByID(entityID);
+				if ((attackEntity.getAp() >= attackEntity.getEntityData().getBasicAttackCost()) && attackEntity.canAttack()) {
+					prepareAttack(attackEntity);
+				}
+				break;
+			case CLICKED_ON_ABILITY:
+				final Entity spellEntity = battlemanager.getEntityByID(entityID);
+				if (spellEntity.getAp() >= ability.getSpellData().getApCost()) {
+					newHud.setLocked(true);
+					prepareSpell(spellEntity, ability);
+					newHud.setLocked(false);
+				}
+				break;
 			}
-			break;
-		case CLICKED_ON_ATTACK:
-			final Entity attackEntity = battlemanager.getEntityByID(entityID);
-			if ((attackEntity.getAp() >= attackEntity.getEntityData().getBasicAttackCost()) && attackEntity.canAttack()) {
-				prepareAttack(attackEntity);
-			}
-			break;
-		case CLICKED_ON_ABILITY:
-			final Entity spellEntity = battlemanager.getEntityByID(entityID);
-			if (spellEntity.getAp() >= ability.getSpellData().getApCost()) {
-				prepareSpell(spellEntity, ability);
-			}
-			break;
 		}
 	}
 
@@ -423,10 +427,16 @@ public class BattleScreen extends GameScreen {
 			mapCamera.position.set(entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY(), 0f);
 			break;
 		case SHOW_STATUS_UI:
-			newHud.getEntityIdWithStatusUi().get(entity.getEntityID()).setVisible(true);
+			final StatusUi statusUIToShow = newHud.getEntityIdWithStatusUi().get(entity.getEntityID());
+			if (statusUIToShow != null) {
+				statusUIToShow.setVisible(true);
+			}
 			break;
 		case HIDE_STATUS_UI:
-			newHud.getEntityIdWithStatusUi().get(entity.getEntityID()).setVisible(false);
+			final StatusUi statusUIToHide = newHud.getEntityIdWithStatusUi().get(entity.getEntityID());
+			if (statusUIToHide != null) {
+				statusUIToHide.setVisible(false);
+			}
 			break;
 		case REMOVE_HUD_UNIT:
 			newHud.removeUnit(entity);
@@ -436,6 +446,12 @@ public class BattleScreen extends GameScreen {
 			break;
 		case ADD_UNIT_ENTITYSTAGE:
 			entityStage.addActor(entity);
+			break;
+		case UNLOCK_UI:
+			newHud.setLocked(false);
+			break;
+		case LOCK_UI:
+			newHud.setLocked(true);
 			break;
 		default:
 			break;

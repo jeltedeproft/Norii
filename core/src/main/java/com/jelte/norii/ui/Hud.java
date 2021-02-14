@@ -41,6 +41,8 @@ public class Hud implements ProfileObserver {
 	private float tilePixelWidth;
 	private float tilePixelHeight;
 
+	private boolean locked;
+
 	public static final float UI_VIEWPORT_WIDTH = 400f;
 	public static final float UI_VIEWPORT_HEIGHT = 400f;
 
@@ -106,16 +108,19 @@ public class Hud implements ProfileObserver {
 	public void removeUnit(Entity entity) {
 		final Integer id = entity.getEntityID();
 		if (entityIdWithStatusUi.containsKey(id)) {
+			entityIdWithStatusUi.get(id).setVisible(false);
 			entityIdWithStatusUi.get(id).remove();
 			entityIdWithStatusUi.remove(id);
 		}
 
 		if (entityIdWithHpBar.containsKey(id)) {
+			entityIdWithHpBar.get(id).getHealthBar().setVisible(false);
 			entityIdWithHpBar.get(id).getHealthBar().remove();
 			entityIdWithHpBar.remove(id);
 		}
 
 		if (entityIdWithActionUi.containsKey(id)) {
+			entityIdWithActionUi.get(id).setVisible(false);
 			entityIdWithActionUi.get(id).remove();
 			entityIdWithActionUi.remove(id);
 		}
@@ -261,5 +266,13 @@ public class Hud implements ProfileObserver {
 
 	public PortraitAndStats getPortraitAndStats() {
 		return portraitAndStats;
+	}
+
+	public boolean isLocked() {
+		return locked;
+	}
+
+	public void setLocked(boolean locked) {
+		this.locked = locked;
 	}
 }
