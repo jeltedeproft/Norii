@@ -6,14 +6,13 @@ import org.xguzm.pathfinding.grid.GridCell;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.jelte.norii.entities.EntityAnimation.Direction;
+import com.jelte.norii.utility.TiledMapPosition;
 
 public interface EntityVisualComponentInterface {
 
 	public void update(final float delta);
 
 	public void dispose();
-
-	public void setPos();
 
 	public void setAnimationType(EntityAnimationType type);
 
@@ -25,7 +24,7 @@ public interface EntityVisualComponentInterface {
 
 	public void draw(Batch batch);
 
-	public void spawn();
+	public void spawn(TiledMapPosition tiledMapPosition);
 
 	public void setActive(boolean b);
 
@@ -35,7 +34,7 @@ public interface EntityVisualComponentInterface {
 
 	public void setInDeploymentPhase(boolean b);
 
-	public void initiateInBattle();
+	public void initiateInBattle(TiledMapPosition pos);
 
 	public void changeAnimation(EntityAnimation entityAnimation);
 
@@ -50,5 +49,9 @@ public interface EntityVisualComponentInterface {
 	public void setActionsHovering(boolean b);;
 
 	public boolean isHovering();
+
+	public EntityActor getEntityactor();
+
+	public void setVisualPosition(TiledMapPosition actorPos);
 
 }

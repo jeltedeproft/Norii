@@ -26,6 +26,7 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 	protected boolean isActive;
 	protected boolean inBattle;
 	protected boolean locked;
+	private boolean isMoving;
 
 	protected EntityAnimation entityAnimation;// weg
 	protected EntityAnimation entityTemporaryAnimation;// weg
@@ -63,10 +64,6 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 	}
 
 	@Override
-	public void setPos() {
-		entityactor.setPos();
-	}
-
 	public EntityActor getEntityactor() {
 		return entityactor;
 	}
@@ -143,9 +140,10 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 	}
 
 	@Override
-	public void initiateInBattle() {
+	public void initiateInBattle(TiledMapPosition pos) {
 		setInBattle(true);
 		getEntityactor().setTouchable(Touchable.enabled);
+		spawn(pos);
 	}
 
 	public EntityAnimation getEntityAnimation() {
@@ -163,22 +161,6 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 		entityAnimation = entityTemporaryAnimation;
 	}
 
-	public SequenceAction createMoveSequence(List<GridCell> path) {
-		getEntityactor().setOrigin(getEntityactor().getWidth() / 2, getEntityactor().getHeight() / 2);
-		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_LOOP, AudioTypeEvent.WALK_LOOP);
-		setAnimationType(EntityAnimationType.WALK);
-		GridCell oldCell = new GridCell(entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY());
-		final SequenceAction sequence = Actions.sequence();
-		for (final GridCell cell : path) {
-			sequence.addAction(Actions.rotateTo(decideRotation(oldCell, cell), 0.05f, Interpolation.swingIn));
-			sequence.addAction(moveTo(cell.getX(), cell.getY(), 0.05f));
-			sequence.addAction(run(updatePositionAction));
-			oldCell = cell;
-		}
-		sequence.addAction(run(stopWalkAction));
-		return sequence;
-	}
-
 	private float decideRotation(GridCell oldCell, GridCell cell) {
 		if ((oldCell.x == cell.x) && (oldCell.y > cell.y)) {
 			return 0.0f;
@@ -191,13 +173,14 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 	}
 
 	private void updatePositionFromActor() {
-		entity.setCurrentPosition(new TiledMapPosition().setPositionFromTiles((int) this.getEntityactor().getX(), (int) this.getEntityactor().getY()));
 		setDirection(decideDirection(this.getEntityactor().getRotation()));
 	}
 
 	private void stopWalkingAction() {
 		AudioManager.getInstance().onNotify(AudioCommand.SOUND_STOP, AudioTypeEvent.WALK_LOOP);
 		setAnimationType(EntityAnimationType.WALK);
+		isMoving = false;
+		entity.getOwner().sendMessageToBattleManager(MessageToBattleScreen.ACTION_COMPLETED, entity);
 	}
 
 	@Override
@@ -219,6 +202,7 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 	@Override
 	public void move(List<GridCell> path) {
 		if (!path.isEmpty()) {
+			isMoving = true;
 			final SequenceAction sequence = createMoveSequence(path);
 			getEntityactor().addAction(sequence);
 		}
@@ -226,25 +210,47 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 
 	@Override
 	public void moveAttack(List<GridCell> path, Entity target) {
-		final SequenceAction sequence = createMoveSequence(path);
-		sequence.addAction(new AttackAction(entity, target));
-		getEntityactor().addAction(sequence);
+		if (!path.isEmpty()) {
+			isMoving = true;
+			final SequenceAction sequence = createMoveSequence(path);
+			sequence.addAction(new AttackAction(entity, target));
+			getEntityactor().addAction(sequence);
+		} else {
+			getEntityactor().addAction(new AttackAction(entity, target));
+		}
+	}
+
+	public SequenceAction createMoveSequence(List<GridCell> path) {
+		getEntityactor().setOrigin(getEntityactor().getWidth() / 2, getEntityactor().getHeight() / 2);
+		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_LOOP, AudioTypeEvent.WALK_LOOP);
+		setAnimationType(EntityAnimationType.WALK);
+		GridCell oldCell = new GridCell(entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY());
+		final SequenceAction sequence = Actions.sequence();
+		for (final GridCell cell : path) {
+			sequence.addAction(Actions.rotateTo(decideRotation(oldCell, cell), 0.05f, Interpolation.swingIn));
+			sequence.addAction(moveTo(cell.getX(), cell.getY(), 0.05f));
+			sequence.addAction(run(updatePositionAction));
+			oldCell = cell;
+		}
+		sequence.addAction(run(stopWalkAction));
+		return sequence;
 	}
 
 	@Override
 	public void draw(Batch batch) {
 		if (isInBattle()) {
-			batch.draw(getFrame(), entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY(), 1.0f, 1.0f);
+			batch.draw(getFrame(), getEntityactor().getX(), getEntityactor().getY(), 1.0f, 1.0f);
 		}
 
 		if (isLocked()) {
-			batch.draw(AssetManagerUtility.getSprite("lock"), entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY() + 1.0f, 1.0f, 1.0f);
+			batch.draw(AssetManagerUtility.getSprite("lock"), getEntityactor().getX(), getEntityactor().getY() + 1.0f, 1.0f, 1.0f);
 		}
 	}
 
 	@Override
-	public void spawn() {
+	public void spawn(TiledMapPosition pos) {
 		setInBattle(true);
+		getEntityactor().setBounds(pos.getTileX(), pos.getTileY(), 1, 1);
 	}
 
 	@Override
@@ -260,6 +266,11 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 	@Override
 	public boolean isHovering() {
 		return entityactor.getIsHovering();
+	}
+
+	@Override
+	public void setVisualPosition(TiledMapPosition pos) {
+		getEntityactor().setBounds(pos.getTileX(), pos.getTileY(), 1, 1);
 	}
 
 }

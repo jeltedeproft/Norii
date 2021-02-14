@@ -29,10 +29,6 @@ public class EntityActor extends Actor {
 		entity.getVisualComponent().setEntityactor(this);
 	}
 
-	public void setPos() {
-		this.setBounds((entity.getCurrentPosition().getTileX()), (entity.getCurrentPosition().getTileY()), 1, 1);
-	}
-
 	public TiledMapPosition getActorPos() {
 		return actorPos;
 	}

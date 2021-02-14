@@ -69,7 +69,7 @@ public class DeploymentBattlePhase extends BattlePhase {
 	private void initiateUnitInBattle(final Entity unit, final TiledMapPosition pos) {
 		unit.setCurrentPosition(pos);
 		battlemanager.addUnit(unit);
-		unit.getVisualComponent().initiateInBattle();
+		unit.getVisualComponent().initiateInBattle(pos);
 	}
 
 	private void checkIfLastUnit() {
@@ -81,5 +81,6 @@ public class DeploymentBattlePhase extends BattlePhase {
 	@Override
 	public void hoveredOnTile(TiledMapActor actor) {
 		playerUnits.get(deployingUnitNumber).setCurrentPosition(actor.getActorPos());
+		playerUnits.get(deployingUnitNumber).getVisualComponent().setVisualPosition(actor.getActorPos());
 	}
 }

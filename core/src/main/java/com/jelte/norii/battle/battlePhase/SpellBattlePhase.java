@@ -282,7 +282,7 @@ public class SpellBattlePhase extends BattlePhase {
 
 		final Entity hammerEntity = new Entity(EntityTypes.BOOMERANG, caster.getOwner());
 		battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.ADD_UNIT_ENTITYSTAGE, hammerEntity);
-		hammerEntity.getVisualComponent().initiateInBattle();
+		hammerEntity.getVisualComponent().initiateInBattle(targetPos);
 		hammerEntity.setCurrentPosition(targetPos);
 		hammerEntity.addModifier(ModifiersEnum.DAMAGE_OVER_TIME, 3, 1);
 		hammerEntity.addAbility(AbilitiesEnum.HAMMERBACKBACK, caster.getCurrentPosition().getTilePosAsPoint());

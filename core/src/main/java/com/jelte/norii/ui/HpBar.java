@@ -5,7 +5,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar.ProgressBarStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.utility.AssetManagerUtility;
-import com.jelte.norii.utility.TiledMapPosition;
 
 public class HpBar {
 
@@ -35,7 +34,7 @@ public class HpBar {
 		healthBar = new ProgressBar(MIN_VALUE, entity.getEntityData().getMaxHP(), STEP_SIZE, false, progressBarStyle);
 		healthBar.setValue(entity.getEntityData().getMaxHP());
 		healthBar.setAnimateDuration(ANIMATION_DURATION);
-		healthBar.setPosition(entity.getCurrentPosition().getTileX() * tilePixelWidth, ((entity.getCurrentPosition().getTileY() * tilePixelHeight) + OFFSET_BAR_Y));
+		healthBar.setPosition(entity.getVisualComponent().getEntityactor().getX() * tilePixelWidth, ((entity.getVisualComponent().getEntityactor().getY() * tilePixelHeight) + OFFSET_BAR_Y));
 		healthBar.setWidth(tilePixelWidth);
 
 		progressBarStyle.background.setMinHeight(tilePixelHeight / 4f);
@@ -50,8 +49,7 @@ public class HpBar {
 	}
 
 	public void update(Entity unit) {
-		final TiledMapPosition posUnit = unit.getCurrentPosition();
-		getHealthBar().setPosition(posUnit.getTileX() * tilePixelWidth, ((posUnit.getTileY() * tilePixelHeight) + HEALTHBAR_Y_OFFSET));
+		getHealthBar().setPosition(unit.getVisualComponent().getEntityactor().getX() * tilePixelWidth, ((unit.getVisualComponent().getEntityactor().getY() * tilePixelHeight) + HEALTHBAR_Y_OFFSET));
 		getHealthBar().setValue(unit.getHp());
 		if (getHealthBar().getValue() == 0) {
 			getHealthBar().setVisible(false);

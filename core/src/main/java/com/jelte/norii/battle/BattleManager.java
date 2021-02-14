@@ -108,10 +108,17 @@ public class BattleManager {
 		case UNIT_DIED:
 			removeUnit(entity);
 			break;
+		case ACTION_COMPLETED:
+			performNextActionIfAny(entity);
+			break;
 		default:
 			battleScreen.messageFromBattleManager(message, entity);
 			break;
 		}
+	}
+
+	private void performNextActionIfAny(Entity entity) {
+		activeBattleState.getTurn();
 	}
 
 	public void swapTurn() {
@@ -122,8 +129,8 @@ public class BattleManager {
 
 		if (!playerTurn) {
 			final BattleState newState = aiTeamLeader.act(activeBattleState);
-			setStateOfBattle(newState);
-			executeMoves(newState.getTurn());
+			activeBattleState = newState;
+			executeNextMove();
 		}
 
 		setCurrentBattleState(getSelectUnitBattleState());
@@ -131,39 +138,40 @@ public class BattleManager {
 
 	}
 
-	public void setStateOfBattle(BattleState stateOfBattle) {
-		this.activeBattleState = stateOfBattle;
-	}
-
-	private void executeMoves(UnitTurn turn) {
+	// deactivate UI while performing moves
+	// execute next move, if none are left, send message to battlescreen to reactivate ui
+	private void executeNextMove() {
+		final UnitTurn turn = activeBattleState.getTurn();
 		final int entityID = turn.getEntityID();
-		for (final Move move : turn.getMoves()) {
-			switch (move.getMoveType()) {
-			case SPELL:
-				final SpellMove spellMove = (SpellMove) move;
-				final SpellBattlePhase spellState = (SpellBattlePhase) spellBattleState;
-				spellState.executeSpellForAi(getEntityByID(entityID), spellMove.getAbility(), spellMove.getLocation());
-				break;
-			case MOVE:
-				final Entity entityToMove = getEntityByID(entityID);
-				final List<GridCell> path = MyPathFinder.getInstance().pathTowards(entityToMove.getCurrentPosition(), new TiledMapPosition().setPositionFromTiles(move.getLocation().x, move.getLocation().y), entityToMove.getAp());
-				activeBattleState.moveUnitTo(entityToMove, new MyPoint(move.getLocation().x, move.getLocation().y));
-				entityToMove.move(path);
-				break;
-			case ATTACK:
-				final Entity entityAttacking = getEntityByID(entityID);
-				final Entity entityToAttack = getEntityByID(activeBattleState.get(move.getLocation().x, move.getLocation().y).getUnit().getEntityID());
-				entityAttacking.attack(entityToAttack);
-				sendMessageToBattleScreen(MessageToBattleScreen.UPDATE_UI, entityToAttack);
-				AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.ATTACK_SOUND);
-				break;
-			case DUMMY:
-				// do nothing
-			default:
-				// do nothing
-			}
-			checkVictory();
+		final Move move = turn.getNextMove();
+		if (move == null) {
+			sendMessageToBattleScreen(MessageToBattleScreen.ALL_MOVES_DONE, entity);
 		}
+		switch (move.getMoveType()) {
+		case SPELL:
+			final SpellMove spellMove = (SpellMove) move;
+			final SpellBattlePhase spellState = (SpellBattlePhase) spellBattleState;
+			spellState.executeSpellForAi(getEntityByID(entityID), spellMove.getAbility(), spellMove.getLocation());
+			break;
+		case MOVE:
+			final Entity entityToMove = getEntityByID(entityID);
+			final List<GridCell> path = MyPathFinder.getInstance().pathTowards(entityToMove.getCurrentPosition(), new TiledMapPosition().setPositionFromTiles(move.getLocation().x, move.getLocation().y), entityToMove.getAp());
+			activeBattleState.moveUnitTo(entityToMove, new MyPoint(move.getLocation().x, move.getLocation().y));
+			entityToMove.move(path);
+			break;
+		case ATTACK:
+			final Entity entityAttacking = getEntityByID(entityID);
+			final Entity entityToAttack = getEntityByID(activeBattleState.get(move.getLocation().x, move.getLocation().y).getUnit().getEntityID());
+			entityAttacking.attack(entityToAttack);
+			sendMessageToBattleScreen(MessageToBattleScreen.UPDATE_UI, entityToAttack);
+			AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.ATTACK_SOUND);
+			break;
+		case DUMMY:
+			// do nothing
+		default:
+			// do nothing
+		}
+		checkVictory();
 		final Entity entity = getEntityByID(entityID);
 		entity.endTurn();
 	}

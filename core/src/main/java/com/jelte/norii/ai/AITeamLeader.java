@@ -45,7 +45,7 @@ public class AITeamLeader implements UnitOwner {
 			if (!spawnPositions.isEmpty()) {
 				unit.setCurrentPosition(spawnPositions.get(0));
 				unit.setPlayerUnit(false);
-				unit.getVisualComponent().spawn();
+				unit.getVisualComponent().spawn(spawnPositions.get(0));
 				spawnPositions.remove(0);
 				battleManager.addUnit(unit);
 			} else {

@@ -6,6 +6,7 @@ import org.xguzm.pathfinding.grid.GridCell;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.jelte.norii.entities.EntityAnimation.Direction;
+import com.jelte.norii.utility.TiledMapPosition;
 
 public class FakeEntityVisualComponent implements EntityVisualComponentInterface {
 
@@ -17,12 +18,6 @@ public class FakeEntityVisualComponent implements EntityVisualComponentInterface
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void setPos() {
 		// TODO Auto-generated method stub
 
 	}
@@ -58,12 +53,6 @@ public class FakeEntityVisualComponent implements EntityVisualComponentInterface
 	}
 
 	@Override
-	public void spawn() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void setActive(boolean b) {
 		// TODO Auto-generated method stub
 
@@ -88,27 +77,23 @@ public class FakeEntityVisualComponent implements EntityVisualComponentInterface
 	}
 
 	@Override
-	public void initiateInBattle() {
+	public void initiateInBattle(TiledMapPosition pos) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void changeAnimation(EntityAnimation entityAnimation) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void setEntityactor(EntityActor entityActor) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void restoreAnimation() {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -124,12 +109,29 @@ public class FakeEntityVisualComponent implements EntityVisualComponentInterface
 	@Override
 	public void setActionsHovering(boolean b) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public boolean isHovering() {
 		return false;
+	}
+
+	@Override
+	public EntityActor getEntityactor() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void spawn(TiledMapPosition tiledMapPosition) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void setVisualPosition(TiledMapPosition actorPos) {
+		// TODO Auto-generated method stub
+
 	}
 
 }
