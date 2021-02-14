@@ -42,7 +42,9 @@ public class BattleManager {
 	private Entity activeUnit;
 	private AITeamLeader aiTeamLeader;
 	private BattleState activeBattleState;
+	private UnitTurn activeTurn;
 	private boolean playerTurn;
+	private boolean inputLocked = false;
 	private Entity lockedUnit;
 	private BattleScreen battleScreen;
 
@@ -68,6 +70,7 @@ public class BattleManager {
 		activeUnit = Player.getInstance().getTeam().get(0);
 		playerTurn = true;
 		lockedUnit = null;
+		activeTurn = null;
 		activeBattleState = new BattleState(width, height);
 		initializeStateOfBattle(unwalkableNodes);
 	}
@@ -97,7 +100,9 @@ public class BattleManager {
 	public void sendMessageToBattleScreen(MessageToBattleScreen message, Entity entity) {
 		switch (message) {
 		case CLICKED:
-			getCurrentBattleState().clickedOnUnit(entity);
+			if (!inputLocked) {
+				getCurrentBattleState().clickedOnUnit(entity);
+			}
 			break;
 		case AI_FINISHED_TURN:
 			swapTurn();
@@ -109,16 +114,14 @@ public class BattleManager {
 			removeUnit(entity);
 			break;
 		case ACTION_COMPLETED:
-			performNextActionIfAny(entity);
+			if (!playerTurn) {
+				executeNextMove();
+			}
 			break;
 		default:
 			battleScreen.messageFromBattleManager(message, entity);
 			break;
 		}
-	}
-
-	private void performNextActionIfAny(Entity entity) {
-		activeBattleState.getTurn();
 	}
 
 	public void swapTurn() {
@@ -129,7 +132,8 @@ public class BattleManager {
 
 		if (!playerTurn) {
 			final BattleState newState = aiTeamLeader.act(activeBattleState);
-			activeBattleState = newState;
+			inputLocked = true;
+			activeTurn = newState.getTurn();
 			executeNextMove();
 		}
 
@@ -139,41 +143,46 @@ public class BattleManager {
 	}
 
 	// deactivate UI while performing moves
-	// execute next move, if none are left, send message to battlescreen to reactivate ui
+	// execute next move, if none are left, send message to battlescreen to
+	// reactivate ui
 	private void executeNextMove() {
-		final UnitTurn turn = activeBattleState.getTurn();
-		final int entityID = turn.getEntityID();
-		final Move move = turn.getNextMove();
+		final int entityID = activeTurn.getEntityID();
+		final Entity entity = getEntityByID(entityID);
+		final Move move = activeTurn.getNextMove();
 		if (move == null) {
-			sendMessageToBattleScreen(MessageToBattleScreen.ALL_MOVES_DONE, entity);
+			inputLocked = false;
+			checkVictory();
+			entity.endTurn();
+			swapTurn();
+			return;
 		}
 		switch (move.getMoveType()) {
 		case SPELL:
 			final SpellMove spellMove = (SpellMove) move;
 			final SpellBattlePhase spellState = (SpellBattlePhase) spellBattleState;
-			spellState.executeSpellForAi(getEntityByID(entityID), spellMove.getAbility(), spellMove.getLocation());
+			spellState.executeSpellForAi(entity, spellMove.getAbility(), spellMove.getLocation());
+			executeNextMove();
 			break;
 		case MOVE:
-			final Entity entityToMove = getEntityByID(entityID);
-			final List<GridCell> path = MyPathFinder.getInstance().pathTowards(entityToMove.getCurrentPosition(), new TiledMapPosition().setPositionFromTiles(move.getLocation().x, move.getLocation().y), entityToMove.getAp());
-			activeBattleState.moveUnitTo(entityToMove, new MyPoint(move.getLocation().x, move.getLocation().y));
-			entityToMove.move(path);
+			if (entity == null) {
+				int j = 5;
+			}
+			final List<GridCell> path = MyPathFinder.getInstance().pathTowards(entity.getCurrentPosition(), new TiledMapPosition().setPositionFromTiles(move.getLocation().x, move.getLocation().y), entity.getAp());
+			activeBattleState.moveUnitTo(entity, new MyPoint(move.getLocation().x, move.getLocation().y));
+			entity.move(path);
 			break;
 		case ATTACK:
-			final Entity entityAttacking = getEntityByID(entityID);
 			final Entity entityToAttack = getEntityByID(activeBattleState.get(move.getLocation().x, move.getLocation().y).getUnit().getEntityID());
-			entityAttacking.attack(entityToAttack);
+			entity.attack(entityToAttack);
 			sendMessageToBattleScreen(MessageToBattleScreen.UPDATE_UI, entityToAttack);
 			AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.ATTACK_SOUND);
+			executeNextMove();
 			break;
 		case DUMMY:
 			// do nothing
 		default:
 			// do nothing
 		}
-		checkVictory();
-		final Entity entity = getEntityByID(entityID);
-		entity.endTurn();
 	}
 
 	private void checkVictory() {

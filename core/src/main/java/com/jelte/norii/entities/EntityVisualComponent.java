@@ -228,8 +228,8 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 		final SequenceAction sequence = Actions.sequence();
 		for (final GridCell cell : path) {
 			sequence.addAction(Actions.rotateTo(decideRotation(oldCell, cell), 0.05f, Interpolation.swingIn));
-			sequence.addAction(moveTo(cell.getX(), cell.getY(), 0.05f));
 			sequence.addAction(run(updatePositionAction));
+			sequence.addAction(moveTo(cell.getX(), cell.getY(), 0.05f));
 			oldCell = cell;
 		}
 		sequence.addAction(run(stopWalkAction));

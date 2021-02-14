@@ -39,9 +39,9 @@ public class BattleState implements Comparable<BattleState> {
 			for (int j = 0; j < row.length; j++) {
 				final BattleCell cell = stateOfField[j][i];
 				if (cell.isOccupied() && cell.getUnit().isPlayerUnit()) {
-					sb.append("| " + cell.getUnit().getEntityID() + " -- (" + cell.getUnit().getX() + "," + cell.getUnit().getY() + ") |");
+					sb.append("| " + cell.getUnit().getEntityID() + " -- (" + cell.getUnit().getCurrentPosition().getTileX() + "," + cell.getUnit().getCurrentPosition().getTileY() + ") |");
 				} else if (cell.isOccupied() && !cell.getUnit().isPlayerUnit()) {
-					sb.append("| " + cell.getUnit().getEntityID() + " -- (" + cell.getUnit().getX() + "," + cell.getUnit().getY() + ") |");
+					sb.append("| " + cell.getUnit().getEntityID() + " -- (" + cell.getUnit().getCurrentPosition().getTileX() + "," + cell.getUnit().getCurrentPosition().getTileY() + ") |");
 				} else if (!cell.isWalkable()) {
 					sb.append("| XXXXXXXX |");
 				} else {
@@ -85,18 +85,7 @@ public class BattleState implements Comparable<BattleState> {
 	}
 
 	public void addEntity(Entity unit) {
-		final int height = unit.getCurrentPosition().getTileY();
-		final int width = unit.getCurrentPosition().getTileX();
-		if ((height > 0) && (width > 0) && (width <= getWidth()) && (height <= getHeight())) {
-			final int originalScore = stateOfField[width][height].getScore();
-			final int newScore = unit.getScore();
-			final int difference = newScore - originalScore;
-			score += difference;
-			unit.setCurrentPosition(new TiledMapPosition().setPositionFromTiles(width, height));
-			stateOfField[width][height].setUnit(unit);
-			stateOfField[width][height].setOccupied(true);
-			units.put(unit.getEntityID(), unit);
-		}
+		addEntityAt(unit, unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY());
 	}
 
 	public BattleCell get(int width, int height) {
@@ -118,11 +107,24 @@ public class BattleState implements Comparable<BattleState> {
 			}
 
 			if (!entityFound) {
-				addEntity(entity);
+				addEntityAt(entity, to.x, to.y);
 			}
 			stateOfField[to.x][to.y].setOccupied(true);
 		}
 
+	}
+
+	private void addEntityAt(Entity unit, int x, int y) {
+		if ((y > 0) && (x > 0) && (x <= getWidth()) && (y <= getHeight())) {
+			final int originalScore = stateOfField[x][y].getScore();
+			final int newScore = unit.getScore();
+			final int difference = newScore - originalScore;
+			score += difference;
+			unit.setCurrentPosition(new TiledMapPosition().setPositionFromTiles(x, y));
+			stateOfField[x][y].setUnit(unit);
+			stateOfField[x][y].setOccupied(true);
+			units.put(unit.getEntityID(), unit);
+		}
 	}
 
 	public void removeUnit(Entity unit) {

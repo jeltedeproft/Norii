@@ -217,6 +217,10 @@ public class Entity extends Actor {
 		return entityID;
 	}
 
+	public void setEntityID(int entityID) {
+		this.entityID = entityID;
+	}
+
 	public int getAttackRange() {
 		return entityData.getAttackRange();
 	}
@@ -327,6 +331,8 @@ public class Entity extends Actor {
 		if (!path.isEmpty()) {
 			setAp(getAp() - path.size());
 			visualComponent.move(path);
+		} else {
+			getOwner().sendMessageToBattleManager(MessageToBattleScreen.ACTION_COMPLETED, this);
 		}
 	}
 
