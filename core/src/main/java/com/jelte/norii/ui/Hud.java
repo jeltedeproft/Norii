@@ -120,6 +120,13 @@ public class Hud implements ProfileObserver {
 		}
 
 		if (entityIdWithActionUi.containsKey(id)) {
+			for (ActionUIButton button : entityIdWithActionUi.get(id).getButtons()) {
+				button.hide();
+			}
+
+			for (ActionInfoUiWindow popup : entityIdWithActionUi.get(id).getPopUps()) {
+				popup.setVisible(false);
+			}
 			entityIdWithActionUi.get(id).setVisible(false);
 			entityIdWithActionUi.get(id).remove();
 			entityIdWithActionUi.remove(id);

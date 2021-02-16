@@ -89,6 +89,20 @@ public class ActionUIButton {
 	public Array<Label> getLabels() {
 		return labels;
 	}
+
+	public void show() {
+		showPopUp();
+		setIsHovering(true);
+		setEntered(true);
+		setExited(false);
+	}
+
+	public void hide() {
+		hidePopUp();
+		setIsHovering(false);
+		setEntered(false);
+		setExited(true);
+	}
 }
 
 enum Action {

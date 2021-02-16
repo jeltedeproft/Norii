@@ -54,4 +54,6 @@ public interface EntityVisualComponentInterface {
 
 	public void setVisualPosition(TiledMapPosition actorPos);
 
+	public void updateBattleState();
+
 }

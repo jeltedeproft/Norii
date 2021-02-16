@@ -81,6 +81,7 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 		sequence.addAction(run(cleanup));
 		getEntityactor().addAction(sequence);
 		entity.getOwner().sendMessageToBattleManager(MessageToBattleScreen.REMOVE_HUD_UNIT, entity);
+		entity.getOwner().sendMessageToBattleManager(MessageToBattleScreen.UNIT_DIED, entity);
 	}
 
 	public void cleanUpDeadUnit() {
@@ -271,6 +272,11 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 	@Override
 	public void setVisualPosition(TiledMapPosition pos) {
 		getEntityactor().setBounds(pos.getTileX(), pos.getTileY(), 1, 1);
+	}
+
+	@Override
+	public void updateBattleState() {
+		entity.getOwner().sendMessageToBattleManager(MessageToBattleScreen.UPDATE_POS, entity);
 	}
 
 }

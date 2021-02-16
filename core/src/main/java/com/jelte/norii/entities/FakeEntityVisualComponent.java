@@ -134,4 +134,10 @@ public class FakeEntityVisualComponent implements EntityVisualComponentInterface
 
 	}
 
+	@Override
+	public void updateBattleState() {
+		// TODO Auto-generated method stub
+
+	}
+
 }

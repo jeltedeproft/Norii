@@ -103,7 +103,7 @@ public class Entity extends Actor {
 
 	public void setCurrentPosition(final TiledMapPosition pos) {
 		currentPlayerPosition = pos;
-		owner.sendMessageToBattleManager(MessageToBattleScreen.UPDATE_POS, this);
+		visualComponent.updateBattleState();
 	}
 
 	public void setCurrentPositionFromScreen(int x, int y) {
@@ -127,7 +127,6 @@ public class Entity extends Actor {
 			visualComponent.removeUnit();
 			setVisible(false);
 			isDead = true;
-			owner.sendMessageToBattleManager(MessageToBattleScreen.UNIT_DIED, this);
 		} else {
 			hp = hp - damage;
 		}

@@ -167,4 +167,8 @@ public class ActionsUi extends Window {
 			}
 		}
 	}
+
+	public ArrayList<ActionUIButton> getButtons() {
+		return buttons;
+	}
 }
