@@ -59,6 +59,7 @@ public class Entity extends Actor {
 		ap = entityData.getMaxAP();
 		isDead = false;
 		statsChanged = true;
+		direction = Direction.DOWN;
 		xp = 0;
 
 		this.owner = owner;

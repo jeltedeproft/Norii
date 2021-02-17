@@ -1,7 +1,5 @@
-[
-  {
+[{
     "id": 0,
     "name": "TeamDesert",
-    "units":[ "Valiant Knight","Shadow","Soldier","Posh Girl","Black Slime","Purple Mage","Slither","White Dog"]
-  }
-]
+    "units": ["Dark Blue Slime", "Blue Slime", "Black Slime Yellow Eyes", "Black Slime White Eyes", "Black Slime", "Black Skeleton", "Black Dog", "Black Cat"]
+}]
