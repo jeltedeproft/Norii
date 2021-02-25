@@ -188,6 +188,7 @@ public class BattleScreen extends GameScreen {
 		updateUIHover();
 		updateStages();
 		updateCameras();
+		processAi();
 	}
 
 	private void updateUnits(final float delta) {
@@ -219,6 +220,10 @@ public class BattleScreen extends GameScreen {
 		mapCamera.position.y = Utility.clamp(mapCamera.position.y, currentMap.getTilemapHeightInTiles() - (mapCamera.viewportHeight / 2), 0 + (mapCamera.viewportHeight / 2));
 		mapCamera.update();
 		hudCamera.update();
+	}
+
+	private void processAi() {
+		battlemanager.processAI();
 	}
 
 	private void renderElements(final float delta) {

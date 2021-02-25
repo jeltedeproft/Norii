@@ -31,30 +31,133 @@ import com.jelte.norii.utility.Utility;
 
 public class AIDecisionMaker {
 	private final SortedMap<Integer, BattleState> statesWithScores;
+	private final Array<Array<BattleState>> allBattleStates = new Array<>();
+	private int turnIndex;
+	private int entityIndex;
+	private int abilityIndex;
+	private int currentStep;
+	private int maxStepsPerRound;
+	private int battleStateIndex;
+	private BattleState currentBattleState;
 
 	private static final int NUMBER_OF_LAYERS = 3;
 	private static final String TAG = AIDecisionMaker.class.getSimpleName();
 
 	public AIDecisionMaker() {
 		statesWithScores = new TreeMap<>();
+		for (int i = 0; i < NUMBER_OF_LAYERS; i++) {
+			allBattleStates.add(new Array<>());
+		}
+	}
+
+	public void startCalculatingNextMove(BattleState battleState) {
+		currentBattleState = battleState;
+		statesWithScores.clear();
+		turnIndex = 0;
+		for (int i = 0; i < NUMBER_OF_LAYERS; i++) {
+			allBattleStates.get(i).clear();
+		}
+		maxStepsPerRound = calculateNumberOfAbilities(currentBattleState.getAiUnits());
+	}
+
+	// returns true when finished
+	public boolean processAi() {
+		Entity unit;
+		BattleState startingState;
+
+		if (turnIndex == 0) {
+			startingState = currentBattleState;
+		} else {
+			startingState = allBattleStates.get(turnIndex - 1).get(battleStateIndex);
+		}
+
+		// if turn is even, play AI
+		if ((turnIndex % 2) == 0) {
+			if (entityIndex >= startingState.getAiUnits().size) {
+				int j = 5;
+			}
+			unit = startingState.getAiUnits().get(entityIndex);
+		} else {
+			unit = startingState.getPlayerUnits().get(entityIndex);
+		}
+
+		for (final Ability ability : unit.getAbilities()) {
+			final Array<UnitTurn> turns = generateMoves(ability, unit, startingState);
+			for (final UnitTurn turn : turns) {
+				final BattleState newState = applyTurnToBattleState(unit, turn, startingState);
+				newState.setTurn(turn);
+				allBattleStates.get(turnIndex).add(newState);
+			}
+		}
+
+		battleStateIndex++;
+		entityIndex++;
+		currentStep++;
+
+		if (currentStep >= (maxStepsPerRound - 1)) {
+			// all steps from this round done, next round
+			reduceModifierCount(allBattleStates.get(turnIndex));
+			turnIndex++;
+			currentStep = 0;
+			battleStateIndex = 0;
+			entityIndex = 0;
+
+			if (turnIndex == 0) {
+				maxStepsPerRound = calculateNumberOfAbilities(allBattleStates.get(turnIndex - 1).get(battleStateIndex).getAiUnits());
+			} else if ((turnIndex % 2) == 0) {
+				maxStepsPerRound = calculateNumberOfAbilities(allBattleStates.get(turnIndex - 1).get(battleStateIndex).getPlayerUnits());
+			} else {
+				maxStepsPerRound = calculateNumberOfAbilities(allBattleStates.get(turnIndex - 1).get(battleStateIndex).getAiUnits());
+			}
+
+			if (turnIndex >= NUMBER_OF_LAYERS) {
+				// were done
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private int calculateNumberOfAbilities(Array<Entity> units) {
+		int result = 0;
+		for (Entity unit : units) {
+			for (Ability ability : unit.getAbilities()) {
+				result++;
+			}
+		}
+		return result;
+	}
+
+	public BattleState getResult() {
+		allBattleStates.get(NUMBER_OF_LAYERS - 1).sort();
+		return getInitialMoves(allBattleStates.get(NUMBER_OF_LAYERS - 1).get(0));
 	}
 
 	public BattleState makeDecision(BattleState battleState) {
+		long startTime = java.lang.System.currentTimeMillis();
+		Gdx.app.debug(TAG, "starting time check for AI");
+		Gdx.app.debug(TAG, "setting timer to zero, GO!");
 		final Array<BattleState> battleStates = new Array<>();
 		final Array<BattleState> battleStatesLevelTwo = new Array<>();
 		final Array<BattleState> battleStatesLevelThree = new Array<>();
 		// for every aiUnit, generate all his moves and store them
+		Gdx.app.debug(TAG, "**********FIRST RUN**************");
 		for (final Entity aiUnit : battleState.getAiUnits()) {
 			for (final Ability ability : aiUnit.getAbilities()) {
 				final Array<UnitTurn> turns = generateMoves(ability, aiUnit, battleState);
 				for (final UnitTurn turn : turns) {
+					Gdx.app.debug(TAG, "time for first turn : " + (java.lang.System.currentTimeMillis() - startTime));
 					final BattleState newState = applyTurnToBattleState(aiUnit, turn, battleState);
 					newState.setTurn(turn);
 					battleStates.add(newState);
 				}
 			}
+			Gdx.app.debug(TAG, "time for first unit : " + (java.lang.System.currentTimeMillis() - startTime));
 		}
+		Gdx.app.debug(TAG, "time for all units : " + (java.lang.System.currentTimeMillis() - startTime));
 		reduceModifierCount(battleStates);
+		Gdx.app.debug(TAG, "time after applying modifiers : " + (java.lang.System.currentTimeMillis() - startTime));
+		Gdx.app.debug(TAG, "**********SECOND RUN**************");
 		for (final BattleState updatedState : battleStates) {
 			if (checkEndConditions(updatedState)) {
 				battleStatesLevelThree.add(updatedState.makeCopyWithTurn());
@@ -70,9 +173,13 @@ public class AIDecisionMaker {
 						}
 					}
 				}
+				Gdx.app.debug(TAG, "time for all units in this state: " + (java.lang.System.currentTimeMillis() - startTime));
 			}
 		}
+		Gdx.app.debug(TAG, "time for all states in round 2: " + (java.lang.System.currentTimeMillis() - startTime));
 		reduceModifierCount(battleStatesLevelTwo);
+		Gdx.app.debug(TAG, "time after applying modifiers : " + (java.lang.System.currentTimeMillis() - startTime));
+		Gdx.app.debug(TAG, "**********THIRD RUN**************");
 		for (final BattleState updatedState : battleStatesLevelTwo) {
 			if (checkEndConditions(updatedState)) {
 				battleStatesLevelThree.add(updatedState.makeCopyWithTurn());
@@ -88,8 +195,11 @@ public class AIDecisionMaker {
 						}
 					}
 				}
+				Gdx.app.debug(TAG, "time for all units in this state: " + (java.lang.System.currentTimeMillis() - startTime));
 			}
 		}
+		Gdx.app.debug(TAG, "time for all states in round 3: " + (java.lang.System.currentTimeMillis() - startTime));
+
 		reduceModifierCount(battleStatesLevelThree);
 		battleStatesLevelThree.sort();
 		return getInitialMoves(battleStatesLevelThree.get(0));
@@ -520,5 +630,4 @@ public class AIDecisionMaker {
 		}
 		return points;
 	}
-
 }

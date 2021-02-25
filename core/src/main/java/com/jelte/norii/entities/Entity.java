@@ -359,6 +359,7 @@ public class Entity extends Actor {
 		final Entity copy = new Entity(entityType, owner);
 		copy.setVisualComponent(new FakeEntityVisualComponent());
 		copy.setCurrentPosition(currentPlayerPosition);
+		copy.setEntityID(entityID);
 		return copy;
 	}
 

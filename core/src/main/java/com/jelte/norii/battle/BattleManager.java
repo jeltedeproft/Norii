@@ -45,6 +45,8 @@ public class BattleManager {
 	private UnitTurn activeTurn;
 	private boolean playerTurn;
 	private boolean aiUnitIsBussy = false;
+	private boolean aiIsCalculating = false;
+	private boolean aiFinishedCalculating = false;
 	private Entity lockedUnit;
 	private BattleScreen battleScreen;
 
@@ -113,6 +115,10 @@ public class BattleManager {
 		case UNIT_DIED:
 			removeUnit(entity);
 			break;
+		case AI_FINISHED_CALCULATING:
+			aiFinishedCalculating = true;
+			aiIsCalculating = false;
+			break;
 		case ACTION_COMPLETED:
 			if (!playerTurn) {
 				executeNextMove();
@@ -133,15 +139,30 @@ public class BattleManager {
 		playerTurn = !playerTurn;
 
 		if (!playerTurn) {
-			final BattleState newState = aiTeamLeader.act(activeBattleState);
-			aiUnitIsBussy = true;
-			activeTurn = newState.getTurn();
-			executeNextMove();
+			aiIsCalculating = true;
+			aiTeamLeader.startCalculatingNextMove(activeBattleState);
+		} else {
+			setCurrentBattleState(getSelectUnitBattleState());
+			getCurrentBattleState().entry();
 		}
 
-		setCurrentBattleState(getSelectUnitBattleState());
-		getCurrentBattleState().entry();
+	}
 
+	public void processAI() {
+		if (aiIsCalculating) {
+			aiTeamLeader.processAi();
+		}
+
+		if (aiFinishedCalculating) {
+			final BattleState newState = aiTeamLeader.getNextBattleState();
+			aiUnitIsBussy = true;
+			aiIsCalculating = false;
+			aiFinishedCalculating = false;
+			activeTurn = newState.getTurn();
+			executeNextMove();
+			setCurrentBattleState(getSelectUnitBattleState());
+			getCurrentBattleState().entry();
+		}
 	}
 
 	private void executeNextMove() {

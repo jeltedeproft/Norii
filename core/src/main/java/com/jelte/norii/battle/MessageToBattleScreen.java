@@ -22,5 +22,6 @@ public enum MessageToBattleScreen {
 	UNIT_DIED,
 	ACTION_COMPLETED,
 	LOCK_UI,
-	UNLOCK_UI
+	UNLOCK_UI,
+	AI_FINISHED_CALCULATING
 }

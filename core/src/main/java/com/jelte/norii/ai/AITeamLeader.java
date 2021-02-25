@@ -59,6 +59,21 @@ public class AITeamLeader implements UnitOwner {
 		return stateOfBattle;
 	}
 
+	public void startCalculatingNextMove(BattleState stateOfBattle) {
+		aiDecisionMaker.startCalculatingNextMove(stateOfBattle);
+	}
+
+	public void processAi() {
+		if (aiDecisionMaker.processAi()) {
+			sendMessageToBattleManager(MessageToBattleScreen.AI_FINISHED_CALCULATING, battleManager.getActiveUnit());
+		}
+
+	}
+
+	public BattleState getNextBattleState() {
+		return aiDecisionMaker.getResult();
+	}
+
 	@Override
 	public void updateUnits(final float delta) {
 		team.removeIf(Entity::isDead);
