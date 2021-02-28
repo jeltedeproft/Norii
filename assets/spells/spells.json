@@ -81,5 +81,22 @@
         "affectsTeam": "ENEMY",
         "target": "CELL_BUT_NO_UNIT",
         "infoText": "Cast Hammerback."
+    },
+
+    {
+        "id": 5,
+        "name": "Ice Field",
+        "iconSpriteName": "fireball",
+        "apCost": 1,
+        "mpCost": 0,
+        "lineOfSight": "DIAGONAL_RIGHT",
+        "goesTroughUnits": true,
+        "areaOfEffect": "HORIZONTAL_LINE",
+        "damage": 2,
+        "range": 4,
+        "areaOfEffectRange": 3,
+        "affectsTeam": "ENEMY",
+        "target": "UNIT",
+        "infoText": "Cast Ice Field."
     }
 ]

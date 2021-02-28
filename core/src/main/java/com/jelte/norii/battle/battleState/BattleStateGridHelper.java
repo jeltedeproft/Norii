@@ -1146,6 +1146,9 @@ public class BattleStateGridHelper {
 		case CIRCLE:
 			spellPath = MyPathFinder.getInstance().getLineOfSightWithinCircle(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), ability.getSpellData().getRange(), positions, !ability.getGoesTroughUnits());
 			break;
+		case DIAGONAL_RIGHT:
+			spellPath = MyPathFinder.getInstance().getLineOfSightWithinCircle(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), ability.getSpellData().getRange(), positions, !ability.getGoesTroughUnits());
+			break;
 		case CROSS:
 			// TODO
 			break;

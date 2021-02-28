@@ -34,10 +34,9 @@ public class AIDecisionMaker {
 	private final Array<Array<BattleState>> allBattleStates = new Array<>();
 	private int turnIndex;
 	private int entityIndex;
-	private int abilityIndex;
 	private int currentStep;
-	private int maxStepsPerRound;
 	private int battleStateIndex;
+	private int numberOfBattleStatesThisRound;
 	private BattleState currentBattleState;
 
 	private static final int NUMBER_OF_LAYERS = 3;
@@ -54,10 +53,10 @@ public class AIDecisionMaker {
 		currentBattleState = battleState;
 		statesWithScores.clear();
 		turnIndex = 0;
+		numberOfBattleStatesThisRound = 1;
 		for (int i = 0; i < NUMBER_OF_LAYERS; i++) {
 			allBattleStates.get(i).clear();
 		}
-		maxStepsPerRound = calculateNumberOfAbilities(currentBattleState.getAiUnits());
 	}
 
 	// returns true when finished
@@ -73,9 +72,6 @@ public class AIDecisionMaker {
 
 		// if turn is even, play AI
 		if ((turnIndex % 2) == 0) {
-			if (entityIndex >= startingState.getAiUnits().size) {
-				int j = 5;
-			}
 			unit = startingState.getAiUnits().get(entityIndex);
 		} else {
 			unit = startingState.getPlayerUnits().get(entityIndex);
@@ -90,11 +86,21 @@ public class AIDecisionMaker {
 			}
 		}
 
-		battleStateIndex++;
 		entityIndex++;
-		currentStep++;
 
-		if (currentStep >= (maxStepsPerRound - 1)) {
+		if ((turnIndex % 2) == 0) {
+			if (entityIndex >= startingState.getAiUnits().size) {
+				battleStateIndex++;
+				entityIndex = 0;
+			}
+		} else {
+			if (entityIndex >= startingState.getPlayerUnits().size) {
+				battleStateIndex++;
+				entityIndex = 0;
+			}
+		}
+
+		if (battleStateIndex >= (numberOfBattleStatesThisRound - 1)) {
 			// all steps from this round done, next round
 			reduceModifierCount(allBattleStates.get(turnIndex));
 			turnIndex++;
@@ -102,12 +108,10 @@ public class AIDecisionMaker {
 			battleStateIndex = 0;
 			entityIndex = 0;
 
-			if (turnIndex == 0) {
-				maxStepsPerRound = calculateNumberOfAbilities(allBattleStates.get(turnIndex - 1).get(battleStateIndex).getAiUnits());
-			} else if ((turnIndex % 2) == 0) {
-				maxStepsPerRound = calculateNumberOfAbilities(allBattleStates.get(turnIndex - 1).get(battleStateIndex).getPlayerUnits());
+			if ((turnIndex % 2) == 0) {
+				numberOfBattleStatesThisRound = allBattleStates.get(turnIndex - 1).size;
 			} else {
-				maxStepsPerRound = calculateNumberOfAbilities(allBattleStates.get(turnIndex - 1).get(battleStateIndex).getAiUnits());
+				numberOfBattleStatesThisRound = allBattleStates.get(turnIndex - 1).size;
 			}
 
 			if (turnIndex >= NUMBER_OF_LAYERS) {
@@ -116,16 +120,6 @@ public class AIDecisionMaker {
 			}
 		}
 		return false;
-	}
-
-	private int calculateNumberOfAbilities(Array<Entity> units) {
-		int result = 0;
-		for (Entity unit : units) {
-			for (Ability ability : unit.getAbilities()) {
-				result++;
-			}
-		}
-		return result;
 	}
 
 	public BattleState getResult() {
@@ -260,6 +254,11 @@ public class AIDecisionMaker {
 		switch (move.getAbility().getAbilityEnum()) {
 		case FIREBALL:
 			battleState.damageUnit(location, damage);
+			break;
+		case ICEFIELD:
+			for (MyPoint point : targets) {
+				battleState.damageUnit(point, damage);
+			}
 			break;
 		case TURN_TO_STONE:
 			battleState.addModifierToUnit(location.x, location.y, new Modifier(ModifiersEnum.STUNNED, 2, 0));

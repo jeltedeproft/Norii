@@ -220,6 +220,9 @@ public class SpellBattlePhase extends BattlePhase {
 		case FIREBALL:
 			castFireBall(currentUnit, targetPos, ability);
 			break;
+		case ICEFIELD:
+			castIceField(currentUnit, targetPos, ability);
+			break;
 		case SWAP:
 			castSwap(currentUnit, target, ability);
 			break;
@@ -238,6 +241,18 @@ public class SpellBattlePhase extends BattlePhase {
 	}
 
 	private void castFireBall(final Entity caster, final TiledMapPosition targetPos, final Ability ability) {
+		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
+		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.FIREBALL_SOUND);
+		ParticleMaker.addParticle(ParticleType.FIREBALL, targetPos, 0);
+
+		final Entity possibleTarget = getEntityAtPosition(targetPos);
+		if (possibleTarget != null) {
+			possibleTarget.damage(ability.getSpellData().getDamage());
+			battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.UPDATE_UI, possibleTarget);
+		}
+	}
+
+	private void castIceField(final Entity caster, final TiledMapPosition targetPos, final Ability ability) {
 		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
 		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.FIREBALL_SOUND);
 		ParticleMaker.addParticle(ParticleType.FIREBALL, targetPos, 0);
