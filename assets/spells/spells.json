@@ -96,7 +96,7 @@
         "range": 4,
         "areaOfEffectRange": 3,
         "affectsTeam": "ENEMY",
-        "target": "UNIT",
+        "target": "CELL",
         "infoText": "Cast Ice Field."
     }
 ]

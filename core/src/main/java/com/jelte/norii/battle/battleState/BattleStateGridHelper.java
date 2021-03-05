@@ -4,8 +4,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.xguzm.pathfinding.grid.GridCell;
-
 import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.ai.AIDecisionMaker;
 import com.jelte.norii.entities.Entity;
@@ -39,6 +37,11 @@ public class BattleStateGridHelper {
 		final Set<MyPoint> points = getPossibleCenterCells(center, lineOfSight, range);
 		checkMyPointBounds(points, battleState);
 		return points;
+	}
+
+	public Set<MyPoint> getPossibleCenterCellsFiltered(MyPoint center, LineOfSight lineOfSight, int range, BattleState battleState) {
+		Set<MyPoint> points = getPossibleCenterCells(center, lineOfSight, range);
+		return filter(points, battleState.getWidth(), battleState.getHeight());
 	}
 
 	public Set<MyPoint> getPossibleCenterCells(MyPoint center, LineOfSight lineOfSight, int range) {
@@ -332,7 +335,7 @@ public class BattleStateGridHelper {
 		return results;
 	}
 
-	private boolean isUnitInAbilityRange(MyPoint casterPos, Ability ability, MyPoint targetPos) {
+	public boolean isUnitInAbilityRange(MyPoint casterPos, Ability ability, MyPoint targetPos) {
 		switch (ability.getLineOfSight()) {
 		case LINE:
 			return getLineOptions(casterPos, ability, targetPos);
@@ -953,7 +956,7 @@ public class BattleStateGridHelper {
 	}
 
 	private Set<MyPoint> filter(Set<MyPoint> castingMyPoints, int width, int height) {
-		castingMyPoints.removeIf(point -> ((point.x < 0) || (point.x > width) || (point.y < 0) || (point.y > height)));
+		castingMyPoints.removeIf(point -> ((point.x < 0) || (point.x >= width) || (point.y < 0) || (point.y >= height)));
 		return castingMyPoints;
 	}
 
@@ -1130,36 +1133,47 @@ public class BattleStateGridHelper {
 		}
 	}
 
-	public Array<MyPoint> getTargetsAbility(Ability ability, MyPoint MyPoint, Array<MyPoint> targetPositions) {
+	public Array<MyPoint> getTargetsAbility(Ability ability, MyPoint point, Array<MyPoint> targetPositions) {
 		final Array<MyPoint> targets = new Array<>();
 		for (final MyPoint targetPosition : targetPositions) {
-			if (checkIfTargetInAreaOfEffect(MyPoint, targetPosition, ability.getAreaOfEffect(), ability.getSpellData().getAreaOfEffectRange())) {
+			if (checkIfTargetInAreaOfEffect(point, targetPosition, ability.getAreaOfEffect(), ability.getSpellData().getAreaOfEffectRange())) {
 				targets.add(targetPosition);
 			}
 		}
 		return filterDoubles(targets);
 	}
 
-	public List<GridCell> calculateSpellPath(final Entity unit, final Ability ability, final List<TiledMapPosition> positions) {
-		List<GridCell> spellPath = null;
+	public Set<MyPoint> calculateSpellPath(final Entity unit, final Ability ability, final List<TiledMapPosition> positions) {
+		Set<MyPoint> spellPath = null;
 		switch (ability.getLineOfSight()) {
+		case SQUARE:
+			spellPath = getPossibleCenterCells(unit.getCurrentPosition().getTilePosAsPoint(), LineOfSight.SQUARE, ability.getSpellData().getRange());
+			break;
+		case DIAGONAL_LEFT:
+			spellPath = getPossibleCenterCells(unit.getCurrentPosition().getTilePosAsPoint(), LineOfSight.DIAGONAL_LEFT, ability.getSpellData().getRange());
+			break;
+		case SQUARE_BORDER:
+			spellPath = getPossibleCenterCells(unit.getCurrentPosition().getTilePosAsPoint(), LineOfSight.SQUARE_BORDER, ability.getSpellData().getRange());
+			break;
+		case CIRCLE_BORDER:
+			spellPath = getPossibleCenterCells(unit.getCurrentPosition().getTilePosAsPoint(), LineOfSight.CIRCLE_BORDER, ability.getSpellData().getRange());
+			break;
 		case CIRCLE:
-			spellPath = MyPathFinder.getInstance().getLineOfSightWithinCircle(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), ability.getSpellData().getRange(), positions, !ability.getGoesTroughUnits());
+			spellPath = getPossibleCenterCells(unit.getCurrentPosition().getTilePosAsPoint(), LineOfSight.CIRCLE, ability.getSpellData().getRange());
 			break;
 		case DIAGONAL_RIGHT:
-			spellPath = MyPathFinder.getInstance().getLineOfSightWithinCircle(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), ability.getSpellData().getRange(), positions, !ability.getGoesTroughUnits());
+			spellPath = getPossibleCenterCells(unit.getCurrentPosition().getTilePosAsPoint(), LineOfSight.DIAGONAL_RIGHT, ability.getSpellData().getRange());
 			break;
 		case CROSS:
-			// TODO
+			spellPath = getPossibleCenterCells(unit.getCurrentPosition().getTilePosAsPoint(), LineOfSight.CIRCLE, ability.getSpellData().getRange());
 			break;
 		case LINE:
-			spellPath = MyPathFinder.getInstance().getLineOfSightWithinLine(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), ability.getSpellData().getRange(), unit.getDirection(), positions,
-					!ability.getGoesTroughUnits());
+			spellPath = getPossibleCenterCells(unit.getCurrentPosition().getTilePosAsPoint(), LineOfSight.CIRCLE, ability.getSpellData().getRange());
 			break;
 		default:
 			break;
 		}
-
+		MyPathFinder.getInstance().filterPositionsByLineOfSight(unit, spellPath, positions, !ability.getGoesTroughUnits());
 		return spellPath;
 	}
 
@@ -1173,5 +1187,4 @@ public class BattleStateGridHelper {
 	private BattleStateGridHelper() {
 
 	}
-
 }

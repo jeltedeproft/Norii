@@ -1,10 +1,9 @@
 package com.jelte.norii.screen;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import org.xguzm.pathfinding.grid.GridCell;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -26,6 +25,7 @@ import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityStage;
 import com.jelte.norii.entities.Player;
 import com.jelte.norii.magic.Ability;
+import com.jelte.norii.magic.Ability.LineOfSight;
 import com.jelte.norii.magic.ModifiersEnum;
 import com.jelte.norii.map.BattleMap;
 import com.jelte.norii.map.Map;
@@ -40,6 +40,7 @@ import com.jelte.norii.ui.Hud;
 import com.jelte.norii.ui.MessageToBattleScreen;
 import com.jelte.norii.ui.StatusUi;
 import com.jelte.norii.utility.AssetManagerUtility;
+import com.jelte.norii.utility.MyPoint;
 import com.jelte.norii.utility.TiledMapPosition;
 import com.jelte.norii.utility.Utility;
 
@@ -306,8 +307,9 @@ public class BattleScreen extends GameScreen {
 	}
 
 	private void prepareMove(final Entity unit) {
-		final List<GridCell> path = MyPathFinder.getInstance().getCellsWithinCircle(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getAp());
-		for (final GridCell cell : path) {
+		Set<MyPoint> pointsToMove = BattleStateGridHelper.getInstance().getPossibleCenterCellsFiltered(unit.getCurrentPosition().getTilePosAsPoint(), LineOfSight.CIRCLE, unit.getAp(), battlemanager.getBattleState());
+		MyPathFinder.getInstance().filterPositionsByWalkability(unit, pointsToMove);
+		for (final MyPoint cell : pointsToMove) {
 			if (!isUnitOnCell(cell)) {
 				final TiledMapPosition positionToPutMoveParticle = new TiledMapPosition().setPositionFromTiles(cell.x, cell.y);
 				ParticleMaker.addParticle(ParticleType.MOVE, positionToPutMoveParticle, 0);
@@ -317,8 +319,8 @@ public class BattleScreen extends GameScreen {
 	}
 
 	private void prepareAttack(final Entity unit) {
-		final List<GridCell> attackPath = MyPathFinder.getInstance().getCellsWithinCircle(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY(), unit.getEntityData().getAttackRange());
-		for (final GridCell cell : attackPath) {
+		Set<MyPoint> pointsToAttack = BattleStateGridHelper.getInstance().getPossibleCenterCells(unit.getCurrentPosition().getTilePosAsPoint(), LineOfSight.CIRCLE, unit.getEntityData().getAttackRange());
+		for (final MyPoint cell : pointsToAttack) {
 			final TiledMapPosition positionToPutAttackParticle = new TiledMapPosition().setPositionFromTiles(cell.x, cell.y);
 			ParticleMaker.addParticle(ParticleType.ATTACK, positionToPutAttackParticle, 0);
 		}
@@ -327,9 +329,9 @@ public class BattleScreen extends GameScreen {
 
 	private void prepareSpell(final Entity unit, final Ability ability) {
 		final List<TiledMapPosition> positions = battlemanager.getUnits().stream().map(Entity::getCurrentPosition).collect(Collectors.toList());
-		final List<GridCell> spellPath = BattleStateGridHelper.getInstance().calculateSpellPath(unit, ability, positions);
+		final Set<MyPoint> spellPath = BattleStateGridHelper.getInstance().calculateSpellPath(unit, ability, positions);
 
-		for (final GridCell cell : spellPath) {
+		for (final MyPoint cell : spellPath) {
 			final TiledMapPosition positionToPutSpellParticle = new TiledMapPosition().setPositionFromTiles(cell.x, cell.y);
 			ParticleMaker.addParticle(ParticleType.SPELL, positionToPutSpellParticle, 0);
 		}
@@ -338,10 +340,9 @@ public class BattleScreen extends GameScreen {
 		battlemanager.setCurrentBattleState(battlemanager.getSpellBattleState());
 	}
 
-	private boolean isUnitOnCell(final GridCell cell) {
-		final TiledMapPosition cellToTiled = new TiledMapPosition().setPositionFromTiles(cell.x, cell.y);
+	private boolean isUnitOnCell(final MyPoint cell) {
 		for (final Entity entity : battlemanager.getBattleState().getAllUnits()) {
-			if (entity.getCurrentPosition().isTileEqualTo(cellToTiled)) {
+			if (entity.getCurrentPosition().isTileEqualTo(cell)) {
 				return true;
 			}
 		}

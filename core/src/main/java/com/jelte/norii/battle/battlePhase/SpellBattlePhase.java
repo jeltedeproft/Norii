@@ -2,6 +2,7 @@ package com.jelte.norii.battle.battlePhase;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
@@ -14,13 +15,11 @@ import com.jelte.norii.battle.MessageToBattleScreen;
 import com.jelte.norii.battle.battleState.BattleStateGridHelper;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityAnimation;
-import com.jelte.norii.entities.EntityAnimation.Direction;
 import com.jelte.norii.entities.EntityAnimationType;
 import com.jelte.norii.entities.EntityTypes;
 import com.jelte.norii.magic.AbilitiesEnum;
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.magic.Ability.AffectedTeams;
-import com.jelte.norii.magic.Ability.LineOfSight;
 import com.jelte.norii.magic.Ability.Target;
 import com.jelte.norii.magic.ModifiersEnum;
 import com.jelte.norii.map.MyPathFinder;
@@ -29,7 +28,6 @@ import com.jelte.norii.particles.ParticleMaker;
 import com.jelte.norii.particles.ParticleType;
 import com.jelte.norii.utility.MyPoint;
 import com.jelte.norii.utility.TiledMapPosition;
-import com.jelte.norii.utility.Utility;
 
 public class SpellBattlePhase extends BattlePhase {
 	private final BattleManager battlemanager;
@@ -127,55 +125,10 @@ public class SpellBattlePhase extends BattlePhase {
 	}
 
 	private boolean checkAreaOfEffect(Entity caster, TiledMapPosition targetPos, Ability ability) {
-		final LineOfSight lineOfSight = ability.getLineOfSight();
-		switch (lineOfSight) {
-		case LINE:
-			return checkLine(caster, targetPos, ability);
-		case CIRCLE:
-			return checkCircle(caster, targetPos, ability);
-		case CROSS:
-			return checkCross(caster, targetPos, ability);
-		default:
-			throw new IllegalArgumentException("not a valid line of sight");
-		}
-	}
-
-	private boolean checkLine(Entity caster, TiledMapPosition targetPos, Ability ability) {
-		final Direction direction = caster.getDirection();
-		final int range = ability.getSpellData().getRange();
-		return checkIfInLine(caster, targetPos, range, direction);
-	}
-
-	private boolean checkIfInLine(final Entity caster, final TiledMapPosition targetPos, final int range, final Direction direction) {
-		final TiledMapPosition casterPos = caster.getCurrentPosition();
-		if ((Math.abs(casterPos.getTileX() - targetPos.getTileX()) + (Math.abs(casterPos.getTileY() - targetPos.getTileY()))) <= range) {
-			switch (direction) {
-			case UP:
-				return (casterPos.getTileX() == targetPos.getTileX()) && (casterPos.getTileY() <= targetPos.getTileY());
-			case DOWN:
-				return (casterPos.getTileX() == targetPos.getTileX()) && (casterPos.getTileY() >= targetPos.getTileY());
-			case LEFT:
-				return (casterPos.getTileX() >= targetPos.getTileX()) && (casterPos.getTileY() == targetPos.getTileY());
-			case RIGHT:
-				return (casterPos.getTileX() <= targetPos.getTileX()) && (casterPos.getTileY() == targetPos.getTileY());
-			default:
-				return false;
-			}
-		}
-		return false;
-	}
-
-	private boolean checkCircle(Entity caster, TiledMapPosition targetPos, Ability ability) {
-		final int range = ability.getSpellData().getRange();
-		return Utility.checkIfUnitsWithinDistance(caster, targetPos, range);
-	}
-
-	private boolean checkCross(Entity caster, TiledMapPosition targetPos, Ability ability) {
-		final int range = ability.getSpellData().getRange();
-		final TiledMapPosition casterPos = caster.getCurrentPosition();
-		final boolean checkX = Math.abs(casterPos.getTileX() - targetPos.getTileX()) <= range;
-		final boolean checkY = Math.abs(casterPos.getTileY() - targetPos.getTileY()) <= range;
-		return (checkX && checkY);
+		final List<TiledMapPosition> positions = battlemanager.getUnits().stream().map(Entity::getCurrentPosition).collect(Collectors.toList());
+		final Set<MyPoint> spellPath = BattleStateGridHelper.getInstance().calculateSpellPath(caster, ability, positions);
+		MyPoint target = targetPos.getTilePosAsPoint();
+		return spellPath.contains(target);
 	}
 
 	private boolean checkVisibility(Entity caster, TiledMapPosition targetPos, Ability ability) {

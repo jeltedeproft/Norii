@@ -1,7 +1,9 @@
 package com.jelte.norii.map;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.xguzm.pathfinding.NavigationNode;
 import org.xguzm.pathfinding.grid.GridCell;
@@ -11,7 +13,6 @@ import org.xguzm.pathfinding.grid.finders.AStarGridFinder;
 import org.xguzm.pathfinding.grid.finders.GridFinderOptions;
 
 import com.jelte.norii.entities.Entity;
-import com.jelte.norii.entities.EntityAnimation.Direction;
 import com.jelte.norii.utility.MyPoint;
 import com.jelte.norii.utility.TiledMapPosition;
 import com.jelte.norii.utility.Utility;
@@ -47,88 +48,24 @@ public class MyPathFinder {
 		return aStarGridFinder;
 	}
 
-	public List<GridCell> getLineOfSightWithinCircle(final int x, final int y, final int range, final List<TiledMapPosition> positions, final boolean unitsAreBlocking) {
-		final List<GridCell> cells = new ArrayList<>();
-		final GridCell center = navGrid.getCell(x, y);
-
-		for (final GridCell[] gridcells : navGrid.getNodes()) {
-			for (final GridCell gridcell : gridcells) {
-				if (isCloseEnough(center, gridcell, range) && pathExists(center, gridcell, range) && lineOfSight(center, gridcell, positions, unitsAreBlocking)) {
-					cells.add(gridcell);
-				}
+	public void filterPositionsByLineOfSight(Entity unit, Set<MyPoint> positions, List<TiledMapPosition> sortedUnits, final boolean unitsAreBlocking) {
+		for (Iterator<MyPoint> posIterator = positions.iterator(); posIterator.hasNext();) {
+			MyPoint pos = posIterator.next();
+			final GridCell unitCell = navGrid.getCell(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY());
+			final GridCell targetCell = navGrid.getCell(pos.x, pos.y);
+			if (!(lineOfSight(unitCell, targetCell, sortedUnits, unitsAreBlocking))) {
+				posIterator.remove();
 			}
 		}
-		return cells;
 	}
 
-	public List<GridCell> getLineOfSightWithinLine(final int x, final int y, final int range, final Direction direction, final List<TiledMapPosition> positions, final boolean unitsAreBlocking) {
-		final List<GridCell> cells = new ArrayList<>();
-		final GridCell center = navGrid.getCell(x, y);
-
-		for (final GridCell[] gridcells : navGrid.getNodes()) {
-			for (final GridCell gridcell : gridcells) {
-				if (checkIfInLine(center, gridcell, range, direction) && lineOfSight(center, gridcell, positions, unitsAreBlocking)) {
-					cells.add(gridcell);
-				}
+	public void filterPositionsByWalkability(Entity unit, Set<MyPoint> positions) {
+		for (Iterator<MyPoint> posIterator = positions.iterator(); posIterator.hasNext();) {
+			MyPoint pos = posIterator.next();
+			if (!(canUnitWalkTo(unit, pos))) {
+				posIterator.remove();
 			}
 		}
-		return cells;
-	}
-
-	public List<GridCell> getCellsWithinCircle(final int x, final int y, final int range) {
-		final List<GridCell> cells = new ArrayList<>();
-		final GridCell center = navGrid.getCell(x, y);
-
-		for (final GridCell[] gridcells : navGrid.getNodes()) {
-			for (final GridCell gridcell : gridcells) {
-				if (isCloseEnough(center, gridcell, range) && pathExists(center, gridcell, range)) {
-					cells.add(gridcell);
-				}
-			}
-		}
-		return cells;
-	}
-
-	public List<GridCell> getCellsWithinLine(final int x, final int y, final int range, final Direction direction) {
-		final List<GridCell> cells = new ArrayList<>();
-		final GridCell center = navGrid.getCell(x, y);
-
-		for (final GridCell[] gridcells : navGrid.getNodes()) {
-			for (final GridCell gridcell : gridcells) {
-				if (checkIfInLine(center, gridcell, range, direction)) {
-					cells.add(gridcell);
-				}
-			}
-		}
-		return cells;
-	}
-
-	public boolean checkIfInLine(Entity caster, Entity target, final int range, final Direction direction) {
-		final GridCell casterCell = navGrid.getCell(caster.getCurrentPosition().getTileX(), caster.getCurrentPosition().getTileY());
-		final GridCell targetCell = navGrid.getCell(target.getCurrentPosition().getTileX(), target.getCurrentPosition().getTileY());
-		return checkIfInLine(casterCell, targetCell, range, direction);
-	}
-
-	private boolean checkIfInLine(final GridCell center, final GridCell gridcell, final int range, final Direction direction) {
-		if (isCloseEnough(center, gridcell, range)) {
-			final List<GridCell> path = aStarGridFinder.findPath(center.x, center.y, gridcell.x, gridcell.y, navGrid);
-			if ((path != null) && (path.size() <= range) && (!path.isEmpty())) {
-				switch (direction) {
-				case UP:
-					return (center.x == gridcell.x) && (center.y <= gridcell.y);
-				case DOWN:
-					return (center.x == gridcell.x) && (center.y >= gridcell.y);
-				case LEFT:
-					return (center.x >= gridcell.x) && (center.y == gridcell.y);
-				case RIGHT:
-					return (center.x <= gridcell.x) && (center.y == gridcell.y);
-				default:
-					return false;
-				}
-			}
-			return false;
-		}
-		return false;
 	}
 
 	private boolean isCloseEnough(final GridCell center, final GridCell gridcell, final int range) {
@@ -138,6 +75,14 @@ public class MyPathFinder {
 	private boolean pathExists(final GridCell center, final GridCell gridcell, final int range) {
 		final List<GridCell> path = aStarGridFinder.findPath(center.x, center.y, gridcell.x, gridcell.y, navGrid);
 		return ((path != null) && (path.size() <= range) && (!path.isEmpty()));
+	}
+
+	public boolean lineOfSight(Entity caster, MyPoint targetPos, List<Entity> sortedUnits, final boolean unitsAreBlocking) {
+		final ArrayList<TiledMapPosition> positionsUnits = (ArrayList<TiledMapPosition>) Utility.collectPositionsUnits(sortedUnits);
+		final GridCell unitCell = navGrid.getCell(caster.getCurrentPosition().getTileX(), caster.getCurrentPosition().getTileY());
+		final GridCell targetCell = navGrid.getCell(targetPos.x, targetPos.y);
+
+		return lineOfSight(unitCell, targetCell, positionsUnits, unitsAreBlocking);
 	}
 
 	public boolean lineOfSight(Entity unit, final GridCell to, List<Entity> sortedUnits, final boolean unitsAreBlocking) {
@@ -219,6 +164,12 @@ public class MyPathFinder {
 	public boolean canUnitWalkTo(Entity unit, GridCell cell) {
 		final GridCell center = navGrid.getCell(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY());
 		return isCloseEnough(center, cell, unit.getAp()) && pathExists(center, cell, unit.getAp());
+	}
+
+	public boolean canUnitWalkTo(Entity unit, MyPoint point) {
+		final GridCell center = navGrid.getCell(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY());
+		final GridCell target = navGrid.getCell(point.x, point.y);
+		return isCloseEnough(center, target, unit.getAp()) && pathExists(center, target, unit.getAp());
 	}
 
 	public boolean canUnitWalkTo(Entity unit, TiledMapPosition pos) {
@@ -316,10 +267,10 @@ public class MyPathFinder {
 		final int startY = mover.getCurrentPosition().getTileY();
 		final int endX = target.getCurrentPosition().getTileX();
 		final int endY = target.getCurrentPosition().getTileY();
-		return removeEndMyPoint(aStarGridFinder.findPath(startX, startY, endX, endY, navGrid));
+		return removeEndPoint(aStarGridFinder.findPath(startX, startY, endX, endY, navGrid));
 	}
 
-	private List<GridCell> removeEndMyPoint(List<GridCell> path) {
+	private List<GridCell> removeEndPoint(List<GridCell> path) {
 		path.remove(path.size() - 1);
 		return path;
 	}

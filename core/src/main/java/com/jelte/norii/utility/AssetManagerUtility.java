@@ -153,7 +153,7 @@ public class AssetManagerUtility implements Disposable {
 	public static Animation<TextureRegion> getAnimation(String animationName, float animationSpeed, PlayMode playMode) {
 		final Array<TextureAtlas.AtlasRegion> regions = getTextureAtlas(SPRITES_ATLAS_PATH).findRegions(animationName);
 
-		if (regions == null) {
+		if ((regions == null) || (regions.size == 0)) {
 			return null;
 		} else {
 			return new Animation<>(animationSpeed, regions, playMode);

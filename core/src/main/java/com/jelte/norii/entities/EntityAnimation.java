@@ -80,8 +80,7 @@ public class EntityAnimation {
 	public void setDirection(final Direction direction) {
 		currentDirection = direction;
 		frameTime = 0;
-		final String animationName = spriteName + currentAnimationType.getTypeAsString() + currentDirection.getDirectionAsString();
-		currentAnimation = AssetManagerUtility.getAnimation(animationName, ANIMATION_DURATION, playmodePerAnimationType.get(currentAnimationType));
+		changeAnimation(currentAnimationType);
 	}
 
 	public Direction getCurrentDirection() {
@@ -95,8 +94,15 @@ public class EntityAnimation {
 	public void setCurrentAnimationType(EntityAnimationType currentAnimationType) {
 		this.currentAnimationType = currentAnimationType;
 		frameTime = 0;
+		changeAnimation(currentAnimationType);
+	}
+
+	private void changeAnimation(EntityAnimationType currentAnimationType) {
 		final String animationName = spriteName + currentAnimationType.getTypeAsString() + currentDirection.getDirectionAsString();
-		currentAnimation = AssetManagerUtility.getAnimation(animationName, ANIMATION_DURATION, playmodePerAnimationType.get(currentAnimationType));
+		Animation<TextureRegion> tempAnimation = AssetManagerUtility.getAnimation(animationName, ANIMATION_DURATION, playmodePerAnimationType.get(currentAnimationType));
+		if (tempAnimation != null) {
+			currentAnimation = tempAnimation;
+		}
 	}
 
 	public enum Direction {
