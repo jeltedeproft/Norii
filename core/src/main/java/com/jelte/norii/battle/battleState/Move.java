@@ -30,7 +30,7 @@ public class Move {
 
 	@Override
 	public String toString() {
-		return moveType.toString() + " to / at " + location;
+		return moveType.toString() + " : " + location;
 	}
 
 	public Move makeCopy() {

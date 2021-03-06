@@ -3,6 +3,7 @@ package com.jelte.norii.battle.battleState;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.ai.UnitTurn;
@@ -19,6 +20,7 @@ public class BattleState implements Comparable<BattleState> {
 	private final Map<Integer, Entity> units = new HashMap<>();
 
 	public static final int NO_UNIT = 0;
+	private static final String TAG = BattleState.class.getSimpleName();
 
 	public BattleState(int width, int height) {
 		stateOfField = new BattleCell[width][height];
@@ -101,7 +103,7 @@ public class BattleState implements Comparable<BattleState> {
 				if (unit.getEntityID() == entity.getEntityID()) {
 					stateOfField[to.x][to.y].setUnit(stateOfField[unit.getCurrentPosition().getTileX()][unit.getCurrentPosition().getTileY()].getUnit());
 					if (stateOfField[to.x][to.y].getUnit() == null) {
-						int j = 5;
+						final int j = 5;
 					}
 					stateOfField[to.x][to.y].getUnit().setCurrentPosition(new TiledMapPosition().setPositionFromTiles(to.x, to.y));
 					stateOfField[from.x][from.y].removeUnit();
@@ -320,5 +322,34 @@ public class BattleState implements Comparable<BattleState> {
 
 	public void damageUnit(MyPoint attackLocation, int damage) {
 		stateOfField[(int) attackLocation.getX()][(int) attackLocation.getY()].getUnit().damage(damage);
+	}
+
+	public void moveUnitBackwardsUntilItHitsSomething(MyPoint casterPos, MyPoint targetPos, int maxCellsToMove) {
+		// decide direction to move
+		final boolean moveLeft = casterPos.x > targetPos.x;
+		final boolean moveRight = casterPos.x < targetPos.x;
+		final boolean moveUp = casterPos.y < targetPos.y;
+		final boolean moveDown = casterPos.y > targetPos.y;
+
+		// keep moving in loop until next cell is not reachable or movecells runs out
+		final MyPoint nextPoint = calculateNextPoint(targetPos, moveLeft, moveRight, moveUp, moveDown);
+	}
+
+	private MyPoint calculateNextPoint(MyPoint oldPos, boolean moveLeft, boolean moveRight, boolean moveUp, boolean moveDown) {
+		if (moveLeft) {
+			return new MyPoint(oldPos.x - 1, oldPos.y);
+		}
+		if (moveRight) {
+			return new MyPoint(oldPos.x + 1, oldPos.y);
+		}
+		if (moveUp) {
+			return new MyPoint(oldPos.x, oldPos.y + 1);
+		}
+		if (moveDown) {
+			return new MyPoint(oldPos.x, oldPos.y - 1);
+		}
+
+		Gdx.app.debug(TAG, "next point in push calculation needs to be in one of 4 directions");
+		return null;
 	}
 }

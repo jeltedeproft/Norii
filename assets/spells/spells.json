@@ -86,7 +86,7 @@
     {
         "id": 5,
         "name": "Ice Field",
-        "iconSpriteName": "fireball",
+        "iconSpriteName": "ice",
         "apCost": 1,
         "mpCost": 0,
         "lineOfSight": "DIAGONAL_RIGHT",
@@ -98,5 +98,22 @@
         "affectsTeam": "ENEMY",
         "target": "CELL",
         "infoText": "Cast Ice Field."
+    },
+
+    {
+        "id": 6,
+        "name": "Push",
+        "iconSpriteName": "wind",
+        "apCost": 1,
+        "mpCost": 0,
+        "lineOfSight": "LINE",
+        "goesTroughUnits": false,
+        "areaOfEffect": "CELL",
+        "damage": 3,
+        "range": 5,
+        "areaOfEffectRange": 1,
+        "affectsTeam": "BOTH",
+        "target": "UNIT",
+        "infoText": "Push another character away."
     }
 ]

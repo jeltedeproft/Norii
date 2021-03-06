@@ -127,7 +127,7 @@ public class SpellBattlePhase extends BattlePhase {
 	private boolean checkAreaOfEffect(Entity caster, TiledMapPosition targetPos, Ability ability) {
 		final List<TiledMapPosition> positions = battlemanager.getUnits().stream().map(Entity::getCurrentPosition).collect(Collectors.toList());
 		final Set<MyPoint> spellPath = BattleStateGridHelper.getInstance().calculateSpellPath(caster, ability, positions);
-		MyPoint target = targetPos.getTilePosAsPoint();
+		final MyPoint target = targetPos.getTilePosAsPoint();
 		return spellPath.contains(target);
 	}
 
@@ -198,7 +198,7 @@ public class SpellBattlePhase extends BattlePhase {
 		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.FIREBALL_SOUND);
 		ParticleMaker.addParticle(ParticleType.FIREBALL, targetPos, 0);
 
-		final Entity possibleTarget = getEntityAtPosition(targetPos);
+		final Entity possibleTarget = getEntityAtPosition(targetPos.getTilePosAsPoint());
 		if (possibleTarget != null) {
 			possibleTarget.damage(ability.getSpellData().getDamage());
 			battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.UPDATE_UI, possibleTarget);
@@ -207,15 +207,18 @@ public class SpellBattlePhase extends BattlePhase {
 
 	private void castIceField(final Entity caster, final TiledMapPosition targetPos, final Ability ability) {
 		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
-		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.FIREBALL_SOUND);
-		ParticleMaker.addParticle(ParticleType.FIREBALL, targetPos, 0);
+		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.ICE);
 
-		// add multiple targets here
+		final Set<MyPoint> targetCells = BattleStateGridHelper.getInstance().getAllPointsASpellCanHit(caster.getCurrentPosition().getTilePosAsPoint(), targetPos.getTilePosAsPoint(), ability.getAreaOfEffect(),
+				ability.getSpellData().getRange(), battlemanager.getBattleState());
 
-		final Entity possibleTarget = getEntityAtPosition(targetPos);
-		if (possibleTarget != null) {
-			possibleTarget.damage(ability.getSpellData().getDamage());
-			battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.UPDATE_UI, possibleTarget);
+		for (final MyPoint cell : targetCells) {
+			ParticleMaker.addParticle(ParticleType.ICE, cell, 0);
+			final Entity possibleTarget = getEntityAtPosition(cell);
+			if (possibleTarget != null) {
+				possibleTarget.damage(ability.getSpellData().getDamage());
+				battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.UPDATE_UI, possibleTarget);
+			}
 		}
 	}
 
@@ -272,7 +275,7 @@ public class SpellBattlePhase extends BattlePhase {
 		}
 	}
 
-	private Entity getEntityAtPosition(TiledMapPosition targetPos) {
+	private Entity getEntityAtPosition(MyPoint targetPos) {
 		final List<Entity> units = battlemanager.getUnits();
 		for (final Entity unit : units) {
 			if (unit.getCurrentPosition().isTileEqualTo(targetPos)) {

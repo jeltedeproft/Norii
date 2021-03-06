@@ -82,6 +82,9 @@ public class AIDecisionMaker {
 			for (final UnitTurn turn : turns) {
 				final BattleState newState = applyTurnToBattleState(unit, turn, startingState);
 				newState.setTurn(turn);
+				if (turnIndex != 0) {
+					newState.setParentState(startingState);
+				}
 				allBattleStates.get(turnIndex).add(newState);
 			}
 		}
@@ -125,78 +128,6 @@ public class AIDecisionMaker {
 	public BattleState getResult() {
 		allBattleStates.get(NUMBER_OF_LAYERS - 1).sort();
 		return getInitialMoves(allBattleStates.get(NUMBER_OF_LAYERS - 1).get(0));
-	}
-
-	public BattleState makeDecision(BattleState battleState) {
-		long startTime = java.lang.System.currentTimeMillis();
-		Gdx.app.debug(TAG, "starting time check for AI");
-		Gdx.app.debug(TAG, "setting timer to zero, GO!");
-		final Array<BattleState> battleStates = new Array<>();
-		final Array<BattleState> battleStatesLevelTwo = new Array<>();
-		final Array<BattleState> battleStatesLevelThree = new Array<>();
-		// for every aiUnit, generate all his moves and store them
-		Gdx.app.debug(TAG, "**********FIRST RUN**************");
-		for (final Entity aiUnit : battleState.getAiUnits()) {
-			for (final Ability ability : aiUnit.getAbilities()) {
-				final Array<UnitTurn> turns = generateMoves(ability, aiUnit, battleState);
-				for (final UnitTurn turn : turns) {
-					Gdx.app.debug(TAG, "time for first turn : " + (java.lang.System.currentTimeMillis() - startTime));
-					final BattleState newState = applyTurnToBattleState(aiUnit, turn, battleState);
-					newState.setTurn(turn);
-					battleStates.add(newState);
-				}
-			}
-			Gdx.app.debug(TAG, "time for first unit : " + (java.lang.System.currentTimeMillis() - startTime));
-		}
-		Gdx.app.debug(TAG, "time for all units : " + (java.lang.System.currentTimeMillis() - startTime));
-		reduceModifierCount(battleStates);
-		Gdx.app.debug(TAG, "time after applying modifiers : " + (java.lang.System.currentTimeMillis() - startTime));
-		Gdx.app.debug(TAG, "**********SECOND RUN**************");
-		for (final BattleState updatedState : battleStates) {
-			if (checkEndConditions(updatedState)) {
-				battleStatesLevelThree.add(updatedState.makeCopyWithTurn());
-			} else {
-				for (final Entity playerUnit : updatedState.getPlayerUnits()) {
-					for (final Ability ability : playerUnit.getAbilities()) {
-						final Array<UnitTurn> turns = generateMoves(ability, playerUnit, updatedState);
-						for (final UnitTurn turn : turns) {
-							final BattleState newState = applyTurnToBattleState(playerUnit, turn, updatedState);
-							newState.setParentState(updatedState);
-							newState.setTurn(turn);
-							battleStatesLevelTwo.add(newState);
-						}
-					}
-				}
-				Gdx.app.debug(TAG, "time for all units in this state: " + (java.lang.System.currentTimeMillis() - startTime));
-			}
-		}
-		Gdx.app.debug(TAG, "time for all states in round 2: " + (java.lang.System.currentTimeMillis() - startTime));
-		reduceModifierCount(battleStatesLevelTwo);
-		Gdx.app.debug(TAG, "time after applying modifiers : " + (java.lang.System.currentTimeMillis() - startTime));
-		Gdx.app.debug(TAG, "**********THIRD RUN**************");
-		for (final BattleState updatedState : battleStatesLevelTwo) {
-			if (checkEndConditions(updatedState)) {
-				battleStatesLevelThree.add(updatedState.makeCopyWithTurn());
-			} else {
-				for (final Entity aiUnit : updatedState.getAiUnits()) {
-					for (final Ability ability : aiUnit.getAbilities()) {
-						final Array<UnitTurn> turns = generateMoves(ability, aiUnit, updatedState);
-						for (final UnitTurn turn : turns) {
-							final BattleState newState = applyTurnToBattleState(aiUnit, turn, updatedState);
-							newState.setParentState(updatedState);
-							newState.setTurn(turn);
-							battleStatesLevelThree.add(newState);
-						}
-					}
-				}
-				Gdx.app.debug(TAG, "time for all units in this state: " + (java.lang.System.currentTimeMillis() - startTime));
-			}
-		}
-		Gdx.app.debug(TAG, "time for all states in round 3: " + (java.lang.System.currentTimeMillis() - startTime));
-
-		reduceModifierCount(battleStatesLevelThree);
-		battleStatesLevelThree.sort();
-		return getInitialMoves(battleStatesLevelThree.get(0));
 	}
 
 	private boolean checkEndConditions(BattleState battleState) {
@@ -255,9 +186,14 @@ public class AIDecisionMaker {
 		case FIREBALL:
 			battleState.damageUnit(location, damage);
 			break;
+		case PUSH:
+			battleState.moveUnitBackwardsUntilItHitsSomething(casterPos, location, damage);
+			break;
 		case ICEFIELD:
-			for (MyPoint point : targets) {
-				battleState.damageUnit(point, damage);
+			if (targets != null) {
+				for (final MyPoint point : targets) {
+					battleState.damageUnit(point, damage);
+				}
 			}
 			break;
 		case TURN_TO_STONE:

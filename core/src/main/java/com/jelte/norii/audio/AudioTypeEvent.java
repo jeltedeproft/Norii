@@ -11,6 +11,9 @@ public enum AudioTypeEvent {
 	STONE_SOUND("audio/stone.mp3"),
 	HAMMER_SOUND("audio/hammer.mp3"),
 	WALK_LOOP("audio/walkloop.wav"),
+	ICE("audio/ice.wav"),
+	COLD_SNAP("audio/coldsnap.wav"),
+	PUSH("audio/push.mp3"),
 	NONE("");
 
 	private final String audioFullFilePath;

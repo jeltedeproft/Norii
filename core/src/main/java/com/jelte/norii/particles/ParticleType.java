@@ -10,6 +10,8 @@ public enum ParticleType {
 	BLUE_CIRCLE("particles/blue_ring.p"),
 	WHITE_SQUARE("particles/white.p"),
 	PURPLE_SQUARE("particles/purple.p"),
+	ICE("particles/ice.p"),
+	WIND("particles/wind.p"),
 	ATTACK("particles/attack.p");
 
 	private String particleFileLocation;
