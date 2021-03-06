@@ -176,6 +176,9 @@ public class SpellBattlePhase extends BattlePhase {
 		case ICEFIELD:
 			castIceField(currentUnit, targetPos, ability);
 			break;
+		case PUSH:
+			castPush(currentUnit, targetPos, ability);
+			break;
 		case SWAP:
 			castSwap(currentUnit, target, ability);
 			break;
@@ -191,6 +194,15 @@ public class SpellBattlePhase extends BattlePhase {
 		default:
 			break;
 		}
+	}
+
+	private void castPush(Entity currentUnit, TiledMapPosition targetPos, Ability ability) {
+		MyPoint casterPos = currentUnit.getCurrentPosition().getTilePosAsPoint();
+		MyPoint location = targetPos.getTilePosAsPoint();
+		int pushRange = ability.getSpellData().getDamage();
+		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.PUSH);
+		battlemanager.getBattleState().moveUnitBackwardsUntilItHitsSomething(casterPos, location, pushRange);
+		ParticleMaker.addParticle(ParticleType.WIND, targetPos, 0);
 	}
 
 	private void castFireBall(final Entity caster, final TiledMapPosition targetPos, final Ability ability) {

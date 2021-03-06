@@ -332,7 +332,25 @@ public class BattleState implements Comparable<BattleState> {
 		final boolean moveDown = casterPos.y > targetPos.y;
 
 		// keep moving in loop until next cell is not reachable or movecells runs out
-		final MyPoint nextPoint = calculateNextPoint(targetPos, moveLeft, moveRight, moveUp, moveDown);
+		MyPoint nextPoint = calculateNextPoint(targetPos, moveLeft, moveRight, moveUp, moveDown);
+
+		while (isValid(nextPoint)) {
+			Entity unitToMove = stateOfField[casterPos.x][casterPos.y].getUnit();
+			moveUnitTo(unitToMove, nextPoint);
+			nextPoint = calculateNextPoint(targetPos, moveLeft, moveRight, moveUp, moveDown);
+		}
+	}
+
+	private boolean isValid(MyPoint nextPoint) {
+		if ((nextPoint.x >= getWidth()) || (nextPoint.x < 0) || (nextPoint.y >= getHeight()) || (nextPoint.y < 0)) {
+			return false;
+		}
+
+		if (!stateOfField[nextPoint.x][nextPoint.y].isWalkable()) {
+			return false;
+		}
+
+		return true;
 	}
 
 	private MyPoint calculateNextPoint(MyPoint oldPos, boolean moveLeft, boolean moveRight, boolean moveUp, boolean moveDown) {

@@ -79,7 +79,7 @@
         "attackRange": 1,
         "attackPower": 3,
         "basicAttackCost": 1,
-        "abilities": ["FIREBALL"]
+        "abilities": ["PUSH"]
     },
 
     {
