@@ -47,7 +47,7 @@ public class AttackBattlePhase extends BattlePhase {
 			battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.UPDATE_UI, entity);
 			AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.ATTACK_SOUND);
 		}
-		this.exit();
+		exit();
 	}
 
 	@Override

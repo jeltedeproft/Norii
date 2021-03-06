@@ -40,7 +40,7 @@ public class BattleStateGridHelper {
 	}
 
 	public Set<MyPoint> getPossibleCenterCellsFiltered(MyPoint center, LineOfSight lineOfSight, int range, BattleState battleState) {
-		Set<MyPoint> points = getPossibleCenterCells(center, lineOfSight, range);
+		final Set<MyPoint> points = getPossibleCenterCells(center, lineOfSight, range);
 		return filter(points, battleState.getWidth(), battleState.getHeight());
 	}
 
@@ -1175,10 +1175,10 @@ public class BattleStateGridHelper {
 			spellPath = getPossibleCenterCells(unit.getCurrentPosition().getTilePosAsPoint(), LineOfSight.DIAGONAL_RIGHT, ability.getSpellData().getRange());
 			break;
 		case CROSS:
-			spellPath = getPossibleCenterCells(unit.getCurrentPosition().getTilePosAsPoint(), LineOfSight.CIRCLE, ability.getSpellData().getRange());
+			spellPath = getPossibleCenterCells(unit.getCurrentPosition().getTilePosAsPoint(), LineOfSight.CROSS, ability.getSpellData().getRange());
 			break;
 		case LINE:
-			spellPath = getPossibleCenterCells(unit.getCurrentPosition().getTilePosAsPoint(), LineOfSight.CIRCLE, ability.getSpellData().getRange());
+			spellPath = getPossibleCenterCells(unit.getCurrentPosition().getTilePosAsPoint(), LineOfSight.LINE, ability.getSpellData().getRange());
 			break;
 		default:
 			break;

@@ -16,7 +16,7 @@ public class ActionBattlePhase extends BattlePhase {
 
 	@Override
 	public void entry() {
-		//
+		battlemanager.setUnitActive(battlemanager.getActiveUnit());
 	}
 
 	@Override

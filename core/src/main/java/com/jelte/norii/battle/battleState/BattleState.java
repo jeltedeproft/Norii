@@ -333,22 +333,27 @@ public class BattleState implements Comparable<BattleState> {
 
 		// keep moving in loop until next cell is not reachable or movecells runs out
 		MyPoint nextPoint = calculateNextPoint(targetPos, moveLeft, moveRight, moveUp, moveDown);
-		final Entity unitToMove = stateOfField[casterPos.x][casterPos.y].getUnit();
+		final Entity unitToMove = stateOfField[targetPos.x][targetPos.y].getUnit();
+		int cellsToMove = maxCellsToMove;
 
-		while (isValid(nextPoint)) {
-			final MyPoint casterNewPosition = unitToMove.getCurrentPosition().getTilePosAsPoint();
-			unitToMove.pushTo(casterNewPosition);
+		while (isValid(nextPoint, cellsToMove)) {
+			unitToMove.pushTo(nextPoint);
 			moveUnitTo(unitToMove, nextPoint);
-			nextPoint = calculateNextPoint(targetPos, moveLeft, moveRight, moveUp, moveDown);
+			nextPoint = calculateNextPoint(nextPoint, moveLeft, moveRight, moveUp, moveDown);
+			cellsToMove--;
 		}
 	}
 
-	private boolean isValid(MyPoint nextPoint) {
+	private boolean isValid(MyPoint nextPoint, int cellsToMove) {
 		if ((nextPoint.x >= getWidth()) || (nextPoint.x < 0) || (nextPoint.y >= getHeight()) || (nextPoint.y < 0)) {
 			return false;
 		}
 
 		if (!stateOfField[nextPoint.x][nextPoint.y].isWalkable()) {
+			return false;
+		}
+
+		if (cellsToMove <= 0) {
 			return false;
 		}
 
