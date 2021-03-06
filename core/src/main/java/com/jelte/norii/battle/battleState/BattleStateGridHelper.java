@@ -95,9 +95,19 @@ public class BattleStateGridHelper {
 			spotsToCheck.add(center);
 			spotsToCheck.addAll(AIDecisionMaker.findLine(center.x, center.y, caster.x, caster.y));
 			break;
+		case HORIZONTAL_LINE:
+			spotsToCheck.add(center);
+			addLineLeft(spotsToCheck, center, areaOfEffectRange);
+			addLineRight(spotsToCheck, center, areaOfEffectRange);
+			break;
 		case HORIZONTAL_LINE_LEFT:
 			spotsToCheck.add(center);
 			addLineLeft(spotsToCheck, center, areaOfEffectRange);
+			break;
+		case VERTICAL_LINE:
+			spotsToCheck.add(center);
+			addLineUpwards(spotsToCheck, center, areaOfEffectRange);
+			addLineDownwards(spotsToCheck, center, areaOfEffectRange);
 			break;
 		case VERTICAL_LINE_UP:
 			spotsToCheck.add(center);

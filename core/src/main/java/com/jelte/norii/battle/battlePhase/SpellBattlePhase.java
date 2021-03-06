@@ -210,6 +210,8 @@ public class SpellBattlePhase extends BattlePhase {
 		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.FIREBALL_SOUND);
 		ParticleMaker.addParticle(ParticleType.FIREBALL, targetPos, 0);
 
+		// add multiple targets here
+
 		final Entity possibleTarget = getEntityAtPosition(targetPos);
 		if (possibleTarget != null) {
 			possibleTarget.damage(ability.getSpellData().getDamage());
