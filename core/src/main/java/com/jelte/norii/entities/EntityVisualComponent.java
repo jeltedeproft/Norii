@@ -19,6 +19,7 @@ import com.jelte.norii.audio.AudioTypeEvent;
 import com.jelte.norii.battle.MessageToBattleScreen;
 import com.jelte.norii.entities.EntityAnimation.Direction;
 import com.jelte.norii.utility.AssetManagerUtility;
+import com.jelte.norii.utility.MyPoint;
 import com.jelte.norii.utility.TiledMapPosition;
 
 public class EntityVisualComponent implements EntityVisualComponentInterface {
@@ -28,13 +29,13 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 	protected boolean locked;
 	private boolean isMoving;
 
-	protected EntityAnimation entityAnimation;// weg
-	protected EntityAnimation entityTemporaryAnimation;// weg
-	protected EntityActor entityactor;// weg
+	protected EntityAnimation entityAnimation;
+	protected EntityAnimation entityTemporaryAnimation;
+	protected EntityActor entityactor;
 
-	private Runnable updatePositionAction;// weg
-	private Runnable stopWalkAction;// weg
-	private Runnable cleanup;// weg
+	private Runnable updatePositionAction;
+	private Runnable stopWalkAction;
+	private Runnable cleanup;
 
 	private final Entity entity;
 
@@ -277,6 +278,15 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 	@Override
 	public void updateBattleState() {
 		entity.getOwner().sendMessageToBattleManager(MessageToBattleScreen.UPDATE_POS, entity);
+	}
+
+	@Override
+	public void pushTo(MyPoint casterNewPosition) {
+		getEntityactor().setOrigin(getEntityactor().getWidth() / 2, getEntityactor().getHeight() / 2);
+		final SequenceAction sequence = Actions.sequence();
+		sequence.addAction(run(updatePositionAction));
+		sequence.addAction(moveTo(casterNewPosition.x, casterNewPosition.y, 0.05f));
+		getEntityactor().addAction(sequence);
 	}
 
 }

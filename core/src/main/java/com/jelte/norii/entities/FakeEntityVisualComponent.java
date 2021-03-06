@@ -6,6 +6,7 @@ import org.xguzm.pathfinding.grid.GridCell;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.jelte.norii.entities.EntityAnimation.Direction;
+import com.jelte.norii.utility.MyPoint;
 import com.jelte.norii.utility.TiledMapPosition;
 
 public class FakeEntityVisualComponent implements EntityVisualComponentInterface {
@@ -136,6 +137,12 @@ public class FakeEntityVisualComponent implements EntityVisualComponentInterface
 
 	@Override
 	public void updateBattleState() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void pushTo(MyPoint casterNewPosition) {
 		// TODO Auto-generated method stub
 
 	}

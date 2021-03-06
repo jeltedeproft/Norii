@@ -49,8 +49,8 @@ public class MyPathFinder {
 	}
 
 	public void filterPositionsByLineOfSight(Entity unit, Set<MyPoint> positions, List<TiledMapPosition> sortedUnits, final boolean unitsAreBlocking) {
-		for (Iterator<MyPoint> posIterator = positions.iterator(); posIterator.hasNext();) {
-			MyPoint pos = posIterator.next();
+		for (final Iterator<MyPoint> posIterator = positions.iterator(); posIterator.hasNext();) {
+			final MyPoint pos = posIterator.next();
 			final GridCell unitCell = navGrid.getCell(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY());
 			final GridCell targetCell = navGrid.getCell(pos.x, pos.y);
 			if (!(lineOfSight(unitCell, targetCell, sortedUnits, unitsAreBlocking))) {
@@ -60,8 +60,8 @@ public class MyPathFinder {
 	}
 
 	public void filterPositionsByWalkability(Entity unit, Set<MyPoint> positions) {
-		for (Iterator<MyPoint> posIterator = positions.iterator(); posIterator.hasNext();) {
-			MyPoint pos = posIterator.next();
+		for (final Iterator<MyPoint> posIterator = positions.iterator(); posIterator.hasNext();) {
+			final MyPoint pos = posIterator.next();
 			if (!(canUnitWalkTo(unit, pos))) {
 				posIterator.remove();
 			}
@@ -215,6 +215,12 @@ public class MyPathFinder {
 			}
 		}
 		return new TiledMapPosition().setPositionFromTiles(maxX, maxY);
+	}
+
+	public List<GridCell> pathTowards(MyPoint start, MyPoint goal, int ap) {
+		final TiledMapPosition startPos = new TiledMapPosition().setPositionFromTiles(start.x, start.y);
+		final TiledMapPosition goalPos = new TiledMapPosition().setPositionFromTiles(goal.x, goal.y);
+		return pathTowards(startPos, goalPos, ap);
 	}
 
 	public List<GridCell> pathTowards(TiledMapPosition start, TiledMapPosition goal, int ap) {

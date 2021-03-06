@@ -96,15 +96,15 @@ public class BattleState implements Comparable<BattleState> {
 
 	public void moveUnitTo(Entity entity, MyPoint to) {
 		// if we have the unit, move it, if not create it
+		if (entity == null) {
+			final int j = 5;
+		}
 		final MyPoint from = new MyPoint(entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY());
 		boolean entityFound = false;
 		if (!from.equals(to)) {
 			for (final Entity unit : units.values()) {
 				if (unit.getEntityID() == entity.getEntityID()) {
 					stateOfField[to.x][to.y].setUnit(stateOfField[unit.getCurrentPosition().getTileX()][unit.getCurrentPosition().getTileY()].getUnit());
-					if (stateOfField[to.x][to.y].getUnit() == null) {
-						final int j = 5;
-					}
 					stateOfField[to.x][to.y].getUnit().setCurrentPosition(new TiledMapPosition().setPositionFromTiles(to.x, to.y));
 					stateOfField[from.x][from.y].removeUnit();
 					entityFound = true;
@@ -333,9 +333,11 @@ public class BattleState implements Comparable<BattleState> {
 
 		// keep moving in loop until next cell is not reachable or movecells runs out
 		MyPoint nextPoint = calculateNextPoint(targetPos, moveLeft, moveRight, moveUp, moveDown);
+		final Entity unitToMove = stateOfField[casterPos.x][casterPos.y].getUnit();
 
 		while (isValid(nextPoint)) {
-			Entity unitToMove = stateOfField[casterPos.x][casterPos.y].getUnit();
+			final MyPoint casterNewPosition = unitToMove.getCurrentPosition().getTilePosAsPoint();
+			unitToMove.pushTo(casterNewPosition);
 			moveUnitTo(unitToMove, nextPoint);
 			nextPoint = calculateNextPoint(targetPos, moveLeft, moveRight, moveUp, moveDown);
 		}

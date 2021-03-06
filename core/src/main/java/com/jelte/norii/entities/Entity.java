@@ -398,4 +398,8 @@ public class Entity extends Actor {
 	public void draw(Batch batch) {
 		visualComponent.draw(batch);
 	}
+
+	public void pushTo(MyPoint casterNewPosition) {
+		visualComponent.pushTo(casterNewPosition);
+	}
 }
