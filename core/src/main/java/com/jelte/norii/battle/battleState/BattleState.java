@@ -96,15 +96,15 @@ public class BattleState implements Comparable<BattleState> {
 
 	public void moveUnitTo(Entity entity, MyPoint to) {
 		// if we have the unit, move it, if not create it
-		if (entity == null) {
-			final int j = 5;
-		}
 		final MyPoint from = new MyPoint(entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY());
 		boolean entityFound = false;
 		if (!from.equals(to)) {
 			for (final Entity unit : units.values()) {
 				if (unit.getEntityID() == entity.getEntityID()) {
 					stateOfField[to.x][to.y].setUnit(stateOfField[unit.getCurrentPosition().getTileX()][unit.getCurrentPosition().getTileY()].getUnit());
+					if (stateOfField[to.x][to.y].getUnit() == null) {
+						final int j = 5;
+					}
 					stateOfField[to.x][to.y].getUnit().setCurrentPosition(new TiledMapPosition().setPositionFromTiles(to.x, to.y));
 					stateOfField[from.x][from.y].removeUnit();
 					entityFound = true;
@@ -324,22 +324,22 @@ public class BattleState implements Comparable<BattleState> {
 		stateOfField[(int) attackLocation.getX()][(int) attackLocation.getY()].getUnit().damage(damage);
 	}
 
-	public void moveUnitBackwardsUntilItHitsSomething(MyPoint casterPos, MyPoint targetPos, int maxCellsToMove) {
+	public void pushOrPullUnit(MyPoint casterPos, MyPoint targetPos, int maxCellsToMove, boolean isPulling) {
 		// decide direction to move
-		final boolean moveLeft = casterPos.x > targetPos.x;
-		final boolean moveRight = casterPos.x < targetPos.x;
-		final boolean moveUp = casterPos.y < targetPos.y;
-		final boolean moveDown = casterPos.y > targetPos.y;
+		final boolean casterIsRight = casterPos.x > targetPos.x;
+		final boolean casterIsLeft = casterPos.x < targetPos.x;
+		final boolean casterIsDown = casterPos.y < targetPos.y;
+		final boolean casterIsUp = casterPos.y > targetPos.y;
 
 		// keep moving in loop until next cell is not reachable or movecells runs out
-		MyPoint nextPoint = calculateNextPoint(targetPos, moveLeft, moveRight, moveUp, moveDown);
+		MyPoint nextPoint = calculateNextPoint(targetPos, casterIsRight, casterIsLeft, casterIsDown, casterIsUp, isPulling);
 		final Entity unitToMove = stateOfField[targetPos.x][targetPos.y].getUnit();
 		int cellsToMove = maxCellsToMove;
 
 		while (isValid(nextPoint, cellsToMove)) {
 			unitToMove.pushTo(nextPoint);
 			moveUnitTo(unitToMove, nextPoint);
-			nextPoint = calculateNextPoint(nextPoint, moveLeft, moveRight, moveUp, moveDown);
+			nextPoint = calculateNextPoint(nextPoint, casterIsRight, casterIsLeft, casterIsDown, casterIsUp, isPulling);
 			cellsToMove--;
 		}
 	}
@@ -349,7 +349,7 @@ public class BattleState implements Comparable<BattleState> {
 			return false;
 		}
 
-		if (!stateOfField[nextPoint.x][nextPoint.y].isWalkable()) {
+		if (stateOfField[nextPoint.x][nextPoint.y].isWalkable() && stateOfField[nextPoint.x][nextPoint.y].isOccupied()) {
 			return false;
 		}
 
@@ -360,18 +360,35 @@ public class BattleState implements Comparable<BattleState> {
 		return true;
 	}
 
-	private MyPoint calculateNextPoint(MyPoint oldPos, boolean moveLeft, boolean moveRight, boolean moveUp, boolean moveDown) {
-		if (moveLeft) {
-			return new MyPoint(oldPos.x - 1, oldPos.y);
+	private MyPoint calculateNextPoint(MyPoint oldPos, boolean casterIsRight, boolean casterIsLeft, boolean casterIsDown, boolean casterIsUp, boolean isPulling) {
+		if (casterIsRight) {
+			if (isPulling) {
+				return new MyPoint(oldPos.x + 1, oldPos.y);
+			} else {
+				return new MyPoint(oldPos.x - 1, oldPos.y);
+			}
+
 		}
-		if (moveRight) {
-			return new MyPoint(oldPos.x + 1, oldPos.y);
+		if (casterIsLeft) {
+			if (isPulling) {
+				return new MyPoint(oldPos.x - 1, oldPos.y);
+			} else {
+				return new MyPoint(oldPos.x + 1, oldPos.y);
+			}
 		}
-		if (moveUp) {
-			return new MyPoint(oldPos.x, oldPos.y + 1);
+		if (casterIsDown) {
+			if (isPulling) {
+				return new MyPoint(oldPos.x, oldPos.y - 1);
+			} else {
+				return new MyPoint(oldPos.x, oldPos.y + 1);
+			}
 		}
-		if (moveDown) {
-			return new MyPoint(oldPos.x, oldPos.y - 1);
+		if (casterIsUp) {
+			if (isPulling) {
+				return new MyPoint(oldPos.x, oldPos.y + 1);
+			} else {
+				return new MyPoint(oldPos.x, oldPos.y - 1);
+			}
 		}
 
 		Gdx.app.debug(TAG, "next point in push calculation needs to be in one of 4 directions");

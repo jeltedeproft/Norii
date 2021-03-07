@@ -8,7 +8,7 @@ public class Ability {
 	private final MyPoint targetLocation; // can be null
 
 	public enum LineOfSight {
-		LINE, CIRCLE, CROSS, SQUARE, DIAGONAL_RIGHT, DIAGONAL_LEFT, SQUARE_BORDER, CIRCLE_BORDER
+		LINE, CIRCLE, CROSS, SQUARE, DIAGONAL_RIGHT, DIAGONAL_LEFT, SQUARE_BORDER, CIRCLE_BORDER, SELF
 	}
 
 	public enum AreaOfEffect {
@@ -77,6 +77,10 @@ public class Ability {
 
 	public boolean getGoesTroughUnits() {
 		return spellData.isGoesTroughUnits();
+	}
+
+	public boolean getGoesTroughObstacles() {
+		return spellData.isGoesTroughObstacles();
 	}
 
 	public MyPoint getTargetLocation() {

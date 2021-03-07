@@ -132,6 +132,10 @@ public class SpellBattlePhase extends BattlePhase {
 	}
 
 	private boolean checkVisibility(Entity caster, TiledMapPosition targetPos, Ability ability) {
+		if (ability.getGoesTroughObstacles()) {
+			return true;
+		}
+
 		if (ability.getGoesTroughUnits()) {
 			return MyPathFinder.getInstance().lineOfSight(caster, targetPos, battlemanager.getUnits(), false);
 		} else {
@@ -173,11 +177,20 @@ public class SpellBattlePhase extends BattlePhase {
 		case FIREBALL:
 			castFireBall(currentUnit, targetPos, ability);
 			break;
+		case ARROW:
+			castArrow(currentUnit, targetPos, ability);
+			break;
+		case INVISIBLE:
+			// todo, think about how invis affects ai
+			break;
 		case ICEFIELD:
 			castIceField(currentUnit, targetPos, ability);
 			break;
 		case PUSH:
 			castPush(currentUnit, targetPos, ability);
+			break;
+		case PULL:
+			castPull(currentUnit, targetPos, ability);
 			break;
 		case SWAP:
 			castSwap(currentUnit, target, ability);
@@ -196,12 +209,35 @@ public class SpellBattlePhase extends BattlePhase {
 		}
 	}
 
+	private void castArrow(Entity caster, TiledMapPosition targetPos, Ability ability) {
+		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
+		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.ARROW);
+
+		final List<MyPoint> crossedCells = AIDecisionMaker.findLine(caster.getCurrentPosition().getTileX(), caster.getCurrentPosition().getTileY(), targetPos.getTileX(), targetPos.getTileY());
+		battlemanager.getBattleState();
+		for (final MyPoint point : crossedCells) {
+			if (battlemanager.getBattleState().get(point.x, point.y).isOccupied()) {
+				final Entity unit = battlemanager.getBattleState().get(point.x, point.y).getUnit();
+				battlemanager.getEntityByID(unit.getEntityID()).damage(ability.getSpellData().getDamage());
+			}
+		}
+	}
+
+	private void castPull(Entity currentUnit, TiledMapPosition targetPos, Ability ability) {
+		final MyPoint casterPos = currentUnit.getCurrentPosition().getTilePosAsPoint();
+		final MyPoint location = targetPos.getTilePosAsPoint();
+		final int pushRange = ability.getSpellData().getDamage();
+		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.PULL);
+		battlemanager.getBattleState().pushOrPullUnit(casterPos, location, pushRange, true);
+		ParticleMaker.addParticle(ParticleType.WIND, targetPos, 0);
+	}
+
 	private void castPush(Entity currentUnit, TiledMapPosition targetPos, Ability ability) {
-		MyPoint casterPos = currentUnit.getCurrentPosition().getTilePosAsPoint();
-		MyPoint location = targetPos.getTilePosAsPoint();
-		int pushRange = ability.getSpellData().getDamage();
+		final MyPoint casterPos = currentUnit.getCurrentPosition().getTilePosAsPoint();
+		final MyPoint location = targetPos.getTilePosAsPoint();
+		final int pushRange = ability.getSpellData().getDamage();
 		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.PUSH);
-		battlemanager.getBattleState().moveUnitBackwardsUntilItHitsSomething(casterPos, location, pushRange);
+		battlemanager.getBattleState().pushOrPullUnit(casterPos, location, pushRange, false);
 		ParticleMaker.addParticle(ParticleType.WIND, targetPos, 0);
 	}
 
@@ -256,7 +292,6 @@ public class SpellBattlePhase extends BattlePhase {
 		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.HAMMER_SOUND);
 
 		final List<MyPoint> crossedCells = AIDecisionMaker.findLine(caster.getCurrentPosition().getTileX(), caster.getCurrentPosition().getTileY(), targetPos.getTileX(), targetPos.getTileY());
-		// check if correct and apply similar effects in aidecisionMaker
 		battlemanager.getBattleState();
 		for (final MyPoint point : crossedCells) {
 			if (battlemanager.getBattleState().get(point.x, point.y).isOccupied()) {

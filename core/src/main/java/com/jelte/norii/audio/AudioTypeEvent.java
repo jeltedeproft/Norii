@@ -13,7 +13,10 @@ public enum AudioTypeEvent {
 	WALK_LOOP("audio/walkloop.wav"),
 	ICE("audio/ice.wav"),
 	COLD_SNAP("audio/coldsnap.wav"),
-	PUSH("audio/push.mp3"),
+	PUSH("audio/push.wav"),
+	PULL("audio/pull.mp3"),
+	ARROW("audio/arrow.wav"),
+	INVISIBLE("audio/invisible.mp3"),
 	NONE("");
 
 	private final String audioFullFilePath;

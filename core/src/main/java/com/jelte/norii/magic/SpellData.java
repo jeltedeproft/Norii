@@ -9,6 +9,7 @@ public class SpellData {
 	private int mpCost;
 	private String lineOfSight;
 	private boolean goesTroughUnits;
+	private boolean goesTroughObstacles;
 	private String target;
 	private String areaOfEffect;
 	private int damage;
@@ -75,6 +76,14 @@ public class SpellData {
 
 	public void setGoesTroughUnits(boolean goesTroughUnits) {
 		this.goesTroughUnits = goesTroughUnits;
+	}
+
+	public boolean isGoesTroughObstacles() {
+		return goesTroughObstacles;
+	}
+
+	public void setGoesTroughObstacles(boolean goesTroughObstacles) {
+		this.goesTroughObstacles = goesTroughObstacles;
 	}
 
 	public String getTarget() {

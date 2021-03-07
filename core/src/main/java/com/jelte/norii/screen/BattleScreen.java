@@ -307,7 +307,7 @@ public class BattleScreen extends GameScreen {
 	}
 
 	private void prepareMove(final Entity unit) {
-		Set<MyPoint> pointsToMove = BattleStateGridHelper.getInstance().getPossibleCenterCellsFiltered(unit.getCurrentPosition().getTilePosAsPoint(), LineOfSight.CIRCLE, unit.getAp(), battlemanager.getBattleState());
+		final Set<MyPoint> pointsToMove = BattleStateGridHelper.getInstance().getPossibleCenterCellsFiltered(unit.getCurrentPosition().getTilePosAsPoint(), LineOfSight.CIRCLE, unit.getAp(), battlemanager.getBattleState());
 		MyPathFinder.getInstance().filterPositionsByWalkability(unit, pointsToMove);
 		for (final MyPoint cell : pointsToMove) {
 			if (!isUnitOnCell(cell)) {
@@ -319,7 +319,7 @@ public class BattleScreen extends GameScreen {
 	}
 
 	private void prepareAttack(final Entity unit) {
-		Set<MyPoint> pointsToAttack = BattleStateGridHelper.getInstance().getPossibleCenterCells(unit.getCurrentPosition().getTilePosAsPoint(), LineOfSight.CIRCLE, unit.getEntityData().getAttackRange());
+		final Set<MyPoint> pointsToAttack = BattleStateGridHelper.getInstance().getPossibleCenterCells(unit.getCurrentPosition().getTilePosAsPoint(), LineOfSight.CIRCLE, unit.getEntityData().getAttackRange());
 		for (final MyPoint cell : pointsToAttack) {
 			final TiledMapPosition positionToPutAttackParticle = new TiledMapPosition().setPositionFromTiles(cell.x, cell.y);
 			ParticleMaker.addParticle(ParticleType.ATTACK, positionToPutAttackParticle, 0);
@@ -407,12 +407,16 @@ public class BattleScreen extends GameScreen {
 		switch (message) {
 		case UNIT_ACTIVE:
 			final ActionsUi actionsUI = newHud.getEntityIdWithActionUi().get(entity.getEntityID());
-			actionsUI.update(entity);
-			actionsUI.setVisible(!entity.hasModifier(ModifiersEnum.STUNNED));
+			if (actionsUI != null) {
+				actionsUI.update(entity);
+				actionsUI.setVisible(!entity.hasModifier(ModifiersEnum.STUNNED));
+			}
 			break;
 		case HIDE_ACTIONS:
 			final ActionsUi actionsUIToHide = newHud.getEntityIdWithActionUi().get(entity.getEntityID());
-			actionsUIToHide.setVisible(false);
+			if (actionsUIToHide != null) {
+				actionsUIToHide.setVisible(false);
+			}
 			break;
 		case UPDATE_UI:
 			newHud.update(battlemanager.getUnits());

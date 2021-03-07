@@ -1183,7 +1183,10 @@ public class BattleStateGridHelper {
 		default:
 			break;
 		}
-		MyPathFinder.getInstance().filterPositionsByLineOfSight(unit, spellPath, positions, !ability.getGoesTroughUnits());
+		if (!ability.getGoesTroughObstacles()) {
+			MyPathFinder.getInstance().filterPositionsByLineOfSight(unit, spellPath, positions, !ability.getGoesTroughUnits());
+		}
+
 		return spellPath;
 	}
 

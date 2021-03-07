@@ -187,7 +187,17 @@ public class AIDecisionMaker {
 			battleState.damageUnit(location, damage);
 			break;
 		case PUSH:
-			battleState.moveUnitBackwardsUntilItHitsSomething(casterPos, location, damage);
+			battleState.pushOrPullUnit(casterPos, location, damage, false);
+			break;
+		case PULL:
+			battleState.pushOrPullUnit(casterPos, location, damage, true);
+			break;
+		case ARROW:
+			if (targets != null) {
+				for (final MyPoint point : targets) {
+					battleState.damageUnit(point, damage);
+				}
+			}
 			break;
 		case ICEFIELD:
 			if (targets != null) {
