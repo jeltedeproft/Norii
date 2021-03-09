@@ -30,6 +30,7 @@ public class Entity extends Actor {
 
 	protected boolean isPlayerUnit;
 	protected boolean isDead;
+	protected boolean isInvis;
 
 	protected int entityID;
 
@@ -59,6 +60,7 @@ public class Entity extends Actor {
 		ap = entityData.getMaxAP();
 		isDead = false;
 		statsChanged = true;
+		isInvis = false;
 		direction = Direction.DOWN;
 		xp = 0;
 
@@ -320,6 +322,9 @@ public class Entity extends Actor {
 			case SILENCED:
 				score -= 2;
 				break;
+			case INVISIBLE:
+				score += 2;
+				break;
 			default:
 				return score;
 			}
@@ -401,5 +406,13 @@ public class Entity extends Actor {
 
 	public void pushTo(MyPoint casterNewPosition) {
 		visualComponent.pushTo(casterNewPosition);
+	}
+
+	public void setInvisible(boolean invisible) {
+		isInvis = invisible;
+	}
+
+	public boolean isInvisible() {
+		return isInvis;
 	}
 }

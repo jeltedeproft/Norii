@@ -30,6 +30,9 @@ public class Modifier {
 			break;
 		case STUNNED:
 			break;
+		case INVISIBLE:
+			unit.setInvisible(true);
+			break;
 		default:
 			break;
 
@@ -47,6 +50,9 @@ public class Modifier {
 			break;
 		case IMAGE_CHANGED:
 			unit.getVisualComponent().restoreAnimation();
+			break;
+		case INVISIBLE:
+			unit.setInvisible(false);
 			break;
 		default:
 			break;

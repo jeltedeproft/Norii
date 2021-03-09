@@ -186,6 +186,9 @@ public class AIDecisionMaker {
 		case FIREBALL:
 			battleState.damageUnit(location, damage);
 			break;
+		case INVISIBLE:
+			battleState.addModifierToUnit(location.x, location.y, new Modifier(ModifiersEnum.INVISIBLE, 2, 0));
+			break;
 		case PUSH:
 			battleState.pushOrPullUnit(casterPos, location, damage, false);
 			break;
@@ -497,9 +500,9 @@ public class AIDecisionMaker {
 		switch (ability.getAffectedTeams()) {
 		case FRIENDLY:
 			if (unit.isPlayerUnit()) {
-				unitsToCheck = battleState.getPlayerUnits();
+				unitsToCheck = battleState.getVisiblePlayerUnits();
 			} else {
-				unitsToCheck = battleState.getAiUnits();
+				unitsToCheck = battleState.getVisibleAiUnits();
 			}
 			for (final Entity entity : unitsToCheck) {
 				if (unit.getEntityID() != entity.getEntityID()) {
@@ -509,9 +512,9 @@ public class AIDecisionMaker {
 			break;
 		case ENEMY:
 			if (unit.isPlayerUnit()) {
-				unitsToCheck = battleState.getAiUnits();
+				unitsToCheck = battleState.getVisibleAiUnits();
 			} else {
-				unitsToCheck = battleState.getPlayerUnits();
+				unitsToCheck = battleState.getVisiblePlayerUnits();
 			}
 			for (final Entity entity : unitsToCheck) {
 				if (unit.getEntityID() != entity.getEntityID()) {
@@ -520,7 +523,7 @@ public class AIDecisionMaker {
 			}
 			break;
 		case BOTH:
-			for (final Entity entity : battleState.getAllUnits()) {
+			for (final Entity entity : battleState.getAllVisibleUnits()) {
 				if (unit.getEntityID() != entity.getEntityID()) {
 					distances.computeIfAbsent(calculateDistanceTwoUnits(unit, entity), k -> new ArrayList<Entity>()).add(entity);
 				}
@@ -540,8 +543,32 @@ public class AIDecisionMaker {
 
 	private Array<MyPoint> getAbilityTargets(Ability ability, MyPoint casterPos, boolean isPlayerUnit, BattleState battleState) {
 
-		final Array<MyPoint> unitPositions = getUnitPositions(isPlayerUnit, ability, battleState);
+		final Array<MyPoint> unitPositions = getVisibleUnitPositions(isPlayerUnit, ability, battleState);
 		return BattleStateGridHelper.getInstance().getTargetPositionsInRangeAbility(casterPos, ability, unitPositions);
+	}
+
+	private Array<MyPoint> getVisibleUnitPositions(boolean isPlayerUnit, Ability ability, BattleState battleState) {
+		switch (ability.getAffectedTeams()) {
+		case FRIENDLY:
+			if (isPlayerUnit) {
+				return collectPoints(battleState.getVisiblePlayerUnits());
+			} else {
+				return collectPoints(battleState.getVisibleAiUnits());
+			}
+		case ENEMY:
+			if (!isPlayerUnit) {
+				return collectPoints(battleState.getVisiblePlayerUnits());
+			} else {
+				return collectPoints(battleState.getVisibleAiUnits());
+			}
+		case BOTH:
+			return collectPoints(battleState.getAllVisibleUnits());
+		case NONE:
+			return new Array<>();
+		default:
+			Gdx.app.debug(TAG, "ability does not have one of these affected teams : FRIENDLY, ENEMY, BOTH or NONE, returning null");
+			return null;
+		}
 	}
 
 	private Array<MyPoint> getUnitPositions(boolean isPlayerUnit, Ability ability, BattleState battleState) {

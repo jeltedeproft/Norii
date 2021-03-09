@@ -181,7 +181,7 @@ public class SpellBattlePhase extends BattlePhase {
 			castArrow(currentUnit, targetPos, ability);
 			break;
 		case INVISIBLE:
-			// todo, think about how invis affects ai
+			castInvis(currentUnit, ability);
 			break;
 		case ICEFIELD:
 			castIceField(currentUnit, targetPos, ability);
@@ -207,6 +207,14 @@ public class SpellBattlePhase extends BattlePhase {
 		default:
 			break;
 		}
+	}
+
+	private void castInvis(Entity caster, Ability ability) {
+		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
+		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.STONE_SOUND);
+		caster.getVisualComponent().changeAnimation(new EntityAnimation("Rock"));
+		caster.addModifier(ModifiersEnum.IMAGE_CHANGED, 2, 0);
+		caster.addModifier(ModifiersEnum.STUNNED, 2, 0);
 	}
 
 	private void castArrow(Entity caster, TiledMapPosition targetPos, Ability ability) {
