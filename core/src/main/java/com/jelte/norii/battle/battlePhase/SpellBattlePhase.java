@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
+import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
 import com.jelte.norii.ai.AIDecisionMaker;
 import com.jelte.norii.audio.AudioCommand;
 import com.jelte.norii.audio.AudioManager;
@@ -20,7 +22,6 @@ import com.jelte.norii.entities.EntityTypes;
 import com.jelte.norii.magic.AbilitiesEnum;
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.magic.Ability.AffectedTeams;
-import com.jelte.norii.magic.Ability.Target;
 import com.jelte.norii.magic.ModifiersEnum;
 import com.jelte.norii.map.MyPathFinder;
 import com.jelte.norii.map.TiledMapActor;
@@ -72,7 +73,7 @@ public class SpellBattlePhase extends BattlePhase {
 	private boolean isValidTileTarget(Entity caster, TiledMapPosition targetPos, Ability ability) {
 		final boolean correctAreaOfEffect = checkAreaOfEffect(caster, targetPos, ability);
 		final boolean correctVisibility = checkVisibility(caster, targetPos, ability);
-		final boolean correctTarget = checkTarget(ability, Target.CELL);
+		final boolean correctTarget = checkTarget(caster, targetPos, ability, true);
 
 		return correctAreaOfEffect && correctVisibility && correctTarget;
 	}
@@ -107,7 +108,7 @@ public class SpellBattlePhase extends BattlePhase {
 		final boolean correctTeam = checkTeams(caster, target, affectedTeams);
 		final boolean correctAreaOfEffect = checkAreaOfEffect(caster, target.getCurrentPosition(), ability);
 		final boolean correctVisibility = checkVisibility(caster, target.getCurrentPosition(), ability);
-		final boolean correctTarget = checkTarget(ability, Target.UNIT);
+		final boolean correctTarget = checkTarget(caster, target.getCurrentPosition(), ability, false);
 
 		return correctAreaOfEffect && correctTeam && correctVisibility && correctTarget;
 	}
@@ -121,7 +122,7 @@ public class SpellBattlePhase extends BattlePhase {
 			return caster.isPlayerUnit() != target.isPlayerUnit();
 		}
 
-		return ((affectedTeams == AffectedTeams.FRIENDLY) && (caster.isPlayerUnit() != target.isPlayerUnit()));
+		return ((affectedTeams == AffectedTeams.FRIENDLY) && (caster.isPlayerUnit() == target.isPlayerUnit()));
 	}
 
 	private boolean checkAreaOfEffect(Entity caster, TiledMapPosition targetPos, Ability ability) {
@@ -144,18 +145,18 @@ public class SpellBattlePhase extends BattlePhase {
 
 	}
 
-	private boolean checkTarget(Ability ability, Target targetType) {
+	private boolean checkTarget(Entity caster, TiledMapPosition targetPos, Ability ability, boolean isTile) {
 		switch (ability.getTarget()) {
 		case CELL:
-			return ((targetType == Target.CELL) || (targetType == Target.UNIT) || (targetType == Target.CELL_BUT_NO_UNIT));
+			return isTile;
 		case UNIT:
-			return (targetType == Target.UNIT);
+			return !isTile;
 		case CELL_BUT_NO_UNIT:
-			return ((targetType == Target.CELL) || (targetType == Target.CELL_BUT_NO_UNIT));
+			return isTile;
 		case SELF:
-			return (targetType == Target.SELF);
+			return (!isTile && caster.getCurrentPosition().isTileEqualTo(targetPos));
 		case NO_TARGET:
-			return (targetType == Target.NO_TARGET);
+			return true;
 		default:
 			Gdx.app.debug("SpellBattlePhase", "ability : " + ability + " has no valid target : " + ability.getTarget());
 			return false;
@@ -211,10 +212,14 @@ public class SpellBattlePhase extends BattlePhase {
 
 	private void castInvis(Entity caster, Ability ability) {
 		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
-		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.STONE_SOUND);
-		caster.getVisualComponent().changeAnimation(new EntityAnimation("Rock"));
-		caster.addModifier(ModifiersEnum.IMAGE_CHANGED, 2, 0);
-		caster.addModifier(ModifiersEnum.STUNNED, 2, 0);
+		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.INVISIBLE);
+		caster.addModifier(ModifiersEnum.INVISIBLE, ability.getSpellData().getDamage(), 0);
+		caster.setInvisible(true);
+		final AlphaAction action = new AlphaAction();
+		action.setAlpha(.5f);
+		action.setDuration(1);
+		action.setInterpolation(Interpolation.linear);
+		caster.getVisualComponent().getEntityactor().addAction(action);
 	}
 
 	private void castArrow(Entity caster, TiledMapPosition targetPos, Ability ability) {

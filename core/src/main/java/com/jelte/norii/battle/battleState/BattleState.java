@@ -236,7 +236,7 @@ public class BattleState implements Comparable<BattleState> {
 		final Array<Entity> playerUnits = new Array<>();
 		for (final BattleCell[] row : stateOfField) {
 			for (final BattleCell cell : row) {
-				if ((cell.getUnit() != null) && cell.getUnit().isPlayerUnit() && cell.getUnit().isInvisible()) {
+				if ((cell.getUnit() != null) && cell.getUnit().isPlayerUnit() && !cell.getUnit().isInvisible()) {
 					playerUnits.add(cell.getUnit());
 				}
 			}
@@ -260,7 +260,7 @@ public class BattleState implements Comparable<BattleState> {
 		final Array<Entity> aiUnits = new Array<>();
 		for (final BattleCell[] row : stateOfField) {
 			for (final BattleCell cell : row) {
-				if ((cell.getUnit() != null) && !cell.getUnit().isPlayerUnit() && cell.getUnit().isInvisible()) {
+				if ((cell.getUnit() != null) && !cell.getUnit().isPlayerUnit() && !cell.getUnit().isInvisible()) {
 					aiUnits.add(cell.getUnit());
 				}
 			}
@@ -284,7 +284,7 @@ public class BattleState implements Comparable<BattleState> {
 		final Array<Entity> allUnits = new Array<>();
 		for (final BattleCell[] row : stateOfField) {
 			for (final BattleCell cell : row) {
-				if ((cell.getUnit() != null) && cell.getUnit().isInvisible()) {
+				if ((cell.getUnit() != null) && !cell.getUnit().isInvisible()) {
 					allUnits.add(cell.getUnit());
 				}
 			}

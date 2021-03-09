@@ -31,7 +31,6 @@ public class Modifier {
 		case STUNNED:
 			break;
 		case INVISIBLE:
-			unit.setInvisible(true);
 			break;
 		default:
 			break;

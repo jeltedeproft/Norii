@@ -247,6 +247,7 @@ public class BattleScreen extends GameScreen {
 
 	private void renderUnits() {
 		spriteBatch.begin();
+
 		if (battlemanager.getActiveUnit().getVisualComponent().isActive()) {
 			spriteBatch.draw(AssetManagerUtility.getSprite("purple"), battlemanager.getActiveUnit().getVisualComponent().getEntityactor().getX(), battlemanager.getActiveUnit().getVisualComponent().getEntityactor().getY(), 1.0f, 1.0f);
 		}

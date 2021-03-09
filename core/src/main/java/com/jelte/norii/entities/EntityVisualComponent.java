@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.xguzm.pathfinding.grid.GridCell;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
@@ -241,7 +242,10 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 	@Override
 	public void draw(Batch batch) {
 		if (isInBattle()) {
+			final Color temp = batch.getColor();
+			batch.setColor(new Color(temp.r, temp.g, temp.b, getEntityactor().getColor().a));
 			batch.draw(getFrame(), getEntityactor().getX(), getEntityactor().getY(), 1.0f, 1.0f);
+			batch.setColor(temp);
 		}
 
 		if (isLocked()) {

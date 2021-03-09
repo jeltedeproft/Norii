@@ -269,7 +269,7 @@ public class Entity extends Actor {
 		modifiers.removeIf(mod -> mod.getTurns() == 0);
 	}
 
-	private void applymod(Modifier mod) {
+	public void applymod(Modifier mod) {
 		mod.applyModifier(this);
 
 		if (mod.getTurns() == 0) {

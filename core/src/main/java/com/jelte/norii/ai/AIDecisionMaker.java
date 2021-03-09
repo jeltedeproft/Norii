@@ -187,7 +187,8 @@ public class AIDecisionMaker {
 			battleState.damageUnit(location, damage);
 			break;
 		case INVISIBLE:
-			battleState.addModifierToUnit(location.x, location.y, new Modifier(ModifiersEnum.INVISIBLE, 2, 0));
+			unit.setInvisible(true);
+			battleState.addModifierToUnit(location.x, location.y, new Modifier(ModifiersEnum.INVISIBLE, damage, 0));
 			break;
 		case PUSH:
 			battleState.pushOrPullUnit(casterPos, location, damage, false);
@@ -362,6 +363,9 @@ public class AIDecisionMaker {
 				final TiledMapPosition closestUnitPos = new TiledMapPosition().setPositionFromTiles(closestUnit.getCurrentPosition().getTileX(), closestUnit.getCurrentPosition().getTileY());
 				final List<GridCell> path = MyPathFinder.getInstance().pathTowards(new TiledMapPosition().setPositionFromTiles(copyUnit.getCurrentPosition().getTileX(), copyUnit.getCurrentPosition().getTileY()), closestUnitPos,
 						copyUnit.getAp());
+				if (path.size() == 0) {
+					final int j = 5;
+				}
 				endMyPoint = new MyPoint(path.get(0).x, path.get(0).y);
 				int i = 0;
 				while (checkIfUnitOnPoint(endMyPoint, copyBattleState, copyUnit)) {
@@ -544,7 +548,12 @@ public class AIDecisionMaker {
 	private Array<MyPoint> getAbilityTargets(Ability ability, MyPoint casterPos, boolean isPlayerUnit, BattleState battleState) {
 
 		final Array<MyPoint> unitPositions = getVisibleUnitPositions(isPlayerUnit, ability, battleState);
-		return BattleStateGridHelper.getInstance().getTargetPositionsInRangeAbility(casterPos, ability, unitPositions);
+		final Array<MyPoint> points = BattleStateGridHelper.getInstance().getTargetPositionsInRangeAbility(casterPos, ability, unitPositions);
+
+		if (ability.getTarget() == Target.SELF) {
+			points.add(casterPos);
+		}
+		return points;
 	}
 
 	private Array<MyPoint> getVisibleUnitPositions(boolean isPlayerUnit, Ability ability, BattleState battleState) {

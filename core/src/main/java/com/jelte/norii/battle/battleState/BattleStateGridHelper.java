@@ -1180,6 +1180,10 @@ public class BattleStateGridHelper {
 		case LINE:
 			spellPath = getPossibleCenterCells(unit.getCurrentPosition().getTilePosAsPoint(), LineOfSight.LINE, ability.getSpellData().getRange());
 			break;
+		case SELF:
+			spellPath = new HashSet<>();
+			spellPath.add(new MyPoint(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY()));
+			break;
 		default:
 			break;
 		}
