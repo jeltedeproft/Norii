@@ -3,6 +3,7 @@ package com.jelte.norii.ai;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -278,6 +279,8 @@ public class AIDecisionMaker {
 	}
 
 	private Array<UnitTurn> generateMoves(Ability ability, Entity aiUnit, BattleState battleState) {
+		Long startTime = System.currentTimeMillis();
+		Long timestamp;
 		final Array<UnitTurn> unitTurns = new Array<>();
 
 		// if the ability is cast on self or no target, just cast it and move
@@ -291,20 +294,32 @@ public class AIDecisionMaker {
 		// if the ability has cell targets, try out all of them + move and make a new
 		// state for each
 		if ((ability.getTarget() == Target.CELL) || (ability.getTarget() == Target.CELL_BUT_NO_UNIT)) {
+			timestamp = System.currentTimeMillis();
+			Gdx.app.debug(TAG, "1 : " + (timestamp - startTime));
 			final MyPoint center = new MyPoint(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY());
-			final Set<MyPoint> cellsToCastOn = BattleStateGridHelper.getInstance().getAllPointsASpellCanHit(center, ability.getLineOfSight(), ability.getSpellData().getRange(), battleState);
+			Set<MyPoint> cellsToCastOn = BattleStateGridHelper.getInstance().getAllPointsASpellCanHit(center, ability.getLineOfSight(), ability.getSpellData().getRange(), battleState);
+			timestamp = System.currentTimeMillis();
+			Gdx.app.debug(TAG, "2 : " + (timestamp - startTime));
 			if (ability.getTarget() == Target.CELL_BUT_NO_UNIT) {
 				filterUnits(cellsToCastOn, battleState);
 			}
+			timestamp = System.currentTimeMillis();
+			Gdx.app.debug(TAG, "3 : " + (timestamp - startTime));
+			cellsToCastOn = filterOutNumber(cellsToCastOn, 50);
 			for (final MyPoint point : cellsToCastOn) {
 				final UnitTurn spellAndMove = new UnitTurn(aiUnit.getEntityID(), new SpellMove(MoveType.SPELL, point, ability));
 				spellAndMove.addMove(decideMove(ability, aiUnit, battleState));
 				unitTurns.add(spellAndMove);
 			}
+			timestamp = System.currentTimeMillis();
+			Gdx.app.debug(TAG, "4 : " + (timestamp - startTime));
 		}
 
 		// get the distance between unit and possible targets
 		final TreeMap<Integer, List<Entity>> distancesWithAbilityTargetUnits = (TreeMap<Integer, List<Entity>>) getDistancesToTargets(aiUnit, battleState, ability);
+
+		timestamp = System.currentTimeMillis();
+		Gdx.app.debug(TAG, "5 : " + (timestamp - startTime));
 
 		if (!distancesWithAbilityTargetUnits.isEmpty() && (distancesWithAbilityTargetUnits.firstKey() > (ability.getSpellData().getRange() + ability.getSpellData().getAreaOfEffectRange() + aiUnit.getAp()))) {
 			if (distancesWithAbilityTargetUnits.firstKey() > (aiUnit.getAttackRange() + aiUnit.getAp())) {
@@ -347,9 +362,15 @@ public class AIDecisionMaker {
 			}
 		}
 
+		timestamp = System.currentTimeMillis();
+		Gdx.app.debug(TAG, "6 : " + (timestamp - startTime));
+
 		// decide where to cast spell
 		final MyPoint casterPos = new MyPoint(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY());
 		Array<MyPoint> abilityTargets = getAbilityTargets(ability, casterPos, aiUnit.isPlayerUnit(), battleState);
+
+		timestamp = System.currentTimeMillis();
+		Gdx.app.debug(TAG, "7 : " + (timestamp - startTime));
 
 		// no units found in immediate vicinity, so move
 		if (abilityTargets.isEmpty()) {
@@ -395,6 +416,9 @@ public class AIDecisionMaker {
 			}
 		}
 
+		timestamp = System.currentTimeMillis();
+		Gdx.app.debug(TAG, "8 : " + (timestamp - startTime));
+
 		if (!abilityTargets.isEmpty()) {
 			for (final MyPoint target : abilityTargets) {
 				final Set<MyPoint> positionsToCastSpell = BattleStateGridHelper.getInstance().getAllCastPointsWhereTargetIsHit(ability, target, new MyPoint(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY()),
@@ -408,7 +432,22 @@ public class AIDecisionMaker {
 				}
 			}
 		}
+
+		timestamp = System.currentTimeMillis();
+		Gdx.app.debug(TAG, "9 : " + (timestamp - startTime));
 		return unitTurns;
+	}
+
+	private Set<MyPoint> filterOutNumber(Set<MyPoint> cellsToCastOn, int maxSize) {
+		Random random = new Random();
+		List<MyPoint> pointsAsList = new ArrayList<>();
+		pointsAsList.addAll(cellsToCastOn);
+		while (pointsAsList.size() > maxSize) {
+			pointsAsList.remove(random.nextInt(pointsAsList.size()));
+		}
+		cellsToCastOn.clear();
+		cellsToCastOn.addAll(pointsAsList);
+		return cellsToCastOn;
 	}
 
 	private void filterUnits(Set<MyPoint> cellsToCastOn, BattleState battleState) {

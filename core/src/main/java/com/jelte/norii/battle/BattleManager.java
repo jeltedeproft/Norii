@@ -6,6 +6,7 @@ import java.util.stream.Stream;
 
 import org.xguzm.pathfinding.grid.GridCell;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.ai.AITeamLeader;
 import com.jelte.norii.ai.UnitTurn;
@@ -49,6 +50,8 @@ public class BattleManager {
 	private boolean aiFinishedCalculating = false;
 	private Entity lockedUnit;
 	private BattleScreen battleScreen;
+
+	private static final String TAG = BattleManager.class.getSimpleName();
 
 	public BattleManager(AITeamLeader aiTeamLeader, int width, int height, Array<GridCell> unwalkableNodes, BattleScreen battleScreen) {
 		initVariables(aiTeamLeader, width, height, unwalkableNodes, battleScreen);
@@ -154,6 +157,7 @@ public class BattleManager {
 		}
 
 		if (aiFinishedCalculating) {
+			Gdx.app.debug(TAG, "finished calculating");
 			final BattleState newState = aiTeamLeader.getNextBattleState();
 			aiUnitIsBussy = true;
 			aiIsCalculating = false;
@@ -163,6 +167,7 @@ public class BattleManager {
 			setCurrentBattleState(getSelectUnitBattleState());
 			getCurrentBattleState().entry();
 		}
+
 	}
 
 	private void executeNextMove() {

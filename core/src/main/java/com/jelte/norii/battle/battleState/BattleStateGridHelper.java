@@ -17,6 +17,7 @@ import com.jelte.norii.utility.TiledMapPosition;
 
 public class BattleStateGridHelper {
 	private static BattleStateGridHelper instance;
+	private static final String TAG = BattleStateGridHelper.class.getSimpleName();
 
 	public Set<MyPoint> findTargets(MyPoint caster, MyPoint center, Ability ability, BattleState battleState) {
 		final AffectedTeams affectedTeams = ability.getAffectedTeams();
