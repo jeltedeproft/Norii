@@ -135,7 +135,7 @@
         "attackRange": 1,
         "attackPower": 3,
         "basicAttackCost": 1,
-        "abilities": ["FIREBALL"]
+        "abilities": ["HEAL"]
     },
 
     {
@@ -261,7 +261,7 @@
         "attackRange": 1,
         "attackPower": 3,
         "basicAttackCost": 1,
-        "abilities": ["FIREBALL"]
+        "abilities": ["PORTAL"]
     },
 
     {
@@ -457,6 +457,20 @@
         "attackRange": 1,
         "attackPower": 3,
         "basicAttackCost": 1,
+        "abilities": []
+    },
+
+    {
+        "id": 33,
+        "name": "Portal",
+        "portraitSpritePath": "VortexIdleDown",
+        "entitySpriteName": "Vortex",
+        "maxAP": 0,
+        "maxHP": 0,
+        "level": 1,
+        "attackRange": 0,
+        "attackPower": 0,
+        "basicAttackCost": 0,
         "abilities": []
     }
 ]

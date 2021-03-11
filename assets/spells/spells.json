@@ -8,7 +8,7 @@
         "goesTroughUnits": true,
         "goesTroughObstacles": false,
         "areaOfEffect": "CELL",
-        "damage": 10,
+        "damage": 5,
         "range": 5,
         "areaOfEffectRange": 2,
         "affectsTeam": "ENEMY",
@@ -176,5 +176,41 @@
         "affectsTeam": "FRIENDLY",
         "target": "SELF",
         "infoText": "Woosh, you're gone."
+    },
+
+    {
+        "id": 10,
+        "name": "Heal",
+        "iconSpriteName": "heal",
+        "apCost": 1,
+        "mpCost": 0,
+        "lineOfSight": "CIRCLE",
+        "goesTroughUnits": true,
+        "goesTroughObstacles": false,
+        "areaOfEffect": "CELL",
+        "damage": 5,
+        "range": 5,
+        "areaOfEffectRange": 1,
+        "affectsTeam": "FRIENDLY",
+        "target": "UNIT",
+        "infoText": "Be blessed my friend."
+    },
+
+    {
+        "id": 11,
+        "name": "Portal",
+        "iconSpriteName": "portal",
+        "apCost": 5,
+        "mpCost": 0,
+        "lineOfSight": "CIRCLE",
+        "goesTroughUnits": true,
+        "goesTroughObstacles": true,
+        "areaOfEffect": "CELL",
+        "damage": 0,
+        "range": 50,
+        "areaOfEffectRange": 1,
+        "affectsTeam": "NONE",
+        "target": "CELL_BUT_NO_UNIT",
+        "infoText": "Cast Portal, make sure to create 2 of these."
     }
 ]

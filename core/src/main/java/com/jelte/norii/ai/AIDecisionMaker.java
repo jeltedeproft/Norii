@@ -187,6 +187,9 @@ public class AIDecisionMaker {
 		case FIREBALL:
 			battleState.damageUnit(location, damage);
 			break;
+		case HEAL:
+			battleState.healUnit(location, damage);
+			break;
 		case INVISIBLE:
 			unit.setInvisible(true);
 			battleState.addModifierToUnit(location.x, location.y, new Modifier(ModifiersEnum.INVISIBLE, damage, 0));

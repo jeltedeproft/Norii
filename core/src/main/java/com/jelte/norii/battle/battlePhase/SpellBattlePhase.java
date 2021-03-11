@@ -8,6 +8,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
+import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.ai.AIDecisionMaker;
 import com.jelte.norii.audio.AudioCommand;
 import com.jelte.norii.audio.AudioManager;
@@ -178,6 +179,9 @@ public class SpellBattlePhase extends BattlePhase {
 		case FIREBALL:
 			castFireBall(currentUnit, targetPos, ability);
 			break;
+		case HEAL:
+			castHeal(currentUnit, targetPos, ability);
+			break;
 		case ARROW:
 			castArrow(currentUnit, targetPos, ability);
 			break;
@@ -201,6 +205,9 @@ public class SpellBattlePhase extends BattlePhase {
 			break;
 		case HAMMERBACK:
 			castHammerback(currentUnit, targetPos, ability);
+			break;
+		case PORTAL:
+			castPortal(currentUnit, targetPos, ability);
 			break;
 		case HAMMERBACKBACK:
 			castHammerbackBack(currentUnit, targetPos, ability);
@@ -266,6 +273,18 @@ public class SpellBattlePhase extends BattlePhase {
 		}
 	}
 
+	private void castHeal(final Entity caster, final TiledMapPosition targetPos, final Ability ability) {
+		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
+		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.HEAL);
+		ParticleMaker.addParticle(ParticleType.HEAL, targetPos, 0);
+
+		final Entity possibleTarget = getEntityAtPosition(targetPos.getTilePosAsPoint());
+		if (possibleTarget != null) {
+			possibleTarget.heal(ability.getSpellData().getDamage());
+			battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.UPDATE_UI, possibleTarget);
+		}
+	}
+
 	private void castIceField(final Entity caster, final TiledMapPosition targetPos, final Ability ability) {
 		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
 		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.ICE);
@@ -321,6 +340,36 @@ public class SpellBattlePhase extends BattlePhase {
 		hammerEntity.addAbility(AbilitiesEnum.HAMMERBACKBACK, caster.getCurrentPosition().getTilePosAsPoint());
 		battlemanager.addUnit(hammerEntity);
 		battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.ADD_UNIT_UI, hammerEntity);
+	}
+
+	private void castPortal(final Entity caster, final TiledMapPosition targetPos, final Ability ability) {
+		final boolean playerUnit = caster.isPlayerUnit();
+		Array<Entity> entities;
+		if (playerUnit) {
+			entities = battlemanager.getBattleState().getPlayerUnits();
+		} else {
+			entities = battlemanager.getBattleState().getAiUnits();
+		}
+		int portalCount = 0;
+		for (final Entity entity : entities) {
+			if (entity.getEntityType() == EntityTypes.PORTAL) {
+				portalCount++;
+			}
+		}
+
+		if (portalCount < 2) {
+			caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
+			AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.PORTAL);
+
+			final Entity portalEntity = new Entity(EntityTypes.PORTAL, caster.getOwner());
+			battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.ADD_UNIT_ENTITYSTAGE, portalEntity);
+			portalEntity.getVisualComponent().initiateInBattle(targetPos);
+			portalEntity.setCurrentPosition(targetPos);
+			portalEntity.addModifier(ModifiersEnum.DAMAGE_OVER_TIME, 3, 1);
+			portalEntity.addAbility(AbilitiesEnum.HAMMERBACKBACK, caster.getCurrentPosition().getTilePosAsPoint());
+			battlemanager.addUnit(portalEntity);
+			battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.ADD_UNIT_UI, portalEntity);
+		}
 	}
 
 	private void castHammerbackBack(final Entity caster, final TiledMapPosition targetPos, final Ability ability) {

@@ -16,6 +16,8 @@ public enum AudioTypeEvent {
 	PUSH("audio/push.mp3"),
 	PULL("audio/pull.mp3"),
 	ARROW("audio/arrow.wav"),
+	PORTAL("audio/portal.mp3"),
+	HEAL("audio/heal.mp3"),
 	INVISIBLE("audio/invisible.mp3"),
 	NONE("");
 

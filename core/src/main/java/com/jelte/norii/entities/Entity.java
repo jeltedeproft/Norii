@@ -375,7 +375,6 @@ public class Entity extends Actor {
 			return "PLAYER: name : " + entityData.getName() + "   ID:" + entityID + "   pos : (" + currentPlayerPosition.getTileX() + "," + currentPlayerPosition.getTileY() + ")";
 		} else {
 			return "AI: name : " + entityData.getName() + "   ID:" + entityID + "   pos : (" + currentPlayerPosition.getTileX() + "," + currentPlayerPosition.getTileY() + ")";
-
 		}
 	}
 

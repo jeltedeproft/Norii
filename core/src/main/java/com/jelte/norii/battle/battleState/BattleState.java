@@ -360,6 +360,10 @@ public class BattleState implements Comparable<BattleState> {
 		stateOfField[(int) attackLocation.getX()][(int) attackLocation.getY()].getUnit().damage(damage);
 	}
 
+	public void healUnit(MyPoint attackLocation, int damage) {
+		stateOfField[(int) attackLocation.getX()][(int) attackLocation.getY()].getUnit().heal(damage);
+	}
+
 	public void pushOrPullUnit(MyPoint casterPos, MyPoint targetPos, int maxCellsToMove, boolean isPulling) {
 		// decide direction to move
 		final boolean casterIsRight = casterPos.x > targetPos.x;

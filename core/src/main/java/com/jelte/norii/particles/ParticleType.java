@@ -5,6 +5,7 @@ public enum ParticleType {
 	MOVE("particles/move.p"),
 	SPELL("particles/spell.p"),
 	FIREBALL("particles/fireball.p"),
+	HEAL("particles/heal.p"),
 	SWAP("particles/swap.p"),
 	RED_CIRCLE("particles/red_ring.p"),
 	BLUE_CIRCLE("particles/blue_ring.p"),
