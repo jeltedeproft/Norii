@@ -279,7 +279,7 @@ public class AIDecisionMaker {
 	}
 
 	private Array<UnitTurn> generateMoves(Ability ability, Entity aiUnit, BattleState battleState) {
-		Long startTime = System.currentTimeMillis();
+		final Long startTime = System.currentTimeMillis();
 		Long timestamp;
 		final Array<UnitTurn> unitTurns = new Array<>();
 
@@ -305,7 +305,7 @@ public class AIDecisionMaker {
 			}
 			timestamp = System.currentTimeMillis();
 			Gdx.app.debug(TAG, "3 : " + (timestamp - startTime));
-			cellsToCastOn = filterOutNumber(cellsToCastOn, 50);
+			cellsToCastOn = filterOutNumber(cellsToCastOn, 30);
 			for (final MyPoint point : cellsToCastOn) {
 				final UnitTurn spellAndMove = new UnitTurn(aiUnit.getEntityID(), new SpellMove(MoveType.SPELL, point, ability));
 				spellAndMove.addMove(decideMove(ability, aiUnit, battleState));
@@ -439,8 +439,8 @@ public class AIDecisionMaker {
 	}
 
 	private Set<MyPoint> filterOutNumber(Set<MyPoint> cellsToCastOn, int maxSize) {
-		Random random = new Random();
-		List<MyPoint> pointsAsList = new ArrayList<>();
+		final Random random = new Random();
+		final List<MyPoint> pointsAsList = new ArrayList<>();
 		pointsAsList.addAll(cellsToCastOn);
 		while (pointsAsList.size() > maxSize) {
 			pointsAsList.remove(random.nextInt(pointsAsList.size()));

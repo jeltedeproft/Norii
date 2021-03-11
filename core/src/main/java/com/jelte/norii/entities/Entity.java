@@ -365,6 +365,7 @@ public class Entity extends Actor {
 		copy.setVisualComponent(new FakeEntityVisualComponent());
 		copy.setCurrentPosition(currentPlayerPosition);
 		copy.setEntityID(entityID);
+		copy.setInvisible(isInvis);
 		return copy;
 	}
 
