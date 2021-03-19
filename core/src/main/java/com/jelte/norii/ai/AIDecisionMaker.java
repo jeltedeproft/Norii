@@ -68,6 +68,9 @@ public class AIDecisionMaker {
 		if (turnIndex == 0) {
 			startingState = currentBattleState;
 		} else {
+			if ((allBattleStates.size == 0) || (allBattleStates.get(turnIndex - 1).size == 0)) {
+				final int j = 5;
+			}
 			startingState = allBattleStates.get(turnIndex - 1).get(battleStateIndex);
 		}
 
@@ -241,6 +244,30 @@ public class AIDecisionMaker {
 				if (battleState.get(point.x, point.y).isOccupied()) {
 					battleState.damageUnit(point, damage);
 				}
+			}
+			break;
+		case PORTAL:
+			final boolean playerUnit = unit.isPlayerUnit();
+			Array<Entity> entities;
+			if (playerUnit) {
+				entities = battleState.getPlayerUnits();
+			} else {
+				entities = battleState.getAiUnits();
+			}
+			int portalCount = 0;
+			for (final Entity entity : entities) {
+				if (entity.getEntityType() == EntityTypes.PORTAL) {
+					portalCount++;
+				}
+			}
+
+			if (portalCount < 2) {
+				final Entity portalEntity = new Entity(EntityTypes.PORTAL, unit.getOwner());
+				unit.getOwner().addUnit(portalEntity);
+				portalEntity.setVisualComponent(new FakeEntityVisualComponent());
+				portalEntity.setCurrentPosition(new TiledMapPosition().setPositionFromTiles(location.x, location.y));
+				battleState.addEntity(portalEntity);
+				battleState.get(location.x, location.y).getUnit().addAbility(AbilitiesEnum.TRANSPORT, casterPos);
 			}
 			break;
 		default:

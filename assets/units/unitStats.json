@@ -466,11 +466,11 @@
         "portraitSpritePath": "VortexIdleDown",
         "entitySpriteName": "Vortex",
         "maxAP": 0,
-        "maxHP": 0,
+        "maxHP": 1000,
         "level": 1,
         "attackRange": 0,
         "attackPower": 0,
         "basicAttackCost": 0,
-        "abilities": []
+        "abilities": ["TRANSPORT"]
     }
 ]

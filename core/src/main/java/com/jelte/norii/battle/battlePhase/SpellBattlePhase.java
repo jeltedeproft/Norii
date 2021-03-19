@@ -209,12 +209,20 @@ public class SpellBattlePhase extends BattlePhase {
 		case PORTAL:
 			castPortal(currentUnit, targetPos, ability);
 			break;
+		case TRANSPORT:
+			castTransport(currentUnit, targetPos, ability);
+			break;
 		case HAMMERBACKBACK:
 			castHammerbackBack(currentUnit, targetPos, ability);
 			break;
 		default:
 			break;
 		}
+	}
+
+	private void castTransport(Entity currentUnit, TiledMapPosition targetPos, Ability ability) {
+		// TODO Auto-generated method stub
+
 	}
 
 	private void castInvis(Entity caster, Ability ability) {
@@ -333,6 +341,7 @@ public class SpellBattlePhase extends BattlePhase {
 		}
 
 		final Entity hammerEntity = new Entity(EntityTypes.BOOMERANG, caster.getOwner());
+		caster.getOwner().addUnit(hammerEntity);
 		battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.ADD_UNIT_ENTITYSTAGE, hammerEntity);
 		hammerEntity.getVisualComponent().initiateInBattle(targetPos);
 		hammerEntity.setCurrentPosition(targetPos);
@@ -362,11 +371,10 @@ public class SpellBattlePhase extends BattlePhase {
 			AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.PORTAL);
 
 			final Entity portalEntity = new Entity(EntityTypes.PORTAL, caster.getOwner());
+			caster.getOwner().addUnit(portalEntity);
 			battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.ADD_UNIT_ENTITYSTAGE, portalEntity);
 			portalEntity.getVisualComponent().initiateInBattle(targetPos);
 			portalEntity.setCurrentPosition(targetPos);
-			portalEntity.addModifier(ModifiersEnum.DAMAGE_OVER_TIME, 3, 1);
-			portalEntity.addAbility(AbilitiesEnum.HAMMERBACKBACK, caster.getCurrentPosition().getTilePosAsPoint());
 			battlemanager.addUnit(portalEntity);
 			battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.ADD_UNIT_UI, portalEntity);
 		}
@@ -379,7 +387,9 @@ public class SpellBattlePhase extends BattlePhase {
 		for (final MyPoint point : crossedCells) {
 			if (battlemanager.getBattleState().get(point.x, point.y).isOccupied()) {
 				final Entity unit = battlemanager.getBattleState().get(point.x, point.y).getUnit();
-				battlemanager.getEntityByID(unit.getEntityID()).damage(ability.getSpellData().getDamage());
+				if (unit.getEntityID() != caster.getEntityID()) {
+					battlemanager.getEntityByID(unit.getEntityID()).damage(ability.getSpellData().getDamage());
+				}
 			}
 		}
 	}
