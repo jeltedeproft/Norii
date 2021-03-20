@@ -136,7 +136,7 @@ public class FakeEntityVisualComponent implements EntityVisualComponentInterface
 	}
 
 	@Override
-	public void updateBattleState() {
+	public void updateBattleState(TiledMapPosition oldPosition) {
 		// TODO Auto-generated method stub
 
 	}

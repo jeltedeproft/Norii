@@ -128,7 +128,7 @@ public class SpellBattlePhase extends BattlePhase {
 
 	private boolean checkAreaOfEffect(Entity caster, TiledMapPosition targetPos, Ability ability) {
 		final List<TiledMapPosition> positions = battlemanager.getUnits().stream().map(Entity::getCurrentPosition).collect(Collectors.toList());
-		final Set<MyPoint> spellPath = BattleStateGridHelper.getInstance().calculateSpellPath(caster, ability, positions);
+		final Set<MyPoint> spellPath = BattleStateGridHelper.getInstance().calculateSpellPath(caster, ability, positions, battlemanager.getBattleState());
 		final MyPoint target = targetPos.getTilePosAsPoint();
 		return spellPath.contains(target);
 	}
@@ -182,6 +182,9 @@ public class SpellBattlePhase extends BattlePhase {
 		case HEAL:
 			castHeal(currentUnit, targetPos, ability);
 			break;
+		case SUMMON:
+			castSummon(currentUnit, targetPos, ability);
+			break;
 		case ARROW:
 			castArrow(currentUnit, targetPos, ability);
 			break;
@@ -220,9 +223,40 @@ public class SpellBattlePhase extends BattlePhase {
 		}
 	}
 
-	private void castTransport(Entity currentUnit, TiledMapPosition targetPos, Ability ability) {
-		// TODO Auto-generated method stub
+	private void castSummon(final Entity caster, final TiledMapPosition targetPos, final Ability ability) {
+		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
+		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.SUMMON);
 
+		final Entity ghostEntity = new Entity(EntityTypes.GHOST, caster.getOwner());
+		caster.getOwner().addUnit(ghostEntity);
+		battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.ADD_UNIT_ENTITYSTAGE, ghostEntity);
+		ghostEntity.getVisualComponent().initiateInBattle(targetPos);
+		ghostEntity.setCurrentPosition(targetPos);
+		battlemanager.addUnit(ghostEntity);
+		battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.ADD_UNIT_UI, ghostEntity);
+	}
+
+	private void castTransport(Entity currentUnit, TiledMapPosition targetPos, Ability ability) {
+		final List<Entity> units = battlemanager.getUnits();
+		Entity otherPortal = null;
+		Array<Entity> unitsNextToPortal = new Array<>();
+
+		for (Entity unit : units) {
+			if (BattleStateGridHelper.getInstance().isNextToButNotSelf(unit, currentUnit)) {
+				unitsNextToPortal.add(unit);
+			}
+
+			if ((unit.getEntityType() == EntityTypes.PORTAL) && (unit.getEntityID() != currentUnit.getEntityID())) {
+				otherPortal = unit;
+			}
+		}
+
+		if (otherPortal != null) {
+			AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.TRANSPORT);
+			for (Entity unit : unitsNextToPortal) {
+				unit.setCurrentPosition(battlemanager.getBattleState().findFreeSpotNextTo(otherPortal));
+			}
+		}
 	}
 
 	private void castInvis(Entity caster, Ability ability) {

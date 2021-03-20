@@ -5,6 +5,7 @@ import java.util.List;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.battle.MessageToBattleScreen;
+import com.jelte.norii.utility.TiledMapPosition;
 
 public interface UnitOwner {
 	public void renderUnits(final Batch batch);
@@ -26,4 +27,6 @@ public interface UnitOwner {
 	public void addUnit(Entity unit);
 
 	public void sendMessageToBattleManager(MessageToBattleScreen message, Entity entity);
+
+	public void sendMessageToBattleManager(MessageToBattleScreen message, Entity entity, TiledMapPosition oldPosition);
 }

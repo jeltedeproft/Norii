@@ -135,4 +135,9 @@ public class AITeamLeader implements UnitOwner {
 	public void addUnit(Entity unit) {
 		team.add(unit);
 	}
+
+	@Override
+	public void sendMessageToBattleManager(MessageToBattleScreen message, Entity entity, TiledMapPosition oldPosition) {
+		battleManager.sendMessageToBattleScreen(message, entity, oldPosition);
+	}
 }

@@ -102,6 +102,16 @@ public class BattleManager {
 
 	}
 
+	public void sendMessageToBattleScreen(MessageToBattleScreen message, Entity entity, TiledMapPosition oldPosition) {
+		switch (message) {
+		case UPDATE_POS:
+			updateStateOfBattle(entity, oldPosition);
+			break;
+		default:
+			break;
+		}
+	}
+
 	public void sendMessageToBattleScreen(MessageToBattleScreen message, Entity entity) {
 		switch (message) {
 		case CLICKED:
@@ -111,9 +121,6 @@ public class BattleManager {
 			break;
 		case AI_FINISHED_TURN:
 			swapTurn();
-			break;
-		case UPDATE_POS:
-			updateStateOfBattle(entity, entity.getCurrentPosition());
 			break;
 		case UNIT_DIED:
 			removeUnit(entity);
@@ -259,10 +266,10 @@ public class BattleManager {
 	}
 
 	public void updateStateOfBattle(Entity unit, TiledMapPosition newPos) {
-		final MyPoint oldMyPoint = new MyPoint(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY());
-		final MyPoint newMyPoint = new MyPoint(newPos.getTileX(), newPos.getTileY());
-		if (!oldMyPoint.equals(newMyPoint)) {
-			activeBattleState.moveUnitTo(unit, newMyPoint);
+		final MyPoint newPoint = new MyPoint(newPos.getTileX(), newPos.getTileY());
+		final MyPoint oldPoint = new MyPoint(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY());
+		if (!oldPoint.equals(newPoint)) {
+			activeBattleState.moveUnitTo(unit, newPoint);
 		}
 	}
 
@@ -357,5 +364,4 @@ public class BattleManager {
 	public List<Entity> getUnits() {
 		return Stream.concat(Player.getInstance().getTeam().stream(), aiTeamLeader.getTeam().stream()).collect(Collectors.toList());
 	}
-
 }

@@ -149,7 +149,7 @@
         "attackRange": 1,
         "attackPower": 3,
         "basicAttackCost": 1,
-        "abilities": ["FIREBALL"]
+        "abilities": ["SUMMON"]
     },
 
     {
@@ -219,7 +219,7 @@
         "attackRange": 1,
         "attackPower": 3,
         "basicAttackCost": 1,
-        "abilities": ["FIREBALL"]
+        "abilities": ["TURN_TO_STONE"]
     },
 
     {
@@ -303,7 +303,7 @@
         "attackRange": 1,
         "attackPower": 3,
         "basicAttackCost": 1,
-        "abilities": ["FIREBALL"]
+        "abilities": ["SWAP"]
     },
 
     {
@@ -472,5 +472,19 @@
         "attackPower": 0,
         "basicAttackCost": 0,
         "abilities": ["TRANSPORT"]
+    },
+
+    {
+        "id": 34,
+        "name": "Ghost",
+        "portraitSpritePath": "GhostNurseIdleDown",
+        "entitySpriteName": "GhostNurse",
+        "maxAP": 10,
+        "maxHP": 10,
+        "level": 1,
+        "attackRange": 0,
+        "attackPower": 0,
+        "basicAttackCost": 0,
+        "abilities": []
     }
 ]

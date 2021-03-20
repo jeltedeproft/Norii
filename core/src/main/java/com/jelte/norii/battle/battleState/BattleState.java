@@ -100,12 +100,9 @@ public class BattleState implements Comparable<BattleState> {
 		boolean entityFound = false;
 		if (!from.equals(to)) {
 			for (final Entity unit : units.values()) {
-				if (unit.getEntityID() == entity.getEntityID()) {
+				if ((unit.getEntityID() == entity.getEntityID()) && (unit.getCurrentPosition().getTileX() >= 0) && (unit.getCurrentPosition().getTileY() >= 0)) {
 					stateOfField[to.x][to.y].setUnit(stateOfField[unit.getCurrentPosition().getTileX()][unit.getCurrentPosition().getTileY()].getUnit());
-					if (stateOfField[to.x][to.y].getUnit() == null) {
-						final int j = 5;
-					}
-					stateOfField[to.x][to.y].getUnit().setCurrentPosition(new TiledMapPosition().setPositionFromTiles(to.x, to.y));
+					stateOfField[to.x][to.y].getUnit().setOnlyCurrentPosition(new TiledMapPosition().setPositionFromTiles(to.x, to.y));
 					stateOfField[from.x][from.y].removeUnit();
 					entityFound = true;
 				}
@@ -120,15 +117,15 @@ public class BattleState implements Comparable<BattleState> {
 	}
 
 	private void addEntityAt(Entity unit, int x, int y) {
-		if ((y > 0) && (x > 0) && (x <= getWidth()) && (y <= getHeight())) {
+		if ((y >= 0) && (x >= 0) && (x <= getWidth()) && (y <= getHeight())) {
 			final int originalScore = stateOfField[x][y].getScore();
 			final int newScore = unit.getScore();
 			final int difference = newScore - originalScore;
 			score += difference;
-			unit.setCurrentPosition(new TiledMapPosition().setPositionFromTiles(x, y));
 			stateOfField[x][y].setUnit(unit);
 			stateOfField[x][y].setOccupied(true);
 			units.put(unit.getEntityID(), unit);
+			unit.setOnlyCurrentPosition(new TiledMapPosition().setPositionFromTiles(x, y));
 		}
 	}
 
@@ -432,6 +429,37 @@ public class BattleState implements Comparable<BattleState> {
 		}
 
 		Gdx.app.debug(TAG, "next point in push calculation needs to be in one of 4 directions");
+		return null;
+	}
+
+	public TiledMapPosition findFreeSpotNextTo(Entity otherPortal) {
+		int maxField = Math.min(getHeight(), getWidth());
+		int portalX = otherPortal.getCurrentPosition().getTileX();
+		int portalY = otherPortal.getCurrentPosition().getTileY();
+
+		for (int max = 1; max <= maxField; max++) {
+			for (int j = 0; j <= max; j++) {
+				for (int k = 0; k <= max; k++) {
+					if ((j + k) == max) {
+						if ((!stateOfField[portalX + j][portalY + k].isOccupied()) && stateOfField[portalX + j][portalY + k].isWalkable()) {
+							return new TiledMapPosition().setPositionFromTiles(portalX + j, portalY + k);
+						}
+
+						if ((!stateOfField[portalX - j][portalY + k].isOccupied()) && stateOfField[portalX - j][portalY + k].isWalkable()) {
+							return new TiledMapPosition().setPositionFromTiles(portalX - j, portalY + k);
+						}
+
+						if ((!stateOfField[portalX + j][portalY - k].isOccupied()) && stateOfField[portalX + j][portalY - k].isWalkable()) {
+							return new TiledMapPosition().setPositionFromTiles(portalX + j, portalY - k);
+						}
+
+						if ((!stateOfField[portalX - j][portalY - k].isOccupied()) && stateOfField[portalX - j][portalY - k].isWalkable()) {
+							return new TiledMapPosition().setPositionFromTiles(portalX - j, portalY - k);
+						}
+					}
+				}
+			}
+		}
 		return null;
 	}
 }

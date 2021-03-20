@@ -212,5 +212,41 @@
         "affectsTeam": "NONE",
         "target": "CELL_BUT_NO_UNIT",
         "infoText": "Cast Portal, make sure to create 2 of these."
+    },
+
+    {
+        "id": 12,
+        "name": "Transport",
+        "iconSpriteName": "transport",
+        "apCost": 0,
+        "mpCost": 0,
+        "lineOfSight": "SELF",
+        "goesTroughUnits": true,
+        "goesTroughObstacles": true,
+        "areaOfEffect": "CIRCLE",
+        "damage": 0,
+        "range": 1,
+        "areaOfEffectRange": 1,
+        "affectsTeam": "BOTH",
+        "target": "SELF",
+        "infoText": "Transport all adjacent units to the other portal (if it exists)."
+    },
+
+    {
+        "id": 13,
+        "name": "Summon",
+        "iconSpriteName": "transport",
+        "apCost": 0,
+        "mpCost": 0,
+        "lineOfSight": "CIRCLE",
+        "goesTroughUnits": true,
+        "goesTroughObstacles": true,
+        "areaOfEffect": "CELL",
+        "damage": 0,
+        "range": 1,
+        "areaOfEffectRange": 1,
+        "affectsTeam": "BOTH",
+        "target": "CELL_BUT_NO_UNIT",
+        "infoText": "Summon a ghost."
     }
 ]

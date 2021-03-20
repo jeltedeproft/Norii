@@ -105,8 +105,13 @@ public class Entity extends Actor {
 	}
 
 	public void setCurrentPosition(final TiledMapPosition pos) {
+		visualComponent.updateBattleState(pos);
 		currentPlayerPosition = pos;
-		visualComponent.updateBattleState();
+		visualComponent.setVisualPosition(pos);
+	}
+
+	public void setOnlyCurrentPosition(final TiledMapPosition pos) {
+		currentPlayerPosition = pos;
 	}
 
 	public void setCurrentPositionFromScreen(int x, int y) {

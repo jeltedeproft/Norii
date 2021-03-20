@@ -962,7 +962,6 @@ public class BattleStateGridHelper {
 			return castingMyPoints;
 		}
 
-		// filter castingMyPoints for field boundaries and doubles
 		return filter(castingMyPoints, battleState.getWidth(), battleState.getHeight());
 	}
 
@@ -1154,7 +1153,7 @@ public class BattleStateGridHelper {
 		return filterDoubles(targets);
 	}
 
-	public Set<MyPoint> calculateSpellPath(final Entity unit, final Ability ability, final List<TiledMapPosition> positions) {
+	public Set<MyPoint> calculateSpellPath(final Entity unit, final Ability ability, final List<TiledMapPosition> positions, BattleState battleState) {
 		Set<MyPoint> spellPath = null;
 		switch (ability.getLineOfSight()) {
 		case SQUARE:
@@ -1186,13 +1185,25 @@ public class BattleStateGridHelper {
 			spellPath.add(new MyPoint(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY()));
 			break;
 		default:
+			spellPath = new HashSet<>();
 			break;
 		}
+		filter(spellPath, battleState.getWidth(), battleState.getHeight());
+		MyPathFinder.getInstance().filterUnwalkablePositions(spellPath);
 		if (!ability.getGoesTroughObstacles()) {
 			MyPathFinder.getInstance().filterPositionsByLineOfSight(unit, spellPath, positions, !ability.getGoesTroughUnits());
 		}
 
 		return spellPath;
+	}
+
+	public boolean isNextToButNotSelf(Entity unit, Entity currentUnit) {
+		int unitX = unit.getCurrentPosition().getTileX();
+		int unitY = unit.getCurrentPosition().getTileY();
+		int currentUnitX = currentUnit.getCurrentPosition().getTileX();
+		int currentUnitY = currentUnit.getCurrentPosition().getTileY();
+
+		return (Math.abs(unitX - currentUnitX) <= 1) && (Math.abs(unitY - currentUnitY) <= 1) && !((unitX == currentUnitX) && (unitY == currentUnitY));
 	}
 
 	public static BattleStateGridHelper getInstance() {

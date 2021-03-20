@@ -6,6 +6,7 @@ import java.util.List;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.battle.MessageToBattleScreen;
+import com.jelte.norii.utility.TiledMapPosition;
 
 public class Player implements UnitOwner {
 	private static Player instance;
@@ -94,5 +95,10 @@ public class Player implements UnitOwner {
 	@Override
 	public void addUnit(Entity unit) {
 		team.add(unit);
+	}
+
+	@Override
+	public void sendMessageToBattleManager(MessageToBattleScreen message, Entity entity, TiledMapPosition oldPosition) {
+		battleManager.sendMessageToBattleScreen(message, entity, oldPosition);
 	}
 }

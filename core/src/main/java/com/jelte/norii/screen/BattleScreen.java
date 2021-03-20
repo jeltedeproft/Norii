@@ -330,7 +330,7 @@ public class BattleScreen extends GameScreen {
 
 	private void prepareSpell(final Entity unit, final Ability ability) {
 		final List<TiledMapPosition> positions = battlemanager.getUnits().stream().map(Entity::getCurrentPosition).collect(Collectors.toList());
-		final Set<MyPoint> spellPath = BattleStateGridHelper.getInstance().calculateSpellPath(unit, ability, positions);
+		final Set<MyPoint> spellPath = BattleStateGridHelper.getInstance().calculateSpellPath(unit, ability, positions, battlemanager.getBattleState());
 
 		for (final MyPoint cell : spellPath) {
 			final TiledMapPosition positionToPutSpellParticle = new TiledMapPosition().setPositionFromTiles(cell.x, cell.y);

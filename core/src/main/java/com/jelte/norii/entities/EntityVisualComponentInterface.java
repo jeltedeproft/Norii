@@ -55,7 +55,7 @@ public interface EntityVisualComponentInterface {
 
 	public void setVisualPosition(TiledMapPosition actorPos);
 
-	public void updateBattleState();
+	public void updateBattleState(TiledMapPosition oldPlayerPosition);
 
 	public void pushTo(MyPoint casterNewPosition);
 

@@ -39,8 +39,10 @@ public class AIDecisionMaker {
 	private int battleStateIndex;
 	private int numberOfBattleStatesThisRound;
 	private BattleState currentBattleState;
+	private static Long processingTimeCounter = 0L;
 
 	private static final int NUMBER_OF_LAYERS = 3;
+	private static final int MAX_AI_THINKING_TIME = 300;
 	private static final String TAG = AIDecisionMaker.class.getSimpleName();
 
 	public AIDecisionMaker() {
@@ -62,15 +64,13 @@ public class AIDecisionMaker {
 
 	// returns true when finished
 	public boolean processAi() {
+		final Long startingTime = System.currentTimeMillis();
 		Entity unit;
 		BattleState startingState;
 
 		if (turnIndex == 0) {
 			startingState = currentBattleState;
 		} else {
-			if ((allBattleStates.size == 0) || (allBattleStates.get(turnIndex - 1).size == 0)) {
-				final int j = 5;
-			}
 			startingState = allBattleStates.get(turnIndex - 1).get(battleStateIndex);
 		}
 
@@ -125,6 +125,12 @@ public class AIDecisionMaker {
 				// were done
 				return true;
 			}
+		}
+		final Long endingTime = System.currentTimeMillis();
+		processingTimeCounter += (endingTime - startingTime);
+		System.out.println(processingTimeCounter);
+		if (processingTimeCounter > MAX_AI_THINKING_TIME) {
+			return true;
 		}
 		return false;
 	}
@@ -270,9 +276,41 @@ public class AIDecisionMaker {
 				battleState.get(location.x, location.y).getUnit().addAbility(AbilitiesEnum.TRANSPORT, casterPos);
 			}
 			break;
+		case TRANSPORT:
+			final Array<Entity> units = battleState.getAllUnits();
+			Entity otherPortal = null;
+			Array<Entity> unitsNextToPortal = new Array<>();
+
+			for (Entity unitToTransport : units) {
+				if (BattleStateGridHelper.getInstance().isNextToButNotSelf(unitToTransport, unit)) {
+					unitsNextToPortal.add(unitToTransport);
+				}
+
+				if ((unitToTransport.getEntityType() == EntityTypes.PORTAL) && (unitToTransport.getEntityID() != unit.getEntityID())) {
+					otherPortal = unitToTransport;
+				}
+			}
+
+			if (otherPortal != null) {
+				for (Entity unitToTransport : unitsNextToPortal) {
+					TiledMapPosition goal = battleState.findFreeSpotNextTo(otherPortal);
+					battleState.get(goal.getTileX(), goal.getTileY()).setUnit(battleState.get(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY()).getUnit());
+					battleState.get(unitToTransport.getCurrentPosition().getTileX(), unitToTransport.getCurrentPosition().getTileY()).removeUnit();
+					unitToTransport.setCurrentPosition(goal);
+					battleState.get(goal.getTileX(), goal.getTileY()).setOccupied(true);
+				}
+			}
+			break;
+		case SUMMON:
+			final Entity ghostUnit = new Entity(EntityTypes.GHOST, unit.getOwner());
+			ghostUnit.setVisualComponent(new FakeEntityVisualComponent());
+			ghostUnit.setCurrentPosition(new TiledMapPosition().setPositionFromTiles(location.x, location.y));
+			battleState.addEntity(ghostUnit);
+			break;
 		default:
 			// nothing
 		}
+
 	}
 
 	/** Bresenham algorithm to find all cells crossed by a line **/
@@ -335,7 +373,7 @@ public class AIDecisionMaker {
 			}
 			timestamp = System.currentTimeMillis();
 			Gdx.app.debug(TAG, "3 : " + (timestamp - startTime));
-			cellsToCastOn = filterOutNumber(cellsToCastOn, 30);
+			cellsToCastOn = filterOutNumber(cellsToCastOn, 15);
 			for (final MyPoint point : cellsToCastOn) {
 				final UnitTurn spellAndMove = new UnitTurn(aiUnit.getEntityID(), new SpellMove(MoveType.SPELL, point, ability));
 				spellAndMove.addMove(decideMove(ability, aiUnit, battleState));
@@ -357,16 +395,20 @@ public class AIDecisionMaker {
 				final Entity closestUnit = distancesWithAbilityTargetUnits.firstEntry().getValue().get(0);
 				final TiledMapPosition closestUnitPos = new TiledMapPosition().setPositionFromTiles(closestUnit.getCurrentPosition().getTileX(), closestUnit.getCurrentPosition().getTileY());
 				final List<GridCell> path = MyPathFinder.getInstance().pathTowards(new TiledMapPosition().setPositionFromTiles(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY()), closestUnitPos, aiUnit.getAp());
-				MyPoint goal = new MyPoint(path.get(path.size() - 1).x, path.get(path.size() - 1).y);
-				int i = 2;
-				while (checkIfUnitOnPoint(goal, battleState, aiUnit)) {
-					if ((path.size() - i) <= 0) {
-						return unitTurns;
+				if (!path.isEmpty()) {
+					MyPoint goal = new MyPoint(path.get(path.size() - 1).x, path.get(path.size() - 1).y);
+					int i = 2;
+					while (checkIfUnitOnPoint(goal, battleState, aiUnit)) {
+						if ((path.size() - i) <= 0) {
+							return unitTurns;
+						}
+						goal = new MyPoint(path.get(path.size() - i).x, path.get(path.size() - i).y);
+						i++;
 					}
-					goal = new MyPoint(path.get(path.size() - i).x, path.get(path.size() - i).y);
-					i++;
+					unitTurns.add(new UnitTurn(aiUnit.getEntityID(), new Move(MoveType.MOVE, goal)));
+				} else {
+					unitTurns.add(new UnitTurn(aiUnit.getEntityID(), new Move(MoveType.MOVE, aiUnit.getCurrentPosition().getTilePosAsPoint())));
 				}
-				unitTurns.add(new UnitTurn(aiUnit.getEntityID(), new Move(MoveType.MOVE, goal)));
 				return unitTurns;
 			} else {
 				// move attack
@@ -482,9 +524,7 @@ public class AIDecisionMaker {
 
 	private void filterUnits(Set<MyPoint> cellsToCastOn, BattleState battleState) {
 		for (final Entity unit : battleState.getAllUnits()) {
-			if (cellsToCastOn.contains(unit.getCurrentPosition().getTilePosAsPoint())) {
-				cellsToCastOn.remove(unit.getCurrentPosition().getTilePosAsPoint());
-			}
+			cellsToCastOn.remove(unit.getCurrentPosition().getTilePosAsPoint());
 		}
 	}
 

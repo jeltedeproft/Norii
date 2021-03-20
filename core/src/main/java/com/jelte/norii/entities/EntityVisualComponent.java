@@ -280,8 +280,8 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 	}
 
 	@Override
-	public void updateBattleState() {
-		entity.getOwner().sendMessageToBattleManager(MessageToBattleScreen.UPDATE_POS, entity);
+	public void updateBattleState(TiledMapPosition oldPosition) {
+		entity.getOwner().sendMessageToBattleManager(MessageToBattleScreen.UPDATE_POS, entity, oldPosition);
 	}
 
 	@Override

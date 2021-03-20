@@ -59,6 +59,15 @@ public class MyPathFinder {
 		}
 	}
 
+	public void filterUnwalkablePositions(Set<MyPoint> positions) {
+		for (final Iterator<MyPoint> posIterator = positions.iterator(); posIterator.hasNext();) {
+			final MyPoint pos = posIterator.next();
+			if (!navGrid.isWalkable(pos.x, pos.y)) {
+				posIterator.remove();
+			}
+		}
+	}
+
 	public void filterPositionsByWalkability(Entity unit, Set<MyPoint> positions) {
 		for (final Iterator<MyPoint> posIterator = positions.iterator(); posIterator.hasNext();) {
 			final MyPoint pos = posIterator.next();

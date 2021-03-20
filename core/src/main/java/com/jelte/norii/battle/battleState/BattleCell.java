@@ -28,6 +28,9 @@ public class BattleCell {
 
 	public int getScore() {
 		if (occupied) {
+			if (unit == null) {
+				int j = 5;
+			}
 			return unit.getScore();
 		} else {
 			return 0;

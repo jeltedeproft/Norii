@@ -168,6 +168,7 @@ public class MainMenuScreen extends GameScreen {
 		playerMonsters.add(new Entity(EntityTypes.BLACK_SLIME, Player.getInstance()));
 		playerMonsters.add(new Entity(EntityTypes.BLACK_SKELETON, Player.getInstance()));
 		playerMonsters.add(new Entity(EntityTypes.BLACK_SLIME_BLUE_EYES, Player.getInstance()));
+		playerMonsters.add(new Entity(EntityTypes.BLACK_SLIME_GREEN_EYES, Player.getInstance()));
 		playerMonsters.add(new Entity(EntityTypes.BLACK_SLIME_DARK_BLUE_EYES, Player.getInstance()));
 		playerMonsters.add(new Entity(EntityTypes.BLUE_GHOSTY, Player.getInstance()));
 		playerMonsters.add(new Entity(EntityTypes.FEMALE_EIGHT, Player.getInstance()));
