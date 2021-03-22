@@ -128,7 +128,6 @@ public class AIDecisionMaker {
 		}
 		final Long endingTime = System.currentTimeMillis();
 		processingTimeCounter += (endingTime - startingTime);
-		System.out.println(processingTimeCounter);
 		if (processingTimeCounter > MAX_AI_THINKING_TIME) {
 			return true;
 		}
