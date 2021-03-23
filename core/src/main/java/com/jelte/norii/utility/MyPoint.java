@@ -1,10 +1,12 @@
 package com.jelte.norii.utility;
 
-import java.awt.Point;
+public class MyPoint implements Comparable<MyPoint> {
+	public int x;
+	public int y;
 
-public class MyPoint extends Point implements Comparable<MyPoint> {
 	public MyPoint(int x, int y) {
-		super(x, y);
+		this.x = x;
+		this.y = y;
 	}
 
 	@Override
@@ -22,6 +24,14 @@ public class MyPoint extends Point implements Comparable<MyPoint> {
 	}
 
 	private long getCompareKey() {
-		return (long) ((getX() * getX()) + (getY() * getY()));
+		return (getX() * getX()) + (getY() * getY());
+	}
+
+	public int getX() {
+		return x;
+	}
+
+	public int getY() {
+		return y;
 	}
 }
