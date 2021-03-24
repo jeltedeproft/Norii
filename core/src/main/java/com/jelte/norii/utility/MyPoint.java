@@ -11,7 +11,7 @@ public class MyPoint implements Comparable<MyPoint> {
 
 	@Override
 	public int compareTo(MyPoint o) {
-		int xComp = Integer.compare(x, o.x);
+		final int xComp = Integer.compare(x, o.x);
 		if (xComp == 0)
 			return Integer.compare(y, o.y);
 		else
@@ -23,8 +23,16 @@ public class MyPoint implements Comparable<MyPoint> {
 		if (!(o instanceof MyPoint)) {
 			return false;
 		}
-		MyPoint p = (MyPoint) o;
+		final MyPoint p = (MyPoint) o;
 		return (getX() == p.getX()) && (getY() == p.getY());
+	}
+
+	@Override
+	public int hashCode() {
+		// Talk about a fun time reverse engineering this one!
+		long l = java.lang.Double.doubleToLongBits(getY());
+		l = (l * 31) ^ java.lang.Double.doubleToLongBits(getX());
+		return (int) ((l >> 32) ^ l);
 	}
 
 	@Override

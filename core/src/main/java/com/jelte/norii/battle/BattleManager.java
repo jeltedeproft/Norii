@@ -48,6 +48,7 @@ public class BattleManager {
 	private boolean aiUnitIsBussy = false;
 	private boolean aiIsCalculating = false;
 	private boolean aiFinishedCalculating = false;
+	private int unitsDeployed;
 	private Entity lockedUnit;
 	private BattleScreen battleScreen;
 
@@ -88,6 +89,9 @@ public class BattleManager {
 
 	public void addUnit(Entity unit) {
 		activeBattleState.addEntity(unit);
+		if (unit.isPlayerUnit()) {
+			unitsDeployed++;
+		}
 	}
 
 	public void setUnitActive(Entity entity) {
@@ -363,5 +367,9 @@ public class BattleManager {
 
 	public List<Entity> getUnits() {
 		return Stream.concat(Player.getInstance().getTeam().stream(), aiTeamLeader.getTeam().stream()).collect(Collectors.toList());
+	}
+
+	public int getUnitsDeployed() {
+		return unitsDeployed;
 	}
 }

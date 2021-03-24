@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.jelte.norii.battle.BattleManager;
+import com.jelte.norii.battle.MessageToBattleScreen;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.Player;
 import com.jelte.norii.map.TiledMapActor;
@@ -28,6 +29,7 @@ public class DeploymentBattlePhase extends BattlePhase {
 	@Override
 	public void exit() {
 		ParticleMaker.deactivateAllParticlesOfType(ParticleType.SPAWN);
+		battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.DEPLOYMENT_FINISHED, battlemanager.getActiveUnit());
 		battlemanager.setCurrentBattleState(battlemanager.getSelectUnitBattleState());
 		battlemanager.getCurrentBattleState().entry();
 	}
@@ -45,10 +47,13 @@ public class DeploymentBattlePhase extends BattlePhase {
 				deployUnit(newPosition);
 				actor.setIsFreeSpawn(false);
 				ParticleMaker.deactivateParticle(ParticleMaker.getParticle(ParticleType.SPAWN, newPosition));
+				battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.UNIT_DEPLOYED, battlemanager.getActiveUnit());
 				nextDeployment();
 			} else {
 				Gdx.app.debug(TAG, "can't deploy unit, units is null or activeunitindex is > the length of units");
 			}
+		} else {
+			battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.INVALID_SPAWN_POINT, battlemanager.getActiveUnit());
 		}
 	}
 
@@ -76,6 +81,10 @@ public class DeploymentBattlePhase extends BattlePhase {
 		if (deployingUnitNumber >= playerUnits.size()) {
 			exit();
 		}
+	}
+
+	public int getDeployedUnitNumber() {
+		return deployingUnitNumber;
 	}
 
 	@Override

@@ -21,8 +21,7 @@ public class AttackBattlePhase extends BattlePhase {
 
 	@Override
 	public void clickedOnTile(TiledMapActor actor) {
-		ParticleMaker.deactivateAllParticlesOfType(ParticleType.ATTACK);
-		exit();
+		battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.INVALID_ATTACK_TARGET, battlemanager.getActiveUnit());
 	}
 
 	@Override
@@ -46,8 +45,10 @@ public class AttackBattlePhase extends BattlePhase {
 			battlemanager.setLockedUnit(entity);
 			battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.UPDATE_UI, entity);
 			AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.ATTACK_SOUND);
+			exit();
+		} else {
+			battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.INVALID_ATTACK_TARGET, battlemanager.getActiveUnit());
 		}
-		exit();
 	}
 
 	@Override

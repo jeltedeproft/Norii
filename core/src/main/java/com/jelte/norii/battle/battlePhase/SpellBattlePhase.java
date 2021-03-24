@@ -67,8 +67,10 @@ public class SpellBattlePhase extends BattlePhase {
 			currentUnit.getVisualComponent().setAnimationType(EntityAnimationType.WALK);
 			selectSpell(null, ability, currentUnit, targetPos);
 			currentUnit.getVisualComponent().setAnimationType(EntityAnimationType.WALK);
+			exit();
+		} else {
+			battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.INVALID_SPELL_TARGET, battlemanager.getActiveUnit());
 		}
-		exit();
 	}
 
 	private boolean isValidTileTarget(Entity caster, TiledMapPosition targetPos, Ability ability) {
@@ -99,6 +101,8 @@ public class SpellBattlePhase extends BattlePhase {
 			selectSpell(target, ability, currentUnit, target.getCurrentPosition());
 			currentUnit.getVisualComponent().setLocked(true);
 			battlemanager.setLockedUnit(currentUnit);
+		} else {
+			battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.INVALID_SPELL_TARGET, battlemanager.getActiveUnit());
 		}
 		exit();
 	}
@@ -239,9 +243,9 @@ public class SpellBattlePhase extends BattlePhase {
 	private void castTransport(Entity currentUnit, TiledMapPosition targetPos, Ability ability) {
 		final List<Entity> units = battlemanager.getUnits();
 		Entity otherPortal = null;
-		Array<Entity> unitsNextToPortal = new Array<>();
+		final Array<Entity> unitsNextToPortal = new Array<>();
 
-		for (Entity unit : units) {
+		for (final Entity unit : units) {
 			if (BattleStateGridHelper.getInstance().isNextToButNotSelf(unit, currentUnit)) {
 				unitsNextToPortal.add(unit);
 			}
@@ -253,7 +257,7 @@ public class SpellBattlePhase extends BattlePhase {
 
 		if (otherPortal != null) {
 			AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.TRANSPORT);
-			for (Entity unit : unitsNextToPortal) {
+			for (final Entity unit : unitsNextToPortal) {
 				unit.setCurrentPosition(battlemanager.getBattleState().findFreeSpotNextTo(otherPortal));
 			}
 		}

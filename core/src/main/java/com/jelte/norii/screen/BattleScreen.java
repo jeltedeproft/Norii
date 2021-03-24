@@ -70,7 +70,7 @@ public class BattleScreen extends GameScreen {
 		initializeVariables();
 		initializeAI(aiTeams);
 		initializeEntityStage();
-		initializeHUD();
+		initializeHUD(aiTeams);
 		initializePauseMenu();
 		initializeInput();
 		initializeMap();
@@ -95,10 +95,13 @@ public class BattleScreen extends GameScreen {
 		entityStage = new EntityStage(Stream.concat(Player.getInstance().getTeam().stream(), aiTeamLeader.getTeam().stream()).collect(Collectors.toList()));
 	}
 
-	private void initializeHUD() {
+	private void initializeHUD(AITeams aiTeams) {
 		hudCamera = new OrthographicCamera();
 		hudCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		newHud = new Hud(Player.getInstance().getTeam(), aiTeamLeader.getTeam(), spriteBatch, currentMap.getMapWidth(), currentMap.getMapHeight(), this);
+		if (aiTeams == AITeams.TUTORIAL) {
+			newHud.showDeployUnitsMessage();
+		}
 	}
 
 	private void initializePauseMenu() {
@@ -384,12 +387,16 @@ public class BattleScreen extends GameScreen {
 				final Entity moveEntity = battlemanager.getEntityByID(entityID);
 				if (moveEntity.canMove()) {
 					prepareMove(moveEntity);
+				} else {
+					newHud.showNotEnoughAPMessage();
 				}
 				break;
 			case CLICKED_ON_ATTACK:
 				final Entity attackEntity = battlemanager.getEntityByID(entityID);
 				if ((attackEntity.getAp() >= attackEntity.getEntityData().getBasicAttackCost()) && attackEntity.canAttack()) {
 					prepareAttack(attackEntity);
+				} else {
+					newHud.showNotEnoughAPMessage();
 				}
 				break;
 			case CLICKED_ON_ABILITY:
@@ -398,6 +405,8 @@ public class BattleScreen extends GameScreen {
 					newHud.setLocked(true);
 					prepareSpell(spellEntity, ability);
 					newHud.setLocked(false);
+				} else {
+					newHud.showNotEnoughAPMessage();
 				}
 				break;
 			}
@@ -427,6 +436,26 @@ public class BattleScreen extends GameScreen {
 			break;
 		case UNSET_CHARACTER_HUD:
 			newHud.getPortraitAndStats().setHero(null);
+			break;
+		case INVALID_SPAWN_POINT:
+			newHud.showInvalidSpawnPointMessage();
+			break;
+		case UNIT_DEPLOYED:
+			newHud.updateNumberOfDeployedUnits(battlemanager.getUnitsDeployed(), battlemanager.getPlayerUnits().size());
+			break;
+		case DEPLOYMENT_FINISHED:
+			newHud.hideDeployedUnits();
+			newHud.hideDeployUnitsMessage();
+			newHud.showExplainActionsMessage();
+			break;
+		case INVALID_SPELL_TARGET:
+			newHud.showInvalidSpellTargetMessage();
+			break;
+		case INVALID_ATTACK_TARGET:
+			newHud.showInvalidAttackMessage();
+			break;
+		case INVALID_MOVE:
+			newHud.showInvalidMoveMessage();
 			break;
 		case AI_WINS:
 			newHud.showAiWin();

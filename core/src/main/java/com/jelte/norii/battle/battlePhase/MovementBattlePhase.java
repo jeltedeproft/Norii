@@ -41,6 +41,8 @@ public class MovementBattlePhase extends BattlePhase {
 	private void possibleMove(TiledMapActor actor) {
 		if (MyPathFinder.getInstance().canUnitWalkTo(battlemanager.getActiveUnit(), actor.getActorPos())) {
 			moveUnit(actor);
+		} else {
+			battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.INVALID_MOVE, battlemanager.getActiveUnit());
 		}
 	}
 
@@ -59,8 +61,6 @@ public class MovementBattlePhase extends BattlePhase {
 		final List<GridCell> path = MyPathFinder.getInstance().pathTowards(currentUnit.getCurrentPosition(), newUnitPos, currentUnit.getAp());
 		battlemanager.getBattleState().moveUnitTo(currentUnit, newUnitPos);
 		currentUnit.move(path);
-		// battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.UNIT_ACTIVE,
-		// battlemanager.getActiveUnit());
 	}
 
 	@Override
