@@ -42,6 +42,7 @@ public class MainMenuScreen extends GameScreen {
 
 	private Table mainMenuTableOfButtons;
 	private TextButton playButton;
+	private TextButton playTutorialButton;
 	private TextButton setTeamButton;
 	private TextButton settingsButton;
 	private TextButton exitButton;
@@ -117,6 +118,7 @@ public class MainMenuScreen extends GameScreen {
 
 		title = new Label("Norii:", statusUISkin, "bigFont");
 		playButton = new TextButton("Play", statusUISkin);
+		playTutorialButton = new TextButton("Play Tutorial", statusUISkin);
 		setTeamButton = new TextButton("Set Team", statusUISkin);
 		settingsButton = new TextButton("Settings", statusUISkin);
 		exitButton = new TextButton("Exit", statusUISkin);
@@ -125,6 +127,7 @@ public class MainMenuScreen extends GameScreen {
 	private void createLayout() {
 		mainMenuTableOfButtons.add(title).row();
 		mainMenuTableOfButtons.add(playButton).height(75).width(200).spaceBottom(20).padTop(30).row();
+		mainMenuTableOfButtons.add(playTutorialButton).height(75).width(200).spaceBottom(20).padTop(30).row();
 		mainMenuTableOfButtons.add(setTeamButton).height(75).width(200).spaceBottom(20).padTop(30).row();
 		mainMenuTableOfButtons.add(settingsButton).height(75).width(200).spaceBottom(20).row();
 		mainMenuTableOfButtons.add(exitButton).height(75).width(200).spaceBottom(20).row();
@@ -137,6 +140,17 @@ public class MainMenuScreen extends GameScreen {
 			@Override
 			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
 				addUnitsToPlayer();
+				loadLevelAssets();
+				ScreenManager.getInstance().showScreen(ScreenEnum.BATTLE, selectedLevel);
+				return true;
+			}
+		});
+
+		playTutorialButton.addListener(new InputListener() {
+			@Override
+			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
+				addTutorialUnitsToPlayer();
+				selectedLevel = AITeams.TUTORIAL;
 				loadLevelAssets();
 				ScreenManager.getInstance().showScreen(ScreenEnum.BATTLE, selectedLevel);
 				return true;
@@ -173,6 +187,12 @@ public class MainMenuScreen extends GameScreen {
 		playerMonsters.add(new Entity(EntityTypes.BLUE_GHOSTY, Player.getInstance()));
 		playerMonsters.add(new Entity(EntityTypes.FEMALE_EIGHT, Player.getInstance()));
 		playerMonsters.add(new Entity(EntityTypes.FEMALE_ONE, Player.getInstance()));
+
+		Player.getInstance().setTeam(playerMonsters);
+	}
+
+	private void addTutorialUnitsToPlayer() {
+		playerMonsters.add(new Entity(EntityTypes.BLACK_SLIME_RED_EYES, Player.getInstance()));
 
 		Player.getInstance().setTeam(playerMonsters);
 	}

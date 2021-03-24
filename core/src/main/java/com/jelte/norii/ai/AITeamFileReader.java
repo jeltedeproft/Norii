@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.reflect.ReflectionException;
 
 public class AITeamFileReader {
 	private static boolean statsLoaded = false;
-	private static ObjectMap<Integer, AITeamData> aiTeamData = new ObjectMap<Integer, AITeamData>();
+	private static ObjectMap<Integer, AITeamData> aiTeamData = new ObjectMap<>();
 	private static final String LEVELS_FILE_LOCATION = "levels/levels.json";
 
 	private AITeamFileReader() {

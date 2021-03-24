@@ -102,6 +102,9 @@ public class BattleState implements Comparable<BattleState> {
 			for (final Entity unit : units.values()) {
 				if ((unit.getEntityID() == entity.getEntityID()) && (unit.getCurrentPosition().getTileX() >= 0) && (unit.getCurrentPosition().getTileY() >= 0)) {
 					stateOfField[to.x][to.y].setUnit(stateOfField[unit.getCurrentPosition().getTileX()][unit.getCurrentPosition().getTileY()].getUnit());
+					if (stateOfField[to.x][to.y].getUnit() == null) {
+						int j = 5;
+					}
 					stateOfField[to.x][to.y].getUnit().setOnlyCurrentPosition(new TiledMapPosition().setPositionFromTiles(to.x, to.y));
 					stateOfField[from.x][from.y].removeUnit();
 					entityFound = true;
@@ -354,11 +357,11 @@ public class BattleState implements Comparable<BattleState> {
 	}
 
 	public void damageUnit(MyPoint attackLocation, int damage) {
-		stateOfField[(int) attackLocation.getX()][(int) attackLocation.getY()].getUnit().damage(damage);
+		stateOfField[attackLocation.getX()][attackLocation.getY()].getUnit().damage(damage);
 	}
 
 	public void healUnit(MyPoint attackLocation, int damage) {
-		stateOfField[(int) attackLocation.getX()][(int) attackLocation.getY()].getUnit().heal(damage);
+		stateOfField[attackLocation.getX()][attackLocation.getY()].getUnit().heal(damage);
 	}
 
 	public void pushOrPullUnit(MyPoint casterPos, MyPoint targetPos, int maxCellsToMove, boolean isPulling) {

@@ -19,6 +19,15 @@ public class MyPoint implements Comparable<MyPoint> {
 	}
 
 	@Override
+	public boolean equals(Object o) {
+		if (!(o instanceof MyPoint)) {
+			return false;
+		}
+		MyPoint p = (MyPoint) o;
+		return (getX() == p.getX()) && (getY() == p.getY());
+	}
+
+	@Override
 	public String toString() {
 		return "(" + x + "," + y + ")";
 	}
