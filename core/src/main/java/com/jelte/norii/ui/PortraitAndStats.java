@@ -20,7 +20,7 @@ public class PortraitAndStats {
 	private static final int WINDOW_PADDING = 0;
 	private static final int HERO_NAME_LABEL_HEIGHT = 25;
 	private static final int HERO_NAME_LABEL_WIDTH = 95;
-	private static final int STATS_WIDTH = 20;
+	private static final int STATS_WIDTH = 2;
 	private static final int STATS_HEIGHT = 20;
 
 	private int heroHP;
@@ -88,18 +88,23 @@ public class PortraitAndStats {
 		final Table subtable = new Table();
 		subtable.pad(WINDOW_PADDING);
 		subtable.padLeft(5);
-		subtable.add(heroNameLabel).height(HERO_NAME_LABEL_HEIGHT).align(Align.left).width(HERO_NAME_LABEL_WIDTH).colspan(2);
+		subtable.add(heroNameLabel).height(HERO_NAME_LABEL_HEIGHT).align(Align.left).width(HERO_NAME_LABEL_WIDTH).colspan(4);
 		subtable.row();
 
-		subtable.add(hpLabel).align(Align.bottomLeft).width(STATS_WIDTH).height(STATS_HEIGHT);
-		subtable.add(hp).align(Align.center).expandX().height(STATS_HEIGHT);
+		subtable.add(hpLabel).align(Align.bottomLeft).width(STATS_WIDTH).height(STATS_HEIGHT).colspan(1);
+		subtable.add(hp).align(Align.center).height(STATS_HEIGHT);
+		subtable.add().padLeft(25).width(STATS_WIDTH);
+		subtable.add().padLeft(25).width(STATS_WIDTH);
+		subtable.add().padLeft(25).width(STATS_WIDTH);
 		subtable.row();
 
 		subtable.add(apLabel).align(Align.left).width(STATS_WIDTH).height(STATS_HEIGHT);
 		subtable.add(ap).align(Align.center).expandX().height(STATS_HEIGHT);
+		subtable.add().padLeft(25).width(STATS_WIDTH);
+		subtable.add().padLeft(25).width(STATS_WIDTH);
+		subtable.add().padLeft(25).width(STATS_WIDTH);
 		subtable.setBackground(AssetManagerUtility.getSkin().getDrawable("windowgray"));
-		table.add(subtable).height((tilePixelHeight * NUMBER_OF_STATS_SHOWN) + PORTRAIT_HEIGHT_PADDING).width(300);
-		table.debugAll();
+		table.add(subtable).height((tilePixelHeight * NUMBER_OF_STATS_SHOWN) + PORTRAIT_HEIGHT_PADDING).width(200);
 
 		table.validate();
 

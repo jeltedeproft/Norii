@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -100,8 +101,14 @@ public class Hud implements ProfileObserver {
 		invalidSpellTargetMessage = new Label("Invalid Spell Target", AssetManagerUtility.getSkin());
 		notEnoughAPMessage = new Label("Not enough AP", AssetManagerUtility.getSkin());
 		numberOfDeployedUnitsMessage = new Label("", AssetManagerUtility.getSkin());
+
 		deployUnitsMessageWindow = new Window("Info", AssetManagerUtility.getSkin());
-		deployUnitsCloseButton = new ImageButton(AssetManagerUtility.getSkin());
+		final ImageButtonStyle imageButtonStyle = AssetManagerUtility.getSkin().get("closebutton", ImageButtonStyle.class);
+		deployUnitsCloseButton = new ImageButton(imageButtonStyle);
+		deployUnitsMessage = new Label("Deploy your units \n on one of the \n blue squares", AssetManagerUtility.getSkin());
+		deployUnitsMessageWindow.add(deployUnitsMessage);
+		deployUnitsMessageWindow.row(); // I added this line
+		deployUnitsMessageWindow.getTitleTable().add(deployUnitsCloseButton).size(50);
 
 		deployUnitsCloseButton.addListener(new ClickListener() {
 			@Override
@@ -110,20 +117,9 @@ public class Hud implements ProfileObserver {
 			}
 		});
 
-		deployUnitsMessage = new Label("Deploy your units \n on one of the \n blue squares", AssetManagerUtility.getSkin());
-		deployUnitsMessageWindow.add(deployUnitsMessage);
-		deployUnitsMessageWindow.getTitleTable().setHeight(tilePixelHeight);
-		deployUnitsMessageWindow.pack();
-		deployUnitsMessageWindow.getTitleTable().setHeight(tilePixelHeight);
-		deployUnitsMessageWindow.getTitleLabel().setSize(tilePixelWidth, tilePixelHeight);
-		deployUnitsMessageWindow.padTop(25);
-		deployUnitsMessageWindow.setMovable(true);
-		deployUnitsMessageWindow.setModal(true);
-		deployUnitsMessageWindow.getTitleTable().add(deployUnitsCloseButton).size(100, 100).padRight(10).padTop(0);
-		deployUnitsMessageWindow.debugAll();
-
 		explainActionsMessageWindow = new Window("Info", AssetManagerUtility.getSkin());
-		explainActionsCloseButton = new ImageButton(AssetManagerUtility.getSkin());
+		explainActionsCloseButton = new ImageButton(AssetManagerUtility.getSkin(), "closebutton");
+		explainActionsMessageWindow.getTitleTable().add(explainActionsCloseButton).size(50);
 
 		explainActionsCloseButton.addListener(new ClickListener() {
 			@Override
@@ -132,16 +128,15 @@ public class Hud implements ProfileObserver {
 			}
 		});
 
-		explainActionsMessage = new Label(
-				"Click once on a \n unit to select it. \n An action bar will appear, \n with one of 4 possible actions, \n move, attack, ability or skip. \n Once an action is performed, \n the unit is locked an no other \n unit can be selected.",
+		explainActionsMessage = new Label("Click once on a \n unit to select it. \n An action bar will appear, \n with one of 4 possible actions, \n move, attack, ability or skip. \n Once an action is performed, \n the unit is locked an no other \n unit can be selected.",
 				AssetManagerUtility.getSkin());
 		explainActionsMessageWindow.add(explainActionsMessage);
 		explainActionsMessageWindow.pack();
 		explainActionsMessageWindow.setMovable(true);
-		explainActionsMessageWindow.getTitleTable().add(deployUnitsCloseButton);
 
 		explainWinConditionsMessageWindow = new Window("Info", AssetManagerUtility.getSkin());
-		explainWinConditionsCloseButton = new ImageButton(AssetManagerUtility.getSkin());
+		explainWinConditionsCloseButton = new ImageButton(AssetManagerUtility.getSkin(), "closebutton");
+		explainWinConditionsMessageWindow.getTitleTable().add(explainWinConditionsCloseButton).size(50);
 
 		explainWinConditionsCloseButton.addListener(new ClickListener() {
 			@Override
@@ -154,7 +149,6 @@ public class Hud implements ProfileObserver {
 		explainWinConditionsMessageWindow.add(explainWinConditionsMessage);
 		explainWinConditionsMessageWindow.pack();
 		explainWinConditionsMessageWindow.setMovable(true);
-		explainWinConditionsMessageWindow.getTitleTable().add(deployUnitsCloseButton).size(38, 38).padRight(10).padTop(0);
 
 		invalidAttackTargetMessage.setPosition((mapWidth / POPUP_WIDTH_FACTOR) * tilePixelWidth, (mapHeight / POPUP_HEIGHT_FACTOR) * tilePixelHeight);
 		invalidMoveMessage.setPosition((mapWidth / POPUP_WIDTH_FACTOR) * tilePixelWidth, (mapHeight / POPUP_HEIGHT_FACTOR) * tilePixelHeight);
