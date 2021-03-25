@@ -98,7 +98,8 @@ public class PortraitAndStats {
 		subtable.add(apLabel).align(Align.left).width(STATS_WIDTH).height(STATS_HEIGHT);
 		subtable.add(ap).align(Align.center).expandX().height(STATS_HEIGHT);
 		subtable.setBackground(AssetManagerUtility.getSkin().getDrawable("windowgray"));
-		table.add(subtable).height((tilePixelHeight * NUMBER_OF_STATS_SHOWN) + PORTRAIT_HEIGHT_PADDING);
+		table.add(subtable).height((tilePixelHeight * NUMBER_OF_STATS_SHOWN) + PORTRAIT_HEIGHT_PADDING).width(300);
+		table.debugAll();
 
 		table.validate();
 

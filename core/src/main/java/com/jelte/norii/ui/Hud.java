@@ -14,8 +14,10 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.jelte.norii.entities.Entity;
@@ -39,6 +41,9 @@ public class Hud implements ProfileObserver {
 	private Label deployUnitsMessage;
 	private Label explainActionsMessage;
 	private Label explainWinConditionsMessage;
+	private ImageButton deployUnitsCloseButton;
+	private ImageButton explainActionsCloseButton;
+	private ImageButton explainWinConditionsCloseButton;
 	private Window deployUnitsMessageWindow;
 	private Window explainActionsMessageWindow;
 	private Window explainWinConditionsMessageWindow;
@@ -61,18 +66,18 @@ public class Hud implements ProfileObserver {
 	public static final float UI_VIEWPORT_HEIGHT = 400f;
 	public static final float POPUP_MESSAGE_FADE_IN_OUT_DURATION = 2f;
 	public static final float POPUP_WIDTH_FACTOR = 2f;
-	public static final float POPUP_HEIGHT_FACTOR = 1.2f;
+	public static final float POPUP_HEIGHT_FACTOR = 2f;
 
 	public Hud(List<Entity> playerUnits, List<Entity> aiUnits, SpriteBatch spriteBatch, int mapWidth, int mapHeight, BattleScreen battleScreen) {
 		final List<Entity> allUnits = Stream.concat(playerUnits.stream(), aiUnits.stream()).collect(Collectors.toList());
 		initVariables(spriteBatch, mapWidth, mapHeight, battleScreen);
 		createEndGameMessages();
-		createInfoMessages();
 		createTileHoverParticle();
 		createCharacterHUD();
 		for (final Entity entity : allUnits) {
 			addUnit(entity);
 		}
+		createInfoMessages();
 	}
 
 	private void initVariables(SpriteBatch spriteBatch, int mapWidth, int mapHeight, BattleScreen battleScreen) {
@@ -96,18 +101,60 @@ public class Hud implements ProfileObserver {
 		notEnoughAPMessage = new Label("Not enough AP", AssetManagerUtility.getSkin());
 		numberOfDeployedUnitsMessage = new Label("", AssetManagerUtility.getSkin());
 		deployUnitsMessageWindow = new Window("Info", AssetManagerUtility.getSkin());
+		deployUnitsCloseButton = new ImageButton(AssetManagerUtility.getSkin());
+
+		deployUnitsCloseButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				deployUnitsMessageWindow.setVisible(false);
+			}
+		});
 
 		deployUnitsMessage = new Label("Deploy your units \n on one of the \n blue squares", AssetManagerUtility.getSkin());
 		deployUnitsMessageWindow.add(deployUnitsMessage);
+		deployUnitsMessageWindow.getTitleTable().setHeight(tilePixelHeight);
+		deployUnitsMessageWindow.pack();
+		deployUnitsMessageWindow.getTitleTable().setHeight(tilePixelHeight);
+		deployUnitsMessageWindow.getTitleLabel().setSize(tilePixelWidth, tilePixelHeight);
+		deployUnitsMessageWindow.padTop(25);
+		deployUnitsMessageWindow.setMovable(true);
+		deployUnitsMessageWindow.setModal(true);
+		deployUnitsMessageWindow.getTitleTable().add(deployUnitsCloseButton).size(100, 100).padRight(10).padTop(0);
+		deployUnitsMessageWindow.debugAll();
 
 		explainActionsMessageWindow = new Window("Info", AssetManagerUtility.getSkin());
-		explainActionsMessage = new Label("Click once on a \n unit to select it. \n An action bar will appear, \n with one of 4 possible actions, \n move, attack, ability or skip. \n Once an action is performed, \n the unit is locked an no other \n unit can be selected.",
+		explainActionsCloseButton = new ImageButton(AssetManagerUtility.getSkin());
+
+		explainActionsCloseButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				explainActionsMessageWindow.setVisible(false);
+			}
+		});
+
+		explainActionsMessage = new Label(
+				"Click once on a \n unit to select it. \n An action bar will appear, \n with one of 4 possible actions, \n move, attack, ability or skip. \n Once an action is performed, \n the unit is locked an no other \n unit can be selected.",
 				AssetManagerUtility.getSkin());
 		explainActionsMessageWindow.add(explainActionsMessage);
+		explainActionsMessageWindow.pack();
+		explainActionsMessageWindow.setMovable(true);
+		explainActionsMessageWindow.getTitleTable().add(deployUnitsCloseButton);
 
 		explainWinConditionsMessageWindow = new Window("Info", AssetManagerUtility.getSkin());
+		explainWinConditionsCloseButton = new ImageButton(AssetManagerUtility.getSkin());
+
+		explainWinConditionsCloseButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				explainWinConditionsMessageWindow.setVisible(false);
+			}
+		});
+
 		explainWinConditionsMessage = new Label("Once all your enemies are defeated, you win the round", AssetManagerUtility.getSkin());
 		explainWinConditionsMessageWindow.add(explainWinConditionsMessage);
+		explainWinConditionsMessageWindow.pack();
+		explainWinConditionsMessageWindow.setMovable(true);
+		explainWinConditionsMessageWindow.getTitleTable().add(deployUnitsCloseButton).size(38, 38).padRight(10).padTop(0);
 
 		invalidAttackTargetMessage.setPosition((mapWidth / POPUP_WIDTH_FACTOR) * tilePixelWidth, (mapHeight / POPUP_HEIGHT_FACTOR) * tilePixelHeight);
 		invalidMoveMessage.setPosition((mapWidth / POPUP_WIDTH_FACTOR) * tilePixelWidth, (mapHeight / POPUP_HEIGHT_FACTOR) * tilePixelHeight);
