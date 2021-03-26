@@ -1,7 +1,6 @@
 package com.jelte.norii.screen;
 
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.ai.msg.MessageManager;
 
 public class GameScreen implements Screen {
 
@@ -15,7 +14,6 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
-		MessageManager.getInstance().update();
 	}
 
 	@Override
