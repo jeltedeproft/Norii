@@ -23,6 +23,18 @@ public enum ScreenEnum {
 		public Screen getScreen(Object... params) {
 			return new SettingsScreen();
 		}
+	},
+	TEAM {
+		@Override
+		public Screen getScreen(Object... params) {
+			return new SetTeamScreen();
+		}
+	},
+	PROFILES {
+		@Override
+		public Screen getScreen(Object... params) {
+			return new ProfilesScreen();
+		}
 	};
 
 	public abstract Screen getScreen(Object... params);
