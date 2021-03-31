@@ -98,7 +98,7 @@ public class BattleScreen extends GameScreen {
 	private void initializeHUD(AITeams aiTeams) {
 		hudCamera = new OrthographicCamera();
 		hudCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		newHud = new Hud(Player.getInstance().getTeam(), aiTeamLeader.getTeam(), spriteBatch, currentMap.getMapWidth(), currentMap.getMapHeight(), this);
+		newHud = new Hud(Player.getInstance().getTeam(), aiTeamLeader.getTeam(), spriteBatch, currentMap.getMapWidth(), currentMap.getMapHeight(), this, (aiTeams == AITeams.TUTORIAL));
 		if (aiTeams == AITeams.TUTORIAL) {
 			newHud.getHudMessages().showDeployUnitsMessage();
 		}

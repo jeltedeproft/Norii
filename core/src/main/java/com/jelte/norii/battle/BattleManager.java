@@ -106,10 +106,10 @@ public class BattleManager {
 
 	}
 
-	public void sendMessageToBattleScreen(MessageToBattleScreen message, Entity entity, TiledMapPosition oldPosition) {
+	public void sendMessageToBattleScreen(MessageToBattleScreen message, Entity entity, TiledMapPosition newPosition) {
 		switch (message) {
 		case UPDATE_POS:
-			updateStateOfBattle(entity, oldPosition);
+			updateStateOfBattle(entity, newPosition);
 			break;
 		default:
 			break;
@@ -128,6 +128,7 @@ public class BattleManager {
 			break;
 		case UNIT_DIED:
 			removeUnit(entity);
+			checkVictory();
 			break;
 		case AI_FINISHED_CALCULATING:
 			aiFinishedCalculating = true;

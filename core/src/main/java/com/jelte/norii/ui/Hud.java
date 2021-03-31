@@ -45,7 +45,7 @@ public class Hud implements ProfileObserver {
 	public static final float UI_VIEWPORT_WIDTH = 400f;
 	public static final float UI_VIEWPORT_HEIGHT = 400f;
 
-	public Hud(List<Entity> playerUnits, List<Entity> aiUnits, SpriteBatch spriteBatch, int mapWidth, int mapHeight, BattleScreen battleScreen) {
+	public Hud(List<Entity> playerUnits, List<Entity> aiUnits, SpriteBatch spriteBatch, int mapWidth, int mapHeight, BattleScreen battleScreen, boolean isTutorial) {
 		final List<Entity> allUnits = Stream.concat(playerUnits.stream(), aiUnits.stream()).collect(Collectors.toList());
 		initVariables(spriteBatch, mapWidth, mapHeight, battleScreen);
 		createTileHoverParticle();
@@ -53,7 +53,8 @@ public class Hud implements ProfileObserver {
 		for (final Entity entity : allUnits) {
 			addUnit(entity);
 		}
-		createHudMessages();
+		createHudMessages(isTutorial);
+
 	}
 
 	private void initVariables(SpriteBatch spriteBatch, int mapWidth, int mapHeight, BattleScreen battleScreen) {
@@ -129,8 +130,8 @@ public class Hud implements ProfileObserver {
 		stage.addActor(portraitAndStats.getTable());
 	}
 
-	private void createHudMessages() {
-		hudMessages = new HudMessages(stage, mapWidth, mapHeight, tilePixelWidth, tilePixelHeight);
+	private void createHudMessages(boolean isTutorial) {
+		hudMessages = new HudMessages(stage, mapWidth, mapHeight, tilePixelWidth, tilePixelHeight, isTutorial);
 	}
 
 	private void createStatusUI(Entity entity) {

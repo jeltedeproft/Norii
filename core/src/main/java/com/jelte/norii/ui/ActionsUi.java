@@ -10,8 +10,8 @@ import com.jelte.norii.utility.AssetManagerUtility;
 import com.jelte.norii.utility.TiledMapPosition;
 
 public class ActionsUi extends Window {
-	private static final int MOVE_AMOUNT_OUT_OF_BOUND_X = 32;
-	private static final int MOVE_AMOUNT_OUT_OF_BOUND_Y = 32;
+	private static final int MOVE_AMOUNT_OUT_OF_BOUND_X = 64;
+	private static final int MOVE_AMOUNT_OUT_OF_BOUND_Y = 64;
 	private static final int HEIGHT_TILES = 2;
 	private static final int WIDTH_TILES = 5;
 	private static final float ICON_PADDING = 2f;
@@ -129,10 +129,10 @@ public class ActionsUi extends Window {
 	}
 
 	private void adjustPosition() {
-		final Boolean right = getX() > Hud.UI_VIEWPORT_WIDTH;
-		final Boolean up = getY() > Hud.UI_VIEWPORT_HEIGHT;
-		final Boolean left = getX() < 0;
-		final Boolean down = getY() < 0;
+		final Boolean right = getX() > (Hud.UI_VIEWPORT_WIDTH - MOVE_AMOUNT_OUT_OF_BOUND_X);
+		final Boolean up = getY() > (Hud.UI_VIEWPORT_HEIGHT - MOVE_AMOUNT_OUT_OF_BOUND_Y);
+		final Boolean left = getX() < MOVE_AMOUNT_OUT_OF_BOUND_X;
+		final Boolean down = getY() < MOVE_AMOUNT_OUT_OF_BOUND_Y;
 
 		if (Boolean.TRUE.equals(right)) {
 			setX(getX() - (MOVE_AMOUNT_OUT_OF_BOUND_X));
@@ -168,7 +168,7 @@ public class ActionsUi extends Window {
 		}
 	}
 
-	public ArrayList<ActionUIButton> getButtons() {
+	public List<ActionUIButton> getButtons() {
 		return buttons;
 	}
 }

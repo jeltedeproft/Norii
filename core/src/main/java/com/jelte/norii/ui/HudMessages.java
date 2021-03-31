@@ -26,23 +26,25 @@ public class HudMessages {
 	private Window deployUnitsMessageWindow;
 	private Window explainActionsMessageWindow;
 	private Window explainWinConditionsMessageWindow;
-	private Stage stage;
-	private int mapWidth;
-	private int mapHeight;
-	private float tilePixelWidth;
-	private float tilePixelHeight;
+	private final Stage stage;
+	private final int mapWidth;
+	private final int mapHeight;
+	private final float tilePixelWidth;
+	private final float tilePixelHeight;
+	private final boolean isTutorial;
 
-	public HudMessages(Stage stage, int mapWidth, int mapHeight, float tilePixelWidth, float tilePixelHeight) {
+	public HudMessages(Stage stage, int mapWidth, int mapHeight, float tilePixelWidth, float tilePixelHeight, boolean isTutorial) {
 		this.stage = stage;
 		this.mapWidth = mapWidth;
 		this.mapHeight = mapHeight;
 		this.tilePixelWidth = tilePixelWidth;
 		this.tilePixelHeight = tilePixelHeight;
-		createInfoMessages();
+		this.isTutorial = isTutorial;
+		createInfoMessages(isTutorial);
 		createEndGameMessages();
 	}
 
-	private void createInfoMessages() {
+	private void createInfoMessages(boolean isTutorial) {
 		invalidAttackTargetMessage = new Label("Invalid Attack Target", AssetManagerUtility.getSkin());
 		invalidMoveMessage = new Label("Invalid Move", AssetManagerUtility.getSkin());
 		invalidSpawnPointMessage = new Label("Invalid Spawn Point", AssetManagerUtility.getSkin());
@@ -52,8 +54,8 @@ public class HudMessages {
 
 		deployUnitsMessageWindow = new Window("Info", AssetManagerUtility.getSkin());
 		final ImageButtonStyle imageButtonStyle = AssetManagerUtility.getSkin().get("closebutton", ImageButtonStyle.class);
-		ImageButton deployUnitsCloseButton = new ImageButton(imageButtonStyle);
-		Label deployUnitsMessage = new Label("Deploy your units \n on one of the \n blue squares", AssetManagerUtility.getSkin());
+		final ImageButton deployUnitsCloseButton = new ImageButton(imageButtonStyle);
+		final Label deployUnitsMessage = new Label("Deploy your units \n on one of the \n blue squares", AssetManagerUtility.getSkin());
 		deployUnitsMessageWindow.add(deployUnitsMessage);
 		deployUnitsMessageWindow.getTitleTable().add(deployUnitsCloseButton).size(20).padBottom(5);
 
@@ -65,7 +67,7 @@ public class HudMessages {
 		});
 
 		explainActionsMessageWindow = new Window("Info", AssetManagerUtility.getSkin());
-		ImageButton explainActionsCloseButton = new ImageButton(AssetManagerUtility.getSkin(), "closebutton");
+		final ImageButton explainActionsCloseButton = new ImageButton(AssetManagerUtility.getSkin(), "closebutton");
 		explainActionsMessageWindow.getTitleTable().add(explainActionsCloseButton).size(20).padBottom(5);
 
 		explainActionsCloseButton.addListener(new ClickListener() {
@@ -75,15 +77,14 @@ public class HudMessages {
 			}
 		});
 
-		Label explainActionsMessage = new Label(
-				"Click once on a \n unit to select it. \n An action bar will appear, \n with one of 4 possible actions, \n move, attack, ability or skip. \n Once an action is performed, \n the unit is locked an no other \n unit can be selected.",
-				AssetManagerUtility.getSkin());
+		final Label explainActionsMessage = new Label(
+				"Click once on a \n unit to select it. \n An action bar will appear, \n with one of 4 possible actions, \n move, attack, ability or skip. \n Once an action is performed, \n the unit is locked an no other \n unit can be selected.", AssetManagerUtility.getSkin());
 		explainActionsMessageWindow.add(explainActionsMessage);
 		explainActionsMessageWindow.pack();
 		explainActionsMessageWindow.setMovable(true);
 
 		explainWinConditionsMessageWindow = new Window("Info", AssetManagerUtility.getSkin());
-		ImageButton explainWinConditionsCloseButton = new ImageButton(AssetManagerUtility.getSkin(), "closebutton");
+		final ImageButton explainWinConditionsCloseButton = new ImageButton(AssetManagerUtility.getSkin(), "closebutton");
 		explainWinConditionsMessageWindow.getTitleTable().add(explainWinConditionsCloseButton).size(20).padBottom(5);
 
 		explainWinConditionsCloseButton.addListener(new ClickListener() {
@@ -93,7 +94,7 @@ public class HudMessages {
 			}
 		});
 
-		Label explainWinConditionsMessage = new Label("Once all your enemies are defeated, you win the round", AssetManagerUtility.getSkin());
+		final Label explainWinConditionsMessage = new Label("Once all your enemies are defeated, you win the round", AssetManagerUtility.getSkin());
 		explainWinConditionsMessageWindow.add(explainWinConditionsMessage);
 		explainWinConditionsMessageWindow.pack();
 		explainWinConditionsMessageWindow.setMovable(true);
@@ -114,7 +115,7 @@ public class HudMessages {
 		invalidSpellTargetMessage.setVisible(false);
 		notEnoughAPMessage.setVisible(false);
 		numberOfDeployedUnitsMessage.setVisible(false);
-		deployUnitsMessageWindow.setVisible(false);
+		deployUnitsMessageWindow.setVisible(isTutorial);
 		explainActionsMessageWindow.setVisible(false);
 		explainWinConditionsMessageWindow.setVisible(false);
 
@@ -130,32 +131,32 @@ public class HudMessages {
 	}
 
 	public void showInvalidAttackMessage() {
-		invalidAttackTargetMessage.setVisible(true);
+		invalidAttackTargetMessage.setVisible(isTutorial);
 		invalidAttackTargetMessage.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(POPUP_MESSAGE_FADE_IN_OUT_DURATION), Actions.fadeOut(POPUP_MESSAGE_FADE_IN_OUT_DURATION)));
 	}
 
 	public void showInvalidMoveMessage() {
-		invalidMoveMessage.setVisible(true);
+		invalidMoveMessage.setVisible(isTutorial);
 		invalidMoveMessage.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(POPUP_MESSAGE_FADE_IN_OUT_DURATION), Actions.fadeOut(POPUP_MESSAGE_FADE_IN_OUT_DURATION)));
 	}
 
 	public void showInvalidSpawnPointMessage() {
-		invalidSpawnPointMessage.setVisible(true);
+		invalidSpawnPointMessage.setVisible(isTutorial);
 		invalidSpawnPointMessage.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(POPUP_MESSAGE_FADE_IN_OUT_DURATION), Actions.fadeOut(POPUP_MESSAGE_FADE_IN_OUT_DURATION)));
 	}
 
 	public void showInvalidSpellTargetMessage() {
-		invalidSpellTargetMessage.setVisible(true);
+		invalidSpellTargetMessage.setVisible(isTutorial);
 		invalidSpellTargetMessage.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(POPUP_MESSAGE_FADE_IN_OUT_DURATION), Actions.fadeOut(POPUP_MESSAGE_FADE_IN_OUT_DURATION)));
 	}
 
 	public void showNotEnoughAPMessage() {
-		notEnoughAPMessage.setVisible(true);
+		notEnoughAPMessage.setVisible(isTutorial);
 		notEnoughAPMessage.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(POPUP_MESSAGE_FADE_IN_OUT_DURATION), Actions.fadeOut(POPUP_MESSAGE_FADE_IN_OUT_DURATION)));
 	}
 
 	public void showDeployUnitsMessage() {
-		deployUnitsMessageWindow.setVisible(true);
+		deployUnitsMessageWindow.setVisible(isTutorial);
 	}
 
 	public void hideDeployUnitsMessage() {
@@ -163,7 +164,7 @@ public class HudMessages {
 	}
 
 	public void showExplainActionsMessage() {
-		explainActionsMessageWindow.setVisible(true);
+		explainActionsMessageWindow.setVisible(isTutorial);
 	}
 
 	public void hideExplainActionsMessage() {
@@ -171,7 +172,7 @@ public class HudMessages {
 	}
 
 	public void showExplainWinConditionsMessage() {
-		explainWinConditionsMessageWindow.setVisible(true);
+		explainWinConditionsMessageWindow.setVisible(isTutorial);
 	}
 
 	public void hideExplainWinConditionsMessage() {
