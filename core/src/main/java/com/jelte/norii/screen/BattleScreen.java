@@ -37,6 +37,7 @@ import com.jelte.norii.particles.ParticleType;
 import com.jelte.norii.profile.ProfileManager;
 import com.jelte.norii.ui.ActionsUi;
 import com.jelte.norii.ui.Hud;
+import com.jelte.norii.ui.HudMessageTypes;
 import com.jelte.norii.ui.MessageToBattleScreen;
 import com.jelte.norii.ui.StatusUi;
 import com.jelte.norii.utility.AssetManagerUtility;
@@ -100,7 +101,7 @@ public class BattleScreen extends GameScreen {
 		hudCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		newHud = new Hud(Player.getInstance().getTeam(), aiTeamLeader.getTeam(), spriteBatch, currentMap.getMapWidth(), currentMap.getMapHeight(), this, (aiTeams == AITeams.TUTORIAL));
 		if (aiTeams == AITeams.TUTORIAL) {
-			newHud.getHudMessages().showDeployUnitsMessage();
+			newHud.getHudMessages().showInfoWindow(HudMessageTypes.DEPLOY_UNITS_INFO);
 		}
 	}
 
@@ -388,7 +389,7 @@ public class BattleScreen extends GameScreen {
 				if (moveEntity.canMove()) {
 					prepareMove(moveEntity);
 				} else {
-					newHud.getHudMessages().showNotEnoughAPMessage();
+					newHud.getHudMessages().showPopup(HudMessageTypes.NOT_ENOUGH_AP);
 				}
 				break;
 			case CLICKED_ON_ATTACK:
@@ -396,7 +397,7 @@ public class BattleScreen extends GameScreen {
 				if ((attackEntity.getAp() >= attackEntity.getEntityData().getBasicAttackCost()) && attackEntity.canAttack()) {
 					prepareAttack(attackEntity);
 				} else {
-					newHud.getHudMessages().showNotEnoughAPMessage();
+					newHud.getHudMessages().showPopup(HudMessageTypes.NOT_ENOUGH_AP);
 				}
 				break;
 			case CLICKED_ON_ABILITY:
@@ -406,7 +407,7 @@ public class BattleScreen extends GameScreen {
 					prepareSpell(spellEntity, ability);
 					newHud.setLocked(false);
 				} else {
-					newHud.getHudMessages().showNotEnoughAPMessage();
+					newHud.getHudMessages().showPopup(HudMessageTypes.NOT_ENOUGH_AP);
 				}
 				break;
 			}
@@ -420,12 +421,16 @@ public class BattleScreen extends GameScreen {
 			if (actionsUI != null) {
 				actionsUI.update(entity);
 				actionsUI.setVisible(!entity.hasModifier(ModifiersEnum.STUNNED));
+				newHud.getHudMessages().hideInfoWindow(HudMessageTypes.SELECT_UNIT_INFO);
+				newHud.getHudMessages().showInfoWindowTutorial(HudMessageTypes.EXPLAIN_ACTION_INFO);
 			}
 			break;
 		case HIDE_ACTIONS:
 			final ActionsUi actionsUIToHide = newHud.getEntityIdWithActionUi().get(entity.getEntityID());
 			if (actionsUIToHide != null) {
 				actionsUIToHide.setVisible(false);
+				newHud.getHudMessages().hideInfoWindow(HudMessageTypes.EXPLAIN_ACTION_INFO);
+				newHud.getHudMessages().showInfoWindowTutorial(HudMessageTypes.EXPLAIN_LOCKING_INFO);
 			}
 			break;
 		case UPDATE_UI:
@@ -438,30 +443,30 @@ public class BattleScreen extends GameScreen {
 			newHud.getPortraitAndStats().setHero(null);
 			break;
 		case INVALID_SPAWN_POINT:
-			newHud.getHudMessages().showInvalidSpawnPointMessage();
+			newHud.getHudMessages().showPopup(HudMessageTypes.INVALID_SPAWN_POINT);
 			break;
 		case UNIT_DEPLOYED:
 			newHud.getHudMessages().updateNumberOfDeployedUnits(battlemanager.getUnitsDeployed(), battlemanager.getPlayerUnits().size());
 			break;
 		case DEPLOYMENT_FINISHED:
-			newHud.getHudMessages().hideDeployedUnits();
-			newHud.getHudMessages().hideDeployUnitsMessage();
-			newHud.getHudMessages().showExplainActionsMessage();
+			newHud.getHudMessages().hideInfoWindow(HudMessageTypes.DEPLOY_UNITS_INFO);
+			newHud.getHudMessages().hideInfoWindow(HudMessageTypes.NUMBER_OF_UNITS_DEPLOYED);
+			newHud.getHudMessages().showInfoWindowTutorial(HudMessageTypes.SELECT_UNIT_INFO);
 			break;
 		case INVALID_SPELL_TARGET:
-			newHud.getHudMessages().showInvalidSpellTargetMessage();
+			newHud.getHudMessages().showPopup(HudMessageTypes.INVALID_SPELL_TARGET);
 			break;
 		case INVALID_ATTACK_TARGET:
-			newHud.getHudMessages().showInvalidAttackMessage();
+			newHud.getHudMessages().showPopup(HudMessageTypes.INVALID_ATTACK_TARGET);
 			break;
 		case INVALID_MOVE:
-			newHud.getHudMessages().showInvalidMoveMessage();
+			newHud.getHudMessages().showPopup(HudMessageTypes.INVALID_MOVE);
 			break;
 		case AI_WINS:
-			newHud.getHudMessages().showAiWin();
+			newHud.getHudMessages().showPopup(HudMessageTypes.AI_VICTORY);
 			break;
 		case PLAYER_WINS:
-			newHud.getHudMessages().showPlayerWin();
+			newHud.getHudMessages().showPopup(HudMessageTypes.PLAYER_VICTORY);
 			break;
 		case FOCUS_CAMERA:
 			mapCamera.position.set(entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY(), 0f);
