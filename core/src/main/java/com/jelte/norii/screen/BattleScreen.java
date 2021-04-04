@@ -421,16 +421,14 @@ public class BattleScreen extends GameScreen {
 			if (actionsUI != null) {
 				actionsUI.update(entity);
 				actionsUI.setVisible(!entity.hasModifier(ModifiersEnum.STUNNED));
-				newHud.getHudMessages().hideInfoWindow(HudMessageTypes.SELECT_UNIT_INFO);
-				newHud.getHudMessages().showInfoWindowTutorial(HudMessageTypes.EXPLAIN_ACTION_INFO);
+				newHud.getHudMessages().showNextTutorialMessage();
 			}
 			break;
 		case HIDE_ACTIONS:
 			final ActionsUi actionsUIToHide = newHud.getEntityIdWithActionUi().get(entity.getEntityID());
 			if (actionsUIToHide != null) {
 				actionsUIToHide.setVisible(false);
-				newHud.getHudMessages().hideInfoWindow(HudMessageTypes.EXPLAIN_ACTION_INFO);
-				newHud.getHudMessages().showInfoWindowTutorial(HudMessageTypes.EXPLAIN_LOCKING_INFO);
+				newHud.getHudMessages().showNextTutorialMessage();
 			}
 			break;
 		case UPDATE_UI:
@@ -449,9 +447,8 @@ public class BattleScreen extends GameScreen {
 			newHud.getHudMessages().updateNumberOfDeployedUnits(battlemanager.getUnitsDeployed(), battlemanager.getPlayerUnits().size());
 			break;
 		case DEPLOYMENT_FINISHED:
-			newHud.getHudMessages().hideInfoWindow(HudMessageTypes.DEPLOY_UNITS_INFO);
 			newHud.getHudMessages().hideInfoWindow(HudMessageTypes.NUMBER_OF_UNITS_DEPLOYED);
-			newHud.getHudMessages().showInfoWindowTutorial(HudMessageTypes.SELECT_UNIT_INFO);
+			newHud.getHudMessages().showNextTutorialMessage();
 			break;
 		case INVALID_SPELL_TARGET:
 			newHud.getHudMessages().showPopup(HudMessageTypes.INVALID_SPELL_TARGET);

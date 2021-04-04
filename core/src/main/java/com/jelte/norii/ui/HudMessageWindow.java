@@ -13,11 +13,11 @@ public class HudMessageWindow {
 	public static final String CLOSE_BUTTON_SKIN_NAME = "closebutton";
 
 	private Window textWindow;
-	private ImageButtonStyle imageButtonStyle;
-	private ImageButton closeButton;
+	private final ImageButtonStyle imageButtonStyle;
+	private final ImageButton closeButton;
 	private Label textLabel;
 
-	public HudMessageWindow(String text, float tilePixelWidth, float tilePixelHeight, int mapWidth, int mapHeight) {
+	public HudMessageWindow(String text, HudMessages hudMessages) {
 		textWindow = new Window(TITLE, AssetManagerUtility.getSkin());
 		imageButtonStyle = AssetManagerUtility.getSkin().get(CLOSE_BUTTON_SKIN_NAME, ImageButtonStyle.class);
 		closeButton = new ImageButton(imageButtonStyle);
@@ -35,7 +35,7 @@ public class HudMessageWindow {
 			}
 		});
 
-		textWindow.setPosition((mapWidth / HudMessages.POPUP_WIDTH_FACTOR) * tilePixelWidth, (mapHeight / HudMessages.POPUP_HEIGHT_FACTOR) * tilePixelHeight);
+		textWindow.setPosition((hudMessages.getMapWidth() / HudMessages.POPUP_WIDTH_FACTOR) * hudMessages.getTilePixelWidth(), (hudMessages.getMapHeight() / HudMessages.POPUP_HEIGHT_FACTOR) * hudMessages.getTilePixelHeight());
 	}
 
 	public Window getTextWindow() {
