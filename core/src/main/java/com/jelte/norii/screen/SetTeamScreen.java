@@ -14,13 +14,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
@@ -53,7 +53,7 @@ public class SetTeamScreen extends GameScreen implements ProfileObserver {
 	private Table titleTable;
 	private Table heroesTitlesTable;
 	private Table allHeroesTable;
-	private Table selectedHeroesTable;
+	private VerticalGroup selectedHeroesTableVerticalGroup;
 	private Table saveAndExitTable;
 
 	private OrthographicCamera parallaxCamera;
@@ -90,7 +90,6 @@ public class SetTeamScreen extends GameScreen implements ProfileObserver {
 		titleTable = new Table();
 		heroesTitlesTable = new Table();
 		allHeroesTable = new Table();
-		selectedHeroesTable = new Table();
 		saveAndExitTable = new Table();
 		availableHeroes = new Array<>();
 		teamHeroes = new Array<>();
@@ -123,16 +122,16 @@ public class SetTeamScreen extends GameScreen implements ProfileObserver {
 	}
 
 	private void createHeroPortraits() {
-		ImageButtonStyle btnStyle = button.getStyle();
-		for (EntityData data : entityData.values()) {
-			String heroImageName = data.getPortraitSpritePath();
-			TextureRegion tr = new TextureRegion(AssetManagerUtility.getSprite(heroImageName));
-			TextureRegionDrawable buttonImage = new TextureRegionDrawable(tr);
-			ImageButtonStyle heroButtonStyle = new ImageButtonStyle();
+		final ImageButtonStyle btnStyle = button.getStyle();
+		for (final EntityData data : entityData.values()) {
+			final String heroImageName = data.getPortraitSpritePath();
+			final TextureRegion tr = new TextureRegion(AssetManagerUtility.getSprite(heroImageName));
+			final TextureRegionDrawable buttonImage = new TextureRegionDrawable(tr);
+			final ImageButtonStyle heroButtonStyle = new ImageButtonStyle();
 			heroButtonStyle.imageUp = buttonImage;
 			heroButtonStyle.up = btnStyle.up;
 			heroButtonStyle.down = btnStyle.down;
-			ImageButton heroImageButton = new ImageButton(heroButtonStyle);
+			final ImageButton heroImageButton = new ImageButton(heroButtonStyle);
 			availableHeroes.add(heroImageButton);
 
 			heroImageButton.addListener(new InputListener() {
@@ -149,34 +148,32 @@ public class SetTeamScreen extends GameScreen implements ProfileObserver {
 	}
 
 	private void tryToAddHeroToTeam(String heroImageName) {
-		int currentHeroes = teamHeroes.size;
+		final int currentHeroes = teamHeroes.size;
 		if (currentHeroes < maxHeroCount) {
-			ImageButtonStyle btnStyle = button.getStyle();
-			TextureRegion tr = new TextureRegion(AssetManagerUtility.getSprite(heroImageName));
-			TextureRegionDrawable buttonImage = new TextureRegionDrawable(tr);
-			ImageButtonStyle heroButtonStyle = new ImageButtonStyle();
+			final ImageButtonStyle btnStyle = button.getStyle();
+			final TextureRegion tr = new TextureRegion(AssetManagerUtility.getSprite(heroImageName));
+			final TextureRegionDrawable buttonImage = new TextureRegionDrawable(tr);
+			// buttonImage.setMinHeight(50);
+			// buttonImage.setMinWidth(50);
+			final ImageButtonStyle heroButtonStyle = new ImageButtonStyle();
 			heroButtonStyle.imageUp = buttonImage;
 			heroButtonStyle.up = btnStyle.up;
 			heroButtonStyle.down = btnStyle.down;
-			ImageButton heroImageButton = new ImageButton(heroButtonStyle);
+			final ImageButton heroImageButton = new ImageButton(heroButtonStyle);
 			teamHeroes.add(heroImageButton);
-			selectedHeroesTable.add(heroImageButton).pad(0).size(50);
-			selectedHeroesTable.row();
+			selectedHeroesTableVerticalGroup.addActor(heroImageButton);
 
 			heroImageButton.addListener(new InputListener() {
 				@Override
 				public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
 					teamHeroes.removeValue(heroImageButton, true);
-					for (Entry<String, String> nameAndPath : heroNamesToImagePaths.entrySet()) {
+					for (final Entry<String, String> nameAndPath : heroNamesToImagePaths.entrySet()) {
 						if (nameAndPath.getValue().equals(heroImageName)) {
 							teamHeroesNames.removeValue(nameAndPath.getKey(), false);
 						}
 					}
-					Cell cell = selectedHeroesTable.getCell(heroImageButton);
-					selectedHeroesTable.removeActor(heroImageButton);
 					heroImageButton.remove();
-					selectedHeroesTable.getCells().removeValue(cell, true);
-					selectedHeroesTable.invalidate();
+					selectedHeroesTableVerticalGroup.removeActor(heroImageButton);
 					return true;
 				}
 			});
@@ -208,7 +205,7 @@ public class SetTeamScreen extends GameScreen implements ProfileObserver {
 	private void addButtons() {
 		titleTable = new Table();
 		allHeroesTable = new Table();
-		selectedHeroesTable = new Table();
+		selectedHeroesTableVerticalGroup = new VerticalGroup();
 		saveAndExitTable = new Table();
 		titleTable.add(titleLabel);
 		mainTable.add(titleTable).align(Align.center).colspan(2).height(50).padTop(50).expandX().fillX().row();
@@ -218,7 +215,7 @@ public class SetTeamScreen extends GameScreen implements ProfileObserver {
 		mainTable.add(heroesTitlesTable).colspan(2).expandX().fillX().row();
 
 		int count = 0;
-		for (ImageButton heroButton : availableHeroes) {
+		for (final ImageButton heroButton : availableHeroes) {
 			if (count >= 4) {
 				allHeroesTable.add(heroButton).pad(0).size(50);
 				allHeroesTable.row();
@@ -231,10 +228,10 @@ public class SetTeamScreen extends GameScreen implements ProfileObserver {
 
 		mainTable.add(allHeroesTable).align(Align.center).align(Align.center).colspan(1).width(500).expand();
 
-		for (String name : teamHeroesNames) {
+		for (final String name : teamHeroesNames) {
 			tryToAddHeroToTeam(heroNamesToImagePaths.get(name));
 		}
-		mainTable.add(selectedHeroesTable).align(Align.center).colspan(1).width(500).expand().row();
+		mainTable.add(selectedHeroesTableVerticalGroup).align(Align.center).colspan(1).width(500).expand().row();
 
 		saveAndExitTable.add(exit).padTop(100).height(50).width(100);
 		saveAndExitTable.add(save).padTop(100).height(50).width(150);

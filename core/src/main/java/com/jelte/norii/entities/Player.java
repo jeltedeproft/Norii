@@ -1,11 +1,14 @@
 package com.jelte.norii.entities;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.battle.MessageToBattleScreen;
+import com.jelte.norii.profile.ProfileManager;
 import com.jelte.norii.utility.TiledMapPosition;
 
 public class Player implements UnitOwner {
@@ -74,7 +77,7 @@ public class Player implements UnitOwner {
 	}
 
 	private Player() {
-
+		team = new ArrayList<>();
 	}
 
 	@Override
@@ -100,5 +103,16 @@ public class Player implements UnitOwner {
 	@Override
 	public void sendMessageToBattleManager(MessageToBattleScreen message, Entity entity, TiledMapPosition oldPosition) {
 		battleManager.sendMessageToBattleScreen(message, entity, oldPosition);
+	}
+
+	public void initializeTeam() {
+		final Array<String> heroNames = ProfileManager.getInstance().getProperty("teamHeroes");
+		for (final String name : heroNames) {
+			for (final EntityTypes type : EntityTypes.values()) {
+				if (type.getEntityName().equals(name)) {
+					addUnit(new Entity(type, this));
+				}
+			}
+		}
 	}
 }

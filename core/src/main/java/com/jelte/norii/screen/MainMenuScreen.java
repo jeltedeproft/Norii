@@ -149,7 +149,6 @@ public class MainMenuScreen extends GameScreen {
 		playButton.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
-				addUnitsToPlayer();
 				loadLevelAssets();
 				ScreenManager.getInstance().showScreen(ScreenEnum.BATTLE, selectedLevel);
 				return true;
@@ -198,23 +197,6 @@ public class MainMenuScreen extends GameScreen {
 				return true;
 			}
 		});
-	}
-
-	private void addUnitsToPlayer() {
-		playerMonsters.add(new Entity(EntityTypes.BEAST_OGRE, Player.getInstance()));
-		playerMonsters.add(new Entity(EntityTypes.BLACK_CAT, Player.getInstance()));
-		playerMonsters.add(new Entity(EntityTypes.BLACK_DOG, Player.getInstance()));
-		playerMonsters.add(new Entity(EntityTypes.BLACK_GHOST_BALL, Player.getInstance()));
-		playerMonsters.add(new Entity(EntityTypes.BLACK_SLIME, Player.getInstance()));
-		playerMonsters.add(new Entity(EntityTypes.BLACK_SKELETON, Player.getInstance()));
-		playerMonsters.add(new Entity(EntityTypes.BLACK_SLIME_BLUE_EYES, Player.getInstance()));
-		playerMonsters.add(new Entity(EntityTypes.BLACK_SLIME_GREEN_EYES, Player.getInstance()));
-		playerMonsters.add(new Entity(EntityTypes.BLACK_SLIME_DARK_BLUE_EYES, Player.getInstance()));
-		playerMonsters.add(new Entity(EntityTypes.BLUE_GHOSTY, Player.getInstance()));
-		playerMonsters.add(new Entity(EntityTypes.FEMALE_EIGHT, Player.getInstance()));
-		playerMonsters.add(new Entity(EntityTypes.FEMALE_ONE, Player.getInstance()));
-
-		Player.getInstance().setTeam(playerMonsters);
 	}
 
 	private void addTutorialUnitsToPlayer() {

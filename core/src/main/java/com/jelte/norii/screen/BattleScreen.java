@@ -93,6 +93,7 @@ public class BattleScreen extends GameScreen {
 	}
 
 	private void initializeEntityStage() {
+		Player.getInstance().initializeTeam();
 		entityStage = new EntityStage(Stream.concat(Player.getInstance().getTeam().stream(), aiTeamLeader.getTeam().stream()).collect(Collectors.toList()));
 	}
 
