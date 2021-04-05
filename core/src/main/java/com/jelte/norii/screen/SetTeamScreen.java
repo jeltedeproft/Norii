@@ -1,5 +1,9 @@
 package com.jelte.norii.screen;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -10,6 +14,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -44,7 +49,13 @@ public class SetTeamScreen extends GameScreen implements ProfileObserver {
 	private TextButton exit;
 	private TextButton save;
 	private Stage stage;
-	private Table table;
+	private Table mainTable;
+	private Table titleTable;
+	private Table heroesTitlesTable;
+	private Table allHeroesTable;
+	private Table selectedHeroesTable;
+	private Table saveAndExitTable;
+
 	private OrthographicCamera parallaxCamera;
 	private ParallaxBackground parallaxBackground;
 	private SpriteBatch backgroundbatch;
@@ -54,6 +65,9 @@ public class SetTeamScreen extends GameScreen implements ProfileObserver {
 	private Array<ImageButton> availableHeroes;
 	private Array<ImageButton> teamHeroes;
 	private ObjectMap<Integer, EntityData> entityData;
+	private Map<String, String> heroNamesToImagePaths;
+	private float maxHeroCount;
+	private ImageButton button;
 
 	public SetTeamScreen() {
 		initializeVariables();
@@ -67,19 +81,26 @@ public class SetTeamScreen extends GameScreen implements ProfileObserver {
 
 	private void initializeVariables() {
 		backgroundbatch = new SpriteBatch();
+		button = new ImageButton(AssetManagerUtility.getSkin());
 		stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), backgroundbatch);
 		parallaxCamera = new OrthographicCamera();
 		parallaxCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		parallaxCamera.update();
-		table = new Table();
-		table.setFillParent(true);
+		mainTable = new Table();
+		titleTable = new Table();
+		heroesTitlesTable = new Table();
+		allHeroesTable = new Table();
+		selectedHeroesTable = new Table();
+		saveAndExitTable = new Table();
 		availableHeroes = new Array<>();
 		teamHeroes = new Array<>();
+		heroNamesToImagePaths = new HashMap<>();
 	}
 
 	private void fillAvailableHeroes() {
 		availableHeroesNames = ProfileManager.getInstance().getProperty("availableHeroes");
 		teamHeroesNames = ProfileManager.getInstance().getProperty("teamHeroes");
+		maxHeroCount = ProfileManager.getInstance().getProperty("maxHeroCount");
 		entityData = EntityFileReader.getUnitData();
 	}
 
@@ -102,7 +123,6 @@ public class SetTeamScreen extends GameScreen implements ProfileObserver {
 	}
 
 	private void createHeroPortraits() {
-		ImageButton button = new ImageButton(AssetManagerUtility.getSkin());
 		ImageButtonStyle btnStyle = button.getStyle();
 		for (EntityData data : entityData.values()) {
 			String heroImageName = data.getPortraitSpritePath();
@@ -114,6 +134,52 @@ public class SetTeamScreen extends GameScreen implements ProfileObserver {
 			heroButtonStyle.down = btnStyle.down;
 			ImageButton heroImageButton = new ImageButton(heroButtonStyle);
 			availableHeroes.add(heroImageButton);
+
+			heroImageButton.addListener(new InputListener() {
+				@Override
+				public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
+					tryToAddHeroToTeam(heroImageName);
+					teamHeroesNames.add(data.getName());
+					return true;
+				}
+			});
+
+			heroNamesToImagePaths.put(data.getName(), heroImageName);
+		}
+	}
+
+	private void tryToAddHeroToTeam(String heroImageName) {
+		int currentHeroes = teamHeroes.size;
+		if (currentHeroes < maxHeroCount) {
+			ImageButtonStyle btnStyle = button.getStyle();
+			TextureRegion tr = new TextureRegion(AssetManagerUtility.getSprite(heroImageName));
+			TextureRegionDrawable buttonImage = new TextureRegionDrawable(tr);
+			ImageButtonStyle heroButtonStyle = new ImageButtonStyle();
+			heroButtonStyle.imageUp = buttonImage;
+			heroButtonStyle.up = btnStyle.up;
+			heroButtonStyle.down = btnStyle.down;
+			ImageButton heroImageButton = new ImageButton(heroButtonStyle);
+			teamHeroes.add(heroImageButton);
+			selectedHeroesTable.add(heroImageButton).pad(0).size(50);
+			selectedHeroesTable.row();
+
+			heroImageButton.addListener(new InputListener() {
+				@Override
+				public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
+					teamHeroes.removeValue(heroImageButton, true);
+					for (Entry<String, String> nameAndPath : heroNamesToImagePaths.entrySet()) {
+						if (nameAndPath.getValue().equals(heroImageName)) {
+							teamHeroesNames.removeValue(nameAndPath.getKey(), false);
+						}
+					}
+					Cell cell = selectedHeroesTable.getCell(heroImageButton);
+					selectedHeroesTable.removeActor(heroImageButton);
+					heroImageButton.remove();
+					selectedHeroesTable.getCells().removeValue(cell, true);
+					selectedHeroesTable.invalidate();
+					return true;
+				}
+			});
 		}
 	}
 
@@ -140,35 +206,43 @@ public class SetTeamScreen extends GameScreen implements ProfileObserver {
 	}
 
 	private void addButtons() {
-		table.add(titleLabel).colspan(20).spaceBottom(100).height(100).width(100).row();
-		table.add(yourTeamLabel).height(75).width(50);
-		table.add(availableHeroesLabel).colspan(10).height(75).width(50).row();
+		titleTable = new Table();
+		allHeroesTable = new Table();
+		selectedHeroesTable = new Table();
+		saveAndExitTable = new Table();
+		titleTable.add(titleLabel);
+		mainTable.add(titleTable).align(Align.center).colspan(2).height(50).padTop(50).expandX().fillX().row();
+
+		heroesTitlesTable.add(yourTeamLabel).align(Align.center).width(700).expandX().fillX();
+		heroesTitlesTable.add(availableHeroesLabel).align(Align.right).width(700).expandX().fillX().row();
+		mainTable.add(heroesTitlesTable).colspan(2).expandX().fillX().row();
 
 		int count = 0;
 		for (ImageButton heroButton : availableHeroes) {
 			if (count >= 4) {
-				table.add(heroButton).pad(0).size(50).uniform();
-				table.add(new Label("test", AssetManagerUtility.getSkin())).size(50);
-				table.add(new Label("test", AssetManagerUtility.getSkin())).size(50);
-				table.add(new Label("test", AssetManagerUtility.getSkin())).size(50);
-				table.add(new Label("test", AssetManagerUtility.getSkin())).size(50);
-				table.add(new Label("test", AssetManagerUtility.getSkin())).size(50);
-				table.add(new Label("test", AssetManagerUtility.getSkin())).size(50);
-				table.row();
+				allHeroesTable.add(heroButton).pad(0).size(50);
+				allHeroesTable.row();
 				count = 0;
 			} else {
-				table.add(heroButton).pad(0).size(50).uniform();
+				allHeroesTable.add(heroButton).pad(0).size(50);
 				count++;
 			}
 		}
 
-		table.add(exit).padTop(100).height(50).width(100);
-		table.add(save).padTop(100).height(50).width(150);
+		mainTable.add(allHeroesTable).align(Align.center).align(Align.center).colspan(1).width(500).expand();
 
-		table.setFillParent(true);
-		table.pack();
-		table.debug();
-		stage.addActor(table);
+		for (String name : teamHeroesNames) {
+			tryToAddHeroToTeam(heroNamesToImagePaths.get(name));
+		}
+		mainTable.add(selectedHeroesTable).align(Align.center).colspan(1).width(500).expand().row();
+
+		saveAndExitTable.add(exit).padTop(100).height(50).width(100);
+		saveAndExitTable.add(save).padTop(100).height(50).width(150);
+
+		mainTable.add(saveAndExitTable).colspan(2);
+
+		mainTable.pack();
+		stage.addActor(mainTable);
 	}
 
 	private void addListeners() {
@@ -183,7 +257,9 @@ public class SetTeamScreen extends GameScreen implements ProfileObserver {
 		save.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
-				// ProfileManager.getInstance().setProperty("teamHeroes", object);
+				ProfileManager.getInstance().setProperty("teamHeroes", teamHeroesNames);
+				ProfileManager.getInstance().saveProfile();
+				ScreenManager.getInstance().showScreen(ScreenEnum.MAIN_MENU);
 				return true;
 			}
 		});
@@ -214,8 +290,8 @@ public class SetTeamScreen extends GameScreen implements ProfileObserver {
 
 	@Override
 	public void resize(int width, int height) {
-		stage.getViewport().setScreenSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		table.setSize(width, height);
+		stage.getViewport().update(width, height);
+		mainTable.setSize(width, height);
 	}
 
 	@Override

@@ -244,7 +244,7 @@ public class MainMenuScreen extends GameScreen {
 
 	@Override
 	public void resize(final int width, final int height) {
-		stage.getViewport().setScreenSize(width, height);
+		stage.getViewport().update(width, height);
 	}
 
 	@Override

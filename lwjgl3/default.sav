@@ -1,4 +1,30 @@
 {
-    "availableHeroes": ["Beast Ogre"],
-    "teamHeroes": ["Beast Ogre"]
+teamHeroes: [
+	{
+		class: java.lang.String
+		value: Beast Ogre
+	}
+	{
+		class: java.lang.String
+		value: Black Slime
+	}
+	{
+		class: java.lang.String
+		value: Icarus
+	}
+	{
+		class: java.lang.String
+		value: Female Eleven
+	}
+]
+maxHeroCount: {
+	class: java.lang.Float
+	value: 10
+}
+availableHeroes: [
+	{
+		class: java.lang.String
+		value: Beast Ogre
+	}
+]
 }
