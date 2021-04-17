@@ -3,7 +3,9 @@ package com.jelte.norii.utility;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.TreeMap;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -47,6 +49,16 @@ public final class Utility {
 		return enemyPositions;
 	}
 
+	public static Map<Integer, Entity> getDistancesWithTarget(MyPoint location, Array<Entity> otherUnits) {
+		final Map<Integer, Entity> distancesWithTarget = new TreeMap<>();
+		for (final Entity target : otherUnits) {
+			if (target.getCurrentPosition().isTileEqualTo(location)) {
+				distancesWithTarget.put(getDistance(location, target), target);
+			}
+		}
+		return distancesWithTarget;
+	}
+
 	public static boolean checkIfUnitsWithinDistance(final Entity unit1, final TiledMapPosition targetPos, final int distance) {
 		final TiledMapPosition pos1 = unit1.getCurrentPosition();
 		return checkIfWithinDistance(pos1, targetPos, distance);
@@ -71,6 +83,11 @@ public final class Utility {
 	public static int getDistance(final TiledMapPosition pos1, final Entity unit2) {
 		final TiledMapPosition pos2 = unit2.getCurrentPosition();
 		return (Math.abs(pos1.getTileX() - pos2.getTileX()) + Math.abs(pos1.getTileY() - pos2.getTileY()));
+	}
+
+	public static int getDistance(final MyPoint pos1, final Entity unit2) {
+		final TiledMapPosition pos2 = unit2.getCurrentPosition();
+		return (Math.abs(pos1.x - pos2.getTileX()) + Math.abs(pos1.y - pos2.getTileY()));
 	}
 
 	public static MyPoint getCenterOfGravityAi(BattleState battleState) {

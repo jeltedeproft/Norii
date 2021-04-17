@@ -306,6 +306,15 @@ public class AIDecisionMaker {
 			ghostUnit.setCurrentPosition(new TiledMapPosition().setPositionFromTiles(location.x, location.y));
 			battleState.addEntity(ghostUnit);
 			break;
+		case CRACKLE:
+			TreeMap<Integer, Entity> distancesToTarget = (TreeMap) Utility.getDistancesWithTarget(location, battleState.getAllUnits());
+			Entity closestTarget = distancesToTarget.firstEntry().getValue();
+			for (int i = 0; i < 3; i++) {
+				distancesToTarget = (TreeMap) Utility.getDistancesWithTarget(closestTarget.getCurrentPosition().getTilePosAsPoint(), battleState.getAllUnits());
+				closestTarget = distancesToTarget.firstEntry().getValue();
+				closestTarget.damage(damage);
+			}
+			break;
 		default:
 			// nothing
 		}

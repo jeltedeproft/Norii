@@ -7,6 +7,7 @@ public enum AudioTypeEvent {
 	ATTACK_SOUND("audio/attack.wav"),
 	SPELL_SOUND("audio/spell.wav"),
 	FIREBALL_SOUND("audio/fireball.mp3"),
+	CRACKLE_SOUND("audio/crackle.wav"),
 	SWAP_SOUND("audio/swap.mp3"),
 	STONE_SOUND("audio/stone.mp3"),
 	HAMMER_SOUND("audio/hammer.mp3"),

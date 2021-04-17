@@ -19,7 +19,7 @@ public class HudMessages {
 	public static final String AI_VICTORY_MESSAGE = "You Lose!";
 	public static final String PLAYER_VICTORY_MESSAGE = "You Win!";
 	public static final String DEPLOY_UNITS_MESSAGE = "Deploy your units \n on one of the \n blue squares";
-	public static final String NUMBER_OF_UNITS_DEPLOYED_MESSAGE = "";
+	public static final String NUMBER_OF_UNITS_DEPLOYED_MESSAGE = "Deployed 0/0 units";
 	public static final String SELECT_UNIT_MESSAGE = "Click once on a \n unit to select it.";
 	public static final String EXPLAIN_ACTION_MESSAGE = "Possible actions are, move, attack, \n cast an ability or skip your turn.";
 	public static final String EXPLAIN_TURNING_MESSAGE = "You can change the direction your character is facing, \n by pressing W, A, S, D.";
@@ -62,8 +62,7 @@ public class HudMessages {
 		messageTypesToPopups.put(HudMessageTypes.NOT_ENOUGH_AP, new HudMessagePopup(NOT_ENOUGH_AP_MESSAGE, this));
 		messageTypesToPopups.put(HudMessageTypes.AI_VICTORY, new HudMessagePopup(AI_VICTORY_MESSAGE, this));
 		messageTypesToPopups.put(HudMessageTypes.PLAYER_VICTORY, new HudMessagePopup(PLAYER_VICTORY_MESSAGE, this));
-
-		messageTypesToWindows.put(HudMessageTypes.NUMBER_OF_UNITS_DEPLOYED, new HudMessageWindow(NUMBER_OF_UNITS_DEPLOYED_MESSAGE, this));
+		messageTypesToPopups.put(HudMessageTypes.NUMBER_OF_UNITS_DEPLOYED, new HudMessagePopup(NUMBER_OF_UNITS_DEPLOYED_MESSAGE, this));
 
 		tutorialMessageTypesToWindows.put(HudMessageTypes.DEPLOY_UNITS_INFO, new HudMessageWindow(DEPLOY_UNITS_MESSAGE, this));
 		tutorialMessageTypesToWindows.put(HudMessageTypes.SELECT_UNIT_INFO, new HudMessageWindow(SELECT_UNIT_MESSAGE, this));
@@ -126,8 +125,8 @@ public class HudMessages {
 	}
 
 	public void updateNumberOfDeployedUnits(int number, int max) {
-		messageTypesToWindows.get(HudMessageTypes.NUMBER_OF_UNITS_DEPLOYED).getTextWindow().setVisible(true);
-		messageTypesToWindows.get(HudMessageTypes.NUMBER_OF_UNITS_DEPLOYED).getTextLabel().setText("deployed " + number + " / " + max + " units");
+		messageTypesToPopups.get(HudMessageTypes.NUMBER_OF_UNITS_DEPLOYED).getPopupMessage().setText("deployed " + number + " / " + max + " units");
+		showPopup(HudMessageTypes.NUMBER_OF_UNITS_DEPLOYED);
 	}
 
 	public int getMapWidth() {

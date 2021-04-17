@@ -248,5 +248,23 @@
         "affectsTeam": "BOTH",
         "target": "CELL_BUT_NO_UNIT",
         "infoText": "Summon a ghost."
+    },
+
+    {
+        "id": 14,
+        "name": "Crackle",
+        "iconSpriteName": "crackle",
+        "apCost": 1,
+        "mpCost": 0,
+        "lineOfSight": "CIRCLE",
+        "goesTroughUnits": true,
+        "goesTroughObstacles": true,
+        "areaOfEffect": "CELL",
+        "damage": 3,
+        "range": 8,
+        "areaOfEffectRange": 1,
+        "affectsTeam": "ENEMY",
+        "target": "CELL",
+        "infoText": "Zip zap, you're dead."
     }
 ]
