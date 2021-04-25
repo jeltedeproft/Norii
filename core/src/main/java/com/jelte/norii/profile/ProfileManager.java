@@ -21,6 +21,7 @@ public class ProfileManager extends ProfileSubject {
 
 	private static final String SAVEGAME_SUFFIX = ".sav";
 	public static final String DEFAULT_PROFILE = "default";
+	public static final String SAVEFILES_DIRECTORY = "properties/savefiles/";
 
 	private ProfileManager() {
 		json = new Json();
@@ -54,10 +55,12 @@ public class ProfileManager extends ProfileSubject {
 
 	public void storeAllProfiles() {
 		if (Gdx.files.isLocalStorageAvailable()) {
-			final FileHandle[] files = Gdx.files.local(".").list(SAVEGAME_SUFFIX);
-
-			for (final FileHandle file : files) {
-				profilesWithFile.put(file.nameWithoutExtension(), file);
+			final FileHandle listOfProfiles = Gdx.files.internal(SAVEFILES_DIRECTORY + "assets.txt");
+			String text = listOfProfiles.readString();
+			String arrayOfProfiles[] = text.split("\\r?\\n");
+			for (String profile : arrayOfProfiles) {
+				FileHandle profileFileHandle = Gdx.files.internal(SAVEFILES_DIRECTORY + profile);
+				profilesWithFile.put(profileFileHandle.nameWithoutExtension(), profileFileHandle);
 			}
 		} else {
 			// try external directory
@@ -69,7 +72,7 @@ public class ProfileManager extends ProfileSubject {
 	}
 
 	public void writeProfileToStorage(String profName, String fileData, boolean overwrite) {
-		final String fullFilename = profName + SAVEGAME_SUFFIX;
+		final String fullFilename = SAVEFILES_DIRECTORY + profName + SAVEGAME_SUFFIX;
 
 		final boolean localFileExists = Gdx.files.internal(fullFilename).exists();
 
@@ -109,7 +112,7 @@ public class ProfileManager extends ProfileSubject {
 
 	@SuppressWarnings("unchecked")
 	public void loadProfile() {
-		final String fullProfileFileName = profileName + SAVEGAME_SUFFIX;
+		final String fullProfileFileName = SAVEFILES_DIRECTORY + profileName + SAVEGAME_SUFFIX;
 		final boolean doesProfileFileExist = Gdx.files.internal(fullProfileFileName).exists();
 
 		if (!doesProfileFileExist) {

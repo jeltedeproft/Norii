@@ -1,0 +1,50 @@
+{
+teamHeroes: [
+	{
+		class: java.lang.String
+		value: Black Slime
+	}
+	{
+		class: java.lang.String
+		value: Black Slime Red Eyes
+	}
+	{
+		class: java.lang.String
+		value: Black Slime Green Eyes
+	}
+	{
+		class: java.lang.String
+		value: Dark Blue Slime
+	}
+	{
+		class: java.lang.String
+		value: Black Slime Yellow Eyes
+	}
+	{
+		class: java.lang.String
+		value: Black Slime Blue Eyes
+	}
+	{
+		class: java.lang.String
+		value: Black Slime Purple Eyes
+	}
+	{
+		class: java.lang.String
+		value: Blue Slime
+	}
+	{
+		class: java.lang.String
+		value: Black Slime Pink Eyes
+	}
+]
+maxHeroCount: {
+	class: java.lang.Float
+	value: 10
+}
+availableHeroes: [
+	{
+		class: java.lang.String
+		value: Beast Ogre
+	}
+]
+}

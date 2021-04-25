@@ -22,7 +22,7 @@ import com.jelte.norii.utility.MyPoint;
 import HeadlessRunnerTest.GdxTestRunner;
 
 @RunWith(GdxTestRunner.class)
-public class testBattleStateGridHelperFromUnits {
+public class TestBattleStateGridHelperFromUnits {
 	BattleStateGridHelper gridHelper = BattleStateGridHelper.getInstance();
 	final static MyPoint testPoints[][] = new MyPoint[20][20];
 	final static Array<MyPoint> allPoints = new Array<>();
