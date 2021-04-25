@@ -12,6 +12,7 @@ public enum ParticleType {
 	WHITE_SQUARE("particles/white.p"),
 	PURPLE_SQUARE("particles/purple.p"),
 	ICE("particles/ice.p"),
+	CRACKLE("particles/crackle.p"),
 	WIND("particles/wind.p"),
 	ATTACK("particles/attack.p");
 

@@ -19,6 +19,10 @@ public class Ability {
 		FRIENDLY, ENEMY, BOTH, NONE
 	}
 
+	public enum DamageType {
+		MAGICAL, PHYSICAL, PURE_DAMAGE
+	}
+
 	public enum Target {
 		UNIT, CELL, CELL_BUT_NO_UNIT, SELF, NO_TARGET;
 
@@ -69,6 +73,10 @@ public class Ability {
 
 	public Target getTarget() {
 		return Target.valueOf(spellData.getTarget());
+	}
+
+	public DamageType getDamageType() {
+		return DamageType.valueOf(spellData.getDamageType());
 	}
 
 	public AbilitiesEnum getAbilityEnum() {

@@ -426,7 +426,8 @@ public class BattleScreen extends GameScreen {
 			}
 			break;
 		case HIDE_ACTIONS:
-			final ActionsUi actionsUIToHide = newHud.getEntityIdWithActionUi().get(entity.getEntityID());
+			Entity entityToHIde = battlemanager.getActiveUnit();
+			final ActionsUi actionsUIToHide = newHud.getEntityIdWithActionUi().get(entityToHIde.getEntityID());
 			if (actionsUIToHide != null) {
 				actionsUIToHide.setVisible(false);
 				newHud.getHudMessages().showNextTutorialMessage();

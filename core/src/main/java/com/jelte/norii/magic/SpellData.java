@@ -13,6 +13,7 @@ public class SpellData {
 	private String target;
 	private String areaOfEffect;
 	private int damage;
+	private String damageType;
 	private int range;
 	private int areaOfEffectRange;
 	private String affectsTeam;
@@ -100,6 +101,14 @@ public class SpellData {
 
 	public void setDamage(final int damage) {
 		this.damage = damage;
+	}
+
+	public String getDamageType() {
+		return damageType;
+	}
+
+	public void setDamageType(String damageType) {
+		this.damageType = damageType;
 	}
 
 	public int getRange() {

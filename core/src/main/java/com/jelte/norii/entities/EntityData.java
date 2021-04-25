@@ -11,6 +11,8 @@ public class EntityData {
 	private int level;
 	private int attackRange;
 	private int attackPower;
+	private int magicalDefense;
+	private int physicalDefense;
 	private int basicAttackCost;
 	private String[] abilities;
 
@@ -90,6 +92,22 @@ public class EntityData {
 
 	public void setAttackPower(final int attackPower) {
 		this.attackPower = attackPower;
+	}
+
+	public int getMagicalDefense() {
+		return magicalDefense;
+	}
+
+	public void setMagicalDefense(int magicalDefense) {
+		this.magicalDefense = magicalDefense;
+	}
+
+	public int getPhysicalDefense() {
+		return physicalDefense;
+	}
+
+	public void setPhysicalDefense(int physicalDefense) {
+		this.physicalDefense = physicalDefense;
 	}
 
 	public int getBasicAttackCost() {

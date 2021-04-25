@@ -22,6 +22,7 @@ import com.jelte.norii.entities.EntityTypes;
 import com.jelte.norii.entities.FakeEntityVisualComponent;
 import com.jelte.norii.magic.AbilitiesEnum;
 import com.jelte.norii.magic.Ability;
+import com.jelte.norii.magic.Ability.DamageType;
 import com.jelte.norii.magic.Ability.Target;
 import com.jelte.norii.magic.Modifier;
 import com.jelte.norii.magic.ModifiersEnum;
@@ -183,7 +184,7 @@ public class AIDecisionMaker {
 	private void applyAttackOnBattleState(Entity aiUnit, Move move, BattleState battleState) {
 		final MyPoint attackLocation = move.getLocation();
 		final int damage = aiUnit.getEntityData().getAttackPower();
-		battleState.damageUnit(attackLocation, damage);
+		battleState.damageUnit(attackLocation, damage, DamageType.PHYSICAL);
 	}
 
 	private void applySpellOnBattleState(Entity unit, SpellMove move, BattleState battleState) {
@@ -193,7 +194,7 @@ public class AIDecisionMaker {
 		final int damage = move.getAbility().getSpellData().getDamage();
 		switch (move.getAbility().getAbilityEnum()) {
 		case FIREBALL:
-			battleState.damageUnit(location, damage);
+			battleState.damageUnit(location, damage, move.getAbility().getDamageType());
 			break;
 		case HEAL:
 			battleState.healUnit(location, damage);
@@ -211,14 +212,14 @@ public class AIDecisionMaker {
 		case ARROW:
 			if (targets != null) {
 				for (final MyPoint point : targets) {
-					battleState.damageUnit(point, damage);
+					battleState.damageUnit(point, damage, move.getAbility().getDamageType());
 				}
 			}
 			break;
 		case ICEFIELD:
 			if (targets != null) {
 				for (final MyPoint point : targets) {
-					battleState.damageUnit(point, damage);
+					battleState.damageUnit(point, damage, move.getAbility().getDamageType());
 				}
 			}
 			break;
@@ -233,21 +234,21 @@ public class AIDecisionMaker {
 			final List<MyPoint> crossedCells = findLine(casterPos.x, casterPos.y, location.x, location.y);
 			for (final MyPoint point : crossedCells) {
 				if (battleState.get(point.x, point.y).isOccupied()) {
-					battleState.damageUnit(point, damage);
+					battleState.damageUnit(point, damage, move.getAbility().getDamageType());
 				}
 			}
 			final Entity hammerBackUnit = new Entity(EntityTypes.BOOMERANG, unit.getOwner());
 			hammerBackUnit.setVisualComponent(new FakeEntityVisualComponent());
 			hammerBackUnit.setCurrentPosition(new TiledMapPosition().setPositionFromTiles(location.x, location.y));
 			battleState.addEntity(hammerBackUnit);
-			battleState.get(location.x, location.y).getUnit().addModifier(new Modifier(ModifiersEnum.DAMAGE_OVER_TIME, 3, 1));
+			battleState.get(location.x, location.y).getUnit().addModifier(new Modifier(ModifiersEnum.DAMAGE_OVER_TIME_MAGICAL, 3, 1));
 			battleState.get(location.x, location.y).getUnit().addAbility(AbilitiesEnum.HAMMERBACKBACK, casterPos);
 			break;
 		case HAMMERBACKBACK:
 			final List<MyPoint> crossedCellsBack = findLine(casterPos.x, casterPos.y, location.x, location.y);
 			for (final MyPoint point : crossedCellsBack) {
 				if (battleState.get(point.x, point.y).isOccupied()) {
-					battleState.damageUnit(point, damage);
+					battleState.damageUnit(point, damage, move.getAbility().getDamageType());
 				}
 			}
 			break;
@@ -306,19 +307,55 @@ public class AIDecisionMaker {
 			ghostUnit.setCurrentPosition(new TiledMapPosition().setPositionFromTiles(location.x, location.y));
 			battleState.addEntity(ghostUnit);
 			break;
+		case PLANT_SHIELD:
+			final Entity rock = new Entity(EntityTypes.ROCK, unit.getOwner());
+			battleState.addModifierToUnit(location.x, location.y, new Modifier(ModifiersEnum.STUNNED, 3, 0));
+			battleState.addModifierToUnit(location.x, location.y, new Modifier(ModifiersEnum.PURE_DAMAGE, 3, 334));
+			rock.setVisualComponent(new FakeEntityVisualComponent());
+			rock.setCurrentPosition(new TiledMapPosition().setPositionFromTiles(location.x, location.y));
+			battleState.addEntity(rock);
+			break;
 		case CRACKLE:
-			TreeMap<Integer, Entity> distancesToTarget = (TreeMap) Utility.getDistancesWithTarget(location, battleState.getAllUnits());
-			Entity closestTarget = distancesToTarget.firstEntry().getValue();
-			for (int i = 0; i < 3; i++) {
-				distancesToTarget = (TreeMap) Utility.getDistancesWithTarget(closestTarget.getCurrentPosition().getTilePosAsPoint(), battleState.getAllUnits());
-				closestTarget = distancesToTarget.firstEntry().getValue();
-				closestTarget.damage(damage);
+			Array<Entity> usedTargets = new Array<>();
+			int entitiesHit = 0;
+
+			// damage target, update ui, increase entities hit and save unit in list
+			Entity target = battleState.get(location.x, location.y).getUnit();
+			entitiesHit = crackleTarget(move.getAbility(), usedTargets, entitiesHit, target);
+
+			// do same for that unit until enough units hit or no units closeby
+			// make sure that unit first cast on is not coming back later on
+			TreeMap<Integer, Array<Entity>> distancesToTarget = (TreeMap<Integer, Array<Entity>>) Utility.getDistancesWithTarget(location, battleState.getAllUnits());
+
+			while ((!distancesToTarget.isEmpty()) && (entitiesHit <= 3)) {
+				Entity closestUnit = distancesToTarget.firstEntry().getValue().first();
+				if (Utility.checkIfUnitsWithinDistance(closestUnit, target, 4)) {
+					if (usedTargets.contains(closestUnit, false)) {
+						// skip this unit
+						distancesToTarget.firstEntry().getValue().removeIndex(0);
+					} else {
+						entitiesHit = crackleTarget(move.getAbility(), usedTargets, entitiesHit, closestUnit);
+						distancesToTarget = (TreeMap<Integer, Array<Entity>>) Utility.getDistancesWithTarget(closestUnit.getCurrentPosition().getTilePosAsPoint(), battleState.getAllUnits());
+						target = closestUnit;
+					}
+				} else {
+					break;
+				}
 			}
 			break;
 		default:
 			// nothing
 		}
 
+	}
+
+	private int crackleTarget(final Ability ability, Array<Entity> usedTargets, int entitiesHit, final Entity target) {
+		if (target != null) {
+			target.damage(ability.getSpellData().getDamage(), ability.getDamageType());
+			usedTargets.add(target);
+			entitiesHit++;
+		}
+		return entitiesHit;
 	}
 
 	/** Bresenham algorithm to find all cells crossed by a line **/
@@ -433,7 +470,8 @@ public class AIDecisionMaker {
 					moveGoal = new MyPoint(path.get(path.size() - i).x, path.get(path.size() - i).y);
 					i++;
 				}
-				final MyPoint attackGoal = new MyPoint(distancesWithAbilityTargetUnits.firstEntry().getValue().get(0).getCurrentPosition().getTileX(), distancesWithAbilityTargetUnits.firstEntry().getValue().get(0).getCurrentPosition().getTileY());
+				final MyPoint attackGoal = new MyPoint(distancesWithAbilityTargetUnits.firstEntry().getValue().get(0).getCurrentPosition().getTileX(),
+						distancesWithAbilityTargetUnits.firstEntry().getValue().get(0).getCurrentPosition().getTileY());
 				final UnitTurn moveAttack = new UnitTurn(aiUnit.getEntityID(), new Move(MoveType.MOVE, moveGoal));
 				moveAttack.addMove(new Move(MoveType.ATTACK, attackGoal));
 				unitTurns.add(moveAttack);
@@ -461,11 +499,13 @@ public class AIDecisionMaker {
 			while (abilityTargets.isEmpty() && (ap > 0)) {
 				final Entity closestUnit = distancesWithAbilityTargetUnits.firstEntry().getValue().get(0);
 				final TiledMapPosition closestUnitPos = new TiledMapPosition().setPositionFromTiles(closestUnit.getCurrentPosition().getTileX(), closestUnit.getCurrentPosition().getTileY());
-				final List<GridCell> path = MyPathFinder.getInstance().pathTowards(new TiledMapPosition().setPositionFromTiles(copyUnit.getCurrentPosition().getTileX(), copyUnit.getCurrentPosition().getTileY()), closestUnitPos, copyUnit.getAp());
+				final List<GridCell> path = MyPathFinder.getInstance().pathTowards(new TiledMapPosition().setPositionFromTiles(copyUnit.getCurrentPosition().getTileX(), copyUnit.getCurrentPosition().getTileY()), closestUnitPos,
+						copyUnit.getAp());
 				endMyPoint = new MyPoint(path.get(0).x, path.get(0).y);
 				int i = 0;
 				while (checkIfUnitOnPoint(endMyPoint, copyBattleState, copyUnit)) {
-					endMyPoint = tryAdjacentPoint(i, new MyPoint(copyUnit.getCurrentPosition().getTileX(), copyUnit.getCurrentPosition().getTileY()), new MyPoint(closestUnit.getCurrentPosition().getTileX(), closestUnit.getCurrentPosition().getTileY()));
+					endMyPoint = tryAdjacentPoint(i, new MyPoint(copyUnit.getCurrentPosition().getTileX(), copyUnit.getCurrentPosition().getTileY()),
+							new MyPoint(closestUnit.getCurrentPosition().getTileX(), closestUnit.getCurrentPosition().getTileY()));
 					i++;
 				}
 				copyBattleState.moveUnitTo(copyUnit, endMyPoint);
@@ -475,7 +515,8 @@ public class AIDecisionMaker {
 			}
 			if (!abilityTargets.isEmpty()) {
 				for (final MyPoint target : abilityTargets) {
-					final Set<MyPoint> positionsToCastSpell = BattleStateGridHelper.getInstance().getAllCastPointsWhereTargetIsHit(ability, target, new MyPoint(copyUnit.getCurrentPosition().getTileX(), copyUnit.getCurrentPosition().getTileY()), copyBattleState);
+					final Set<MyPoint> positionsToCastSpell = BattleStateGridHelper.getInstance().getAllCastPointsWhereTargetIsHit(ability, target,
+							new MyPoint(copyUnit.getCurrentPosition().getTileX(), copyUnit.getCurrentPosition().getTileY()), copyBattleState);
 					for (final MyPoint MyPoint : positionsToCastSpell) {
 						final UnitTurn moveAndSpellCopy = moveAndSpell.makeCopy();
 						final Array<MyPoint> affectedUnits = BattleStateGridHelper.getInstance().getTargetsAbility(ability, MyPoint, getUnitPositions(false, ability, copyBattleState));
@@ -494,7 +535,8 @@ public class AIDecisionMaker {
 
 		if (!abilityTargets.isEmpty()) {
 			for (final MyPoint target : abilityTargets) {
-				final Set<MyPoint> positionsToCastSpell = BattleStateGridHelper.getInstance().getAllCastPointsWhereTargetIsHit(ability, target, new MyPoint(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY()), battleState);
+				final Set<MyPoint> positionsToCastSpell = BattleStateGridHelper.getInstance().getAllCastPointsWhereTargetIsHit(ability, target, new MyPoint(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY()),
+						battleState);
 				final Move moveAfterSpell = decideMove(ability, aiUnit, battleState);
 				for (final MyPoint MyPoint : positionsToCastSpell) {
 					final Array<MyPoint> affectedUnits = BattleStateGridHelper.getInstance().getTargetsAbility(ability, MyPoint, getUnitPositions(false, ability, battleState));

@@ -1,6 +1,7 @@
 package com.jelte.norii.entities;
 
 import com.badlogic.gdx.scenes.scene2d.Action;
+import com.jelte.norii.magic.Ability.DamageType;
 
 public class AttackAction extends Action {
 	private final Entity entityToAttack;
@@ -17,7 +18,7 @@ public class AttackAction extends Action {
 		if (target != null) {
 			attacker.getVisualComponent().setAnimationType(EntityAnimationType.WALK);
 			final EntityActor targetEntity = (EntityActor) target;
-			targetEntity.getEntity().attack(entityToAttack);
+			targetEntity.getEntity().attack(entityToAttack, DamageType.PHYSICAL);
 		}
 
 		return true;

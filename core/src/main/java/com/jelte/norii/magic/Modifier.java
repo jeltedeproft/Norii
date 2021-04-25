@@ -1,6 +1,7 @@
 package com.jelte.norii.magic;
 
 import com.jelte.norii.entities.Entity;
+import com.jelte.norii.magic.Ability.DamageType;
 
 public class Modifier {
 	private ModifiersEnum type;
@@ -25,8 +26,14 @@ public class Modifier {
 		case IMPROVE_DAMAGE:
 			unit.getEntityData().setAttackPower(unit.getEntityData().getAttackPower() + amount);
 			break;
-		case DAMAGE_OVER_TIME:
-			unit.damage(amount);
+		case DAMAGE_OVER_TIME_PHYSICAL:
+			unit.damage(amount, DamageType.PHYSICAL);
+			break;
+		case DAMAGE_OVER_TIME_MAGICAL:
+			unit.damage(amount, DamageType.MAGICAL);
+			break;
+		case PURE_DAMAGE:
+			unit.damage(amount, DamageType.PURE_DAMAGE);
 			break;
 		case STUNNED:
 			break;

@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.ai.UnitTurn;
 import com.jelte.norii.entities.Entity;
+import com.jelte.norii.magic.Ability.DamageType;
 import com.jelte.norii.magic.Modifier;
 import com.jelte.norii.utility.MyPoint;
 import com.jelte.norii.utility.TiledMapPosition;
@@ -356,8 +357,8 @@ public class BattleState implements Comparable<BattleState> {
 		stateOfField[targetPos.getTileX()][targetPos.getTileY()].setUnit(caster);
 	}
 
-	public void damageUnit(MyPoint attackLocation, int damage) {
-		stateOfField[attackLocation.getX()][attackLocation.getY()].getUnit().damage(damage);
+	public void damageUnit(MyPoint attackLocation, int damage, DamageType type) {
+		stateOfField[attackLocation.getX()][attackLocation.getY()].getUnit().damage(damage, type);
 	}
 
 	public void healUnit(MyPoint attackLocation, int damage) {

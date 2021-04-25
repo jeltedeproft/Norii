@@ -8,6 +8,8 @@
         "level": 1,
         "attackRange": 1,
         "attackPower": 3,
+        "magicalDefense": 25,
+        "physicalDefense": 25,
         "basicAttackCost": 1,
         "abilities": ["FIREBALL"]
     },
@@ -21,7 +23,9 @@
         "maxHP": 1,
         "level": 1,
         "attackRange": 30,
-        "attackPower": 9,
+        "attackPower": 3,
+        "magicalDefense": 25,
+        "physicalDefense": 25,
         "basicAttackCost": 1,
         "abilities": ["TURN_TO_STONE"]
     },
@@ -36,6 +40,8 @@
         "level": 1,
         "attackRange": 1,
         "attackPower": 3,
+        "magicalDefense": 25,
+        "physicalDefense": 25,
         "basicAttackCost": 1,
         "abilities": ["FIREBALL"]
     },
@@ -50,6 +56,8 @@
         "level": 1,
         "attackRange": 1,
         "attackPower": 3,
+        "magicalDefense": 25,
+        "physicalDefense": 25,
         "basicAttackCost": 1,
         "abilities": ["SWAP"]
     },
@@ -64,6 +72,8 @@
         "level": 1,
         "attackRange": 1,
         "attackPower": 3,
+        "magicalDefense": 25,
+        "physicalDefense": 25,
         "basicAttackCost": 1,
         "abilities": ["ICEFIELD"]
     },
@@ -78,6 +88,8 @@
         "level": 1,
         "attackRange": 1,
         "attackPower": 3,
+        "magicalDefense": 25,
+        "physicalDefense": 25,
         "basicAttackCost": 1,
         "abilities": ["PUSH"]
     },
@@ -92,6 +104,8 @@
         "level": 1,
         "attackRange": 1,
         "attackPower": 3,
+        "magicalDefense": 25,
+        "physicalDefense": 25,
         "basicAttackCost": 1,
         "abilities": ["ARROW"]
     },
@@ -106,6 +120,8 @@
         "level": 1,
         "attackRange": 1,
         "attackPower": 3,
+        "magicalDefense": 25,
+        "physicalDefense": 25,
         "basicAttackCost": 1,
         "abilities": ["PULL"]
     },
@@ -120,6 +136,8 @@
         "level": 1,
         "attackRange": 1,
         "attackPower": 3,
+        "magicalDefense": 25,
+        "physicalDefense": 25,
         "basicAttackCost": 1,
         "abilities": ["INVISIBLE"]
     },
@@ -134,6 +152,8 @@
         "level": 1,
         "attackRange": 1,
         "attackPower": 3,
+        "magicalDefense": 25,
+        "physicalDefense": 25,
         "basicAttackCost": 1,
         "abilities": ["HEAL"]
     },
@@ -148,6 +168,8 @@
         "level": 1,
         "attackRange": 1,
         "attackPower": 3,
+        "magicalDefense": 25,
+        "physicalDefense": 25,
         "basicAttackCost": 1,
         "abilities": ["SUMMON"]
     },
@@ -162,6 +184,8 @@
         "level": 1,
         "attackRange": 1,
         "attackPower": 3,
+        "magicalDefense": 25,
+        "physicalDefense": 25,
         "basicAttackCost": 1,
         "abilities": ["CRACKLE"]
     },
@@ -176,8 +200,10 @@
         "level": 1,
         "attackRange": 1,
         "attackPower": 3,
+        "magicalDefense": 25,
+        "physicalDefense": 25,
         "basicAttackCost": 1,
-        "abilities": ["FIREBALL"]
+        "abilities": ["PLANT_SHIELD"]
     },
 
     {
@@ -190,6 +216,8 @@
         "level": 1,
         "attackRange": 1,
         "attackPower": 3,
+        "magicalDefense": 25,
+        "physicalDefense": 25,
         "basicAttackCost": 1,
         "abilities": ["FIREBALL"]
     },
@@ -204,6 +232,8 @@
         "level": 1,
         "attackRange": 1,
         "attackPower": 3,
+        "magicalDefense": 25,
+        "physicalDefense": 25,
         "basicAttackCost": 1,
         "abilities": ["FIREBALL"]
     },
@@ -218,6 +248,8 @@
         "level": 1,
         "attackRange": 1,
         "attackPower": 3,
+        "magicalDefense": 25,
+        "physicalDefense": 25,
         "basicAttackCost": 1,
         "abilities": ["TURN_TO_STONE"]
     },
@@ -232,6 +264,8 @@
         "level": 1,
         "attackRange": 1,
         "attackPower": 3,
+        "magicalDefense": 25,
+        "physicalDefense": 25,
         "basicAttackCost": 1,
         "abilities": ["FIREBALL"]
     },
@@ -246,6 +280,8 @@
         "level": 1,
         "attackRange": 1,
         "attackPower": 3,
+        "magicalDefense": 25,
+        "physicalDefense": 25,
         "basicAttackCost": 1,
         "abilities": ["FIREBALL"]
     },
@@ -260,6 +296,8 @@
         "level": 1,
         "attackRange": 1,
         "attackPower": 3,
+        "magicalDefense": 25,
+        "physicalDefense": 25,
         "basicAttackCost": 1,
         "abilities": ["PORTAL"]
     },
@@ -274,6 +312,8 @@
         "level": 1,
         "attackRange": 1,
         "attackPower": 3,
+        "magicalDefense": 25,
+        "physicalDefense": 25,
         "basicAttackCost": 1,
         "abilities": ["FIREBALL"]
     },
@@ -288,6 +328,8 @@
         "level": 1,
         "attackRange": 1,
         "attackPower": 3,
+        "magicalDefense": 25,
+        "physicalDefense": 25,
         "basicAttackCost": 1,
         "abilities": ["FIREBALL"]
     },
@@ -302,6 +344,8 @@
         "level": 1,
         "attackRange": 1,
         "attackPower": 3,
+        "magicalDefense": 25,
+        "physicalDefense": 25,
         "basicAttackCost": 1,
         "abilities": ["SWAP"]
     },
@@ -316,6 +360,8 @@
         "level": 1,
         "attackRange": 1,
         "attackPower": 3,
+        "magicalDefense": 25,
+        "physicalDefense": 25,
         "basicAttackCost": 1,
         "abilities": ["FIREBALL"]
     },
@@ -330,6 +376,8 @@
         "level": 1,
         "attackRange": 1,
         "attackPower": 3,
+        "magicalDefense": 25,
+        "physicalDefense": 25,
         "basicAttackCost": 1,
         "abilities": ["FIREBALL"]
     },
@@ -344,6 +392,8 @@
         "level": 1,
         "attackRange": 1,
         "attackPower": 3,
+        "magicalDefense": 25,
+        "physicalDefense": 25,
         "basicAttackCost": 1,
         "abilities": ["FIREBALL"]
     },
@@ -358,6 +408,8 @@
         "level": 1,
         "attackRange": 1,
         "attackPower": 3,
+        "magicalDefense": 25,
+        "physicalDefense": 25,
         "basicAttackCost": 1,
         "abilities": ["FIREBALL"]
     },
@@ -372,6 +424,8 @@
         "level": 1,
         "attackRange": 1,
         "attackPower": 3,
+        "magicalDefense": 25,
+        "physicalDefense": 25,
         "basicAttackCost": 1,
         "abilities": ["FIREBALL"]
     },
@@ -386,6 +440,8 @@
         "level": 1,
         "attackRange": 1,
         "attackPower": 3,
+        "magicalDefense": 25,
+        "physicalDefense": 25,
         "basicAttackCost": 1,
         "abilities": ["FIREBALL"]
     },
@@ -400,6 +456,8 @@
         "level": 1,
         "attackRange": 1,
         "attackPower": 3,
+        "magicalDefense": 25,
+        "physicalDefense": 25,
         "basicAttackCost": 1,
         "abilities": ["FIREBALL"]
     },
@@ -414,6 +472,8 @@
         "level": 1,
         "attackRange": 1,
         "attackPower": 3,
+        "magicalDefense": 25,
+        "physicalDefense": 25,
         "basicAttackCost": 1,
         "abilities": ["FIREBALL"]
     },
@@ -428,6 +488,8 @@
         "level": 1,
         "attackRange": 1,
         "attackPower": 3,
+        "magicalDefense": 25,
+        "physicalDefense": 25,
         "basicAttackCost": 1,
         "abilities": ["FIREBALL"]
     },
@@ -442,6 +504,8 @@
         "level": 1,
         "attackRange": 1,
         "attackPower": 3,
+        "magicalDefense": 25,
+        "physicalDefense": 25,
         "basicAttackCost": 1,
         "abilities": ["HAMMERBACK"]
     },
@@ -456,6 +520,8 @@
         "level": 1,
         "attackRange": 1,
         "attackPower": 3,
+        "magicalDefense": 25,
+        "physicalDefense": 25,
         "basicAttackCost": 1,
         "abilities": []
     },
@@ -470,6 +536,8 @@
         "level": 1,
         "attackRange": 0,
         "attackPower": 0,
+        "magicalDefense": 25,
+        "physicalDefense": 25,
         "basicAttackCost": 0,
         "abilities": ["TRANSPORT"]
     },
@@ -484,6 +552,24 @@
         "level": 1,
         "attackRange": 0,
         "attackPower": 0,
+        "magicalDefense": 25,
+        "physicalDefense": 25,
+        "basicAttackCost": 0,
+        "abilities": []
+    },
+
+    {
+        "id": 35,
+        "name": "Rock",
+        "portraitSpritePath": "GhostNurseIdleDown",
+        "entitySpriteName": "Rock",
+        "maxAP": 0,
+        "maxHP": 1000,
+        "level": 1,
+        "attackRange": 0,
+        "attackPower": 0,
+        "magicalDefense": 100,
+        "physicalDefense": 100,
         "basicAttackCost": 0,
         "abilities": []
     }

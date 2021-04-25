@@ -2,6 +2,7 @@ package com.jelte.norii.battle.battlePhase;
 
 import java.util.List;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import com.badlogic.gdx.Gdx;
@@ -30,6 +31,7 @@ import com.jelte.norii.particles.ParticleMaker;
 import com.jelte.norii.particles.ParticleType;
 import com.jelte.norii.utility.MyPoint;
 import com.jelte.norii.utility.TiledMapPosition;
+import com.jelte.norii.utility.Utility;
 
 public class SpellBattlePhase extends BattlePhase {
 	private final BattleManager battlemanager;
@@ -153,7 +155,7 @@ public class SpellBattlePhase extends BattlePhase {
 	private boolean checkTarget(Entity caster, TiledMapPosition targetPos, Ability ability, boolean isTile) {
 		switch (ability.getTarget()) {
 		case CELL:
-			return isTile;
+			return !caster.getCurrentPosition().isTileEqualTo(targetPos);
 		case UNIT:
 			return !isTile;
 		case CELL_BUT_NO_UNIT:
@@ -222,6 +224,12 @@ public class SpellBattlePhase extends BattlePhase {
 		case HAMMERBACKBACK:
 			castHammerbackBack(currentUnit, targetPos, ability);
 			break;
+		case CRACKLE:
+			castCrackle(currentUnit, targetPos, ability);
+			break;
+		case PLANT_SHIELD:
+			castPlantShield(currentUnit, targetPos, ability);
+			break;
 		default:
 			break;
 		}
@@ -238,6 +246,49 @@ public class SpellBattlePhase extends BattlePhase {
 		ghostEntity.setCurrentPosition(targetPos);
 		battlemanager.addUnit(ghostEntity);
 		battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.ADD_UNIT_UI, ghostEntity);
+	}
+
+	@SuppressWarnings("unchecked")
+	private void castCrackle(final Entity caster, final TiledMapPosition targetPos, final Ability ability) {
+		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
+		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.CRACKLE_SOUND);
+		Array<Entity> usedTargets = new Array<>();
+		int entitiesHit = 0;
+
+		// damage target, update ui, increase entities hit and save unit in list
+		Entity target = getEntityAtPosition(targetPos.getTilePosAsPoint());
+		entitiesHit = crackleTarget(targetPos, ability, usedTargets, entitiesHit, target);
+
+		// do same for that unit until enough units hit or no units closeby
+		// make sure that unit first cast on is not coming back later on
+		TreeMap<Integer, Array<Entity>> distancesToTarget = (TreeMap<Integer, Array<Entity>>) Utility.getDistancesWithTarget(targetPos.getTilePosAsPoint(), battlemanager.getBattleState().getAllUnits());
+
+		while ((!distancesToTarget.isEmpty()) && (entitiesHit <= 3)) {
+			Entity closestUnit = distancesToTarget.firstEntry().getValue().first();
+			if (Utility.checkIfUnitsWithinDistance(closestUnit, target, 4)) {
+				if (usedTargets.contains(closestUnit, false)) {
+					// skip this unit
+					distancesToTarget.firstEntry().getValue().removeIndex(0);
+				} else {
+					entitiesHit = crackleTarget(closestUnit.getCurrentPosition(), ability, usedTargets, entitiesHit, closestUnit);
+					distancesToTarget = (TreeMap<Integer, Array<Entity>>) Utility.getDistancesWithTarget(closestUnit.getCurrentPosition().getTilePosAsPoint(), battlemanager.getBattleState().getAllUnits());
+					target = closestUnit;
+				}
+			} else {
+				break;
+			}
+		}
+	}
+
+	private int crackleTarget(final TiledMapPosition targetPos, final Ability ability, Array<Entity> usedTargets, int entitiesHit, final Entity target) {
+		if (target != null) {
+			target.damage(ability.getSpellData().getDamage(), ability.getDamageType());
+			ParticleMaker.addParticle(ParticleType.FIREBALL, targetPos, 5);
+			battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.UPDATE_UI, target);
+			usedTargets.add(target);
+			entitiesHit++;
+		}
+		return entitiesHit;
 	}
 
 	private void castTransport(Entity currentUnit, TiledMapPosition targetPos, Ability ability) {
@@ -284,7 +335,7 @@ public class SpellBattlePhase extends BattlePhase {
 		for (final MyPoint point : crossedCells) {
 			if (battlemanager.getBattleState().get(point.x, point.y).isOccupied()) {
 				final Entity unit = battlemanager.getBattleState().get(point.x, point.y).getUnit();
-				battlemanager.getEntityByID(unit.getEntityID()).damage(ability.getSpellData().getDamage());
+				battlemanager.getEntityByID(unit.getEntityID()).damage(ability.getSpellData().getDamage(), ability.getDamageType());
 			}
 		}
 	}
@@ -314,7 +365,7 @@ public class SpellBattlePhase extends BattlePhase {
 
 		final Entity possibleTarget = getEntityAtPosition(targetPos.getTilePosAsPoint());
 		if (possibleTarget != null) {
-			possibleTarget.damage(ability.getSpellData().getDamage());
+			possibleTarget.damage(ability.getSpellData().getDamage(), ability.getDamageType());
 			battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.UPDATE_UI, possibleTarget);
 		}
 	}
@@ -335,13 +386,14 @@ public class SpellBattlePhase extends BattlePhase {
 		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
 		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.ICE);
 
-		final Set<MyPoint> targetCells = BattleStateGridHelper.getInstance().getAllPointsASpellCanHit(caster.getCurrentPosition().getTilePosAsPoint(), targetPos.getTilePosAsPoint(), ability.getAreaOfEffect(), ability.getSpellData().getRange(), battlemanager.getBattleState());
+		final Set<MyPoint> targetCells = BattleStateGridHelper.getInstance().getAllPointsASpellCanHit(caster.getCurrentPosition().getTilePosAsPoint(), targetPos.getTilePosAsPoint(), ability.getAreaOfEffect(),
+				ability.getSpellData().getRange(), battlemanager.getBattleState());
 
 		for (final MyPoint cell : targetCells) {
 			ParticleMaker.addParticle(ParticleType.ICE, cell, 0);
 			final Entity possibleTarget = getEntityAtPosition(cell);
 			if (possibleTarget != null) {
-				possibleTarget.damage(ability.getSpellData().getDamage());
+				possibleTarget.damage(ability.getSpellData().getDamage(), ability.getDamageType());
 				battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.UPDATE_UI, possibleTarget);
 			}
 		}
@@ -364,6 +416,21 @@ public class SpellBattlePhase extends BattlePhase {
 		target.addModifier(ModifiersEnum.STUNNED, 2, 0);
 	}
 
+	private void castPlantShield(final Entity caster, final TiledMapPosition targetPos, final Ability ability) {
+		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
+		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.STONE_SOUND);
+
+		final Entity rock = new Entity(EntityTypes.ROCK, caster.getOwner());
+		caster.getOwner().addUnit(rock);
+		battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.ADD_UNIT_ENTITYSTAGE, rock);
+		rock.getVisualComponent().initiateInBattle(targetPos);
+		rock.setCurrentPosition(targetPos);
+		rock.addModifier(ModifiersEnum.STUNNED, 3, 0);
+		rock.addModifier(ModifiersEnum.PURE_DAMAGE, 3, 334);
+		battlemanager.addUnit(rock);
+		battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.ADD_UNIT_UI, rock);
+	}
+
 	private void castHammerback(final Entity caster, final TiledMapPosition targetPos, final Ability ability) {
 		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
 		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.HAMMER_SOUND);
@@ -373,7 +440,7 @@ public class SpellBattlePhase extends BattlePhase {
 		for (final MyPoint point : crossedCells) {
 			if (battlemanager.getBattleState().get(point.x, point.y).isOccupied()) {
 				final Entity unit = battlemanager.getBattleState().get(point.x, point.y).getUnit();
-				battlemanager.getEntityByID(unit.getEntityID()).damage(ability.getSpellData().getDamage());
+				battlemanager.getEntityByID(unit.getEntityID()).damage(ability.getSpellData().getDamage(), ability.getDamageType());
 			}
 		}
 
@@ -382,7 +449,7 @@ public class SpellBattlePhase extends BattlePhase {
 		battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.ADD_UNIT_ENTITYSTAGE, hammerEntity);
 		hammerEntity.getVisualComponent().initiateInBattle(targetPos);
 		hammerEntity.setCurrentPosition(targetPos);
-		hammerEntity.addModifier(ModifiersEnum.DAMAGE_OVER_TIME, 3, 1);
+		hammerEntity.addModifier(ModifiersEnum.DAMAGE_OVER_TIME_PHYSICAL, 3, 1);
 		hammerEntity.addAbility(AbilitiesEnum.HAMMERBACKBACK, caster.getCurrentPosition().getTilePosAsPoint());
 		battlemanager.addUnit(hammerEntity);
 		battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.ADD_UNIT_UI, hammerEntity);
@@ -425,7 +492,7 @@ public class SpellBattlePhase extends BattlePhase {
 			if (battlemanager.getBattleState().get(point.x, point.y).isOccupied()) {
 				final Entity unit = battlemanager.getBattleState().get(point.x, point.y).getUnit();
 				if (unit.getEntityID() != caster.getEntityID()) {
-					battlemanager.getEntityByID(unit.getEntityID()).damage(ability.getSpellData().getDamage());
+					battlemanager.getEntityByID(unit.getEntityID()).damage(ability.getSpellData().getDamage(), ability.getDamageType());
 				}
 			}
 		}

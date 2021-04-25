@@ -49,11 +49,18 @@ public final class Utility {
 		return enemyPositions;
 	}
 
-	public static Map<Integer, Entity> getDistancesWithTarget(MyPoint location, Array<Entity> otherUnits) {
-		final Map<Integer, Entity> distancesWithTarget = new TreeMap<>();
+	public static Map<Integer, Array<Entity>> getDistancesWithTarget(MyPoint location, Array<Entity> otherUnits) {
+		final Map<Integer, Array<Entity>> distancesWithTarget = new TreeMap<>();
 		for (final Entity target : otherUnits) {
-			if (target.getCurrentPosition().isTileEqualTo(location)) {
-				distancesWithTarget.put(getDistance(location, target), target);
+			if (!target.getCurrentPosition().isTileEqualTo(location)) {
+				Integer distance = getDistance(location, target);
+				if (distancesWithTarget.containsKey(distance)) {
+					distancesWithTarget.get(distance).add(target);
+				} else {
+					Array<Entity> entitiesAtThisDistance = new Array<>();
+					entitiesAtThisDistance.add(target);
+					distancesWithTarget.put(distance, entitiesAtThisDistance);
+				}
 			}
 		}
 		return distancesWithTarget;

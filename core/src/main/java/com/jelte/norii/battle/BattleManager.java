@@ -26,6 +26,7 @@ import com.jelte.norii.battle.battleState.SpellMove;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.Player;
 import com.jelte.norii.magic.Ability;
+import com.jelte.norii.magic.Ability.DamageType;
 import com.jelte.norii.map.MyPathFinder;
 import com.jelte.norii.screen.BattleScreen;
 import com.jelte.norii.utility.MyPoint;
@@ -213,7 +214,7 @@ public class BattleManager {
 			break;
 		case ATTACK:
 			final Entity entityToAttack = getEntityByID(activeBattleState.get(move.getLocation().x, move.getLocation().y).getUnit().getEntityID());
-			entity.attack(entityToAttack);
+			entity.attack(entityToAttack, DamageType.PHYSICAL);
 			sendMessageToBattleScreen(MessageToBattleScreen.UPDATE_UI, entityToAttack);
 			AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.ATTACK_SOUND);
 			executeNextMove();

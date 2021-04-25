@@ -6,6 +6,7 @@ import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.battle.MessageToBattleScreen;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityAnimation.Direction;
+import com.jelte.norii.magic.ModifiersEnum;
 
 public class ActionBattlePhase extends BattlePhase {
 	private final BattleManager battlemanager;
@@ -22,6 +23,27 @@ public class ActionBattlePhase extends BattlePhase {
 	@Override
 	public void exit() {
 		battlemanager.swapTurn();
+	}
+
+	@Override
+	public void clickedOnUnit(Entity entity) {
+		if (isUnitSelectable(entity)) {
+			battlemanager.setUnitActive(entity);
+		}
+	}
+
+	private boolean isUnitSelectable(Entity entity) {
+		final Entity lockedEntity = battlemanager.getLockedUnit();
+
+		if (lockedEntity != null) {
+			return false;
+		}
+
+		if (!entity.isPlayerUnit()) {
+			return false;
+		}
+
+		return !entity.hasModifier(ModifiersEnum.STUNNED);
 	}
 
 	@Override

@@ -12,6 +12,7 @@ import com.jelte.norii.battle.MessageToBattleScreen;
 import com.jelte.norii.entities.EntityAnimation.Direction;
 import com.jelte.norii.magic.AbilitiesEnum;
 import com.jelte.norii.magic.Ability;
+import com.jelte.norii.magic.Ability.DamageType;
 import com.jelte.norii.magic.Modifier;
 import com.jelte.norii.magic.ModifiersEnum;
 import com.jelte.norii.utility.MyPoint;
@@ -24,6 +25,8 @@ public class Entity extends Actor {
 	protected int ap;
 	protected int hp;
 	protected int xp;
+	protected int magicalDefense;
+	protected int physicalDefense;
 	protected boolean statsChanged;
 
 	protected int basicAttackCost;
@@ -120,24 +123,38 @@ public class Entity extends Actor {
 		}
 	}
 
-	public void attack(final Entity target) {
+	public void attack(final Entity target, DamageType type) {
 		visualComponent.setAnimationType(EntityAnimationType.WALK);
-		target.damage(entityData.getAttackPower());
+		target.damage(entityData.getAttackPower(), type);
 	}
 
 	public boolean canAttack() {
 		return ap > basicAttackCost;
 	}
 
-	public void damage(final int damage) {
-		if (damage >= hp) {
+	public void damage(final int damage, DamageType type) {
+		int reducedDamage = calculateDamage(damage, type);
+		if (reducedDamage >= hp) {
 			hp = 0;
 			visualComponent.removeUnit();
 			setVisible(false);
 			isDead = true;
 		} else {
-			hp = hp - damage;
+			hp = hp - reducedDamage;
 		}
+	}
+
+	private int calculateDamage(int damage, DamageType type) {
+		int factor = 1;
+		if (type == DamageType.PHYSICAL) {
+			factor = physicalDefense;
+		}
+
+		if (type == DamageType.MAGICAL) {
+			factor = magicalDefense;
+		}
+		damage -= (damage / 100) * factor;
+		return damage;
 	}
 
 	public void heal(final int healAmount) {
@@ -303,13 +320,19 @@ public class Entity extends Actor {
 		int score = hp;
 		for (final Modifier modifier : modifiers) {
 			switch (modifier.getType()) {
-			case DAMAGE_OVER_TIME:
+			case DAMAGE_OVER_TIME_PHYSICAL:
+				score -= 2;
+				break;
+			case DAMAGE_OVER_TIME_MAGICAL:
 				score -= 2;
 				break;
 			case REMOVE_AP:
 				score -= 2;
 				break;
-			case REDUCE_ARMOR:
+			case REDUCE_PHYSICAL_DEFENSE:
+				score -= 2;
+				break;
+			case REDUCE_MAGICAL_DEFENSE:
 				score -= 2;
 				break;
 			case REDUCE_DAMAGE:

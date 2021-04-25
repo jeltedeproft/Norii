@@ -9,12 +9,12 @@ import com.jelte.norii.entities.Entity;
 import com.jelte.norii.utility.AssetManagerUtility;
 
 public class StatusUi extends Window {
-	private int levelVal;
+	private int phyDefVal;
 	private int hpVal;
 	private int maxHpVal;
 	private int apVal;
 	private int maxApVal;
-	private int xpVal;
+	private int magDefVal;
 
 	private final float tilePixelWidth;
 	private final float tilePixelHeight;
@@ -22,22 +22,22 @@ public class StatusUi extends Window {
 	private Label heroName;
 	private Label hp;
 	private Label ap;
-	private Label xp;
-	private Label levelValLabel;
+	private Label magDef;
+	private Label phyDef;
 
 	private Label hpLabel;
 	private Label apLabel;
-	private Label xpLabel;
-	private Label levelLabel;
+	private Label magDefLabel;
+	private Label phyDefLabel;
 
 	private boolean actionsUIIsHovering = false;
 
-	private static final float WIDTH_TILES = 8;
-	private static final float HEIGHT_TILES = 7;
+	private static final float WIDTH_TILES = 10;
+	private static final float HEIGHT_TILES = 5.5f;// for this class, change this value, it recalculates around window size
 	private static final float WINDOW_PADDING = 0;
 	private static final int HERO_NAME_COLSPAN = 3;
 	private static final int STATS_WIDTH = 20;
-	private static final int STATS_HEIGHT = 20;
+	private static final int STATS_HEIGHT = 5;
 	private static final String SEPARATOR = "/";
 	private static final String FONT_NAME_LABEL_STYLE = "smallFont";
 
@@ -75,14 +75,14 @@ public class StatusUi extends Window {
 	private void createLabels(Entity entity) {
 		final Skin statusUISkin = AssetManagerUtility.getSkin();
 		heroName = new Label(entity.getEntityData().getName(), statusUISkin, FONT_NAME_LABEL_STYLE);
-		hpLabel = new Label(" hp:", statusUISkin, FONT_NAME_LABEL_STYLE);
+		hpLabel = new Label("hp:", statusUISkin, FONT_NAME_LABEL_STYLE);
 		hp = new Label(String.valueOf(hpVal) + SEPARATOR + maxHpVal, statusUISkin, FONT_NAME_LABEL_STYLE);
-		apLabel = new Label(" ap:", statusUISkin, FONT_NAME_LABEL_STYLE);
+		apLabel = new Label("ap:", statusUISkin, FONT_NAME_LABEL_STYLE);
 		ap = new Label(String.valueOf(apVal) + SEPARATOR + maxApVal, statusUISkin, FONT_NAME_LABEL_STYLE);
-		xpLabel = new Label(" xp:", statusUISkin, FONT_NAME_LABEL_STYLE);
-		xp = new Label(String.valueOf(xpVal) + SEPARATOR + Entity.MAX_XP, statusUISkin, FONT_NAME_LABEL_STYLE);
-		levelLabel = new Label(" lv:", statusUISkin, FONT_NAME_LABEL_STYLE);
-		levelValLabel = new Label(String.valueOf(levelVal), statusUISkin, FONT_NAME_LABEL_STYLE);
+		magDefLabel = new Label("mag def:", statusUISkin, FONT_NAME_LABEL_STYLE);
+		magDef = new Label(String.valueOf(magDefVal), statusUISkin, FONT_NAME_LABEL_STYLE);
+		phyDefLabel = new Label("phy def:", statusUISkin, FONT_NAME_LABEL_STYLE);
+		phyDef = new Label(String.valueOf(phyDefVal), statusUISkin, FONT_NAME_LABEL_STYLE);
 	}
 
 	private void createGroups() {
@@ -95,7 +95,7 @@ public class StatusUi extends Window {
 	}
 
 	private void addWidgets() {
-		this.add(heroName).colspan(HERO_NAME_COLSPAN).height(30);
+		this.add(heroName).colspan(HERO_NAME_COLSPAN);
 		row();
 
 		this.add(hpLabel).align(Align.left).expandX().width(STATS_WIDTH).height(STATS_HEIGHT);
@@ -106,12 +106,12 @@ public class StatusUi extends Window {
 		this.add(ap).align(Align.left).width(STATS_WIDTH).height(STATS_HEIGHT);
 		row();
 
-		this.add(levelLabel).align(Align.left).expandX().width(STATS_WIDTH).height(STATS_HEIGHT);
-		this.add(levelValLabel).align(Align.left).width(STATS_WIDTH).height(STATS_HEIGHT);
+		this.add(phyDefLabel).align(Align.left).expandX().width(STATS_WIDTH).height(STATS_HEIGHT);
+		this.add(phyDef).align(Align.left).width(STATS_WIDTH).height(STATS_HEIGHT);
 		row();
 
-		this.add(xpLabel).align(Align.left).expandX().width(STATS_WIDTH).height(STATS_HEIGHT);
-		this.add(xp).align(Align.left).width(STATS_WIDTH).height(STATS_HEIGHT);
+		this.add(magDefLabel).align(Align.left).expandX().width(STATS_WIDTH).height(STATS_HEIGHT);
+		this.add(magDef).align(Align.left).width(STATS_WIDTH).height(STATS_HEIGHT);
 		row();
 
 		pack();
@@ -140,19 +140,19 @@ public class StatusUi extends Window {
 	}
 
 	private void updateStats(Entity unit) {
-		levelVal = unit.getEntityData().getLevel();
+		phyDefVal = unit.getEntityData().getPhysicalDefense();
 		hpVal = unit.getHp();
 		maxHpVal = unit.getEntityData().getMaxHP();
 		apVal = unit.getAp();
 		maxApVal = unit.getEntityData().getMaxAP();
-		xpVal = unit.getXp();
+		magDefVal = unit.getEntityData().getMagicalDefense();
 	}
 
 	private void updateLabels() {
 		hp.setText(String.valueOf(hpVal) + SEPARATOR + maxHpVal);
 		ap.setText(String.valueOf(apVal) + SEPARATOR + maxApVal);
-		xp.setText(String.valueOf(xpVal) + SEPARATOR + Entity.MAX_XP);
-		levelValLabel.setText(String.valueOf(levelVal));
+		magDef.setText(String.valueOf(magDefVal) + "%");
+		phyDef.setText(String.valueOf(phyDefVal) + "%");
 	}
 
 	public void setActionsUIHovering(boolean actionsUIHovering) {
