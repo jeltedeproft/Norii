@@ -300,5 +300,24 @@
         "affectsTeam": "NONE",
         "target": "CELL_BUT_NO_UNIT",
         "infoText": "place a defensive unpenetrable rock"
+    },
+
+    {
+        "id": 16,
+        "name": "Explosion",
+        "iconSpriteName": "fireball",
+        "apCost": 1,
+        "mpCost": 0,
+        "lineOfSight": "SELF",
+        "goesTroughUnits": false,
+        "goesTroughObstacles": false,
+        "areaOfEffect": "CROSS",
+        "damage": 8,
+        "damageType": "MAGICAL",
+        "range": 1,
+        "areaOfEffectRange": 1,
+        "affectsTeam": "BOTH",
+        "target": "SELF",
+        "infoText": "goodby cruel world"
     }
 ]

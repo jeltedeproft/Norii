@@ -55,7 +55,7 @@ public class BattleStateGridHelper {
 		case CIRCLE:
 			return addFilledCircleAroundCentre(points, center, range);
 		case CROSS:
-			return addCrossAroundCentre(points, center, range);
+			return addDiagonalCrossAroundCentre(points, center, range);
 		case SQUARE_BORDER:
 			return addUnfilledSquareAroundCentre(points, center, range);
 		case SQUARE:
@@ -125,6 +125,9 @@ public class BattleStateGridHelper {
 		case CIRCLE:
 			spotsToCheck.add(center);
 			addFilledCircleAroundCentre(spotsToCheck, center, areaOfEffectRange);
+			break;
+		case DIAGONAL:
+			addDiagonalCrossAroundCentre(spotsToCheck, center, areaOfEffectRange);
 			break;
 		case CROSS:
 			addCrossAroundCentre(spotsToCheck, center, areaOfEffectRange);
@@ -292,7 +295,7 @@ public class BattleStateGridHelper {
 		return points;
 	}
 
-	private Set<MyPoint> addCrossAroundCentre(Set<MyPoint> points, MyPoint centre, int range) {
+	private Set<MyPoint> addDiagonalCrossAroundCentre(Set<MyPoint> points, MyPoint centre, int range) {
 		final int centerX = centre.x;
 		final int centerY = centre.y;
 
@@ -301,6 +304,20 @@ public class BattleStateGridHelper {
 			points.add(new MyPoint(centerX - i, centerY + i));
 			points.add(new MyPoint(centerX + i, centerY - i));
 			points.add(new MyPoint(centerX - i, centerY - i));
+		}
+
+		return points;
+	}
+
+	private Set<MyPoint> addCrossAroundCentre(Set<MyPoint> points, MyPoint centre, int range) {
+		final int centerX = centre.x;
+		final int centerY = centre.y;
+
+		for (int i = 1; i <= range; i++) {
+			points.add(new MyPoint(centerX + i, centerY));
+			points.add(new MyPoint(centerX - i, centerY));
+			points.add(new MyPoint(centerX, centerY + i));
+			points.add(new MyPoint(centerX, centerY - i));
 		}
 
 		return points;

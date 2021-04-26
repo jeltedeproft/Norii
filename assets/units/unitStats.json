@@ -11,7 +11,7 @@
         "magicalDefense": 25,
         "physicalDefense": 25,
         "basicAttackCost": 1,
-        "abilities": ["FIREBALL"]
+        "abilities": ["EXPLOSION"]
     },
 
     {

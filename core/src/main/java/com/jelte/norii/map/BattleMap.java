@@ -135,6 +135,7 @@ public class BattleMap extends Map {
 		AudioManager.getInstance().onNotify(AudioCommand.SOUND_LOAD, AudioTypeEvent.SPELL_SOUND);
 		AudioManager.getInstance().onNotify(AudioCommand.SOUND_LOAD, AudioTypeEvent.WALK_LOOP);
 		AudioManager.getInstance().onNotify(AudioCommand.SOUND_LOAD, AudioTypeEvent.FIREBALL_SOUND);
+		AudioManager.getInstance().onNotify(AudioCommand.SOUND_LOAD, AudioTypeEvent.EXPLOSION);
 		AudioManager.getInstance().onNotify(AudioCommand.SOUND_LOAD, AudioTypeEvent.CRACKLE_SOUND);
 		AudioManager.getInstance().onNotify(AudioCommand.SOUND_LOAD, AudioTypeEvent.ICE);
 		AudioManager.getInstance().onNotify(AudioCommand.SOUND_LOAD, AudioTypeEvent.PUSH);

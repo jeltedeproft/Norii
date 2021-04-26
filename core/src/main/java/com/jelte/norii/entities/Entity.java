@@ -443,4 +443,8 @@ public class Entity extends Actor {
 	public boolean isInvisible() {
 		return isInvis;
 	}
+
+	public void kill() {
+		damage(1000000, DamageType.PURE_DAMAGE);
+	}
 }

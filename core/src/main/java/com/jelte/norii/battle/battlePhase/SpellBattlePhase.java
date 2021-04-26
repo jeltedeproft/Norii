@@ -185,6 +185,9 @@ public class SpellBattlePhase extends BattlePhase {
 		case FIREBALL:
 			castFireBall(currentUnit, targetPos, ability);
 			break;
+		case EXPLOSION:
+			castExplosion(currentUnit, targetPos, ability);
+			break;
 		case HEAL:
 			castHeal(currentUnit, targetPos, ability);
 			break;
@@ -233,6 +236,18 @@ public class SpellBattlePhase extends BattlePhase {
 		default:
 			break;
 		}
+	}
+
+	private void castExplosion(Entity caster, TiledMapPosition targetPos, Ability ability) {
+		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
+		Array<Entity> neighbours = battlemanager.getBattleState().getNeighbours(targetPos.getTilePosAsPoint());
+		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.EXPLOSION);
+		for (Entity entity : neighbours) {
+			ParticleMaker.addParticle(ParticleType.FIREBALL, entity.getCurrentPosition(), 0);
+			entity.damage(ability.getSpellData().getDamage(), ability.getDamageType());
+			battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.UPDATE_UI, entity);
+		}
+		caster.kill();
 	}
 
 	private void castSummon(final Entity caster, final TiledMapPosition targetPos, final Ability ability) {

@@ -196,6 +196,13 @@ public class AIDecisionMaker {
 		case FIREBALL:
 			battleState.damageUnit(location, damage, move.getAbility().getDamageType());
 			break;
+		case EXPLOSION:
+			Array<Entity> neighbours = battleState.getNeighbours(location);
+			for (Entity entity : neighbours) {
+				battleState.damageUnit(location, damage, move.getAbility().getDamageType());
+			}
+			unit.kill();
+			break;
 		case HEAL:
 			battleState.healUnit(location, damage);
 			break;

@@ -12,6 +12,7 @@ import com.jelte.norii.magic.Ability.DamageType;
 import com.jelte.norii.magic.Modifier;
 import com.jelte.norii.utility.MyPoint;
 import com.jelte.norii.utility.TiledMapPosition;
+import com.jelte.norii.utility.Utility;
 
 public class BattleState implements Comparable<BattleState> {
 	private final BattleCell[][] stateOfField;
@@ -465,5 +466,12 @@ public class BattleState implements Comparable<BattleState> {
 			}
 		}
 		return null;
+	}
+
+	public Array<Entity> getNeighbours(MyPoint location) {
+		Array<Entity> neighbours = new Array<>();
+		Map<Integer, Array<Entity>> distances = Utility.getDistancesWithTarget(location, getAllUnits());
+		neighbours.addAll(distances.get(1));
+		return neighbours;
 	}
 }
