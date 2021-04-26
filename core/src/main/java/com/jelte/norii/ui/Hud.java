@@ -17,12 +17,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.magic.Ability;
-import com.jelte.norii.profile.ProfileManager;
-import com.jelte.norii.profile.ProfileObserver;
 import com.jelte.norii.screen.BattleScreen;
 import com.jelte.norii.utility.AssetManagerUtility;
 
-public class Hud implements ProfileObserver {
+public class Hud {
 	private Stage stage;
 	private Image onTileHover;
 
@@ -218,11 +216,6 @@ public class Hud implements ProfileObserver {
 
 	public void dispose() {
 		stage.dispose();
-	}
-
-	@Override
-	public void onNotify(ProfileManager profileManager, ProfileEvent event) {
-		// no-op
 	}
 
 	public Collection<ActionsUi> getActionUIs() {

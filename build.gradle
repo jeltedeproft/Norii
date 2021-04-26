@@ -16,8 +16,6 @@ allprojects {
 	apply plugin: 'idea'
 }
 
-
-
 configure(subprojects) {
 	apply plugin: 'java-library'
 	sourceCompatibility = 11.0

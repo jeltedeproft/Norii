@@ -46,7 +46,6 @@ public class MainMenuScreen extends GameScreen {
 	private TextButton playTutorialButton;
 	private TextButton setTeamButton;
 	private TextButton settingsButton;
-	private TextButton profilesButton;
 	private TextButton exitButton;
 	private Label title;
 
@@ -58,7 +57,6 @@ public class MainMenuScreen extends GameScreen {
 
 	public MainMenuScreen() {
 		loadAssets();
-		loadProfile();
 		initializeClassVariables();
 
 		createBackground();
@@ -76,11 +74,7 @@ public class MainMenuScreen extends GameScreen {
 		EntityFileReader.loadUnitStatsInMemory();
 		SpellFileReader.loadSpellsInMemory();
 		AITeamFileReader.loadLevelsInMemory();
-	}
-
-	private void loadProfile() {
-		ProfileManager.getInstance().setCurrentProfile("default");
-		ProfileManager.getInstance().loadProfile();
+		ProfileManager.getInstance().initialise();
 	}
 
 	private void loadLevelAssets() {
@@ -128,7 +122,6 @@ public class MainMenuScreen extends GameScreen {
 		playButton = new TextButton("Play", statusUISkin);
 		playTutorialButton = new TextButton("Play Tutorial", statusUISkin);
 		setTeamButton = new TextButton("Manage Team", statusUISkin);
-		profilesButton = new TextButton("Profiles", statusUISkin);
 		settingsButton = new TextButton("Settings", statusUISkin);
 		exitButton = new TextButton("Exit", statusUISkin);
 	}
@@ -138,7 +131,6 @@ public class MainMenuScreen extends GameScreen {
 		mainMenuTableOfButtons.add(playButton).height(75).width(200).spaceBottom(20).padTop(30).row();
 		mainMenuTableOfButtons.add(playTutorialButton).height(75).width(200).spaceBottom(20).padTop(30).row();
 		mainMenuTableOfButtons.add(setTeamButton).height(75).width(200).spaceBottom(20).padTop(30).row();
-		mainMenuTableOfButtons.add(profilesButton).height(75).width(200).spaceBottom(20).padTop(30).row();
 		mainMenuTableOfButtons.add(settingsButton).height(75).width(200).spaceBottom(20).padTop(30).row();
 		mainMenuTableOfButtons.add(exitButton).height(75).width(200).spaceBottom(20).row();
 
@@ -170,14 +162,6 @@ public class MainMenuScreen extends GameScreen {
 			@Override
 			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
 				ScreenManager.getInstance().showScreen(ScreenEnum.TEAM);
-				return true;
-			}
-		});
-
-		profilesButton.addListener(new InputListener() {
-			@Override
-			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
-				ScreenManager.getInstance().showScreen(ScreenEnum.PROFILES);
 				return true;
 			}
 		});

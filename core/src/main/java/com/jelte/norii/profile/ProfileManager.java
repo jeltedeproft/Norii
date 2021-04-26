@@ -1,34 +1,24 @@
 package com.jelte.norii.profile;
 
-import java.util.HashMap;
-import java.util.Iterator;
-
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.badlogic.gdx.utils.reflect.ClassReflection;
-import com.badlogic.gdx.utils.reflect.ReflectionException;
+import com.jelte.norii.entities.EntityData;
+import com.jelte.norii.entities.EntityFileReader;
 
-public class ProfileManager extends ProfileSubject {
+public class ProfileManager {
 	private static final String TAG = ProfileManager.class.getSimpleName();
-	private final Json json;
 	private static ProfileManager profileManager;
-	private HashMap<String, FileHandle> profilesWithFile = null;
-	private ObjectMap<String, Object> profileProperties = new ObjectMap<>();
-	private String profileName;
-
-	private static final String SAVEGAME_SUFFIX = ".sav";
-	public static final String DEFAULT_PROFILE = "default";
-	public static final String SAVEFILES_DIRECTORY = "properties/savefiles/";
+	private static final String PROPERTIES = "properties";
+	private Preferences preferences;
+	private final Json json;
+	private boolean isInitialised = false;
 
 	private ProfileManager() {
+		preferences = Gdx.app.getPreferences(PROPERTIES);
 		json = new Json();
-		profilesWithFile = new HashMap<>();
-		profilesWithFile.clear();
-		profileName = DEFAULT_PROFILE;
-		storeAllProfiles();
 	}
 
 	public static final ProfileManager getInstance() {
@@ -38,102 +28,59 @@ public class ProfileManager extends ProfileSubject {
 		return profileManager;
 	}
 
-	public Array<String> getProfileList() {
-		final Array<String> profiles = new Array<>();
-		for (final Iterator<String> e = profilesWithFile.keySet().iterator(); e.hasNext();) {
-			profiles.add(e.next());
-		}
-		return profiles;
+	public Array<String> getTeamHeroes() {
+		String serializedHeroes = preferences.getString(PropertiesEnum.TEAM_HEROES.getPropertyName());
+		Array<String> deserializedHeroes = json.fromJson(Array.class, serializedHeroes);
+		return deserializedHeroes;
 	}
 
-	public FileHandle getProfileFile(String profile) {
-		if (!doesProfileExist(profile)) {
-			return null;
-		}
-		return profilesWithFile.get(profile);
+	public void setTeamHeroes(Array<String> heroes) {
+		preferences.putString(PropertiesEnum.TEAM_HEROES.getPropertyName(), json.toJson(heroes));
 	}
 
-	public void storeAllProfiles() {
-		if (Gdx.files.isLocalStorageAvailable()) {
-			final FileHandle listOfProfiles = Gdx.files.internal(SAVEFILES_DIRECTORY + "assets.txt");
-			String text = listOfProfiles.readString();
-			String arrayOfProfiles[] = text.split("\\r?\\n");
-			for (String profile : arrayOfProfiles) {
-				FileHandle profileFileHandle = Gdx.files.internal(SAVEFILES_DIRECTORY + profile);
-				profilesWithFile.put(profileFileHandle.nameWithoutExtension(), profileFileHandle);
+	public Array<String> getAvailableHeroes() {
+		String serializedHeroes = preferences.getString(PropertiesEnum.AVAILABLE_HEROES.getPropertyName());
+		Array<String> deserializedHeroes = json.fromJson(Array.class, serializedHeroes);
+		return deserializedHeroes;
+	}
+
+	public void setAvailableHeroes(Array<String> heroes) {
+		preferences.putString(PropertiesEnum.AVAILABLE_HEROES.getPropertyName(), json.toJson(heroes));
+	}
+
+	public int getMaxHeroCount() {
+		return preferences.getInteger(PropertiesEnum.MAX_HERO_COUNT.getPropertyName());
+	}
+
+	public void setMaxHeroCount(int count) {
+		preferences.putInteger(PropertiesEnum.MAX_HERO_COUNT.getPropertyName(), count);
+	}
+
+	public void saveSettings() {
+		preferences.flush();
+	}
+
+	public void initialise() {
+		if (!isInitialised()) {
+			setMaxHeroCount(10);
+
+			Array<String> availableHeroes = new Array<>();
+			ObjectMap<Integer, EntityData> entityData = EntityFileReader.getUnitData();
+			for (final EntityData data : entityData.values()) {
+				availableHeroes.add(data.getName());
 			}
-		} else {
-			// try external directory
+
+			setAvailableHeroes(availableHeroes);
+			Array<String> teamHeroes = new Array<>();
+			teamHeroes.add("Beast Ogre");
+			setTeamHeroes(teamHeroes);
+
+			preferences.putBoolean("initialised", true);
+			saveSettings();
 		}
 	}
 
-	public boolean doesProfileExist(String profName) {
-		return profilesWithFile.containsKey(profName);
+	private boolean isInitialised() {
+		return preferences.getBoolean("initialised");
 	}
-
-	public void writeProfileToStorage(String profName, String fileData, boolean overwrite) {
-		final String fullFilename = SAVEFILES_DIRECTORY + profName + SAVEGAME_SUFFIX;
-
-		final boolean localFileExists = Gdx.files.internal(fullFilename).exists();
-
-		// If we cannot overwrite and the file exists, exit
-		if (localFileExists && !overwrite) {
-			return;
-		}
-
-		FileHandle file = null;
-
-		if (Gdx.files.isLocalStorageAvailable()) {
-			file = Gdx.files.local(fullFilename);
-			file.writeString(fileData, !overwrite);
-
-			profilesWithFile.put(profName, file);
-		}
-	}
-
-	public void setProperty(String key, Object object) {
-		profileProperties.put(key, object);
-	}
-
-	public <T extends Object> T getProperty(String key) {
-		T property = null;
-		if (!profileProperties.containsKey(key)) {
-			return property;
-		}
-		property = (T) profileProperties.get(key);
-		return property;
-	}
-
-	public void saveProfile() {
-		notify(this, ProfileObserver.ProfileEvent.SAVING_PROFILE);
-		final String text = json.prettyPrint(json.toJson(profileProperties));
-		writeProfileToStorage(profileName, text, true);
-	}
-
-	@SuppressWarnings("unchecked")
-	public void loadProfile() {
-		final String fullProfileFileName = SAVEFILES_DIRECTORY + profileName + SAVEGAME_SUFFIX;
-		final boolean doesProfileFileExist = Gdx.files.internal(fullProfileFileName).exists();
-
-		if (!doesProfileFileExist) {
-			Gdx.app.debug(TAG, "File doesn't exist!");
-			return;
-		}
-		try {
-			profileProperties = (ObjectMap<String, Object>) json.fromJson(ClassReflection.forName("com.badlogic.gdx.utils.ObjectMap"), profilesWithFile.get(profileName));
-			notify(this, ProfileObserver.ProfileEvent.PROFILE_LOADED);
-		} catch (final ReflectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	public void setCurrentProfile(String profName) {
-		if (doesProfileExist(profName)) {
-			profileName = profName;
-		} else {
-			profileName = DEFAULT_PROFILE;
-		}
-	}
-
 }

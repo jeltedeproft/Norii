@@ -106,7 +106,7 @@ public class Player implements UnitOwner {
 	}
 
 	public void initializeTeam() {
-		final Array<String> heroNames = ProfileManager.getInstance().getProperty("teamHeroes");
+		final Array<String> heroNames = ProfileManager.getInstance().getTeamHeroes();
 		for (final String name : heroNames) {
 			for (final EntityTypes type : EntityTypes.values()) {
 				if (type.getEntityName().equals(name)) {

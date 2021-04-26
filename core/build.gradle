@@ -12,18 +12,3 @@ dependencies {
 	implementation 'com.github.raeleus:stripe:master-SNAPSHOT'
 }
 
-task writeAllAssetsToFile {
-    doLast {
-        def assetsFolder = new File("${project.rootDir}/assets/properties/savefiles")
-        def assetsFile = new File(assetsFolder, "assets.txt")
-        assetsFile.delete()
-
-        fileTree(assetsFolder).collect {
-            assetsFolder.relativePath(it)
-        }.each {
-            assetsFile.append(it + "\n")
-        }
-    }
-}
-
-compileJava.dependsOn writeAllAssetsToFile

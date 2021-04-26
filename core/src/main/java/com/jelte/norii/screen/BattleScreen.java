@@ -34,7 +34,6 @@ import com.jelte.norii.map.MyPathFinder;
 import com.jelte.norii.map.TiledMapActor;
 import com.jelte.norii.particles.ParticleMaker;
 import com.jelte.norii.particles.ParticleType;
-import com.jelte.norii.profile.ProfileManager;
 import com.jelte.norii.ui.ActionsUi;
 import com.jelte.norii.ui.Hud;
 import com.jelte.norii.ui.HudMessageTypes;
@@ -75,7 +74,6 @@ public class BattleScreen extends GameScreen {
 		initializePauseMenu();
 		initializeInput();
 		initializeMap();
-		initializeObservers();
 		spawnAI();
 	}
 
@@ -129,10 +127,6 @@ public class BattleScreen extends GameScreen {
 	private void spawnAI() {
 		final List<TiledMapPosition> enemyStartPositions = currentMap.getEnemyStartPositions();
 		aiTeamLeader.spawnAiUnits(enemyStartPositions);
-	}
-
-	private void initializeObservers() {
-		ProfileManager.getInstance().addObserver(newHud);
 	}
 
 	public BattleManager getBattlemanager() {

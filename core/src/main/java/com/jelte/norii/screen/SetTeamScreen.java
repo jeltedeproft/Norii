@@ -29,13 +29,12 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.jelte.norii.entities.EntityData;
 import com.jelte.norii.entities.EntityFileReader;
 import com.jelte.norii.profile.ProfileManager;
-import com.jelte.norii.profile.ProfileObserver;
 import com.jelte.norii.utility.AssetManagerUtility;
 import com.jelte.norii.utility.parallax.ParallaxBackground;
 import com.jelte.norii.utility.parallax.ParallaxUtils.WH;
 import com.jelte.norii.utility.parallax.TextureRegionParallaxLayer;
 
-public class SetTeamScreen extends GameScreen implements ProfileObserver {
+public class SetTeamScreen extends GameScreen {
 	private static final String TITLE_FONT = "bigFont";
 	private static final String TITLE = "SET TEAM";
 	private static final String YOUR_TEAM = "Your Team";
@@ -97,9 +96,9 @@ public class SetTeamScreen extends GameScreen implements ProfileObserver {
 	}
 
 	private void fillAvailableHeroes() {
-		availableHeroesNames = ProfileManager.getInstance().getProperty("availableHeroes");
-		teamHeroesNames = ProfileManager.getInstance().getProperty("teamHeroes");
-		maxHeroCount = ProfileManager.getInstance().getProperty("maxHeroCount");
+		availableHeroesNames = ProfileManager.getInstance().getAvailableHeroes();
+		teamHeroesNames = ProfileManager.getInstance().getTeamHeroes();
+		maxHeroCount = ProfileManager.getInstance().getMaxHeroCount();
 		entityData = EntityFileReader.getUnitData();
 	}
 
@@ -254,8 +253,8 @@ public class SetTeamScreen extends GameScreen implements ProfileObserver {
 		save.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
-				ProfileManager.getInstance().setProperty("teamHeroes", teamHeroesNames);
-				ProfileManager.getInstance().saveProfile();
+				ProfileManager.getInstance().setTeamHeroes(teamHeroesNames);
+				ProfileManager.getInstance().saveSettings();
 				ScreenManager.getInstance().showScreen(ScreenEnum.MAIN_MENU);
 				return true;
 			}
@@ -312,17 +311,4 @@ public class SetTeamScreen extends GameScreen implements ProfileObserver {
 		stage.dispose();
 		parallaxBackground = null;
 	}
-
-	@Override
-	public void onNotify(ProfileManager profileManager, ProfileEvent event) {
-		switch (event) {
-		case SAVING_PROFILE:
-			// no-op
-			break;
-		default:
-			break;
-		}
-
-	}
-
 }
