@@ -498,6 +498,12 @@ public class AIDecisionMaker {
 
 		// no units found in immediate vicinity, so move
 		if (abilityTargets.isEmpty()) {
+			if (distancesWithAbilityTargetUnits.isEmpty()) {
+				// no targets, (the whole other team is invis?) just stand still
+				MyPoint endMyPoint = new MyPoint(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY());
+				final UnitTurn doNothing = new UnitTurn(aiUnit.getEntityID(), new Move(MoveType.MOVE, endMyPoint));
+				unitTurns.add(doNothing);
+			}
 			MyPoint endMyPoint = new MyPoint(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY());
 			final UnitTurn moveAndSpell = new UnitTurn(aiUnit.getEntityID(), new Move(MoveType.MOVE, endMyPoint));
 			int ap = aiUnit.getAp();

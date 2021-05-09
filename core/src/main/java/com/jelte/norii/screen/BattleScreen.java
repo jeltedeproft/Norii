@@ -405,6 +405,22 @@ public class BattleScreen extends GameScreen {
 					newHud.getHudMessages().showPopup(HudMessageTypes.NOT_ENOUGH_AP);
 				}
 				break;
+			case HOVERED_ON_MOVE:
+				final Entity showMoveEntity = battlemanager.getEntityByID(entityID);
+				final Set<MyPoint> pointsToMove = BattleStateGridHelper.getInstance().getPossibleCenterCellsFiltered(showMoveEntity.getCurrentPosition().getTilePosAsPoint(), LineOfSight.CIRCLE, showMoveEntity.getAp(),
+						battlemanager.getBattleState());
+				MyPathFinder.getInstance().filterPositionsByWalkability(showMoveEntity, pointsToMove);
+				for (final MyPoint cell : pointsToMove) {
+					if (!isUnitOnCell(cell)) {
+						final TiledMapPosition positionToPutMoveParticle = new TiledMapPosition().setPositionFromTiles(cell.x, cell.y);
+						ParticleMaker.addParticle(ParticleType.MOVE, positionToPutMoveParticle, 0);
+						battlemanager.setCurrentBattleState(battlemanager.getMovementBattleState());
+					}
+				}
+				break;
+			case STOP_HOVERED_ON_MOVE:
+				ParticleMaker.deactivateAllParticlesOfType(ParticleType.MOVE);
+				break;
 			}
 		}
 	}

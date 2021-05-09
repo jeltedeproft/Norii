@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -38,13 +39,17 @@ public class SetTeamScreen extends GameScreen {
 	private static final String TITLE_FONT = "bigFont";
 	private static final String TITLE = "SET TEAM";
 	private static final String YOUR_TEAM = "Your Team";
+	private static final String EMPTY_ERROR = "Team can't be empty";
 	private static final String AVAILABLE = "Available Heroes";
 	private static final String EXIT = "exit";
 	private static final String SAVE = "Save and Exit";
+	private static final int FADE_IN_DURATION = 2;
+	private static final int FADE_OUT_DURATION = 2;
 
 	private Label titleLabel;
 	private Label yourTeamLabel;
 	private Label availableHeroesLabel;
+	private Label notEmptyLabel;
 	private TextButton exit;
 	private TextButton save;
 	private Stage stage;
@@ -114,6 +119,8 @@ public class SetTeamScreen extends GameScreen {
 		availableHeroesLabel = new Label(YOUR_TEAM, statusUISkin);
 		availableHeroesLabel.setAlignment(Align.center);
 
+		notEmptyLabel = new Label(EMPTY_ERROR, statusUISkin, TITLE_FONT);
+
 		exit = new TextButton(EXIT, statusUISkin);
 		exit.align(Align.bottom);
 		save = new TextButton(SAVE, statusUISkin);
@@ -152,8 +159,6 @@ public class SetTeamScreen extends GameScreen {
 			final ImageButtonStyle btnStyle = button.getStyle();
 			final TextureRegion tr = new TextureRegion(AssetManagerUtility.getSprite(heroImageName));
 			final TextureRegionDrawable buttonImage = new TextureRegionDrawable(tr);
-			// buttonImage.setMinHeight(50);
-			// buttonImage.setMinWidth(50);
 			final ImageButtonStyle heroButtonStyle = new ImageButtonStyle();
 			heroButtonStyle.imageUp = buttonImage;
 			heroButtonStyle.up = btnStyle.up;
@@ -239,6 +244,10 @@ public class SetTeamScreen extends GameScreen {
 
 		mainTable.pack();
 		stage.addActor(mainTable);
+
+		notEmptyLabel.setPosition(Gdx.app.getGraphics().getWidth() / 2, Gdx.app.getGraphics().getHeight() / 2);
+		notEmptyLabel.setVisible(false);
+		stage.addActor(notEmptyLabel);
 	}
 
 	private void addListeners() {
@@ -253,9 +262,14 @@ public class SetTeamScreen extends GameScreen {
 		save.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
-				ProfileManager.getInstance().setTeamHeroes(teamHeroesNames);
-				ProfileManager.getInstance().saveSettings();
-				ScreenManager.getInstance().showScreen(ScreenEnum.MAIN_MENU);
+				if (teamHeroesNames.isEmpty()) {
+					notEmptyLabel.setVisible(true);
+					notEmptyLabel.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(FADE_IN_DURATION), Actions.fadeOut(FADE_OUT_DURATION)));
+				} else {
+					ProfileManager.getInstance().setTeamHeroes(teamHeroesNames);
+					ProfileManager.getInstance().saveSettings();
+					ScreenManager.getInstance().showScreen(ScreenEnum.MAIN_MENU);
+				}
 				return true;
 			}
 		});
