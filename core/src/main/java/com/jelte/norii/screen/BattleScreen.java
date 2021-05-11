@@ -45,8 +45,8 @@ import com.jelte.norii.utility.TiledMapPosition;
 import com.jelte.norii.utility.Utility;
 
 public class BattleScreen extends GameScreen {
-	public static final int VISIBLE_WIDTH = 25;
-	public static final int VISIBLE_HEIGHT = 25;
+	public static final int VISIBLE_WIDTH = 15;
+	public static final int VISIBLE_HEIGHT = 15;
 	private static OrthographicCamera mapCamera = null;
 
 	private OrthogonalTiledMapRenderer mapRenderer = null;
