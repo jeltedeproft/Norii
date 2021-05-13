@@ -12,7 +12,8 @@ public class HpBar {
 	private static final float MIN_VALUE = 0f;
 	private static final float STEP_SIZE = 1f;
 	private static final float ANIMATION_DURATION = 0.25f;
-	public static final int HEALTHBAR_Y_OFFSET = 12;
+	public static final int HEALTHBAR_Y_OFFSET = 50;
+	public static final float HEIGHT_FACTOR = 5f;
 	private final ProgressBar healthBar;
 
 	private final float tilePixelWidth;
@@ -37,8 +38,8 @@ public class HpBar {
 		healthBar.setPosition(entity.getVisualComponent().getEntityactor().getX() * tilePixelWidth, ((entity.getVisualComponent().getEntityactor().getY() * tilePixelHeight) + OFFSET_BAR_Y));
 		healthBar.setWidth(tilePixelWidth);
 
-		progressBarStyle.background.setMinHeight(tilePixelHeight / 4f);
-		progressBarStyle.knobBefore.setMinHeight(tilePixelHeight / 4f);
+		progressBarStyle.background.setMinHeight(tilePixelHeight / HEIGHT_FACTOR);
+		progressBarStyle.knobBefore.setMinHeight(tilePixelHeight / HEIGHT_FACTOR);
 
 		progressBarStyle.background.setMinWidth(tilePixelWidth);
 		progressBarStyle.knobBefore.setMinWidth(tilePixelWidth);

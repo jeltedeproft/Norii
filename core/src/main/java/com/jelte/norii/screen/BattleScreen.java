@@ -45,8 +45,8 @@ import com.jelte.norii.utility.TiledMapPosition;
 import com.jelte.norii.utility.Utility;
 
 public class BattleScreen extends GameScreen {
-	public static final int VISIBLE_WIDTH = 15;
-	public static final int VISIBLE_HEIGHT = 15;
+	public static final int VISIBLE_WIDTH = 21;
+	public static final int VISIBLE_HEIGHT = 21;
 	private static OrthographicCamera mapCamera = null;
 
 	private OrthogonalTiledMapRenderer mapRenderer = null;
@@ -407,8 +407,7 @@ public class BattleScreen extends GameScreen {
 				break;
 			case HOVERED_ON_MOVE:
 				final Entity showMoveEntity = battlemanager.getEntityByID(entityID);
-				final Set<MyPoint> pointsToMove = BattleStateGridHelper.getInstance().getPossibleCenterCellsFiltered(showMoveEntity.getCurrentPosition().getTilePosAsPoint(), LineOfSight.CIRCLE, showMoveEntity.getAp(),
-						battlemanager.getBattleState());
+				final Set<MyPoint> pointsToMove = BattleStateGridHelper.getInstance().getPossibleCenterCellsFiltered(showMoveEntity.getCurrentPosition().getTilePosAsPoint(), LineOfSight.CIRCLE, showMoveEntity.getAp(), battlemanager.getBattleState());
 				MyPathFinder.getInstance().filterPositionsByWalkability(showMoveEntity, pointsToMove);
 				for (final MyPoint cell : pointsToMove) {
 					if (!isUnitOnCell(cell)) {
@@ -436,7 +435,7 @@ public class BattleScreen extends GameScreen {
 			}
 			break;
 		case HIDE_ACTIONS:
-			Entity entityToHIde = battlemanager.getActiveUnit();
+			final Entity entityToHIde = battlemanager.getActiveUnit();
 			final ActionsUi actionsUIToHide = newHud.getEntityIdWithActionUi().get(entityToHIde.getEntityID());
 			if (actionsUIToHide != null) {
 				actionsUIToHide.setVisible(false);

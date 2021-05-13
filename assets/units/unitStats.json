@@ -572,5 +572,21 @@
         "physicalDefense": 100,
         "basicAttackCost": 0,
         "abilities": []
+    },
+
+    {
+        "id": 36,
+        "name": "Dark Mage",
+        "portraitSpritePath": "DarkMageHurtDown",
+        "entitySpriteName": "DarkMage",
+        "maxAP": 10,
+        "maxHP": 10,
+        "level": 1,
+        "attackRange": 0,
+        "attackPower": 0,
+        "magicalDefense": 25,
+        "physicalDefense": 25,
+        "basicAttackCost": 0,
+        "abilities": ["FIREBALL"]
     }
 ]

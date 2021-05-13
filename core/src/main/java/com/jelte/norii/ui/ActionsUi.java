@@ -3,13 +3,13 @@ package com.jelte.norii.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.utility.AssetManagerUtility;
 import com.jelte.norii.utility.TiledMapPosition;
 
-public class ActionsUi extends Window {
+public class ActionsUi extends Table {
 	private static final int MOVE_AMOUNT_OUT_OF_BOUND_X = 64;
 	private static final int MOVE_AMOUNT_OUT_OF_BOUND_Y = 64;
 	private static final int HEIGHT_TILES = 2;
@@ -34,11 +34,11 @@ public class ActionsUi extends Window {
 	private ArrayList<ActionInfoUiWindow> popUps;
 
 	public ActionsUi(final Entity entity, int mapWidth, int mapHeight, Hud hud) {
-		super("", AssetManagerUtility.getSkin());
+		super();
+		setBackground(AssetManagerUtility.getSkin().getDrawable("windowgray"));
 
 		this.mapHeight = mapHeight;
 		this.mapWidth = mapWidth;
-		setBackground(AssetManagerUtility.getSkin().getDrawable("window-noborder"));
 
 		tilePixelWidth = Hud.UI_VIEWPORT_WIDTH / mapWidth;
 		tilePixelHeight = Hud.UI_VIEWPORT_HEIGHT / mapHeight;
@@ -55,7 +55,6 @@ public class ActionsUi extends Window {
 
 	private void configureMainWindow() {
 		setVisible(false);
-		setKeepWithinStage(false);
 	}
 
 	private void initVariables(final Entity entity) {

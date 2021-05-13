@@ -40,8 +40,8 @@ public class Hud {
 
 	private boolean locked;
 
-	public static final float UI_VIEWPORT_WIDTH = 240;
-	public static final float UI_VIEWPORT_HEIGHT = 240;
+	public static final float UI_VIEWPORT_WIDTH = 1000;
+	public static final float UI_VIEWPORT_HEIGHT = 1000;
 
 	public Hud(List<Entity> playerUnits, List<Entity> aiUnits, SpriteBatch spriteBatch, int mapWidth, int mapHeight, BattleScreen battleScreen, boolean isTutorial) {
 		final List<Entity> allUnits = Stream.concat(playerUnits.stream(), aiUnits.stream()).collect(Collectors.toList());
@@ -143,7 +143,7 @@ public class Hud {
 			}
 		});
 
-		stage.addActor(statusui);
+		// stage.addActor(statusui);
 	}
 
 	private void createActionUI(Entity playerUnit) {
@@ -157,10 +157,10 @@ public class Hud {
 			}
 		});
 
-		stage.addActor(actionui);
+		// stage.addActor(actionui);
 		entityIdWithActionInfoUiWindows.put(playerUnit.getEntityID(), actionui.getPopUps());
 		for (final ActionInfoUiWindow popUp : actionui.getPopUps()) {
-			stage.addActor(popUp);
+			// stage.addActor(popUp);
 		}
 	}
 

@@ -41,9 +41,11 @@ public class EntityAnimation {
 		playmodePerAnimationType.put(EntityAnimationType.SPELLCAST, Animation.PlayMode.NORMAL);
 		playmodePerAnimationType.put(EntityAnimationType.THRUST, Animation.PlayMode.NORMAL);
 		playmodePerAnimationType.put(EntityAnimationType.WALK, Animation.PlayMode.LOOP);
+		playmodePerAnimationType.put(EntityAnimationType.RUN, Animation.PlayMode.LOOP);
 		playmodePerAnimationType.put(EntityAnimationType.SLASH, Animation.PlayMode.NORMAL);
 		playmodePerAnimationType.put(EntityAnimationType.SHOOT, Animation.PlayMode.NORMAL);
 		playmodePerAnimationType.put(EntityAnimationType.HURT, Animation.PlayMode.NORMAL);
+		playmodePerAnimationType.put(EntityAnimationType.DIE, Animation.PlayMode.NORMAL);
 		playmodePerAnimationType.put(EntityAnimationType.IDLE, Animation.PlayMode.LOOP);
 	}
 
@@ -99,7 +101,7 @@ public class EntityAnimation {
 
 	private void changeAnimation(EntityAnimationType currentAnimationType) {
 		final String animationName = spriteName + currentAnimationType.getTypeAsString() + currentDirection.getDirectionAsString();
-		Animation<TextureRegion> tempAnimation = AssetManagerUtility.getAnimation(animationName, ANIMATION_DURATION, playmodePerAnimationType.get(currentAnimationType));
+		final Animation<TextureRegion> tempAnimation = AssetManagerUtility.getAnimation(animationName, ANIMATION_DURATION, playmodePerAnimationType.get(currentAnimationType));
 		if (tempAnimation != null) {
 			currentAnimation = tempAnimation;
 		}
