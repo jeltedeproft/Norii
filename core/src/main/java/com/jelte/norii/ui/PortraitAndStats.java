@@ -139,15 +139,14 @@ public class PortraitAndStats {
 
 	private void populateHeroImageAndStats() {
 		table = new Table();
-		// table.setBackground(AssetManagerUtility.getSkin().getDrawable("windowgray"));
+		table.setBackground(AssetManagerUtility.getSkin().getDrawable("window-noborder"));
 		table.setTransform(false);
 		table.setPosition(0, 0);
-		table.add(heroImageButton).width(tilePixelWidth * 3).height((tilePixelHeight * 3));
+		table.pad(0);
+		table.add(heroImageButton).width(tilePixelWidth * 3).height((tilePixelHeight * 3)).pad(0).align(Align.bottomLeft);
 		final Table subtable = new Table();
 		subtable.align(Align.topLeft);
-		subtable.pad(WINDOW_PADDING);
-		subtable.padLeft(5);
-		subtable.add(heroNameLabel).height(HERO_NAME_LABEL_HEIGHT).align(Align.topLeft).width(HERO_NAME_LABEL_WIDTH).padTop(0).padBottom(PAD_BOTTOM_TITLE);
+		subtable.add(heroNameLabel).height(HERO_NAME_LABEL_HEIGHT).align(Align.topLeft).width(HERO_NAME_LABEL_WIDTH).padTop(0);
 		subtable.row();
 
 		subtable.add(hpLabel).align(Align.bottomLeft).width(STATS_WIDTH).height(STATS_HEIGHT);
