@@ -20,12 +20,10 @@ public class EntityClickListener extends ClickListener {
 	@Override
 	public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
 		actor.setIsHovering(true);
-		actor.getEntity().getOwner().sendMessageToBattleManager(MessageToBattleScreen.SHOW_STATUS_UI, actor.getEntity());
 	}
 
 	@Override
 	public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
 		actor.setIsHovering(false);
-		actor.getEntity().getOwner().sendMessageToBattleManager(MessageToBattleScreen.HIDE_STATUS_UI, actor.getEntity());
 	}
 }

@@ -36,6 +36,11 @@ import com.jelte.norii.utility.parallax.ParallaxUtils.WH;
 import com.jelte.norii.utility.parallax.TextureRegionParallaxLayer;
 
 public class MainMenuScreen extends GameScreen {
+	private static final float BUTTON_WIDTH_FACTOR = 1 / 9f;
+	private static final float BUTTON_HEIGHT_FACTOR = 1 / 18f;
+	private static final float BUTTON_PAD_BOTTOM = 40;
+	private static final float BUTTON_PAD_TOP = 50;
+
 	private Stage stage;
 	private SpriteBatch backgroundbatch;
 	private OrthographicCamera parallaxcamera;
@@ -94,7 +99,6 @@ public class MainMenuScreen extends GameScreen {
 	}
 
 	private void createBackground() {
-		final int worldWidth = Gdx.graphics.getWidth();
 		final int worldHeight = Gdx.graphics.getHeight();
 
 		final TextureAtlas atlas = AssetManagerUtility.getTextureAtlas(AssetManagerUtility.SPRITES_ATLAS_PATH);
@@ -119,20 +123,25 @@ public class MainMenuScreen extends GameScreen {
 		final Skin statusUISkin = AssetManagerUtility.getSkin();
 
 		title = new Label("Norii:", statusUISkin, "bigFont");
-		playButton = new TextButton("Play", statusUISkin);
-		playTutorialButton = new TextButton("Play Tutorial", statusUISkin);
-		setTeamButton = new TextButton("Manage Team", statusUISkin);
-		settingsButton = new TextButton("Settings", statusUISkin);
-		exitButton = new TextButton("Exit", statusUISkin);
+		playButton = new TextButton("Play", statusUISkin, "lumos30");
+		playTutorialButton = new TextButton("Play Tutorial", statusUISkin, "lumos30");
+		setTeamButton = new TextButton("Manage Team", statusUISkin, "lumos30");
+		settingsButton = new TextButton("Settings", statusUISkin, "lumos30");
+		exitButton = new TextButton("Exit", statusUISkin, "lumos30");
 	}
 
 	private void createLayout() {
+		final int width = Gdx.graphics.getWidth();
+		final int height = Gdx.graphics.getHeight();
+		final float buttonWidth = width * BUTTON_WIDTH_FACTOR;
+		final float buttonHeight = height * BUTTON_HEIGHT_FACTOR;
+
 		mainMenuTableOfButtons.add(title).row();
-		mainMenuTableOfButtons.add(playButton).height(75).width(200).spaceBottom(20).padTop(30).row();
-		mainMenuTableOfButtons.add(playTutorialButton).height(75).width(200).spaceBottom(20).padTop(30).row();
-		mainMenuTableOfButtons.add(setTeamButton).height(75).width(200).spaceBottom(20).padTop(30).row();
-		mainMenuTableOfButtons.add(settingsButton).height(75).width(200).spaceBottom(20).padTop(30).row();
-		mainMenuTableOfButtons.add(exitButton).height(75).width(200).spaceBottom(20).row();
+		mainMenuTableOfButtons.add(playButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM).padTop(BUTTON_PAD_TOP).row();
+		mainMenuTableOfButtons.add(playTutorialButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM).padTop(BUTTON_PAD_TOP).row();
+		mainMenuTableOfButtons.add(setTeamButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM).padTop(BUTTON_PAD_TOP).row();
+		mainMenuTableOfButtons.add(settingsButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM).padTop(BUTTON_PAD_TOP).row();
+		mainMenuTableOfButtons.add(exitButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM).row();
 
 		stage.addActor(mainMenuTableOfButtons);
 	}

@@ -132,8 +132,12 @@ public class Entity extends Actor {
 		return ap > basicAttackCost;
 	}
 
-	public void damage(final int damage, DamageType type) {
-		int reducedDamage = calculateDamage(damage, type);
+	public void damage(int damage, DamageType type) {
+		if (hasModifier(ModifiersEnum.LINKED)) {
+			damage = (int) (damage * 0.5);
+			getModifiers();
+		}
+		final int reducedDamage = calculateDamage(damage, type);
 		if (reducedDamage >= hp) {
 			hp = 0;
 			visualComponent.removeUnit();
@@ -284,6 +288,15 @@ public class Entity extends Actor {
 			}
 		}
 		return result;
+	}
+
+	public Modifier getModifier(final ModifiersEnum type) {
+		for (final Modifier modifier : modifiers) {
+			if (modifier.getType() == type) {
+				return modifier;
+			}
+		}
+		return null;
 	}
 
 	public void applyModifiers() {

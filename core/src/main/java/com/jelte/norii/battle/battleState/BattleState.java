@@ -10,6 +10,7 @@ import com.jelte.norii.ai.UnitTurn;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.magic.Ability.DamageType;
 import com.jelte.norii.magic.Modifier;
+import com.jelte.norii.magic.ModifiersEnum;
 import com.jelte.norii.utility.MyPoint;
 import com.jelte.norii.utility.TiledMapPosition;
 import com.jelte.norii.utility.Utility;
@@ -105,7 +106,7 @@ public class BattleState implements Comparable<BattleState> {
 				if ((unit.getEntityID() == entity.getEntityID()) && (unit.getCurrentPosition().getTileX() >= 0) && (unit.getCurrentPosition().getTileY() >= 0)) {
 					stateOfField[to.x][to.y].setUnit(stateOfField[unit.getCurrentPosition().getTileX()][unit.getCurrentPosition().getTileY()].getUnit());
 					if (stateOfField[to.x][to.y].getUnit() == null) {
-						int j = 5;
+						final int j = 5;
 					}
 					stateOfField[to.x][to.y].getUnit().setOnlyCurrentPosition(new TiledMapPosition().setPositionFromTiles(to.x, to.y));
 					stateOfField[from.x][from.y].removeUnit();
@@ -438,9 +439,9 @@ public class BattleState implements Comparable<BattleState> {
 	}
 
 	public TiledMapPosition findFreeSpotNextTo(Entity otherPortal) {
-		int maxField = Math.min(getHeight(), getWidth());
-		int portalX = otherPortal.getCurrentPosition().getTileX();
-		int portalY = otherPortal.getCurrentPosition().getTileY();
+		final int maxField = Math.min(getHeight(), getWidth());
+		final int portalX = otherPortal.getCurrentPosition().getTileX();
+		final int portalY = otherPortal.getCurrentPosition().getTileY();
 
 		for (int max = 1; max <= maxField; max++) {
 			for (int j = 0; j <= max; j++) {
@@ -469,9 +470,14 @@ public class BattleState implements Comparable<BattleState> {
 	}
 
 	public Array<Entity> getNeighbours(MyPoint location) {
-		Array<Entity> neighbours = new Array<>();
-		Map<Integer, Array<Entity>> distances = Utility.getDistancesWithTarget(location, getAllUnits());
+		final Array<Entity> neighbours = new Array<>();
+		final Map<Integer, Array<Entity>> distances = Utility.getDistancesWithTarget(location, getAllUnits());
 		neighbours.addAll(distances.get(1));
 		return neighbours;
+	}
+
+	public void linkUnits(MyPoint casterPos, MyPoint location) {
+		final int linkedId = stateOfField[location.getX()][location.getY()].getUnit().getEntityID();
+		stateOfField[casterPos.getX()][casterPos.getY()].getUnit().addModifier(ModifiersEnum.LINKED, 3, linkedId);
 	}
 }

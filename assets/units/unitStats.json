@@ -588,5 +588,21 @@
         "physicalDefense": 25,
         "basicAttackCost": 0,
         "abilities": ["FIREBALL"]
+    },
+
+    {
+        "id": 37,
+        "name": "Ryu",
+        "portraitSpritePath": "RyuHurtDown",
+        "entitySpriteName": "Ryu",
+        "maxAP": 10,
+        "maxHP": 10,
+        "level": 1,
+        "attackRange": 0,
+        "attackPower": 0,
+        "magicalDefense": 25,
+        "physicalDefense": 25,
+        "basicAttackCost": 0,
+        "abilities": ["LOVE"]
     }
 ]

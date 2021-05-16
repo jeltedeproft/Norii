@@ -98,13 +98,11 @@ public class BattleManager {
 	public void setUnitActive(Entity entity) {
 		activeUnit.setFocused(false);
 		activeUnit.getVisualComponent().setActive(false);
-		sendMessageToBattleScreen(MessageToBattleScreen.HIDE_ACTIONS, entity);
 
 		activeUnit = entity;
 		activeUnit.setFocused(true);
 		activeUnit.getVisualComponent().setActive(true);
 		sendMessageToBattleScreen(MessageToBattleScreen.UNIT_ACTIVE, entity);
-
 	}
 
 	public void sendMessageToBattleScreen(MessageToBattleScreen message, Entity entity, TiledMapPosition newPosition) {

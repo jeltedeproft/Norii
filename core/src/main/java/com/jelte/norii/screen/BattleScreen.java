@@ -26,7 +26,6 @@ import com.jelte.norii.entities.EntityStage;
 import com.jelte.norii.entities.Player;
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.magic.Ability.LineOfSight;
-import com.jelte.norii.magic.ModifiersEnum;
 import com.jelte.norii.map.BattleMap;
 import com.jelte.norii.map.Map;
 import com.jelte.norii.map.MapManager;
@@ -34,11 +33,9 @@ import com.jelte.norii.map.MyPathFinder;
 import com.jelte.norii.map.TiledMapActor;
 import com.jelte.norii.particles.ParticleMaker;
 import com.jelte.norii.particles.ParticleType;
-import com.jelte.norii.ui.ActionsUi;
 import com.jelte.norii.ui.Hud;
 import com.jelte.norii.ui.HudMessageTypes;
 import com.jelte.norii.ui.MessageToBattleScreen;
-import com.jelte.norii.ui.StatusUi;
 import com.jelte.norii.utility.AssetManagerUtility;
 import com.jelte.norii.utility.MyPoint;
 import com.jelte.norii.utility.TiledMapPosition;
@@ -203,9 +200,6 @@ public class BattleScreen extends GameScreen {
 			if (unit.getVisualComponent().isActionsHovering()) {
 				hoverResult = true;
 			}
-		}
-		for (final StatusUi ui : newHud.getStatusUIs()) {
-			ui.setActionsUIHovering(hoverResult);
 		}
 	}
 
@@ -427,20 +421,7 @@ public class BattleScreen extends GameScreen {
 	public void messageFromBattleManager(com.jelte.norii.battle.MessageToBattleScreen message, Entity entity) {
 		switch (message) {
 		case UNIT_ACTIVE:
-			final ActionsUi actionsUI = newHud.getEntityIdWithActionUi().get(entity.getEntityID());
-			if (actionsUI != null) {
-				actionsUI.update(entity);
-				actionsUI.setVisible(!entity.hasModifier(ModifiersEnum.STUNNED));
-				newHud.getHudMessages().showNextTutorialMessage();
-			}
-			break;
-		case HIDE_ACTIONS:
-			final Entity entityToHIde = battlemanager.getActiveUnit();
-			final ActionsUi actionsUIToHide = newHud.getEntityIdWithActionUi().get(entityToHIde.getEntityID());
-			if (actionsUIToHide != null) {
-				actionsUIToHide.setVisible(false);
-				newHud.getHudMessages().showNextTutorialMessage();
-			}
+			newHud.getHudMessages().showNextTutorialMessage();
 			break;
 		case UPDATE_UI:
 			newHud.update(battlemanager.getUnits());
@@ -479,18 +460,6 @@ public class BattleScreen extends GameScreen {
 		case FOCUS_CAMERA:
 			mapCamera.position.set(entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY(), 0f);
 			break;
-		case SHOW_STATUS_UI:
-			final StatusUi statusUIToShow = newHud.getEntityIdWithStatusUi().get(entity.getEntityID());
-			if (statusUIToShow != null) {
-				statusUIToShow.setVisible(true);
-			}
-			break;
-		case HIDE_STATUS_UI:
-			final StatusUi statusUIToHide = newHud.getEntityIdWithStatusUi().get(entity.getEntityID());
-			if (statusUIToHide != null) {
-				statusUIToHide.setVisible(false);
-			}
-			break;
 		case REMOVE_HUD_UNIT:
 			newHud.removeUnit(entity);
 			break;
@@ -502,11 +471,9 @@ public class BattleScreen extends GameScreen {
 			break;
 		case UNLOCK_UI:
 			newHud.setLocked(false);
-			newHud.showActions(true, entity);
 			break;
 		case LOCK_UI:
 			newHud.setLocked(true);
-			newHud.showActions(false, entity);
 			break;
 		default:
 			break;

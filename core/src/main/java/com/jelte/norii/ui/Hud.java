@@ -1,6 +1,5 @@
 package com.jelte.norii.ui;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,8 +8,6 @@ import java.util.stream.Stream;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -25,10 +22,7 @@ public class Hud {
 	private Image onTileHover;
 
 	private HashMap<Integer, HpBar> entityIdWithHpBar;
-	private HashMap<Integer, StatusUi> entityIdWithStatusUi;
-	private HashMap<Integer, ActionsUi> entityIdWithActionUi;
-	private HashMap<Integer, List<ActionInfoUiWindow>> entityIdWithActionInfoUiWindows;
-	private PortraitAndStats portraitAndStats;
+	private BottomBar portraitAndStats;
 	private HudMessages hudMessages;
 	private BattleScreen battleScreen;
 
@@ -62,9 +56,6 @@ public class Hud {
 		tilePixelWidth = UI_VIEWPORT_WIDTH / mapWidth;
 		tilePixelHeight = UI_VIEWPORT_HEIGHT / mapHeight;
 		entityIdWithHpBar = new HashMap<>();
-		entityIdWithStatusUi = new HashMap<>();
-		entityIdWithActionUi = new HashMap<>();
-		entityIdWithActionInfoUiWindows = new HashMap<>();
 		stage = new Stage(new FitViewport(UI_VIEWPORT_WIDTH, UI_VIEWPORT_HEIGHT), spriteBatch);
 	}
 
@@ -83,37 +74,14 @@ public class Hud {
 	public void addUnit(Entity entity) {
 		createHpBar(entity);
 		portraitAndStats.setHero(entity);
-		createStatusUI(entity);
-		if (entity.isPlayerUnit()) {
-			createActionUI(entity);
-		}
 	}
 
 	public void removeUnit(Entity entity) {
 		final Integer id = entity.getEntityID();
-		if (entityIdWithStatusUi.containsKey(id)) {
-			entityIdWithStatusUi.get(id).setVisible(false);
-			entityIdWithStatusUi.get(id).remove();
-			entityIdWithStatusUi.remove(id);
-		}
-
 		if (entityIdWithHpBar.containsKey(id)) {
 			entityIdWithHpBar.get(id).getHealthBar().setVisible(false);
 			entityIdWithHpBar.get(id).getHealthBar().remove();
 			entityIdWithHpBar.remove(id);
-		}
-
-		if (entityIdWithActionUi.containsKey(id)) {
-			for (final ActionUIButton button : entityIdWithActionUi.get(id).getButtons()) {
-				button.hide();
-			}
-
-			for (final ActionInfoUiWindow popup : entityIdWithActionUi.get(id).getPopUps()) {
-				popup.setVisible(false);
-			}
-			entityIdWithActionUi.get(id).setVisible(false);
-			entityIdWithActionUi.get(id).remove();
-			entityIdWithActionUi.remove(id);
 		}
 	}
 
@@ -124,44 +92,12 @@ public class Hud {
 	}
 
 	private void createCharacterHUD() {
-		portraitAndStats = new PortraitAndStats(mapWidth, mapHeight);
+		portraitAndStats = new BottomBar(mapWidth, mapHeight, this);
 		stage.addActor(portraitAndStats.getTable());
 	}
 
 	private void createHudMessages(boolean isTutorial) {
 		hudMessages = new HudMessages(stage, mapWidth, mapHeight, tilePixelWidth, tilePixelHeight, isTutorial);
-	}
-
-	private void createStatusUI(Entity entity) {
-		final StatusUi statusui = new StatusUi(entity, mapWidth, mapHeight);
-		entityIdWithStatusUi.put(entity.getEntityID(), statusui);
-
-		statusui.addListener(new InputListener() {
-			@Override
-			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-				return true;
-			}
-		});
-
-		// stage.addActor(statusui);
-	}
-
-	private void createActionUI(Entity playerUnit) {
-		final ActionsUi actionui = new ActionsUi(playerUnit, mapWidth, mapHeight, this);
-		entityIdWithActionUi.put(playerUnit.getEntityID(), actionui);
-
-		actionui.addListener(new InputListener() {
-			@Override
-			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-				return true;
-			}
-		});
-
-		// stage.addActor(actionui);
-		entityIdWithActionInfoUiWindows.put(playerUnit.getEntityID(), actionui.getPopUps());
-		for (final ActionInfoUiWindow popUp : actionui.getPopUps()) {
-			// stage.addActor(popUp);
-		}
 	}
 
 	public void setPositionTileHover(int tileX, int tileY) {
@@ -172,23 +108,9 @@ public class Hud {
 		for (final Entity entity : units) {
 			final int id = entity.getEntityID();
 			final HpBar bar = entityIdWithHpBar.get(id);
-			final StatusUi status = entityIdWithStatusUi.get(id);
-			final ActionsUi action = entityIdWithActionUi.get(id);
-			final List<ActionInfoUiWindow> infos = entityIdWithActionInfoUiWindows.get(id);
 
 			if (bar != null) {
 				bar.update(entity);
-			}
-			if (status != null) {
-				status.update(entity);
-			}
-			if (action != null) {
-				action.update(entity);
-			}
-			if (infos != null) {
-				for (final ActionInfoUiWindow info : infos) {
-					info.update();
-				}
 			}
 
 			if (entity.isStatsChanged()) {
@@ -218,35 +140,15 @@ public class Hud {
 		stage.dispose();
 	}
 
-	public Collection<ActionsUi> getActionUIs() {
-		return entityIdWithActionUi.values();
-	}
-
-	public Collection<StatusUi> getStatusUIs() {
-		return entityIdWithStatusUi.values();
-	}
-
 	public Map<Integer, HpBar> getEntityIdWithHpBar() {
 		return entityIdWithHpBar;
-	}
-
-	public Map<Integer, StatusUi> getEntityIdWithStatusUi() {
-		return entityIdWithStatusUi;
-	}
-
-	public Map<Integer, ActionsUi> getEntityIdWithActionUi() {
-		return entityIdWithActionUi;
-	}
-
-	public Map<Integer, List<ActionInfoUiWindow>> getEntityIdWithActionInfoUiWindows() {
-		return entityIdWithActionInfoUiWindows;
 	}
 
 	public void sendMessage(MessageToBattleScreen message, int entityID, Ability ability) {
 		battleScreen.messageFromUi(message, entityID, ability);
 	}
 
-	public PortraitAndStats getPortraitAndStats() {
+	public BottomBar getPortraitAndStats() {
 		return portraitAndStats;
 	}
 
@@ -256,12 +158,6 @@ public class Hud {
 
 	public void setLocked(boolean locked) {
 		this.locked = locked;
-	}
-
-	public void showActions(boolean show, Entity entity) {
-		final int id = entity.getEntityID();
-		final ActionsUi action = entityIdWithActionUi.get(id);
-		action.setVisible(show);
 	}
 
 	public HudMessages getHudMessages() {

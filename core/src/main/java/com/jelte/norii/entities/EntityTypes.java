@@ -38,7 +38,8 @@ public enum EntityTypes {
 	PORTAL("Portal"), // 33
 	GHOST("Ghost"), // 34
 	ROCK("Rock"), // 35
-	DARK_MAGE("Dark Mage"); // 36
+	DARK_MAGE("Dark Mage"), // 36
+	RYU("Ryu"); // 37
 
 	private String entityName;
 
