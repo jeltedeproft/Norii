@@ -23,6 +23,7 @@ public enum AudioTypeEvent {
 	SUMMON("audio/summon.wav"),
 	TRANSPORT("audio/transport.mp3"),
 	INVISIBLE("audio/invisible.mp3"),
+	LOVE("audio/love.wav"),
 	NONE("");
 
 	private final String audioFullFilePath;

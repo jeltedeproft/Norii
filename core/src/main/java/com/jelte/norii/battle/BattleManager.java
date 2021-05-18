@@ -115,6 +115,16 @@ public class BattleManager {
 		}
 	}
 
+	public void sendMessageToBattleScreen(MessageToBattleScreen message, Entity entity, int damage) {
+		switch (message) {
+		case DAMAGED:
+			activeBattleState.unitDamage(entity, damage);
+			break;
+		default:
+			break;
+		}
+	}
+
 	public void sendMessageToBattleScreen(MessageToBattleScreen message, Entity entity) {
 		switch (message) {
 		case CLICKED:

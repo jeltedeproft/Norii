@@ -29,4 +29,6 @@ public interface UnitOwner {
 	public void sendMessageToBattleManager(MessageToBattleScreen message, Entity entity);
 
 	public void sendMessageToBattleManager(MessageToBattleScreen message, Entity entity, TiledMapPosition oldPosition);
+
+	public void sendMessageToBattleManager(MessageToBattleScreen message, Entity entity, int damage);
 }

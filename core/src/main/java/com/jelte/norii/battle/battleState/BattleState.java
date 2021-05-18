@@ -21,6 +21,7 @@ public class BattleState implements Comparable<BattleState> {
 	private BattleState parentState = null;
 	private UnitTurn turn;
 	private final Map<Integer, Entity> units = new HashMap<>();
+	private final Map<Integer, Entity> linkedUnitsIds = new HashMap<>();
 
 	public static final int NO_UNIT = 0;
 	private static final String TAG = BattleState.class.getSimpleName();
@@ -105,9 +106,6 @@ public class BattleState implements Comparable<BattleState> {
 			for (final Entity unit : units.values()) {
 				if ((unit.getEntityID() == entity.getEntityID()) && (unit.getCurrentPosition().getTileX() >= 0) && (unit.getCurrentPosition().getTileY() >= 0)) {
 					stateOfField[to.x][to.y].setUnit(stateOfField[unit.getCurrentPosition().getTileX()][unit.getCurrentPosition().getTileY()].getUnit());
-					if (stateOfField[to.x][to.y].getUnit() == null) {
-						final int j = 5;
-					}
 					stateOfField[to.x][to.y].getUnit().setOnlyCurrentPosition(new TiledMapPosition().setPositionFromTiles(to.x, to.y));
 					stateOfField[from.x][from.y].removeUnit();
 					entityFound = true;
@@ -477,7 +475,20 @@ public class BattleState implements Comparable<BattleState> {
 	}
 
 	public void linkUnits(MyPoint casterPos, MyPoint location) {
-		final int linkedId = stateOfField[location.getX()][location.getY()].getUnit().getEntityID();
-		stateOfField[casterPos.getX()][casterPos.getY()].getUnit().addModifier(ModifiersEnum.LINKED, 3, linkedId);
+		final Entity target = stateOfField[location.getX()][location.getY()].getUnit();
+		final int linkedIdCaster = stateOfField[location.getX()][location.getY()].getUnit().getEntityID();
+		stateOfField[casterPos.getX()][casterPos.getY()].getUnit().addModifier(ModifiersEnum.LINKED, 3, 0);
+		linkedUnitsIds.put(linkedIdCaster, target);
+	}
+
+	public void unlinkUnits(MyPoint casterPos, MyPoint location) {
+		final int linkedIdCaster = stateOfField[location.getX()][location.getY()].getUnit().getEntityID();
+		linkedUnitsIds.remove(linkedIdCaster);
+	}
+
+	public void unitDamage(Entity entity, int damage) {
+		if (entity.hasModifier(ModifiersEnum.LINKED)) {
+			linkedUnitsIds.get(entity.getEntityID()).damage(damage, DamageType.MAGICAL);
+		}
 	}
 }

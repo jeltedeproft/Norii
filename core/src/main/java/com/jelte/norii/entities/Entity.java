@@ -133,9 +133,9 @@ public class Entity extends Actor {
 	}
 
 	public void damage(int damage, DamageType type) {
+		owner.sendMessageToBattleManager(MessageToBattleScreen.DAMAGED, this, damage);
 		if (hasModifier(ModifiersEnum.LINKED)) {
 			damage = (int) (damage * 0.5);
-			getModifiers();
 		}
 		final int reducedDamage = calculateDamage(damage, type);
 		if (reducedDamage >= hp) {

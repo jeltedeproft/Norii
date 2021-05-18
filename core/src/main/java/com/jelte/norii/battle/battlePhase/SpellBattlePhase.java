@@ -185,6 +185,9 @@ public class SpellBattlePhase extends BattlePhase {
 		case FIREBALL:
 			castFireBall(currentUnit, targetPos, ability);
 			break;
+		case LOVE:
+			castLove(currentUnit, targetPos, ability);
+			break;
 		case EXPLOSION:
 			castExplosion(currentUnit, targetPos, ability);
 			break;
@@ -235,6 +238,17 @@ public class SpellBattlePhase extends BattlePhase {
 			break;
 		default:
 			break;
+		}
+	}
+
+	private void castLove(Entity caster, TiledMapPosition targetPos, Ability ability) {
+		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
+		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.LOVE);
+		final Entity possibleTarget = getEntityAtPosition(targetPos.getTilePosAsPoint());
+		if (possibleTarget != null) {
+			ParticleMaker.addParticle(ParticleType.LOVE, targetPos, 0);
+			possibleTarget.addModifier(ModifiersEnum.LINKED, 3, 0);
+			battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.UPDATE_UI, possibleTarget);
 		}
 	}
 

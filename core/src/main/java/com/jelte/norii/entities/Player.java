@@ -115,4 +115,9 @@ public class Player implements UnitOwner {
 			}
 		}
 	}
+
+	@Override
+	public void sendMessageToBattleManager(MessageToBattleScreen message, Entity entity, int damage) {
+		battleManager.sendMessageToBattleScreen(message, entity, damage);
+	}
 }

@@ -14,7 +14,8 @@ public enum ParticleType {
 	ICE("particles/ice.p"),
 	CRACKLE("particles/crackle.p"),
 	WIND("particles/wind.p"),
-	ATTACK("particles/attack.p");
+	ATTACK("particles/attack.p"),
+	LOVE("particles/love.p");
 
 	private String particleFileLocation;
 

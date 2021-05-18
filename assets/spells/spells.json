@@ -319,5 +319,24 @@
         "affectsTeam": "BOTH",
         "target": "SELF",
         "infoText": "goodby cruel world"
+    },
+
+    {
+        "id": 17,
+        "name": "Love",
+        "iconSpriteName": "fireball",
+        "apCost": 1,
+        "mpCost": 0,
+        "lineOfSight": "LINE",
+        "goesTroughUnits": false,
+        "goesTroughObstacles": false,
+        "areaOfEffect": "CELL",
+        "damage": 0,
+        "damageType": "MAGICAL",
+        "range": 7,
+        "areaOfEffectRange": 1,
+        "affectsTeam": "ENEMY",
+        "target": "UNIT",
+        "infoText": "Link yourself to an enemy. You now share damage."
     }
 ]
