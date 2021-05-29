@@ -197,12 +197,14 @@ public class AIDecisionMaker {
 			battleState.damageUnit(location, damage, move.getAbility().getDamageType());
 			break;
 		case LOVE:
+			final Entity targetToDamage = battleState.get(location.x, location.y).getUnit();
 			battleState.linkUnits(casterPos, location);
+			battleState.addModifierToUnit(casterPos.x, casterPos.y, new Modifier(ModifiersEnum.LINKED, damage, targetToDamage.getEntityID()));// damage = turns
 			break;
 		case EXPLOSION:
 			final Array<Entity> neighbours = battleState.getNeighbours(location);
 			for (final Entity entity : neighbours) {
-				battleState.damageUnit(location, damage, move.getAbility().getDamageType());
+				battleState.damageUnit(entity.getCurrentPosition().getTilePosAsPoint(), damage, move.getAbility().getDamageType());
 			}
 			unit.kill();
 			break;
@@ -211,7 +213,7 @@ public class AIDecisionMaker {
 			break;
 		case INVISIBLE:
 			unit.setInvisible(true);
-			battleState.addModifierToUnit(location.x, location.y, new Modifier(ModifiersEnum.INVISIBLE, damage, 0));
+			battleState.addModifierToUnit(location.x, location.y, new Modifier(ModifiersEnum.INVISIBLE, damage, 0));// damage = turns
 			break;
 		case PUSH:
 			battleState.pushOrPullUnit(casterPos, location, damage, false);

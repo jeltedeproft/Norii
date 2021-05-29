@@ -1,6 +1,8 @@
 package com.jelte.norii.battle.battleState;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
@@ -21,7 +23,7 @@ public class BattleState implements Comparable<BattleState> {
 	private BattleState parentState = null;
 	private UnitTurn turn;
 	private final Map<Integer, Entity> units = new HashMap<>();
-	private final Map<Integer, Entity> linkedUnitsIds = new HashMap<>();
+	private final Map<Integer, List<Entity>> linkedUnitsIds = new HashMap<>();
 
 	public static final int NO_UNIT = 0;
 	private static final String TAG = BattleState.class.getSimpleName();
@@ -477,8 +479,8 @@ public class BattleState implements Comparable<BattleState> {
 	public void linkUnits(MyPoint casterPos, MyPoint location) {
 		final Entity target = stateOfField[location.getX()][location.getY()].getUnit();
 		final int linkedIdCaster = stateOfField[location.getX()][location.getY()].getUnit().getEntityID();
-		stateOfField[casterPos.getX()][casterPos.getY()].getUnit().addModifier(ModifiersEnum.LINKED, 3, 0);
-		linkedUnitsIds.put(linkedIdCaster, target);
+		stateOfField[casterPos.getX()][casterPos.getY()].getUnit().addModifier(ModifiersEnum.LINKED, 3, target.getEntityID());
+		linkedUnitsIds.computeIfAbsent(linkedIdCaster, k -> new ArrayList<>()).add(target);
 	}
 
 	public void unlinkUnits(MyPoint casterPos, MyPoint location) {
@@ -488,7 +490,13 @@ public class BattleState implements Comparable<BattleState> {
 
 	public void unitDamage(Entity entity, int damage) {
 		if (entity.hasModifier(ModifiersEnum.LINKED)) {
-			linkedUnitsIds.get(entity.getEntityID()).damage(damage, DamageType.MAGICAL);
+			damage = (int) (damage * 0.5);
+			final List<Entity> linkedEntities = linkedUnitsIds.get(entity.getEntityID());
+			if (linkedEntities != null) {
+				for (final Entity entityToDamage : linkedUnitsIds.get(entity.getEntityID())) {
+					entityToDamage.damage(damage, DamageType.MAGICAL);
+				}
+			}
 		}
 	}
 }

@@ -245,18 +245,20 @@ public class SpellBattlePhase extends BattlePhase {
 		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
 		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.LOVE);
 		final Entity possibleTarget = getEntityAtPosition(targetPos.getTilePosAsPoint());
+		final int damage = ability.getSpellData().getDamage();
 		if (possibleTarget != null) {
 			ParticleMaker.addParticle(ParticleType.LOVE, targetPos, 0);
-			possibleTarget.addModifier(ModifiersEnum.LINKED, 3, 0);
+			caster.addModifier(ModifiersEnum.LINKED, damage, possibleTarget.getEntityID());
+			battlemanager.getBattleState().linkUnits(caster.getCurrentPosition().getTilePosAsPoint(), targetPos.getTilePosAsPoint());
 			battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.UPDATE_UI, possibleTarget);
 		}
 	}
 
 	private void castExplosion(Entity caster, TiledMapPosition targetPos, Ability ability) {
 		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
-		Array<Entity> neighbours = battlemanager.getBattleState().getNeighbours(targetPos.getTilePosAsPoint());
+		final Array<Entity> neighbours = battlemanager.getBattleState().getNeighbours(targetPos.getTilePosAsPoint());
 		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.EXPLOSION);
-		for (Entity entity : neighbours) {
+		for (final Entity entity : neighbours) {
 			ParticleMaker.addParticle(ParticleType.FIREBALL, entity.getCurrentPosition(), 0);
 			entity.damage(ability.getSpellData().getDamage(), ability.getDamageType());
 			battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.UPDATE_UI, entity);
@@ -281,7 +283,7 @@ public class SpellBattlePhase extends BattlePhase {
 	private void castCrackle(final Entity caster, final TiledMapPosition targetPos, final Ability ability) {
 		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
 		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.CRACKLE_SOUND);
-		Array<Entity> usedTargets = new Array<>();
+		final Array<Entity> usedTargets = new Array<>();
 		int entitiesHit = 0;
 
 		// damage target, update ui, increase entities hit and save unit in list
@@ -293,7 +295,7 @@ public class SpellBattlePhase extends BattlePhase {
 		TreeMap<Integer, Array<Entity>> distancesToTarget = (TreeMap<Integer, Array<Entity>>) Utility.getDistancesWithTarget(targetPos.getTilePosAsPoint(), battlemanager.getBattleState().getAllUnits());
 
 		while ((!distancesToTarget.isEmpty()) && (entitiesHit <= 3)) {
-			Entity closestUnit = distancesToTarget.firstEntry().getValue().first();
+			final Entity closestUnit = distancesToTarget.firstEntry().getValue().first();
 			if (Utility.checkIfUnitsWithinDistance(closestUnit, target, 4)) {
 				if (usedTargets.contains(closestUnit, false)) {
 					// skip this unit
@@ -415,8 +417,7 @@ public class SpellBattlePhase extends BattlePhase {
 		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
 		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.ICE);
 
-		final Set<MyPoint> targetCells = BattleStateGridHelper.getInstance().getAllPointsASpellCanHit(caster.getCurrentPosition().getTilePosAsPoint(), targetPos.getTilePosAsPoint(), ability.getAreaOfEffect(),
-				ability.getSpellData().getRange(), battlemanager.getBattleState());
+		final Set<MyPoint> targetCells = BattleStateGridHelper.getInstance().getAllPointsASpellCanHit(caster.getCurrentPosition().getTilePosAsPoint(), targetPos.getTilePosAsPoint(), ability.getAreaOfEffect(), ability.getSpellData().getRange(), battlemanager.getBattleState());
 
 		for (final MyPoint cell : targetCells) {
 			ParticleMaker.addParticle(ParticleType.ICE, cell, 0);

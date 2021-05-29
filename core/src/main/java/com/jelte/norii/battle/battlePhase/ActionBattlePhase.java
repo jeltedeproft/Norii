@@ -28,6 +28,8 @@ public class ActionBattlePhase extends BattlePhase {
 	public void clickedOnUnit(Entity entity) {
 		if (isUnitSelectable(entity)) {
 			battlemanager.setUnitActive(entity);
+		} else {
+			battlemanager.justShowUnit(entity);
 		}
 	}
 

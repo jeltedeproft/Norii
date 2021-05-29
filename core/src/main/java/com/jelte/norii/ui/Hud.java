@@ -112,11 +112,11 @@ public class Hud {
 			if (bar != null) {
 				bar.update(entity);
 			}
-
-			if (entity.isStatsChanged()) {
-				portraitAndStats.update(entity);
-			}
 		}
+	}
+
+	public void updateBottomBar(Entity entity) {
+		portraitAndStats.update(entity);
 	}
 
 	public Stage getStage() {

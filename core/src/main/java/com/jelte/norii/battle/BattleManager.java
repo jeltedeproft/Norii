@@ -95,6 +95,16 @@ public class BattleManager {
 		}
 	}
 
+	public void justShowUnit(Entity entity) {
+		for (final Entity unit : activeBattleState.getAllUnits()) {
+			unit.getVisualComponent().setActive(false);
+			unit.setFocused(false);
+		}
+		entity.getVisualComponent().setActive(true);
+		entity.setFocused(true);
+		sendMessageToBattleScreen(MessageToBattleScreen.UNIT_ACTIVE, entity);
+	}
+
 	public void setUnitActive(Entity entity) {
 		activeUnit.setFocused(false);
 		activeUnit.getVisualComponent().setActive(false);

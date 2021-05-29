@@ -55,7 +55,7 @@ public class BattleScreen extends GameScreen {
 	private InputMultiplexer multiplexer;
 	private BattleScreenInputProcessor battlescreenInputProcessor;
 	private OrthographicCamera hudCamera;
-	private Hud newHud;
+	private Hud hud;
 	private PauseMenuScreen pauseMenu;
 
 	private EntityStage entityStage;
@@ -95,9 +95,9 @@ public class BattleScreen extends GameScreen {
 	private void initializeHUD(AITeams aiTeams) {
 		hudCamera = new OrthographicCamera();
 		hudCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		newHud = new Hud(Player.getInstance().getTeam(), aiTeamLeader.getTeam(), spriteBatch, currentMap.getMapWidth(), currentMap.getMapHeight(), this, (aiTeams == AITeams.TUTORIAL));
+		hud = new Hud(Player.getInstance().getTeam(), aiTeamLeader.getTeam(), spriteBatch, currentMap.getMapWidth(), currentMap.getMapHeight(), this, (aiTeams == AITeams.TUTORIAL));
 		if (aiTeams == AITeams.TUTORIAL) {
-			newHud.getHudMessages().showInfoWindow(HudMessageTypes.DEPLOY_UNITS_INFO);
+			hud.getHudMessages().showInfoWindow(HudMessageTypes.DEPLOY_UNITS_INFO);
 		}
 	}
 
@@ -109,7 +109,7 @@ public class BattleScreen extends GameScreen {
 		battlescreenInputProcessor = new BattleScreenInputProcessor(this, mapCamera);
 		multiplexer = new InputMultiplexer();
 		multiplexer.addProcessor(battlescreenInputProcessor);
-		multiplexer.addProcessor(newHud.getStage());
+		multiplexer.addProcessor(hud.getStage());
 		multiplexer.addProcessor(entityStage);
 		multiplexer.addProcessor(pauseMenu.getStage());
 	}
@@ -178,7 +178,7 @@ public class BattleScreen extends GameScreen {
 	}
 
 	private void updateElements(final float delta) {
-		newHud.update(battlemanager.getUnits());
+		hud.update(battlemanager.getUnits());
 		battlescreenInputProcessor.update();
 		battlemanager.getCurrentBattleState().update();
 		updateUnits(delta);
@@ -205,7 +205,7 @@ public class BattleScreen extends GameScreen {
 
 	private void updateStages() {
 		entityStage.act();
-		newHud.getStage().act();
+		hud.getStage().act();
 		currentMap.getTiledMapStage().act();
 	}
 
@@ -255,9 +255,9 @@ public class BattleScreen extends GameScreen {
 	}
 
 	private void renderHUD(final float delta) {
-		spriteBatch.setProjectionMatrix(newHud.getStage().getCamera().combined);
-		newHud.getStage().getViewport().apply();
-		newHud.render(delta);
+		spriteBatch.setProjectionMatrix(hud.getStage().getCamera().combined);
+		hud.getStage().getViewport().apply();
+		hud.render(delta);
 	}
 
 	public void renderGrid() {
@@ -272,7 +272,7 @@ public class BattleScreen extends GameScreen {
 		currentMap.getTiledMapStage().getViewport().update(width, height, false);
 		entityStage.getViewport().update(width, height, false);
 
-		newHud.resize(width, height);
+		hud.resize(width, height);
 		pauseMenu.resize(width, height);
 	}
 
@@ -357,11 +357,11 @@ public class BattleScreen extends GameScreen {
 
 	public void hoveredOnTileMapActor(TiledMapActor actor) {
 		battlemanager.getCurrentBattleState().hoveredOnTile(actor);
-		newHud.setPositionTileHover(actor.getActorPos().getTileX(), actor.getActorPos().getTileY());
+		hud.setPositionTileHover(actor.getActorPos().getTileX(), actor.getActorPos().getTileY());
 	}
 
 	public void messageFromUi(MessageToBattleScreen message, int entityID, Ability ability) {
-		if (!newHud.isLocked()) {
+		if (!hud.isLocked()) {
 			switch (message) {
 			case CLICKED_ON_SKIP:
 				final Entity skipEntity = battlemanager.getEntityByID(entityID);
@@ -378,7 +378,7 @@ public class BattleScreen extends GameScreen {
 				if (moveEntity.canMove()) {
 					prepareMove(moveEntity);
 				} else {
-					newHud.getHudMessages().showPopup(HudMessageTypes.NOT_ENOUGH_AP);
+					hud.getHudMessages().showPopup(HudMessageTypes.NOT_ENOUGH_AP);
 				}
 				break;
 			case CLICKED_ON_ATTACK:
@@ -386,17 +386,17 @@ public class BattleScreen extends GameScreen {
 				if ((attackEntity.getAp() >= attackEntity.getEntityData().getBasicAttackCost()) && attackEntity.canAttack()) {
 					prepareAttack(attackEntity);
 				} else {
-					newHud.getHudMessages().showPopup(HudMessageTypes.NOT_ENOUGH_AP);
+					hud.getHudMessages().showPopup(HudMessageTypes.NOT_ENOUGH_AP);
 				}
 				break;
 			case CLICKED_ON_ABILITY:
 				final Entity spellEntity = battlemanager.getEntityByID(entityID);
 				if (spellEntity.getAp() >= ability.getSpellData().getApCost()) {
-					newHud.setLocked(true);
+					hud.setLocked(true);
 					prepareSpell(spellEntity, ability);
-					newHud.setLocked(false);
+					hud.setLocked(false);
 				} else {
-					newHud.getHudMessages().showPopup(HudMessageTypes.NOT_ENOUGH_AP);
+					hud.getHudMessages().showPopup(HudMessageTypes.NOT_ENOUGH_AP);
 				}
 				break;
 			case HOVERED_ON_MOVE:
@@ -421,59 +421,61 @@ public class BattleScreen extends GameScreen {
 	public void messageFromBattleManager(com.jelte.norii.battle.MessageToBattleScreen message, Entity entity) {
 		switch (message) {
 		case UNIT_ACTIVE:
-			newHud.getHudMessages().showNextTutorialMessage();
+			hud.getHudMessages().showNextTutorialMessage();
+			hud.updateBottomBar(entity);
 			break;
 		case UPDATE_UI:
-			newHud.update(battlemanager.getUnits());
+			hud.update(battlemanager.getUnits());
+			hud.updateBottomBar(entity);
 			break;
 		case SET_CHARACTER_HUD:
-			newHud.getPortraitAndStats().setHero(entity);
+			hud.getPortraitAndStats().setHero(entity);
 			break;
 		case UNSET_CHARACTER_HUD:
-			newHud.getPortraitAndStats().setHero(null);
+			hud.getPortraitAndStats().setHero(null);
 			break;
 		case INVALID_SPAWN_POINT:
-			newHud.getHudMessages().showPopup(HudMessageTypes.INVALID_SPAWN_POINT);
+			hud.getHudMessages().showPopup(HudMessageTypes.INVALID_SPAWN_POINT);
 			break;
 		case UNIT_DEPLOYED:
-			newHud.getHudMessages().updateNumberOfDeployedUnits(battlemanager.getUnitsDeployed(), battlemanager.getPlayerUnits().size());
+			hud.getHudMessages().updateNumberOfDeployedUnits(battlemanager.getUnitsDeployed(), battlemanager.getPlayerUnits().size());
 			break;
 		case DEPLOYMENT_FINISHED:
-			newHud.getHudMessages().hideInfoWindow(HudMessageTypes.NUMBER_OF_UNITS_DEPLOYED);
-			newHud.getHudMessages().showNextTutorialMessage();
+			hud.getHudMessages().hideInfoWindow(HudMessageTypes.NUMBER_OF_UNITS_DEPLOYED);
+			hud.getHudMessages().showNextTutorialMessage();
 			break;
 		case INVALID_SPELL_TARGET:
-			newHud.getHudMessages().showPopup(HudMessageTypes.INVALID_SPELL_TARGET);
+			hud.getHudMessages().showPopup(HudMessageTypes.INVALID_SPELL_TARGET);
 			break;
 		case INVALID_ATTACK_TARGET:
-			newHud.getHudMessages().showPopup(HudMessageTypes.INVALID_ATTACK_TARGET);
+			hud.getHudMessages().showPopup(HudMessageTypes.INVALID_ATTACK_TARGET);
 			break;
 		case INVALID_MOVE:
-			newHud.getHudMessages().showPopup(HudMessageTypes.INVALID_MOVE);
+			hud.getHudMessages().showPopup(HudMessageTypes.INVALID_MOVE);
 			break;
 		case AI_WINS:
-			newHud.getHudMessages().showPopup(HudMessageTypes.AI_VICTORY);
+			hud.getHudMessages().showPopup(HudMessageTypes.AI_VICTORY);
 			break;
 		case PLAYER_WINS:
-			newHud.getHudMessages().showPopup(HudMessageTypes.PLAYER_VICTORY);
+			hud.getHudMessages().showPopup(HudMessageTypes.PLAYER_VICTORY);
 			break;
 		case FOCUS_CAMERA:
 			mapCamera.position.set(entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY(), 0f);
 			break;
 		case REMOVE_HUD_UNIT:
-			newHud.removeUnit(entity);
+			hud.removeUnit(entity);
 			break;
 		case ADD_UNIT_UI:
-			newHud.addUnit(entity);
+			hud.addUnit(entity);
 			break;
 		case ADD_UNIT_ENTITYSTAGE:
 			entityStage.addActor(entity);
 			break;
 		case UNLOCK_UI:
-			newHud.setLocked(false);
+			hud.setLocked(false);
 			break;
 		case LOCK_UI:
-			newHud.setLocked(true);
+			hud.setLocked(true);
 			break;
 		default:
 			break;
