@@ -89,7 +89,7 @@ public class DeploymentBattlePhase extends BattlePhase {
 
 	@Override
 	public void hoveredOnTile(TiledMapActor actor) {
-		playerUnits.get(deployingUnitNumber).setCurrentPosition(actor.getActorPos());
+		// playerUnits.get(deployingUnitNumber).setCurrentPosition(actor.getActorPos());
 		playerUnits.get(deployingUnitNumber).getVisualComponent().setVisualPosition(actor.getActorPos());
 	}
 }
