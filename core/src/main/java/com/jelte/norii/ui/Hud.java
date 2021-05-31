@@ -94,6 +94,8 @@ public class Hud {
 	private void createCharacterHUD() {
 		portraitAndStats = new BottomBar(mapWidth, mapHeight, this);
 		stage.addActor(portraitAndStats.getTable());
+
+		apIndicator = new ApBar
 	}
 
 	private void createHudMessages(boolean isTutorial) {

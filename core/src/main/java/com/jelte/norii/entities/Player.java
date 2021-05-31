@@ -15,6 +15,7 @@ public class Player implements UnitOwner {
 	private static Player instance;
 	private List<Entity> team;
 	private BattleManager battleManager;
+	private int ap;
 
 	@Override
 	public void updateUnits(final float delta) {
@@ -119,5 +120,15 @@ public class Player implements UnitOwner {
 	@Override
 	public void sendMessageToBattleManager(MessageToBattleScreen message, Entity entity, int damage) {
 		battleManager.sendMessageToBattleScreen(message, entity, damage);
+	}
+
+	@Override
+	public void setAp(int ap) {
+		this.ap = ap;
+	}
+
+	@Override
+	public int getAp() {
+		return ap;
 	}
 }

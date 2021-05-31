@@ -6,7 +6,6 @@ public class EntityData {
 	private String name;
 	private String portraitSpritePath;
 	private String entitySpriteName;
-	private int maxAP;
 	private int maxHP;
 	private int level;
 	private int attackRange;
@@ -52,14 +51,6 @@ public class EntityData {
 
 	public void setEntitySpriteName(final String entitySpriteName) {
 		this.entitySpriteName = entitySpriteName;
-	}
-
-	public int getMaxAP() {
-		return maxAP;
-	}
-
-	public void setMaxAP(final int maxAP) {
-		this.maxAP = maxAP;
 	}
 
 	public int getMaxHP() {
@@ -132,8 +123,8 @@ public class EntityData {
 
 	@Override
 	public String toString() {
-		return "id : " + id + "\n" + "name : " + name + "\n" + "portraitSpritePath : " + portraitSpritePath + "\n" + "entitySpriteFilePath : " + entitySpriteName + "\n" + "maxAP : " + maxAP + "\n" + "maxHP : " + maxHP + "\n" + "level : "
-				+ level + "\n" + "attackRange : " + attackRange + "\n" + "attackPower : " + attackPower + "\n" + "basicAttackCost : " + basicAttackCost + "\n";
+		return "id : " + id + "\n" + "name : " + name + "\n" + "portraitSpritePath : " + portraitSpritePath + "\n" + "entitySpriteFilePath : " + entitySpriteName + "\n" + "maxHP : " + maxHP + "\n" + "level : " + level + "\n" + "attackRange : " + attackRange + "\n"
+				+ "attackPower : " + attackPower + "\n" + "basicAttackCost : " + basicAttackCost + "\n";
 	}
 
 }

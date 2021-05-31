@@ -368,7 +368,6 @@ public class BattleScreen extends GameScreen {
 				skipEntity.getVisualComponent().setActive(false);
 				skipEntity.setFocused(false);
 				skipEntity.getVisualComponent().setLocked(false);
-				skipEntity.setAp(skipEntity.getEntityData().getMaxAP());
 				battlemanager.setLockedUnit(null);
 				battlemanager.setCurrentBattleState(battlemanager.getActionBattleState());
 				battlemanager.getCurrentBattleState().exit();

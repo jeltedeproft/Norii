@@ -20,6 +20,7 @@ public class AITeamLeader implements UnitOwner {
 	private final AITeamData aiTeamData;
 	private final AIDecisionMaker aiDecisionMaker;
 	private BattleManager battleManager;
+	private int ap;
 
 	public AITeamLeader(final AITeams type) {
 		aiTeamData = AITeamFileReader.getAITeamData().get(type.ordinal());
@@ -144,5 +145,15 @@ public class AITeamLeader implements UnitOwner {
 	@Override
 	public void sendMessageToBattleManager(MessageToBattleScreen message, Entity entity, int damage) {
 		battleManager.sendMessageToBattleScreen(message, entity, damage);
+	}
+
+	@Override
+	public int getAp() {
+		return ap;
+	}
+
+	@Override
+	public void setAp(int ap) {
+		this.ap = ap;
 	}
 }

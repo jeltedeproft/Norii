@@ -1,6 +1,8 @@
 package com.jelte.norii.battle;
 
+import java.util.AbstractMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -52,6 +54,8 @@ public class BattleManager {
 	private int unitsDeployed;
 	private Entity lockedUnit;
 	private BattleScreen battleScreen;
+	private int turn = 0;
+	private Map<Integer, Integer> turnToAp;
 
 	private static final String TAG = BattleManager.class.getSimpleName();
 
@@ -79,6 +83,16 @@ public class BattleManager {
 		lockedUnit = null;
 		activeTurn = null;
 		activeBattleState = new BattleState(width, height);
+		turnToAp = Map.ofEntries(new AbstractMap.SimpleEntry<Integer, Integer>(0, 3), //
+				new AbstractMap.SimpleEntry<Integer, Integer>(1, 4), //
+				new AbstractMap.SimpleEntry<Integer, Integer>(2, 5), //
+				new AbstractMap.SimpleEntry<Integer, Integer>(3, 6), //
+				new AbstractMap.SimpleEntry<Integer, Integer>(4, 6), //
+				new AbstractMap.SimpleEntry<Integer, Integer>(5, 6), //
+				new AbstractMap.SimpleEntry<Integer, Integer>(6, 6), //
+				new AbstractMap.SimpleEntry<Integer, Integer>(7, 6), //
+				new AbstractMap.SimpleEntry<Integer, Integer>(8, 6), //
+				new AbstractMap.SimpleEntry<Integer, Integer>(9, 6));
 		initializeStateOfBattle(unwalkableNodes);
 	}
 
@@ -173,9 +187,11 @@ public class BattleManager {
 		playerTurn = !playerTurn;
 
 		if (!playerTurn) {
+			Player.getInstance().setAp(turnToAp.get(turn));
 			aiIsCalculating = true;
 			aiTeamLeader.startCalculatingNextMove(activeBattleState);
 		} else {
+			turn++;
 			setCurrentBattleState(getSelectUnitBattleState());
 			getCurrentBattleState().entry();
 		}
@@ -211,8 +227,8 @@ public class BattleManager {
 				sendMessageToBattleScreen(MessageToBattleScreen.UNLOCK_UI, activeUnit);
 			}
 			checkVictory();
-			entity.endTurn();
 			swapTurn();
+			aiTeamLeader.setAp(turnToAp.get(turn));
 			return;
 		}
 		switch (move.getMoveType()) {
