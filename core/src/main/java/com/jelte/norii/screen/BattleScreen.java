@@ -179,10 +179,10 @@ public class BattleScreen extends GameScreen {
 
 	private void updateElements(final float delta) {
 		hud.update(battlemanager.getUnits());
+		hud.updateApBar(Player.getInstance().getAp());
 		battlescreenInputProcessor.update();
 		battlemanager.getCurrentBattleState().update();
 		updateUnits(delta);
-		updateUIHover();
 		updateStages();
 		updateCameras();
 		processAi();
@@ -191,16 +191,6 @@ public class BattleScreen extends GameScreen {
 	private void updateUnits(final float delta) {
 		Player.getInstance().updateUnits(delta);
 		aiTeamLeader.updateUnits(delta);
-	}
-
-	// TODO check this
-	private void updateUIHover() {
-		boolean hoverResult = false;
-		for (final Entity unit : Player.getInstance().getTeam()) {
-			if (unit.getVisualComponent().isActionsHovering()) {
-				hoverResult = true;
-			}
-		}
 	}
 
 	private void updateStages() {

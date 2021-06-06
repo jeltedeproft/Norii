@@ -23,6 +23,7 @@ import com.jelte.norii.ai.AITeams;
 import com.jelte.norii.audio.AudioCommand;
 import com.jelte.norii.audio.AudioManager;
 import com.jelte.norii.audio.AudioTypeEvent;
+import com.jelte.norii.battle.ApFileReader;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityFileReader;
 import com.jelte.norii.entities.EntityTypes;
@@ -77,6 +78,7 @@ public class MainMenuScreen extends GameScreen {
 		AssetManagerUtility.loadTextureAtlas(AssetManagerUtility.SKIN_TEXTURE_ATLAS_PATH);
 		AssetManagerUtility.loadTextureAtlas(AssetManagerUtility.SPRITES_ATLAS_PATH);
 		EntityFileReader.loadUnitStatsInMemory();
+		ApFileReader.loadApInMemory();
 		SpellFileReader.loadSpellsInMemory();
 		AITeamFileReader.loadLevelsInMemory();
 		ProfileManager.getInstance().initialise();

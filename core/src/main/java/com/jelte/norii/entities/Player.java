@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.utils.Array;
+import com.jelte.norii.battle.ApFileReader;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.battle.MessageToBattleScreen;
 import com.jelte.norii.profile.ProfileManager;
@@ -115,6 +116,7 @@ public class Player implements UnitOwner {
 				}
 			}
 		}
+		setAp(ApFileReader.getApData(0));
 	}
 
 	@Override

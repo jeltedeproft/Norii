@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.jelte.norii.battle.ApFileReader;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.battle.MessageToBattleScreen;
 import com.jelte.norii.battle.battleState.BattleState;
@@ -39,6 +40,7 @@ public class AITeamLeader implements UnitOwner {
 				}
 			}
 		}
+		ap = ApFileReader.getApData(0);
 	}
 
 	public void spawnAiUnits(List<TiledMapPosition> spawnPositions) {
