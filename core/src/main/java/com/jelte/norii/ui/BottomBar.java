@@ -1,6 +1,5 @@
 package com.jelte.norii.ui;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -28,15 +27,14 @@ public class BottomBar {
 	private static final int PORTRAIT_WIDTH_PADDING = 5;
 	private static final int PORTRAIT_HEIGHT_PADDING = 5;
 	private static final int WINDOW_PADDING = 0;
-	private static final int HERO_NAME_LABEL_HEIGHT = 25;
+	private static final int HERO_NAME_LABEL_HEIGHT = 15;
 	private static final int HERO_NAME_LABEL_WIDTH = 55;
 	private static final int STATS_WIDTH = 2;
-	private static final int STATS_HEIGHT = 10;
+	private static final int STATS_HEIGHT = 20;
 	private static final int PAD_BOTTOM_TITLE = 10;
 	private static final float ICON_PADDING = 2f;
 
 	private int heroHP;
-	private int heroAP;
 	private int heroMagDef;
 	private int heroPhyDef;
 	private final float tilePixelWidth;
@@ -46,10 +44,9 @@ public class BottomBar {
 	private Table table;
 
 	private Label heroNameLabel;
+	private Label underscore;
 	private Label hpLabel;
 	private Label hp;
-	private Label apLabel;
-	private Label ap;
 	private Label magDefLabel;
 	private Label magDef;
 	private Label phyDefLabel;
@@ -94,10 +91,9 @@ public class BottomBar {
 	private void initStatsMenu() {
 		final Skin statusUISkin = AssetManagerUtility.getSkin();
 		heroNameLabel = new Label("", statusUISkin);
+		underscore = new Label("______", statusUISkin);
 		hpLabel = new Label("hp: ", statusUISkin);
 		hp = new Label("", statusUISkin);
-		apLabel = new Label("ap: ", statusUISkin);
-		ap = new Label("", statusUISkin);
 		magDefLabel = new Label("mag def: ", statusUISkin);
 		magDef = new Label("", statusUISkin);
 		phyDefLabel = new Label("phy def: ", statusUISkin);
@@ -190,22 +186,17 @@ public class BottomBar {
 		subtable.pad(WINDOW_PADDING);
 		subtable.padLeft(5);
 		subtable.align(Align.topLeft);
-		subtable.add(heroNameLabel).height(HERO_NAME_LABEL_HEIGHT).align(Align.topLeft).width(HERO_NAME_LABEL_WIDTH).padTop(0);
+		subtable.add(heroNameLabel).height(HERO_NAME_LABEL_HEIGHT).align(Align.topLeft).width(HERO_NAME_LABEL_WIDTH).padTop(10).padBottom(0);
+		subtable.row();
+		subtable.add(underscore).height(HERO_NAME_LABEL_HEIGHT).align(Align.topLeft).width(HERO_NAME_LABEL_WIDTH).padTop(0).padBottom(5);
 		subtable.row();
 
 		subtable.add(hpLabel).align(Align.bottomLeft).width(STATS_WIDTH).height(STATS_HEIGHT);
-		subtable.add(hp).height(STATS_HEIGHT).width(STATS_WIDTH);
-		subtable.row();
-
-		subtable.add(apLabel).align(Align.left).width(STATS_WIDTH).height(STATS_HEIGHT);
-		subtable.add(ap).height(STATS_HEIGHT);
-		subtable.add().padLeft(25).width(STATS_WIDTH);
-		subtable.add().padLeft(25).width(STATS_WIDTH);
-		subtable.add().padLeft(25).width(STATS_WIDTH);
+		subtable.add(hp).height(STATS_HEIGHT).width(STATS_WIDTH).padBottom(5);
 		subtable.row();
 
 		subtable.add(magDefLabel).align(Align.bottomLeft).width(STATS_WIDTH).height(STATS_HEIGHT).colspan(1);
-		subtable.add(magDef).height(STATS_HEIGHT);
+		subtable.add(magDef).height(STATS_HEIGHT).padBottom(5);
 		subtable.add().padLeft(25).width(STATS_WIDTH);
 		subtable.add().padLeft(25).width(STATS_WIDTH);
 		subtable.add().padLeft(25).width(STATS_WIDTH);
@@ -269,7 +260,6 @@ public class BottomBar {
 
 	private void initiateHeroStats(Entity entity) {
 		heroHP = entity.getHp();
-		heroAP = entity.getAp();
 		heroMagDef = entity.getEntityData().getMagicalDefense();
 		heroPhyDef = entity.getEntityData().getPhysicalDefense();
 	}
@@ -301,7 +291,6 @@ public class BottomBar {
 	private void updateStats(Entity entity) {
 		if (entity != null) {
 			heroHP = entity.getHp();
-			heroAP = entity.getAp();
 			heroMagDef = entity.getEntityData().getMagicalDefense();
 			heroPhyDef = entity.getEntityData().getPhysicalDefense();
 		}
@@ -309,15 +298,8 @@ public class BottomBar {
 
 	private void updateLabels() {
 		hp.setText(String.valueOf(heroHP));
-		ap.setText(String.valueOf(heroAP));
 		magDef.setText(String.valueOf(heroMagDef) + "%");
 		phyDef.setText(String.valueOf(heroPhyDef) + "%");
-
-		if (heroAP == 0) {
-			ap.setColor(Color.RED);
-		} else {
-			ap.setColor(Color.WHITE);
-		}
 	}
 
 	public Table getTable() {

@@ -9,7 +9,7 @@ public class MapFactory {
 		BATTLE_MAP_THE_DARK_SWAMP {
 			@Override
 			public String toString() {
-				return "maps/Room of tactics.tmx";
+				return "maps/grass.tmx";
 			}
 		}
 	}

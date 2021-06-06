@@ -53,11 +53,11 @@ public final class Utility {
 		final Map<Integer, Array<Entity>> distancesWithTarget = new TreeMap<>();
 		for (final Entity target : otherUnits) {
 			if (!target.getCurrentPosition().isTileEqualTo(location)) {
-				Integer distance = getDistance(location, target);
+				final Integer distance = getDistance(location, target);
 				if (distancesWithTarget.containsKey(distance)) {
 					distancesWithTarget.get(distance).add(target);
 				} else {
-					Array<Entity> entitiesAtThisDistance = new Array<>();
+					final Array<Entity> entitiesAtThisDistance = new Array<>();
 					entitiesAtThisDistance.add(target);
 					distancesWithTarget.put(distance, entitiesAtThisDistance);
 				}
@@ -166,10 +166,13 @@ public final class Utility {
 	}
 
 	public static void drawDebugLine(Vector2 start, Vector2 end, Matrix4 projectionMatrix) {
-		Gdx.gl.glLineWidth(2);
+		Gdx.gl.glLineWidth(1);
 		debugRenderer.setProjectionMatrix(projectionMatrix);
 		debugRenderer.begin(ShapeRenderer.ShapeType.Line);
-		debugRenderer.setColor(Color.DARK_GRAY);
+		debugRenderer.setColor(Color.BLACK);
+		final Color color = debugRenderer.getColor();
+		color.a = 0.2f;
+		debugRenderer.setColor(color);
 		debugRenderer.line(start, end);
 		debugRenderer.end();
 		Gdx.gl.glLineWidth(1);

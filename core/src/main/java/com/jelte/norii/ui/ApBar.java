@@ -12,8 +12,6 @@ import com.jelte.norii.battle.ApFileReader;
 import com.jelte.norii.utility.AssetManagerUtility;
 
 public class ApBar {
-	private static final int PAD_LEFT = 10;
-	private static final String AP_FILENAME = "ap";
 	private int oldAp;
 	private final HorizontalGroup allAP;
 	private final Table table;

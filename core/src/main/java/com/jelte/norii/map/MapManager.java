@@ -2,7 +2,6 @@ package com.jelte.norii.map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 
 public class MapManager {
@@ -17,7 +16,7 @@ public class MapManager {
 	}
 
 	public void loadMap(MapFactory.MapType mapType) {
-		Map map = MapFactory.getMap(mapType);
+		final Map map = MapFactory.getMap(mapType);
 
 		if (map == null) {
 			Gdx.app.debug(TAG, "Map does not exist!  ");
@@ -31,10 +30,6 @@ public class MapManager {
 		map.loadMusic();
 		currentMap = map;
 		mapChanged = true;
-	}
-
-	public MapLayer getCollisionLayer() {
-		return currentMap.getCollisionLayer();
 	}
 
 	public TiledMap getCurrentTiledMap() {
