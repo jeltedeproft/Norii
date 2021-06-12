@@ -441,8 +441,7 @@ public class BattleStateGridHelper {
 			return false;
 		}
 
-		return !(((deltaX == deltaY) && (deltaX >= range)) || (((deltaX == 0) && (deltaY > range)) || ((deltaY == 0) && (deltaX > range))) || checkLShapesDiagonal(deltaX, deltaY, range, areaOfEffectRange)
-				|| checkCorners(deltaX, deltaY, areaOfEffectRange));
+		return !(((deltaX == deltaY) && (deltaX >= range)) || (((deltaX == 0) && (deltaY > range)) || ((deltaY == 0) && (deltaX > range))) || checkLShapesDiagonal(deltaX, deltaY, range, areaOfEffectRange) || checkCorners(deltaX, deltaY, areaOfEffectRange));
 	}
 
 	private boolean checkCorners(int deltaX, int deltaY, int areaOfEffectRange) {
@@ -1116,45 +1115,61 @@ public class BattleStateGridHelper {
 		final AreaOfEffect area = ability.getAreaOfEffect();
 
 		for (int i = 1; i <= range; i++) {
-			tryToAddPotentialCenter(targetPosition, new MyPoint(casterPosition.x, casterPosition.y + i), spotsToCastAbilityHittingTarget, aoeRange, area);
-			tryToAddPotentialCenter(targetPosition, new MyPoint(casterPosition.x, casterPosition.y - i), spotsToCastAbilityHittingTarget, aoeRange, area);
-			tryToAddPotentialCenter(targetPosition, new MyPoint(casterPosition.x + i, casterPosition.y), spotsToCastAbilityHittingTarget, aoeRange, area);
-			tryToAddPotentialCenter(targetPosition, new MyPoint(casterPosition.x - i, casterPosition.y), spotsToCastAbilityHittingTarget, aoeRange, area);
+			tryToAddPotentialCenter(targetPosition, new MyPoint(casterPosition.x, casterPosition.y + i), casterPosition, spotsToCastAbilityHittingTarget, aoeRange, area);
+			tryToAddPotentialCenter(targetPosition, new MyPoint(casterPosition.x, casterPosition.y - i), casterPosition, spotsToCastAbilityHittingTarget, aoeRange, area);
+			tryToAddPotentialCenter(targetPosition, new MyPoint(casterPosition.x + i, casterPosition.y), casterPosition, spotsToCastAbilityHittingTarget, aoeRange, area);
+			tryToAddPotentialCenter(targetPosition, new MyPoint(casterPosition.x - i, casterPosition.y), casterPosition, spotsToCastAbilityHittingTarget, aoeRange, area);
 		}
 
 		return spotsToCastAbilityHittingTarget;
 	}
 
-	private void tryToAddPotentialCenter(MyPoint targetPosition, MyPoint center, Set<MyPoint> spotsToCastAbilityHittingTarget, int aoeRange, AreaOfEffect area) {
-		if (checkIfTargetInAreaOfEffect(center, targetPosition, area, aoeRange)) {
-			spotsToCastAbilityHittingTarget.add(center);
+	private void tryToAddPotentialCenter(MyPoint targetPosition, MyPoint castPoint, MyPoint casterPosition, Set<MyPoint> spotsToCastAbilityHittingTarget, int aoeRange, AreaOfEffect area) {
+		if (checkIfTargetInAreaOfEffect(castPoint, casterPosition, targetPosition, area, aoeRange)) {
+			spotsToCastAbilityHittingTarget.add(castPoint);
 		}
 	}
 
-	private boolean checkIfTargetInAreaOfEffect(MyPoint center, MyPoint target, AreaOfEffect area, int aoeRange) {
+	private boolean checkIfTargetInAreaOfEffect(MyPoint castPoint, MyPoint casterPosition, MyPoint targetPosition, AreaOfEffect area, int aoeRange) {
+		final int diffX = Math.abs(castPoint.x - targetPosition.x);
+		final int diffY = Math.abs(castPoint.y - targetPosition.y);
+		final boolean casterIsLeft = castPoint.x < casterPosition.x;
+		final boolean casterIsRight = castPoint.x > casterPosition.x;
+		final boolean casterIsDown = castPoint.y > casterPosition.y;
+		final boolean casterIsUp = castPoint.y < casterPosition.y;
 		switch (area) {
 		case CELL:
-			return center.equals(target);
+			return castPoint.equals(targetPosition);
 		case STRAIGHT_LINE:
-			return center.equals(target);
+			if (casterIsLeft) {
+				return ((diffX <= aoeRange) && (diffY == 0)) || ((diffX <= aoeRange) && (diffY == 0));
+			}
+			if (casterIsRight) {
+				return ((diffX == 0) && (diffY <= aoeRange)) || ((diffX <= aoeRange) && (diffY == 0));
+			}
+			if (casterIsDown) {
+				return ((diffX == 0) && (diffY <= aoeRange)) || ((diffX <= aoeRange) && (diffY == 0));
+			}
+			if (casterIsUp) {
+				return ((diffX == 0) && (diffY <= aoeRange)) || ((diffX <= aoeRange) && (diffY == 0));
+			}
+
 		case HORIZONTAL_LINE:
-			return (center.y == target.y) && (Math.abs(center.x - target.x) <= aoeRange);
+			return ((diffX == 0) && (diffY <= aoeRange)) || ((diffX <= aoeRange) && (diffY == 0));
 		case VERTICAL_LINE:
-			return (center.x == target.x) && (Math.abs(center.y - target.y) <= aoeRange);
+			return ((diffX == 0) && (diffY <= aoeRange)) || ((diffX <= aoeRange) && (diffY == 0));
 		case CIRCLE:
-			return Math.abs((center.x + center.y) - (target.x + target.y)) <= aoeRange;
+			return Math.abs((castPoint.x + castPoint.y) - (targetPosition.x + targetPosition.y)) <= aoeRange;
 		case CROSS:
-			return ((center.y == target.y) && (Math.abs(center.x - target.x) <= aoeRange)) || ((center.x == target.x) && (Math.abs(center.y - target.y) <= aoeRange));
+			return ((castPoint.y == targetPosition.y) && (diffX <= aoeRange)) || ((castPoint.x == targetPosition.x) && (diffY <= aoeRange));
 		case SQUARE:
-			return (Math.abs(center.x - target.x) <= aoeRange) && (Math.abs(center.y - target.y) <= aoeRange);
+			return (diffX <= aoeRange) && (diffY <= aoeRange);
 		case DIAGONAL:
-			final int diffX = Math.abs(center.x - target.x);
-			final int diffY = Math.abs(center.y - target.y);
 			return (diffX == diffY) && (diffX <= aoeRange);
 		case SQUARE_BORDER:
-			return (Math.abs(center.x - target.x) == aoeRange) && (Math.abs(center.y - target.y) == aoeRange);
+			return (diffX == aoeRange) && (diffY == aoeRange);
 		case CIRCLE_BORDER:
-			return Math.abs((center.x + center.y) - (target.x + target.y)) == aoeRange;
+			return Math.abs((castPoint.x + castPoint.y) - (targetPosition.x + targetPosition.y)) == aoeRange;
 		default:
 			return false;
 		}
@@ -1215,10 +1230,10 @@ public class BattleStateGridHelper {
 	}
 
 	public boolean isNextToButNotSelf(Entity unit, Entity currentUnit) {
-		int unitX = unit.getCurrentPosition().getTileX();
-		int unitY = unit.getCurrentPosition().getTileY();
-		int currentUnitX = currentUnit.getCurrentPosition().getTileX();
-		int currentUnitY = currentUnit.getCurrentPosition().getTileY();
+		final int unitX = unit.getCurrentPosition().getTileX();
+		final int unitY = unit.getCurrentPosition().getTileY();
+		final int currentUnitX = currentUnit.getCurrentPosition().getTileX();
+		final int currentUnitY = currentUnit.getCurrentPosition().getTileY();
 
 		return (Math.abs(unitX - currentUnitX) <= 1) && (Math.abs(unitY - currentUnitY) <= 1) && !((unitX == currentUnitX) && (unitY == currentUnitY));
 	}
