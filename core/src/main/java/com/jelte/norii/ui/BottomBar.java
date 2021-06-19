@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
@@ -29,6 +30,8 @@ public class BottomBar {
 	private static final int WINDOW_PADDING = 0;
 	private static final int HERO_NAME_LABEL_HEIGHT = 15;
 	private static final int HERO_NAME_LABEL_WIDTH = 55;
+	private static final int ACTION_BUTTON_LABEL_HEIGHT = 15;
+	private static final int ACTION_BUTTON_LABEL_WIDTH = 55;
 	private static final int STATS_WIDTH = 80;
 	private static final int STATS_HEIGHT = 20;
 	private static final int PAD_BOTTOM_TITLE = 10;
@@ -53,9 +56,9 @@ public class BottomBar {
 	private Label phyDef;
 
 	private Label actionsLabel;
-	private ImageButton moveImageButton;
-	private ImageButton attackImageButton;
-	private ImageButton skipImageButton;
+	private TextButton moveImageButton;
+	private TextButton attackImageButton;
+	private TextButton skipImageButton;
 	private SpellImageButton spellImageButton;
 
 	private Label infoLabel;
@@ -101,14 +104,12 @@ public class BottomBar {
 	}
 
 	private void initActions() {
+		final Skin statusUISkin = AssetManagerUtility.getSkin();
 		actionsLabel = new Label(ACTIONS, AssetManagerUtility.getSkin());
 		infoLabel = new Label(INFO, AssetManagerUtility.getSkin());
 		statsLabel = new Label(STATS, AssetManagerUtility.getSkin());
 		spellInfo = new Label("", AssetManagerUtility.getSkin());
-		final ImageButtonStyle moveButtonStyle = new ImageButtonStyle();
-		moveImageButton = new ImageButton(moveButtonStyle);
-		final TextureRegionDrawable moveImage = new TextureRegionDrawable(new TextureRegion(AssetManagerUtility.getSprite(MOVE_BUTTON_SPRITE_NAME)));
-		moveButtonStyle.up = moveImage;
+		moveImageButton = new TextButton("MOVE", statusUISkin, "default");
 		moveImageButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(final InputEvent event, final float x, final float y) {
@@ -116,10 +117,7 @@ public class BottomBar {
 			}
 		});
 
-		final ImageButtonStyle attackButtonStyle = new ImageButtonStyle();
-		attackImageButton = new ImageButton(attackButtonStyle);
-		final TextureRegionDrawable attackImage = new TextureRegionDrawable(new TextureRegion(AssetManagerUtility.getSprite(ATTACK_BUTTON_SPRITE_NAME)));
-		attackButtonStyle.up = attackImage;
+		attackImageButton = new TextButton("ATTACK", statusUISkin, "default");
 		attackImageButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(final InputEvent event, final float x, final float y) {
@@ -127,10 +125,7 @@ public class BottomBar {
 			}
 		});
 
-		final ImageButtonStyle skipButtonStyle = new ImageButtonStyle();
-		skipImageButton = new ImageButton(skipButtonStyle);
-		final TextureRegionDrawable skipImage = new TextureRegionDrawable(new TextureRegion(AssetManagerUtility.getSprite(SKIP_BUTTON_SPRITE_NAME)));
-		skipButtonStyle.up = skipImage;
+		skipImageButton = new TextButton("SKIP", statusUISkin, "default");
 		skipImageButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(final InputEvent event, final float x, final float y) {
@@ -138,10 +133,7 @@ public class BottomBar {
 			}
 		});
 
-		final ImageButtonStyle spellButtonStyle = new ImageButtonStyle();
-		spellImageButton = new SpellImageButton(spellButtonStyle);
-		final TextureRegionDrawable spellImage = new TextureRegionDrawable(new TextureRegion(AssetManagerUtility.getSprite(SKIP_BUTTON_SPRITE_NAME)));
-		spellButtonStyle.up = spellImage;
+		spellImageButton = new SpellImageButton();
 		spellImageButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(final InputEvent event, final float x, final float y) {
@@ -151,11 +143,7 @@ public class BottomBar {
 	}
 
 	private void changeSpellImage(final String spellImageName) {
-		final TextureRegion tr = new TextureRegion(AssetManagerUtility.getSprite(spellImageName));
-		final TextureRegionDrawable trd = new TextureRegionDrawable(tr);
-		final ImageButtonStyle oldStyle = spellImageButton.getStyle();
-		oldStyle.imageUp = trd;
-		spellImageButton.setStyle(oldStyle);
+		spellImageButton.setText(spellImageName);
 	}
 
 	private void changeHeroImage(final String heroImageName) {
@@ -217,11 +205,11 @@ public class BottomBar {
 		actionsTable.align(Align.topLeft);
 		actionsTable.pad(WINDOW_PADDING);
 		actionsTable.padLeft(5);
-		actionsTable.add(moveImageButton).size(tilePixelWidth, tilePixelHeight).pad(ICON_PADDING);
-		actionsTable.add(attackImageButton).size(tilePixelWidth, tilePixelHeight).pad(ICON_PADDING);
+		actionsTable.add(moveImageButton).size(tilePixelWidth * 2, tilePixelHeight * 1).pad(ICON_PADDING);
+		actionsTable.add(attackImageButton).size(tilePixelWidth * 2, tilePixelHeight * 1).pad(ICON_PADDING);
 		actionsTable.row();
-		actionsTable.add(skipImageButton).size(tilePixelWidth, tilePixelHeight).pad(ICON_PADDING);
-		actionsTable.add(spellImageButton).size(tilePixelWidth, tilePixelHeight).pad(ICON_PADDING);
+		actionsTable.add(skipImageButton).size(tilePixelWidth * 2, tilePixelHeight * 1).pad(ICON_PADDING);
+		actionsTable.add(spellImageButton).size(tilePixelWidth * 2, tilePixelHeight * 1).pad(ICON_PADDING);
 
 		actionsTable.setBackground(AssetManagerUtility.getSkin().getDrawable("windowgray"));
 		table.add(actionsTable).align(Align.topLeft).height(tilePixelHeight * 3).width(tilePixelWidth * 6);

@@ -33,7 +33,7 @@
         "areaOfEffectRange": 2,
         "affectsTeam": "BOTH",
         "target": "UNIT",
-        "infoText": "Turn an ally or enemy to stone."
+        "infoText": "Turn an ally\n or enemy to stone."
     },
 
     {
@@ -147,7 +147,7 @@
         "areaOfEffectRange": 1,
         "affectsTeam": "BOTH",
         "target": "UNIT",
-        "infoText": "Pull another character towards you."
+        "infoText": "Pull another character\n towards you."
     },
 
     {
@@ -166,7 +166,7 @@
         "areaOfEffectRange": 1,
         "affectsTeam": "ENEMY",
         "target": "CELL",
-        "infoText": "Shoot an arrow across the battlefield."
+        "infoText": "Shoot an arrow\n across the battlefield."
     },
 
     {
@@ -223,7 +223,7 @@
         "areaOfEffectRange": 1,
         "affectsTeam": "NONE",
         "target": "CELL_BUT_NO_UNIT",
-        "infoText": "Cast Portal, make sure to create 2 of these."
+        "infoText": "Cast Portal, \nmake sure to create 2 of these."
     },
 
     {
@@ -242,7 +242,7 @@
         "areaOfEffectRange": 1,
         "affectsTeam": "BOTH",
         "target": "SELF",
-        "infoText": "Transport all adjacent units to the other portal (if it exists)."
+        "infoText": "Transport all adjacent units \nto the other portal \n(if it exists)."
     },
 
     {
@@ -299,7 +299,7 @@
         "areaOfEffectRange": 1,
         "affectsTeam": "NONE",
         "target": "CELL_BUT_NO_UNIT",
-        "infoText": "place a defensive unpenetrable rock"
+        "infoText": "place a defensive \nunpenetrable rock"
     },
 
     {
@@ -337,6 +337,6 @@
         "areaOfEffectRange": 1,
         "affectsTeam": "ENEMY",
         "target": "UNIT",
-        "infoText": "Link yourself to an enemy. You now share damage."
+        "infoText": "Link yourself to an enemy.\n You now share damage."
     }
 ]
