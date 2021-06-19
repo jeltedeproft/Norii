@@ -37,10 +37,10 @@ import com.jelte.norii.utility.parallax.ParallaxUtils.WH;
 import com.jelte.norii.utility.parallax.TextureRegionParallaxLayer;
 
 public class MainMenuScreen extends GameScreen {
-	private static final float BUTTON_WIDTH_FACTOR = 1 / 9f;
+	private static final float BUTTON_WIDTH_FACTOR = 1 / 5f;
 	private static final float BUTTON_HEIGHT_FACTOR = 1 / 18f;
 	private static final float BUTTON_PAD_BOTTOM = 40;
-	private static final float BUTTON_PAD_TOP = 50;
+	private static final float BUTTON_PAD_TOP = 40;
 
 	private Stage stage;
 	private SpriteBatch backgroundbatch;
@@ -138,12 +138,12 @@ public class MainMenuScreen extends GameScreen {
 		final float buttonWidth = width * BUTTON_WIDTH_FACTOR;
 		final float buttonHeight = height * BUTTON_HEIGHT_FACTOR;
 
-		mainMenuTableOfButtons.add(title).row();
+		mainMenuTableOfButtons.add(title).spaceBottom(BUTTON_PAD_BOTTOM).padTop(BUTTON_PAD_TOP).row();
 		mainMenuTableOfButtons.add(playButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM).padTop(BUTTON_PAD_TOP).row();
 		mainMenuTableOfButtons.add(playTutorialButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM).padTop(BUTTON_PAD_TOP).row();
 		mainMenuTableOfButtons.add(setTeamButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM).padTop(BUTTON_PAD_TOP).row();
 		mainMenuTableOfButtons.add(settingsButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM).padTop(BUTTON_PAD_TOP).row();
-		mainMenuTableOfButtons.add(exitButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM).row();
+		mainMenuTableOfButtons.add(exitButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM).padTop(BUTTON_PAD_TOP).row();
 
 		stage.addActor(mainMenuTableOfButtons);
 	}

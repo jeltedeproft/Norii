@@ -151,8 +151,18 @@ public class TestBattleStateGridHelperFromUnits {
 		results = gridHelper.getAllCastPointsWhereTargetIsHit(ability, target, center, battleState);
 		assertEquals(unitPositions, results);
 
-		unitPositions = new HashSet<>(Arrays.asList(testPoints[3][5]));
+		unitPositions = new HashSet<>(Arrays.asList(testPoints[3][5], testPoints[4][5]));
 		target = new MyPoint(3, 5);
+		results = gridHelper.getAllCastPointsWhereTargetIsHit(ability, target, center, battleState);
+		assertEquals(unitPositions, results);
+
+		unitPositions = new HashSet<>(Arrays.asList(testPoints[5][7]));
+		target = new MyPoint(6, 7);
+		results = gridHelper.getAllCastPointsWhereTargetIsHit(ability, target, center, battleState);
+		assertEquals(unitPositions, results);
+
+		unitPositions = new HashSet<>();
+		target = new MyPoint(0, 5);
 		results = gridHelper.getAllCastPointsWhereTargetIsHit(ability, target, center, battleState);
 		assertEquals(unitPositions, results);
 	}

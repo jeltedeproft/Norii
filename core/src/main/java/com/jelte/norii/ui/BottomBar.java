@@ -29,7 +29,7 @@ public class BottomBar {
 	private static final int WINDOW_PADDING = 0;
 	private static final int HERO_NAME_LABEL_HEIGHT = 15;
 	private static final int HERO_NAME_LABEL_WIDTH = 55;
-	private static final int STATS_WIDTH = 2;
+	private static final int STATS_WIDTH = 80;
 	private static final int STATS_HEIGHT = 20;
 	private static final int PAD_BOTTOM_TITLE = 10;
 	private static final float ICON_PADDING = 2f;
@@ -180,7 +180,7 @@ public class BottomBar {
 		table.pad(0);
 		table.add(heroImageButton).width(tilePixelWidth * 3).height((tilePixelHeight * 3)).pad(0).align(Align.bottomLeft);
 		final Table subtable = new Table();
-		subtable.add(statsLabel).height(HERO_NAME_LABEL_HEIGHT).align(Align.topLeft).width(HERO_NAME_LABEL_WIDTH).padTop(0).padBottom(PAD_BOTTOM_TITLE);
+		subtable.add(statsLabel).height(HERO_NAME_LABEL_HEIGHT).align(Align.topLeft).width(HERO_NAME_LABEL_WIDTH).padTop(7).padBottom(PAD_BOTTOM_TITLE);
 		subtable.row();
 		subtable.align(Align.topLeft);
 		subtable.pad(WINDOW_PADDING);
@@ -212,7 +212,7 @@ public class BottomBar {
 		table.add(subtable).align(Align.topLeft).height(tilePixelHeight * 3).width(tilePixelWidth * 6);
 
 		final Table actionsTable = new Table();
-		actionsTable.add(actionsLabel).height(HERO_NAME_LABEL_HEIGHT).align(Align.topLeft).width(HERO_NAME_LABEL_WIDTH).padTop(0).padBottom(PAD_BOTTOM_TITLE);
+		actionsTable.add(actionsLabel).height(HERO_NAME_LABEL_HEIGHT).align(Align.topLeft).width(HERO_NAME_LABEL_WIDTH).padTop(7).padBottom(PAD_BOTTOM_TITLE);
 		actionsTable.row();
 		actionsTable.align(Align.topLeft);
 		actionsTable.pad(WINDOW_PADDING);
@@ -227,7 +227,7 @@ public class BottomBar {
 		table.add(actionsTable).align(Align.topLeft).height(tilePixelHeight * 3).width(tilePixelWidth * 6);
 
 		final Table infoTable = new Table();
-		infoTable.add(infoLabel).height(HERO_NAME_LABEL_HEIGHT).align(Align.topLeft).width(HERO_NAME_LABEL_WIDTH).padTop(0).padBottom(PAD_BOTTOM_TITLE);
+		infoTable.add(infoLabel).height(HERO_NAME_LABEL_HEIGHT).align(Align.topLeft).width(HERO_NAME_LABEL_WIDTH).padTop(7).padBottom(PAD_BOTTOM_TITLE);
 		infoTable.row();
 		infoTable.align(Align.topLeft);
 		infoTable.pad(WINDOW_PADDING);
