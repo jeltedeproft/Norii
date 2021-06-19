@@ -23,6 +23,7 @@ import com.jelte.norii.ai.AITeams;
 import com.jelte.norii.audio.AudioCommand;
 import com.jelte.norii.audio.AudioManager;
 import com.jelte.norii.audio.AudioTypeEvent;
+import com.jelte.norii.battle.ApFileReader;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityFileReader;
 import com.jelte.norii.entities.EntityTypes;
@@ -77,6 +78,7 @@ public class MainMenuScreen extends GameScreen {
 		AssetManagerUtility.loadTextureAtlas(AssetManagerUtility.SKIN_TEXTURE_ATLAS_PATH);
 		AssetManagerUtility.loadTextureAtlas(AssetManagerUtility.SPRITES_ATLAS_PATH);
 		EntityFileReader.loadUnitStatsInMemory();
+		ApFileReader.loadApInMemory();
 		SpellFileReader.loadSpellsInMemory();
 		AITeamFileReader.loadLevelsInMemory();
 		ProfileManager.getInstance().initialise();
@@ -136,7 +138,7 @@ public class MainMenuScreen extends GameScreen {
 		final float buttonWidth = width * BUTTON_WIDTH_FACTOR;
 		final float buttonHeight = height * BUTTON_HEIGHT_FACTOR;
 
-		mainMenuTableOfButtons.add(title).row();
+		mainMenuTableOfButtons.add(title).spaceBottom(BUTTON_PAD_BOTTOM).padTop(BUTTON_PAD_TOP).row();
 		mainMenuTableOfButtons.add(playButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM).padTop(BUTTON_PAD_TOP).row();
 		mainMenuTableOfButtons.add(playTutorialButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM).padTop(BUTTON_PAD_TOP).row();
 		mainMenuTableOfButtons.add(setTeamButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM).padTop(BUTTON_PAD_TOP).row();

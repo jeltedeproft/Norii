@@ -29,7 +29,6 @@ public abstract class Map {
 	protected Json json;
 	protected TiledMap currentMap = null;
 	protected TiledMapStage tiledmapstage;
-	protected MapLayer collisionLayer = null;
 	protected MapLayer spawnsLayer = null;
 	protected MyNavigationTiledMapLayer navLayer = null;
 
@@ -96,10 +95,6 @@ public abstract class Map {
 
 	public void setNavLayer(final MyNavigationTiledMapLayer navLayer) {
 		this.navLayer = navLayer;
-	}
-
-	public MapLayer getCollisionLayer() {
-		return collisionLayer;
 	}
 
 	public TiledMap getCurrentTiledMap() {

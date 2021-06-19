@@ -12,6 +12,10 @@ public interface UnitOwner {
 
 	public void updateUnits(final float delta);
 
+	public int getAp();
+
+	public void setAp(int ap);
+
 	public List<Entity> getTeam();
 
 	public void setTeam(List<Entity> entities);

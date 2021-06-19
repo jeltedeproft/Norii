@@ -52,6 +52,7 @@ public class BattleManager {
 	private int unitsDeployed;
 	private Entity lockedUnit;
 	private BattleScreen battleScreen;
+	private int turn = 0;
 
 	private static final String TAG = BattleManager.class.getSimpleName();
 
@@ -173,9 +174,12 @@ public class BattleManager {
 		playerTurn = !playerTurn;
 
 		if (!playerTurn) {
+			Player.getInstance().setAp(ApFileReader.getApData(turn));
 			aiIsCalculating = true;
 			aiTeamLeader.startCalculatingNextMove(activeBattleState);
 		} else {
+			turn++;
+			aiTeamLeader.setAp(ApFileReader.getApData(turn));
 			setCurrentBattleState(getSelectUnitBattleState());
 			getCurrentBattleState().entry();
 		}
@@ -211,8 +215,8 @@ public class BattleManager {
 				sendMessageToBattleScreen(MessageToBattleScreen.UNLOCK_UI, activeUnit);
 			}
 			checkVictory();
-			entity.endTurn();
 			swapTurn();
+			aiTeamLeader.setAp(ApFileReader.getApData(turn));
 			return;
 		}
 		switch (move.getMoveType()) {
@@ -223,9 +227,6 @@ public class BattleManager {
 			executeNextMove();
 			break;
 		case MOVE:
-			if (entity == null) {
-				final int j = 5;
-			}
 			final List<GridCell> path = MyPathFinder.getInstance().pathTowards(entity.getCurrentPosition(), new TiledMapPosition().setPositionFromTiles(move.getLocation().x, move.getLocation().y), entity.getAp());
 			activeBattleState.moveUnitTo(entity, new MyPoint(move.getLocation().x, move.getLocation().y));
 			entity.move(path);
@@ -295,6 +296,10 @@ public class BattleManager {
 		if (!oldPoint.equals(newPoint)) {
 			activeBattleState.moveUnitTo(unit, newPoint);
 		}
+	}
+
+	public int getTurn() {
+		return turn;
 	}
 
 	public BattleState getBattleState() {

@@ -533,7 +533,8 @@ public class AIDecisionMaker {
 					final Set<MyPoint> positionsToCastSpell = BattleStateGridHelper.getInstance().getAllCastPointsWhereTargetIsHit(ability, target, new MyPoint(copyUnit.getCurrentPosition().getTileX(), copyUnit.getCurrentPosition().getTileY()), copyBattleState);
 					for (final MyPoint MyPoint : positionsToCastSpell) {
 						final UnitTurn moveAndSpellCopy = moveAndSpell.makeCopy();
-						final Array<MyPoint> affectedUnits = BattleStateGridHelper.getInstance().getTargetsAbility(ability, MyPoint, getUnitPositions(false, ability, copyBattleState));
+						final Array<MyPoint> affectedUnits = BattleStateGridHelper.getInstance().getTargetsAbility(ability, MyPoint, new MyPoint(copyUnit.getCurrentPosition().getTileX(), copyUnit.getCurrentPosition().getTileY()),
+								getUnitPositions(false, ability, copyBattleState));
 						moveAndSpellCopy.addMove(new SpellMove(MoveType.SPELL, MyPoint, ability, affectedUnits));
 						unitTurns.add(moveAndSpellCopy);
 					}
@@ -552,7 +553,7 @@ public class AIDecisionMaker {
 				final Set<MyPoint> positionsToCastSpell = BattleStateGridHelper.getInstance().getAllCastPointsWhereTargetIsHit(ability, target, new MyPoint(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY()), battleState);
 				final Move moveAfterSpell = decideMove(ability, aiUnit, battleState);
 				for (final MyPoint MyPoint : positionsToCastSpell) {
-					final Array<MyPoint> affectedUnits = BattleStateGridHelper.getInstance().getTargetsAbility(ability, MyPoint, getUnitPositions(false, ability, battleState));
+					final Array<MyPoint> affectedUnits = BattleStateGridHelper.getInstance().getTargetsAbility(ability, MyPoint, casterPos, getUnitPositions(false, ability, battleState));
 					final UnitTurn spellAndMove = new UnitTurn(aiUnit.getEntityID(), new SpellMove(MoveType.SPELL, MyPoint, ability, affectedUnits));
 					spellAndMove.addMove(moveAfterSpell);
 					unitTurns.add(spellAndMove);

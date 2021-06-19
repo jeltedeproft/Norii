@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.jelte.norii.battle.ApFileReader;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.battle.MessageToBattleScreen;
 import com.jelte.norii.battle.battleState.BattleState;
@@ -20,6 +21,7 @@ public class AITeamLeader implements UnitOwner {
 	private final AITeamData aiTeamData;
 	private final AIDecisionMaker aiDecisionMaker;
 	private BattleManager battleManager;
+	private int ap;
 
 	public AITeamLeader(final AITeams type) {
 		aiTeamData = AITeamFileReader.getAITeamData().get(type.ordinal());
@@ -38,6 +40,7 @@ public class AITeamLeader implements UnitOwner {
 				}
 			}
 		}
+		ap = ApFileReader.getApData(0);
 	}
 
 	public void spawnAiUnits(List<TiledMapPosition> spawnPositions) {
@@ -144,5 +147,15 @@ public class AITeamLeader implements UnitOwner {
 	@Override
 	public void sendMessageToBattleManager(MessageToBattleScreen message, Entity entity, int damage) {
 		battleManager.sendMessageToBattleScreen(message, entity, damage);
+	}
+
+	@Override
+	public int getAp() {
+		return ap;
+	}
+
+	@Override
+	public void setAp(int ap) {
+		this.ap = ap;
 	}
 }

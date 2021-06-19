@@ -34,11 +34,6 @@ public class BattleMap extends Map {
 			return;
 		}
 
-		collisionLayer = currentMap.getLayers().get(MAP_COLLISION_LAYER);
-		if (collisionLayer == null) {
-			Gdx.app.debug(TAG, "No collision layer!");
-		}
-
 		initializeClassVariables();
 	}
 

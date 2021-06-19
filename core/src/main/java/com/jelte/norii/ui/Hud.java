@@ -23,6 +23,7 @@ public class Hud {
 
 	private HashMap<Integer, HpBar> entityIdWithHpBar;
 	private BottomBar portraitAndStats;
+	private ApBar apIndicator;
 	private HudMessages hudMessages;
 	private BattleScreen battleScreen;
 
@@ -94,6 +95,9 @@ public class Hud {
 	private void createCharacterHUD() {
 		portraitAndStats = new BottomBar(mapWidth, mapHeight, this);
 		stage.addActor(portraitAndStats.getTable());
+
+		apIndicator = new ApBar(mapWidth, mapHeight);
+		stage.addActor(apIndicator.getTable());
 	}
 
 	private void createHudMessages(boolean isTutorial) {
@@ -113,6 +117,10 @@ public class Hud {
 				bar.update(entity);
 			}
 		}
+	}
+
+	public void updateApBar(int currentAp) {
+		apIndicator.update(currentAp);
 	}
 
 	public void updateBottomBar(Entity entity) {

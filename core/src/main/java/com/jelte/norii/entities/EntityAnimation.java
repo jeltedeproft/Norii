@@ -10,7 +10,7 @@ import com.jelte.norii.utility.AssetManagerUtility;
 public class EntityAnimation {
 	private static final String TAG = EntityAnimation.class.getSimpleName();
 
-	private static final float ANIMATION_DURATION = 0.3f;
+	private static final float ANIMATION_DURATION = 0.1f;
 
 	private String spriteName;
 	protected float frameTime = 0f;

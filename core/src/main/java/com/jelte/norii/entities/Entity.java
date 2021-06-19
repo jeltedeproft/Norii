@@ -22,7 +22,6 @@ public class Entity extends Actor {
 	public static final int MAX_XP = 100;
 	protected final EntityData entityData;
 
-	protected int ap;
 	protected int hp;
 	protected int xp;
 	protected int magicalDefense;
@@ -60,7 +59,6 @@ public class Entity extends Actor {
 		oldPlayerPosition = new TiledMapPosition().setPositionFromScreen(-1000, -1000);
 		currentPlayerPosition = new TiledMapPosition().setPositionFromScreen(-1000, -1000);
 		hp = entityData.getMaxHP();
-		ap = entityData.getMaxAP();
 		isDead = false;
 		statsChanged = true;
 		isInvis = false;
@@ -129,7 +127,7 @@ public class Entity extends Actor {
 	}
 
 	public boolean canAttack() {
-		return ap > basicAttackCost;
+		return owner.getAp() > basicAttackCost;
 	}
 
 	public void damage(int damage, DamageType type) {
@@ -169,7 +167,7 @@ public class Entity extends Actor {
 	}
 
 	public boolean canMove() {
-		return ap > 0;
+		return owner.getAp() > 0;
 	}
 
 	public boolean isDead() {
@@ -222,11 +220,11 @@ public class Entity extends Actor {
 	}
 
 	public int getAp() {
-		return ap;
+		return owner.getAp();
 	}
 
 	public void setAp(final int ap) {
-		this.ap = ap;
+		owner.setAp(ap);
 	}
 
 	public int getHp() {
@@ -385,10 +383,6 @@ public class Entity extends Actor {
 	public void moveAttack(List<GridCell> path, Entity target) {
 		setAp(getAp() - path.size() - getEntityData().getBasicAttackCost());
 		visualComponent.moveAttack(path, target);
-	}
-
-	public void endTurn() {
-		setAp(getEntityData().getMaxAP());
 	}
 
 	public Entity makeCopyWithoutVisual() {
