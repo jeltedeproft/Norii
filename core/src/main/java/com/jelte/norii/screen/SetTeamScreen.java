@@ -212,9 +212,10 @@ public class SetTeamScreen extends GameScreen {
 		selectedHeroesTableVerticalGroup = new VerticalGroup();
 		saveAndExitTable = new Table();
 		titleTable.add(titleLabel);
-		mainTable.add(titleTable).align(Align.center).colspan(2).height(50).padTop(50).expandX().fillX().row();
+		mainTable.setFillParent(true);
+		mainTable.add(titleTable).align(Align.top).colspan(2).height(50).padTop(30).expandX().fillX().row();
 
-		heroesTitlesTable.add(yourTeamLabel).align(Align.center).width(700).expandX().fillX();
+		heroesTitlesTable.add(yourTeamLabel).align(Align.top).width(700).expandX().fillX();
 		heroesTitlesTable.add(availableHeroesLabel).align(Align.right).width(700).expandX().fillX().row();
 		mainTable.add(heroesTitlesTable).colspan(2).expandX().fillX().row();
 
