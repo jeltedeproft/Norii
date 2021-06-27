@@ -154,7 +154,6 @@ public class SettingsScreen extends GameScreen {
 	@Override
 	public void resize(int width, int height) {
 		stage.getViewport().setScreenSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		table.setSize(width, height);
 	}
 
 	@Override

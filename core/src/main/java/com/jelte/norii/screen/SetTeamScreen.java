@@ -301,7 +301,6 @@ public class SetTeamScreen extends GameScreen {
 	@Override
 	public void resize(int width, int height) {
 		stage.getViewport().update(width, height);
-		mainTable.setSize(width, height);
 	}
 
 	@Override

@@ -72,7 +72,7 @@ public class ProfileManager {
 
 			setAvailableHeroes(availableHeroes);
 			Array<String> teamHeroes = new Array<>();
-			teamHeroes.add("Beast Ogre");
+			teamHeroes.add("Black Slime Green Eyes");
 			setTeamHeroes(teamHeroes);
 
 			preferences.putBoolean("initialised", true);
