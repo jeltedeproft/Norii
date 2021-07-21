@@ -49,6 +49,7 @@ public class MainMenuScreen extends GameScreen {
 
 	private Table mainMenuTableOfButtons;
 	private TextButton playButton;
+	private TextButton multiplayerButton;
 	private TextButton playTutorialButton;
 	private TextButton setTeamButton;
 	private TextButton settingsButton;
@@ -126,6 +127,7 @@ public class MainMenuScreen extends GameScreen {
 
 		title = new Label(" Norii\n_______", statusUISkin, "bigFont");
 		playButton = new TextButton("Play", statusUISkin, "lumos30");
+		multiplayerButton = new TextButton("Multiplayer", statusUISkin, "lumos30");
 		playTutorialButton = new TextButton("Play Tutorial", statusUISkin, "lumos30");
 		setTeamButton = new TextButton("Manage Team", statusUISkin, "lumos30");
 		settingsButton = new TextButton("Settings", statusUISkin, "lumos30");
@@ -140,6 +142,7 @@ public class MainMenuScreen extends GameScreen {
 
 		mainMenuTableOfButtons.add(title).spaceBottom(BUTTON_PAD_BOTTOM).padTop(BUTTON_PAD_TOP).row();
 		mainMenuTableOfButtons.add(playButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM).padTop(BUTTON_PAD_TOP).row();
+		mainMenuTableOfButtons.add(multiplayerButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM).padTop(BUTTON_PAD_TOP).row();
 		mainMenuTableOfButtons.add(playTutorialButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM).padTop(BUTTON_PAD_TOP).row();
 		mainMenuTableOfButtons.add(setTeamButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM).padTop(BUTTON_PAD_TOP).row();
 		mainMenuTableOfButtons.add(settingsButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM).padTop(BUTTON_PAD_TOP).row();
@@ -154,6 +157,15 @@ public class MainMenuScreen extends GameScreen {
 			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
 				loadLevelAssets();
 				ScreenManager.getInstance().showScreen(ScreenEnum.BATTLE, selectedLevel);
+				return true;
+			}
+		});
+
+		multiplayerButton.addListener(new InputListener() {
+			@Override
+			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
+				loadLevelAssets();
+				ScreenManager.getInstance().showScreen(ScreenEnum.MULTIPLAYER, selectedLevel);
 				return true;
 			}
 		});

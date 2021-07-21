@@ -24,9 +24,9 @@ public class ScreenManager {
 	}
 
 	public void showScreen(ScreenEnum screenEnum, Object... params) {
-		final Screen currentScreen = game.getScreen();
+		var currentScreen = game.getScreen();
 
-		final Screen newScreen = screenEnum.getScreen(params);
+		var newScreen = screenEnum.getScreen(params);
 		game.setScreen(newScreen);
 
 		if (currentScreen != null) {

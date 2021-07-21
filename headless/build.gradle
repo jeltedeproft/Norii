@@ -1,0 +1,14 @@
+apply plugin: 'application'
+
+sourceCompatibility = 11.0
+mainClassName = 'com.jelte.norii.headless.HeadlessLauncher'
+eclipse.project.name = appName + '-headless'
+
+dependencies {
+	implementation project(':core')
+	implementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+	implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+
+	implementation platform("io.vertx:vertx-stack-depchain:$vertxVersion")
+	implementation "io.vertx:vertx-web"
+}
