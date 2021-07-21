@@ -1,7 +1,5 @@
 package com.jelte.norii.screen;
 
-import java.io.IOException;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -17,8 +15,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.esotericsoftware.kryonet.Client;
-import com.jelte.norii.server.ServerMessage;
 import com.jelte.norii.utility.AssetManagerUtility;
 import com.jelte.norii.utility.parallax.ParallaxBackground;
 import com.jelte.norii.utility.parallax.ParallaxUtils.WH;
@@ -109,17 +105,6 @@ public class MultiplayerScreen extends GameScreen {
 	}
 
 	private void initMultiplayer() {
-		try {
-			Client client = new Client();
-			client.start();
-			client.connect(5000, "192.168.0.4", 54555, 54777);
-
-			ServerMessage request = new ServerMessage();
-			request.text = "Here is the request";
-			client.sendTCP(request);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 
 	}
 
