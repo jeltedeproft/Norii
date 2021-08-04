@@ -127,7 +127,11 @@ public class Entity extends Actor {
 	}
 
 	public boolean canAttack() {
-		return owner.getAp() > basicAttackCost;
+		return isPlayerUnit && (owner.getAp() > basicAttackCost);
+	}
+
+	public boolean canCastSpell(Ability ability) {
+		return isPlayerUnit && (owner.getAp() >= ability.getSpellData().getApCost());
 	}
 
 	public void damage(int damage, DamageType type) {
@@ -167,7 +171,7 @@ public class Entity extends Actor {
 	}
 
 	public boolean canMove() {
-		return owner.getAp() > 0;
+		return isPlayerUnit && (owner.getAp() > 0);
 	}
 
 	public boolean isDead() {

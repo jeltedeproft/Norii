@@ -26,6 +26,7 @@ dependencies {
     }
 	implementation "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
 	implementation "com.badlogicgames.gdx:gdx-controllers-lwjgl3:$gdxVersion"
+	api "com.github.MrStahlfelge.gdx-websockets:common:$wsVersion"
 	api "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
 }
 

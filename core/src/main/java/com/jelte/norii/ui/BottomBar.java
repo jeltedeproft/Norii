@@ -235,7 +235,9 @@ public class BottomBar {
 		if (entity != null) {
 			if (!entity.getEntityData().getName().equalsIgnoreCase(heroNameLabel.getText().toString())) {
 				spellImageButton.setEntity(entity);
-				spellImageButton.setAbility((Ability) entity.getAbilities().toArray()[0]);
+				if (!entity.getAbilities().isEmpty()) {
+					spellImageButton.setAbility((Ability) entity.getAbilities().toArray()[0]);
+				}
 				activeUnit = entity;
 				this.getTable().setVisible(true);
 				initiateHeroStats(entity);

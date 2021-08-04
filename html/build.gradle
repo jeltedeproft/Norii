@@ -43,6 +43,9 @@ dependencies {
     implementation "com.github.intrigus.gdx-freetype-gwt:gdx-freetype-gwt:1.9.10.1:sources"
     implementation "com.github.xaguzman:pathfinding:0.2.6:sources"
     implementation 'com.github.raeleus:stripe:master-SNAPSHOT:sources'
+    implementation "com.github.MrStahlfelge.gdx-websockets:core:$wsVersion:sources"
+    implementation "com.github.MrStahlfelge.gdx-websockets:html:$wsVersion"
+    implementation "com.github.MrStahlfelge.gdx-websockets:html:$wsVersion:sources"
 }
 
 import org.akhikhl.gretty.AppBeforeIntegrationTestTask

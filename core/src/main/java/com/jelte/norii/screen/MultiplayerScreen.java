@@ -15,6 +15,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.github.czyzby.websocket.WebSocket;
+import com.github.czyzby.websocket.WebSocketAdapter;
+import com.github.czyzby.websocket.WebSocketListener;
+import com.github.czyzby.websocket.WebSockets;
 import com.jelte.norii.utility.AssetManagerUtility;
 import com.jelte.norii.utility.parallax.ParallaxBackground;
 import com.jelte.norii.utility.parallax.ParallaxUtils.WH;
@@ -24,15 +28,19 @@ public class MultiplayerScreen extends GameScreen {
 	private static final String TITLE_FONT = "bigFont";
 	private static final String TITLE = "MULTIPLAYER";
 	private static final String EXIT = "exit";
+	private static final String SEARCH = "search";
 
 	private Label titleLabel;
 	private Label multiplayerLabel;
+	private TextButton searchTextButton;
 	private TextButton exitTextButton;
 	private Stage stage;
 	private Table table;
 	private OrthographicCamera parallaxCamera;
 	private ParallaxBackground parallaxBackground;
 	private SpriteBatch backgroundbatch;
+
+	private WebSocket socket;
 
 	public MultiplayerScreen() {
 		initializeVariables();
@@ -59,6 +67,7 @@ public class MultiplayerScreen extends GameScreen {
 		titleLabel = new Label(TITLE, statusUISkin, TITLE_FONT);
 		titleLabel.setAlignment(Align.top);
 
+		searchTextButton = new TextButton(SEARCH, statusUISkin);
 		exitTextButton = new TextButton(EXIT, statusUISkin);
 	}
 
@@ -85,7 +94,7 @@ public class MultiplayerScreen extends GameScreen {
 
 	private void addButtons() {
 		table.add(titleLabel).expandX().colspan(10).spaceBottom(100).height(250).width(1000).row();
-		table.add(multiplayerLabel).height(75).width(200).row();
+		table.add(searchTextButton).height(75).width(200).row();
 		table.add(multiplayerLabel).height(75).width(200).row();
 		table.add(multiplayerLabel).height(75).width(200).row();
 		table.add(multiplayerLabel).height(75).width(200);
@@ -102,10 +111,42 @@ public class MultiplayerScreen extends GameScreen {
 				return true;
 			}
 		});
+		searchTextButton.addListener(new InputListener() {
+			@Override
+			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
+				socket.send("find");
+				return true;
+			}
+		});
 	}
 
 	private void initMultiplayer() {
+		socket = WebSockets.newSocket(WebSockets.toSecureWebSocketUrl("norii-lnw72.ondigitalocean.app", 443));
+		socket.setSendGracefully(true);
+		socket.addListener(getWebSocketListener());
+		socket.connect();
+	}
 
+	private WebSocketListener getWebSocketListener() {
+		return new WebSocketAdapter() {
+			@Override
+			public boolean onOpen(WebSocket webSocket) {
+				System.out.println("connected: ");
+				return FULLY_HANDLED;
+			}
+
+			@Override
+			public boolean onMessage(WebSocket webSocket, String packet) {
+				System.out.println(packet + "\n");
+				return FULLY_HANDLED;
+			}
+
+			@Override
+			public boolean onClose(WebSocket webSocket, int closeCode, String reason) {
+				System.out.println("Disconnected: " + reason + "\n");
+				return FULLY_HANDLED;
+			}
+		};
 	}
 
 	@Override

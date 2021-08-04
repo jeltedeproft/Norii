@@ -201,6 +201,9 @@ public class BattleState implements Comparable<BattleState> {
 		for (final BattleCell[] row : stateOfField) {
 			for (final BattleCell cell : row) {
 				sum += cell.getScore();
+				if (sum != 0) {
+					int j = 0;
+				}
 			}
 		}
 

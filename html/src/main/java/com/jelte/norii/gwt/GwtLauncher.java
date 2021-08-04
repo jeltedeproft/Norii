@@ -6,6 +6,7 @@ import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
 import com.badlogic.gdx.graphics.g2d.freetype.gwt.FreetypeInjector;
 import com.badlogic.gdx.graphics.g2d.freetype.gwt.inject.OnCompletion;
+import com.github.czyzby.websocket.GwtWebSockets;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Window;
@@ -44,6 +45,9 @@ public class GwtLauncher extends GwtApplication {
 
 	@Override
 	public ApplicationListener createApplicationListener() {
+		// Initiating web sockets module - safe to call before creating application
+		// listener:
+		GwtWebSockets.initiate();
 		return new Norii();
 	}
 

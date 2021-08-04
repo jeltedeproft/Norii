@@ -20,15 +20,22 @@ public class SelectUnitBattlePhase extends BattlePhase {
 	public void clickedOnUnit(Entity entity) {
 		if (isUnitSelectable(entity)) {
 			battlemanager.setUnitActive(entity);
-			exit();
+		} else {
+			battlemanager.justShowUnit(entity);
 		}
 	}
 
 	private boolean isUnitSelectable(Entity entity) {
 		final Entity lockedEntity = battlemanager.getLockedUnit();
-		if ((lockedEntity != null) && (lockedEntity.getEntityID() != entity.getEntityID()) && entity.isPlayerUnit()) {
+
+		if (lockedEntity != null) {
 			return false;
 		}
+
+		if (!entity.isPlayerUnit()) {
+			return false;
+		}
+
 		return !entity.hasModifier(ModifiersEnum.STUNNED);
 	}
 

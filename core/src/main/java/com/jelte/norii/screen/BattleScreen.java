@@ -380,7 +380,7 @@ public class BattleScreen extends GameScreen {
 				break;
 			case CLICKED_ON_ABILITY:
 				final Entity spellEntity = battlemanager.getEntityByID(entityID);
-				if (spellEntity.getAp() >= ability.getSpellData().getApCost()) {
+				if (spellEntity.canCastSpell(ability)) {
 					hud.setLocked(true);
 					prepareSpell(spellEntity, ability);
 					hud.setLocked(false);
@@ -390,7 +390,8 @@ public class BattleScreen extends GameScreen {
 				break;
 			case HOVERED_ON_MOVE:
 				final Entity showMoveEntity = battlemanager.getEntityByID(entityID);
-				final Set<MyPoint> pointsToMove = BattleStateGridHelper.getInstance().getPossibleCenterCellsFiltered(showMoveEntity.getCurrentPosition().getTilePosAsPoint(), LineOfSight.CIRCLE, showMoveEntity.getAp(), battlemanager.getBattleState());
+				final Set<MyPoint> pointsToMove = BattleStateGridHelper.getInstance().getPossibleCenterCellsFiltered(showMoveEntity.getCurrentPosition().getTilePosAsPoint(), LineOfSight.CIRCLE, showMoveEntity.getAp(),
+						battlemanager.getBattleState());
 				MyPathFinder.getInstance().filterPositionsByWalkability(showMoveEntity, pointsToMove);
 				for (final MyPoint cell : pointsToMove) {
 					if (!isUnitOnCell(cell)) {

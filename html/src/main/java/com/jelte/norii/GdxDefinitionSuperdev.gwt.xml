@@ -3,6 +3,8 @@
 <module rename-to="html">
 	<inherits name="com.jelte.norii.GdxDefinition" />
 	<inherits name='org.xguzm.pathfinding' />
+	<inherits name='com.github.czyzby.websocket.GdxWebSocket' />
+	<inherits name='com.github.czyzby.websocket.GdxWebSocketGwt' />
 	
 	<collapse-all-properties />
 	<add-linker name="xsiframe"/>

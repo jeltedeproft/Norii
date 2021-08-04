@@ -13,15 +13,22 @@ sourceSets.test.java.srcDirs = ["src/"]
 
     dependencies {
         compile project(":core")
+        compile project(":headless")
         
         compile "junit:junit:4.+"
         compile "org.mockito:mockito-all:1.9.+"
         
         compile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"        
+        
+        compile platform("io.vertx:vertx-stack-depchain:$vertxVersion")
+	    compile "io.vertx:vertx-web"
+	    implementation "io.vertx:vertx-core:$vertxVersion"
+	    implementation 'com.groupon.vertx:vertx-utils:3.5.2'
 
         testCompile 'junit:junit:4.+'
         testCompile "org.mockito:mockito-all:1.9.+"
+        testImplementation "io.vertx:vertx-junit5"
 
         testCompile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
         testCompile "com.badlogicgames.gdx:gdx:$gdxVersion"

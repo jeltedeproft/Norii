@@ -149,7 +149,6 @@ public class SpellBattlePhase extends BattlePhase {
 		} else {
 			return MyPathFinder.getInstance().lineOfSight(caster, targetPos, battlemanager.getUnits(), true);
 		}
-
 	}
 
 	private boolean checkTarget(Entity caster, TiledMapPosition targetPos, Ability ability, boolean isTile) {
@@ -366,7 +365,9 @@ public class SpellBattlePhase extends BattlePhase {
 		for (final MyPoint point : crossedCells) {
 			if (battlemanager.getBattleState().get(point.x, point.y).isOccupied()) {
 				final Entity unit = battlemanager.getBattleState().get(point.x, point.y).getUnit();
-				battlemanager.getEntityByID(unit.getEntityID()).damage(ability.getSpellData().getDamage(), ability.getDamageType());
+				if (!unit.equals(caster)) {
+					battlemanager.getEntityByID(unit.getEntityID()).damage(ability.getSpellData().getDamage(), ability.getDamageType());
+				}
 			}
 		}
 	}
@@ -417,7 +418,8 @@ public class SpellBattlePhase extends BattlePhase {
 		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
 		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.ICE);
 
-		final Set<MyPoint> targetCells = BattleStateGridHelper.getInstance().getAllPointsASpellCanHit(caster.getCurrentPosition().getTilePosAsPoint(), targetPos.getTilePosAsPoint(), ability.getAreaOfEffect(), ability.getSpellData().getRange(), battlemanager.getBattleState());
+		final Set<MyPoint> targetCells = BattleStateGridHelper.getInstance().getAllPointsASpellCanHit(caster.getCurrentPosition().getTilePosAsPoint(), targetPos.getTilePosAsPoint(), ability.getAreaOfEffect(),
+				ability.getSpellData().getRange(), battlemanager.getBattleState());
 
 		for (final MyPoint cell : targetCells) {
 			ParticleMaker.addParticle(ParticleType.ICE, cell, 0);

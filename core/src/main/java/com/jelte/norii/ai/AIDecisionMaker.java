@@ -44,6 +44,7 @@ public class AIDecisionMaker {
 
 	private static final int NUMBER_OF_LAYERS = 3;
 	private static final int MAX_AI_THINKING_TIME = 700;
+	private static final int RANDOMISATION_TOP_X_STATES = 5;
 	private static final String TAG = AIDecisionMaker.class.getSimpleName();
 
 	public AIDecisionMaker() {
@@ -63,7 +64,7 @@ public class AIDecisionMaker {
 		}
 	}
 
-	// returns true when finished
+	// returns true when finished or time is up
 	public boolean processAi() {
 		final Long startingTime = System.currentTimeMillis();
 		Entity unit;
@@ -82,6 +83,7 @@ public class AIDecisionMaker {
 			unit = startingState.getPlayerUnits().get(entityIndex);
 		}
 
+		Gdx.app.debug(TAG, "generating moves for : " + unit);
 		for (final Ability ability : unit.getAbilities()) {
 			final Array<UnitTurn> turns = generateMoves(ability, unit, startingState);
 			for (final UnitTurn turn : turns) {
@@ -152,7 +154,24 @@ public class AIDecisionMaker {
 			resultStates = allBattleStates.get(NUMBER_OF_LAYERS - i);
 		}
 		allBattleStates.get(NUMBER_OF_LAYERS - i).sort();
-		return getInitialMoves(allBattleStates.get(NUMBER_OF_LAYERS - i).get(0));
+		Gdx.app.debug(TAG, "RESULTS");
+		Gdx.app.debug(TAG, "==========================================================");
+		int pos = 1;
+		for (BattleState state : allBattleStates.get(NUMBER_OF_LAYERS - i)) {
+			Gdx.app.debug(TAG, pos + ") initial move = " + getInitialMoves(state).getTurn() + " with endscore : " + state.getScore());
+			pos++;
+		}
+		Random random = new Random();
+		int totalNumberOfStates = allBattleStates.get(NUMBER_OF_LAYERS - i).size;
+		int stateWePick;
+		if (totalNumberOfStates < RANDOMISATION_TOP_X_STATES) {
+			stateWePick = random.nextInt(totalNumberOfStates);
+		} else {
+			stateWePick = random.nextInt(RANDOMISATION_TOP_X_STATES);
+		}
+		Gdx.app.debug(TAG, "we pick state : " + stateWePick);
+		Gdx.app.debug(TAG, "which is : " + getInitialMoves(allBattleStates.get(NUMBER_OF_LAYERS - i).get(stateWePick)).getTurn());
+		return getInitialMoves(allBattleStates.get(NUMBER_OF_LAYERS - i).get(stateWePick));
 	}
 
 	private boolean checkEndConditions(BattleState battleState) {
@@ -422,10 +441,13 @@ public class AIDecisionMaker {
 		final Long startTime = System.currentTimeMillis();
 		Long timestamp;
 		final Array<UnitTurn> unitTurns = new Array<>();
+		Gdx.app.debug(TAG, "generating moves for : " + ability);
+		Gdx.app.debug(TAG, "===============================================================");
 
 		// if the ability is cast on self or no target, just cast it and move
 
 		if ((ability.getTarget() == Target.NO_TARGET) || (ability.getTarget() == Target.SELF)) {
+			Gdx.app.debug(TAG, "SELF/NO target spells");
 			final UnitTurn spellAndMove = new UnitTurn(aiUnit.getEntityID(), new SpellMove(MoveType.SPELL, new MyPoint(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY()), ability));
 			spellAndMove.addMove(decideMove(ability, aiUnit, battleState));
 			unitTurns.add(spellAndMove);
@@ -435,16 +457,16 @@ public class AIDecisionMaker {
 		// state for each
 		if ((ability.getTarget() == Target.CELL) || (ability.getTarget() == Target.CELL_BUT_NO_UNIT)) {
 			timestamp = System.currentTimeMillis();
-			Gdx.app.debug(TAG, "1 : " + (timestamp - startTime));
+			Gdx.app.debug(TAG, "CELL target start : " + (timestamp - startTime));
 			final MyPoint center = new MyPoint(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY());
 			Set<MyPoint> cellsToCastOn = BattleStateGridHelper.getInstance().getAllPointsASpellCanHit(center, ability.getLineOfSight(), ability.getSpellData().getRange(), battleState);
 			timestamp = System.currentTimeMillis();
-			Gdx.app.debug(TAG, "2 : " + (timestamp - startTime));
+			Gdx.app.debug(TAG, "CELL target found all points a spell can hit, took  : " + (timestamp - startTime) + "ms");
 			if (ability.getTarget() == Target.CELL_BUT_NO_UNIT) {
 				filterUnits(cellsToCastOn, battleState);
 			}
 			timestamp = System.currentTimeMillis();
-			Gdx.app.debug(TAG, "3 : " + (timestamp - startTime));
+			Gdx.app.debug(TAG, "CELL target filtered units, took : " + (timestamp - startTime) + "ms");
 			cellsToCastOn = filterOutNumber(cellsToCastOn, 15);
 			for (final MyPoint point : cellsToCastOn) {
 				final UnitTurn spellAndMove = new UnitTurn(aiUnit.getEntityID(), new SpellMove(MoveType.SPELL, point, ability));
@@ -452,18 +474,19 @@ public class AIDecisionMaker {
 				unitTurns.add(spellAndMove);
 			}
 			timestamp = System.currentTimeMillis();
-			Gdx.app.debug(TAG, "4 : " + (timestamp - startTime));
+			Gdx.app.debug(TAG, "CELL target, limited number of targets, and created spellmoves, took : " + (timestamp - startTime) + "ms");
 		}
 
 		// get the distance between unit and possible targets
 		final TreeMap<Integer, List<Entity>> distancesWithAbilityTargetUnits = (TreeMap<Integer, List<Entity>>) getDistancesToTargets(aiUnit, battleState, ability);
 
 		timestamp = System.currentTimeMillis();
-		Gdx.app.debug(TAG, "5 : " + (timestamp - startTime));
+		Gdx.app.debug(TAG, "found distances with ability target units, took : " + (timestamp - startTime) + "ms");
 
 		if (!distancesWithAbilityTargetUnits.isEmpty() && (distancesWithAbilityTargetUnits.firstKey() > (ability.getSpellData().getRange() + ability.getSpellData().getAreaOfEffectRange() + aiUnit.getAp()))) {
 			if (distancesWithAbilityTargetUnits.firstKey() > (aiUnit.getAttackRange() + aiUnit.getAp())) {
 				// just walk
+				Gdx.app.debug(TAG, "just walking : ");
 				final Entity closestUnit = distancesWithAbilityTargetUnits.firstEntry().getValue().get(0);
 				final TiledMapPosition closestUnitPos = new TiledMapPosition().setPositionFromTiles(closestUnit.getCurrentPosition().getTileX(), closestUnit.getCurrentPosition().getTileY());
 				final List<GridCell> path = MyPathFinder.getInstance().pathTowards(new TiledMapPosition().setPositionFromTiles(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY()), closestUnitPos, aiUnit.getAp());
@@ -484,6 +507,7 @@ public class AIDecisionMaker {
 				return unitTurns;
 			} else {
 				// move attack
+				Gdx.app.debug(TAG, "just move attack");
 				final Entity closestUnit = distancesWithAbilityTargetUnits.firstEntry().getValue().get(0);
 				final TiledMapPosition closestUnitPos = new TiledMapPosition().setPositionFromTiles(closestUnit.getCurrentPosition().getTileX(), closestUnit.getCurrentPosition().getTileY());
 				final List<GridCell> path = MyPathFinder.getInstance().pathTowards(new TiledMapPosition().setPositionFromTiles(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY()), closestUnitPos, aiUnit.getAp());
@@ -507,19 +531,20 @@ public class AIDecisionMaker {
 		}
 
 		timestamp = System.currentTimeMillis();
-		Gdx.app.debug(TAG, "6 : " + (timestamp - startTime));
+		Gdx.app.debug(TAG, "there are units in range, took" + (timestamp - startTime) + "ms");
 
 		// decide where to cast spell
 		final MyPoint casterPos = new MyPoint(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY());
 		Array<MyPoint> abilityTargets = getAbilityTargets(ability, casterPos, aiUnit.isPlayerUnit(), battleState);
 
 		timestamp = System.currentTimeMillis();
-		Gdx.app.debug(TAG, "7 : " + (timestamp - startTime));
+		Gdx.app.debug(TAG, "looked for targets, took : " + (timestamp - startTime) + "ms");
 
 		// no units found in immediate vicinity, so move
 		if (abilityTargets.isEmpty()) {
+			Gdx.app.debug(TAG, "no units found in immeadiate vicinity, moving");
 			if (distancesWithAbilityTargetUnits.isEmpty()) {
-				// no targets, (the whole other team is invis?) just stand still
+				// no targets, (the whole other team is invis?) or ability does not have targets
 				final MyPoint endMyPoint = new MyPoint(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY());
 				final UnitTurn doNothing = new UnitTurn(aiUnit.getEntityID(), new Move(MoveType.MOVE, endMyPoint));
 				unitTurns.add(doNothing);
@@ -536,17 +561,18 @@ public class AIDecisionMaker {
 						copyUnit.getAp());
 				endMyPoint = new MyPoint(path.get(0).x, path.get(0).y);
 				int i = 0;
-				while (checkIfUnitOnPoint(endMyPoint, copyBattleState, copyUnit)) {
+				do {
 					endMyPoint = tryAdjacentPoint(i, new MyPoint(copyUnit.getCurrentPosition().getTileX(), copyUnit.getCurrentPosition().getTileY()),
 							new MyPoint(closestUnit.getCurrentPosition().getTileX(), closestUnit.getCurrentPosition().getTileY()));
 					i++;
-				}
+				} while (checkIfUnitOnPoint(endMyPoint, copyBattleState, copyUnit));
 				copyBattleState.moveUnitTo(copyUnit, endMyPoint);
 				moveAndSpell.addMove(new Move(MoveType.MOVE, endMyPoint));
 				ap--;
 				abilityTargets = getAbilityTargets(ability, endMyPoint, copyUnit.isPlayerUnit(), copyBattleState);
 			}
 			if (!abilityTargets.isEmpty()) {
+				Gdx.app.debug(TAG, "targets found after walking, took : " + (timestamp - startTime) + "ms");
 				for (final MyPoint target : abilityTargets) {
 					final Set<MyPoint> positionsToCastSpell = BattleStateGridHelper.getInstance().getAllCastPointsWhereTargetIsHit(ability, target,
 							new MyPoint(copyUnit.getCurrentPosition().getTileX(), copyUnit.getCurrentPosition().getTileY()), copyBattleState);
@@ -565,7 +591,7 @@ public class AIDecisionMaker {
 		}
 
 		timestamp = System.currentTimeMillis();
-		Gdx.app.debug(TAG, "8 : " + (timestamp - startTime));
+		Gdx.app.debug(TAG, "targets found without walking, took : " + (timestamp - startTime) + "ms");
 
 		if (!abilityTargets.isEmpty()) {
 			for (final MyPoint target : abilityTargets) {
@@ -582,7 +608,7 @@ public class AIDecisionMaker {
 		}
 
 		timestamp = System.currentTimeMillis();
-		Gdx.app.debug(TAG, "9 : " + (timestamp - startTime));
+		Gdx.app.debug(TAG, "the end of this ability, took : " + (timestamp - startTime) + "ms");
 		return unitTurns;
 	}
 
