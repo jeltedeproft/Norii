@@ -176,7 +176,7 @@ public class BattleManager {
 		if (!playerTurn) {
 			Player.getInstance().setAp(ApFileReader.getApData(turn));
 			aiIsCalculating = true;
-			aiTeamLeader.startCalculatingNextMove(activeBattleState);
+			aiTeamLeader.resetAI(activeBattleState);
 		} else {
 			turn++;
 			aiTeamLeader.setAp(ApFileReader.getApData(turn));

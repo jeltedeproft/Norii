@@ -57,8 +57,8 @@ public class AITeamLeader implements UnitOwner {
 		}
 	}
 
-	public void startCalculatingNextMove(BattleState stateOfBattle) {
-		aiDecisionMaker.startCalculatingNextMove(stateOfBattle);
+	public void resetAI(BattleState stateOfBattle) {
+		aiDecisionMaker.resetAI(stateOfBattle);
 	}
 
 	public void processAi() {

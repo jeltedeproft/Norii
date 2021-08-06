@@ -475,7 +475,9 @@ public class BattleState implements Comparable<BattleState> {
 	public Array<Entity> getNeighbours(MyPoint location) {
 		final Array<Entity> neighbours = new Array<>();
 		final Map<Integer, Array<Entity>> distances = Utility.getDistancesWithTarget(location, getAllUnits());
-		neighbours.addAll(distances.get(1));
+		if ((!distances.isEmpty()) && distances.containsKey(1)) {
+			neighbours.addAll(distances.get(1));// explode in distance 1
+		}
 		return neighbours;
 	}
 
