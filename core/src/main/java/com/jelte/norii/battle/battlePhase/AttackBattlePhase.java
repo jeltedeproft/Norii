@@ -42,8 +42,6 @@ public class AttackBattlePhase extends BattlePhase {
 		final boolean closeEnough = Utility.checkIfUnitsWithinDistance(entity, currentUnit.getCurrentPosition(), currentUnit.getEntityData().getAttackRange());
 		if ((entity.isPlayerUnit() != currentUnit.isPlayerUnit()) && closeEnough) {
 			currentUnit.attack(entity, DamageType.PHYSICAL);
-			currentUnit.getVisualComponent().setLocked(true);
-			battlemanager.setLockedUnit(entity);
 			battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.UPDATE_UI, entity);
 			AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.ATTACK_SOUND);
 			exit();

@@ -34,12 +34,6 @@ public class ActionBattlePhase extends BattlePhase {
 	}
 
 	private boolean isUnitSelectable(Entity entity) {
-		final Entity lockedEntity = battlemanager.getLockedUnit();
-
-		if (lockedEntity != null) {
-			return false;
-		}
-
 		if (!entity.isPlayerUnit()) {
 			return false;
 		}

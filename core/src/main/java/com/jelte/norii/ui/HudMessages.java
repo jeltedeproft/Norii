@@ -23,7 +23,6 @@ public class HudMessages {
 	public static final String SELECT_UNIT_MESSAGE = "Click once on a \n unit to select it.";
 	public static final String EXPLAIN_ACTION_MESSAGE = "Possible actions are, move, attack, \n cast an ability or skip your turn.";
 	public static final String EXPLAIN_TURNING_MESSAGE = "You can change the direction your character is facing, \n by pressing W, A, S, D.";
-	public static final String EXPLAIN_LOCKING_MESSAGE = "After an action is performed\n, that character is locked and no other character \ncan be used for that turn.";
 	public static final String EXPLAIN_END_TURN_MESSAGE = "Press skip to end your turn.";
 	public static final String EXPLAIN_CANCEL_MESSAGE = "Right click on the mouse to cancel any action.";
 	public static final String EXPLAIN_WIN_LOSE_MESSAGE = "Once all your enemies are defeated\n, you win the round";
@@ -68,7 +67,6 @@ public class HudMessages {
 		tutorialMessageTypesToWindows.put(HudMessageTypes.SELECT_UNIT_INFO, new HudMessageWindow(SELECT_UNIT_MESSAGE, this));
 		tutorialMessageTypesToWindows.put(HudMessageTypes.EXPLAIN_ACTION_INFO, new HudMessageWindow(EXPLAIN_ACTION_MESSAGE, this));
 		tutorialMessageTypesToWindows.put(HudMessageTypes.EXPLAIN_TURNING_INFO, new HudMessageWindow(EXPLAIN_TURNING_MESSAGE, this));
-		tutorialMessageTypesToWindows.put(HudMessageTypes.EXPLAIN_LOCKING_INFO, new HudMessageWindow(EXPLAIN_LOCKING_MESSAGE, this));
 		tutorialMessageTypesToWindows.put(HudMessageTypes.EXPLAIN_END_TURN_INFO, new HudMessageWindow(EXPLAIN_END_TURN_MESSAGE, this));
 		tutorialMessageTypesToWindows.put(HudMessageTypes.EXPLAIN_CANCEL_INFO, new HudMessageWindow(EXPLAIN_CANCEL_MESSAGE, this));
 		tutorialMessageTypesToWindows.put(HudMessageTypes.EXPLAIN_WIN_LOSE_INFO, new HudMessageWindow(EXPLAIN_WIN_LOSE_MESSAGE, this));

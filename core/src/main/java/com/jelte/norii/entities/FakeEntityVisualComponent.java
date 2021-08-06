@@ -66,12 +66,6 @@ public class FakeEntityVisualComponent implements EntityVisualComponentInterface
 	}
 
 	@Override
-	public void setLocked(boolean b) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void setInDeploymentPhase(boolean b) {
 		// TODO Auto-generated method stub
 

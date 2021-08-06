@@ -67,7 +67,7 @@ public class AIDecisionMaker {
 
 		updateBattlestateAndEntityIfNecessary();
 
-		Gdx.app.debug(TAG, "generating moves for : " + unit);
+		Gdx.app.debug(TAG, "\ngenerating moves for : " + unit);
 		generateBattleStatesForUnit(unit, startingState);
 
 		entityIndex++;

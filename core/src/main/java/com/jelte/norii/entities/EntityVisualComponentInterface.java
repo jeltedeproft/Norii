@@ -31,8 +31,6 @@ public interface EntityVisualComponentInterface {
 
 	public void setDirection(Direction up);
 
-	public void setLocked(boolean b);
-
 	public void setInDeploymentPhase(boolean b);
 
 	public void initiateInBattle(TiledMapPosition pos);

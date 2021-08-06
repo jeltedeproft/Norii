@@ -50,7 +50,6 @@ public class BattleManager {
 	private boolean aiIsCalculating = false;
 	private boolean aiFinishedCalculating = false;
 	private int unitsDeployed;
-	private Entity lockedUnit;
 	private BattleScreen battleScreen;
 	private int turn = 0;
 
@@ -77,7 +76,6 @@ public class BattleManager {
 		aiTeamLeader.setBattleManager(this);
 		activeUnit = Player.getInstance().getTeam().get(0);
 		playerTurn = true;
-		lockedUnit = null;
 		activeTurn = null;
 		activeBattleState = new BattleState(width, height);
 		initializeStateOfBattle(unwalkableNodes);
@@ -324,14 +322,6 @@ public class BattleManager {
 
 	public void setPlayerTurn(boolean playerTurn) {
 		this.playerTurn = playerTurn;
-	}
-
-	public Entity getLockedUnit() {
-		return lockedUnit;
-	}
-
-	public void setLockedUnit(Entity lockedUnit) {
-		this.lockedUnit = lockedUnit;
 	}
 
 	public BattlePhase getDeploymentBattleState() {

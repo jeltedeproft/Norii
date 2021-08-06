@@ -27,7 +27,6 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 	protected boolean isInAttackPhase;
 	protected boolean isActive;
 	protected boolean inBattle;
-	protected boolean locked;
 	private boolean isMoving;
 
 	protected EntityAnimation entityAnimation;
@@ -43,7 +42,6 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 	public EntityVisualComponent(Entity entity) {
 		this.entity = entity;
 		isInAttackPhase = false;
-		locked = false;
 		inBattle = false;
 		entityAnimation = new EntityAnimation(entity.getEntityData().getEntitySpriteName());
 		initActions();
@@ -105,15 +103,6 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 
 	public boolean isInAttackPhase() {
 		return isInAttackPhase;
-	}
-
-	public boolean isLocked() {
-		return locked;
-	}
-
-	@Override
-	public void setLocked(boolean locked) {
-		this.locked = locked;
 	}
 
 	public boolean isInBattle() {
@@ -246,10 +235,6 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 			batch.setColor(new Color(temp.r, temp.g, temp.b, getEntityactor().getColor().a));
 			batch.draw(getFrame(), getEntityactor().getX(), getEntityactor().getY(), 1.0f, 1.0f);
 			batch.setColor(temp);
-		}
-
-		if (isLocked()) {
-			batch.draw(AssetManagerUtility.getSprite("lock"), getEntityactor().getX(), getEntityactor().getY() + 1.0f, 1.0f, 1.0f);
 		}
 	}
 

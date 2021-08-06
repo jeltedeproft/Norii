@@ -1,7 +1,6 @@
 package com.jelte.norii.entities;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -54,10 +53,9 @@ public class Player implements UnitOwner {
 
 	@Override
 	public void applyModifiers() {
-		// team.forEach(Entity::applyModifiers);
-		final Iterator<Entity> entityIterator = team.iterator();
-		while (entityIterator.hasNext()) {
-			entityIterator.next().applyModifiers();
+		Entity[] teamCopy = team.toArray(new Entity[0]);// make copy to prevent concurrentModificationException
+		for (Entity entity : teamCopy) {
+			entity.applyModifiers();
 		}
 	}
 
