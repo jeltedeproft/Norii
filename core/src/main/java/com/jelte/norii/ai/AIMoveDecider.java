@@ -308,26 +308,26 @@ public class AIMoveDecider {
 		// if low hp run away
 		if (aiUnit.getHp() <= ((aiUnit.getEntityData().getMaxHP() / 100.0f) * 10)) {
 			final MyPoint originalGoal = MyPathFinder.getInstance().getPositionFurthestAwayFrom(centerOfGravityEnemies);
-			final MyPoint trimmedGoal = trimPathConsideringApAndReachable(originalGoal, aiUnit);
+			final MyPoint trimmedGoal = trimPathConsideringApAndReachable(originalGoal, aiUnit, battleState);
 			return new Move(MoveType.MOVE, trimmedGoal);
 		}
 
 		switch (ability.getAffectedTeams()) {
 		case FRIENDLY:
-			return new Move(MoveType.MOVE, trimPathConsideringApAndReachable(centerOfGravityAllies, aiUnit));
+			return new Move(MoveType.MOVE, trimPathConsideringApAndReachable(centerOfGravityAllies, aiUnit, battleState));
 		case ENEMY:
-			return new Move(MoveType.MOVE, trimPathConsideringApAndReachable(centerOfGravityEnemies, aiUnit));
+			return new Move(MoveType.MOVE, trimPathConsideringApAndReachable(centerOfGravityEnemies, aiUnit, battleState));
 		case BOTH:
-			return new Move(MoveType.MOVE, trimPathConsideringApAndReachable(centerOfGravityAllUnits, aiUnit));
+			return new Move(MoveType.MOVE, trimPathConsideringApAndReachable(centerOfGravityAllUnits, aiUnit, battleState));
 		case NONE:
-			return new Move(MoveType.MOVE, trimPathConsideringApAndReachable(centerOfGravityAllUnits, aiUnit));
+			return new Move(MoveType.MOVE, trimPathConsideringApAndReachable(centerOfGravityAllUnits, aiUnit, battleState));
 		default:
 			Gdx.app.debug(TAG, "ability does not have one of these affected teams : FRIENDLY, ENEMY, BOTH or NONE, returning null");
 			return null;
 		}
 	}
 
-	private MyPoint trimPathConsideringApAndReachable(MyPoint originalGoal, Entity aiUnit) {
+	private MyPoint trimPathConsideringApAndReachable(MyPoint originalGoal, Entity aiUnit, BattleState battleState) {
 		final TiledMapPosition start = new TiledMapPosition().setPositionFromTiles(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY());
 		final TiledMapPosition goal = new TiledMapPosition().setPositionFromTiles(originalGoal.x, originalGoal.y);
 		final List<GridCell> path = MyPathFinder.getInstance().pathTowards(start, goal, aiUnit.getAp());
@@ -335,7 +335,12 @@ public class AIMoveDecider {
 			return new MyPoint(start.getTileX(), start.getTileY());
 		}
 
-		return new MyPoint(path.get(path.size() - 1).x, path.get(path.size() - 1).y);
+		int i = 1;
+		while (battleState.get(path.get(path.size() - i).x, path.get(path.size() - i).y).isOccupied() && (i < path.size())) {
+			i++;
+		}
+
+		return new MyPoint(path.get(path.size() - i).x, path.get(path.size() - i).y);
 	}
 
 	private Map<Integer, List<Entity>> getDistancesToTargets(Entity unit, BattleState battleState, Ability ability) {
@@ -346,7 +351,7 @@ public class AIMoveDecider {
 			addFriendlyUnitsWithDistance(unit, battleState, distances);
 			break;
 		case ENEMY:
-			addEnemyUnitsWithDIstance(unit, battleState, distances);
+			addEnemyUnitsWithDistance(unit, battleState, distances);
 			break;
 		case BOTH:
 			addAllUnitsWithDistance(unit, battleState, distances);
@@ -365,7 +370,7 @@ public class AIMoveDecider {
 		}
 	}
 
-	private void addEnemyUnitsWithDIstance(Entity unit, BattleState battleState, final Map<Integer, List<Entity>> distances) {
+	private void addEnemyUnitsWithDistance(Entity unit, BattleState battleState, final Map<Integer, List<Entity>> distances) {
 		Array<Entity> unitsToCheck;
 		if (unit.isPlayerUnit()) {
 			unitsToCheck = battleState.getVisibleAiUnits();

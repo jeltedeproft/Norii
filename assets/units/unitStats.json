@@ -515,11 +515,11 @@
         "entitySpriteName": "GhostNurse",
         "maxHP": 10,
         "level": 1,
-        "attackRange": 0,
-        "attackPower": 0,
+        "attackRange": 1,
+        "attackPower": 2,
         "magicalDefense": 25,
         "physicalDefense": 25,
-        "basicAttackCost": 0,
+        "basicAttackCost": 1,
         "abilities": []
     },
 
@@ -545,11 +545,11 @@
         "entitySpriteName": "DarkMage",
         "maxHP": 10,
         "level": 1,
-        "attackRange": 0,
-        "attackPower": 0,
+        "attackRange": 2,
+        "attackPower": 2,
         "magicalDefense": 25,
         "physicalDefense": 25,
-        "basicAttackCost": 0,
+        "basicAttackCost": 1,
         "abilities": ["FIREBALL"]
     },
 
@@ -560,11 +560,11 @@
         "entitySpriteName": "Ryu",
         "maxHP": 10,
         "level": 1,
-        "attackRange": 0,
-        "attackPower": 0,
+        "attackRange": 1,
+        "attackPower": 4,
         "magicalDefense": 25,
         "physicalDefense": 25,
-        "basicAttackCost": 0,
+        "basicAttackCost": 1,
         "abilities": ["LOVE"]
     }
 ]

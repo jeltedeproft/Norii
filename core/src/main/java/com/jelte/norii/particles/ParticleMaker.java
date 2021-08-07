@@ -54,6 +54,15 @@ public class ParticleMaker {
 		}
 	}
 
+	public static void deactivateAllParticles() {
+		for (ArrayList<Particle> particles : allParticles.values()) {
+			for (final Particle particle : particles) {
+				particle.deactivate();
+			}
+			particlesChanged = true;
+		}
+	}
+
 	public static void deactivateParticle(final ParticleType particletype, final TiledMapPosition pos, final int id) {
 		if (allParticles.get(particletype) != null) {
 			for (final Particle particle : allParticles.get(particletype)) {

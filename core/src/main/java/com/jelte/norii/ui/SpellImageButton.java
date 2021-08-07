@@ -31,4 +31,9 @@ public class SpellImageButton extends TextButton {
 		this.setText(ability.getName());
 	}
 
+	public void clearAbility() {
+		this.ability = null;
+		this.setText("/");
+	}
+
 }

@@ -237,6 +237,8 @@ public class BottomBar {
 				spellImageButton.setEntity(entity);
 				if (!entity.getAbilities().isEmpty()) {
 					spellImageButton.setAbility((Ability) entity.getAbilities().toArray()[0]);
+				} else {
+					spellImageButton.clearAbility();
 				}
 				activeUnit = entity;
 				this.getTable().setVisible(true);

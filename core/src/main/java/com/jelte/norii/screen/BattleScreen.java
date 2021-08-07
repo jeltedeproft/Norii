@@ -293,6 +293,7 @@ public class BattleScreen extends GameScreen {
 	private void prepareMove(final Entity unit) {
 		final Set<MyPoint> pointsToMove = BattleStateGridHelper.getInstance().getPossibleCenterCellsFiltered(unit.getCurrentPosition().getTilePosAsPoint(), LineOfSight.CIRCLE, unit.getAp(), battlemanager.getBattleState());
 		MyPathFinder.getInstance().filterPositionsByWalkability(unit, pointsToMove);
+		ParticleMaker.deactivateAllParticles();
 		for (final MyPoint cell : pointsToMove) {
 			if (!isUnitOnCell(cell)) {
 				final TiledMapPosition positionToPutMoveParticle = new TiledMapPosition().setPositionFromTiles(cell.x, cell.y);
@@ -303,6 +304,7 @@ public class BattleScreen extends GameScreen {
 	}
 
 	private void prepareAttack(final Entity unit) {
+		ParticleMaker.deactivateAllParticles();
 		final Set<MyPoint> pointsToAttack = BattleStateGridHelper.getInstance().getPossibleCenterCells(unit.getCurrentPosition().getTilePosAsPoint(), LineOfSight.CIRCLE, unit.getEntityData().getAttackRange());
 		for (final MyPoint cell : pointsToAttack) {
 			final TiledMapPosition positionToPutAttackParticle = new TiledMapPosition().setPositionFromTiles(cell.x, cell.y);
@@ -312,6 +314,7 @@ public class BattleScreen extends GameScreen {
 	}
 
 	private void prepareSpell(final Entity unit, final Ability ability) {
+		ParticleMaker.deactivateAllParticles();
 		final List<TiledMapPosition> positions = battlemanager.getUnits().stream().map(Entity::getCurrentPosition).collect(Collectors.toList());
 		final Set<MyPoint> spellPath = BattleStateGridHelper.getInstance().calculateSpellPath(unit, ability, positions, battlemanager.getBattleState());
 
@@ -378,12 +381,14 @@ public class BattleScreen extends GameScreen {
 				break;
 			case CLICKED_ON_ABILITY:
 				final Entity spellEntity = battlemanager.getEntityByID(entityID);
-				if (spellEntity.canCastSpell(ability)) {
-					hud.setLocked(true);
-					prepareSpell(spellEntity, ability);
-					hud.setLocked(false);
-				} else {
-					hud.getHudMessages().showPopup(HudMessageTypes.NOT_ENOUGH_AP);
+				if (ability != null) {
+					if (spellEntity.canCastSpell(ability)) {
+						hud.setLocked(true);
+						prepareSpell(spellEntity, ability);
+						hud.setLocked(false);
+					} else {
+						hud.getHudMessages().showPopup(HudMessageTypes.NOT_ENOUGH_AP);
+					}
 				}
 				break;
 			case HOVERED_ON_MOVE:
