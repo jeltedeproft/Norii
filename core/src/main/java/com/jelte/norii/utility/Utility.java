@@ -104,8 +104,8 @@ public final class Utility {
 		int sumY = 0;
 
 		for (int i = 0; i < numberOfElements; i++) {
-			sumX += aiUnits.get(i).getX();
-			sumY += aiUnits.get(i).getY();
+			sumX += aiUnits.get(i).getCurrentPosition().getTileX();
+			sumY += aiUnits.get(i).getCurrentPosition().getTileY();
 		}
 
 		return new MyPoint(sumX / numberOfElements, sumY / numberOfElements);
@@ -118,8 +118,8 @@ public final class Utility {
 		int sumY = 0;
 
 		for (int i = 0; i < numberOfElements; i++) {
-			sumX += playerUnits.get(i).getX();
-			sumY += playerUnits.get(i).getY();
+			sumX += playerUnits.get(i).getCurrentPosition().getTileX();
+			sumY += playerUnits.get(i).getCurrentPosition().getTileY();
 		}
 
 		return new MyPoint(sumX / numberOfElements, sumY / numberOfElements);
@@ -132,8 +132,8 @@ public final class Utility {
 		int sumY = 0;
 
 		for (int i = 0; i < numberOfElements; i++) {
-			sumX += allUnits.get(i).getX();
-			sumY += allUnits.get(i).getY();
+			sumX += allUnits.get(i).getCurrentPosition().getTileX();
+			sumY += allUnits.get(i).getCurrentPosition().getTileY();
 		}
 
 		return new MyPoint(sumX / numberOfElements, sumY / numberOfElements);
