@@ -55,6 +55,7 @@ public class UnitTurn {
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
+		sb.append("\n");
 		for (final Move move : moves) {
 			sb.append(move.toString());
 			sb.append("\n");
