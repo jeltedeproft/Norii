@@ -26,6 +26,7 @@ import com.jelte.norii.utility.Utility;
 
 public class AIMoveDecider {
 	private static final String TAG = AIMoveDecider.class.getSimpleName();
+	private static final int FILTER_AMOUNT_OF_CELL_TARGETS = 10;
 	private Long oldTime;
 	final Random random = new Random();
 
@@ -36,7 +37,6 @@ public class AIMoveDecider {
 		Gdx.app.debug(TAG, "===============================================================");
 
 		switch (ability.getTarget()) {
-		case CELL:
 		case CELL_BUT_NO_UNIT:
 			castAbilityOnCell(ability, aiUnit, battleState, unitTurns);
 			break;
@@ -44,6 +44,7 @@ public class AIMoveDecider {
 		case SELF:
 			castNoTargetOrSelf(ability, aiUnit, battleState, unitTurns);
 			break;
+		case CELL:
 		case UNIT:
 			castAbilityOnTarget(ability, aiUnit, battleState, unitTurns);
 			break;
@@ -66,7 +67,7 @@ public class AIMoveDecider {
 		}
 		oldTime = debugTime("filtered targets", oldTime);
 
-		filterOutNumber(cellsToCastOn, 15);
+		filterOutNumber(cellsToCastOn, FILTER_AMOUNT_OF_CELL_TARGETS);
 		for (final MyPoint point : cellsToCastOn) {
 			final UnitTurn spellAndMove = new UnitTurn(aiUnit.getEntityID(), new SpellMove(MoveType.SPELL, point, ability));
 			spellAndMove.addMove(decideMove(ability, aiUnit, battleState));
@@ -104,17 +105,14 @@ public class AIMoveDecider {
 		oldTime = debugTime("looked for targets", oldTime);
 
 		if (abilityTargets.isEmpty()) {
-			oldTime = debugTime("no units found in immeadiate vicinity, moving", oldTime);
+			oldTime = debugTime("no units found in immediate vicinity, moving", oldTime);
 			if (distancesToTargets.isEmpty()) {
 				doNothing(aiUnit, unitTurns);
 			} else {
-				abilityTargets = tryToMoveAndCastSpell(ability, aiUnit, battleState, unitTurns, distancesToTargets, abilityTargets);
+				abilityTargets = tryToMoveAndCastSpell(ability, aiUnit, battleState, unitTurns, distancesToTargets, abilityTargets);// adds to unitTurns
 			}
-		}
-
-		oldTime = debugTime("targets found without walking", oldTime);
-
-		if (!abilityTargets.isEmpty()) {
+			oldTime = debugTime("targets found without walking", oldTime);
+		} else {
 			addSpellMovesForEveryTarget(ability, aiUnit, battleState, unitTurns, casterPos, abilityTargets);
 		}
 	}
@@ -128,7 +126,7 @@ public class AIMoveDecider {
 	}
 
 	private void justMove(Entity aiUnit, BattleState battleState, final Array<UnitTurn> unitTurns, final TreeMap<Integer, List<Entity>> distancesWithAbilityTargetUnits) {
-		Gdx.app.debug(TAG, "just walking : ");
+		oldTime = debugTime("just walking", oldTime);
 		final Entity closestUnit = distancesWithAbilityTargetUnits.firstEntry().getValue().get(0);
 		final TiledMapPosition closestUnitPos = new TiledMapPosition().setPositionFromTiles(closestUnit.getCurrentPosition().getTileX(), closestUnit.getCurrentPosition().getTileY());
 		final List<GridCell> path = MyPathFinder.getInstance().pathTowards(new TiledMapPosition().setPositionFromTiles(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY()), closestUnitPos, aiUnit.getAp());
@@ -149,7 +147,7 @@ public class AIMoveDecider {
 	}
 
 	private void moveAttack(Entity aiUnit, BattleState battleState, final Array<UnitTurn> unitTurns, final TreeMap<Integer, List<Entity>> distancesWithAbilityTargetUnits) {
-		Gdx.app.debug(TAG, "just move attack");
+		oldTime = debugTime("just move and attack", oldTime);
 		final Entity closestUnit = distancesWithAbilityTargetUnits.firstEntry().getValue().get(0);
 		final TiledMapPosition closestUnitPos = new TiledMapPosition().setPositionFromTiles(closestUnit.getCurrentPosition().getTileX(), closestUnit.getCurrentPosition().getTileY());
 		final List<GridCell> path = MyPathFinder.getInstance().pathTowards(new TiledMapPosition().setPositionFromTiles(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY()), closestUnitPos, aiUnit.getAp());
@@ -178,8 +176,8 @@ public class AIMoveDecider {
 
 	private Array<MyPoint> tryToMoveAndCastSpell(Ability ability, Entity aiUnit, BattleState battleState, final Array<UnitTurn> unitTurns, final TreeMap<Integer, List<Entity>> distancesWithAbilityTargetUnits,
 			Array<MyPoint> abilityTargets) {
-		MyPoint endMyPoint = new MyPoint(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY());
-		final UnitTurn moveAndSpell = new UnitTurn(aiUnit.getEntityID(), new Move(MoveType.MOVE, endMyPoint));
+		MyPoint endPoint = new MyPoint(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY());
+		final UnitTurn moveAndSpell = new UnitTurn(aiUnit.getEntityID(), new Move(MoveType.MOVE, endPoint));
 		int ap = aiUnit.getAp();
 		final BattleState copyBattleState = battleState.makeCopy();
 		final Entity copyUnit = copyBattleState.get(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY()).getUnit();
@@ -188,17 +186,20 @@ public class AIMoveDecider {
 			final TiledMapPosition closestUnitPos = new TiledMapPosition().setPositionFromTiles(closestUnit.getCurrentPosition().getTileX(), closestUnit.getCurrentPosition().getTileY());
 			final List<GridCell> path = MyPathFinder.getInstance().pathTowards(new TiledMapPosition().setPositionFromTiles(copyUnit.getCurrentPosition().getTileX(), copyUnit.getCurrentPosition().getTileY()), closestUnitPos,
 					copyUnit.getAp());
-			endMyPoint = new MyPoint(path.get(0).x, path.get(0).y);
+			if (path.size() == 0) {
+				int j = 5;
+			}
+			endPoint = new MyPoint(path.get(0).x, path.get(0).y);
 			int i = 0;
 			do {
-				endMyPoint = tryAdjacentPoint(i, new MyPoint(copyUnit.getCurrentPosition().getTileX(), copyUnit.getCurrentPosition().getTileY()),
+				endPoint = tryAdjacentPoint(i, new MyPoint(copyUnit.getCurrentPosition().getTileX(), copyUnit.getCurrentPosition().getTileY()),
 						new MyPoint(closestUnit.getCurrentPosition().getTileX(), closestUnit.getCurrentPosition().getTileY()));
 				i++;
-			} while (checkIfUnitOnPoint(endMyPoint, copyBattleState, copyUnit));
-			copyBattleState.moveUnitTo(copyUnit, endMyPoint);
-			moveAndSpell.addMove(new Move(MoveType.MOVE, endMyPoint));
+			} while (checkIfUnitOnPoint(endPoint, copyBattleState, copyUnit));
+			copyBattleState.moveUnitTo(copyUnit, endPoint);
+			moveAndSpell.addMove(new Move(MoveType.MOVE, endPoint));
 			ap--;
-			abilityTargets = getAbilityTargets(ability, endMyPoint, copyUnit.isPlayerUnit(), copyBattleState);
+			abilityTargets = getAbilityTargets(ability, endPoint, copyUnit.isPlayerUnit(), copyBattleState);
 		}
 		if (!abilityTargets.isEmpty()) {
 			addSpellMovesAfterMovingForEveryTarget(ability, unitTurns, abilityTargets, moveAndSpell, copyBattleState, copyUnit);
@@ -206,6 +207,7 @@ public class AIMoveDecider {
 			// units were in range, but moving did not bring them into line of sight
 			unitTurns.add(moveAndSpell);
 		}
+		oldTime = debugTime("casting spell after move", oldTime);
 		return abilityTargets;
 	}
 
@@ -228,18 +230,18 @@ public class AIMoveDecider {
 		for (final MyPoint target : abilityTargets) {
 			final Set<MyPoint> positionsToCastSpell = BattleStateGridHelper.getInstance().getAllCastPointsWhereTargetIsHit(ability, target, new MyPoint(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY()),
 					battleState);
+			oldTime = debugTime("finished 1 target - getcastPointswherehit", oldTime);
 			final Move moveAfterSpell = decideMove(ability, aiUnit, battleState);
+			oldTime = debugTime("finished 1 target - decideMove", oldTime);
 			for (final MyPoint MyPoint : positionsToCastSpell) {
 				final Array<MyPoint> affectedUnits = BattleStateGridHelper.getInstance().getTargetsAbility(ability, MyPoint, casterPos, getUnitPositions(false, ability, battleState));
 				final UnitTurn spellAndMove = new UnitTurn(aiUnit.getEntityID(), new SpellMove(MoveType.SPELL, MyPoint, ability, affectedUnits));
 				spellAndMove.addMove(moveAfterSpell);
 				unitTurns.add(spellAndMove);
 			}
+			oldTime = debugTime("finished 1 target - createspellmove", oldTime);
 		}
-	}
-
-	private boolean checkEndConditions(BattleState battleState) {
-		return battleState.getPlayerUnits().isEmpty() || battleState.getAiUnits().isEmpty();
+		oldTime = debugTime("adding spell moves for every target", oldTime);
 	}
 
 	private Set<MyPoint> filterOutNumber(Set<MyPoint> cellsToCastOn, int maxSize) {
@@ -304,14 +306,14 @@ public class AIMoveDecider {
 		final MyPoint centerOfGravityEnemies = Utility.getCenterOfGravityPlayers(battleState);
 		final MyPoint centerOfGravityAllies = Utility.getCenterOfGravityAi(battleState);
 		final MyPoint centerOfGravityAllUnits = Utility.getCenterOfGravityAllUnits(battleState);
-
+		oldTime = debugTime("centersofgravirty", oldTime);
 		// if low hp run away
 		if (aiUnit.getHp() <= ((aiUnit.getEntityData().getMaxHP() / 100.0f) * 10)) {
 			final MyPoint originalGoal = MyPathFinder.getInstance().getPositionFurthestAwayFrom(centerOfGravityEnemies);
 			final MyPoint trimmedGoal = trimPathConsideringApAndReachable(originalGoal, aiUnit, battleState);
 			return new Move(MoveType.MOVE, trimmedGoal);
 		}
-
+		oldTime = debugTime("check low hp run away", oldTime);
 		switch (ability.getAffectedTeams()) {
 		case FRIENDLY:
 			return new Move(MoveType.MOVE, trimPathConsideringApAndReachable(centerOfGravityAllies, aiUnit, battleState));
@@ -331,7 +333,9 @@ public class AIMoveDecider {
 		final TiledMapPosition start = new TiledMapPosition().setPositionFromTiles(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY());
 		final TiledMapPosition goal = new TiledMapPosition().setPositionFromTiles(originalGoal.x, originalGoal.y);
 		final List<GridCell> path = MyPathFinder.getInstance().pathTowards(start, goal, aiUnit.getAp());
+		oldTime = debugTime("calculated path", oldTime);
 		if (path.isEmpty()) {
+			oldTime = debugTime("empty path trimmed", oldTime);
 			return new MyPoint(start.getTileX(), start.getTileY());
 		}
 
@@ -339,13 +343,12 @@ public class AIMoveDecider {
 		while (battleState.get(path.get(path.size() - i).x, path.get(path.size() - i).y).isOccupied() && (i < path.size())) {
 			i++;
 		}
-
+		oldTime = debugTime("path trimmed", oldTime);
 		return new MyPoint(path.get(path.size() - i).x, path.get(path.size() - i).y);
 	}
 
 	private Map<Integer, List<Entity>> getDistancesToTargets(Entity unit, BattleState battleState, Ability ability) {
 		final Map<Integer, List<Entity>> distances = new TreeMap<>();
-		Array<Entity> unitsToCheck;
 		switch (ability.getAffectedTeams()) {
 		case FRIENDLY:
 			addFriendlyUnitsWithDistance(unit, battleState, distances);
@@ -471,9 +474,9 @@ public class AIMoveDecider {
 		return points;
 	}
 
-	private Long debugTime(String log, Long oldTime) {
+	public static Long debugTime(String log, Long oldTime) {
 		Long newTime = System.currentTimeMillis();
-		Gdx.app.debug(TAG, log + "took : " + (newTime - oldTime) + "ms");
+		Gdx.app.debug(TAG, log + " which took : " + (newTime - oldTime) + " ms");
 		return newTime;
 	}
 

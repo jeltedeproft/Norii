@@ -2,6 +2,7 @@ package com.jelte.norii.ai;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -28,8 +29,9 @@ public class AIDecisionMaker {
 	private static final String TAG = AIDecisionMaker.class.getSimpleName();
 
 	private static final int NUMBER_OF_LAYERS = 3;
-	private static final int MAX_AI_THINKING_TIME = 700;
+	private static final int MAX_AI_THINKING_TIME = 20000;
 	private static final int RANDOMISATION_TOP_X_STATES = 5;
+	private static final int SAVE_TOP_X_STATES_EVERY_ROUND = 15;
 
 	private final SortedMap<Integer, BattleState> statesWithScores;
 	private final Array<Array<BattleState>> allBattleStates = new Array<>();
@@ -41,7 +43,8 @@ public class AIDecisionMaker {
 	private AIMoveDecider aiMoveDecider;
 	private Entity unit;
 	private BattleState startingState;
-	private static Long processingTimeCounter = 0L;
+	private Long processingTimeCounter = 0L;
+	private Long oldTime = 0L;
 
 	public AIDecisionMaker() {
 		aiMoveDecider = new AIMoveDecider();
@@ -52,10 +55,12 @@ public class AIDecisionMaker {
 	}
 
 	public void resetAI(BattleState battleState) {
+		battleState.calculateScore();
 		currentBattleState = battleState;
 		statesWithScores.clear();
 		turnIndex = 0;
 		numberOfBattleStatesThisRound = 1;
+		processingTimeCounter = 0L;
 		for (int i = 0; i < NUMBER_OF_LAYERS; i++) {
 			allBattleStates.get(i).clear();
 		}
@@ -63,51 +68,35 @@ public class AIDecisionMaker {
 
 	// returns true when finished or time is up
 	public boolean processAi() {
+		oldTime = System.currentTimeMillis();
 		final Long startingTime = System.currentTimeMillis();
 
 		updateBattlestateAndEntityIfNecessary();
 
-		Gdx.app.debug(TAG, "\ngenerating moves for : " + unit);
+		oldTime = AIMoveDecider.debugTime("\n\ngenerating moves for : " + unit, oldTime);
 		generateBattleStatesForUnit(unit, startingState);
+		oldTime = AIMoveDecider.debugTime("moves generated for unit : " + unit, oldTime);
 
 		entityIndex++;
 
 		nextBattlestateIfAllUnitsDone();// all units done?
 
 		if (isRoundFinished()) {
+			oldTime = AIMoveDecider.debugTime("\n\nNEXT ROUND", oldTime);
 			prepareNextRound();
 
 			if (turnIndex >= NUMBER_OF_LAYERS) {
+				oldTime = AIMoveDecider.debugTime("\n\nALL STATES DONE", oldTime);
 				return true;
 			}
 		}
 
 		// check timer
 		processingTimeCounter += (System.currentTimeMillis() - startingTime);
-		return processingTimeCounter > MAX_AI_THINKING_TIME;
-	}
-
-	private void prepareNextRound() {
-		// all steps from this round done, next round
-		reduceModifierCount(allBattleStates.get(turnIndex));
-		turnIndex++;
-		battleStateIndex = 0;
-		entityIndex = 0;
-		numberOfBattleStatesThisRound = allBattleStates.get(turnIndex - 1).size;
-	}
-
-	private void nextBattlestateIfAllUnitsDone() {
-		if ((turnIndex % 2) == 0) {
-			if (entityIndex >= startingState.getAiUnits().size) {
-				battleStateIndex++;
-				entityIndex = 0;
-			}
-		} else {
-			if (entityIndex >= startingState.getPlayerUnits().size) {
-				battleStateIndex++;
-				entityIndex = 0;
-			}
+		if (processingTimeCounter > MAX_AI_THINKING_TIME) {
+			oldTime = AIMoveDecider.debugTime("\n\nEARLY CUTOFF TO TIME", oldTime);
 		}
+		return processingTimeCounter > MAX_AI_THINKING_TIME;
 	}
 
 	private void updateBattlestateAndEntityIfNecessary() {
@@ -122,6 +111,44 @@ public class AIDecisionMaker {
 			unit = startingState.getAiUnits().get(entityIndex);
 		} else {
 			unit = startingState.getPlayerUnits().get(entityIndex);
+		}
+	}
+
+	private void prepareNextRound() {
+		// all steps from this round done, next round
+		Array<BattleState> statesFromLastRound = allBattleStates.get(turnIndex);
+		statesFromLastRound.sort();
+		statesFromLastRound = limitNumberOfStatesTo(allBattleStates.get(turnIndex), SAVE_TOP_X_STATES_EVERY_ROUND);
+		reduceModifierCount(statesFromLastRound);
+		turnIndex++;
+		battleStateIndex = 0;
+		entityIndex = 0;
+		numberOfBattleStatesThisRound = statesFromLastRound.size;
+	}
+
+	private Array<BattleState> limitNumberOfStatesTo(Array<BattleState> array, int size) {
+		Array<BattleState> smallerArray = new Array<>();
+		int i = 0;
+		while ((i < size) && (i < array.size)) {
+			smallerArray.add(array.get(i));
+			i++;
+		}
+		return smallerArray;
+	}
+
+	private void nextBattlestateIfAllUnitsDone() {
+		if ((turnIndex % 2) == 0) {
+			if (entityIndex >= startingState.getAiUnits().size) {
+				oldTime = AIMoveDecider.debugTime("\n\nNEXT BATTLESTATE", oldTime);
+				battleStateIndex++;
+				entityIndex = 0;
+			}
+		} else {
+			if (entityIndex >= startingState.getPlayerUnits().size) {
+				oldTime = AIMoveDecider.debugTime("\n\nNEXT BATTLESTATE", oldTime);
+				battleStateIndex++;
+				entityIndex = 0;
+			}
 		}
 	}
 
@@ -156,11 +183,21 @@ public class AIDecisionMaker {
 			resultStates = allBattleStates.get(NUMBER_OF_LAYERS - i);
 		}
 		allBattleStates.get(NUMBER_OF_LAYERS - i).sort();
-		Gdx.app.debug(TAG, "RESULTS");
+		Gdx.app.debug(TAG, "RESULTS FOR LAYER : " + (NUMBER_OF_LAYERS - i));
 		Gdx.app.debug(TAG, "==========================================================");
 		int pos = 1;
 		for (BattleState state : allBattleStates.get(NUMBER_OF_LAYERS - i)) {
-			Gdx.app.debug(TAG, pos + ") initial move = " + getInitialMoves(state).getTurn() + " with endscore : " + state.getScore());
+			Gdx.app.debug("", "current state =  " + state.getTurn() + " --> on level : " + (NUMBER_OF_LAYERS - i));
+			for (Move move : getInitialMoves(state).getTurn().getMoves()) {
+				if (move instanceof SpellMove) {
+					SpellMove spell = (SpellMove) move;
+					Gdx.app.debug(TAG, "move " + pos + ") initial spell = " + spell.getAbility() + " with endscore : " + state.getScore() + "\n");
+
+				} else {
+					Gdx.app.debug(TAG, "move " + pos + ") initial move = " + move.getLocation() + " with endscore : " + state.getScore() + "\n");
+
+				}
+			}
 			pos++;
 		}
 		Random random = new Random();
@@ -336,7 +373,7 @@ public class AIDecisionMaker {
 
 	private void castHammerBack(Entity unit, SpellMove move, BattleState battleState, final MyPoint casterPos, final MyPoint location, final int damage) {
 		castHammerBackBack(move, battleState, casterPos, location, damage);
-		final Entity hammerBackUnit = new Entity(EntityTypes.BOOMERANG, unit.getOwner());
+		final Entity hammerBackUnit = new Entity(EntityTypes.BOOMERANG, unit.getOwner(), false);
 		hammerBackUnit.setVisualComponent(new FakeEntityVisualComponent());
 		hammerBackUnit.setCurrentPosition(new TiledMapPosition().setPositionFromTiles(location.x, location.y));
 		battleState.addEntity(hammerBackUnit);
@@ -369,7 +406,7 @@ public class AIDecisionMaker {
 		}
 
 		if (portalCount < 2) {
-			final Entity portalEntity = new Entity(EntityTypes.PORTAL, unit.getOwner());
+			final Entity portalEntity = new Entity(EntityTypes.PORTAL, unit.getOwner(), false);
 			unit.getOwner().addUnit(portalEntity);
 			portalEntity.setVisualComponent(new FakeEntityVisualComponent());
 			portalEntity.setCurrentPosition(new TiledMapPosition().setPositionFromTiles(location.x, location.y));
@@ -405,14 +442,14 @@ public class AIDecisionMaker {
 	}
 
 	private void castSummon(Entity unit, BattleState battleState, final MyPoint location) {
-		final Entity ghostUnit = new Entity(EntityTypes.GHOST, unit.getOwner());
+		final Entity ghostUnit = new Entity(EntityTypes.GHOST, unit.getOwner(), false);
 		ghostUnit.setVisualComponent(new FakeEntityVisualComponent());
 		ghostUnit.setCurrentPosition(new TiledMapPosition().setPositionFromTiles(location.x, location.y));
 		battleState.addEntity(ghostUnit);
 	}
 
 	private void castPlantShield(Entity unit, BattleState battleState, final MyPoint location) {
-		final Entity rock = new Entity(EntityTypes.ROCK, unit.getOwner());
+		final Entity rock = new Entity(EntityTypes.ROCK, unit.getOwner(), false);
 		battleState.addModifierToUnit(location.x, location.y, new Modifier(ModifiersEnum.STUNNED, 3, 0));
 		battleState.addModifierToUnit(location.x, location.y, new Modifier(ModifiersEnum.PURE_DAMAGE, 3, 334));
 		rock.setVisualComponent(new FakeEntityVisualComponent());
@@ -433,11 +470,15 @@ public class AIDecisionMaker {
 		TreeMap<Integer, Array<Entity>> distancesToTarget = (TreeMap<Integer, Array<Entity>>) Utility.getDistancesWithTarget(location, battleState.getAllUnits());
 
 		while ((!distancesToTarget.isEmpty()) && (entitiesHit <= 3)) {
-			final Entity closestUnit = distancesToTarget.firstEntry().getValue().first();
+			if (distancesToTarget.firstEntry().getValue().size == 0) {
+				int j = 5;
+			}
+			final Array<Entity> closestUnits = getFirstNotNull(distancesToTarget);
+			final Entity closestUnit = closestUnits.first();
 			if (Utility.checkIfUnitsWithinDistance(closestUnit, target, 4)) {
 				if (usedTargets.contains(closestUnit, false)) {
 					// skip this unit
-					distancesToTarget.firstEntry().getValue().removeIndex(0);
+					closestUnits.removeIndex(0);
 				} else {
 					entitiesHit = crackleTarget(move.getAbility(), usedTargets, entitiesHit, closestUnit);
 					distancesToTarget = (TreeMap<Integer, Array<Entity>>) Utility.getDistancesWithTarget(closestUnit.getCurrentPosition().getTilePosAsPoint(), battleState.getAllUnits());
@@ -447,6 +488,15 @@ public class AIDecisionMaker {
 				break;
 			}
 		}
+	}
+
+	private Array<Entity> getFirstNotNull(TreeMap<Integer, Array<Entity>> distancesToTarget) {
+		for (Map.Entry<Integer, Array<Entity>> entry : distancesToTarget.entrySet()) {
+			if (!entry.getValue().isEmpty()) {
+				return entry.getValue();
+			}
+		}
+		return null;
 	}
 
 	private int crackleTarget(final Ability ability, Array<Entity> usedTargets, int entitiesHit, final Entity target) {
