@@ -34,6 +34,7 @@ public class BattleStateGridHelper {
 		return targets;
 	}
 
+	// TO-DO optimize : return only subset of points
 	public Set<MyPoint> getAllPointsASpellCanHit(MyPoint center, LineOfSight lineOfSight, int range, BattleState battleState) {
 		final Set<MyPoint> points = getPossibleCenterCells(center, lineOfSight, range);
 		checkMyPointBounds(points, battleState);
@@ -441,7 +442,8 @@ public class BattleStateGridHelper {
 			return false;
 		}
 
-		return !(((deltaX == deltaY) && (deltaX >= range)) || (((deltaX == 0) && (deltaY > range)) || ((deltaY == 0) && (deltaX > range))) || checkLShapesDiagonal(deltaX, deltaY, range, areaOfEffectRange) || checkCorners(deltaX, deltaY, areaOfEffectRange));
+		return !(((deltaX == deltaY) && (deltaX >= range)) || (((deltaX == 0) && (deltaY > range)) || ((deltaY == 0) && (deltaX > range))) || checkLShapesDiagonal(deltaX, deltaY, range, areaOfEffectRange)
+				|| checkCorners(deltaX, deltaY, areaOfEffectRange));
 	}
 
 	private boolean checkCorners(int deltaX, int deltaY, int areaOfEffectRange) {
