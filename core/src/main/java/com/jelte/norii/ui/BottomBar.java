@@ -20,18 +20,14 @@ public class BottomBar {
 	private static final String MOVE_BUTTON_SPRITE_NAME = "move";
 	private static final String ATTACK_BUTTON_SPRITE_NAME = "attack";
 	private static final String SKIP_BUTTON_SPRITE_NAME = "skip";
+	private static final String DEFAULT_SKIN = "default";
 	private static final String ACTIONS = "Actions";
-	private static final String INFO = "Information";
+	private static final String INFO = "Ability";
 	private static final String STATS = "Stats";
 
-	private static final int NUMBER_OF_STATS_SHOWN = 5;
-	private static final int PORTRAIT_WIDTH_PADDING = 5;
-	private static final int PORTRAIT_HEIGHT_PADDING = 5;
 	private static final int WINDOW_PADDING = 0;
 	private static final int HERO_NAME_LABEL_HEIGHT = 15;
 	private static final int HERO_NAME_LABEL_WIDTH = 55;
-	private static final int ACTION_BUTTON_LABEL_HEIGHT = 15;
-	private static final int ACTION_BUTTON_LABEL_WIDTH = 55;
 	private static final int STATS_WIDTH = 80;
 	private static final int STATS_HEIGHT = 20;
 	private static final int PAD_BOTTOM_TITLE = 10;
@@ -66,6 +62,7 @@ public class BottomBar {
 	private Label spellInfo;
 
 	private Entity activeUnit;
+	private boolean actionsVisible;
 	private final Hud hud;
 
 	public BottomBar(int mapWidth, int mapHeight, Hud hud) {
@@ -109,7 +106,7 @@ public class BottomBar {
 		infoLabel = new Label(INFO, AssetManagerUtility.getSkin());
 		statsLabel = new Label(STATS, AssetManagerUtility.getSkin());
 		spellInfo = new Label("", AssetManagerUtility.getSkin());
-		moveImageButton = new TextButton("MOVE", statusUISkin, "default");
+		moveImageButton = new TextButton(MOVE_BUTTON_SPRITE_NAME, statusUISkin, DEFAULT_SKIN);
 		moveImageButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(final InputEvent event, final float x, final float y) {
@@ -117,7 +114,7 @@ public class BottomBar {
 			}
 		});
 
-		attackImageButton = new TextButton("ATTACK", statusUISkin, "default");
+		attackImageButton = new TextButton(ATTACK_BUTTON_SPRITE_NAME, statusUISkin, DEFAULT_SKIN);
 		attackImageButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(final InputEvent event, final float x, final float y) {
@@ -125,7 +122,7 @@ public class BottomBar {
 			}
 		});
 
-		skipImageButton = new TextButton("SKIP", statusUISkin, "default");
+		skipImageButton = new TextButton(SKIP_BUTTON_SPRITE_NAME, statusUISkin, DEFAULT_SKIN);
 		skipImageButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(final InputEvent event, final float x, final float y) {
@@ -140,6 +137,7 @@ public class BottomBar {
 				hud.sendMessage(MessageToBattleScreen.CLICKED_ON_ABILITY, activeUnit.getEntityID(), spellImageButton.getAbility());
 			}
 		});
+		setActionsVisible(false);
 	}
 
 	private void changeSpellImage(final String spellImageName) {
@@ -296,6 +294,18 @@ public class BottomBar {
 
 	public Table getTable() {
 		return table;
+	}
+
+	public boolean isActionsVisible() {
+		return actionsVisible;
+	}
+
+	public void setActionsVisible(boolean actionsVisible) {
+		this.actionsVisible = actionsVisible;
+		moveImageButton.setVisible(actionsVisible);
+		skipImageButton.setVisible(actionsVisible);
+		attackImageButton.setVisible(actionsVisible);
+		spellImageButton.setVisible(actionsVisible);
 	}
 
 }
