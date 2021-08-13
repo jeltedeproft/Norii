@@ -233,6 +233,9 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 		if (isInBattle()) {
 			final Color temp = batch.getColor();
 			batch.setColor(new Color(temp.r, temp.g, temp.b, getEntityactor().getColor().a));
+			if (getFrame() == null) {
+				int j = 5;
+			}
 			batch.draw(getFrame(), getEntityactor().getX(), getEntityactor().getY(), 1.0f, 1.0f);
 			batch.setColor(temp);
 		}

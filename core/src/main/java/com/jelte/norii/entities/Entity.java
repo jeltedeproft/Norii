@@ -33,6 +33,7 @@ public class Entity extends Actor {
 	protected boolean isPlayerUnit;
 	protected boolean isDead;
 	protected boolean isInvis;
+	protected boolean isReal;
 
 	protected int entityID;
 
@@ -48,14 +49,14 @@ public class Entity extends Actor {
 
 	private UnitOwner owner;
 
-	public Entity(final EntityTypes type, UnitOwner owner) {
+	public Entity(final EntityTypes type, UnitOwner owner, boolean isReal) {
 		entityData = EntityFileReader.getUnitData().get(type.ordinal());
 		entityType = type;
 		entityData.setEntity(this);
-		initEntity(owner);
+		initEntity(owner, isReal);
 	}
 
-	public void initEntity(UnitOwner owner) {
+	public void initEntity(UnitOwner owner, boolean isReal) {
 		oldPlayerPosition = new TiledMapPosition().setPositionFromScreen(-1000, -1000);
 		currentPlayerPosition = new TiledMapPosition().setPositionFromScreen(-1000, -1000);
 		hp = entityData.getMaxHP();
@@ -63,6 +64,7 @@ public class Entity extends Actor {
 		statsChanged = true;
 		isInvis = false;
 		direction = Direction.DOWN;
+		this.isReal = isReal;
 		xp = 0;
 
 		this.owner = owner;
@@ -72,7 +74,11 @@ public class Entity extends Actor {
 		modifiers = new ArrayList<>();
 		entityID = java.lang.System.identityHashCode(this);
 		initAbilities();
-		visualComponent = new EntityVisualComponent(this);
+		if (isReal) {
+			visualComponent = new EntityVisualComponent(this);
+		} else {
+			visualComponent = new FakeEntityVisualComponent();
+		}
 	}
 
 	private void initAbilities() {
@@ -400,7 +406,7 @@ public class Entity extends Actor {
 			copyAbilities.add(new Ability(ability.getAbilityEnum()));
 		}
 
-		final Entity copy = new Entity(entityType, owner);
+		final Entity copy = new Entity(entityType, owner, false);
 		copy.setVisualComponent(new FakeEntityVisualComponent());
 		copy.setCurrentPosition(currentPlayerPosition);
 		copy.setEntityID(entityID);
@@ -453,6 +459,10 @@ public class Entity extends Actor {
 
 	public boolean isInvisible() {
 		return isInvis;
+	}
+
+	public boolean isRealUnit() {
+		return isReal;
 	}
 
 	public void kill() {

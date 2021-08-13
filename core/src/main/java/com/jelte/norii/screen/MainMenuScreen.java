@@ -207,8 +207,7 @@ public class MainMenuScreen extends GameScreen {
 	}
 
 	private void addTutorialUnitsToPlayer() {
-		playerMonsters.add(new Entity(EntityTypes.BLACK_SLIME_RED_EYES, Player.getInstance()));
-
+		playerMonsters.add(new Entity(EntityTypes.BLACK_SLIME_RED_EYES, Player.getInstance(), true));
 		Player.getInstance().setTeam(playerMonsters);
 	}
 

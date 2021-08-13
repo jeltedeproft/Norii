@@ -159,6 +159,7 @@ public class BattleScreen extends GameScreen {
 		// System.out.println("max sprites in batch : " +
 		// spriteBatch.maxSpritesInBatch);
 		// System.out.println("spritebatch render calls : " + spriteBatch.renderCalls);
+		MyPathFinder.getInstance().preprocessMap();// do this in render loop so we dont block gui
 		if (isPaused) {
 			updatePauseMenu();
 			renderPauseMenu(delta);
@@ -436,6 +437,7 @@ public class BattleScreen extends GameScreen {
 		case DEPLOYMENT_FINISHED:
 			hud.getHudMessages().hideInfoWindow(HudMessageTypes.NUMBER_OF_UNITS_DEPLOYED);
 			hud.getHudMessages().showNextTutorialMessage();
+			hud.getPortraitAndStats().setActionsVisible(true);
 			break;
 		case INVALID_SPELL_TARGET:
 			hud.getHudMessages().showPopup(HudMessageTypes.INVALID_SPELL_TARGET);

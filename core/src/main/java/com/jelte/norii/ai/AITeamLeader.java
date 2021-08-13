@@ -34,7 +34,7 @@ public class AITeamLeader implements UnitOwner {
 		for (final String name : aiTeamData.getUnits()) {
 			for (final EntityTypes type : EntityTypes.values()) {
 				if (name.equals(type.getEntityName())) {
-					final Entity entity = new Entity(type, this);
+					final Entity entity = new Entity(type, this, true);
 					entity.setPlayerUnit(false);
 					team.add(entity);
 				}

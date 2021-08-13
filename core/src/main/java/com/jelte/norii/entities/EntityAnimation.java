@@ -35,6 +35,7 @@ public class EntityAnimation {
 			animationName = spriteName + "Walk" + currentDirection.getDirectionAsString();
 			currentAnimation = AssetManagerUtility.getAnimation(animationName, ANIMATION_DURATION, playmodePerAnimationType.get(currentAnimationType));
 		}
+		currentFrame = currentAnimation.getKeyFrame(frameTime);
 	}
 
 	private void initPlaymodePerAnimationType() {

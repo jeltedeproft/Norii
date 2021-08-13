@@ -47,9 +47,9 @@ public class BattleState implements Comparable<BattleState> {
 			for (int j = 0; j < row.length; j++) {
 				final BattleCell cell = stateOfField[j][i];
 				if (cell.isOccupied() && cell.getUnit().isPlayerUnit()) {
-					sb.append("| " + cell.getUnit().getEntityID() + " -- (" + cell.getUnit().getCurrentPosition().getTileX() + "," + cell.getUnit().getCurrentPosition().getTileY() + ") |");
+					sb.append("|    " + cell.getUnit().getHp() + "     |");
 				} else if (cell.isOccupied() && !cell.getUnit().isPlayerUnit()) {
-					sb.append("| " + cell.getUnit().getEntityID() + " -- (" + cell.getUnit().getCurrentPosition().getTileX() + "," + cell.getUnit().getCurrentPosition().getTileY() + ") |");
+					sb.append("|    " + cell.getUnit().getHp() + "     |");
 				} else if (!cell.isWalkable()) {
 					sb.append("| XXXXXXXX |");
 				} else {
@@ -201,7 +201,7 @@ public class BattleState implements Comparable<BattleState> {
 		for (final BattleCell[] row : stateOfField) {
 			for (final BattleCell cell : row) {
 				sum += cell.getScore();
-				if (sum != 0) {
+				if (cell.getScore() != 0) {
 					int j = 0;
 				}
 			}
@@ -228,11 +228,9 @@ public class BattleState implements Comparable<BattleState> {
 
 	public Array<Entity> getPlayerUnits() {
 		final Array<Entity> playerUnits = new Array<>();
-		for (final BattleCell[] row : stateOfField) {
-			for (final BattleCell cell : row) {
-				if ((cell.getUnit() != null) && cell.getUnit().isPlayerUnit()) {
-					playerUnits.add(cell.getUnit());
-				}
+		for (Entity entity : units.values()) {
+			if (entity.isPlayerUnit()) {
+				playerUnits.add(entity);
 			}
 		}
 		return playerUnits;
@@ -240,11 +238,9 @@ public class BattleState implements Comparable<BattleState> {
 
 	public Array<Entity> getVisiblePlayerUnits() {
 		final Array<Entity> playerUnits = new Array<>();
-		for (final BattleCell[] row : stateOfField) {
-			for (final BattleCell cell : row) {
-				if ((cell.getUnit() != null) && cell.getUnit().isPlayerUnit() && !cell.getUnit().isInvisible()) {
-					playerUnits.add(cell.getUnit());
-				}
+		for (Entity entity : units.values()) {
+			if (entity.isPlayerUnit() && !entity.isInvisible()) {
+				playerUnits.add(entity);
 			}
 		}
 		return playerUnits;
@@ -252,11 +248,9 @@ public class BattleState implements Comparable<BattleState> {
 
 	public Array<Entity> getAiUnits() {
 		final Array<Entity> aiUnits = new Array<>();
-		for (final BattleCell[] row : stateOfField) {
-			for (final BattleCell cell : row) {
-				if ((cell.getUnit() != null) && !cell.getUnit().isPlayerUnit()) {
-					aiUnits.add(cell.getUnit());
-				}
+		for (Entity entity : units.values()) {
+			if (!entity.isPlayerUnit()) {
+				aiUnits.add(entity);
 			}
 		}
 		return aiUnits;
@@ -264,11 +258,9 @@ public class BattleState implements Comparable<BattleState> {
 
 	public Array<Entity> getVisibleAiUnits() {
 		final Array<Entity> aiUnits = new Array<>();
-		for (final BattleCell[] row : stateOfField) {
-			for (final BattleCell cell : row) {
-				if ((cell.getUnit() != null) && !cell.getUnit().isPlayerUnit() && !cell.getUnit().isInvisible()) {
-					aiUnits.add(cell.getUnit());
-				}
+		for (Entity entity : units.values()) {
+			if (!entity.isPlayerUnit() && !entity.isInvisible()) {
+				aiUnits.add(entity);
 			}
 		}
 		return aiUnits;

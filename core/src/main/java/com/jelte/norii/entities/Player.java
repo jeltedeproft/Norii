@@ -110,7 +110,7 @@ public class Player implements UnitOwner {
 		for (final String name : heroNames) {
 			for (final EntityTypes type : EntityTypes.values()) {
 				if (type.getEntityName().equals(name)) {
-					addUnit(new Entity(type, this));
+					addUnit(new Entity(type, this, true));
 				}
 			}
 		}
