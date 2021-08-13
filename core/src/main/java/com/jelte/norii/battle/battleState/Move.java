@@ -30,7 +30,12 @@ public class Move {
 
 	@Override
 	public String toString() {
-		return moveType.toString() + " : " + location;
+		if (this instanceof SpellMove) {
+			SpellMove spell = (SpellMove) this;
+			return ("casting " + spell.getAbility() + " on : " + location);
+		}
+
+		return "moving to : " + location;
 	}
 
 	public Move makeCopy() {
