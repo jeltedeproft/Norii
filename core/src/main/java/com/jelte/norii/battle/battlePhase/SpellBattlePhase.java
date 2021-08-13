@@ -1,6 +1,7 @@
 package com.jelte.norii.battle.battlePhase;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
@@ -170,11 +171,13 @@ public class SpellBattlePhase extends BattlePhase {
 	public void executeSpellForAi(Entity entity, Ability ability, MyPoint target) {
 		final TiledMapPosition targetPos = new TiledMapPosition().setPositionFromTiles(target.x, target.y);
 		final List<Entity> units = battlemanager.getUnits();
+		Entity targetUnit = null;
 		for (final Entity unit : units) {
 			if (unit.getCurrentPosition().isTileEqualTo(targetPos)) {
-				selectSpell(unit, ability, entity, targetPos);
+				targetUnit = unit;
 			}
 		}
+		selectSpell(targetUnit, ability, entity, targetPos);
 	}
 
 	private void selectSpell(final Entity target, final Ability ability, final Entity currentUnit, final TiledMapPosition targetPos) {
@@ -267,7 +270,7 @@ public class SpellBattlePhase extends BattlePhase {
 		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
 		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.SUMMON);
 
-		final Entity ghostEntity = new Entity(EntityTypes.GHOST, caster.getOwner());
+		final Entity ghostEntity = new Entity(EntityTypes.GHOST, caster.getOwner(), true);
 		caster.getOwner().addUnit(ghostEntity);
 		battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.ADD_UNIT_ENTITYSTAGE, ghostEntity);
 		ghostEntity.getVisualComponent().initiateInBattle(targetPos);
@@ -292,11 +295,15 @@ public class SpellBattlePhase extends BattlePhase {
 		TreeMap<Integer, Array<Entity>> distancesToTarget = (TreeMap<Integer, Array<Entity>>) Utility.getDistancesWithTarget(targetPos.getTilePosAsPoint(), battlemanager.getBattleState().getAllUnits());
 
 		while ((!distancesToTarget.isEmpty()) && (entitiesHit <= 3)) {
-			final Entity closestUnit = distancesToTarget.firstEntry().getValue().first();
+			if (distancesToTarget.firstEntry().getValue().size == 0) {
+				int j = 5;
+			}
+			final Array<Entity> closestUnits = getFirstNotNull(distancesToTarget);
+			final Entity closestUnit = closestUnits.first();
 			if (Utility.checkIfUnitsWithinDistance(closestUnit, target, 4)) {
 				if (usedTargets.contains(closestUnit, false)) {
 					// skip this unit
-					distancesToTarget.firstEntry().getValue().removeIndex(0);
+					closestUnits.removeIndex(0);
 				} else {
 					entitiesHit = crackleTarget(closestUnit.getCurrentPosition(), ability, usedTargets, entitiesHit, closestUnit);
 					distancesToTarget = (TreeMap<Integer, Array<Entity>>) Utility.getDistancesWithTarget(closestUnit.getCurrentPosition().getTilePosAsPoint(), battlemanager.getBattleState().getAllUnits());
@@ -306,6 +313,15 @@ public class SpellBattlePhase extends BattlePhase {
 				break;
 			}
 		}
+	}
+
+	private Array<Entity> getFirstNotNull(TreeMap<Integer, Array<Entity>> distancesToTarget) {
+		for (Map.Entry<Integer, Array<Entity>> entry : distancesToTarget.entrySet()) {
+			if (!entry.getValue().isEmpty()) {
+				return entry.getValue();
+			}
+		}
+		return null;
 	}
 
 	private int crackleTarget(final TiledMapPosition targetPos, final Ability ability, Array<Entity> usedTargets, int entitiesHit, final Entity target) {
@@ -450,7 +466,7 @@ public class SpellBattlePhase extends BattlePhase {
 		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
 		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.STONE_SOUND);
 
-		final Entity rock = new Entity(EntityTypes.ROCK, caster.getOwner());
+		final Entity rock = new Entity(EntityTypes.ROCK, caster.getOwner(), true);
 		caster.getOwner().addUnit(rock);
 		battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.ADD_UNIT_ENTITYSTAGE, rock);
 		rock.getVisualComponent().initiateInBattle(targetPos);
@@ -474,7 +490,7 @@ public class SpellBattlePhase extends BattlePhase {
 			}
 		}
 
-		final Entity hammerEntity = new Entity(EntityTypes.BOOMERANG, caster.getOwner());
+		final Entity hammerEntity = new Entity(EntityTypes.BOOMERANG, caster.getOwner(), true);
 		caster.getOwner().addUnit(hammerEntity);
 		battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.ADD_UNIT_ENTITYSTAGE, hammerEntity);
 		hammerEntity.getVisualComponent().initiateInBattle(targetPos);
@@ -504,7 +520,7 @@ public class SpellBattlePhase extends BattlePhase {
 			caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
 			AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.PORTAL);
 
-			final Entity portalEntity = new Entity(EntityTypes.PORTAL, caster.getOwner());
+			final Entity portalEntity = new Entity(EntityTypes.PORTAL, caster.getOwner(), true);
 			caster.getOwner().addUnit(portalEntity);
 			battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.ADD_UNIT_ENTITYSTAGE, portalEntity);
 			portalEntity.getVisualComponent().initiateInBattle(targetPos);
