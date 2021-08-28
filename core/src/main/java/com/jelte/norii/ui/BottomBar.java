@@ -258,7 +258,7 @@ public class BottomBar {
 		heroNameLabel.setText(entity.getEntityData().getName());
 		changeHeroImage(entity.getEntityData().getPortraitSpritePath());
 		for (final Ability ability : entity.getAbilities()) {
-			changeSpellImage(ability.getSpellData().getIconSpriteName());
+			changeSpellImage(ability.getSpellData().getName());
 			changeSpellInfo(ability.getSpellData().getInfoText());
 		}
 	}

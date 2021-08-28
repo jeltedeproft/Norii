@@ -46,6 +46,9 @@ dependencies {
     implementation "com.github.MrStahlfelge.gdx-websockets:core:$wsVersion:sources"
     implementation "com.github.MrStahlfelge.gdx-websockets:html:$wsVersion"
     implementation "com.github.MrStahlfelge.gdx-websockets:html:$wsVersion:sources"
+    implementation "com.badlogicgames.gdx-video:gdx-video:$gdxVideoVersion:sources"
+	implementation "com.badlogicgames.gdx-video:gdx-video-gwt:$gdxVideoVersion"
+	implementation "com.badlogicgames.gdx-video:gdx-video-gwt:$gdxVideoVersion:sources"
 }
 
 import org.akhikhl.gretty.AppBeforeIntegrationTestTask

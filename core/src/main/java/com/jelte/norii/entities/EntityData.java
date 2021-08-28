@@ -14,6 +14,7 @@ public class EntityData {
 	private int physicalDefense;
 	private int basicAttackCost;
 	private String[] abilities;
+	private String spellExplanation;
 
 	private Entity linkedEntity;
 
@@ -121,10 +122,18 @@ public class EntityData {
 		this.linkedEntity = entity;
 	}
 
+	public String getSpellExplanation() {
+		return spellExplanation;
+	}
+
+	public void setSpellExplanation(String spellExplanation) {
+		this.spellExplanation = spellExplanation;
+	}
+
 	@Override
 	public String toString() {
-		return "id : " + id + "\n" + "name : " + name + "\n" + "portraitSpritePath : " + portraitSpritePath + "\n" + "entitySpriteFilePath : " + entitySpriteName + "\n" + "maxHP : " + maxHP + "\n" + "level : " + level + "\n" + "attackRange : " + attackRange + "\n"
-				+ "attackPower : " + attackPower + "\n" + "basicAttackCost : " + basicAttackCost + "\n";
+		return "id : " + id + "\n" + "name : " + name + "\n" + "portraitSpritePath : " + portraitSpritePath + "\n" + "entitySpriteFilePath : " + entitySpriteName + "\n" + "maxHP : " + maxHP + "\n" + "level : " + level + "\n"
+				+ "attackRange : " + attackRange + "\n" + "attackPower : " + attackPower + "\n" + "basicAttackCost : " + basicAttackCost + "\n";
 	}
 
 }

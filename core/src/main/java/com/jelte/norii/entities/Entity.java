@@ -241,6 +241,10 @@ public class Entity extends Actor {
 		return hp;
 	}
 
+	private void setHp(int hp) {
+		this.hp = hp;
+	}
+
 	public int getXp() {
 		return xp;
 	}
@@ -411,6 +415,10 @@ public class Entity extends Actor {
 		copy.setCurrentPosition(currentPlayerPosition);
 		copy.setEntityID(entityID);
 		copy.setInvisible(isInvis);
+		copy.setDirection(direction);
+		copy.setPlayerUnit(isPlayerUnit);
+		copy.setHp(hp);
+		copy.setXp(xp);
 		return copy;
 	}
 

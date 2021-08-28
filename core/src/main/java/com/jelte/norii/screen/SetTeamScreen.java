@@ -11,25 +11,30 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Null;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.jelte.norii.entities.EntityData;
 import com.jelte.norii.entities.EntityFileReader;
 import com.jelte.norii.profile.ProfileManager;
+import com.jelte.norii.ui.VideoDrawable;
 import com.jelte.norii.utility.AssetManagerUtility;
 import com.jelte.norii.utility.parallax.ParallaxBackground;
 import com.jelte.norii.utility.parallax.ParallaxUtils.WH;
@@ -57,6 +62,13 @@ public class SetTeamScreen extends GameScreen {
 	private Table titleTable;
 	private Table heroesTitlesTable;
 	private Table allHeroesTable;
+
+	// ability table
+	private Table abilityTable;
+	private ImageButton abilityIcon;
+	private TextArea abilityInfo;
+	private VideoDrawable videoDrawable;
+
 	private VerticalGroup selectedHeroesTableVerticalGroup;
 	private Table saveAndExitTable;
 
@@ -79,6 +91,7 @@ public class SetTeamScreen extends GameScreen {
 		createBackground();
 		createButtons();
 		createHeroPortraits();
+		createAbilityInfoPanel();
 		addButtons();
 		addListeners();
 	}
@@ -149,6 +162,18 @@ public class SetTeamScreen extends GameScreen {
 				}
 			});
 
+			heroImageButton.addListener(new InputListener() {
+				@Override
+				public void enter(InputEvent event, float x, float y, int pointer, @Null Actor fromActor) {
+					final ImageButtonStyle heroButtonStyle = new ImageButtonStyle();
+					heroButtonStyle.imageUp = buttonImage;
+					heroButtonStyle.up = btnStyle.up;
+					heroButtonStyle.down = btnStyle.down;
+					abilityIcon.setStyle(heroButtonStyle);
+					abilityInfo.setText(data.getSpellExplanation());
+				}
+			});
+
 			heroNamesToImagePaths.put(data.getName(), heroImageName);
 		}
 	}
@@ -182,6 +207,24 @@ public class SetTeamScreen extends GameScreen {
 				}
 			});
 		}
+	}
+
+	private void createAbilityInfoPanel() {
+		abilityTable = new Table();
+
+		ImageButtonStyle imageButtonStyle = AssetManagerUtility.getSkin().get("Portrait", ImageButtonStyle.class);
+		abilityIcon = new ImageButton(imageButtonStyle);
+
+		abilityInfo = new TextArea("AbilityInfo", AssetManagerUtility.getSkin());
+		abilityInfo.setText("this unit can launche a fireball that damages a single target for 5 fire damage");
+
+		abilityTable.center();
+		abilityTable.add(abilityIcon);
+		abilityTable.add(abilityInfo).width(500).height(150);
+
+		videoDrawable = new VideoDrawable(Gdx.files.internal("video/test.webm"));
+		var image = new Image(videoDrawable);
+		abilityTable.add(image).width(500).height(150);
 	}
 
 	private void createBackground() {
@@ -237,6 +280,8 @@ public class SetTeamScreen extends GameScreen {
 			tryToAddHeroToTeam(heroNamesToImagePaths.get(name));
 		}
 		mainTable.add(selectedHeroesTableVerticalGroup).align(Align.center).colspan(1).width(500).expand().row();
+
+		mainTable.add(abilityTable).colspan(3).expandX().row();
 
 		saveAndExitTable.add(exit).padTop(100).height(50).width(100);
 		saveAndExitTable.add(save).padTop(100).height(50).width(150);
@@ -324,5 +369,6 @@ public class SetTeamScreen extends GameScreen {
 		backgroundbatch.dispose();
 		stage.dispose();
 		parallaxBackground = null;
+		videoDrawable.dispose();
 	}
 }

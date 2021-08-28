@@ -274,7 +274,7 @@
         "goesTroughUnits": true,
         "goesTroughObstacles": true,
         "areaOfEffect": "CELL",
-        "damage": 5,
+        "damage": 2,
         "damageType": "MAGICAL",
         "range": 8,
         "areaOfEffectRange": 1,

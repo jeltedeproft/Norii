@@ -13,6 +13,7 @@
 	<inherits name='org.xguzm.pathfinding' />
 	<inherits name='com.github.czyzby.websocket.GdxWebSocket' />
 	<inherits name='com.github.czyzby.websocket.GdxWebSocketGwt' />
+	<inherits name="com.badlogic.gdx.video.gdx_video_gwt" />
 	
 	<entry-point class="com.jelte.norii.gwt.GwtLauncher" />
 	<set-configuration-property name="gdx.assetpath" value="../assets" />

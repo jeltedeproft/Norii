@@ -1,221 +1,228 @@
 {
-    "BitmapFont": {
-        "neutral": {
-            "file": "font-export.fnt"
-        }
-    },
-    "Color": {
-        "black": {
-            "hex": "000000ff"
-        },
-        "metal": {
-            "hex": "6c89a0ff"
-        },
-        "red": {
-            "hex": "ea4a4aff"
-        },
-        "blue": {
-            "hex": "133fb7eb"
-        },
-        "white": {
-            "hex": "ffffffff"
-        }
-    },
-    "com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator": {
-        "lumos12": {
-            "font": "Goudy Mediaeval Regular.ttf",
-            "size": 16,
-            "mono": false,
-            "color": "white",
-            "gamma": 1.8,
-            "renderCount": 2,
-            "borderWidth": 0,
-            "borderColor": "white",
-            "borderStraight": false,
-            "borderGamma": 1.8,
-            "shadowOffsetX": 0,
-            "shadowOffsetY": 0,
-            "spaceX": 0,
-            "spaceY": 0,
-            "kerning": true,
-            "flip": false,
-            "genMipMaps": false,
-            "incremental": false,
-            "hinting": "Full",
-            "minFilter": "Nearest",
-            "magFilter": "Nearest",
-            "characters": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890\"!`?'.,;:()[]{}<>|/@\\^$€-%+=#_&~* ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ•⌘"
-        },
-        "lumos30": {
-            "font": "Goudy Mediaeval Regular.ttf",
-            "size": 30,
-            "mono": false,
-            "color": "white",
-            "gamma": 0.8,
-            "renderCount": 2,
-            "borderWidth": 0.3,
-            "borderColor": "white",
-            "borderStraight": false,
-            "borderGamma": 1.8,
-            "shadowOffsetX": 0,
-            "shadowOffsetY": 0,
-            "shadowColor": "red",
-            "spaceX": 0,
-            "spaceY": 0,
-            "kerning": true,
-            "flip": false,
-            "genMipMaps": false,
-            "incremental": false,
-            "hinting": "Full",
-            "minFilter": "Nearest",
-            "magFilter": "Nearest",
-            "characters": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890\"!`?'.,;:()[]{}<>|/@\\^$€-%+=#_&~* ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ•⌘"
-        },
-        "lumos60": {
-            "font": "Goudy Mediaeval Regular.ttf",
-            "size": 60,
-            "mono": false,
-            "color": "white",
-            "gamma": 1.8,
-            "renderCount": 3,
-            "borderWidth": 0,
-            "borderStraight": false,
-            "borderGamma": 1.8,
-            "shadowOffsetX": 0,
-            "shadowOffsetY": 0,
-            "spaceX": 0,
-            "spaceY": 0,
-            "kerning": true,
-            "flip": false,
-            "genMipMaps": false,
-            "incremental": false,
-            "hinting": "AutoMedium",
-            "minFilter": "Nearest",
-            "magFilter": "Nearest",
-            "characters": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890\"!`?'.,;:()[]{}<>|/@\\^$€-%+=#_&~* ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ•⌘"
-        }
-    },
-    "TintedDrawable": {
-        "window-darkgray": {
-            "name": "window",
-            "color": {
-                "hex": "414141ff"
-            }
-        },
-        "android-horizontal-scrollbar-knob-blue": {
-            "name": "android-horizontal-scrollbar-knob",
-            "color": "blue"
-        },
-        "android-horizontal-scrollbar-knob-red": {
-            "name": "android-horizontal-scrollbar-knob",
-            "color": "red"
-        }
-    },
-    "ButtonStyle": {
-        "ap": {
-            "up": "apptheme_btn_radio_on_disabled_focused_holo_light",
-            "checked": "apptheme_btn_radio_on_focused_holo_light"
-        }
-    },
-    "ImageButtonStyle": {
-        "default": {
-            "up": "button",
-            "down": "button-pressed"
-        },
-        "Portrait": {
-            "imageUp": "CommanderProfileSmall",
-            "up": "button",
-            "down": "button-pressed"
-        },
-        "closebutton": {
-            "imageUp": "close-button-alt",
-            "imageDown": "close-button-alt-highlight",
-            "up": "close-button-alt",
-            "down": "close-button-alt-highlight"
-        }
-    },
-    "LabelStyle": {
-        "default": {
-            "font": "lumos12",
-            "fontColor": "white"
-        },
-        "bigFont": {
-            "font": "lumos60",
-            "fontColor": "white"
-        },
-        "smallFont": {
-            "font": "lumos12"
-        }
-    },
-    "ListStyle": {
-        "default": {
-            "font": "lumos12",
-            "fontColorSelected": "white",
-            "fontColorUnselected": "black",
-            "selection": "selection",
-            "background": "window-noborder"
-        }
-    },
-    "ProgressBarStyle": {
-        "default-horizontal": {
-            "background": "progressbar-horizontal"
-        },
-        "default-vertical": {
-            "background": "scroll-bar-vertical"
-        },
-        "red-hp-bar": {
-            "background": "progressbar-horizontal",
-            "knobBefore": "android-horizontal-scrollbar-knob-red"
-        },
-        "blue-hp-bar": {
-            "background": "progressbar-horizontal",
-            "knobBefore": "android-horizontal-scrollbar-knob-blue"
-        }
-    },
-    "ScrollPaneStyle": {
-        "default": {
-            "background": "window-noborder",
-            "corner": "scroll_corner",
-            "hScroll": "scroll-bar-horizontal",
-            "hScrollKnob": "scroll_horizontal_knob",
-            "vScroll": "scroll-bar-vertical",
-            "vScrollKnob": "scroll_vertical_knob"
-        }
-    },
-    "SelectBoxStyle": {
-        "default": {
-            "font": "lumos12",
-            "fontColor": "white",
-            "disabledFontColor": "black",
-            "background": "select-box",
-            "scrollStyle": "default",
-            "listStyle": "default"
-        }
-    },
-    "TextButtonStyle": {
-        "default": {
-            "font": "lumos12",
-            "fontColor": "white",
-            "up": "button",
-            "down": "button-pressed"
-        },
-        "lumos30": {
-            "font": "lumos30",
-            "fontColor": "white",
-            "up": "button",
-            "down": "button-pressed"
-        }
-    },
-    "TextTooltipStyle": {
-        "default": {
-            "label": "default"
-        }
-    },
-    "WindowStyle": {
-        "default": {
-            "background": "windowgray",
-            "titleFont": "lumos12",
-            "titleFontColor": "white"
-        }
-    }
+"BitmapFont": {
+	"neutral": {
+		"file": "font-export.fnt"
+	}
+},
+"Color": {
+	"black": {
+		"hex": "000000ff"
+	},
+	"metal": {
+		"hex": "6c89a0ff"
+	},
+	"red": {
+		"hex": "ea4a4aff"
+	},
+	"blue": {
+		"hex": "133fb7eb"
+	},
+	"white": {
+		"hex": "ffffffff"
+	}
+},
+"com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator": {
+	"lumos12": {
+		"font": "Goudy Mediaeval Regular.ttf",
+		"size": 16,
+		"mono": false,
+		"color": "white",
+		"gamma": 1.8,
+		"renderCount": 2,
+		"borderWidth": 0,
+		"borderColor": "white",
+		"borderStraight": false,
+		"borderGamma": 1.8,
+		"shadowOffsetX": 0,
+		"shadowOffsetY": 0,
+		"spaceX": 0,
+		"spaceY": 0,
+		"kerning": true,
+		"flip": false,
+		"genMipMaps": false,
+		"incremental": false,
+		"hinting": "Full",
+		"minFilter": "Nearest",
+		"magFilter": "Nearest",
+		"characters": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890\"!`?'.,;:()[]{}<>|/@\\^$€-%+=#_&~* ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ•⌘"
+	},
+	"lumos30": {
+		"font": "Goudy Mediaeval Regular.ttf",
+		"size": 30,
+		"mono": false,
+		"color": "white",
+		"gamma": 0.8,
+		"renderCount": 2,
+		"borderWidth": 0.3,
+		"borderColor": "white",
+		"borderStraight": false,
+		"borderGamma": 1.8,
+		"shadowOffsetX": 0,
+		"shadowOffsetY": 0,
+		"shadowColor": "red",
+		"spaceX": 0,
+		"spaceY": 0,
+		"kerning": true,
+		"flip": false,
+		"genMipMaps": false,
+		"incremental": false,
+		"hinting": "Full",
+		"minFilter": "Nearest",
+		"magFilter": "Nearest",
+		"characters": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890\"!`?'.,;:()[]{}<>|/@\\^$€-%+=#_&~* ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ•⌘"
+	},
+	"lumos60": {
+		"font": "Goudy Mediaeval Regular.ttf",
+		"size": 60,
+		"mono": false,
+		"color": "white",
+		"gamma": 1.8,
+		"renderCount": 3,
+		"borderWidth": 0,
+		"borderStraight": false,
+		"borderGamma": 1.8,
+		"shadowOffsetX": 0,
+		"shadowOffsetY": 0,
+		"spaceX": 0,
+		"spaceY": 0,
+		"kerning": true,
+		"flip": false,
+		"genMipMaps": false,
+		"incremental": false,
+		"hinting": "AutoMedium",
+		"minFilter": "Nearest",
+		"magFilter": "Nearest",
+		"characters": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890\"!`?'.,;:()[]{}<>|/@\\^$€-%+=#_&~* ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ•⌘"
+	}
+},
+"TintedDrawable": {
+	"window-darkgray": {
+		"name": "window",
+		"color": {
+			"hex": "414141ff"
+		}
+	},
+	"android-horizontal-scrollbar-knob-blue": {
+		"name": "android-horizontal-scrollbar-knob",
+		"color": "blue"
+	},
+	"android-horizontal-scrollbar-knob-red": {
+		"name": "android-horizontal-scrollbar-knob",
+		"color": "red"
+	}
+},
+"ButtonStyle": {
+	"ap": {
+		"up": "apptheme_btn_radio_on_disabled_focused_holo_light",
+		"checked": "apptheme_btn_radio_on_focused_holo_light"
+	}
+},
+"ImageButtonStyle": {
+	"default": {
+		"up": "button",
+		"down": "button-pressed"
+	},
+	"Portrait": {
+		"imageUp": "CommanderProfileSmall",
+		"up": "button",
+		"down": "button-pressed"
+	},
+	"closebutton": {
+		"imageUp": "close-button-alt",
+		"imageDown": "close-button-alt-highlight",
+		"up": "close-button-alt",
+		"down": "close-button-alt-highlight"
+	}
+},
+"LabelStyle": {
+	"default": {
+		"font": "lumos12",
+		"fontColor": "white"
+	},
+	"bigFont": {
+		"font": "lumos60",
+		"fontColor": "white"
+	},
+	"smallFont": {
+		"font": "lumos12"
+	}
+},
+"ListStyle": {
+	"default": {
+		"font": "lumos12",
+		"fontColorSelected": "white",
+		"fontColorUnselected": "black",
+		"selection": "selection",
+		"background": "window-noborder"
+	}
+},
+"ProgressBarStyle": {
+	"default-horizontal": {
+		"background": "progressbar-horizontal"
+	},
+	"default-vertical": {
+		"background": "scroll-bar-vertical"
+	},
+	"red-hp-bar": {
+		"background": "progressbar-horizontal",
+		"knobBefore": "android-horizontal-scrollbar-knob-red"
+	},
+	"blue-hp-bar": {
+		"background": "progressbar-horizontal",
+		"knobBefore": "android-horizontal-scrollbar-knob-blue"
+	}
+},
+"ScrollPaneStyle": {
+	"default": {
+		"background": "window-noborder",
+		"corner": "scroll_corner",
+		"hScroll": "scroll-bar-horizontal",
+		"hScrollKnob": "scroll_horizontal_knob",
+		"vScroll": "scroll-bar-vertical",
+		"vScrollKnob": "scroll_vertical_knob"
+	}
+},
+"SelectBoxStyle": {
+	"default": {
+		"font": "lumos12",
+		"fontColor": "white",
+		"disabledFontColor": "black",
+		"background": "select-box",
+		"scrollStyle": "default",
+		"listStyle": "default"
+	}
+},
+"TextButtonStyle": {
+	"default": {
+		"font": "lumos12",
+		"fontColor": "white",
+		"up": "button",
+		"down": "button-pressed"
+	},
+	"lumos30": {
+		"font": "lumos30",
+		"fontColor": "white",
+		"up": "button",
+		"down": "button-pressed"
+	}
+},
+"TextFieldStyle": {
+	"default": {
+		"font": "lumos30",
+		"fontColor": "white",
+		"background": "window-noborder"
+	}
+},
+"TextTooltipStyle": {
+	"default": {
+		"label": "default"
+	}
+},
+"WindowStyle": {
+	"default": {
+		"background": "windowgray",
+		"titleFont": "lumos12",
+		"titleFontColor": "white"
+	}
+}
 }

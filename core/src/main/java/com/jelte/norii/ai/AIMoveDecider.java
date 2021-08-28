@@ -17,6 +17,7 @@ import com.jelte.norii.battle.battleState.Move;
 import com.jelte.norii.battle.battleState.MoveType;
 import com.jelte.norii.battle.battleState.SpellMove;
 import com.jelte.norii.entities.Entity;
+import com.jelte.norii.magic.AbilitiesEnum;
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.magic.Ability.Target;
 import com.jelte.norii.map.MyPathFinder;
@@ -84,6 +85,9 @@ public class AIMoveDecider {
 	}
 
 	private void castAbilityOnTarget(Ability ability, Entity aiUnit, BattleState battleState, final Array<UnitTurn> unitTurns) {
+		if (ability.getAbilityEnum() == AbilitiesEnum.ICEFIELD) {
+			int j = 5;
+		}
 		final TreeMap<Integer, List<Entity>> distancesToTargets = (TreeMap<Integer, List<Entity>>) getDistancesToTargets(aiUnit, battleState, ability);
 
 		oldTime = debugTime("found distances with ability target units", oldTime);

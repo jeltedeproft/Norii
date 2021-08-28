@@ -153,11 +153,23 @@ public class AIDecisionMaker {
 	}
 
 	private void generateBattleStatesForUnit(Entity unit, BattleState startingState) {
+		int oldScore = startingState.calculateScore();
 		for (final Ability ability : unit.getAbilities()) {
 			final Array<UnitTurn> turns = aiMoveDecider.generateMoves(ability, unit, startingState);
 			for (final UnitTurn turn : turns) {
+				String abilityString = "";
+				for (Move move : turn.getMoves()) {
+					if (move instanceof SpellMove) {
+						SpellMove spellMove = (SpellMove) move;
+						abilityString = spellMove.getAbility().getName();
+						if (abilityString.equals("Ice Field")) {
+							int j = 5;
+						}
+					}
+				}
 				final BattleState newState = applyTurnToBattleState(unit, turn, startingState);
 				newState.setTurn(turn);
+				Gdx.app.debug(TAG, "score went from " + oldScore + " to " + newState.calculateScore() + "for ability: " + abilityString);
 				if (turnIndex != 0) {
 					newState.setParentState(startingState);
 				}

@@ -39,7 +39,10 @@ public enum EntityTypes {
 	GHOST("Ghost"), // 34
 	ROCK("Rock"), // 35
 	DARK_MAGE("Dark Mage"), // 36
-	RYU("Ryu"); // 37
+	RYU("Ryu"), // 37
+	ASTROLOGER("Astrologer"), // 38
+	ARTIST("Artist"), // 39
+	CITIZEN("Citizen"); // 40
 
 	private String entityName;
 

@@ -327,7 +327,7 @@ public class SpellBattlePhase extends BattlePhase {
 	private int crackleTarget(final TiledMapPosition targetPos, final Ability ability, Array<Entity> usedTargets, int entitiesHit, final Entity target) {
 		if (target != null) {
 			target.damage(ability.getSpellData().getDamage(), ability.getDamageType());
-			ParticleMaker.addParticle(ParticleType.FIREBALL, targetPos, 5);
+			ParticleMaker.addParticle(ParticleType.ELECTRICITY, targetPos, 5);
 			battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.UPDATE_UI, target);
 			usedTargets.add(target);
 			entitiesHit++;
@@ -436,7 +436,7 @@ public class SpellBattlePhase extends BattlePhase {
 				ability.getSpellData().getRange(), battlemanager.getBattleState());
 
 		for (final MyPoint cell : targetCells) {
-			ParticleMaker.addParticle(ParticleType.ICE, cell, 0);
+			ParticleMaker.addParticle(ParticleType.FROST, cell, 0);
 			final Entity possibleTarget = getEntityAtPosition(cell);
 			if (possibleTarget != null) {
 				possibleTarget.damage(ability.getSpellData().getDamage(), ability.getDamageType());

@@ -225,6 +225,9 @@ public class BattleManager {
 			executeNextMove();
 			break;
 		case MOVE:
+			if (entity == null) {
+				int j = 5;
+			}
 			final List<GridCell> path = MyPathFinder.getInstance().pathTowards(entity.getCurrentPosition(), new TiledMapPosition().setPositionFromTiles(move.getLocation().x, move.getLocation().y), entity.getAp());
 			activeBattleState.moveUnitTo(entity, new MyPoint(move.getLocation().x, move.getLocation().y));
 			entity.move(path);
