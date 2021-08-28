@@ -212,7 +212,7 @@ public class SetTeamScreen extends GameScreen {
 	private void createAbilityInfoPanel() {
 		abilityTable = new Table();
 
-		ImageButtonStyle imageButtonStyle = AssetManagerUtility.getSkin().get("Portrait", ImageButtonStyle.class);
+		final ImageButtonStyle imageButtonStyle = AssetManagerUtility.getSkin().get("Portrait", ImageButtonStyle.class);
 		abilityIcon = new ImageButton(imageButtonStyle);
 
 		abilityInfo = new TextArea("AbilityInfo", AssetManagerUtility.getSkin());
@@ -223,7 +223,7 @@ public class SetTeamScreen extends GameScreen {
 		abilityTable.add(abilityInfo).width(500).height(150);
 
 		videoDrawable = new VideoDrawable(Gdx.files.internal("video/test.webm"));
-		var image = new Image(videoDrawable);
+		final Image image = new Image(videoDrawable);
 		abilityTable.add(image).width(500).height(150);
 	}
 

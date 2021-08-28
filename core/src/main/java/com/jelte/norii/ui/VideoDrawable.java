@@ -3,6 +3,7 @@ package com.jelte.norii.ui;
 import java.io.FileNotFoundException;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
 import com.badlogic.gdx.utils.Disposable;
@@ -16,7 +17,7 @@ public class VideoDrawable extends BaseDrawable implements Disposable {
 		videoPlayer = VideoPlayerCreator.createVideoPlayer();
 		try {
 			videoPlayer.play(file);
-		} catch (FileNotFoundException e) {
+		} catch (final FileNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
@@ -24,7 +25,7 @@ public class VideoDrawable extends BaseDrawable implements Disposable {
 	@Override
 	public void draw(Batch batch, float x, float y, float width, float height) {
 		videoPlayer.update();
-		var frame = videoPlayer.getTexture();
+		final Texture frame = videoPlayer.getTexture();
 		if (frame != null)
 			batch.draw(frame, x, y, width, height);
 	}
