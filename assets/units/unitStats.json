@@ -154,7 +154,7 @@
         "magicalDefense": 25,
         "physicalDefense": 25,
         "basicAttackCost": 1,
-        "spellExplanation": "this unit can blow himself up, dealing heavy damage to units adjavent to it",
+        "spellExplanation": "this unit can heal people",
         "abilities": ["HEAL"]
     },
 

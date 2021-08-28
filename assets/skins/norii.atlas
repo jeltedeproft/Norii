@@ -206,7 +206,7 @@ selection
   index: -1
 textfield
   rotate: false
-  xy: 479, 481
+  xy: 479, 475
   size: 30, 30
   split: 4, 4, 4, 4
   pad: 4, 4, 1, 1
@@ -267,5 +267,33 @@ windowgray
   split: 5, 5, 33, 4
   pad: 2, 2, 33, 4
   orig: 54, 60
+  offset: 0, 0
+  index: -1
+progressbar
+  rotate: false
+  xy: 84, 191
+  size: 1, 32
+  orig: 1, 32
+  offset: 0, 0
+  index: -1
+progressbar-filled
+  rotate: false
+  xy: 112, 257
+  size: 1, 32
+  orig: 1, 32
+  offset: 0, 0
+  index: -1
+progressbar-filled-vertical
+  rotate: false
+  xy: 479, 510
+  size: 32, 1
+  orig: 32, 1
+  offset: 0, 0
+  index: -1
+progressbar-vertical
+  rotate: false
+  xy: 479, 507
+  size: 32, 1
+  orig: 32, 1
   offset: 0, 0
   index: -1
