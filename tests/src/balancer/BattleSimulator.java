@@ -6,19 +6,19 @@ import com.jelte.norii.battle.battleState.BattleState;
 import com.jelte.norii.entities.Entity;
 
 public class BattleSimulator {
-	private BattleState battleState;
+	private final BattleState battleState;
 
 	public BattleSimulator() {
 		battleState = new BattleState(20, 20);
 	}
 
 	public void initEntities(List<Entity> heroes) {
-		for (Entity unit : heroes) {
+		for (final Entity unit : heroes) {
 			battleState.addEntity(unit);
 		}
 	}
 
-	public void playARound() {
+	public void playRound() {
 		int turn = 0;
 		boolean allyTurn = true;
 		while ((!allyHasWon()) && (!enemyHasWon()) && (turn < 200)) {

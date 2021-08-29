@@ -1,7 +1,7 @@
 [{
         "id": 0,
         "name": "Fireball",
-        "iconSpriteName": "fireball",
+        "iconSpriteName": "Fireball",
         "apCost": 1,
         "mpCost": 0,
         "lineOfSight": "LINE",
@@ -20,7 +20,7 @@
     {
         "id": 1,
         "name": "Petrification",
-        "iconSpriteName": "petrification",
+        "iconSpriteName": "Petrification",
         "apCost": 1,
         "mpCost": 0,
         "lineOfSight": "LINE",
@@ -39,7 +39,7 @@
     {
         "id": 2,
         "name": "Swap",
-        "iconSpriteName": "swap",
+        "iconSpriteName": "Swap",
         "apCost": 1,
         "mpCost": 0,
         "lineOfSight": "LINE",
@@ -58,7 +58,7 @@
     {
         "id": 3,
         "name": "Hammerback",
-        "iconSpriteName": "hammer",
+        "iconSpriteName": "Hammer",
         "apCost": 1,
         "mpCost": 0,
         "lineOfSight": "CIRCLE",
@@ -77,7 +77,7 @@
     {
         "id": 4,
         "name": "HammerbackBack",
-        "iconSpriteName": "hammer",
+        "iconSpriteName": "Hammer",
         "apCost": 1,
         "mpCost": 0,
         "lineOfSight": "CIRCLE",
@@ -96,7 +96,7 @@
     {
         "id": 5,
         "name": "Ice Field",
-        "iconSpriteName": "ice",
+        "iconSpriteName": "Ice",
         "apCost": 1,
         "mpCost": 0,
         "lineOfSight": "DIAGONAL_RIGHT",
@@ -115,7 +115,7 @@
     {
         "id": 6,
         "name": "Push",
-        "iconSpriteName": "wind",
+        "iconSpriteName": "Wind",
         "apCost": 1,
         "mpCost": 0,
         "lineOfSight": "LINE",
@@ -134,7 +134,7 @@
     {
         "id": 7,
         "name": "Pull",
-        "iconSpriteName": "pull",
+        "iconSpriteName": "Pull",
         "apCost": 1,
         "mpCost": 0,
         "lineOfSight": "LINE",
@@ -153,7 +153,7 @@
     {
         "id": 8,
         "name": "Arrow",
-        "iconSpriteName": "arrow",
+        "iconSpriteName": "Arrow",
         "apCost": 1,
         "mpCost": 0,
         "lineOfSight": "CIRCLE",
@@ -172,7 +172,7 @@
     {
         "id": 9,
         "name": "Invisible",
-        "iconSpriteName": "invisible",
+        "iconSpriteName": "Invisible",
         "apCost": 1,
         "mpCost": 0,
         "lineOfSight": "SELF",
@@ -191,7 +191,7 @@
     {
         "id": 10,
         "name": "Heal",
-        "iconSpriteName": "heal",
+        "iconSpriteName": "Heal",
         "apCost": 1,
         "mpCost": 0,
         "lineOfSight": "CIRCLE",
@@ -210,7 +210,7 @@
     {
         "id": 11,
         "name": "Portal",
-        "iconSpriteName": "portal",
+        "iconSpriteName": "Portal",
         "apCost": 5,
         "mpCost": 0,
         "lineOfSight": "CIRCLE",
@@ -229,7 +229,7 @@
     {
         "id": 12,
         "name": "Transport",
-        "iconSpriteName": "transport",
+        "iconSpriteName": "Transport",
         "apCost": 0,
         "mpCost": 0,
         "lineOfSight": "SELF",
@@ -248,7 +248,7 @@
     {
         "id": 13,
         "name": "Summon",
-        "iconSpriteName": "transport",
+        "iconSpriteName": "Summon",
         "apCost": 0,
         "mpCost": 0,
         "lineOfSight": "CIRCLE",
@@ -267,7 +267,7 @@
     {
         "id": 14,
         "name": "Crackle",
-        "iconSpriteName": "fireball",
+        "iconSpriteName": "Crackle",
         "apCost": 1,
         "mpCost": 0,
         "lineOfSight": "CIRCLE",
@@ -286,7 +286,7 @@
     {
         "id": 15,
         "name": "Plant Shield",
-        "iconSpriteName": "fireball",
+        "iconSpriteName": "Shield",
         "apCost": 1,
         "mpCost": 0,
         "lineOfSight": "CIRCLE",
@@ -305,7 +305,7 @@
     {
         "id": 16,
         "name": "Explosion",
-        "iconSpriteName": "fireball",
+        "iconSpriteName": "Explosion",
         "apCost": 1,
         "mpCost": 0,
         "lineOfSight": "SELF",
@@ -324,7 +324,7 @@
     {
         "id": 17,
         "name": "Love",
-        "iconSpriteName": "fireball",
+        "iconSpriteName": "Love",
         "apCost": 1,
         "mpCost": 0,
         "lineOfSight": "LINE",
@@ -338,5 +338,43 @@
         "affectsTeam": "ENEMY",
         "target": "UNIT",
         "infoText": "Link yourself to an enemy.\n You now share damage."
+    },
+
+    {
+        "id": 18,
+        "name": "Hour Glass",
+        "iconSpriteName": "HourGlass",
+        "apCost": 3,
+        "mpCost": 0,
+        "lineOfSight": "SELF",
+        "goesTroughUnits": true,
+        "goesTroughObstacles": true,
+        "areaOfEffect": "DIAGONAL",
+        "damage": 1,
+        "damageType": "MAGICAL",
+        "range": 5,
+        "areaOfEffectRange": 5,
+        "affectsTeam": "BOTH",
+        "target": "UNIT",
+        "infoText": "Reduce AP of enemy and ally units, use carefully."
+    },
+
+    {
+        "id": 19,
+        "name": "Mind Warp",
+        "iconSpriteName": "MindWarp",
+        "apCost": 3,
+        "mpCost": 0,
+        "lineOfSight": "SELF",
+        "goesTroughUnits": true,
+        "goesTroughObstacles": true,
+        "areaOfEffect": "SQUARE_BORDER",
+        "damage": 10,
+        "damageType": "MAGICAL",
+        "range": 5,
+        "areaOfEffectRange": 5,
+        "affectsTeam": "BOTH",
+        "target": "UNIT",
+        "infoText": "Reduce magical resistance of enemies."
     }
 ]

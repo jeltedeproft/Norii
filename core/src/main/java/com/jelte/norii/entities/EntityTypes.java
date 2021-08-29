@@ -42,7 +42,8 @@ public enum EntityTypes {
 	RYU("Ryu"), // 37
 	ASTROLOGER("Astrologer"), // 38
 	ARTIST("Artist"), // 39
-	CITIZEN("Citizen"); // 40
+	CITIZEN("Citizen"), // 40
+	WARRIOR_GIRL("Warrior Girl"); // 41
 
 	private String entityName;
 

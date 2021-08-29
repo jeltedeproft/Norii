@@ -13,6 +13,7 @@ import org.xguzm.pathfinding.grid.NavigationGridGraphNode;
 import org.xguzm.pathfinding.grid.finders.AStarGridFinder;
 import org.xguzm.pathfinding.grid.finders.GridFinderOptions;
 
+import com.badlogic.gdx.Gdx;
 import com.jelte.norii.ai.AIMoveDecider;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.utility.MyPoint;
@@ -43,7 +44,7 @@ public class MyPathFinder {
 	public void preprocessMap() {
 		if (preprocessI < linkedMap.getMapWidth()) {
 			if (preprocessJ < linkedMap.getMapHeight()) {
-				MyPoint point = new MyPoint(preprocessI, preprocessJ);
+				final MyPoint point = new MyPoint(preprocessI, preprocessJ);
 				precalculatedPaths.put(point, calculatePathsToEveryOtherCell(point));
 				preprocessJ++;
 			} else {
@@ -54,13 +55,13 @@ public class MyPathFinder {
 	}
 
 	private HashMap<MyPoint, List<GridCell>> calculatePathsToEveryOtherCell(MyPoint point) {
-		HashMap<MyPoint, List<GridCell>> pathsToEveryOtherCell = new HashMap<>();
+		final HashMap<MyPoint, List<GridCell>> pathsToEveryOtherCell = new HashMap<>();
 		for (int i = 0; i < linkedMap.getMapWidth(); i++) {
 			for (int j = 0; j < linkedMap.getMapHeight(); j++) {
-				MyPoint end = new MyPoint(i, j);
-				List<GridCell> path = aStarGridFinder.findPath(point.x, point.y, i, j, navGrid);
+				final MyPoint end = new MyPoint(i, j);
+				final List<GridCell> path = aStarGridFinder.findPath(point.x, point.y, i, j, navGrid);
 				if (path != null) {
-					List<GridCell> copy = new ArrayList<>(path);
+					final List<GridCell> copy = new ArrayList<>(path);
 					pathsToEveryOtherCell.put(end, copy);
 				} else {
 					pathsToEveryOtherCell.put(end, null);
@@ -130,7 +131,7 @@ public class MyPathFinder {
 	public List<GridCell> pathTowards(TiledMapPosition start, TiledMapPosition goal, int ap) {
 		oldTime = System.currentTimeMillis();
 		final List<GridCell> path = precalculatedPaths.get(start.getTilePosAsPoint()).get(goal.getTilePosAsPoint());
-		oldTime = AIMoveDecider.debugTime("find path", oldTime);
+		oldTime = AIMoveDecider.debugTime("find path from " + start + " to " + goal, oldTime);
 		if (path == null) {
 			return adjustGoal(start, goal, path);
 		}
@@ -143,12 +144,13 @@ public class MyPathFinder {
 	}
 
 	private List<GridCell> adjustGoal(TiledMapPosition start, TiledMapPosition goal, List<GridCell> path) {
-		while (path == null) {
+		while ((path == null) || path.isEmpty()) {
 			oldTime = AIMoveDecider.debugTime("trying from : " + start + " to " + goal, oldTime);
 			goal = tryAdjacentTile(start, goal);
 			path = precalculatedPaths.get(start.getTilePosAsPoint()).get(goal.getTilePosAsPoint());
 		}
 		oldTime = AIMoveDecider.debugTime("goal adjusted", oldTime);
+		Gdx.app.debug("myPathFinder", "path after adjustment = " + path);
 		return path;
 	}
 

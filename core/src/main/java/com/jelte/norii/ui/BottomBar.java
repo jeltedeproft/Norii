@@ -60,6 +60,7 @@ public class BottomBar {
 	private Label infoLabel;
 	private Label statsLabel;
 	private Label spellInfo;
+	private ImageButton abilityIcon;
 
 	private Entity activeUnit;
 	private boolean actionsVisible;
@@ -78,13 +79,10 @@ public class BottomBar {
 		initPortrait();
 		initStatsMenu();
 		initActions();
-		// initInfo();
 	}
 
 	private void initPortrait() {
 		final ImageButtonStyle imageButtonStyle = AssetManagerUtility.getSkin().get("Portrait", ImageButtonStyle.class);
-//		imageButtonStyle.imageUp.setMinHeight(tilePixelHeight * NUMBER_OF_STATS_SHOWN);
-//		imageButtonStyle.imageUp.setMinWidth(tilePixelWidth * NUMBER_OF_STATS_SHOWN);
 		heroImageButton = new ImageButton(imageButtonStyle);
 	}
 
@@ -106,6 +104,8 @@ public class BottomBar {
 		infoLabel = new Label(INFO, AssetManagerUtility.getSkin());
 		statsLabel = new Label(STATS, AssetManagerUtility.getSkin());
 		spellInfo = new Label("", AssetManagerUtility.getSkin());
+		final ImageButtonStyle abilityIconStyle = new ImageButtonStyle();
+		abilityIcon = new ImageButton(abilityIconStyle);
 		moveImageButton = new TextButton(MOVE_BUTTON_SPRITE_NAME, statusUISkin, DEFAULT_SKIN);
 		moveImageButton.addListener(new ClickListener() {
 			@Override
@@ -142,6 +142,13 @@ public class BottomBar {
 
 	private void changeSpellImage(final String spellImageName) {
 		spellImageButton.setText(spellImageName);
+		final TextureRegion tr = new TextureRegion(AssetManagerUtility.getSprite(spellImageName));
+		final TextureRegionDrawable trd = new TextureRegionDrawable(tr);
+		final ImageButtonStyle oldStyle = abilityIcon.getStyle();
+		oldStyle.imageUp = trd;
+		oldStyle.imageUp.setMinHeight(tilePixelHeight * 3);
+		oldStyle.imageUp.setMinWidth(tilePixelWidth * 3);
+		abilityIcon.setStyle(oldStyle);
 	}
 
 	private void changeHeroImage(final String heroImageName) {
@@ -218,6 +225,7 @@ public class BottomBar {
 		infoTable.align(Align.topLeft);
 		infoTable.pad(WINDOW_PADDING);
 		infoTable.padLeft(5);
+		infoTable.add(abilityIcon).size(tilePixelWidth, tilePixelHeight);
 		infoTable.add(spellInfo).size(tilePixelWidth, tilePixelHeight);
 
 		infoTable.setBackground(AssetManagerUtility.getSkin().getDrawable("windowgray"));
@@ -237,6 +245,8 @@ public class BottomBar {
 					spellImageButton.setAbility((Ability) entity.getAbilities().toArray()[0]);
 				} else {
 					spellImageButton.clearAbility();
+					changeSpellImage("NoAbility");
+					spellInfo.setText("");
 				}
 				activeUnit = entity;
 				this.getTable().setVisible(true);
@@ -258,7 +268,7 @@ public class BottomBar {
 		heroNameLabel.setText(entity.getEntityData().getName());
 		changeHeroImage(entity.getEntityData().getPortraitSpritePath());
 		for (final Ability ability : entity.getAbilities()) {
-			changeSpellImage(ability.getSpellData().getName());
+			changeSpellImage(ability.getSpellData().getIconSpriteName());
 			changeSpellInfo(ability.getSpellData().getInfoText());
 		}
 	}

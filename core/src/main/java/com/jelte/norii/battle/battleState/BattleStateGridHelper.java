@@ -442,8 +442,7 @@ public class BattleStateGridHelper {
 			return false;
 		}
 
-		return !(((deltaX == deltaY) && (deltaX >= range)) || (((deltaX == 0) && (deltaY > range)) || ((deltaY == 0) && (deltaX > range))) || checkLShapesDiagonal(deltaX, deltaY, range, areaOfEffectRange)
-				|| checkCorners(deltaX, deltaY, areaOfEffectRange));
+		return !(((deltaX == deltaY) && (deltaX >= range)) || (((deltaX == 0) && (deltaY > range)) || ((deltaY == 0) && (deltaX > range))) || checkLShapesDiagonal(deltaX, deltaY, range, areaOfEffectRange) || checkCorners(deltaX, deltaY, areaOfEffectRange));
 	}
 
 	private boolean checkCorners(int deltaX, int deltaY, int areaOfEffectRange) {

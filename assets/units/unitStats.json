@@ -618,8 +618,8 @@
         "magicalDefense": 25,
         "physicalDefense": 25,
         "basicAttackCost": 1,
-        "spellExplanation": "this unit does nothing for now",
-        "abilities": []
+        "spellExplanation": "Reduce AP of enemy and ally units",
+        "abilities": ["HOURGLASS"]
     },
 
     {
@@ -634,8 +634,8 @@
         "magicalDefense": 25,
         "physicalDefense": 25,
         "basicAttackCost": 1,
-        "spellExplanation": "this unit does nothing for now",
-        "abilities": []
+        "spellExplanation": "Reduce magical resistance of enemies",
+        "abilities": ["MINDWARP"]
     },
 
     {
@@ -643,6 +643,22 @@
         "name": "Citizen",
         "portraitSpritePath": "CitizenIdleDown",
         "entitySpriteName": "Citizen",
+        "maxHP": 10,
+        "level": 1,
+        "attackRange": 1,
+        "attackPower": 4,
+        "magicalDefense": 25,
+        "physicalDefense": 25,
+        "basicAttackCost": 1,
+        "spellExplanation": "this unit does nothing for now",
+        "abilities": []
+    },
+
+    {
+        "id": 41,
+        "name": "Warrior Girl",
+        "portraitSpritePath": "WarriorGirlIdleDown",
+        "entitySpriteName": "WarriorGirl",
         "maxHP": 10,
         "level": 1,
         "attackRange": 1,
