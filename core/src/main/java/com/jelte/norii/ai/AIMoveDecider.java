@@ -180,32 +180,27 @@ public class AIMoveDecider {
 
 	// if goal is right next to start, then problem ==> just move in random direction? or complicated algorithm that decides move based on start,goal, ability??
 	private Array<MyPoint> tryToMoveAndCastSpell(Ability ability, Entity aiUnit, BattleState battleState, final Array<UnitTurn> unitTurns, final TreeMap<Integer, List<Entity>> distancesWithAbilityTargetUnits, Array<MyPoint> abilityTargets) {
-		MyPoint endPoint = new MyPoint(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY());
-		final UnitTurn moveAndSpell = new UnitTurn(aiUnit.getEntityID(), new Move(MoveType.MOVE, endPoint));
+		// is this necesary? can we return empty turns and deal with it?
+		final UnitTurn moveAndSpell = new UnitTurn(aiUnit.getEntityID(), new Move(MoveType.MOVE, new MyPoint(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY())));
 		int ap = aiUnit.getAp();
 		final BattleState copyBattleState = battleState.makeCopy();
 		final Entity copyUnit = copyBattleState.get(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY()).getUnit();
-		while (abilityTargets.isEmpty() && (ap > 0)) {
-			final Entity closestUnit = distancesWithAbilityTargetUnits.firstEntry().getValue().get(0);
-			final TiledMapPosition closestUnitPos = new TiledMapPosition().setPositionFromTiles(closestUnit.getCurrentPosition().getTileX(), closestUnit.getCurrentPosition().getTileY());
-			final List<GridCell> path = MyPathFinder.getInstance().pathTowards(new TiledMapPosition().setPositionFromTiles(copyUnit.getCurrentPosition().getTileX(), copyUnit.getCurrentPosition().getTileY()), closestUnitPos, copyUnit.getAp());
-			if (path.size() == 0) {
-				final int j = 5;
+
+		final Entity closestUnit = distancesWithAbilityTargetUnits.firstEntry().getValue().get(0);
+		final TiledMapPosition closestUnitPos = new TiledMapPosition().setPositionFromTiles(closestUnit.getCurrentPosition().getTileX(), closestUnit.getCurrentPosition().getTileY());
+		final List<GridCell> path = MyPathFinder.getInstance().pathTowards(new TiledMapPosition().setPositionFromTiles(copyUnit.getCurrentPosition().getTileX(), copyUnit.getCurrentPosition().getTileY()), closestUnitPos, copyUnit.getAp());
+		final List<MyPoint> moveTo = calculateMoveDestination(copyUnit, copyBattleState, ap);
+
+		for (final MyPoint to : moveTo) {
+			if (!to.equals(copyUnit.getCurrentPosition().getTilePosAsPoint())) {
+
 			}
-			endPoint = new MyPoint(path.get(0).x, path.get(0).y);
-			int i = 0;
-			do {
-				endPoint = tryAdjacentPoint(i, new MyPoint(copyUnit.getCurrentPosition().getTileX(), copyUnit.getCurrentPosition().getTileY()), new MyPoint(closestUnit.getCurrentPosition().getTileX(), closestUnit.getCurrentPosition().getTileY()));
-				i++;
-				if ((endPoint.x == closestUnitPos.getTileX()) && (endPoint.y == closestUnitPos.getTileY())) {
-					final int j = 5;
-				}
-			} while (checkIfUnitOnPoint(endPoint, copyBattleState, copyUnit));
-			copyBattleState.moveUnitTo(copyUnit, endPoint);
-			moveAndSpell.addMove(new Move(MoveType.MOVE, endPoint));
-			ap--;
-			abilityTargets = getAbilityTargets(ability, endPoint, copyUnit.isPlayerUnit(), copyBattleState);
 		}
+		copyBattleState.moveUnitTo(copyUnit, moveTo);
+		moveAndSpell.addMove(new Move(MoveType.MOVE, moveTo));
+		ap--;
+		abilityTargets = getAbilityTargets(ability, moveTo, copyUnit.isPlayerUnit(), copyBattleState);
+
 		if (!abilityTargets.isEmpty()) {
 			addSpellMovesAfterMovingForEveryTarget(ability, unitTurns, abilityTargets, moveAndSpell, copyBattleState, copyUnit);
 		} else {
@@ -263,7 +258,7 @@ public class AIMoveDecider {
 		}
 	}
 
-	private MyPoint tryAdjacentPoint(int i, MyPoint unitPoint, MyPoint target) {
+	private MyPoint calculateMoveDestination(int i, MyPoint unitPoint, MyPoint target) {
 		if (i == 0) {
 			if (target.x < unitPoint.x) {
 				i++;
