@@ -43,7 +43,7 @@ public class AITeamLeader implements UnitOwner {
 		ap = ApFileReader.getApData(0);
 	}
 
-	public void spawnAiUnits(List<TiledMapPosition> spawnPositions) {
+	public void spawnUnits(List<TiledMapPosition> spawnPositions) {
 		for (final Entity unit : team) {
 			if (!spawnPositions.isEmpty()) {
 				unit.setCurrentPosition(spawnPositions.get(0));

@@ -24,6 +24,7 @@ import com.jelte.norii.battle.battleState.BattleStateGridHelper;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityStage;
 import com.jelte.norii.entities.Player;
+import com.jelte.norii.entities.UnitOwner;
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.magic.Ability.LineOfSight;
 import com.jelte.norii.map.BattleMap;
@@ -51,7 +52,7 @@ public class BattleScreen extends GameScreen {
 	private MapManager mapMgr;
 	private BattleMap currentMap;
 	private BattleManager battlemanager;
-	private AITeamLeader aiTeamLeader;
+	private UnitOwner aiTeamLeader;
 	private InputMultiplexer multiplexer;
 	private BattleScreenInputProcessor battlescreenInputProcessor;
 	private OrthographicCamera hudCamera;
@@ -123,7 +124,7 @@ public class BattleScreen extends GameScreen {
 
 	private void spawnAI() {
 		final List<TiledMapPosition> enemyStartPositions = currentMap.getEnemyStartPositions();
-		aiTeamLeader.spawnAiUnits(enemyStartPositions);
+		aiTeamLeader.spawnUnits(enemyStartPositions);
 	}
 
 	public BattleManager getBattlemanager() {

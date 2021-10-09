@@ -178,29 +178,25 @@ public class AIMoveDecider {
 		unitTurns.add(doNothing);
 	}
 
-	// if goal is right next to start, then problem ==> just move in random direction? or complicated algorithm that decides move based on start,goal, ability??
-	private Array<MyPoint> tryToMoveAndCastSpell(Ability ability, Entity aiUnit, BattleState battleState, final Array<UnitTurn> unitTurns, final TreeMap<Integer, List<Entity>> distancesWithAbilityTargetUnits, Array<MyPoint> abilityTargets) {
-		// is this necesary? can we return empty turns and deal with it?
-		final UnitTurn moveAndSpell = new UnitTurn(aiUnit.getEntityID(), new Move(MoveType.MOVE, new MyPoint(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY())));
+	// if goal is right next to start, then problem ==> just move in random
+	// direction? or complicated algorithm that decides move based on start,goal,
+	// ability??
+	private Array<MyPoint> tryToMoveAndCastSpell(Ability ability, Entity aiUnit, BattleState battleState, final Array<UnitTurn> unitTurns, final TreeMap<Integer, List<Entity>> distancesWithAbilityTargetUnits,
+			Array<MyPoint> abilityTargets) {
+		MyPoint endPoint = new MyPoint(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY());
+		final UnitTurn moveAndSpell = new UnitTurn(aiUnit.getEntityID(), new Move(MoveType.MOVE, endPoint));
 		int ap = aiUnit.getAp();
 		final BattleState copyBattleState = battleState.makeCopy();
 		final Entity copyUnit = copyBattleState.get(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY()).getUnit();
-
-		final Entity closestUnit = distancesWithAbilityTargetUnits.firstEntry().getValue().get(0);
-		final TiledMapPosition closestUnitPos = new TiledMapPosition().setPositionFromTiles(closestUnit.getCurrentPosition().getTileX(), closestUnit.getCurrentPosition().getTileY());
-		final List<GridCell> path = MyPathFinder.getInstance().pathTowards(new TiledMapPosition().setPositionFromTiles(copyUnit.getCurrentPosition().getTileX(), copyUnit.getCurrentPosition().getTileY()), closestUnitPos, copyUnit.getAp());
-		final List<MyPoint> moveTo = calculateMoveDestination(copyUnit, copyBattleState, ap);
-
-		for (final MyPoint to : moveTo) {
-			if (!to.equals(copyUnit.getCurrentPosition().getTilePosAsPoint())) {
-
-			}
+		List<MyPoint> passedPoints = new ArrayList<>();
+		while (abilityTargets.isEmpty() && (ap > 0)) {
+			endPoint = getRandomMovePoint(new MyPoint(copyUnit.getCurrentPosition().getTileX(), copyUnit.getCurrentPosition().getTileY()), copyBattleState, copyUnit, passedPoints);
+			passedPoints.add(new MyPoint(endPoint.x, endPoint.y));
+			copyBattleState.moveUnitTo(copyUnit, endPoint);
+			moveAndSpell.addMove(new Move(MoveType.MOVE, endPoint));
+			ap--;
+			abilityTargets = getAbilityTargets(ability, endPoint, copyUnit.isPlayerUnit(), copyBattleState);
 		}
-		copyBattleState.moveUnitTo(copyUnit, moveTo);
-		moveAndSpell.addMove(new Move(MoveType.MOVE, moveTo));
-		ap--;
-		abilityTargets = getAbilityTargets(ability, moveTo, copyUnit.isPlayerUnit(), copyBattleState);
-
 		if (!abilityTargets.isEmpty()) {
 			addSpellMovesAfterMovingForEveryTarget(ability, unitTurns, abilityTargets, moveAndSpell, copyBattleState, copyUnit);
 		} else {
@@ -211,13 +207,65 @@ public class AIMoveDecider {
 		return abilityTargets;
 	}
 
+	private MyPoint getRandomMovePoint(MyPoint unitPoint, BattleState copyBattleState, Entity copyUnit, List<MyPoint> passedPoints) {
+		int randomStartDirection = random.nextInt(4);
+		int direction = random.nextInt(4);
+		MyPoint endPoint = new MyPoint(unitPoint.x, unitPoint.y);
+		do {
+			switch (direction) {
+			case 0:
+				endPoint = new MyPoint(unitPoint.x + 1, unitPoint.y);
+				break;
+			case 1:
+				endPoint = new MyPoint(unitPoint.x - 1, unitPoint.y);
+				break;
+			case 2:
+				endPoint = new MyPoint(unitPoint.x, unitPoint.y + 1);
+				break;
+			case 3:
+				endPoint = new MyPoint(unitPoint.x, unitPoint.y - 1);
+				break;
+			default:
+				break;
+			}
+
+			if (checkValidityMovePoint(endPoint, copyBattleState, copyUnit, passedPoints)) {
+				return endPoint;
+			} else {
+				direction = ++direction % 4;
+			}
+		} while (direction != randomStartDirection);
+		return new MyPoint(unitPoint.x, unitPoint.y);
+	}
+
+	private boolean checkValidityMovePoint(MyPoint endPoint, BattleState copyBattleState, Entity copyUnit, List<MyPoint> passedPoints) {
+		return !checkIfUnitOnPoint(endPoint, copyBattleState, copyUnit) && inBounds(endPoint, copyBattleState) && isAlreadyVisitedPoint(endPoint, passedPoints);
+	}
+
+	private boolean isAlreadyVisitedPoint(MyPoint endPoint, List<MyPoint> passedPoints) {
+		for (MyPoint point : passedPoints) {
+			if (point.equals(endPoint)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean inBounds(MyPoint point, BattleState copyBattleState) {
+		final int maxWidth = copyBattleState.getWidth() - 1;
+		final int maxHeight = copyBattleState.getHeight() - 1;
+		return (point.x > maxWidth) || (point.y > maxHeight) || (point.x < 0) || (point.y < 0);
+	}
+
 	private void addSpellMovesAfterMovingForEveryTarget(Ability ability, final Array<UnitTurn> unitTurns, Array<MyPoint> abilityTargets, final UnitTurn moveAndSpell, final BattleState copyBattleState, final Entity copyUnit) {
 		oldTime = debugTime("targets found after walking", oldTime);
 		for (final MyPoint target : abilityTargets) {
-			final Set<MyPoint> positionsToCastSpell = BattleStateGridHelper.getInstance().getAllCastPointsWhereTargetIsHit(ability, target, new MyPoint(copyUnit.getCurrentPosition().getTileX(), copyUnit.getCurrentPosition().getTileY()), copyBattleState);
+			final Set<MyPoint> positionsToCastSpell = BattleStateGridHelper.getInstance().getAllCastPointsWhereTargetIsHit(ability, target, new MyPoint(copyUnit.getCurrentPosition().getTileX(), copyUnit.getCurrentPosition().getTileY()),
+					copyBattleState);
 			for (final MyPoint MyPoint : positionsToCastSpell) {
 				final UnitTurn moveAndSpellCopy = moveAndSpell.makeCopy();
-				final Array<MyPoint> affectedUnits = BattleStateGridHelper.getInstance().getTargetsAbility(ability, MyPoint, new MyPoint(copyUnit.getCurrentPosition().getTileX(), copyUnit.getCurrentPosition().getTileY()), getUnitPositions(false, ability, copyBattleState));
+				final Array<MyPoint> affectedUnits = BattleStateGridHelper.getInstance().getTargetsAbility(ability, MyPoint, new MyPoint(copyUnit.getCurrentPosition().getTileX(), copyUnit.getCurrentPosition().getTileY()),
+						getUnitPositions(false, ability, copyBattleState));
 				moveAndSpellCopy.addMove(new SpellMove(MoveType.SPELL, MyPoint, ability, affectedUnits));
 				unitTurns.add(moveAndSpellCopy);
 			}
@@ -226,7 +274,8 @@ public class AIMoveDecider {
 
 	private void addSpellMovesForEveryTarget(Ability ability, Entity aiUnit, BattleState battleState, final Array<UnitTurn> unitTurns, final MyPoint casterPos, Array<MyPoint> abilityTargets) {
 		for (final MyPoint target : abilityTargets) {
-			final Set<MyPoint> positionsToCastSpell = BattleStateGridHelper.getInstance().getAllCastPointsWhereTargetIsHit(ability, target, new MyPoint(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY()), battleState);
+			final Set<MyPoint> positionsToCastSpell = BattleStateGridHelper.getInstance().getAllCastPointsWhereTargetIsHit(ability, target, new MyPoint(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY()),
+					battleState);
 			oldTime = debugTime("finished 1 target - getcastPointswherehit", oldTime);
 			final Move moveAfterSpell = decideMove(ability, aiUnit, battleState);
 			oldTime = debugTime("finished 1 target - decideMove", oldTime);

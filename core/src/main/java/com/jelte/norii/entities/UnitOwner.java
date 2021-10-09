@@ -30,9 +30,13 @@ public interface UnitOwner {
 
 	public void addUnit(Entity unit);
 
+	public void spawnUnits(List<TiledMapPosition> spawnPositions);
+
 	public void sendMessageToBattleManager(MessageToBattleScreen message, Entity entity);
 
 	public void sendMessageToBattleManager(MessageToBattleScreen message, Entity entity, TiledMapPosition oldPosition);
 
 	public void sendMessageToBattleManager(MessageToBattleScreen message, Entity entity, int damage);
+
+	public void dispose();
 }

@@ -8,7 +8,6 @@ import org.xguzm.pathfinding.grid.GridCell;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
-import com.jelte.norii.ai.AITeamLeader;
 import com.jelte.norii.ai.UnitTurn;
 import com.jelte.norii.audio.AudioCommand;
 import com.jelte.norii.audio.AudioManager;
@@ -25,6 +24,7 @@ import com.jelte.norii.battle.battleState.Move;
 import com.jelte.norii.battle.battleState.SpellMove;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.Player;
+import com.jelte.norii.entities.UnitOwner;
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.magic.Ability.DamageType;
 import com.jelte.norii.map.MyPathFinder;
@@ -42,7 +42,7 @@ public class BattleManager {
 	private BattlePhase currentBattleState;
 
 	private Entity activeUnit;
-	private AITeamLeader aiTeamLeader;
+	private UnitOwner aiTeamLeader;
 	private BattleState activeBattleState;
 	private UnitTurn activeTurn;
 	private boolean playerTurn;
@@ -55,8 +55,8 @@ public class BattleManager {
 
 	private static final String TAG = BattleManager.class.getSimpleName();
 
-	public BattleManager(AITeamLeader aiTeamLeader, int width, int height, Array<GridCell> unwalkableNodes, BattleScreen battleScreen) {
-		initVariables(aiTeamLeader, width, height, unwalkableNodes, battleScreen);
+	public BattleManager(UnitOwner aiTeamLeader2, int width, int height, Array<GridCell> unwalkableNodes, BattleScreen battleScreen) {
+		initVariables(aiTeamLeader2, width, height, unwalkableNodes, battleScreen);
 
 		deploymentBattleState = new DeploymentBattlePhase(this);
 		selectUnitBattleState = new SelectUnitBattlePhase(this);
@@ -69,11 +69,11 @@ public class BattleManager {
 		currentBattleState.entry();
 	}
 
-	private void initVariables(AITeamLeader aiTeamLeader, int width, int height, Array<GridCell> unwalkableNodes, BattleScreen battleScreen) {
+	private void initVariables(UnitOwner aiTeamLeader2, int width, int height, Array<GridCell> unwalkableNodes, BattleScreen battleScreen) {
 		this.battleScreen = battleScreen;
-		this.aiTeamLeader = aiTeamLeader;
+		this.aiTeamLeader = aiTeamLeader2;
 		Player.getInstance().setBattleManager(this);
-		aiTeamLeader.setBattleManager(this);
+		aiTeamLeader2.setBattleManager(this);
 		activeUnit = Player.getInstance().getTeam().get(0);
 		playerTurn = true;
 		activeTurn = null;

@@ -20,6 +20,8 @@ import com.github.czyzby.websocket.WebSocket;
 import com.github.czyzby.websocket.WebSocketAdapter;
 import com.github.czyzby.websocket.WebSocketListener;
 import com.github.czyzby.websocket.WebSockets;
+import com.jelte.norii.ai.AITeams;
+import com.jelte.norii.map.MapFactory.MapType;
 import com.jelte.norii.utility.AssetManagerUtility;
 import com.jelte.norii.utility.parallax.ParallaxBackground;
 import com.jelte.norii.utility.parallax.ParallaxUtils.WH;
@@ -139,6 +141,15 @@ public class MultiplayerScreen extends GameScreen {
 			@Override
 			public boolean onMessage(WebSocket webSocket, String packet) {
 				System.out.println(packet + "\n");
+				switch (packet) {
+				case "PLAYER_FOUND":
+					AITeams selectedLevel = AITeams.ONLINE_PLAYER;
+					AssetManagerUtility.loadMapAsset(MapType.BATTLE_MAP_THE_DARK_SWAMP.toString());
+					ScreenManager.getInstance().showScreen(ScreenEnum.BATTLE, selectedLevel);
+					break;
+				default:
+					break;
+				}
 				return FULLY_HANDLED;
 			}
 
