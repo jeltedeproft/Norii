@@ -33,6 +33,8 @@ public class MultiplayerScreen extends GameScreen {
 	private static final String EXIT = "exit";
 	private static final String SEARCH = "search";
 
+	private static final String APP_LINK = "norii-ipmpb.ondigitalocean.app";
+
 	private Label titleLabel;
 	private Label multiplayerLabel;
 	private TextButton searchTextButton;
@@ -124,7 +126,7 @@ public class MultiplayerScreen extends GameScreen {
 	}
 
 	private void initMultiplayer() {
-		socket = WebSockets.newSocket(WebSockets.toSecureWebSocketUrl("norii-lnw72.ondigitalocean.app", 443));
+		socket = WebSockets.newSocket(WebSockets.toSecureWebSocketUrl(APP_LINK, 443));
 		socket.setSendGracefully(true);
 		socket.addListener(getWebSocketListener());
 		socket.connect();
