@@ -20,15 +20,6 @@ android-horizontal-scrollbar-knob
   orig: 10, 4
   offset: 0, 0
   index: -1
-android-horizontal-scrollbar-knob
-  rotate: false
-  xy: 123, 400
-  size: 10, 4
-  split: 1, 1, 1, 1
-  pad: 1, 1, 0, 0
-  orig: 10, 4
-  offset: 0, 0
-  index: -1
 apptheme_btn_radio_on_disabled_focused_holo_light
   rotate: false
   xy: 1, 71
@@ -94,11 +85,39 @@ font-export
   orig: 98, 98
   offset: 0, 0
   index: -1
+progressbar
+  rotate: false
+  xy: 84, 191
+  size: 1, 32
+  orig: 1, 32
+  offset: 0, 0
+  index: -1
+progressbar-filled
+  rotate: false
+  xy: 112, 257
+  size: 1, 32
+  orig: 1, 32
+  offset: 0, 0
+  index: -1
+progressbar-filled-vertical
+  rotate: false
+  xy: 479, 510
+  size: 32, 1
+  orig: 32, 1
+  offset: 0, 0
+  index: -1
 progressbar-horizontal
   rotate: false
   xy: 179, 454
   size: 23, 12
   orig: 23, 12
+  offset: 0, 0
+  index: -1
+progressbar-vertical
+  rotate: false
+  xy: 479, 507
+  size: 32, 1
+  orig: 32, 1
   offset: 0, 0
   index: -1
 scroll-bar-horizontal
@@ -244,14 +263,6 @@ window
   orig: 27, 34
   offset: 0, 0
   index: -1
-window
-  rotate: false
-  xy: 55, 189
-  size: 27, 34
-  split: 5, 4, 26, 3
-  orig: 27, 34
-  offset: 0, 0
-  index: -1
 window-noborder
   rotate: false
   xy: 55, 153
@@ -267,33 +278,5 @@ windowgray
   split: 5, 5, 33, 4
   pad: 2, 2, 33, 4
   orig: 54, 60
-  offset: 0, 0
-  index: -1
-progressbar
-  rotate: false
-  xy: 84, 191
-  size: 1, 32
-  orig: 1, 32
-  offset: 0, 0
-  index: -1
-progressbar-filled
-  rotate: false
-  xy: 112, 257
-  size: 1, 32
-  orig: 1, 32
-  offset: 0, 0
-  index: -1
-progressbar-filled-vertical
-  rotate: false
-  xy: 479, 510
-  size: 32, 1
-  orig: 32, 1
-  offset: 0, 0
-  index: -1
-progressbar-vertical
-  rotate: false
-  xy: 479, 507
-  size: 32, 1
-  orig: 32, 1
   offset: 0, 0
   index: -1
