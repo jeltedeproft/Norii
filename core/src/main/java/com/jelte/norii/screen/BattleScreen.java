@@ -52,7 +52,7 @@ public class BattleScreen extends GameScreen {
 	private MapManager mapMgr;
 	private BattleMap currentMap;
 	private BattleManager battlemanager;
-	private UnitOwner aiTeamLeader;
+	private UnitOwner enemyTeamLeader;
 	private InputMultiplexer multiplexer;
 	private BattleScreenInputProcessor battlescreenInputProcessor;
 	private OrthographicCamera hudCamera;
@@ -72,7 +72,7 @@ public class BattleScreen extends GameScreen {
 		initializePauseMenu();
 		initializeInput();
 		initializeMap();
-		spawnAI();
+		spawnEnemyUnits();
 	}
 
 	private void initializeVariables() {
@@ -85,18 +85,18 @@ public class BattleScreen extends GameScreen {
 	}
 
 	private void initializeAI(AITeams ai) {
-		aiTeamLeader = new AITeamLeader(ai);
+		enemyTeamLeader = new AITeamLeader(ai);
 	}
 
 	private void initializeEntityStage() {
 		Player.getInstance().initializeTeam();
-		entityStage = new EntityStage(Stream.concat(Player.getInstance().getTeam().stream(), aiTeamLeader.getTeam().stream()).collect(Collectors.toList()));
+		entityStage = new EntityStage(Stream.concat(Player.getInstance().getTeam().stream(), enemyTeamLeader.getTeam().stream()).collect(Collectors.toList()));
 	}
 
 	private void initializeHUD(AITeams aiTeams) {
 		hudCamera = new OrthographicCamera();
 		hudCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		hud = new Hud(Player.getInstance().getTeam(), aiTeamLeader.getTeam(), spriteBatch, currentMap.getMapWidth(), currentMap.getMapHeight(), this, (aiTeams == AITeams.TUTORIAL));
+		hud = new Hud(Player.getInstance().getTeam(), enemyTeamLeader.getTeam(), spriteBatch, currentMap.getMapWidth(), currentMap.getMapHeight(), this, (aiTeams == AITeams.TUTORIAL));
 		if (aiTeams == AITeams.TUTORIAL) {
 			hud.getHudMessages().showInfoWindow(HudMessageTypes.DEPLOY_UNITS_INFO);
 		}
@@ -116,15 +116,15 @@ public class BattleScreen extends GameScreen {
 	}
 
 	private void initializeMap() {
-		battlemanager = new BattleManager(aiTeamLeader, currentMap.getMapWidth(), currentMap.getMapHeight(), currentMap.getNavLayer().getUnwalkableNodes(), this);
+		battlemanager = new BattleManager(enemyTeamLeader, currentMap.getMapWidth(), currentMap.getMapHeight(), currentMap.getNavLayer().getUnwalkableNodes(), this);
 		battlescreenInputProcessor.setBattleManager(battlemanager);
 		currentMap.setStage(this);
 		MyPathFinder.getInstance().setMap(currentMap);
 	}
 
-	private void spawnAI() {
+	private void spawnEnemyUnits() {
 		final List<TiledMapPosition> enemyStartPositions = currentMap.getEnemyStartPositions();
-		aiTeamLeader.spawnUnits(enemyStartPositions);
+		enemyTeamLeader.spawnUnits(enemyStartPositions);
 	}
 
 	public BattleManager getBattlemanager() {
@@ -192,7 +192,7 @@ public class BattleScreen extends GameScreen {
 
 	private void updateUnits(final float delta) {
 		Player.getInstance().updateUnits(delta);
-		aiTeamLeader.updateUnits(delta);
+		enemyTeamLeader.updateUnits(delta);
 	}
 
 	private void updateStages() {
@@ -238,7 +238,7 @@ public class BattleScreen extends GameScreen {
 		}
 		entityStage.getViewport().apply();
 		Player.getInstance().renderUnits(spriteBatch);
-		aiTeamLeader.renderUnits(spriteBatch);
+		enemyTeamLeader.renderUnits(spriteBatch);
 	}
 
 	private void renderParticles(final float delta) {
@@ -286,7 +286,7 @@ public class BattleScreen extends GameScreen {
 	@Override
 	public void dispose() {
 		Player.getInstance().dispose();
-		aiTeamLeader.dispose();
+		enemyTeamLeader.dispose();
 		mapRenderer.dispose();
 		pauseMenu.dispose();
 		currentMap.dispose();

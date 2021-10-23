@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.battle.ApFileReader;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.battle.MessageToBattleScreen;
+import com.jelte.norii.battle.battleState.BattleState;
 import com.jelte.norii.profile.ProfileManager;
 import com.jelte.norii.utility.TiledMapPosition;
 
@@ -40,6 +41,7 @@ public class Player implements UnitOwner {
 		return team;
 	}
 
+	@Override
 	public void dispose() {
 		for (final Entity entity : team) {
 			entity.dispose();
@@ -130,5 +132,29 @@ public class Player implements UnitOwner {
 	@Override
 	public int getAp() {
 		return ap;
+	}
+
+	@Override
+	public void spawnUnits(List<TiledMapPosition> spawnPositions) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void resetAI(BattleState activeBattleState) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void processAi() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public BattleState getNextBattleState() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.battle.MessageToBattleScreen;
+import com.jelte.norii.battle.battleState.BattleState;
 import com.jelte.norii.utility.TiledMapPosition;
 
 public interface UnitOwner {
@@ -39,4 +40,10 @@ public interface UnitOwner {
 	public void sendMessageToBattleManager(MessageToBattleScreen message, Entity entity, int damage);
 
 	public void dispose();
+
+	public void resetAI(BattleState activeBattleState);
+
+	public void processAi();
+
+	public BattleState getNextBattleState();
 }

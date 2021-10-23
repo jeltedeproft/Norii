@@ -42,7 +42,7 @@ public class BattleManager {
 	private BattlePhase currentBattleState;
 
 	private Entity activeUnit;
-	private UnitOwner aiTeamLeader;
+	private UnitOwner unitOwner;
 	private BattleState activeBattleState;
 	private UnitTurn activeTurn;
 	private boolean playerTurn;
@@ -55,8 +55,8 @@ public class BattleManager {
 
 	private static final String TAG = BattleManager.class.getSimpleName();
 
-	public BattleManager(UnitOwner aiTeamLeader2, int width, int height, Array<GridCell> unwalkableNodes, BattleScreen battleScreen) {
-		initVariables(aiTeamLeader2, width, height, unwalkableNodes, battleScreen);
+	public BattleManager(UnitOwner aiTeamLeader, int width, int height, Array<GridCell> unwalkableNodes, BattleScreen battleScreen) {
+		initVariables(aiTeamLeader, width, height, unwalkableNodes, battleScreen);
 
 		deploymentBattleState = new DeploymentBattlePhase(this);
 		selectUnitBattleState = new SelectUnitBattlePhase(this);
@@ -69,11 +69,11 @@ public class BattleManager {
 		currentBattleState.entry();
 	}
 
-	private void initVariables(UnitOwner aiTeamLeader2, int width, int height, Array<GridCell> unwalkableNodes, BattleScreen battleScreen) {
+	private void initVariables(UnitOwner unitOwner, int width, int height, Array<GridCell> unwalkableNodes, BattleScreen battleScreen) {
 		this.battleScreen = battleScreen;
-		this.aiTeamLeader = aiTeamLeader2;
+		this.unitOwner = unitOwner;
 		Player.getInstance().setBattleManager(this);
-		aiTeamLeader2.setBattleManager(this);
+		unitOwner.setBattleManager(this);
 		activeUnit = Player.getInstance().getTeam().get(0);
 		playerTurn = true;
 		activeTurn = null;
@@ -167,17 +167,17 @@ public class BattleManager {
 
 	public void swapTurn() {
 		Player.getInstance().applyModifiers();
-		aiTeamLeader.applyModifiers();
+		unitOwner.applyModifiers();
 
 		playerTurn = !playerTurn;
 
 		if (!playerTurn) {
 			Player.getInstance().setAp(ApFileReader.getApData(turn));
 			aiIsCalculating = true;
-			aiTeamLeader.resetAI(activeBattleState);
+			unitOwner.resetAI(activeBattleState);
 		} else {
 			turn++;
-			aiTeamLeader.setAp(ApFileReader.getApData(turn));
+			unitOwner.setAp(ApFileReader.getApData(turn));
 			setCurrentBattleState(getSelectUnitBattleState());
 			getCurrentBattleState().entry();
 		}
@@ -186,12 +186,12 @@ public class BattleManager {
 
 	public void processAI() {
 		if (aiIsCalculating) {
-			aiTeamLeader.processAi();
+			unitOwner.processAi();
 		}
 
 		if (aiFinishedCalculating) {
 			Gdx.app.debug(TAG, "finished calculating");
-			final BattleState newState = aiTeamLeader.getNextBattleState();
+			final BattleState newState = unitOwner.getNextBattleState();
 			aiUnitIsBussy = true;
 			aiIsCalculating = false;
 			aiFinishedCalculating = false;
@@ -214,7 +214,7 @@ public class BattleManager {
 			}
 			checkVictory();
 			swapTurn();
-			aiTeamLeader.setAp(ApFileReader.getApData(turn));
+			unitOwner.setAp(ApFileReader.getApData(turn));
 			return;
 		}
 		switch (move.getMoveType()) {
@@ -263,7 +263,7 @@ public class BattleManager {
 			}
 		}
 
-		for (final Entity entity : aiTeamLeader.getTeam()) {
+		for (final Entity entity : unitOwner.getTeam()) {
 			if (entity.getEntityID() == entityID) {
 				return entity;
 			}
@@ -274,7 +274,7 @@ public class BattleManager {
 	private void removeUnit(Entity unit) {
 		executeOnDeathEffect(unit);
 		Player.getInstance().removeUnit(unit);
-		aiTeamLeader.removeUnit(unit);
+		unitOwner.removeUnit(unit);
 		activeBattleState.removeUnit(unit);
 	}
 
@@ -316,7 +316,7 @@ public class BattleManager {
 	}
 
 	public List<Entity> getAiUnits() {
-		return aiTeamLeader.getTeam();
+		return unitOwner.getTeam();
 	}
 
 	public boolean isPlayerTurn() {
@@ -384,7 +384,7 @@ public class BattleManager {
 	}
 
 	public List<Entity> getUnits() {
-		return Stream.concat(Player.getInstance().getTeam().stream(), aiTeamLeader.getTeam().stream()).collect(Collectors.toList());
+		return Stream.concat(Player.getInstance().getTeam().stream(), unitOwner.getTeam().stream()).collect(Collectors.toList());
 	}
 
 	public int getUnitsDeployed() {
