@@ -29,17 +29,15 @@ import com.jelte.norii.utility.parallax.ParallaxBackground;
 import com.jelte.norii.utility.parallax.ParallaxUtils.WH;
 import com.jelte.norii.utility.parallax.TextureRegionParallaxLayer;
 
-public class MultiplayerScreen extends GameScreen {
+public class LoginScreen extends GameScreen {
 	private static final String TITLE_FONT = "bigFont";
-	private static final String TITLE = "MULTIPLAYER";
-	private static final String EXIT = "exit";
-	private static final String SEARCH = "search";
-
-	private static final String APP_LINK = "norii-ipmpb.ondigitalocean.app";
+	private static final String TITLE = "LOGIN";
+	private static final String LOGIN = "LOG IN";
+	private static final String EXIT = "quit";
 
 	private Label titleLabel;
 	private Label multiplayerLabel;
-	private TextButton searchTextButton;
+	private TextButton loginTextButton;
 	private TextButton exitTextButton;
 	private Stage stage;
 	private Table table;
@@ -49,7 +47,7 @@ public class MultiplayerScreen extends GameScreen {
 
 	private WebSocket socket;
 
-	public MultiplayerScreen() {
+	public LoginScreen() {
 		initializeVariables();
 		createBackground();
 		createButtons();
@@ -95,13 +93,13 @@ public class MultiplayerScreen extends GameScreen {
 		titleLabel = new Label(TITLE, statusUISkin, TITLE_FONT);
 		titleLabel.setAlignment(Align.top);
 
-		searchTextButton = new TextButton(SEARCH, statusUISkin);
+		loginTextButton = new TextButton(LOGIN, statusUISkin);
 		exitTextButton = new TextButton(EXIT, statusUISkin);
 	}
 
 	private void addButtons() {
 		table.add(titleLabel).expandX().colspan(10).spaceBottom(100).height(250).width(1000).row();
-		table.add(searchTextButton).height(75).width(200).row();
+		table.add(loginTextButton).height(75).width(200).row();
 		table.add(multiplayerLabel).height(75).width(200).row();
 		table.add(multiplayerLabel).height(75).width(200).row();
 		table.add(multiplayerLabel).height(75).width(200);
@@ -114,11 +112,12 @@ public class MultiplayerScreen extends GameScreen {
 		exitTextButton.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
-				ScreenManager.getInstance().showScreen(ScreenEnum.MAIN_MENU);
+				Gdx.app.exit();
 				return true;
 			}
 		});
-		searchTextButton.addListener(new InputListener() {
+
+		loginTextButton.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
 				NetworkMessage message = new NetworkMessage(NetworkMessage.MessageType.SEARCH_OPPONENT);

@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.badlogic.gdx.Gdx;
+import com.jelte.norii.multiplayer.NetworkMessage;
+import com.jelte.norii.multiplayer.NetworkMessage.MessageType;
 
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
@@ -15,11 +17,16 @@ import io.vertx.core.http.ServerWebSocket;
 import io.vertx.core.http.WebSocketFrame;
 
 public class GameServer {
-	private final ConcurrentLinkedQueue<ServerWebSocket> clients = new ConcurrentLinkedQueue<>();
-	private final Map<ServerWebSocket, ConnectedClient> socketsWithClients = new HashMap<>();
+	private final ConcurrentLinkedQueue<ConnectedClient> clients = new ConcurrentLinkedQueue<>();
+	private final ConcurrentLinkedQueue<ConnectedClient> searchingClients = new ConcurrentLinkedQueue<>();
 	private HttpServer server;
 	private static final int PORT = 80;
 	private static final String CLIENT_TAG = "Client";
+	/**
+     * The amount of games created since the server was launched
+     * Used to create unique game ID's
+     */
+    private int gamesCreated;
 
 	public GameServer() {
 		initServer();
@@ -33,6 +40,7 @@ public class GameServer {
 		final Vertx vertx = Vertx.vertx();
 		final HttpServerOptions options = new HttpServerOptions();
 		server = vertx.createHttpServer(options);
+		gamesCreated = 0;
 
 		server.webSocketHandler(initConnectedClient());
 	}
@@ -52,45 +60,42 @@ public class GameServer {
 	private void handleConnectedClient(ServerWebSocket client) {
 		Gdx.app.log(CLIENT_TAG, "Connected " + client.textHandlerID());
 
-		clients.add(client);
-		clients.forEach(c -> c.writeFinalTextFrame("Client connected: " + client.textHandlerID()));
+		clients.add(new ConnectedClient(client));
+		clients.forEach(c -> c.getSocket().writeFinalTextFrame("Client connected: " + client.textHandlerID()));
 	}
 
 	private void handleFrameClient(WebSocketFrame event) {
 		Gdx.app.log(CLIENT_TAG, "Message " + event.textData());
 
-		clients.forEach(c -> c.writeFinalTextFrame(event.textData()));
+		clients.forEach(c -> c.getSocket().writeFinalTextFrame(event.textData()));
 	}
 
 	private void handleCloseClient(ServerWebSocket client) {
 		Gdx.app.log(CLIENT_TAG, "Disconnected " + client.textHandlerID());
-		clients.remove(client);
+		clients.remove(new ConnectedClient(client));
 
-		clients.forEach(c -> c.writeFinalTextFrame("Client disconnected: " + client.textHandlerID()));
+		clients.forEach(c -> c.getSocket().writeFinalTextFrame("Client disconnected: " + client.textHandlerID()));
 	}
 
 	public void matchPlayers() {
-		if (socketsWithClients.size() < 2)
+		if (searchingClients.size() < 2)
 			return;
 
 		ArrayList<ConnectedClient> players = new ArrayList<>();
 
-		for (final ConnectedClient client : socketsWithClients.values()) {
+		for (final ConnectedClient client : searchingClients) {
 			if (client.getClientState() == ClientState.QUEUED) {
 				players.add(client);
 				if (players.size() == 2) {
-					// Create a GameSetup packet to send to each client
-					String battleMessage = NetworkMessage.createBattleMessageForSending(CLIENT_TAG, CLIENT_TAG, CLIENT_TAG, CLIENT_TAG)
+					// Create a battle message to send to each client
+					NetworkMessage battleMessage = new NetworkMessage(MessageType.BATTLE);
+					battleMessage.makeBattleMessage(players.get(0).getPlayerName(), players.get(1).getPlayerName());
 
 					// Send the packet to the first player
-					gameSetup.playerName = players.get(0).getPlayerName();
-					gameSetup.opponentName = players.get(1).getPlayerName();
-					players.get(0).getConnection().sendTCP(gameSetup);
-
+					players.get(0).getSocket().writeTextMessage(battleMessage.messageToString());
+					
 					// Send the packet to the second player
-					gameSetup.playerName = players.get(1).getPlayerName();
-					gameSetup.opponentName = players.get(0).getPlayerName();
-					players.get(1).getConnection().sendTCP(gameSetup);
+					players.get(1).getSocket().writeTextMessage(battleMessage.messageToString());
 
 					// Change the state for each player to be ingame
 					players.get(0).setClientState(ClientState.INGAME);

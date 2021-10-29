@@ -35,6 +35,12 @@ public enum ScreenEnum {
 		public Screen getScreen(Object... params) {
 			return new MultiplayerScreen();
 		}
+	},
+	LOGIN {
+		@Override
+		public Screen getScreen(Object... params) {
+			return new LoginScreen();
+		}
 	};
 
 	public abstract Screen getScreen(Object... params);

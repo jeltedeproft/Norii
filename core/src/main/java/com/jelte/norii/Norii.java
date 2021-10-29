@@ -13,7 +13,7 @@ public class Norii extends Game {
 		// Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
 		Gdx.app.setLogLevel(3);// debug
 		ScreenManager.getInstance().initialize(this);
-		ScreenManager.getInstance().showScreen(ScreenEnum.MAIN_MENU);
+		ScreenManager.getInstance().showScreen(ScreenEnum.LOGIN);
 	}
 
 	@Override

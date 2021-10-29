@@ -1,24 +1,25 @@
 package com.jelte.norii.headless;
 
-import java.sql.Connection;
 
 import com.badlogic.gdx.Gdx;
 
+import io.vertx.core.http.ServerWebSocket;
+
 public class ConnectedClient {
 	private static final String TAG = ConnectedClient.class.getSimpleName();
-	private final Connection connection;
+	private ServerWebSocket socket;
 	private String name;
 	private ClientState clientState;
 	private int currentGameID;
 
-	public ConnectedClient(Connection c) {
-		connection = c;
+	public ConnectedClient(ServerWebSocket s) {
+		socket = s;
 		clientState = ClientState.NAMELESS;
 		currentGameID = -1;
 	}
 
-	public Connection getConnection() {
-		return connection;
+	public ServerWebSocket getSocket() {
+		return socket;
 	}
 
 	public String getPlayerName() {
