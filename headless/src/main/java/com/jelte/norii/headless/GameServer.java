@@ -1,8 +1,6 @@
 package com.jelte.norii.headless;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.badlogic.gdx.Gdx;
@@ -23,10 +21,10 @@ public class GameServer {
 	private static final int PORT = 80;
 	private static final String CLIENT_TAG = "Client";
 	/**
-     * The amount of games created since the server was launched
-     * Used to create unique game ID's
-     */
-    private int gamesCreated;
+	 * The amount of games created since the server was launched Used to create
+	 * unique game ID's
+	 */
+	private int gamesCreated;
 
 	public GameServer() {
 		initServer();
@@ -51,9 +49,7 @@ public class GameServer {
 
 			client.frameHandler(this::handleFrameClient);
 
-			client.closeHandler(event -> {
-				handleCloseClient(client);
-			});
+			client.closeHandler(event -> handleCloseClient(client));
 		};
 	}
 
@@ -61,20 +57,44 @@ public class GameServer {
 		Gdx.app.log(CLIENT_TAG, "Connected " + client.textHandlerID());
 
 		clients.add(new ConnectedClient(client));
-		clients.forEach(c -> c.getSocket().writeFinalTextFrame("Client connected: " + client.textHandlerID()));
+		clients.forEach(c -> {
+			NetworkMessage message = new NetworkMessage(MessageType.CONNECTED);
+			message.makeConnectedMessage(client.textHandlerID());
+			c.getSocket().writeFinalTextFrame(message.messageToString());
+		});
 	}
 
 	private void handleFrameClient(WebSocketFrame event) {
 		Gdx.app.log(CLIENT_TAG, "Message " + event.textData());
 
-		clients.forEach(c -> c.getSocket().writeFinalTextFrame(event.textData()));
+		NetworkMessage message = new NetworkMessage();
+		message.importString(event.textData());
+
+		switch (message.getType()) {
+		case CONNECTING:
+			NetworkMessage returnMessage = new NetworkMessage(MessageType.CONNECTED);
+			returnMessage.makeConnectedMessage(message.getSender());
+			break;
+		default:
+			break;
+		}
+
+		clients.forEach(c -> {
+			if (c.getPlayerName().equals(message.getSender())) {
+				c.getSocket().writeFinalTextFrame(message.messageToString());
+			}
+		});
 	}
 
 	private void handleCloseClient(ServerWebSocket client) {
 		Gdx.app.log(CLIENT_TAG, "Disconnected " + client.textHandlerID());
 		clients.remove(new ConnectedClient(client));
 
-		clients.forEach(c -> c.getSocket().writeFinalTextFrame("Client disconnected: " + client.textHandlerID()));
+		clients.forEach(c -> {
+			NetworkMessage message = new NetworkMessage(MessageType.DISCONNECTED);
+			message.makeConnectedMessage(client.textHandlerID());
+			c.getSocket().writeFinalTextFrame(message.messageToString());
+		});
 	}
 
 	public void matchPlayers() {
@@ -93,7 +113,7 @@ public class GameServer {
 
 					// Send the packet to the first player
 					players.get(0).getSocket().writeTextMessage(battleMessage.messageToString());
-					
+
 					// Send the packet to the second player
 					players.get(1).getSocket().writeTextMessage(battleMessage.messageToString());
 
@@ -113,7 +133,8 @@ public class GameServer {
 					Log.info("Game " + gamesCreated + ": " + players.get(0).getPlayerName() + " vs " + players.get(1).getPlayerName());
 					gamesCreated++;
 
-					// Clear the players list and carry on running, so multiple games can be created each function call
+					// Clear the players list and carry on running, so multiple games can be created
+					// each function call
 					players = new ArrayList<>();
 				}
 			}

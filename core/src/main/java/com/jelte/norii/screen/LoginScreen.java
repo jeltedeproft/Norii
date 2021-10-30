@@ -17,11 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.github.czyzby.websocket.WebSocket;
-import com.github.czyzby.websocket.WebSocketAdapter;
-import com.github.czyzby.websocket.WebSocketListener;
 import com.github.czyzby.websocket.WebSockets;
-import com.jelte.norii.ai.AITeams;
-import com.jelte.norii.map.MapFactory.MapType;
 import com.jelte.norii.multiplayer.MyWebSocketAdapter;
 import com.jelte.norii.multiplayer.NetworkMessage;
 import com.jelte.norii.utility.AssetManagerUtility;
@@ -34,6 +30,7 @@ public class LoginScreen extends GameScreen {
 	private static final String TITLE = "LOGIN";
 	private static final String LOGIN = "LOG IN";
 	private static final String EXIT = "quit";
+	private static final String APP_LINK = "norii-ipmpb.ondigitalocean.app";
 
 	private Label titleLabel;
 	private Label multiplayerLabel;
@@ -86,7 +83,7 @@ public class LoginScreen extends GameScreen {
 		parallaxBackground = new ParallaxBackground();
 		parallaxBackground.addLayers(backTreesLayer, lightsLayer, middleTreesLayer, frontTreesLayer);
 	}
-	
+
 	private void createButtons() {
 		final Skin statusUISkin = AssetManagerUtility.getSkin();
 
@@ -122,7 +119,7 @@ public class LoginScreen extends GameScreen {
 			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
 				NetworkMessage message = new NetworkMessage(NetworkMessage.MessageType.SEARCH_OPPONENT);
 				message.makeSearchMessage(APP_LINK);
-				socket.send("find");
+				socket.send(message.messageToString());
 				return true;
 			}
 		});

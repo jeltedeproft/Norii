@@ -8,7 +8,7 @@ import com.jelte.norii.screen.ScreenEnum;
 import com.jelte.norii.screen.ScreenManager;
 import com.jelte.norii.utility.AssetManagerUtility;
 
-public class MyWebSocketAdapter implements WebSocketListener{
+public class MyWebSocketAdapter implements WebSocketListener {
 	@Override
 	public boolean onOpen(WebSocket webSocket) {
 		System.out.println("connected: ");
@@ -17,9 +17,11 @@ public class MyWebSocketAdapter implements WebSocketListener{
 
 	@Override
 	public boolean onMessage(WebSocket webSocket, String packet) {
-		System.out.println(packet + "\n");
-		switch (packet) {
-		case "PLAYER_FOUND":
+		NetworkMessage message = new NetworkMessage();
+		message.importString(packet);
+		System.out.println("received message :" + packet + "\n");
+		switch (message.getType()) {
+		case BATTLE:
 			AITeams selectedLevel = AITeams.ONLINE_PLAYER;
 			AssetManagerUtility.loadMapAsset(MapType.BATTLE_MAP_THE_DARK_SWAMP.toString());
 			ScreenManager.getInstance().showScreen(ScreenEnum.BATTLE, selectedLevel);
@@ -36,14 +38,14 @@ public class MyWebSocketAdapter implements WebSocketListener{
 		return FULLY_HANDLED;
 	}
 
-    @Override
-    public boolean onMessage(final WebSocket webSocket, final byte[] packet) {
-        return NOT_HANDLED;
-    }
+	@Override
+	public boolean onMessage(final WebSocket webSocket, final byte[] packet) {
+		return NOT_HANDLED;
+	}
 
-    @Override
-    public boolean onError(final WebSocket webSocket, final Throwable error) {
-        return NOT_HANDLED;
-    }
+	@Override
+	public boolean onError(final WebSocket webSocket, final Throwable error) {
+		return NOT_HANDLED;
+	}
 
 }

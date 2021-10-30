@@ -17,12 +17,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.github.czyzby.websocket.WebSocket;
-import com.github.czyzby.websocket.WebSocketAdapter;
-import com.github.czyzby.websocket.WebSocketListener;
-import com.github.czyzby.websocket.WebSockets;
-import com.jelte.norii.ai.AITeams;
-import com.jelte.norii.map.MapFactory.MapType;
-import com.jelte.norii.multiplayer.MyWebSocketAdapter;
 import com.jelte.norii.multiplayer.NetworkMessage;
 import com.jelte.norii.utility.AssetManagerUtility;
 import com.jelte.norii.utility.parallax.ParallaxBackground;
@@ -34,8 +28,6 @@ public class MultiplayerScreen extends GameScreen {
 	private static final String TITLE = "MULTIPLAYER";
 	private static final String EXIT = "exit";
 	private static final String SEARCH = "search";
-
-	private static final String APP_LINK = "norii-ipmpb.ondigitalocean.app";
 
 	private Label titleLabel;
 	private Label multiplayerLabel;
@@ -49,16 +41,16 @@ public class MultiplayerScreen extends GameScreen {
 
 	private WebSocket socket;
 
-	public MultiplayerScreen() {
-		initializeVariables();
+	public MultiplayerScreen(WebSocket socket) {
+		initializeVariables(socket);
 		createBackground();
 		createButtons();
 		addButtons();
 		addListeners();
-		initMultiplayer();
 	}
 
-	private void initializeVariables() {
+	private void initializeVariables(WebSocket socket) {
+		this.socket = socket;
 		backgroundbatch = new SpriteBatch();
 		stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), backgroundbatch);
 		parallaxCamera = new OrthographicCamera();
@@ -88,7 +80,7 @@ public class MultiplayerScreen extends GameScreen {
 		parallaxBackground = new ParallaxBackground();
 		parallaxBackground.addLayers(backTreesLayer, lightsLayer, middleTreesLayer, frontTreesLayer);
 	}
-	
+
 	private void createButtons() {
 		final Skin statusUISkin = AssetManagerUtility.getSkin();
 
@@ -127,13 +119,6 @@ public class MultiplayerScreen extends GameScreen {
 				return true;
 			}
 		});
-	}
-
-	private void initMultiplayer() {
-		socket = WebSockets.newSocket(WebSockets.toSecureWebSocketUrl(APP_LINK, 443));
-		socket.setSendGracefully(true);
-		socket.addListener(new MyWebSocketAdapter());
-		socket.connect();
 	}
 
 	@Override
