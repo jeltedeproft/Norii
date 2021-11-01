@@ -16,16 +16,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.github.czyzby.websocket.WebSocket;
-import com.github.czyzby.websocket.WebSockets;
-import com.jelte.norii.Norii;
-import com.jelte.norii.ai.AITeamFileReader;
-import com.jelte.norii.battle.ApFileReader;
-import com.jelte.norii.entities.EntityFileReader;
-import com.jelte.norii.magic.SpellFileReader;
-import com.jelte.norii.multiplayer.MyWebSocketAdapter;
 import com.jelte.norii.multiplayer.NetworkMessage;
-import com.jelte.norii.profile.ProfileManager;
+import com.jelte.norii.multiplayer.NetworkMessage.MessageType;
+import com.jelte.norii.multiplayer.ServerCommunicator;
 import com.jelte.norii.ui.LoginWidget;
 import com.jelte.norii.utility.AssetManagerUtility;
 import com.jelte.norii.utility.parallax.ParallaxBackground;
@@ -46,8 +39,7 @@ public class LoginScreen extends GameScreen {
 	private ParallaxBackground parallaxBackground;
 	private SpriteBatch backgroundbatch;
 	private LoginWidget loginWidget;
-
-	private WebSocket socket;
+	private ServerCommunicator serverCom = ServerCommunicator.getInstance();
 
 	public LoginScreen() {
 		loadAssets();
@@ -57,15 +49,13 @@ public class LoginScreen extends GameScreen {
 		addButtons();
 		addListeners();
 	}
-	
+
 	private void loadAssets() {
 		AssetManagerUtility.loadTextureAtlas(AssetManagerUtility.SKIN_TEXTURE_ATLAS_PATH);
 		AssetManagerUtility.loadTextureAtlas(AssetManagerUtility.SPRITES_ATLAS_PATH);
 	}
 
 	private void initializeVariables() {
-		Norii game =  (Norii) Gdx.app.getApplicationListener();
-		socket = game.getSocket();
 		backgroundbatch = new SpriteBatch();
 		stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), backgroundbatch);
 		parallaxCamera = new OrthographicCamera();
@@ -122,15 +112,15 @@ public class LoginScreen extends GameScreen {
 				return true;
 			}
 		});
-		
+
 		loginWidget.getLoginTextButton().addListener(new InputListener() {
 			@Override
 			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
 				String username = loginWidget.getUsername();
 				String password = loginWidget.getPassword();
 				NetworkMessage message = new NetworkMessage(NetworkMessage.MessageType.TRY_LOGIN);
-				message.makeLoginMessage(username,password);
-				socket.send(message.messageToString());
+				message.makeLoginMessage(username, password);
+				ServerCommunicator.getInstance().sendMessage(message);
 				return true;
 			}
 		});
@@ -159,10 +149,15 @@ public class LoginScreen extends GameScreen {
 		parallaxBackground.draw(parallaxCamera, backgroundbatch);
 		backgroundbatch.end();
 	}
-	
+
 	private void checkLogin() {
-		if(socket.get) {
-			
+		if (serverCom.isNewMessage()) {
+			NetworkMessage oldestMessage = serverCom.getOldestMessageFromServer();
+			if (oldestMessage.getType() == MessageType.LOGIN_VALIDATION) {
+				if (oldestMessage.getLoginWorked().equalsIgnoreCase("true")) {
+					ScreenManager.getInstance().showScreen(ScreenEnum.MAIN_MENU);
+				}
+			}
 		}
 	}
 

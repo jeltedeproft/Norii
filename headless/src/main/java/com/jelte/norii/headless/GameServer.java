@@ -1,6 +1,7 @@
 package com.jelte.norii.headless;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.badlogic.gdx.Gdx;
@@ -18,6 +19,7 @@ import io.vertx.core.http.WebSocketFrame;
 public class GameServer {
 	private final ConcurrentLinkedQueue<ConnectedClient> clients = new ConcurrentLinkedQueue<>();
 	private final ConcurrentLinkedQueue<ConnectedClient> searchingClients = new ConcurrentLinkedQueue<>();
+	private Map<Integer, GameInstance> activeGames;
 	private Vertx vertx;
 	private HttpServer server;
 	private static final int PORT = 80;
@@ -71,7 +73,7 @@ public class GameServer {
 
 		NetworkMessage message = new NetworkMessage();
 		message.importString(event.textData());
-		
+
 		NetworkMessage returnMessage = new NetworkMessage();
 
 		switch (message.getType()) {
@@ -81,23 +83,24 @@ public class GameServer {
 		case TRY_LOGIN:
 			// Check existence and delete
 			vertx.fileSystem().exists("login.txt", result -> {
-			  if (!(result.succeeded() && result.result())) {
-				 vertx.fileSystem().createFile("login.txt");
-			}});
-			  vertx.fileSystem().writeFile("login.txt", Buffer.buffer("jelte"), result -> {
-				  if (result.succeeded()) {
-				    System.out.println("File written");
-				  } else {
-				    System.err.println("Oh oh ..." + result.cause());
-				  }
-			  });
-				returnMessage.makeLoginValidationMessage("true","worked");
-				break;
+				if (!(result.succeeded() && result.result())) {
+					vertx.fileSystem().createFile("login.txt");
+				}
+			});
+			vertx.fileSystem().writeFile("login.txt", Buffer.buffer("jelte"), result -> {
+				if (result.succeeded()) {
+					System.out.println("File written");
+				} else {
+					System.err.println("Oh oh ..." + result.cause());
+				}
+			});
+			returnMessage.makeLoginValidationMessage("true", "worked");
+			break;
 		default:
 			break;
 		}
 
-		//always a return message??
+		// always a return message??
 		clients.forEach(c -> {
 			if (c.getPlayerName().equals(message.getSender())) {
 				c.getSocket().writeFinalTextFrame(returnMessage.messageToString());
@@ -149,7 +152,7 @@ public class GameServer {
 					activeGames.put(gamesCreated, newGame);
 
 					// Output matchup to log
-					Log.info("Game " + gamesCreated + ": " + players.get(0).getPlayerName() + " vs " + players.get(1).getPlayerName());
+					Gdx.app.debug(CLIENT_TAG, "Game " + gamesCreated + ": " + players.get(0).getPlayerName() + " vs " + players.get(1).getPlayerName());
 					gamesCreated++;
 
 					// Clear the players list and carry on running, so multiple games can be created

@@ -16,9 +16,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.github.czyzby.websocket.WebSocket;
-import com.jelte.norii.Norii;
 import com.jelte.norii.multiplayer.NetworkMessage;
+import com.jelte.norii.multiplayer.ServerCommunicator;
 import com.jelte.norii.utility.AssetManagerUtility;
 import com.jelte.norii.utility.parallax.ParallaxBackground;
 import com.jelte.norii.utility.parallax.ParallaxUtils.WH;
@@ -39,7 +38,6 @@ public class MultiplayerScreen extends GameScreen {
 	private OrthographicCamera parallaxCamera;
 	private ParallaxBackground parallaxBackground;
 	private SpriteBatch backgroundbatch;
-	private WebSocket socket;
 
 	public MultiplayerScreen() {
 		initializeVariables();
@@ -50,8 +48,6 @@ public class MultiplayerScreen extends GameScreen {
 	}
 
 	private void initializeVariables() {
-		Norii game =  (Norii) Gdx.app.getApplicationListener();
-		socket = game.getSocket();
 		backgroundbatch = new SpriteBatch();
 		stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), backgroundbatch);
 		parallaxCamera = new OrthographicCamera();
@@ -115,8 +111,8 @@ public class MultiplayerScreen extends GameScreen {
 			@Override
 			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
 				NetworkMessage message = new NetworkMessage(NetworkMessage.MessageType.SEARCH_OPPONENT);
-				message.makeSearchMessage(APP_LINK);
-				socket.send("find");
+				message.makeSearchMessage(ServerCommunicator.getInstance().getClientID());
+				ServerCommunicator.getInstance().sendMessage(message);
 				return true;
 			}
 		});
