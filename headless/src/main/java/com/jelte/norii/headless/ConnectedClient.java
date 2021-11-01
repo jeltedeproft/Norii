@@ -16,6 +16,7 @@ public class ConnectedClient {
 		socket = s;
 		clientState = ClientState.NAMELESS;
 		currentGameID = -1;
+		name = s.textHandlerID();
 	}
 
 	public ServerWebSocket getSocket() {

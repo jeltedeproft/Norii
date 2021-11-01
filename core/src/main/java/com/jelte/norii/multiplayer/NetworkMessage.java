@@ -68,6 +68,7 @@ public class NetworkMessage {
 		type = MessageType.TRY_LOGIN;
 		this.username = username;
 		this.password = password;
+		sender = ServerCommunicator.getInstance().getClientID();
 	}
 	
 	public void makeLoginValidationMessage(String loginWorked, String reason) {
