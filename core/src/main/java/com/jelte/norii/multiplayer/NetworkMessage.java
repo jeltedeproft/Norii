@@ -10,9 +10,13 @@ public class NetworkMessage {
 	private MessageType type;
 	private String sender = "";
 	private String receiver = "";
+	private String username = "";
+	private String password = "";
+	private String loginWorked = "";
+	private String loginReason = "";
 
 	public enum MessageType {
-		CONNECTING, CONNECTED, SEARCH_OPPONENT, DISCONNECTED, BATTLE
+		CONNECTING, CONNECTED, SEARCH_OPPONENT, DISCONNECTED, BATTLE, TRY_LOGIN, LOGIN_VALIDATION
 	}
 
 	public NetworkMessage() {
@@ -48,6 +52,18 @@ public class NetworkMessage {
 		sender = fighter1;
 		receiver = fighter2;
 	}
+	
+	public void makeLoginMessage(String username, String password) {
+		type = MessageType.TRY_LOGIN;
+		this.username = username;
+		this.password = password;
+	}
+	
+	public void makeLoginValidationMessage(String loginWorked, String reason) {
+		type = MessageType.LOGIN_VALIDATION;
+		this.loginWorked = loginWorked;
+		this.loginReason = reason;
+	}
 
 	public String messageToString() {
 		StringBuilder stringToSend = new StringBuilder();
@@ -57,6 +73,14 @@ public class NetworkMessage {
 		stringToSend.append(sender);
 		stringToSend.append(SEPARATOR);
 		stringToSend.append(receiver);
+		stringToSend.append(SEPARATOR);
+		stringToSend.append(username);
+		stringToSend.append(SEPARATOR);
+		stringToSend.append(password);
+		stringToSend.append(SEPARATOR);
+		stringToSend.append(loginWorked);
+		stringToSend.append(SEPARATOR);
+		stringToSend.append(loginReason);
 		stringToSend.append(END_TAG);
 		return stringToSend.toString();
 	}
@@ -64,11 +88,24 @@ public class NetworkMessage {
 	public void importString(String message) {
 		if (!message.isBlank()) {
 			String[] tags = message.split(SEPARATOR);
+			int size = tags.length;
 			type = MessageType.valueOf(tags[0]);
-			sender = tags[1];
-			receiver = tags[2];
+			sender = extract(tags,size,1);
+			receiver = extract(tags,size,2);
+			username = extract(tags,size,3);
+			password = extract(tags,size,4);
+			loginWorked = extract(tags,size,5);
+			loginReason = extract(tags,size,6);
 		} else {
 			Gdx.app.log(TAG, "message was empty");
+		}
+	}
+
+	private String extract(String[] tags, int size, int i) {
+		if(size > i) {
+			return tags[i];
+		}else {
+			return "";
 		}
 	}
 
@@ -84,4 +121,19 @@ public class NetworkMessage {
 		return receiver;
 	}
 
+	public String getUsername() {
+		return username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public String getLoginWorked() {
+		return loginWorked;
+	}
+
+	public String getLoginReason() {
+		return loginReason;
+	}
 }

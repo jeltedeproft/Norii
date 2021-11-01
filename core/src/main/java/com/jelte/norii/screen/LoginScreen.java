@@ -18,8 +18,15 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.github.czyzby.websocket.WebSocket;
 import com.github.czyzby.websocket.WebSockets;
+import com.jelte.norii.Norii;
+import com.jelte.norii.ai.AITeamFileReader;
+import com.jelte.norii.battle.ApFileReader;
+import com.jelte.norii.entities.EntityFileReader;
+import com.jelte.norii.magic.SpellFileReader;
 import com.jelte.norii.multiplayer.MyWebSocketAdapter;
 import com.jelte.norii.multiplayer.NetworkMessage;
+import com.jelte.norii.profile.ProfileManager;
+import com.jelte.norii.ui.LoginWidget;
 import com.jelte.norii.utility.AssetManagerUtility;
 import com.jelte.norii.utility.parallax.ParallaxBackground;
 import com.jelte.norii.utility.parallax.ParallaxUtils.WH;
@@ -28,32 +35,37 @@ import com.jelte.norii.utility.parallax.TextureRegionParallaxLayer;
 public class LoginScreen extends GameScreen {
 	private static final String TITLE_FONT = "bigFont";
 	private static final String TITLE = "LOGIN";
-	private static final String LOGIN = "LOG IN";
 	private static final String EXIT = "quit";
-	private static final String APP_LINK = "norii-ipmpb.ondigitalocean.app";
 
 	private Label titleLabel;
 	private Label multiplayerLabel;
-	private TextButton loginTextButton;
 	private TextButton exitTextButton;
 	private Stage stage;
 	private Table table;
 	private OrthographicCamera parallaxCamera;
 	private ParallaxBackground parallaxBackground;
 	private SpriteBatch backgroundbatch;
+	private LoginWidget loginWidget;
 
 	private WebSocket socket;
 
 	public LoginScreen() {
+		loadAssets();
 		initializeVariables();
 		createBackground();
 		createButtons();
 		addButtons();
 		addListeners();
-		initMultiplayer();
+	}
+	
+	private void loadAssets() {
+		AssetManagerUtility.loadTextureAtlas(AssetManagerUtility.SKIN_TEXTURE_ATLAS_PATH);
+		AssetManagerUtility.loadTextureAtlas(AssetManagerUtility.SPRITES_ATLAS_PATH);
 	}
 
 	private void initializeVariables() {
+		Norii game =  (Norii) Gdx.app.getApplicationListener();
+		socket = game.getSocket();
 		backgroundbatch = new SpriteBatch();
 		stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), backgroundbatch);
 		parallaxCamera = new OrthographicCamera();
@@ -61,6 +73,7 @@ public class LoginScreen extends GameScreen {
 		parallaxCamera.update();
 		table = new Table();
 		table.setFillParent(true);
+		loginWidget = new LoginWidget();
 	}
 
 	private void createBackground() {
@@ -90,16 +103,12 @@ public class LoginScreen extends GameScreen {
 		titleLabel = new Label(TITLE, statusUISkin, TITLE_FONT);
 		titleLabel.setAlignment(Align.top);
 
-		loginTextButton = new TextButton(LOGIN, statusUISkin);
 		exitTextButton = new TextButton(EXIT, statusUISkin);
 	}
 
 	private void addButtons() {
 		table.add(titleLabel).expandX().colspan(10).spaceBottom(100).height(250).width(1000).row();
-		table.add(loginTextButton).height(75).width(200).row();
-		table.add(multiplayerLabel).height(75).width(200).row();
-		table.add(multiplayerLabel).height(75).width(200).row();
-		table.add(multiplayerLabel).height(75).width(200);
+		table.add(loginWidget.getWindow()).height(300).width(300).row();
 		table.add(exitTextButton).spaceTop(100).height(100).width(100).row();
 
 		stage.addActor(table);
@@ -113,23 +122,18 @@ public class LoginScreen extends GameScreen {
 				return true;
 			}
 		});
-
-		loginTextButton.addListener(new InputListener() {
+		
+		loginWidget.getLoginTextButton().addListener(new InputListener() {
 			@Override
 			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
-				NetworkMessage message = new NetworkMessage(NetworkMessage.MessageType.SEARCH_OPPONENT);
-				message.makeSearchMessage(APP_LINK);
+				String username = loginWidget.getUsername();
+				String password = loginWidget.getPassword();
+				NetworkMessage message = new NetworkMessage(NetworkMessage.MessageType.TRY_LOGIN);
+				message.makeLoginMessage(username,password);
 				socket.send(message.messageToString());
 				return true;
 			}
 		});
-	}
-
-	private void initMultiplayer() {
-		socket = WebSockets.newSocket(WebSockets.toSecureWebSocketUrl(APP_LINK, 443));
-		socket.setSendGracefully(true);
-		socket.addListener(new MyWebSocketAdapter());
-		socket.connect();
 	}
 
 	@Override
@@ -147,12 +151,19 @@ public class LoginScreen extends GameScreen {
 		stage.draw();
 
 		parallaxCamera.translate(2, 0, 0);
+		checkLogin();
 	}
 
 	public void updatebg(final float delta) {
 		backgroundbatch.begin();
 		parallaxBackground.draw(parallaxCamera, backgroundbatch);
 		backgroundbatch.end();
+	}
+	
+	private void checkLogin() {
+		if(socket.get) {
+			
+		}
 	}
 
 	@Override

@@ -9,6 +9,7 @@ import com.jelte.norii.multiplayer.NetworkMessage.MessageType;
 
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
+import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.http.ServerWebSocket;
@@ -17,6 +18,7 @@ import io.vertx.core.http.WebSocketFrame;
 public class GameServer {
 	private final ConcurrentLinkedQueue<ConnectedClient> clients = new ConcurrentLinkedQueue<>();
 	private final ConcurrentLinkedQueue<ConnectedClient> searchingClients = new ConcurrentLinkedQueue<>();
+	private Vertx vertx;
 	private HttpServer server;
 	private static final int PORT = 80;
 	private static final String CLIENT_TAG = "Client";
@@ -35,7 +37,7 @@ public class GameServer {
 	}
 
 	private void initServer() {
-		final Vertx vertx = Vertx.vertx();
+		vertx = Vertx.vertx();
 		final HttpServerOptions options = new HttpServerOptions();
 		server = vertx.createHttpServer(options);
 		gamesCreated = 0;
@@ -45,15 +47,15 @@ public class GameServer {
 
 	private Handler<ServerWebSocket> initConnectedClient() {
 		return client -> {
-			handleConnectedClient(client);
+			initClient(client);
 
-			client.frameHandler(this::handleFrameClient);
+			client.frameHandler(this::handleMessageClient);
 
-			client.closeHandler(event -> handleCloseClient(client));
+			client.closeHandler(event -> removeClient(client));
 		};
 	}
 
-	private void handleConnectedClient(ServerWebSocket client) {
+	private void initClient(ServerWebSocket client) {
 		Gdx.app.log(CLIENT_TAG, "Connected " + client.textHandlerID());
 
 		clients.add(new ConnectedClient(client));
@@ -64,29 +66,46 @@ public class GameServer {
 		});
 	}
 
-	private void handleFrameClient(WebSocketFrame event) {
+	private void handleMessageClient(WebSocketFrame event) {
 		Gdx.app.log(CLIENT_TAG, "Message " + event.textData());
 
 		NetworkMessage message = new NetworkMessage();
 		message.importString(event.textData());
+		
+		NetworkMessage returnMessage = new NetworkMessage();
 
 		switch (message.getType()) {
 		case CONNECTING:
-			NetworkMessage returnMessage = new NetworkMessage(MessageType.CONNECTED);
 			returnMessage.makeConnectedMessage(message.getSender());
 			break;
+		case TRY_LOGIN:
+			// Check existence and delete
+			vertx.fileSystem().exists("login.txt", result -> {
+			  if (!(result.succeeded() && result.result())) {
+				 vertx.fileSystem().createFile("login.txt");
+			}});
+			  vertx.fileSystem().writeFile("login.txt", Buffer.buffer("jelte"), result -> {
+				  if (result.succeeded()) {
+				    System.out.println("File written");
+				  } else {
+				    System.err.println("Oh oh ..." + result.cause());
+				  }
+			  });
+				returnMessage.makeLoginValidationMessage("true","worked");
+				break;
 		default:
 			break;
 		}
 
+		//always a return message??
 		clients.forEach(c -> {
 			if (c.getPlayerName().equals(message.getSender())) {
-				c.getSocket().writeFinalTextFrame(message.messageToString());
+				c.getSocket().writeFinalTextFrame(returnMessage.messageToString());
 			}
 		});
 	}
 
-	private void handleCloseClient(ServerWebSocket client) {
+	private void removeClient(ServerWebSocket client) {
 		Gdx.app.log(CLIENT_TAG, "Disconnected " + client.textHandlerID());
 		clients.remove(new ConnectedClient(client));
 

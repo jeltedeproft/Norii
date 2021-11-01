@@ -9,6 +9,8 @@ import com.jelte.norii.screen.ScreenManager;
 import com.jelte.norii.utility.AssetManagerUtility;
 
 public class MyWebSocketAdapter implements WebSocketListener {
+	private boolean loginValidated = false;
+	
 	@Override
 	public boolean onOpen(WebSocket webSocket) {
 		System.out.println("connected: ");
@@ -25,6 +27,9 @@ public class MyWebSocketAdapter implements WebSocketListener {
 			AITeams selectedLevel = AITeams.ONLINE_PLAYER;
 			AssetManagerUtility.loadMapAsset(MapType.BATTLE_MAP_THE_DARK_SWAMP.toString());
 			ScreenManager.getInstance().showScreen(ScreenEnum.BATTLE, selectedLevel);
+			break;
+		case LOGIN_VALIDATION:
+			loginValidated = "true".equals(message.getLoginWorked());
 			break;
 		default:
 			break;
@@ -46,6 +51,14 @@ public class MyWebSocketAdapter implements WebSocketListener {
 	@Override
 	public boolean onError(final WebSocket webSocket, final Throwable error) {
 		return NOT_HANDLED;
+	}
+
+	public boolean isLoginValidated() {
+		return loginValidated;
+	}
+
+	public void setLoginValidated(boolean loginValidated) {
+		this.loginValidated = loginValidated;
 	}
 
 }

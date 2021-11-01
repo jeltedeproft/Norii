@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.github.czyzby.websocket.WebSocket;
+import com.jelte.norii.Norii;
 import com.jelte.norii.multiplayer.NetworkMessage;
 import com.jelte.norii.utility.AssetManagerUtility;
 import com.jelte.norii.utility.parallax.ParallaxBackground;
@@ -38,19 +39,19 @@ public class MultiplayerScreen extends GameScreen {
 	private OrthographicCamera parallaxCamera;
 	private ParallaxBackground parallaxBackground;
 	private SpriteBatch backgroundbatch;
-
 	private WebSocket socket;
 
-	public MultiplayerScreen(WebSocket socket) {
-		initializeVariables(socket);
+	public MultiplayerScreen() {
+		initializeVariables();
 		createBackground();
 		createButtons();
 		addButtons();
 		addListeners();
 	}
 
-	private void initializeVariables(WebSocket socket) {
-		this.socket = socket;
+	private void initializeVariables() {
+		Norii game =  (Norii) Gdx.app.getApplicationListener();
+		socket = game.getSocket();
 		backgroundbatch = new SpriteBatch();
 		stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), backgroundbatch);
 		parallaxCamera = new OrthographicCamera();

@@ -76,8 +76,6 @@ public class MainMenuScreen extends GameScreen {
 	}
 
 	private void loadAssets() {
-		AssetManagerUtility.loadTextureAtlas(AssetManagerUtility.SKIN_TEXTURE_ATLAS_PATH);
-		AssetManagerUtility.loadTextureAtlas(AssetManagerUtility.SPRITES_ATLAS_PATH);
 		EntityFileReader.loadUnitStatsInMemory();
 		ApFileReader.loadApInMemory();
 		SpellFileReader.loadSpellsInMemory();
