@@ -1,6 +1,6 @@
 apply plugin: 'application'
 
-sourceCompatibility = 16.0
+sourceCompatibility = 11.0
 mainClassName = 'com.jelte.norii.headless.HeadlessLauncher'
 eclipse.project.name = appName + '-headless'
 

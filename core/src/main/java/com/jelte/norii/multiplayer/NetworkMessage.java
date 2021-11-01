@@ -14,9 +14,12 @@ public class NetworkMessage {
 	private String password = "";
 	private String loginWorked = "";
 	private String loginReason = "";
+	private String moveType = "";
+	private String location = "";
+	private String ability = "";
 
 	public enum MessageType {
-		CONNECTING, CONNECTED, SEARCH_OPPONENT, DISCONNECTED, BATTLE, TRY_LOGIN, LOGIN_VALIDATION
+		CONNECTING, CONNECTED, SEARCH_OPPONENT, DISCONNECTED, BATTLE, TRY_LOGIN, LOGIN_VALIDATION, MOVE_MADE
 	}
 
 	public NetworkMessage() {
@@ -51,6 +54,14 @@ public class NetworkMessage {
 		type = MessageType.BATTLE;
 		sender = fighter1;
 		receiver = fighter2;
+	}
+	
+	public void makeMoveMessage(String client, String moveType, String location, String ability) {
+		type = MessageType.MOVE_MADE;
+		sender = client;
+		this.moveType = moveType;
+		this.location = location;
+		this.ability = ability;
 	}
 	
 	public void makeLoginMessage(String username, String password) {
