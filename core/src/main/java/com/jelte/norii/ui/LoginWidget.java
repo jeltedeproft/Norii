@@ -1,14 +1,10 @@
 package com.jelte.norii.ui;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
-import com.jelte.norii.multiplayer.NetworkMessage;
 import com.jelte.norii.utility.AssetManagerUtility;
 
 public class LoginWidget {
@@ -37,6 +33,7 @@ public class LoginWidget {
 
 	private void initWidgets() {
 		window = new Window(TITLE, AssetManagerUtility.getSkin());
+		mainTable = new Table();
 		usernameLabel = new Label(USERNAME, AssetManagerUtility.getSkin());
 		passwordLabel = new Label(PASSWORD, AssetManagerUtility.getSkin());
 		createAccountLabel = new Label(CREATE, AssetManagerUtility.getSkin());
@@ -51,6 +48,8 @@ public class LoginWidget {
 		mainTable.row();
 		mainTable.add(passwordLabel);
 		mainTable.add(passwordField);
+		mainTable.row();
+		mainTable.add(loginTextButton);
 		mainTable.row();
 		mainTable.add(createAccountLabel);
 		window.add(mainTable);
