@@ -154,7 +154,6 @@ public class GameServer {
 	}
 
 	public void matchPlayers() {
-		Gdx.app.log(CLIENT_TAG, "matching players againsteach other, searching players amount =  " + searchingClients.size());
 		for(ConnectedClient client : searchingClients) {
 			Gdx.app.log(CLIENT_TAG, client.getPlayerName());
 		}
@@ -176,10 +175,10 @@ public class GameServer {
 
 					// Send the packet to the first player
 					players.get(0).getSocket().writeTextMessage(battleMessage.messageToString());
-
+					Gdx.app.log(CLIENT_TAG, "made battlemessage");
 					// Send the packet to the second player
 					players.get(1).getSocket().writeTextMessage(battleMessage.messageToString());
-
+					Gdx.app.log(CLIENT_TAG, "battlemessage send");
 					// Change the state for each player to be ingame
 					players.get(0).setClientState(ClientState.INGAME);
 					players.get(1).setClientState(ClientState.INGAME);
@@ -187,11 +186,11 @@ public class GameServer {
 					// Change the gameID for each player to the ID of the new game
 					players.get(0).setGameID(gamesCreated);
 					players.get(1).setGameID(gamesCreated);
-
+					Gdx.app.log(CLIENT_TAG, "making game object");
 					// Create a game instance and add it to the list of all active game instances
 					final GameInstance newGame = new GameInstance(this, gamesCreated, players.get(0), players.get(1));
 					activeGames.put(gamesCreated, newGame);
-
+					Gdx.app.log(CLIENT_TAG, "game made");
 					// Output matchup to log
 					Gdx.app.debug(CLIENT_TAG, "Game " + gamesCreated + ": " + players.get(0).getPlayerName() + " vs " + players.get(1).getPlayerName());
 					gamesCreated++;
