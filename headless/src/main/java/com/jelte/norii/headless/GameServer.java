@@ -100,12 +100,13 @@ public class GameServer {
 			break;
 		}
 
-		// always a return message??
-		clients.forEach(c -> {
-			if (c.getPlayerName().equals(message.getSender())) {
-				c.getSocket().writeFinalTextFrame(returnMessage.messageToString());
-			}
-		});
+		if (returnMessage.getType() != null) {
+			clients.forEach(c -> {
+				if (c.getPlayerName().equals(message.getSender())) {
+					c.getSocket().writeFinalTextFrame(returnMessage.messageToString());
+				}
+			});
+		}
 	}
 
 	private void removeClient(ServerWebSocket client) {
