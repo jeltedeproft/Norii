@@ -4,7 +4,7 @@ buildscript {
 		mavenCentral()
 		google()
 		maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
-		jcenter()
+		gradlePluginPortal()
 	}
 	dependencies {
 		classpath "org.wisepersist:gwt-gradle-plugin:$gwtPluginVersion"
@@ -32,7 +32,7 @@ subprojects {
 		mavenCentral()
 		maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
 		maven { url 'https://jitpack.io' }
-		jcenter()
+		gradlePluginPortal()
 	}
 }
 

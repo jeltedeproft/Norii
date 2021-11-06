@@ -96,6 +96,8 @@ public class GameServer {
 			});
 			returnMessage.makeLoginValidationMessage("true", "worked");
 			break;
+		case SEARCH_OPPONENT:
+			searchingClients.add(getClientByName(message.getSender()));
 		default:
 			break;
 		}
@@ -107,6 +109,15 @@ public class GameServer {
 				}
 			});
 		}
+	}
+
+	private ConnectedClient getClientByName(String sender) {
+		for (ConnectedClient client : clients) {
+			if ((client.getPlayerName() != null) && (client.getPlayerName() == sender)) {
+				return client;
+			}
+		}
+		return null;
 	}
 
 	private void removeClient(ServerWebSocket client) {
