@@ -107,7 +107,11 @@ public class GameServer {
 			returnMessage.makeLoginValidationMessage("true", "worked");
 			break;
 		case SEARCH_OPPONENT:
-			searchingClients.add(getClientByName(message.getSender()));
+			ConnectedClient client = getClientByName(message.getSender());
+			if(client != null) {
+				searchingClients.add(getClientByName(message.getSender()));
+			}
+			break;
 		default:
 			break;
 		}
