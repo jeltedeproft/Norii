@@ -161,13 +161,15 @@ public class GameServer {
 		
 		if (searchingClients.size() < 2)
 			return;
-
+		Gdx.app.log(CLIENT_TAG, "made it here  ");
 		ArrayList<ConnectedClient> players = new ArrayList<>();
 
 		for (final ConnectedClient client : searchingClients) {
 			if (client.getClientState() == ClientState.QUEUED) {
+				Gdx.app.log(CLIENT_TAG, "adding player");
 				players.add(client);
 				if (players.size() == 2) {
+					Gdx.app.log(CLIENT_TAG, "making a game");
 					// Create a battle message to send to each client
 					NetworkMessage battleMessage = new NetworkMessage(MessageType.BATTLE);
 					battleMessage.makeBattleMessage(players.get(0).getPlayerName(), players.get(1).getPlayerName());
