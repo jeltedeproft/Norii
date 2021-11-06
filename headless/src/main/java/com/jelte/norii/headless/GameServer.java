@@ -114,7 +114,8 @@ public class GameServer {
 			}
 			ConnectedClient client = getClientByName(message.getSender());
 			if(client != null) {
-				searchingClients.add(getClientByName(message.getSender()));
+				Gdx.app.log(CLIENT_TAG, "adding client to searchingClients : " + client.getPlayerName());
+				searchingClients.add(client);
 			}
 			break;
 		default:
@@ -132,7 +133,8 @@ public class GameServer {
 
 	private ConnectedClient getClientByName(String sender) {
 		for (ConnectedClient client : clients) {
-			if ((client.getPlayerName() != null) && (client.getPlayerName() == sender)) {
+			if ((client.getPlayerName() != null) && (client.getPlayerName().equals(sender))) {
+				Gdx.app.log(CLIENT_TAG, "found client with name : " + client.getPlayerName());
 				return client;
 			}
 		}
