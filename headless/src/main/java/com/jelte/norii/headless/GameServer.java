@@ -30,6 +30,11 @@ public class GameServer {
 	 */
 	private int gamesCreated;
 
+	/**
+	 * Seperate thread that handles updating of server-side data
+	 */
+	UpdateThread updateThread;
+
 	public GameServer() {
 		initServer();
 
@@ -43,6 +48,11 @@ public class GameServer {
 		final HttpServerOptions options = new HttpServerOptions();
 		server = vertx.createHttpServer(options);
 		gamesCreated = 0;
+
+		// Start update thread
+		updateThread = new UpdateThread();
+		updateThread.gameServer = this;
+		new Thread(updateThread).start();
 
 		server.webSocketHandler(initConnectedClient());
 	}
