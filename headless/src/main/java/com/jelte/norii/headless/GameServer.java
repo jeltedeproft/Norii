@@ -107,6 +107,11 @@ public class GameServer {
 			returnMessage.makeLoginValidationMessage("true", "worked");
 			break;
 		case SEARCH_OPPONENT:
+			Gdx.app.log(CLIENT_TAG, "searching opponent for " + message.getSender());
+			Gdx.app.log(CLIENT_TAG, "connected clients : ");
+			for(ConnectedClient client : clients) {
+				Gdx.app.log(CLIENT_TAG, client.getPlayerName());
+			}
 			ConnectedClient client = getClientByName(message.getSender());
 			if(client != null) {
 				searchingClients.add(getClientByName(message.getSender()));
