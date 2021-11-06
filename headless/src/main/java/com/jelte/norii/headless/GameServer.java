@@ -146,6 +146,11 @@ public class GameServer {
 	}
 
 	public void matchPlayers() {
+		Gdx.app.log(CLIENT_TAG, "matching players againsteach other, searching players amount =  " + searchingClients.size());
+		for(ConnectedClient client : searchingClients) {
+			Gdx.app.log(CLIENT_TAG, client.getPlayerName());
+		}
+		
 		if (searchingClients.size() < 2)
 			return;
 
