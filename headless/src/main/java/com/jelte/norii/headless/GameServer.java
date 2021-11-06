@@ -116,6 +116,7 @@ public class GameServer {
 			if(client != null) {
 				Gdx.app.log(CLIENT_TAG, "adding client to searchingClients : " + client.getPlayerName());
 				searchingClients.add(client);
+				client.setClientState(ClientState.QUEUED);
 			}
 			break;
 		default:
