@@ -42,6 +42,10 @@ public class ServerCommunicator {
 		return receivedMessages.poll();
 	}
 
+	public boolean isNextMessageOfType(MessageType type) {
+		return receivedMessages.peek().getType().equals(type);
+	}
+
 	public boolean isNewMessage() {
 		return (receivedMessages.peek() != null);
 	}

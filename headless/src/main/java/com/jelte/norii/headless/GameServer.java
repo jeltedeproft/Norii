@@ -1,10 +1,13 @@
 package com.jelte.norii.headless;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.badlogic.gdx.Gdx;
+import com.jelte.norii.map.MapFactory;
+import com.jelte.norii.map.MapFactory.MapType;
 import com.jelte.norii.multiplayer.NetworkMessage;
 import com.jelte.norii.multiplayer.NetworkMessage.MessageType;
 
@@ -48,6 +51,7 @@ public class GameServer {
 		final HttpServerOptions options = new HttpServerOptions();
 		server = vertx.createHttpServer(options);
 		gamesCreated = 0;
+		activeGames = new HashMap<>();
 
 		// Start update thread
 		updateThread = new UpdateThread();
@@ -109,14 +113,15 @@ public class GameServer {
 		case SEARCH_OPPONENT:
 			Gdx.app.log(CLIENT_TAG, "searching opponent for " + message.getSender());
 			Gdx.app.log(CLIENT_TAG, "connected clients : ");
-			for(ConnectedClient client : clients) {
+			for (ConnectedClient client : clients) {
 				Gdx.app.log(CLIENT_TAG, client.getPlayerName());
 			}
 			ConnectedClient client = getClientByName(message.getSender());
-			if(client != null) {
+			if (client != null) {
 				Gdx.app.log(CLIENT_TAG, "adding client to searchingClients : " + client.getPlayerName());
 				searchingClients.add(client);
 				client.setClientState(ClientState.QUEUED);
+				client.setTeamFromJson(message.getTeam());
 			}
 			break;
 		default:
@@ -154,10 +159,10 @@ public class GameServer {
 	}
 
 	public void matchPlayers() {
-		for(ConnectedClient client : searchingClients) {
+		for (ConnectedClient client : searchingClients) {
 			Gdx.app.log(CLIENT_TAG, client.getPlayerName());
 		}
-		
+
 		if (searchingClients.size() < 2)
 			return;
 		Gdx.app.log(CLIENT_TAG, "made it here  ");
@@ -171,7 +176,10 @@ public class GameServer {
 					Gdx.app.log(CLIENT_TAG, "making a game");
 					// Create a battle message to send to each client
 					NetworkMessage battleMessage = new NetworkMessage(MessageType.BATTLE);
-					battleMessage.makeBattleMessage(players.get(0).getPlayerName(), players.get(1).getPlayerName());
+
+					// for now just select a map, later randomize this
+					MapFactory.MapType mapType = MapType.BATTLE_MAP_THE_DARK_SWAMP;
+					battleMessage.makeBattleMessage(players.get(0).getPlayerName(), players.get(1).getPlayerName(), mapType.toString());
 
 					// Send the packet to the first player
 					players.get(0).getSocket().writeTextMessage(battleMessage.messageToString());

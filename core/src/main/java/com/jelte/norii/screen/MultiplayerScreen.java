@@ -16,8 +16,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.jelte.norii.ai.AITeams;
 import com.jelte.norii.multiplayer.NetworkMessage;
+import com.jelte.norii.multiplayer.NetworkMessage.MessageType;
 import com.jelte.norii.multiplayer.ServerCommunicator;
+import com.jelte.norii.profile.PropertiesEnum;
 import com.jelte.norii.utility.AssetManagerUtility;
 import com.jelte.norii.utility.parallax.ParallaxBackground;
 import com.jelte.norii.utility.parallax.ParallaxUtils.WH;
@@ -28,6 +31,7 @@ public class MultiplayerScreen extends GameScreen {
 	private static final String TITLE = "MULTIPLAYER";
 	private static final String EXIT = "exit";
 	private static final String SEARCH = "search";
+	private static final String PROPERTIES = "properties";
 
 	private Label titleLabel;
 	private Label multiplayerLabel;
@@ -111,7 +115,8 @@ public class MultiplayerScreen extends GameScreen {
 			@Override
 			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
 				NetworkMessage message = new NetworkMessage(NetworkMessage.MessageType.SEARCH_OPPONENT);
-				message.makeSearchMessage(ServerCommunicator.getInstance().getClientID());
+				String team = Gdx.app.getPreferences(PROPERTIES).getString(PropertiesEnum.TEAM_HEROES.getPropertyName());
+				message.makeSearchMessage(ServerCommunicator.getInstance().getClientID(), team);
 				ServerCommunicator.getInstance().sendMessage(message);
 				return true;
 			}
@@ -131,8 +136,18 @@ public class MultiplayerScreen extends GameScreen {
 		updatebg(delta);
 		stage.act(delta);
 		stage.draw();
+		checkForStartGame();
 
 		parallaxCamera.translate(2, 0, 0);
+	}
+
+	private void checkForStartGame() {
+		if (ServerCommunicator.getInstance().isNextMessageOfType(MessageType.BATTLE)) {
+			NetworkMessage message = ServerCommunicator.getInstance().getOldestMessageFromServer();
+			AITeams selectedLevel = AITeams.ONLINE_PLAYER;
+			AssetManagerUtility.loadMapAsset(message.getMap());
+			ScreenManager.getInstance().showScreen(ScreenEnum.BATTLE, selectedLevel);// give team and map
+		}
 	}
 
 	public void updatebg(final float delta) {

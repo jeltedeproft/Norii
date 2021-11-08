@@ -17,6 +17,8 @@ public class NetworkMessage {
 	private String moveType = "";
 	private String location = "";
 	private String ability = "";
+	private String team = "";
+	private String map = "";
 
 	public enum MessageType {
 		CONNECTING, CONNECTED, SEARCH_OPPONENT, DISCONNECTED, BATTLE, TRY_LOGIN, LOGIN_VALIDATION, MOVE_MADE
@@ -45,17 +47,19 @@ public class NetworkMessage {
 		sender = client;
 	}
 
-	public void makeSearchMessage(String client) {
+	public void makeSearchMessage(String client, String team) {
 		type = MessageType.SEARCH_OPPONENT;
 		sender = client;
+		this.team = team;
 	}
 
-	public void makeBattleMessage(String fighter1, String fighter2) {
+	public void makeBattleMessage(String fighter1, String fighter2, String map) {
 		type = MessageType.BATTLE;
 		sender = fighter1;
 		receiver = fighter2;
+		this.map = map;
 	}
-	
+
 	public void makeMoveMessage(String client, String moveType, String location, String ability) {
 		type = MessageType.MOVE_MADE;
 		sender = client;
@@ -63,14 +67,14 @@ public class NetworkMessage {
 		this.location = location;
 		this.ability = ability;
 	}
-	
+
 	public void makeLoginMessage(String username, String password) {
 		type = MessageType.TRY_LOGIN;
 		this.username = username;
 		this.password = password;
 		sender = ServerCommunicator.getInstance().getClientID();
 	}
-	
+
 	public void makeLoginValidationMessage(String loginWorked, String reason) {
 		type = MessageType.LOGIN_VALIDATION;
 		this.loginWorked = loginWorked;
@@ -93,6 +97,10 @@ public class NetworkMessage {
 		stringToSend.append(loginWorked);
 		stringToSend.append(SEPARATOR);
 		stringToSend.append(loginReason);
+		stringToSend.append(SEPARATOR);
+		stringToSend.append(team);
+		stringToSend.append(SEPARATOR);
+		stringToSend.append(map);
 		stringToSend.append(END_TAG);
 		return stringToSend.toString();
 	}
@@ -102,21 +110,23 @@ public class NetworkMessage {
 			String[] tags = message.split(SEPARATOR);
 			int size = tags.length;
 			type = MessageType.valueOf(tags[0]);
-			sender = extract(tags,size,1);
-			receiver = extract(tags,size,2);
-			username = extract(tags,size,3);
-			password = extract(tags,size,4);
-			loginWorked = extract(tags,size,5);
-			loginReason = extract(tags,size,6);
+			sender = extract(tags, size, 1);
+			receiver = extract(tags, size, 2);
+			username = extract(tags, size, 3);
+			password = extract(tags, size, 4);
+			loginWorked = extract(tags, size, 5);
+			loginReason = extract(tags, size, 6);
+			team = extract(tags, size, 7);
+			map = extract(tags, size, 8);
 		} else {
 			Gdx.app.log(TAG, "message was empty");
 		}
 	}
 
 	private String extract(String[] tags, int size, int i) {
-		if(size > i) {
+		if (size > i) {
 			return tags[i];
-		}else {
+		} else {
 			return "";
 		}
 	}
@@ -147,5 +157,13 @@ public class NetworkMessage {
 
 	public String getLoginReason() {
 		return loginReason;
+	}
+
+	public String getTeam() {
+		return team;
+	}
+
+	public String getMap() {
+		return map;
 	}
 }
