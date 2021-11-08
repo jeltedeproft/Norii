@@ -22,8 +22,10 @@ public class AITeamLeader implements UnitOwner {
 	private final AIDecisionMaker aiDecisionMaker;
 	private BattleManager battleManager;
 	private int ap;
+	private EnemyType type;
 
-	public AITeamLeader(final AITeams type) {
+	public AITeamLeader(final EnemyType type) {
+		this.type = type;
 		aiTeamData = AITeamFileReader.getAITeamData().get(type.ordinal());
 		aiDecisionMaker = new AIDecisionMaker();
 		initiateUnits();
@@ -157,5 +159,10 @@ public class AITeamLeader implements UnitOwner {
 	@Override
 	public void setAp(int ap) {
 		this.ap = ap;
+	}
+
+	@Override
+	public EnemyType getType() {
+		return type;
 	}
 }

@@ -14,7 +14,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.jelte.norii.ai.AITeamLeader;
-import com.jelte.norii.ai.AITeams;
+import com.jelte.norii.ai.EnemyType;
 import com.jelte.norii.audio.AudioCommand;
 import com.jelte.norii.audio.AudioManager;
 import com.jelte.norii.audio.AudioTypeEvent;
@@ -29,6 +29,7 @@ import com.jelte.norii.magic.Ability;
 import com.jelte.norii.magic.Ability.LineOfSight;
 import com.jelte.norii.map.BattleMap;
 import com.jelte.norii.map.Map;
+import com.jelte.norii.map.MapFactory.MapType;
 import com.jelte.norii.map.MapManager;
 import com.jelte.norii.map.MyPathFinder;
 import com.jelte.norii.map.TiledMapActor;
@@ -64,28 +65,24 @@ public class BattleScreen extends GameScreen {
 
 	private boolean isPaused;
 
-	public BattleScreen(AITeams aiTeams) {
-		initializeVariables();
-		initializeAI(aiTeams);
+	public BattleScreen(UnitOwner unitOwner, MapType mapType) {
+		initializeVariables(unitOwner,mapType);
 		initializeEntityStage();
-		initializeHUD(aiTeams);
+		initializeHUD();
 		initializePauseMenu();
 		initializeInput();
 		initializeMap();
 		spawnEnemyUnits();
 	}
 
-	private void initializeVariables() {
+	private void initializeVariables(UnitOwner unitOwner, MapType mapType) {
 		mapCamera = new OrthographicCamera();
 		mapCamera.setToOrtho(false, VISIBLE_WIDTH, VISIBLE_HEIGHT);
 		spriteBatch = new SpriteBatch(900);
 		isPaused = false;
 		mapMgr = new MapManager();
-		currentMap = (BattleMap) mapMgr.getCurrentMap();
-	}
-
-	private void initializeAI(AITeams ai) {
-		enemyTeamLeader = new AITeamLeader(ai);
+		mapMgr.loadMap(mapType);
+		enemyTeamLeader = unitOwner;
 	}
 
 	private void initializeEntityStage() {
@@ -93,11 +90,11 @@ public class BattleScreen extends GameScreen {
 		entityStage = new EntityStage(Stream.concat(Player.getInstance().getTeam().stream(), enemyTeamLeader.getTeam().stream()).collect(Collectors.toList()));
 	}
 
-	private void initializeHUD(AITeams aiTeams) {
+	private void initializeHUD() {
 		hudCamera = new OrthographicCamera();
 		hudCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		hud = new Hud(Player.getInstance().getTeam(), enemyTeamLeader.getTeam(), spriteBatch, currentMap.getMapWidth(), currentMap.getMapHeight(), this, (aiTeams == AITeams.TUTORIAL));
-		if (aiTeams == AITeams.TUTORIAL) {
+		hud = new Hud(Player.getInstance().getTeam(), enemyTeamLeader.getTeam(), spriteBatch, currentMap.getMapWidth(), currentMap.getMapHeight(), this, (enemyTeamLeader.getType() == EnemyType.TUTORIAL));
+		if (enemyTeamLeader.getType() == EnemyType.TUTORIAL) {
 			hud.getHudMessages().showInfoWindow(HudMessageTypes.DEPLOY_UNITS_INFO);
 		}
 	}

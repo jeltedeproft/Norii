@@ -16,9 +16,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.jelte.norii.ai.AITeams;
+import com.jelte.norii.ai.AITeamLeader;
+import com.jelte.norii.ai.EnemyType;
+import com.jelte.norii.entities.UnitOwner;
+import com.jelte.norii.map.MapFactory.MapType;
 import com.jelte.norii.multiplayer.NetworkMessage;
 import com.jelte.norii.multiplayer.NetworkMessage.MessageType;
+import com.jelte.norii.multiplayer.OnlineEnemy;
 import com.jelte.norii.multiplayer.ServerCommunicator;
 import com.jelte.norii.profile.PropertiesEnum;
 import com.jelte.norii.utility.AssetManagerUtility;
@@ -144,9 +148,11 @@ public class MultiplayerScreen extends GameScreen {
 	private void checkForStartGame() {
 		if (ServerCommunicator.getInstance().isNextMessageOfType(MessageType.BATTLE)) {
 			NetworkMessage message = ServerCommunicator.getInstance().getOldestMessageFromServer();
-			AITeams selectedLevel = AITeams.ONLINE_PLAYER;
-			AssetManagerUtility.loadMapAsset(message.getMap());
-			ScreenManager.getInstance().showScreen(ScreenEnum.BATTLE, selectedLevel);// give team and map
+			EnemyType selectedLevel = EnemyType.ONLINE_PLAYER;
+			UnitOwner enemyTeamLeader = new OnlineEnemy(selectedLevel);
+			MapType mapType = MapType.valueOf(message.getMap());
+			AssetManagerUtility.loadMapAsset(mapType.toString());
+			ScreenManager.getInstance().showScreen(ScreenEnum.BATTLE, enemyTeamLeader, mapType);// give team and map
 		}
 	}
 

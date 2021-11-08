@@ -3,6 +3,7 @@ package com.jelte.norii.entities;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.jelte.norii.ai.EnemyType;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.battle.MessageToBattleScreen;
 import com.jelte.norii.battle.battleState.BattleState;
@@ -46,4 +47,6 @@ public interface UnitOwner {
 	public void processAi();
 
 	public BattleState getNextBattleState();
+
+	public EnemyType getType();
 }

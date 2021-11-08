@@ -19,7 +19,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.jelte.norii.ai.AITeamFileReader;
-import com.jelte.norii.ai.AITeams;
+import com.jelte.norii.ai.AITeamLeader;
+import com.jelte.norii.ai.EnemyType;
 import com.jelte.norii.audio.AudioCommand;
 import com.jelte.norii.audio.AudioManager;
 import com.jelte.norii.audio.AudioTypeEvent;
@@ -28,6 +29,7 @@ import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityFileReader;
 import com.jelte.norii.entities.EntityTypes;
 import com.jelte.norii.entities.Player;
+import com.jelte.norii.entities.UnitOwner;
 import com.jelte.norii.magic.SpellFileReader;
 import com.jelte.norii.map.MapFactory.MapType;
 import com.jelte.norii.profile.ProfileManager;
@@ -57,7 +59,7 @@ public class MainMenuScreen extends GameScreen {
 	private Label title;
 
 	private ArrayList<Entity> playerMonsters;
-	private AITeams selectedLevel;
+	private EnemyType selectedLevel;
 
 	protected float frameTime = 0f;
 	protected Sprite frameSprite = null;
@@ -96,7 +98,7 @@ public class MainMenuScreen extends GameScreen {
 		parallaxcamera.update();
 		mainMenuTableOfButtons = new Table();
 		mainMenuTableOfButtons.setFillParent(true);
-		selectedLevel = AITeams.DESERT_TEAM;
+		selectedLevel = EnemyType.DESERT_TEAM;
 	}
 
 	private void createBackground() {
@@ -154,7 +156,8 @@ public class MainMenuScreen extends GameScreen {
 			@Override
 			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
 				loadLevelAssets();
-				ScreenManager.getInstance().showScreen(ScreenEnum.BATTLE, selectedLevel);
+				UnitOwner enemyTeamLeader = new AITeamLeader(selectedLevel);
+				ScreenManager.getInstance().showScreen(ScreenEnum.BATTLE, enemyTeamLeader, MapType.BATTLE_MAP_THE_DARK_SWAMP);
 				return true;
 			}
 		});
@@ -172,9 +175,10 @@ public class MainMenuScreen extends GameScreen {
 			@Override
 			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
 				addTutorialUnitsToPlayer();
-				selectedLevel = AITeams.TUTORIAL;
+				selectedLevel = EnemyType.TUTORIAL;
 				loadLevelAssets();
-				ScreenManager.getInstance().showScreen(ScreenEnum.BATTLE, selectedLevel);
+				UnitOwner enemyTeamLeader = new AITeamLeader(selectedLevel);
+				ScreenManager.getInstance().showScreen(ScreenEnum.BATTLE, enemyTeamLeader,MapType.BATTLE_MAP_THE_DARK_SWAMP);
 				return true;
 			}
 		});

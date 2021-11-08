@@ -1,129 +1,175 @@
 package com.jelte.norii.multiplayer;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.jelte.norii.ai.AIDecisionMaker;
+import com.jelte.norii.ai.AITeamData;
+import com.jelte.norii.ai.AITeamFileReader;
+import com.jelte.norii.ai.AITeamLeader;
+import com.jelte.norii.ai.EnemyType;
+import com.jelte.norii.battle.ApFileReader;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.battle.MessageToBattleScreen;
 import com.jelte.norii.battle.battleState.BattleState;
 import com.jelte.norii.entities.Entity;
+import com.jelte.norii.entities.EntityTypes;
 import com.jelte.norii.entities.UnitOwner;
 import com.jelte.norii.utility.TiledMapPosition;
 
 public class OnlineEnemy implements UnitOwner {
 
-	@Override
-	public void renderUnits(Batch batch) {
-		// TODO Auto-generated method stub
+	private static final String TAG = OnlineEnemy.class.getSimpleName();
+
+	private List<Entity> team;
+	private final AITeamData aiTeamData;
+	private final AIDecisionMaker aiDecisionMaker;
+	private BattleManager battleManager;
+	private int ap;
+	private EnemyType type;
+
+	public OnlineEnemy(final EnemyType type) {
+		this.type = type;
+		aiTeamData = AITeamFileReader.getAITeamData().get(type.ordinal());
+		aiDecisionMaker = new AIDecisionMaker();
+		initiateUnits();
+	}
+
+	private void initiateUnits() {
+		team = new ArrayList<>();
+		for (final String name : aiTeamData.getUnits()) {
+			for (final EntityTypes type : EntityTypes.values()) {
+				if (name.equals(type.getEntityName())) {
+					final Entity entity = new Entity(type, this, true);
+					entity.setPlayerUnit(false);
+					team.add(entity);
+				}
+			}
+		}
+		ap = ApFileReader.getApData(0);
+	}
+
+	public void spawnUnits(List<TiledMapPosition> spawnPositions) {
+		for (final Entity unit : team) {
+			if (!spawnPositions.isEmpty()) {
+				unit.setCurrentPosition(spawnPositions.get(0));
+				unit.setPlayerUnit(false);
+				unit.getVisualComponent().spawn(spawnPositions.get(0));
+				spawnPositions.remove(0);
+				battleManager.addUnit(unit);
+			} else {
+				Gdx.app.debug(TAG, "maybe no more room to spawn ai units!");
+			}
+		}
+	}
+
+	public void resetAI(BattleState stateOfBattle) {
+		aiDecisionMaker.resetAI(stateOfBattle);
+	}
+
+	public void processAi() {
+		if (aiDecisionMaker.processAi()) {
+			sendMessageToBattleManager(MessageToBattleScreen.AI_FINISHED_CALCULATING, battleManager.getActiveUnit());
+		}
 
 	}
 
-	@Override
-	public void updateUnits(float delta) {
-		// TODO Auto-generated method stub
-
+	public BattleState getNextBattleState() {
+		return aiDecisionMaker.getResult();
 	}
 
 	@Override
-	public int getAp() {
-		// TODO Auto-generated method stub
-		return 0;
+	public void updateUnits(final float delta) {
+		team.removeIf(Entity::isDead);
+
+		for (final Entity entity : team) {
+			entity.update(delta);
+		}
 	}
 
 	@Override
-	public void setAp(int ap) {
-		// TODO Auto-generated method stub
+	public void renderUnits(final Batch batch) {
+		for (final Entity entity : team) {
+			entity.draw(batch);
+		}
+	}
 
+	@Override
+	public void setTeam(final List<Entity> team) {
+		this.team = team;
 	}
 
 	@Override
 	public List<Entity> getTeam() {
-		// TODO Auto-generated method stub
-		return null;
+		return team;
+	}
+
+	public void dispose() {
+		for (final Entity entity : team) {
+			entity.dispose();
+		}
 	}
 
 	@Override
-	public void setTeam(List<Entity> entities) {
-		// TODO Auto-generated method stub
-
+	public String toString() {
+		return "AITeamLeader with team : " + team;
 	}
 
 	@Override
 	public void applyModifiers() {
-		// TODO Auto-generated method stub
-
+		team.forEach(Entity::applyModifiers);
 	}
 
 	@Override
 	public boolean isPlayer() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public void setBattleManager(BattleManager battleManager) {
-		// TODO Auto-generated method stub
+	public void sendMessageToBattleManager(MessageToBattleScreen message, Entity entity) {
+		battleManager.sendMessageToBattleScreen(message, entity);
+	}
 
+	@Override
+	public void setBattleManager(BattleManager battleManager) {
+		this.battleManager = battleManager;
 	}
 
 	@Override
 	public void removeUnit(Entity unit) {
-		// TODO Auto-generated method stub
-
+		team.remove(unit);
 	}
 
 	@Override
 	public void addUnit(Entity unit) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void spawnUnits(List<TiledMapPosition> spawnPositions) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void sendMessageToBattleManager(MessageToBattleScreen message, Entity entity) {
-		// TODO Auto-generated method stub
-
+		team.add(unit);
 	}
 
 	@Override
 	public void sendMessageToBattleManager(MessageToBattleScreen message, Entity entity, TiledMapPosition oldPosition) {
-		// TODO Auto-generated method stub
-
+		battleManager.sendMessageToBattleScreen(message, entity, oldPosition);
 	}
 
 	@Override
 	public void sendMessageToBattleManager(MessageToBattleScreen message, Entity entity, int damage) {
-		// TODO Auto-generated method stub
-
+		battleManager.sendMessageToBattleScreen(message, entity, damage);
 	}
 
 	@Override
-	public void dispose() {
-		// TODO Auto-generated method stub
-
+	public int getAp() {
+		return ap;
 	}
 
 	@Override
-	public void resetAI(BattleState activeBattleState) {
-		// TODO Auto-generated method stub
-
+	public void setAp(int ap) {
+		this.ap = ap;
 	}
 
 	@Override
-	public void processAi() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public BattleState getNextBattleState() {
-		// TODO Auto-generated method stub
-		return null;
+	public EnemyType getType() {
+		return type;
 	}
 
 }

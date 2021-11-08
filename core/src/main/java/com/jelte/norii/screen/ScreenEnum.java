@@ -1,7 +1,9 @@
 package com.jelte.norii.screen;
 
 import com.badlogic.gdx.Screen;
-import com.jelte.norii.ai.AITeams;
+import com.jelte.norii.ai.EnemyType;
+import com.jelte.norii.entities.UnitOwner;
+import com.jelte.norii.map.MapFactory.MapType;
 
 public enum ScreenEnum {
 
@@ -14,8 +16,9 @@ public enum ScreenEnum {
 	BATTLE {
 		@Override
 		public Screen getScreen(Object... params) {
-			final AITeams aiTeams = (AITeams) params[ScreenEnum.ScreenParams.AI_TEAM.ordinal()];
-			return new BattleScreen(aiTeams);
+			final UnitOwner unitOwner = (UnitOwner) params[ScreenEnum.ScreenParams.UNIT_OWNER.ordinal()];
+			final MapType mapType = (MapType) params[ScreenEnum.ScreenParams.MAP.ordinal()];
+			return new BattleScreen(unitOwner, mapType);
 		}
 	},
 	SETTINGS {
@@ -46,6 +49,6 @@ public enum ScreenEnum {
 	public abstract Screen getScreen(Object... params);
 
 	public enum ScreenParams {
-		AI_TEAM;
+		UNIT_OWNER, MAP;
 	}
 }

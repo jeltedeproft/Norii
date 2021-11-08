@@ -179,7 +179,7 @@ public class GameServer {
 
 					// for now just select a map, later randomize this
 					MapFactory.MapType mapType = MapType.BATTLE_MAP_THE_DARK_SWAMP;
-					battleMessage.makeBattleMessage(players.get(0).getPlayerName(), players.get(1).getPlayerName(), mapType.toString());
+					battleMessage.makeBattleMessage(players.get(0).getPlayerName(), players.get(1).getPlayerName(), mapType.name());
 
 					// Send the packet to the first player
 					players.get(0).getSocket().writeTextMessage(battleMessage.messageToString());
@@ -196,7 +196,7 @@ public class GameServer {
 					players.get(1).setGameID(gamesCreated);
 					Gdx.app.log(CLIENT_TAG, "making game object");
 					// Create a game instance and add it to the list of all active game instances
-					final GameInstance newGame = new GameInstance(this, gamesCreated, players.get(0), players.get(1));
+					final GameInstance newGame = new GameInstance(this, gamesCreated, players.get(0), players.get(1), mapType);
 					activeGames.put(gamesCreated, newGame);
 					Gdx.app.log(CLIENT_TAG, "game made");
 					// Output matchup to log

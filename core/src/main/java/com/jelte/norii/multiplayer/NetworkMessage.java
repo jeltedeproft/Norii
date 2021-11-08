@@ -53,6 +53,7 @@ public class NetworkMessage {
 		this.team = team;
 	}
 
+	//add team1, team2 and wether the receiving player is first to start or not, then start deployment phae based on that, either waiting for the enemy, or placing a unit
 	public void makeBattleMessage(String fighter1, String fighter2, String map) {
 		type = MessageType.BATTLE;
 		sender = fighter1;

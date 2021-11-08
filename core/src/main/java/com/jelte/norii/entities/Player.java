@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.utils.Array;
+import com.jelte.norii.ai.EnemyType;
 import com.jelte.norii.battle.ApFileReader;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.battle.MessageToBattleScreen;
@@ -17,6 +18,7 @@ public class Player implements UnitOwner {
 	private List<Entity> team;
 	private BattleManager battleManager;
 	private int ap;
+	private EnemyType type;
 
 	@Override
 	public void updateUnits(final float delta) {
@@ -80,6 +82,7 @@ public class Player implements UnitOwner {
 
 	private Player() {
 		team = new ArrayList<>();
+		type = EnemyType.PLAYER;
 	}
 
 	@Override
@@ -156,5 +159,10 @@ public class Player implements UnitOwner {
 	public BattleState getNextBattleState() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public EnemyType getType() {
+		return type;
 	}
 }
