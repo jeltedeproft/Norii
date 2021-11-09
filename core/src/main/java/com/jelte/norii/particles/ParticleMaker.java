@@ -136,8 +136,10 @@ public class ParticleMaker {
 	}
 
 	public static void deactivateParticle(final Particle particle) {
-		particlesChanged = true;
-		particle.deactivate();
+		if(particle != null) {
+			particlesChanged = true;
+			particle.deactivate();
+		}
 	}
 
 	public static void cleanUpUnactiveParticles() {

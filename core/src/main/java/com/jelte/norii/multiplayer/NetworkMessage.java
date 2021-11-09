@@ -87,10 +87,11 @@ public class NetworkMessage {
 		sender = ServerCommunicator.getInstance().getClientID();
 	}
 
-	public void makeLoginValidationMessage(String loginWorked, String reason) {
+	public void makeLoginValidationMessage(String client, String loginWorked, String reason) {
 		type = MessageType.LOGIN_VALIDATION;
 		this.loginWorked = loginWorked;
 		this.loginReason = reason;
+		sender = client;
 	}
 
 	public String messageToString() {

@@ -113,7 +113,7 @@ public class GameServer {
 					System.err.println("Oh oh ..." + result.cause());
 				}
 			});
-			returnMessage.makeLoginValidationMessage("true", "worked");
+			returnMessage.makeLoginValidationMessage(message.getSender(),"true", "worked");
 			break;
 		case SEARCH_OPPONENT:
 			ConnectedClient client = getClientByName(message.getSender());

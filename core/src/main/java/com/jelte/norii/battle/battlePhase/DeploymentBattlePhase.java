@@ -53,6 +53,7 @@ public class DeploymentBattlePhase extends BattlePhase {
 				deployUnit(newPosition);
 				actor.setIsFreeSpawn(false);
 				ParticleMaker.deactivateParticle(ParticleMaker.getParticle(ParticleType.SPAWN, newPosition));
+				ParticleMaker.deactivateParticle(ParticleMaker.getParticle(ParticleType.PURPLE_SQUARE, newPosition));
 				battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.UNIT_DEPLOYED, battlemanager.getActiveUnit());
 				nextDeployment();
 			} else {
