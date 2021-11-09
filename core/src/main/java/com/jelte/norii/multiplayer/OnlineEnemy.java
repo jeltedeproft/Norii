@@ -31,12 +31,14 @@ public class OnlineEnemy implements UnitOwner {
 	private EnemyType type;
 	private String ownerName;
 	private Json json;
+	private String side;
 
-	public OnlineEnemy(final EnemyType type, String ownerName, String teamAsString) {
-		team = new ArrayList<Entity>();
+	public OnlineEnemy(final EnemyType type, String ownerName, String teamAsString, String side) {
+		team = new ArrayList<>();
 		this.type = type;
 		this.ownerName = ownerName;
 		json = new Json();
+		this.side = side;
 		initiateUnits(teamAsString);
 	}
 
@@ -170,6 +172,14 @@ public class OnlineEnemy implements UnitOwner {
 	@Override
 	public String getName() {
 		return ownerName;
+	}
+
+	public String getSide() {
+		return side;
+	}
+
+	public void setSide(String side) {
+		this.side = side;
 	}
 
 }

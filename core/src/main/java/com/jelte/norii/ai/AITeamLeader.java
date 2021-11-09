@@ -24,6 +24,7 @@ public class AITeamLeader implements UnitOwner {
 	private int ap;
 	private EnemyType type;
 	private String name = "test";
+	private String side = "right";
 
 	public AITeamLeader(final EnemyType type) {
 		this.type = type;
@@ -175,5 +176,15 @@ public class AITeamLeader implements UnitOwner {
 	@Override
 	public String getName() {
 		return name;
+	}
+
+	@Override
+	public String getSide() {
+		return side;
+	}
+
+	@Override
+	public void setSide(String side) {
+		this.side = side;
 	}
 }

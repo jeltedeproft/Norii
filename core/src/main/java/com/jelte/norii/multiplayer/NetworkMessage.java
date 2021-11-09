@@ -23,6 +23,7 @@ public class NetworkMessage {
 	private String team2 = "";
 	private String fighter1 = "";
 	private String fighter2 = "";
+	private String side = "";
 
 	public enum MessageType {
 		CONNECTING, CONNECTED, SEARCH_OPPONENT, DISCONNECTED, BATTLE, TRY_LOGIN, LOGIN_VALIDATION, MOVE_MADE
@@ -52,6 +53,7 @@ public class NetworkMessage {
 	}
 
 	public void makeSearchMessage(String client, String team) {
+		Gdx.app.log(TAG, "making search message for : " + client);
 		type = MessageType.SEARCH_OPPONENT;
 		sender = client;
 		this.team = team;
@@ -60,13 +62,14 @@ public class NetworkMessage {
 	// add team1, team2 and whether the receiving player is first to start or not,
 	// then start deployment phase based on that, either waiting for the enemy, or
 	// placing a unit
-	public void makeBattleMessage(String fighter1, String fighter2, String map, String team1, String team2) {
+	public void makeBattleMessage(String fighter1, String fighter2, String map, String team1, String team2, String side) {
 		type = MessageType.BATTLE;
 		this.fighter1 = fighter1;
 		this.fighter2 = fighter2;
 		this.map = map;
 		this.team1 = team1;
 		this.team2 = team2;
+		this.side = side;
 	}
 
 	public void makeMoveMessage(String client, String moveType, String location, String ability) {
@@ -118,6 +121,8 @@ public class NetworkMessage {
 		stringToSend.append(fighter1);
 		stringToSend.append(SEPARATOR);
 		stringToSend.append(fighter2);
+		stringToSend.append(SEPARATOR);
+		stringToSend.append(side);
 		stringToSend.append(END_TAG);
 		return stringToSend.toString();
 	}
@@ -139,6 +144,7 @@ public class NetworkMessage {
 			team2 = extract(tags, size, 10);
 			fighter1 = extract(tags, size, 11);
 			fighter2 = extract(tags, size, 12);
+			side = extract(tags, size, 13);
 		} else {
 			Gdx.app.log(TAG, "message was empty");
 		}
@@ -202,5 +208,13 @@ public class NetworkMessage {
 
 	public String getFighter2() {
 		return fighter2;
+	}
+
+	public String getSide() {
+		return side;
+	}
+
+	public void setSide(String side) {
+		this.side = side;
 	}
 }

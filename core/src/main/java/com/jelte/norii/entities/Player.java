@@ -20,6 +20,7 @@ public class Player implements UnitOwner {
 	private int ap;
 	private EnemyType type;
 	private String name;
+	private String side;
 
 	@Override
 	public void updateUnits(final float delta) {
@@ -84,6 +85,7 @@ public class Player implements UnitOwner {
 	private Player() {
 		team = new ArrayList<>();
 		type = EnemyType.PLAYER;
+		side = "left";
 	}
 
 	@Override
@@ -175,5 +177,15 @@ public class Player implements UnitOwner {
 	@Override
 	public String getName() {
 		return name;
+	}
+
+	@Override
+	public String getSide() {
+		return side;
+	}
+
+	@Override
+	public void setSide(String side) {
+		this.side = side;
 	}
 }

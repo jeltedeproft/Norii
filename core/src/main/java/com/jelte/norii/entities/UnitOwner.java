@@ -53,4 +53,8 @@ public interface UnitOwner {
 	public BattleState getNextBattleState();
 
 	public EnemyType getType();
+	
+	public String getSide();
+	
+	public void setSide(String side);
 }

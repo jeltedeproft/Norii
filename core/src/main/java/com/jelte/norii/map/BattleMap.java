@@ -99,6 +99,10 @@ public class BattleMap extends Map {
 		for (final TiledMapPosition pos : unitSpawnPositions) {
 			ParticleMaker.addParticle(ParticleType.SPAWN, pos, 0);
 		}
+		
+		for (final TiledMapPosition pos : enemyStartPositions) {
+			ParticleMaker.addParticle(ParticleType.PURPLE_SQUARE, pos, 0);
+		}
 	}
 
 	public List<TiledMapPosition> getSpawnPositions() {

@@ -116,14 +116,8 @@ public class GameServer {
 			returnMessage.makeLoginValidationMessage("true", "worked");
 			break;
 		case SEARCH_OPPONENT:
-			Gdx.app.log(CLIENT_TAG, "searching opponent for " + message.getSender());
-			Gdx.app.log(CLIENT_TAG, "connected clients : ");
-			for (ConnectedClient client : clients) {
-				Gdx.app.log(CLIENT_TAG, client.getPlayerName());
-			}
 			ConnectedClient client = getClientByName(message.getSender());
 			if (client != null) {
-				Gdx.app.log(CLIENT_TAG, "adding client to searchingClients : " + client.getPlayerName());
 				searchingClients.add(client);
 				client.setClientState(ClientState.QUEUED);
 				client.setTeamFromJson(message.getTeam());
@@ -178,12 +172,14 @@ public class GameServer {
 
 					// for now just select a map, later randomize this
 					MapFactory.MapType mapType = MapType.BATTLE_MAP_THE_DARK_SWAMP;
-					battleMessage.makeBattleMessage(players.get(0).getPlayerName(), players.get(1).getPlayerName(), mapType.name(), json.toJson(players.get(0).getTeam(), Array.class), json.toJson(players.get(1).getTeam(), Array.class));
+					battleMessage.makeBattleMessage(players.get(0).getPlayerName(), players.get(1).getPlayerName(), mapType.name(), json.toJson(players.get(0).getTeam(), Array.class), json.toJson(players.get(1).getTeam(), Array.class),"1");
 
 					// Send the packet to the first player
 					players.get(0).getSocket().writeTextMessage(battleMessage.messageToString());
 					Gdx.app.log(CLIENT_TAG, "sending to : " + players.get(0).getPlayerName());
-					// Send the packet to the second player
+					
+					// Send the packet to the second player, just changing the side
+					battleMessage.setSide("2");
 					players.get(1).getSocket().writeTextMessage(battleMessage.messageToString());
 					Gdx.app.log(CLIENT_TAG, "sending to : " + players.get(1).getPlayerName());
 					// Change the state for each player to be ingame

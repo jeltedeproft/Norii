@@ -149,7 +149,13 @@ public class MultiplayerScreen extends GameScreen {
 		if (ServerCommunicator.getInstance().isNextMessageOfType(MessageType.BATTLE)) {
 			NetworkMessage message = ServerCommunicator.getInstance().getOldestMessageFromServer();
 			EnemyType selectedLevel = EnemyType.ONLINE_PLAYER;
-			UnitOwner enemyTeamLeader = new OnlineEnemy(selectedLevel, message.getFighter2(), message.getTeam2());
+			UnitOwner enemyTeamLeader;
+			if(ServerCommunicator.getInstance().getClientID().equals(message.getFighter1())) {
+				enemyTeamLeader = new OnlineEnemy(selectedLevel, message.getFighter2(), message.getTeam2(), message.getSide());
+			}else {
+				enemyTeamLeader = new OnlineEnemy(selectedLevel, message.getFighter1(), message.getTeam1(), message.getSide());
+			}
+			
 			MapType mapType = MapType.valueOf(message.getMap());
 			AssetManagerUtility.loadMapAsset(mapType.toString());
 			ScreenManager.getInstance().showScreen(ScreenEnum.BATTLE, enemyTeamLeader, mapType);// give team and map
