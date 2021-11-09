@@ -177,4 +177,12 @@ public final class Utility {
 		debugRenderer.end();
 		Gdx.gl.glLineWidth(1);
 	}
+
+	public static String arrayOfStringsToString(Array<String> strings) {
+		StringBuilder builder = new StringBuilder();
+		for (String string : strings) {
+			builder.append(string);
+		}
+		return builder.toString();
+	}
 }

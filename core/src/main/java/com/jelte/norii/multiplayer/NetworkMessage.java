@@ -19,6 +19,8 @@ public class NetworkMessage {
 	private String ability = "";
 	private String team = "";
 	private String map = "";
+	private String team1 = "";
+	private String team2 = "";
 
 	public enum MessageType {
 		CONNECTING, CONNECTED, SEARCH_OPPONENT, DISCONNECTED, BATTLE, TRY_LOGIN, LOGIN_VALIDATION, MOVE_MADE
@@ -53,12 +55,16 @@ public class NetworkMessage {
 		this.team = team;
 	}
 
-	//add team1, team2 and wether the receiving player is first to start or not, then start deployment phae based on that, either waiting for the enemy, or placing a unit
-	public void makeBattleMessage(String fighter1, String fighter2, String map) {
+	// add team1, team2 and wether the receiving player is first to start or not,
+	// then start deployment phae based on that, either waiting for the enemy, or
+	// placing a unit
+	public void makeBattleMessage(String fighter1, String fighter2, String map, String team1, String team2) {
 		type = MessageType.BATTLE;
 		sender = fighter1;
 		receiver = fighter2;
 		this.map = map;
+		this.team1 = team1;
+		this.team2 = team2;
 	}
 
 	public void makeMoveMessage(String client, String moveType, String location, String ability) {
@@ -102,6 +108,10 @@ public class NetworkMessage {
 		stringToSend.append(team);
 		stringToSend.append(SEPARATOR);
 		stringToSend.append(map);
+		stringToSend.append(SEPARATOR);
+		stringToSend.append(team1);
+		stringToSend.append(SEPARATOR);
+		stringToSend.append(team2);
 		stringToSend.append(END_TAG);
 		return stringToSend.toString();
 	}
@@ -119,6 +129,8 @@ public class NetworkMessage {
 			loginReason = extract(tags, size, 6);
 			team = extract(tags, size, 7);
 			map = extract(tags, size, 8);
+			team1 = extract(tags, size, 9);
+			team2 = extract(tags, size, 10);
 		} else {
 			Gdx.app.log(TAG, "message was empty");
 		}
@@ -166,5 +178,13 @@ public class NetworkMessage {
 
 	public String getMap() {
 		return map;
+	}
+
+	public String getTeam1() {
+		return team1;
+	}
+
+	public String getTeam2() {
+		return team2;
 	}
 }

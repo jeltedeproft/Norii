@@ -1,11 +1,13 @@
 package com.jelte.norii.headless;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.utils.Json;
 import com.jelte.norii.map.MapFactory;
 import com.jelte.norii.map.MapFactory.MapType;
 import com.jelte.norii.multiplayer.NetworkMessage;
@@ -25,6 +27,8 @@ public class GameServer {
 	private Map<Integer, GameInstance> activeGames;
 	private Vertx vertx;
 	private HttpServer server;
+	private Json json;
+
 	private static final int PORT = 80;
 	private static final String CLIENT_TAG = "Client";
 	/**
@@ -52,6 +56,7 @@ public class GameServer {
 		server = vertx.createHttpServer(options);
 		gamesCreated = 0;
 		activeGames = new HashMap<>();
+		json = new Json();
 
 		// Start update thread
 		updateThread = new UpdateThread();
@@ -179,7 +184,7 @@ public class GameServer {
 
 					// for now just select a map, later randomize this
 					MapFactory.MapType mapType = MapType.BATTLE_MAP_THE_DARK_SWAMP;
-					battleMessage.makeBattleMessage(players.get(0).getPlayerName(), players.get(1).getPlayerName(), mapType.name());
+					battleMessage.makeBattleMessage(players.get(0).getPlayerName(), players.get(1).getPlayerName(), mapType.name(), json.toJson(players.get(0).getTeam(), Array.class), json.toJson(players.get(1).getTeam(), Array.class));
 
 					// Send the packet to the first player
 					players.get(0).getSocket().writeTextMessage(battleMessage.messageToString());
