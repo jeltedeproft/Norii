@@ -82,6 +82,7 @@ public class BattleScreen extends GameScreen {
 		isPaused = false;
 		mapMgr = new MapManager();
 		mapMgr.loadMap(mapType);
+		currentMap = (BattleMap) mapMgr.getCurrentMap();
 		enemyTeamLeader = unitOwner;
 	}
 
