@@ -19,6 +19,7 @@ public class Player implements UnitOwner {
 	private BattleManager battleManager;
 	private int ap;
 	private EnemyType type;
+	private String name;
 
 	@Override
 	public void updateUnits(final float delta) {
@@ -164,5 +165,15 @@ public class Player implements UnitOwner {
 	@Override
 	public EnemyType getType() {
 		return type;
+	}
+
+	@Override
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	@Override
+	public String getName() {
+		return name;
 	}
 }

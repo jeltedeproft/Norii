@@ -18,11 +18,12 @@ public class AITeamLeader implements UnitOwner {
 	private static final String TAG = AITeamLeader.class.getSimpleName();
 
 	private List<Entity> team;
-	private final AITeamData aiTeamData;
+	private final Level aiTeamData;
 	private final AIDecisionMaker aiDecisionMaker;
 	private BattleManager battleManager;
 	private int ap;
 	private EnemyType type;
+	private String name = "test";
 
 	public AITeamLeader(final EnemyType type) {
 		this.type = type;
@@ -164,5 +165,15 @@ public class AITeamLeader implements UnitOwner {
 	@Override
 	public EnemyType getType() {
 		return type;
+	}
+
+	@Override
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	@Override
+	public String getName() {
+		return name;
 	}
 }

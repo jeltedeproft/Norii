@@ -1,12 +1,12 @@
 package com.jelte.norii.ai;
 
-public class AITeamData {
+public class Level {
 
 	private int id;
 	private String name;
 	private String[] units;
 
-	public AITeamData() {
+	public Level() {
 
 	}
 

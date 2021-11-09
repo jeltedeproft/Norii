@@ -17,6 +17,10 @@ public interface UnitOwner {
 	public int getAp();
 
 	public void setAp(int ap);
+	
+	public void setName(String name);
+	
+	public String getName();
 
 	public List<Entity> getTeam();
 

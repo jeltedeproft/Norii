@@ -5,8 +5,10 @@ import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Json;
 import com.jelte.norii.ai.AIDecisionMaker;
-import com.jelte.norii.ai.AITeamData;
+import com.jelte.norii.ai.Level;
 import com.jelte.norii.ai.AITeamFileReader;
 import com.jelte.norii.ai.AITeamLeader;
 import com.jelte.norii.ai.EnemyType;
@@ -24,25 +26,25 @@ public class OnlineEnemy implements UnitOwner {
 	private static final String TAG = OnlineEnemy.class.getSimpleName();
 
 	private List<Entity> team;
-	private final AITeamData aiTeamData;
-	private final AIDecisionMaker aiDecisionMaker;
 	private BattleManager battleManager;
 	private int ap;
 	private EnemyType type;
+	private String ownerName;
+	private Json json;
 
-	public OnlineEnemy(final EnemyType type) {
+	public OnlineEnemy(final EnemyType type, String ownerName, String team) {
 		this.type = type;
-		aiTeamData = AITeamFileReader.getAITeamData().get(type.ordinal());
-		aiDecisionMaker = new AIDecisionMaker();
-		initiateUnits();
+		this.ownerName = ownerName;
+		json = new Json();
+		initiateUnits(team);
 	}
 
-	private void initiateUnits() {
-		team = new ArrayList<>();
-		for (final String name : aiTeamData.getUnits()) {
-			for (final EntityTypes type : EntityTypes.values()) {
-				if (name.equals(type.getEntityName())) {
-					final Entity entity = new Entity(type, this, true);
+	private void initiateUnits(String teamAsString) {
+		Array<String> teamNames = json.fromJson(Array.class, teamAsString);
+		for (final String name : teamNames) {
+			for (final EntityTypes entityType : EntityTypes.values()) {
+				if (name.equals(entityType.getEntityName())) {
+					final Entity entity = new Entity(entityType, this, true);
 					entity.setPlayerUnit(false);
 					team.add(entity);
 				}
@@ -52,32 +54,19 @@ public class OnlineEnemy implements UnitOwner {
 	}
 
 	public void spawnUnits(List<TiledMapPosition> spawnPositions) {
-		for (final Entity unit : team) {
-			if (!spawnPositions.isEmpty()) {
-				unit.setCurrentPosition(spawnPositions.get(0));
-				unit.setPlayerUnit(false);
-				unit.getVisualComponent().spawn(spawnPositions.get(0));
-				spawnPositions.remove(0);
-				battleManager.addUnit(unit);
-			} else {
-				Gdx.app.debug(TAG, "maybe no more room to spawn ai units!");
-			}
-		}
+		//do nothing
 	}
 
 	public void resetAI(BattleState stateOfBattle) {
-		aiDecisionMaker.resetAI(stateOfBattle);
+		//do nothing
 	}
 
 	public void processAi() {
-		if (aiDecisionMaker.processAi()) {
-			sendMessageToBattleManager(MessageToBattleScreen.AI_FINISHED_CALCULATING, battleManager.getActiveUnit());
-		}
-
+		//do nothing
 	}
 
 	public BattleState getNextBattleState() {
-		return aiDecisionMaker.getResult();
+		return null;
 	}
 
 	@Override
@@ -114,7 +103,7 @@ public class OnlineEnemy implements UnitOwner {
 
 	@Override
 	public String toString() {
-		return "AITeamLeader with team : " + team;
+		return "Online player : " + ownerName + " with team : " + team;
 	}
 
 	@Override
@@ -170,6 +159,16 @@ public class OnlineEnemy implements UnitOwner {
 	@Override
 	public EnemyType getType() {
 		return type;
+	}
+
+	@Override
+	public void setName(String name) {
+		this.ownerName = name;
+	}
+
+	@Override
+	public String getName() {
+		return ownerName;
 	}
 
 }
