@@ -32,11 +32,12 @@ public class OnlineEnemy implements UnitOwner {
 	private String ownerName;
 	private Json json;
 
-	public OnlineEnemy(final EnemyType type, String ownerName, String team) {
+	public OnlineEnemy(final EnemyType type, String ownerName, String teamAsString) {
+		team = new ArrayList<Entity>();
 		this.type = type;
 		this.ownerName = ownerName;
 		json = new Json();
-		initiateUnits(team);
+		initiateUnits(teamAsString);
 	}
 
 	private void initiateUnits(String teamAsString) {

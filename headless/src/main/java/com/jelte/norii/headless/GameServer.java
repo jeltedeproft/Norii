@@ -164,21 +164,15 @@ public class GameServer {
 	}
 
 	public void matchPlayers() {
-		for (ConnectedClient client : searchingClients) {
-			Gdx.app.log(CLIENT_TAG, client.getPlayerName());
-		}
-
 		if (searchingClients.size() < 2)
 			return;
-		Gdx.app.log(CLIENT_TAG, "made it here  ");
+		
 		ArrayList<ConnectedClient> players = new ArrayList<>();
 
 		for (final ConnectedClient client : searchingClients) {
 			if (client.getClientState() == ClientState.QUEUED) {
-				Gdx.app.log(CLIENT_TAG, "adding player");
 				players.add(client);
 				if (players.size() == 2) {
-					Gdx.app.log(CLIENT_TAG, "making a game");
 					// Create a battle message to send to each client
 					NetworkMessage battleMessage = new NetworkMessage(MessageType.BATTLE);
 
@@ -188,10 +182,10 @@ public class GameServer {
 
 					// Send the packet to the first player
 					players.get(0).getSocket().writeTextMessage(battleMessage.messageToString());
-					Gdx.app.log(CLIENT_TAG, "made battlemessage");
+					Gdx.app.log(CLIENT_TAG, "sending to : " + players.get(0).getPlayerName());
 					// Send the packet to the second player
 					players.get(1).getSocket().writeTextMessage(battleMessage.messageToString());
-					Gdx.app.log(CLIENT_TAG, "battlemessage send");
+					Gdx.app.log(CLIENT_TAG, "sending to : " + players.get(1).getPlayerName());
 					// Change the state for each player to be ingame
 					players.get(0).setClientState(ClientState.INGAME);
 					players.get(1).setClientState(ClientState.INGAME);
@@ -199,13 +193,11 @@ public class GameServer {
 					// Change the gameID for each player to the ID of the new game
 					players.get(0).setGameID(gamesCreated);
 					players.get(1).setGameID(gamesCreated);
-					Gdx.app.log(CLIENT_TAG, "making game object");
 					// Create a game instance and add it to the list of all active game instances
 					final GameInstance newGame = new GameInstance(this, gamesCreated, players.get(0), players.get(1), mapType);
 					activeGames.put(gamesCreated, newGame);
-					Gdx.app.log(CLIENT_TAG, "game made");
 					// Output matchup to log
-					Gdx.app.debug(CLIENT_TAG, "Game " + gamesCreated + ": " + players.get(0).getPlayerName() + " vs " + players.get(1).getPlayerName());
+					Gdx.app.log(CLIENT_TAG, "Game " + gamesCreated + ": " + players.get(0).getPlayerName() + " vs " + players.get(1).getPlayerName());
 					gamesCreated++;
 
 					// Clear the players list and carry on running, so multiple games can be created
