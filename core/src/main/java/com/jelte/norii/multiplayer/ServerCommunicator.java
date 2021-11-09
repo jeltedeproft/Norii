@@ -43,7 +43,11 @@ public class ServerCommunicator {
 	}
 
 	public boolean isNextMessageOfType(MessageType type) {
-		return receivedMessages.peek().getType().equals(type);
+		if(receivedMessages.isEmpty()) {
+			return false;
+		}else {
+			return receivedMessages.peek().getType().equals(type);
+		}
 	}
 
 	public boolean isNewMessage() {

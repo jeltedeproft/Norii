@@ -23,7 +23,7 @@ public class AITeamFileReader {
 			final Json json = new Json();
 			ArrayList<Level> aiTeamStats;
 			try {
-				aiTeamStats = (ArrayList<Level>) json.fromJson(ClassReflection.forName("java.util.ArrayList"), ClassReflection.forName("com.jelte.norii.ai.AITeamData"), Gdx.files.internal(LEVELS_FILE_LOCATION));
+				aiTeamStats = (ArrayList<Level>) json.fromJson(ClassReflection.forName("java.util.ArrayList"), ClassReflection.forName("com.jelte.norii.ai.Level"), Gdx.files.internal(LEVELS_FILE_LOCATION));
 				for (int i = 0; i < aiTeamStats.size(); i++) {
 					final Level data = aiTeamStats.get(i);
 					aiTeamData.put(data.getId(), data);
