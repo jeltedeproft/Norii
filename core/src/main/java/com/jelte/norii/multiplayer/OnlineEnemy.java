@@ -3,14 +3,9 @@ package com.jelte.norii.multiplayer;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
-import com.jelte.norii.ai.AIDecisionMaker;
-import com.jelte.norii.ai.Level;
-import com.jelte.norii.ai.AITeamFileReader;
-import com.jelte.norii.ai.AITeamLeader;
 import com.jelte.norii.ai.EnemyType;
 import com.jelte.norii.battle.ApFileReader;
 import com.jelte.norii.battle.BattleManager;
@@ -19,6 +14,7 @@ import com.jelte.norii.battle.battleState.BattleState;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityTypes;
 import com.jelte.norii.entities.UnitOwner;
+import com.jelte.norii.multiplayer.NetworkMessage.MessageType;
 import com.jelte.norii.utility.TiledMapPosition;
 
 public class OnlineEnemy implements UnitOwner {
@@ -56,18 +52,22 @@ public class OnlineEnemy implements UnitOwner {
 		ap = ApFileReader.getApData(0);
 	}
 
+	@Override
 	public void spawnUnits(List<TiledMapPosition> spawnPositions) {
-		//do nothing
+		// do nothing
 	}
 
+	@Override
 	public void resetAI(BattleState stateOfBattle) {
-		//do nothing
+		// do nothing
 	}
 
+	@Override
 	public void processAi() {
-		//do nothing
+		// do nothing
 	}
 
+	@Override
 	public BattleState getNextBattleState() {
 		return null;
 	}
@@ -98,6 +98,7 @@ public class OnlineEnemy implements UnitOwner {
 		return team;
 	}
 
+	@Override
 	public void dispose() {
 		for (final Entity entity : team) {
 			entity.dispose();
@@ -174,12 +175,21 @@ public class OnlineEnemy implements UnitOwner {
 		return ownerName;
 	}
 
+	@Override
 	public String getSide() {
 		return side;
 	}
 
+	@Override
 	public void setSide(String side) {
 		this.side = side;
+	}
+
+	@Override
+	public void playerUnitSpawned(Entity entity, TiledMapPosition pos) {
+		NetworkMessage message = new NetworkMessage(MessageType.UNIT_DEPLOYED);
+		message.makeUnitDeployedMessage(entity.getEntityType().name(), pos.toString());
+		ServerCommunicator.getInstance().sendMessage(message);
 	}
 
 }

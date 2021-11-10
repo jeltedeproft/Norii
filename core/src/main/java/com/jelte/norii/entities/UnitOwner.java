@@ -17,9 +17,9 @@ public interface UnitOwner {
 	public int getAp();
 
 	public void setAp(int ap);
-	
+
 	public void setName(String name);
-	
+
 	public String getName();
 
 	public List<Entity> getTeam();
@@ -38,6 +38,8 @@ public interface UnitOwner {
 
 	public void spawnUnits(List<TiledMapPosition> spawnPositions);
 
+	public void playerUnitSpawned(Entity entity, TiledMapPosition pos);
+
 	public void sendMessageToBattleManager(MessageToBattleScreen message, Entity entity);
 
 	public void sendMessageToBattleManager(MessageToBattleScreen message, Entity entity, TiledMapPosition oldPosition);
@@ -53,8 +55,8 @@ public interface UnitOwner {
 	public BattleState getNextBattleState();
 
 	public EnemyType getType();
-	
+
 	public String getSide();
-	
+
 	public void setSide(String side);
 }

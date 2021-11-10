@@ -13,7 +13,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.jelte.norii.ai.AITeamLeader;
 import com.jelte.norii.ai.EnemyType;
 import com.jelte.norii.audio.AudioCommand;
 import com.jelte.norii.audio.AudioManager;
@@ -66,7 +65,7 @@ public class BattleScreen extends GameScreen {
 	private boolean isPaused;
 
 	public BattleScreen(UnitOwner unitOwner, MapType mapType) {
-		initializeVariables(unitOwner,mapType);
+		initializeVariables(unitOwner, mapType);
 		initializeEntityStage();
 		initializeHUD();
 		initializePauseMenu();
@@ -123,6 +122,9 @@ public class BattleScreen extends GameScreen {
 	private void spawnEnemyUnits() {
 		final List<TiledMapPosition> enemyStartPositions = currentMap.getEnemyStartPositions();
 		enemyTeamLeader.spawnUnits(enemyStartPositions);
+		if ("2".equals(enemyTeamLeader.getSide())) {// if were not the first to deploy a unit online, lock the ui
+			hud.setLocked(true);
+		}
 	}
 
 	public BattleManager getBattlemanager() {

@@ -24,9 +24,11 @@ public class NetworkMessage {
 	private String fighter1 = "";
 	private String fighter2 = "";
 	private String side = "";
+	private String unitType = "";
+	private String pos = "";
 
 	public enum MessageType {
-		CONNECTING, CONNECTED, SEARCH_OPPONENT, DISCONNECTED, BATTLE, TRY_LOGIN, LOGIN_VALIDATION, MOVE_MADE
+		CONNECTING, CONNECTED, SEARCH_OPPONENT, DISCONNECTED, BATTLE, TRY_LOGIN, LOGIN_VALIDATION, MOVE_MADE, UNIT_DEPLOYED
 	}
 
 	public NetworkMessage() {
@@ -94,6 +96,12 @@ public class NetworkMessage {
 		sender = client;
 	}
 
+	public void makeUnitDeployedMessage(String unit, String pos) {
+		type = MessageType.UNIT_DEPLOYED;
+		unitType = unit;
+		this.pos = pos;
+	}
+
 	public String messageToString() {
 		StringBuilder stringToSend = new StringBuilder();
 
@@ -124,6 +132,10 @@ public class NetworkMessage {
 		stringToSend.append(fighter2);
 		stringToSend.append(SEPARATOR);
 		stringToSend.append(side);
+		stringToSend.append(SEPARATOR);
+		stringToSend.append(unitType);
+		stringToSend.append(SEPARATOR);
+		stringToSend.append(pos);
 		stringToSend.append(END_TAG);
 		return stringToSend.toString();
 	}
@@ -146,6 +158,8 @@ public class NetworkMessage {
 			fighter1 = extract(tags, size, 11);
 			fighter2 = extract(tags, size, 12);
 			side = extract(tags, size, 13);
+			unitType = extract(tags, size, 14);
+			pos = extract(tags, size, 15);
 		} else {
 			Gdx.app.log(TAG, "message was empty");
 		}
@@ -217,5 +231,13 @@ public class NetworkMessage {
 
 	public void setSide(String side) {
 		this.side = side;
+	}
+
+	public String getUnitType() {
+		return unitType;
+	}
+
+	public String getPos() {
+		return pos;
 	}
 }

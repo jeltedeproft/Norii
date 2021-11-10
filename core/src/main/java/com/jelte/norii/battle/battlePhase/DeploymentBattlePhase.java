@@ -41,9 +41,9 @@ public class DeploymentBattlePhase extends BattlePhase {
 
 	private void deployUnit(final TiledMapActor actor) {
 		boolean isPossibleSpawnPoint;
-		if(Player.getInstance().getSide().equals("1")) {
+		if (Player.getInstance().getSide().equals("1")) {
 			isPossibleSpawnPoint = actor.getIsFreeSpawn();
-		}else {
+		} else {
 			isPossibleSpawnPoint = actor.getIsAISpawn();
 		}
 		if (Boolean.TRUE.equals(isPossibleSpawnPoint)) {
