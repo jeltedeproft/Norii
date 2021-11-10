@@ -28,7 +28,7 @@ public class NetworkMessage {
 	private String pos = "";
 
 	public enum MessageType {
-		CONNECTING, CONNECTED, SEARCH_OPPONENT, DISCONNECTED, BATTLE, TRY_LOGIN, LOGIN_VALIDATION, MOVE_MADE, UNIT_DEPLOYED
+		CONNECTED, SEARCH_OPPONENT, DISCONNECTED, BATTLE, TRY_LOGIN, LOGIN_VALIDATION, MOVE_MADE, UNIT_DEPLOYED
 	}
 
 	public NetworkMessage() {
@@ -37,11 +37,6 @@ public class NetworkMessage {
 
 	public NetworkMessage(MessageType type) {
 		this.type = type;
-	}
-
-	public void makeConnectingMessage(String client) {
-		type = MessageType.CONNECTING;
-		sender = client;
 	}
 
 	public void makeConnectedMessage(String client) {
@@ -84,6 +79,7 @@ public class NetworkMessage {
 		this.username = username;
 		this.password = password;
 		sender = ServerCommunicator.getInstance().getClientID();
+		Gdx.app.log("networkmessage:", "making login message with : " + sender + " , " + username + " , " + password);
 	}
 
 	public void makeLoginValidationMessage(String client, String loginWorked, String reason) {

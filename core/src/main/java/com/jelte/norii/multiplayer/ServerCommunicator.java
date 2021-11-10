@@ -2,6 +2,7 @@ package com.jelte.norii.multiplayer;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import com.badlogic.gdx.Gdx;
 import com.github.czyzby.websocket.WebSocket;
 import com.github.czyzby.websocket.WebSockets;
 import com.jelte.norii.multiplayer.NetworkMessage.MessageType;
@@ -14,10 +15,6 @@ public class ServerCommunicator {
 	private String clientID;
 
 	private ServerCommunicator() {
-		initMultiplayer();
-	}
-
-	private void initMultiplayer() {
 		socket = WebSockets.newSocket(WebSockets.toSecureWebSocketUrl(APP_LINK, 443));
 		socket.setSendGracefully(true);
 		socket.addListener(new MyWebSocketAdapter());
@@ -31,7 +28,9 @@ public class ServerCommunicator {
 	}
 
 	private boolean preProcessMessage(NetworkMessage message) {
+		Gdx.app.log("servercom:", "prperocessing message : " + message.getType());
 		if (message.getType() == MessageType.CONNECTED) {
+			Gdx.app.log("servercom:", "setting clientId to  : " + message.getSender());
 			clientID = message.getSender();
 			return false;
 		}

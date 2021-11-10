@@ -78,7 +78,12 @@ public class GameServer {
 
 	private void initClient(ServerWebSocket client) {
 		Gdx.app.log(CLIENT_TAG, "Connected " + client.textHandlerID());
-		clients.add(new ConnectedClient(client));
+
+		ConnectedClient connectedClient = new ConnectedClient(client);
+		clients.add(connectedClient);
+		NetworkMessage message = new NetworkMessage(MessageType.CONNECTED);
+		message.makeConnectedMessage(client.textHandlerID());
+		connectedClient.getSocket().writeFinalTextFrame(message.messageToString());
 	}
 
 	private void handleMessageClient(WebSocketFrame event) {
@@ -90,9 +95,6 @@ public class GameServer {
 		NetworkMessage returnMessage = new NetworkMessage();
 
 		switch (message.getType()) {
-		case CONNECTING:
-			returnMessage.makeConnectedMessage(message.getSender());
-			break;
 		case TRY_LOGIN:
 			// Check existence and delete
 			vertx.fileSystem().exists("login.txt", result -> {
