@@ -34,6 +34,7 @@ public class Entity extends Actor {
 	protected boolean isDead;
 	protected boolean isInvis;
 	protected boolean isReal;
+	protected boolean inBattle;
 
 	protected int entityID;
 
@@ -65,6 +66,7 @@ public class Entity extends Actor {
 		isInvis = false;
 		direction = Direction.DOWN;
 		this.isReal = isReal;
+		inBattle = false;
 		xp = 0;
 
 		this.owner = owner;
@@ -149,6 +151,7 @@ public class Entity extends Actor {
 		if (reducedDamage >= hp) {
 			hp = 0;
 			visualComponent.removeUnit();
+			inBattle = false;
 			setVisible(false);
 			isDead = true;
 		} else {
@@ -467,6 +470,14 @@ public class Entity extends Actor {
 
 	public boolean isInvisible() {
 		return isInvis;
+	}
+	
+	public boolean isInBattle() {
+		return inBattle;
+	}
+
+	public void setInBattle(final boolean inBattle) {
+		this.inBattle = inBattle;
 	}
 
 	public boolean isRealUnit() {

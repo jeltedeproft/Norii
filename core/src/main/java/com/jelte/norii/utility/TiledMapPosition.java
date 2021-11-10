@@ -81,11 +81,12 @@ public class TiledMapPosition {
 		return new MyPoint(tileCoordinates.x, tileCoordinates.y);
 	}
 
-	public void setPosFromString(String pos) {
+	public TiledMapPosition setPosFromString(String pos) {
 		String[] coordinates = pos.split(",");
 		int x = Integer.parseInt(coordinates[0].substring(1));
 		int y = Integer.parseInt(coordinates[1].substring(0, coordinates[1].length() - 1));
 		tileCoordinates = new MyPoint(x, y);
+		return this;
 	}
 
 	@Override

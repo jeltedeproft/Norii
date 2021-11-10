@@ -24,7 +24,7 @@ public class AITeamLeader implements UnitOwner {
 	private int ap;
 	private EnemyType type;
 	private String name = "test";
-	private String side = "right";
+	private boolean isMyTurn = false;
 
 	public AITeamLeader(final EnemyType type) {
 		this.type = type;
@@ -178,13 +178,36 @@ public class AITeamLeader implements UnitOwner {
 		return name;
 	}
 
+
 	@Override
-	public String getSide() {
-		return side;
+	public void spawnUnit(String name, TiledMapPosition pos) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
-	public void setSide(String side) {
-		this.side = side;
+	public void playerUnitSpawned(Entity entity, TiledMapPosition pos) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isMyTurn() {
+		return isMyTurn;
+	}
+
+	@Override
+	public void setMyTurn(boolean myTurn) {
+		this.isMyTurn = myTurn;
+	}
+
+	@Override
+	public boolean isAI() {
+		return true;
+	}
+
+	@Override
+	public boolean isOnlinePlayer() {
+		return false;
 	}
 }

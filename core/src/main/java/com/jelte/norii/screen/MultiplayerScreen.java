@@ -150,10 +150,10 @@ public class MultiplayerScreen extends GameScreen {
 			NetworkMessage message = ServerCommunicator.getInstance().getOldestMessageFromServer();
 			EnemyType selectedLevel = EnemyType.ONLINE_PLAYER;
 			UnitOwner enemyTeamLeader;
-			if(ServerCommunicator.getInstance().getClientID().equals(message.getFighter1())) {
-				enemyTeamLeader = new OnlineEnemy(selectedLevel, message.getFighter2(), message.getTeam2(), message.getSide());
+			if("true".equals(message.getPlayerStart())) {
+				enemyTeamLeader = new OnlineEnemy(selectedLevel, message.getFighter2(), message.getTeam2(), message.getPlayerStart());
 			}else {
-				enemyTeamLeader = new OnlineEnemy(selectedLevel, message.getFighter1(), message.getTeam1(), message.getSide());
+				enemyTeamLeader = new OnlineEnemy(selectedLevel, message.getFighter1(), message.getTeam1(), message.getPlayerStart());
 			}
 			
 			MapType mapType = MapType.valueOf(message.getMap());

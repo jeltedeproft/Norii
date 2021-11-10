@@ -23,7 +23,7 @@ public class NetworkMessage {
 	private String team2 = "";
 	private String fighter1 = "";
 	private String fighter2 = "";
-	private String side = "";
+	private String playerStart = "";
 	private String unitType = "";
 	private String pos = "";
 
@@ -61,17 +61,14 @@ public class NetworkMessage {
 		this.team = team;
 	}
 
-	// add team1, team2 and whether the receiving player is first to start or not,
-	// then start deployment phase based on that, either waiting for the enemy, or
-	// placing a unit
-	public void makeBattleMessage(String fighter1, String fighter2, String map, String team1, String team2, String side) {
+	public void makeBattleMessage(String fighter1, String fighter2, String map, String team1, String team2, String playerStart) {
 		type = MessageType.BATTLE;
 		this.fighter1 = fighter1;
 		this.fighter2 = fighter2;
 		this.map = map;
 		this.team1 = team1;
 		this.team2 = team2;
-		this.side = side;
+		this.playerStart = playerStart;
 	}
 
 	public void makeMoveMessage(String client, String moveType, String location, String ability) {
@@ -131,7 +128,7 @@ public class NetworkMessage {
 		stringToSend.append(SEPARATOR);
 		stringToSend.append(fighter2);
 		stringToSend.append(SEPARATOR);
-		stringToSend.append(side);
+		stringToSend.append(playerStart);
 		stringToSend.append(SEPARATOR);
 		stringToSend.append(unitType);
 		stringToSend.append(SEPARATOR);
@@ -157,7 +154,7 @@ public class NetworkMessage {
 			team2 = extract(tags, size, 10);
 			fighter1 = extract(tags, size, 11);
 			fighter2 = extract(tags, size, 12);
-			side = extract(tags, size, 13);
+			playerStart = extract(tags, size, 13);
 			unitType = extract(tags, size, 14);
 			pos = extract(tags, size, 15);
 		} else {
@@ -225,12 +222,12 @@ public class NetworkMessage {
 		return fighter2;
 	}
 
-	public String getSide() {
-		return side;
+	public String getPlayerStart() {
+		return playerStart;
 	}
 
-	public void setSide(String side) {
-		this.side = side;
+	public void setPlayerStart(String playerStart) {
+		this.playerStart = playerStart;
 	}
 
 	public String getUnitType() {

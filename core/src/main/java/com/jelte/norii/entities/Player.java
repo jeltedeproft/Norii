@@ -20,7 +20,7 @@ public class Player implements UnitOwner {
 	private int ap;
 	private EnemyType type;
 	private String name;
-	private String side;
+	private boolean isMyTurn;
 
 	@Override
 	public void updateUnits(final float delta) {
@@ -85,7 +85,7 @@ public class Player implements UnitOwner {
 	private Player() {
 		team = new ArrayList<>();
 		type = EnemyType.PLAYER;
-		side = "left";
+		isMyTurn = true;
 	}
 
 	@Override
@@ -180,12 +180,34 @@ public class Player implements UnitOwner {
 	}
 
 	@Override
-	public String getSide() {
-		return side;
+	public void spawnUnit(String name, TiledMapPosition pos) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
-	public void setSide(String side) {
-		this.side = side;
+	public void playerUnitSpawned(Entity entity, TiledMapPosition pos) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isMyTurn() {
+		return isMyTurn;
+	}
+
+	@Override
+	public void setMyTurn(boolean myTurn) {
+		this.isMyTurn = myTurn;
+	}
+
+	@Override
+	public boolean isAI() {
+		return false;
+	}
+
+	@Override
+	public boolean isOnlinePlayer() {
+		return false;
 	}
 }

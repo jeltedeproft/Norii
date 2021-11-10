@@ -75,8 +75,9 @@ public class BattleManager {
 		Player.getInstance().setBattleManager(this);
 		unitOwner.setBattleManager(this);
 		activeUnit = Player.getInstance().getTeam().get(0);
-		playerTurn = true;
+		playerTurn = unitOwner.isMyTurn();
 		activeTurn = null;
+		aiIsCalculating = (unitOwner.isAI() && !playerTurn);
 		activeBattleState = new BattleState(width, height);
 		initializeStateOfBattle(unwalkableNodes);
 	}
@@ -389,5 +390,9 @@ public class BattleManager {
 
 	public int getUnitsDeployed() {
 		return unitsDeployed;
+	}
+
+	public UnitOwner getUnitOwner() {
+		return unitOwner;
 	}
 }

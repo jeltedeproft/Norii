@@ -26,7 +26,6 @@ import com.jelte.norii.utility.TiledMapPosition;
 public class EntityVisualComponent implements EntityVisualComponentInterface {
 	protected boolean isInAttackPhase;
 	protected boolean isActive;
-	protected boolean inBattle;
 	private boolean isMoving;
 
 	protected EntityAnimation entityAnimation;
@@ -42,7 +41,6 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 	public EntityVisualComponent(Entity entity) {
 		this.entity = entity;
 		isInAttackPhase = false;
-		inBattle = false;
 		entityAnimation = new EntityAnimation(entity.getEntityData().getEntitySpriteName());
 		initActions();
 	}
@@ -86,7 +84,6 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 
 	public void cleanUpDeadUnit() {
 		isActive = false;
-		inBattle = false;
 		getEntityactor().setPosition(-100, -100);
 		getEntityactor().remove();
 	}
@@ -105,18 +102,10 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 		return isInAttackPhase;
 	}
 
-	public boolean isInBattle() {
-		return inBattle;
-	}
-
-	public void setInBattle(final boolean inBattle) {
-		this.inBattle = inBattle;
-	}
-
 	@Override
 	public void setInDeploymentPhase(final boolean isInDeploymentPhase) {
 		if (isInDeploymentPhase) {
-			setInBattle(true);
+			entity.setInBattle(true);
 			entityactor.setTouchable(Touchable.disabled);
 			entity.getOwner().sendMessageToBattleManager(MessageToBattleScreen.SET_CHARACTER_HUD, entity);
 		}
@@ -133,7 +122,7 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 
 	@Override
 	public void initiateInBattle(TiledMapPosition pos) {
-		setInBattle(true);
+		entity.setInBattle(true);
 		getEntityactor().setTouchable(Touchable.enabled);
 		spawn(pos);
 	}
@@ -230,7 +219,7 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 
 	@Override
 	public void draw(Batch batch) {
-		if (isInBattle()) {
+		if (entity.isInBattle()) {
 			final Color temp = batch.getColor();
 			batch.setColor(new Color(temp.r, temp.g, temp.b, getEntityactor().getColor().a));
 			if (getFrame() == null) {
@@ -243,7 +232,7 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 
 	@Override
 	public void spawn(TiledMapPosition pos) {
-		setInBattle(true);
+		entity.setInBattle(true);
 		getEntityactor().setBounds(pos.getTileX(), pos.getTileY(), 1, 1);
 	}
 

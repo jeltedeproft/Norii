@@ -3,6 +3,7 @@ package com.jelte.norii.multiplayer;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
@@ -27,14 +28,14 @@ public class OnlineEnemy implements UnitOwner {
 	private EnemyType type;
 	private String ownerName;
 	private Json json;
-	private String side;
+	private boolean myTurn;
 
-	public OnlineEnemy(final EnemyType type, String ownerName, String teamAsString, String side) {
+	public OnlineEnemy(final EnemyType type, String ownerName, String teamAsString, String playerStart) {
 		team = new ArrayList<>();
 		this.type = type;
 		this.ownerName = ownerName;
 		json = new Json();
-		this.side = side;
+		this.myTurn = "true".equals(playerStart);
 		initiateUnits(teamAsString);
 	}
 
@@ -55,6 +56,19 @@ public class OnlineEnemy implements UnitOwner {
 	@Override
 	public void spawnUnits(List<TiledMapPosition> spawnPositions) {
 		// do nothing
+	}
+	
+	public void spawnUnit(String unitName, TiledMapPosition spawnPosition) {
+		for (final Entity unit : team) {
+			if (unitName.equals(unit.getName()) && unit.isInBattle()) {
+				unit.setCurrentPosition(spawnPosition);
+				unit.setPlayerUnit(false);
+				unit.getVisualComponent().spawn(spawnPosition);
+				battleManager.addUnit(unit);
+			} else {
+				Gdx.app.debug(TAG, "maybe no more room to spawn ai units!");
+			}
+		}
 	}
 
 	@Override
@@ -176,20 +190,30 @@ public class OnlineEnemy implements UnitOwner {
 	}
 
 	@Override
-	public String getSide() {
-		return side;
-	}
-
-	@Override
-	public void setSide(String side) {
-		this.side = side;
-	}
-
-	@Override
 	public void playerUnitSpawned(Entity entity, TiledMapPosition pos) {
 		NetworkMessage message = new NetworkMessage(MessageType.UNIT_DEPLOYED);
 		message.makeUnitDeployedMessage(entity.getEntityType().name(), pos.toString());
 		ServerCommunicator.getInstance().sendMessage(message);
+	}
+
+	@Override
+	public boolean isMyTurn() {
+		return myTurn;
+	}
+
+	@Override
+	public void setMyTurn(boolean myTurn) {
+		this.myTurn = myTurn;
+	}
+
+	@Override
+	public boolean isAI() {
+		return false;
+	}
+
+	@Override
+	public boolean isOnlinePlayer() {
+		return true;
 	}
 
 }

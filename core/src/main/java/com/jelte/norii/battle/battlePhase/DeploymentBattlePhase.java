@@ -36,12 +36,14 @@ public class DeploymentBattlePhase extends BattlePhase {
 
 	@Override
 	public void clickedOnTile(final TiledMapActor actor) {
-		deployUnit(actor);
+		if(battlemanager.isPlayerTurn()) {
+			deployUnit(actor);
+		}
 	}
 
 	private void deployUnit(final TiledMapActor actor) {
 		boolean isPossibleSpawnPoint;
-		if (Player.getInstance().getSide().equals("1")) {
+		if (Player.getInstance().isMyTurn()) {
 			isPossibleSpawnPoint = actor.getIsFreeSpawn();
 		} else {
 			isPossibleSpawnPoint = actor.getIsAISpawn();
@@ -66,6 +68,7 @@ public class DeploymentBattlePhase extends BattlePhase {
 
 	private void deployUnit(final TiledMapPosition newPosition) {
 		final Entity unitToDeploy = playerUnits.get(deployingUnitNumber);
+		battlemanager.getUnitOwner().playerUnitSpawned(unitToDeploy, newPosition);
 		unitToDeploy.getVisualComponent().setInDeploymentPhase(false);
 		initiateUnitInBattle(unitToDeploy, newPosition);
 	}

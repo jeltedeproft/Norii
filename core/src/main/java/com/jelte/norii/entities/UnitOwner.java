@@ -37,6 +37,8 @@ public interface UnitOwner {
 	public void addUnit(Entity unit);
 
 	public void spawnUnits(List<TiledMapPosition> spawnPositions);
+	
+	public void spawnUnit(String name, TiledMapPosition pos);
 
 	public void playerUnitSpawned(Entity entity, TiledMapPosition pos);
 
@@ -56,7 +58,11 @@ public interface UnitOwner {
 
 	public EnemyType getType();
 
-	public String getSide();
+	public boolean isMyTurn();
 
-	public void setSide(String side);
+	public void setMyTurn(boolean myTurn);
+
+	public boolean isAI();
+	
+	public boolean isOnlinePlayer();
 }

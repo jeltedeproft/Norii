@@ -172,14 +172,14 @@ public class GameServer {
 
 					// for now just select a map, later randomize this
 					MapFactory.MapType mapType = MapType.BATTLE_MAP_THE_DARK_SWAMP;
-					battleMessage.makeBattleMessage(players.get(0).getPlayerName(), players.get(1).getPlayerName(), mapType.name(), json.toJson(players.get(0).getTeam(), Array.class), json.toJson(players.get(1).getTeam(), Array.class),"1");
+					battleMessage.makeBattleMessage(players.get(0).getPlayerName(), players.get(1).getPlayerName(), mapType.name(), json.toJson(players.get(0).getTeam(), Array.class), json.toJson(players.get(1).getTeam(), Array.class),"true");
 
 					// Send the packet to the first player
 					players.get(0).getSocket().writeTextMessage(battleMessage.messageToString());
 					Gdx.app.log(CLIENT_TAG, "sending to : " + players.get(0).getPlayerName());
 					
 					// Send the packet to the second player, just changing the side
-					battleMessage.setSide("2");
+					battleMessage.setPlayerStart("false");
 					players.get(1).getSocket().writeTextMessage(battleMessage.messageToString());
 					Gdx.app.log(CLIENT_TAG, "sending to : " + players.get(1).getPlayerName());
 					// Change the state for each player to be ingame

@@ -32,6 +32,8 @@ import com.jelte.norii.map.MapFactory.MapType;
 import com.jelte.norii.map.MapManager;
 import com.jelte.norii.map.MyPathFinder;
 import com.jelte.norii.map.TiledMapActor;
+import com.jelte.norii.multiplayer.NetworkMessage;
+import com.jelte.norii.multiplayer.ServerCommunicator;
 import com.jelte.norii.particles.ParticleMaker;
 import com.jelte.norii.particles.ParticleType;
 import com.jelte.norii.ui.Hud;
@@ -122,9 +124,7 @@ public class BattleScreen extends GameScreen {
 	private void spawnEnemyUnits() {
 		final List<TiledMapPosition> enemyStartPositions = currentMap.getEnemyStartPositions();
 		enemyTeamLeader.spawnUnits(enemyStartPositions);
-		if ("2".equals(enemyTeamLeader.getSide())) {// if were not the first to deploy a unit online, lock the ui
-			hud.setLocked(true);
-		}
+		hud.setLocked(enemyTeamLeader.isMyTurn());
 	}
 
 	public BattleManager getBattlemanager() {
@@ -188,6 +188,7 @@ public class BattleScreen extends GameScreen {
 		updateStages();
 		updateCameras();
 		processAi();
+		processMessagesFromServer();
 	}
 
 	private void updateUnits(final float delta) {
@@ -210,6 +211,22 @@ public class BattleScreen extends GameScreen {
 
 	private void processAi() {
 		battlemanager.processAI();
+	}
+	
+	private void processMessagesFromServer() {
+		if(ServerCommunicator.getInstance().isNewMessage()) {
+			NetworkMessage message = ServerCommunicator.getInstance().getOldestMessageFromServer();
+			switch(message.getType()) {
+			case UNIT_DEPLOYED:
+				//get unit and position, deploy unit locally as well, unlock ui, continue self-deployment, set playerturn to true, check if all units deployed, deployment finished message?
+				TiledMapPosition pos = new TiledMapPosition().setPosFromString(message.getPos());
+				enemyTeamLeader.spawnUnit(message.getUnitType(), pos);
+				ParticleMaker.deactivateParticle(ParticleMaker.getParticle(ParticleType.SPAWN, pos));
+				ParticleMaker.deactivateParticle(ParticleMaker.getParticle(ParticleType.PURPLE_SQUARE, pos));
+				hud.setLocked(false);
+				battlemanager.setPlayerTurn(true);
+			}
+		}
 	}
 
 	private void renderElements(final float delta) {
@@ -434,6 +451,7 @@ public class BattleScreen extends GameScreen {
 			break;
 		case UNIT_DEPLOYED:
 			hud.getHudMessages().updateNumberOfDeployedUnits(battlemanager.getUnitsDeployed(), battlemanager.getPlayerUnits().size());
+			hud.setLocked(true);
 			break;
 		case DEPLOYMENT_FINISHED:
 			hud.getHudMessages().hideInfoWindow(HudMessageTypes.NUMBER_OF_UNITS_DEPLOYED);
