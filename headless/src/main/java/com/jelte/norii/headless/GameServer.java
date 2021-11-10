@@ -78,13 +78,7 @@ public class GameServer {
 
 	private void initClient(ServerWebSocket client) {
 		Gdx.app.log(CLIENT_TAG, "Connected " + client.textHandlerID());
-
 		clients.add(new ConnectedClient(client));
-		clients.forEach(c -> {
-			NetworkMessage message = new NetworkMessage(MessageType.CONNECTED);
-			message.makeConnectedMessage(client.textHandlerID());
-			c.getSocket().writeFinalTextFrame(message.messageToString());
-		});
 	}
 
 	private void handleMessageClient(WebSocketFrame event) {
