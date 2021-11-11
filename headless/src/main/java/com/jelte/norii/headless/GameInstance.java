@@ -60,5 +60,18 @@ public class GameInstance {
 	public Player getPlayer2() {
 		return player2;
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Game Instance \n ");
+		builder.append("_____________ \n ");
+		builder.append("gameId : " + gameID + "\n");
+		builder.append("player 1 : " + player1.getConnectedClient().getPlayerName() + "state : " + statePlayer1 + "\n");
+		builder.append("player 2 : " + player2.getConnectedClient().getPlayerName() + "state : " + statePlayer2 + "\n");
+		builder.append("map : " + map.toString() + "\n");
+
+		return  builder.toString();
+	}
 
 }
