@@ -125,7 +125,10 @@ public class GameServer {
 		case UNIT_DEPLOYED:
 			Integer id = Integer.parseInt(message.getGameID());
 			GameInstance battle = activeGames.get(id);
+			Gdx.app.log("gameserver, ","received unit deployed message, with id :  " + id + " \n and battle : " + battle);
 			if (battle.containsClient(client)) {
+				Gdx.app.log("gameserver, ","battle contains client : " + client.getPlayerName());
+				Gdx.app.log("gameserver, ","opponent = " + battle.getOpponent(client).getPlayerName());
 				battle.getOpponent(client).getSocket().writeFinalTextFrame(event.textData());
 			}
 			break;
