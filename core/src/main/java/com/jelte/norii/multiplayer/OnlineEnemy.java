@@ -29,13 +29,15 @@ public class OnlineEnemy implements UnitOwner {
 	private String ownerName;
 	private Json json;
 	private boolean myTurn;
+	private String gameID;
 
-	public OnlineEnemy(final EnemyType type, String ownerName, String teamAsString, String playerStart) {
+	public OnlineEnemy(final EnemyType type, String ownerName, String teamAsString, String playerStart, String gameID) {
 		team = new ArrayList<>();
 		this.type = type;
 		this.ownerName = ownerName;
 		json = new Json();
 		this.myTurn = "true".equals(playerStart);
+		this.gameID = gameID;
 		initiateUnits(teamAsString);
 	}
 
@@ -57,7 +59,8 @@ public class OnlineEnemy implements UnitOwner {
 	public void spawnUnits(List<TiledMapPosition> spawnPositions) {
 		// do nothing
 	}
-	
+
+	@Override
 	public void spawnUnit(String unitName, TiledMapPosition spawnPosition) {
 		for (final Entity unit : team) {
 			if (unitName.equals(unit.getName()) && unit.isInBattle()) {
@@ -192,7 +195,7 @@ public class OnlineEnemy implements UnitOwner {
 	@Override
 	public void playerUnitSpawned(Entity entity, TiledMapPosition pos) {
 		NetworkMessage message = new NetworkMessage(MessageType.UNIT_DEPLOYED);
-		message.makeUnitDeployedMessage(entity.getEntityType().name(), pos.toString());
+		message.makeUnitDeployedMessage(gameID, entity.getEntityType().name(), pos.toString());
 		ServerCommunicator.getInstance().sendMessage(message);
 	}
 
@@ -214,6 +217,10 @@ public class OnlineEnemy implements UnitOwner {
 	@Override
 	public boolean isOnlinePlayer() {
 		return true;
+	}
+
+	public String getGameID() {
+		return gameID;
 	}
 
 }

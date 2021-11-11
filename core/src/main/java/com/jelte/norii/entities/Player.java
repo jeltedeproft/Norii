@@ -10,6 +10,9 @@ import com.jelte.norii.battle.ApFileReader;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.battle.MessageToBattleScreen;
 import com.jelte.norii.battle.battleState.BattleState;
+import com.jelte.norii.multiplayer.NetworkMessage;
+import com.jelte.norii.multiplayer.NetworkMessage.MessageType;
+import com.jelte.norii.multiplayer.ServerCommunicator;
 import com.jelte.norii.profile.ProfileManager;
 import com.jelte.norii.utility.TiledMapPosition;
 
@@ -21,6 +24,7 @@ public class Player implements UnitOwner {
 	private EnemyType type;
 	private String name;
 	private boolean isMyTurn;
+	private String gameID;
 
 	@Override
 	public void updateUnits(final float delta) {
@@ -182,13 +186,14 @@ public class Player implements UnitOwner {
 	@Override
 	public void spawnUnit(String name, TiledMapPosition pos) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void playerUnitSpawned(Entity entity, TiledMapPosition pos) {
-		// TODO Auto-generated method stub
-		
+		NetworkMessage message = new NetworkMessage(MessageType.UNIT_DEPLOYED);
+		message.makeUnitDeployedMessage(gameID, entity.getEntityType().name(), pos.toString());
+		ServerCommunicator.getInstance().sendMessage(message);
 	}
 
 	@Override
@@ -209,5 +214,13 @@ public class Player implements UnitOwner {
 	@Override
 	public boolean isOnlinePlayer() {
 		return false;
+	}
+
+	public String getGameID() {
+		return gameID;
+	}
+
+	public void setGameID(String gameID) {
+		this.gameID = gameID;
 	}
 }

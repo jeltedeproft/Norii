@@ -1,7 +1,6 @@
 package com.jelte.norii.headless;
 
 import com.jelte.norii.battle.battleState.BattleState;
-import com.jelte.norii.map.Map;
 import com.jelte.norii.map.MapFactory.MapType;
 import com.jelte.norii.multiplayer.NetworkMessage;
 
@@ -38,6 +37,20 @@ public class GameInstance {
 
 	private void sendMessagePlayer2(NetworkMessage message) {
 		player2.getConnectedClient().getSocket().writeFinalTextFrame(message.messageToString());
+	}
+
+	public boolean containsClient(ConnectedClient client) {
+		return (player1.getConnectedClient() == client) || (player2.getConnectedClient() == client);
+	}
+
+	public ConnectedClient getOpponent(ConnectedClient client) {
+		if (player1.getConnectedClient() == client) {
+			return player2.getConnectedClient();
+		} else if (player2.getConnectedClient() == client) {
+			return player1.getConnectedClient();
+		}
+
+		return null;
 	}
 
 }

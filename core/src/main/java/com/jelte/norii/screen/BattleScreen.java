@@ -212,19 +212,24 @@ public class BattleScreen extends GameScreen {
 	private void processAi() {
 		battlemanager.processAI();
 	}
-	
+
 	private void processMessagesFromServer() {
-		if(ServerCommunicator.getInstance().isNewMessage()) {
+		if (ServerCommunicator.getInstance().isNewMessage()) {
 			NetworkMessage message = ServerCommunicator.getInstance().getOldestMessageFromServer();
-			switch(message.getType()) {
+			switch (message.getType()) {
 			case UNIT_DEPLOYED:
-				//get unit and position, deploy unit locally as well, unlock ui, continue self-deployment, set playerturn to true, check if all units deployed, deployment finished message?
+				// get unit and position, deploy unit locally as well, unlock ui, continue
+				// self-deployment, set playerturn to true, check if all units deployed,
+				// deployment finished message?
 				TiledMapPosition pos = new TiledMapPosition().setPosFromString(message.getPos());
 				enemyTeamLeader.spawnUnit(message.getUnitType(), pos);
 				ParticleMaker.deactivateParticle(ParticleMaker.getParticle(ParticleType.SPAWN, pos));
 				ParticleMaker.deactivateParticle(ParticleMaker.getParticle(ParticleType.PURPLE_SQUARE, pos));
 				hud.setLocked(false);
 				battlemanager.setPlayerTurn(true);
+				break;
+			default:
+				break;
 			}
 		}
 	}

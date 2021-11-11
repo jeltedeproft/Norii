@@ -94,6 +94,8 @@ public class GameServer {
 
 		NetworkMessage returnMessage = new NetworkMessage();
 
+		ConnectedClient client = getClientByName(message.getSender());
+
 		switch (message.getType()) {
 		case TRY_LOGIN:
 			// Check existence and delete
@@ -109,16 +111,21 @@ public class GameServer {
 					System.err.println("Oh oh ..." + result.cause());
 				}
 			});
-			returnMessage.makeLoginValidationMessage(message.getSender(),"true", "worked");
+			returnMessage.makeLoginValidationMessage(message.getSender(), "true", "worked");
 			break;
 		case SEARCH_OPPONENT:
-			ConnectedClient client = getClientByName(message.getSender());
 			if (client != null) {
 				searchingClients.add(client);
 				client.setClientState(ClientState.QUEUED);
 				client.setTeamFromJson(message.getTeam());
 			}
 			break;
+		case UNIT_DEPLOYED:
+			Integer id = Integer.parseInt(message.getGameID());
+			GameInstance battle = activeGames.get(id);
+			if (battle.containsClient(client)) {
+				battle.getOpponent(client).getSocket().writeFinalTextFrame(event.textData());
+			}
 		default:
 			break;
 		}
@@ -156,7 +163,7 @@ public class GameServer {
 	public void matchPlayers() {
 		if (searchingClients.size() < 2)
 			return;
-		
+
 		ArrayList<ConnectedClient> players = new ArrayList<>();
 
 		for (final ConnectedClient client : searchingClients) {
@@ -168,12 +175,13 @@ public class GameServer {
 
 					// for now just select a map, later randomize this
 					MapFactory.MapType mapType = MapType.BATTLE_MAP_THE_DARK_SWAMP;
-					battleMessage.makeBattleMessage(players.get(0).getPlayerName(), players.get(1).getPlayerName(), mapType.name(), json.toJson(players.get(0).getTeam(), Array.class), json.toJson(players.get(1).getTeam(), Array.class),"true");
+					battleMessage.makeBattleMessage(String.valueOf(gamesCreated), players.get(0).getPlayerName(), players.get(1).getPlayerName(), mapType.name(), json.toJson(players.get(0).getTeam(), Array.class),
+							json.toJson(players.get(1).getTeam(), Array.class), "true");
 
 					// Send the packet to the first player
 					players.get(0).getSocket().writeTextMessage(battleMessage.messageToString());
 					Gdx.app.log(CLIENT_TAG, "sending to : " + players.get(0).getPlayerName());
-					
+
 					// Send the packet to the second player, just changing the side
 					battleMessage.setPlayerStart("false");
 					players.get(1).getSocket().writeTextMessage(battleMessage.messageToString());

@@ -16,8 +16,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.jelte.norii.ai.AITeamLeader;
 import com.jelte.norii.ai.EnemyType;
+import com.jelte.norii.entities.Player;
 import com.jelte.norii.entities.UnitOwner;
 import com.jelte.norii.map.MapFactory.MapType;
 import com.jelte.norii.multiplayer.NetworkMessage;
@@ -150,12 +150,13 @@ public class MultiplayerScreen extends GameScreen {
 			NetworkMessage message = ServerCommunicator.getInstance().getOldestMessageFromServer();
 			EnemyType selectedLevel = EnemyType.ONLINE_PLAYER;
 			UnitOwner enemyTeamLeader;
-			if("true".equals(message.getPlayerStart())) {
-				enemyTeamLeader = new OnlineEnemy(selectedLevel, message.getFighter2(), message.getTeam2(), message.getPlayerStart());
-			}else {
-				enemyTeamLeader = new OnlineEnemy(selectedLevel, message.getFighter1(), message.getTeam1(), message.getPlayerStart());
+			if ("true".equals(message.getPlayerStart())) {
+				enemyTeamLeader = new OnlineEnemy(selectedLevel, message.getFighter2(), message.getTeam2(), message.getPlayerStart(), message.getGameID());
+			} else {
+				enemyTeamLeader = new OnlineEnemy(selectedLevel, message.getFighter1(), message.getTeam1(), message.getPlayerStart(), message.getGameID());
 			}
-			
+			Player.getInstance().setGameID(message.getGameID());
+
 			MapType mapType = MapType.valueOf(message.getMap());
 			AssetManagerUtility.loadMapAsset(mapType.toString());
 			ScreenManager.getInstance().showScreen(ScreenEnum.BATTLE, enemyTeamLeader, mapType);// give team and map

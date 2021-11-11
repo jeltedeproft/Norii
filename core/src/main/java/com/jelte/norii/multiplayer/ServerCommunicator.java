@@ -28,9 +28,7 @@ public class ServerCommunicator {
 	}
 
 	private boolean preProcessMessage(NetworkMessage message) {
-		Gdx.app.log("servercom:", "prperocessing message : " + message.getType());
 		if (message.getType() == MessageType.CONNECTED) {
-			Gdx.app.log("servercom:", "setting clientId to  : " + message.getSender());
 			clientID = message.getSender();
 			return false;
 		}
@@ -42,9 +40,9 @@ public class ServerCommunicator {
 	}
 
 	public boolean isNextMessageOfType(MessageType type) {
-		if(receivedMessages.isEmpty()) {
+		if (receivedMessages.isEmpty()) {
 			return false;
-		}else {
+		} else {
 			return receivedMessages.peek().getType().equals(type);
 		}
 	}
@@ -54,6 +52,7 @@ public class ServerCommunicator {
 	}
 
 	public void sendMessage(NetworkMessage message) {
+		Gdx.app.log("servercom:", "sending message  : " + message);
 		socket.send(message.messageToString());
 	}
 

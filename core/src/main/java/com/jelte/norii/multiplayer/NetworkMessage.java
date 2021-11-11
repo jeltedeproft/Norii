@@ -26,6 +26,7 @@ public class NetworkMessage {
 	private String playerStart = "";
 	private String unitType = "";
 	private String pos = "";
+	private String gameID = "";
 
 	public enum MessageType {
 		CONNECTED, SEARCH_OPPONENT, DISCONNECTED, BATTLE, TRY_LOGIN, LOGIN_VALIDATION, MOVE_MADE, UNIT_DEPLOYED
@@ -56,7 +57,7 @@ public class NetworkMessage {
 		this.team = team;
 	}
 
-	public void makeBattleMessage(String fighter1, String fighter2, String map, String team1, String team2, String playerStart) {
+	public void makeBattleMessage(String gameID, String fighter1, String fighter2, String map, String team1, String team2, String playerStart) {
 		type = MessageType.BATTLE;
 		this.fighter1 = fighter1;
 		this.fighter2 = fighter2;
@@ -64,6 +65,7 @@ public class NetworkMessage {
 		this.team1 = team1;
 		this.team2 = team2;
 		this.playerStart = playerStart;
+		this.gameID = gameID;
 	}
 
 	public void makeMoveMessage(String client, String moveType, String location, String ability) {
@@ -89,10 +91,11 @@ public class NetworkMessage {
 		sender = client;
 	}
 
-	public void makeUnitDeployedMessage(String unit, String pos) {
+	public void makeUnitDeployedMessage(String unit, String pos, String gameID) {
 		type = MessageType.UNIT_DEPLOYED;
 		unitType = unit;
 		this.pos = pos;
+		this.gameID = gameID;
 	}
 
 	public String messageToString() {
@@ -129,6 +132,8 @@ public class NetworkMessage {
 		stringToSend.append(unitType);
 		stringToSend.append(SEPARATOR);
 		stringToSend.append(pos);
+		stringToSend.append(SEPARATOR);
+		stringToSend.append(gameID);
 		stringToSend.append(END_TAG);
 		return stringToSend.toString();
 	}
@@ -153,6 +158,7 @@ public class NetworkMessage {
 			playerStart = extract(tags, size, 13);
 			unitType = extract(tags, size, 14);
 			pos = extract(tags, size, 15);
+			gameID = extract(tags, size, 15);
 		} else {
 			Gdx.app.log(TAG, "message was empty");
 		}
@@ -232,5 +238,9 @@ public class NetworkMessage {
 
 	public String getPos() {
 		return pos;
+	}
+
+	public String getGameID() {
+		return gameID;
 	}
 }

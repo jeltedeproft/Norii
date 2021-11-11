@@ -36,7 +36,7 @@ public class DeploymentBattlePhase extends BattlePhase {
 
 	@Override
 	public void clickedOnTile(final TiledMapActor actor) {
-		if(battlemanager.isPlayerTurn()) {
+		if (battlemanager.isPlayerTurn()) {
 			deployUnit(actor);
 		}
 	}
