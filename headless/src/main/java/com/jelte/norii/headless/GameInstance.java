@@ -40,7 +40,7 @@ public class GameInstance {
 	}
 
 	public boolean containsClient(ConnectedClient client) {
-		return (player1.getConnectedClient() == client) || (player2.getConnectedClient() == client);
+		return (player1.getConnectedClient().getPlayerName().equals(client.getPlayerName()) || (player2.getConnectedClient().getPlayerName().equals(client.getPlayerName())));
 	}
 
 	public ConnectedClient getOpponent(ConnectedClient client) {
@@ -51,6 +51,14 @@ public class GameInstance {
 		}
 
 		return null;
+	}
+
+	public Player getPlayer1() {
+		return player1;
+	}
+
+	public Player getPlayer2() {
+		return player2;
 	}
 
 }
