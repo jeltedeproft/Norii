@@ -195,7 +195,8 @@ public class OnlineEnemy implements UnitOwner {
 	@Override
 	public void playerUnitSpawned(Entity entity, TiledMapPosition pos) {
 		NetworkMessage message = new NetworkMessage(MessageType.UNIT_DEPLOYED);
-		message.makeUnitDeployedMessage(gameID, entity.getEntityType().name(), pos.toString());
+		Gdx.app.log("onlineEnemey: gameID = ", gameID);
+		message.makeUnitDeployedMessage(entity.getEntityType().name(), pos.toString(), gameID);
 		ServerCommunicator.getInstance().sendMessage(message);
 	}
 

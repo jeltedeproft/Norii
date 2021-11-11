@@ -3,6 +3,7 @@ package com.jelte.norii.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.ai.EnemyType;
@@ -192,7 +193,8 @@ public class Player implements UnitOwner {
 	@Override
 	public void playerUnitSpawned(Entity entity, TiledMapPosition pos) {
 		NetworkMessage message = new NetworkMessage(MessageType.UNIT_DEPLOYED);
-		message.makeUnitDeployedMessage(gameID, entity.getEntityType().name(), pos.toString());
+		Gdx.app.log("player: gameID = ", gameID);
+		message.makeUnitDeployedMessage(entity.getEntityType().name(), pos.toString(),gameID);
 		ServerCommunicator.getInstance().sendMessage(message);
 	}
 

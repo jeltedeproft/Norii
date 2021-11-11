@@ -134,6 +134,7 @@ public class NetworkMessage {
 		stringToSend.append(pos);
 		stringToSend.append(SEPARATOR);
 		stringToSend.append(gameID);
+		stringToSend.append(SEPARATOR);
 		stringToSend.append(END_TAG);
 		return stringToSend.toString();
 	}
@@ -158,7 +159,7 @@ public class NetworkMessage {
 			playerStart = extract(tags, size, 13);
 			unitType = extract(tags, size, 14);
 			pos = extract(tags, size, 15);
-			gameID = extract(tags, size, 15);
+			gameID = extract(tags, size, 16);
 		} else {
 			Gdx.app.log(TAG, "message was empty");
 		}
@@ -242,5 +243,54 @@ public class NetworkMessage {
 
 	public String getGameID() {
 		return gameID;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("MESSAGE \n ");
+		builder.append("______ \n");
+		builder.append("type : ");
+		builder.append(type.toString() + "\n");
+		builder.append("sender : ");
+		builder.append(sender + "\n");
+		builder.append("receiver : ");
+		builder.append(receiver + "\n");
+		builder.append("username : ");
+		builder.append(username + "\n");
+		builder.append("password : ");
+		builder.append(password + "\n");
+		builder.append("loginWorked : ");
+		builder.append(loginWorked + "\n");
+		builder.append("loginreason : ");
+		builder.append(loginReason + "\n");
+		builder.append("moveType : ");
+		builder.append(moveType + "\n");
+		builder.append("location : ");
+		builder.append(location + "\n");
+		builder.append("ability : ");
+		builder.append(ability + "\n");
+		builder.append("team : ");
+		builder.append(team + "\n");
+		builder.append("map : ");
+		builder.append(map + "\n");
+		builder.append("fighter1 : ");
+		builder.append(fighter1 + "\n");
+		builder.append("fighter2 : ");
+		builder.append(fighter2 + "\n");
+		builder.append("team1 : ");
+		builder.append(team1 + "\n");
+		builder.append("team2 : ");
+		builder.append(team2 + "\n");
+		builder.append("playerStart : ");
+		builder.append(playerStart + "\n");
+		builder.append("unit type : ");
+		builder.append(unitType + "\n");
+		builder.append("position : ");
+		builder.append(pos + "\n");
+		builder.append("game ID : ");
+		builder.append(gameID + "\n");
+
+		return  builder.toString();
 	}
 }

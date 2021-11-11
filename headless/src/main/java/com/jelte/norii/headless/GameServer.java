@@ -91,6 +91,8 @@ public class GameServer {
 
 		NetworkMessage message = new NetworkMessage();
 		message.importString(event.textData());
+		
+		Gdx.app.log(CLIENT_TAG, "Message imported \n" + message);
 
 		NetworkMessage returnMessage = new NetworkMessage();
 
@@ -126,6 +128,7 @@ public class GameServer {
 			if (battle.containsClient(client)) {
 				battle.getOpponent(client).getSocket().writeFinalTextFrame(event.textData());
 			}
+			break;
 		default:
 			break;
 		}
