@@ -63,7 +63,7 @@ public class OnlineEnemy implements UnitOwner {
 	@Override
 	public void spawnUnit(String unitName, TiledMapPosition spawnPosition) {
 		for (final Entity unit : team) {
-			if (unitName.equals(unit.getEntityType().name()) && unit.isInBattle()) {
+			if (unitName.equals(unit.getEntityType().name()) && !unit.isInBattle()) {
 				unit.setCurrentPosition(spawnPosition);
 				unit.setPlayerUnit(false);
 				unit.getVisualComponent().spawn(spawnPosition);
