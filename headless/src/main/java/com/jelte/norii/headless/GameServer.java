@@ -203,7 +203,7 @@ public class GameServer {
 					Gdx.app.log(CLIENT_TAG, "map = " + mapType.name());
 					Gdx.app.log(CLIENT_TAG, "team1 = " + json.toJson(players.get(0).getTeam(), Array.class));
 					Gdx.app.log(CLIENT_TAG, "team2 = " + json.toJson(players.get(1).getTeam(), Array.class));
-					battleMessage.makeBattleMessage(gamesCreated, players.get(0).getPlayerName(), players.get(1).getPlayerName(), mapType.name(), json.toJson(players.get(0).getTeam(), Array.class),
+					battleMessage.makeBattleMessage(String.valueOf(gamesCreated), players.get(0).getPlayerName(), players.get(1).getPlayerName(), mapType.name(), json.toJson(players.get(0).getTeam(), Array.class),
 							json.toJson(players.get(1).getTeam(), Array.class), "true");
 					Gdx.app.log(CLIENT_TAG, "6");
 					// Send the packet to the first player

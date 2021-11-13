@@ -57,17 +57,15 @@ public class NetworkMessage {
 		this.team = team;
 	}
 
-	public void makeBattleMessage(int gamesCreated, String fighter1, String fighter2, String map, String team1, String team2, String playerStart) {
+	public void makeBattleMessage(String gameID, String fighter1, String fighter2, String map, String team1, String team2, String playerStart) {
 		type = MessageType.BATTLE;
-		sender = ServerCommunicator.getInstance().getClientID();
 		this.fighter1 = fighter1;
 		this.fighter2 = fighter2;
 		this.map = map;
 		this.team1 = team1;
 		this.team2 = team2;
 		this.playerStart = playerStart;
-		Gdx.app.log(TAG, "teeeeeeeeeeeeest");
-		this.gameID = String.valueOf(gamesCreated);
+		this.gameID = gameID;
 	}
 
 	public void makeMoveMessage(String client, String moveType, String location, String ability) {
