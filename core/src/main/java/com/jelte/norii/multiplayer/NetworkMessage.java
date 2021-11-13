@@ -51,7 +51,6 @@ public class NetworkMessage {
 	}
 
 	public void makeSearchMessage(String client, String team) {
-		Gdx.app.log(TAG, "making search message for : " + client);
 		type = MessageType.SEARCH_OPPONENT;
 		sender = client;
 		this.team = team;
@@ -81,7 +80,6 @@ public class NetworkMessage {
 		this.username = username;
 		this.password = password;
 		sender = ServerCommunicator.getInstance().getClientID();
-		Gdx.app.log("networkmessage:", "making login message with : " + sender + " , " + username + " , " + password);
 	}
 
 	public void makeLoginValidationMessage(String client, String loginWorked, String reason) {

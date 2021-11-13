@@ -52,7 +52,7 @@ public class ServerCommunicator {
 	}
 
 	public void sendMessage(NetworkMessage message) {
-		Gdx.app.log("servercom:", "sending message  : " + message);
+		Gdx.app.log("ServerCommunicator", "sending message to server \n" + message);
 		socket.send(message.messageToString());
 	}
 

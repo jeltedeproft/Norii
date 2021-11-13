@@ -7,7 +7,6 @@ public class MyWebSocketAdapter implements WebSocketListener {
 
 	@Override
 	public boolean onOpen(WebSocket webSocket) {
-		System.out.println("connected: ");
 		return FULLY_HANDLED;
 	}
 
@@ -15,14 +14,12 @@ public class MyWebSocketAdapter implements WebSocketListener {
 	public boolean onMessage(WebSocket webSocket, String packet) {
 		NetworkMessage message = new NetworkMessage();
 		message.importString(packet);
-		System.out.println("received message :" + packet + "\n");
 		ServerCommunicator.getInstance().addMessageFromServer(message);
 		return FULLY_HANDLED;
 	}
 
 	@Override
 	public boolean onClose(WebSocket webSocket, int closeCode, String reason) {
-		System.out.println("Disconnected: " + reason + "\n");
 		return FULLY_HANDLED;
 	}
 
