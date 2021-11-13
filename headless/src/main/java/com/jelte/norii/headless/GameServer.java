@@ -185,17 +185,21 @@ public class GameServer {
 		ArrayList<ConnectedClient> players = new ArrayList<>();
 
 		for (final ConnectedClient client : searchingClients) {
+			Gdx.app.log(CLIENT_TAG, "1");
 			if (client.getClientState() == ClientState.QUEUED) {
+				Gdx.app.log(CLIENT_TAG, "2");
 				players.add(client);
+				Gdx.app.log(CLIENT_TAG, "3");
 				if (players.size() == 2) {
+					Gdx.app.log(CLIENT_TAG, "4");
 					// Create a battle message to send to each client
 					NetworkMessage battleMessage = new NetworkMessage(MessageType.BATTLE);
-
+					Gdx.app.log(CLIENT_TAG, "5");
 					// for now just select a map, later randomize this
 					MapFactory.MapType mapType = MapType.BATTLE_MAP_THE_DARK_SWAMP;
 					battleMessage.makeBattleMessage(String.valueOf(gamesCreated), players.get(0).getPlayerName(), players.get(1).getPlayerName(), mapType.name(), json.toJson(players.get(0).getTeam(), Array.class),
 							json.toJson(players.get(1).getTeam(), Array.class), "true");
-
+					Gdx.app.log(CLIENT_TAG, "6");
 					// Send the packet to the first player
 					players.get(0).getSocket().writeTextMessage(battleMessage.messageToString());
 					Gdx.app.log(CLIENT_TAG, "sending to : " + players.get(0).getPlayerName());
@@ -207,7 +211,7 @@ public class GameServer {
 					// Change the state for each player to be ingame
 					players.get(0).setClientState(ClientState.INGAME);
 					players.get(1).setClientState(ClientState.INGAME);
-
+					Gdx.app.log(CLIENT_TAG, "7");
 					// Change the gameID for each player to the ID of the new game
 					players.get(0).setGameID(gamesCreated);
 					players.get(1).setGameID(gamesCreated);
@@ -222,9 +226,11 @@ public class GameServer {
 					// each function call
 					players = new ArrayList<>();
 				}
+				Gdx.app.log(CLIENT_TAG, "8");
 			}
+			Gdx.app.log(CLIENT_TAG, "9");
 		}
-
+		Gdx.app.log(CLIENT_TAG, "10");
 	}
 
 }
