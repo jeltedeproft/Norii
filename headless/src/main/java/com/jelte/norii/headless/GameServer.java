@@ -124,6 +124,7 @@ public class GameServer {
 				client.setClientState(ClientState.QUEUED);
 				client.setTeamFromJson(message.getTeam());
 			}
+			Gdx.app.log(CLIENT_TAG, "finished search message");
 			break;
 		case UNIT_DEPLOYED:
 			Integer id = Integer.parseInt(message.getGameID());
@@ -180,7 +181,7 @@ public class GameServer {
 	public void matchPlayers() {
 		if (searchingClients.size() < 2)
 			return;
-
+		Gdx.app.log(CLIENT_TAG, "matching players");
 		ArrayList<ConnectedClient> players = new ArrayList<>();
 
 		for (final ConnectedClient client : searchingClients) {
