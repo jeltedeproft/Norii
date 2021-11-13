@@ -26,6 +26,7 @@ public class Player implements UnitOwner {
 	private String name;
 	private boolean isMyTurn;
 	private String gameID;
+	private Alliance alliance;
 
 	@Override
 	public void updateUnits(final float delta) {
@@ -195,7 +196,7 @@ public class Player implements UnitOwner {
 		NetworkMessage message = new NetworkMessage(MessageType.UNIT_DEPLOYED);
 		message.makeUnitDeployedMessage(entity.getEntityType().name(), pos.toString(),gameID);
 		ServerCommunicator.getInstance().sendMessage(message);
-		Player.getInstance().setMyTurn(false);
+		setMyTurn(false);
 	}
 
 	@Override
@@ -224,5 +225,13 @@ public class Player implements UnitOwner {
 
 	public void setGameID(String gameID) {
 		this.gameID = gameID;
+	}
+
+	public Alliance getAlliance() {
+		return alliance;
+	}
+
+	public void setAlliance(Alliance alliance) {
+		this.alliance = alliance;
 	}
 }

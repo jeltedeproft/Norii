@@ -85,8 +85,10 @@ public class BattleMap extends Map {
 		if (tiledactor != null) {
 			if (isHuman) {
 				tiledactor.setIsFreeSpawn(true);
+				tiledactor.setIsAISpawn(false);
 			} else {
 				tiledactor.setIsAISpawn(true);
+				tiledactor.setIsFreeSpawn(false);
 			}
 		}
 	}

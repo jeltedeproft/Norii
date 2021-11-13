@@ -7,6 +7,7 @@ import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.battle.MessageToBattleScreen;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.Player;
+import com.jelte.norii.entities.UnitOwner.Alliance;
 import com.jelte.norii.map.TiledMapActor;
 import com.jelte.norii.particles.ParticleMaker;
 import com.jelte.norii.particles.ParticleType;
@@ -43,7 +44,7 @@ public class DeploymentBattlePhase extends BattlePhase {
 
 	private void deployUnit(final TiledMapActor actor) {
 		boolean isPossibleSpawnPoint;
-		if (Player.getInstance().isMyTurn()) {
+		if (Player.getInstance().getAlliance() == Alliance.TEAM_BLUE) {
 			isPossibleSpawnPoint = actor.getIsFreeSpawn();
 		} else {
 			isPossibleSpawnPoint = actor.getIsAISpawn();
@@ -52,6 +53,8 @@ public class DeploymentBattlePhase extends BattlePhase {
 			final TiledMapPosition newPosition = actor.getActorPos();
 
 			if ((playerUnits != null) && (deployingUnitNumber < playerUnits.size())) {
+				Player.getInstance().setMyTurn(false);
+				battlemanager.setPlayerTurn(!battlemanager.isPlayerTurn());
 				deployUnit(newPosition);
 				actor.setIsFreeSpawn(false);
 				ParticleMaker.deactivateParticle(ParticleMaker.getParticle(ParticleType.SPAWN, newPosition));
@@ -68,7 +71,7 @@ public class DeploymentBattlePhase extends BattlePhase {
 
 	private void deployUnit(final TiledMapPosition newPosition) {
 		final Entity unitToDeploy = playerUnits.get(deployingUnitNumber);
-		battlemanager.getUnitOwner().playerUnitSpawned(unitToDeploy, newPosition);
+		battlemanager.getEnemyTeamLeader().playerUnitSpawned(unitToDeploy, newPosition);
 		unitToDeploy.getVisualComponent().setInDeploymentPhase(false);
 		initiateUnitInBattle(unitToDeploy, newPosition);
 	}

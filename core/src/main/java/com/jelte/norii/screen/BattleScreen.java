@@ -227,6 +227,7 @@ public class BattleScreen extends GameScreen {
 				ParticleMaker.deactivateParticle(ParticleMaker.getParticle(ParticleType.PURPLE_SQUARE, pos));
 				hud.setLocked(false);
 				battlemanager.setPlayerTurn(true);
+				Player.getInstance().setMyTurn(true);
 				break;
 			default:
 				break;

@@ -151,9 +151,9 @@ public class MultiplayerScreen extends GameScreen {
 			EnemyType selectedLevel = EnemyType.ONLINE_PLAYER;
 			UnitOwner enemyTeamLeader;
 			if ("true".equals(message.getPlayerStart())) {
-				enemyTeamLeader = new OnlineEnemy(selectedLevel, message.getFighter2(), message.getTeam2(), message.getPlayerStart(), message.getGameID());
+				enemyTeamLeader = new OnlineEnemy(selectedLevel, message.getFighter2(), message.getTeam2(), false, message.getGameID());
 			} else {
-				enemyTeamLeader = new OnlineEnemy(selectedLevel, message.getFighter1(), message.getTeam1(), message.getPlayerStart(), message.getGameID());
+				enemyTeamLeader = new OnlineEnemy(selectedLevel, message.getFighter1(), message.getTeam1(), true, message.getGameID());
 			}
 			Player.getInstance().setGameID(message.getGameID());
 

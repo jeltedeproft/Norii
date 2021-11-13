@@ -11,7 +11,9 @@ import com.jelte.norii.battle.MessageToBattleScreen;
 import com.jelte.norii.battle.battleState.BattleState;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityTypes;
+import com.jelte.norii.entities.Player;
 import com.jelte.norii.entities.UnitOwner;
+import com.jelte.norii.entities.UnitOwner.Alliance;
 import com.jelte.norii.utility.TiledMapPosition;
 
 public class AITeamLeader implements UnitOwner {
@@ -25,9 +27,11 @@ public class AITeamLeader implements UnitOwner {
 	private EnemyType type;
 	private String name = "test";
 	private boolean isMyTurn = false;
+	private Alliance alliance;
 
 	public AITeamLeader(final EnemyType type) {
 		this.type = type;
+		alliance = Alliance.TEAM_RED;
 		aiTeamData = AITeamFileReader.getAITeamData().get(type.ordinal());
 		aiDecisionMaker = new AIDecisionMaker();
 		initiateUnits();
@@ -187,8 +191,8 @@ public class AITeamLeader implements UnitOwner {
 
 	@Override
 	public void playerUnitSpawned(Entity entity, TiledMapPosition pos) {
-		// TODO Auto-generated method stub
-		
+		battleManager.setPlayerTurn(!battleManager.isPlayerTurn());
+		Player.getInstance().setMyTurn(true);//turn back to player because AI already placed units
 	}
 
 	@Override
@@ -209,5 +213,11 @@ public class AITeamLeader implements UnitOwner {
 	@Override
 	public boolean isOnlinePlayer() {
 		return false;
+	}
+
+	@Override
+	public Alliance getAlliance() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

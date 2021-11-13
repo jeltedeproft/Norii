@@ -42,7 +42,7 @@ public class BattleManager {
 	private BattlePhase currentBattleState;
 
 	private Entity activeUnit;
-	private UnitOwner unitOwner;
+	private UnitOwner enemyTeamLeader;
 	private BattleState activeBattleState;
 	private UnitTurn activeTurn;
 	private boolean playerTurn;
@@ -55,8 +55,8 @@ public class BattleManager {
 
 	private static final String TAG = BattleManager.class.getSimpleName();
 
-	public BattleManager(UnitOwner aiTeamLeader, int width, int height, Array<GridCell> unwalkableNodes, BattleScreen battleScreen) {
-		initVariables(aiTeamLeader, width, height, unwalkableNodes, battleScreen);
+	public BattleManager(UnitOwner enemyTeamLeader, int width, int height, Array<GridCell> unwalkableNodes, BattleScreen battleScreen) {
+		initVariables(enemyTeamLeader, width, height, unwalkableNodes, battleScreen);
 
 		deploymentBattleState = new DeploymentBattlePhase(this);
 		selectUnitBattleState = new SelectUnitBattlePhase(this);
@@ -69,15 +69,15 @@ public class BattleManager {
 		currentBattleState.entry();
 	}
 
-	private void initVariables(UnitOwner unitOwner, int width, int height, Array<GridCell> unwalkableNodes, BattleScreen battleScreen) {
+	private void initVariables(UnitOwner enemyTeamLeader, int width, int height, Array<GridCell> unwalkableNodes, BattleScreen battleScreen) {
 		this.battleScreen = battleScreen;
-		this.unitOwner = unitOwner;
+		this.enemyTeamLeader = enemyTeamLeader;
 		Player.getInstance().setBattleManager(this);
-		unitOwner.setBattleManager(this);
+		enemyTeamLeader.setBattleManager(this);
 		activeUnit = Player.getInstance().getTeam().get(0);
-		playerTurn = unitOwner.isMyTurn();
+		playerTurn = enemyTeamLeader.isMyTurn();
 		activeTurn = null;
-		aiIsCalculating = (unitOwner.isAI() && !playerTurn);
+		aiIsCalculating = (enemyTeamLeader.isAI() && !playerTurn);
 		activeBattleState = new BattleState(width, height);
 		initializeStateOfBattle(unwalkableNodes);
 	}
@@ -168,17 +168,17 @@ public class BattleManager {
 
 	public void swapTurn() {
 		Player.getInstance().applyModifiers();
-		unitOwner.applyModifiers();
+		enemyTeamLeader.applyModifiers();
 
 		playerTurn = !playerTurn;
 
 		if (!playerTurn) {
 			Player.getInstance().setAp(ApFileReader.getApData(turn));
 			aiIsCalculating = true;
-			unitOwner.resetAI(activeBattleState);
+			enemyTeamLeader.resetAI(activeBattleState);
 		} else {
 			turn++;
-			unitOwner.setAp(ApFileReader.getApData(turn));
+			enemyTeamLeader.setAp(ApFileReader.getApData(turn));
 			setCurrentBattleState(getSelectUnitBattleState());
 			getCurrentBattleState().entry();
 		}
@@ -187,12 +187,12 @@ public class BattleManager {
 
 	public void processAI() {
 		if (aiIsCalculating) {
-			unitOwner.processAi();
+			enemyTeamLeader.processAi();
 		}
 
 		if (aiFinishedCalculating) {
 			Gdx.app.debug(TAG, "finished calculating");
-			final BattleState newState = unitOwner.getNextBattleState();
+			final BattleState newState = enemyTeamLeader.getNextBattleState();
 			aiUnitIsBussy = true;
 			aiIsCalculating = false;
 			aiFinishedCalculating = false;
@@ -215,7 +215,7 @@ public class BattleManager {
 			}
 			checkVictory();
 			swapTurn();
-			unitOwner.setAp(ApFileReader.getApData(turn));
+			enemyTeamLeader.setAp(ApFileReader.getApData(turn));
 			return;
 		}
 		switch (move.getMoveType()) {
@@ -226,9 +226,6 @@ public class BattleManager {
 			executeNextMove();
 			break;
 		case MOVE:
-			if (entity == null) {
-				int j = 5;
-			}
 			final List<GridCell> path = MyPathFinder.getInstance().pathTowards(entity.getCurrentPosition(), new TiledMapPosition().setPositionFromTiles(move.getLocation().x, move.getLocation().y), entity.getAp());
 			activeBattleState.moveUnitTo(entity, new MyPoint(move.getLocation().x, move.getLocation().y));
 			entity.move(path);
@@ -264,7 +261,7 @@ public class BattleManager {
 			}
 		}
 
-		for (final Entity entity : unitOwner.getTeam()) {
+		for (final Entity entity : enemyTeamLeader.getTeam()) {
 			if (entity.getEntityID() == entityID) {
 				return entity;
 			}
@@ -275,7 +272,7 @@ public class BattleManager {
 	private void removeUnit(Entity unit) {
 		executeOnDeathEffect(unit);
 		Player.getInstance().removeUnit(unit);
-		unitOwner.removeUnit(unit);
+		enemyTeamLeader.removeUnit(unit);
 		activeBattleState.removeUnit(unit);
 	}
 
@@ -316,8 +313,8 @@ public class BattleManager {
 		return Player.getInstance().getTeam();
 	}
 
-	public List<Entity> getAiUnits() {
-		return unitOwner.getTeam();
+	public List<Entity> getEnemyUnits() {
+		return enemyTeamLeader.getTeam();
 	}
 
 	public boolean isPlayerTurn() {
@@ -385,14 +382,14 @@ public class BattleManager {
 	}
 
 	public List<Entity> getUnits() {
-		return Stream.concat(Player.getInstance().getTeam().stream(), unitOwner.getTeam().stream()).collect(Collectors.toList());
+		return Stream.concat(Player.getInstance().getTeam().stream(), enemyTeamLeader.getTeam().stream()).collect(Collectors.toList());
 	}
 
 	public int getUnitsDeployed() {
 		return unitsDeployed;
 	}
 
-	public UnitOwner getUnitOwner() {
-		return unitOwner;
+	public UnitOwner getEnemyTeamLeader() {
+		return enemyTeamLeader;
 	}
 }

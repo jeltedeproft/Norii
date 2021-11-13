@@ -10,6 +10,9 @@ import com.jelte.norii.battle.battleState.BattleState;
 import com.jelte.norii.utility.TiledMapPosition;
 
 public interface UnitOwner {
+	public enum Alliance{
+		TEAM_RED, TEAM_BLUE
+	}
 	public void renderUnits(final Batch batch);
 
 	public void updateUnits(final float delta);
@@ -65,4 +68,6 @@ public interface UnitOwner {
 	public boolean isAI();
 	
 	public boolean isOnlinePlayer();
+	
+	public Alliance getAlliance();
 }

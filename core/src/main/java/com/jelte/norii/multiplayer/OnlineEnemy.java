@@ -14,6 +14,7 @@ import com.jelte.norii.battle.MessageToBattleScreen;
 import com.jelte.norii.battle.battleState.BattleState;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityTypes;
+import com.jelte.norii.entities.Player;
 import com.jelte.norii.entities.UnitOwner;
 import com.jelte.norii.multiplayer.NetworkMessage.MessageType;
 import com.jelte.norii.utility.TiledMapPosition;
@@ -30,15 +31,23 @@ public class OnlineEnemy implements UnitOwner {
 	private Json json;
 	private boolean myTurn;
 	private String gameID;
+	private Alliance alliance;
 
-	public OnlineEnemy(final EnemyType type, String ownerName, String teamAsString, String playerStart, String gameID) {
+	public OnlineEnemy(final EnemyType type, String ownerName, String teamAsString, boolean playerStart, String gameID) {
 		team = new ArrayList<>();
 		this.type = type;
 		this.ownerName = ownerName;
 		json = new Json();
-		this.myTurn = "true".equals(playerStart);
+		this.myTurn = playerStart;
 		this.gameID = gameID;
 		initiateUnits(teamAsString);
+		if(playerStart) {
+			alliance = Alliance.TEAM_BLUE;
+			Player.getInstance().setAlliance(Alliance.TEAM_RED);
+		}else {
+			alliance = Alliance.TEAM_RED;
+			Player.getInstance().setAlliance(Alliance.TEAM_BLUE);
+		}
 	}
 
 	private void initiateUnits(String teamAsString) {
@@ -219,6 +228,12 @@ public class OnlineEnemy implements UnitOwner {
 
 	public String getGameID() {
 		return gameID;
+	}
+
+	@Override
+	public Alliance getAlliance() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
