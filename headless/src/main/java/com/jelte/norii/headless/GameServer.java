@@ -197,7 +197,8 @@ public class GameServer {
 					Gdx.app.log(CLIENT_TAG, "5");
 					// for now just select a map, later randomize this
 					MapFactory.MapType mapType = MapType.BATTLE_MAP_THE_DARK_SWAMP;
-					battleMessage.makeBattleMessage(String.valueOf(gamesCreated), players.get(0).getPlayerName(), players.get(1).getPlayerName(), mapType.name(), json.toJson(players.get(0).getTeam(), Array.class),
+					Gdx.app.log(CLIENT_TAG, "gamescreated = " + gamesCreated);
+					battleMessage.makeBattleMessage(gamesCreated, players.get(0).getPlayerName(), players.get(1).getPlayerName(), mapType.name(), json.toJson(players.get(0).getTeam(), Array.class),
 							json.toJson(players.get(1).getTeam(), Array.class), "true");
 					Gdx.app.log(CLIENT_TAG, "6");
 					// Send the packet to the first player
