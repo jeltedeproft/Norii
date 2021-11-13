@@ -91,12 +91,14 @@ public class GameServer {
 
 		NetworkMessage message = new NetworkMessage();
 		message.importString(event.textData());
-		
+
 		Gdx.app.log(CLIENT_TAG, "Message imported \n" + message);
 
 		NetworkMessage returnMessage = new NetworkMessage();
 
 		ConnectedClient client = getClientByName(message.getSender());
+
+		Gdx.app.log(CLIENT_TAG, "found client");
 
 		switch (message.getType()) {
 		case TRY_LOGIN:
@@ -116,6 +118,7 @@ public class GameServer {
 			returnMessage.makeLoginValidationMessage(message.getSender(), "true", "worked");
 			break;
 		case SEARCH_OPPONENT:
+			Gdx.app.log(CLIENT_TAG, "handling search message");
 			if (client != null) {
 				searchingClients.add(client);
 				client.setClientState(ClientState.QUEUED);
@@ -125,18 +128,18 @@ public class GameServer {
 		case UNIT_DEPLOYED:
 			Integer id = Integer.parseInt(message.getGameID());
 			GameInstance battle = activeGames.get(id);
-			Gdx.app.log("gameserver, ","received unit deployed message, with id :  " + id + " \n and battle : " + battle);
-			Gdx.app.log("gameserver, ","client:  " + client);
-			Gdx.app.log("gameserver, ","client name :  " + client.getPlayerName());
-			Gdx.app.log("gameserver, ","battle player 1 :  " + battle.getPlayer1());
-			Gdx.app.log("gameserver, ","battle player 1 client :  " + battle.getPlayer1().getConnectedClient());
-			Gdx.app.log("gameserver, ","battle player 1 clientname :  " + battle.getPlayer1().getConnectedClient().getPlayerName());
-			Gdx.app.log("gameserver, ","battle player 2 :  " + battle.getPlayer2().getConnectedClient().getPlayerName());
-			Gdx.app.log("gameserver, ","battle player 2 client :  " + battle.getPlayer2().getConnectedClient());
-			Gdx.app.log("gameserver, ","battle player 2 clientname :  " + battle.getPlayer2().getConnectedClient().getPlayerName());
+			Gdx.app.log("gameserver, ", "received unit deployed message, with id :  " + id + " \n and battle : " + battle);
+			Gdx.app.log("gameserver, ", "client:  " + client);
+			Gdx.app.log("gameserver, ", "client name :  " + client.getPlayerName());
+			Gdx.app.log("gameserver, ", "battle player 1 :  " + battle.getPlayer1());
+			Gdx.app.log("gameserver, ", "battle player 1 client :  " + battle.getPlayer1().getConnectedClient());
+			Gdx.app.log("gameserver, ", "battle player 1 clientname :  " + battle.getPlayer1().getConnectedClient().getPlayerName());
+			Gdx.app.log("gameserver, ", "battle player 2 :  " + battle.getPlayer2().getConnectedClient().getPlayerName());
+			Gdx.app.log("gameserver, ", "battle player 2 client :  " + battle.getPlayer2().getConnectedClient());
+			Gdx.app.log("gameserver, ", "battle player 2 clientname :  " + battle.getPlayer2().getConnectedClient().getPlayerName());
 			if (battle.containsClient(client)) {
-				Gdx.app.log("gameserver, ","battle contains client : " + client.getPlayerName());
-				Gdx.app.log("gameserver, ","opponent = " + battle.getOpponent(client).getPlayerName());
+				Gdx.app.log("gameserver, ", "battle contains client : " + client.getPlayerName());
+				Gdx.app.log("gameserver, ", "opponent = " + battle.getOpponent(client).getPlayerName());
 				battle.getOpponent(client).getSocket().writeFinalTextFrame(event.textData());
 			}
 			break;
