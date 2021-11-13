@@ -59,6 +59,7 @@ public class NetworkMessage {
 
 	public void makeBattleMessage(String gameID, String fighter1, String fighter2, String map, String team1, String team2, String playerStart) {
 		type = MessageType.BATTLE;
+		sender = ServerCommunicator.getInstance().getClientID();
 		this.fighter1 = fighter1;
 		this.fighter2 = fighter2;
 		this.map = map;
@@ -96,6 +97,7 @@ public class NetworkMessage {
 		unitType = unit;
 		this.pos = pos;
 		this.gameID = gameID;
+		sender = ServerCommunicator.getInstance().getClientID();
 	}
 
 	public String messageToString() {

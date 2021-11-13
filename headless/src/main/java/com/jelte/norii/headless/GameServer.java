@@ -126,6 +126,7 @@ public class GameServer {
 			Integer id = Integer.parseInt(message.getGameID());
 			GameInstance battle = activeGames.get(id);
 			Gdx.app.log("gameserver, ","received unit deployed message, with id :  " + id + " \n and battle : " + battle);
+			Gdx.app.log("gameserver, ","client:  " + client);
 			Gdx.app.log("gameserver, ","client name :  " + client.getPlayerName());
 			Gdx.app.log("gameserver, ","battle player 1 :  " + battle.getPlayer1());
 			Gdx.app.log("gameserver, ","battle player 1 client :  " + battle.getPlayer1().getConnectedClient());
@@ -133,7 +134,6 @@ public class GameServer {
 			Gdx.app.log("gameserver, ","battle player 2 :  " + battle.getPlayer2().getConnectedClient().getPlayerName());
 			Gdx.app.log("gameserver, ","battle player 2 client :  " + battle.getPlayer2().getConnectedClient());
 			Gdx.app.log("gameserver, ","battle player 2 clientname :  " + battle.getPlayer2().getConnectedClient().getPlayerName());
-			Gdx.app.log("gameserver, ","battle :  " + battle);
 			if (battle.containsClient(client)) {
 				Gdx.app.log("gameserver, ","battle contains client : " + client.getPlayerName());
 				Gdx.app.log("gameserver, ","opponent = " + battle.getOpponent(client).getPlayerName());
