@@ -3,7 +3,6 @@ package com.jelte.norii.entities;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.ai.EnemyType;
@@ -186,7 +185,7 @@ public class Player implements UnitOwner {
 	}
 
 	@Override
-	public void spawnUnit(String name, TiledMapPosition pos) {
+	public void spawnUnit(String name, int unitID, TiledMapPosition pos) {
 		// TODO Auto-generated method stub
 
 	}
@@ -194,7 +193,7 @@ public class Player implements UnitOwner {
 	@Override
 	public void playerUnitSpawned(Entity entity, TiledMapPosition pos) {
 		NetworkMessage message = new NetworkMessage(MessageType.UNIT_DEPLOYED);
-		message.makeUnitDeployedMessage(entity.getEntityType().name(), pos.toString(),gameID);
+		message.makeUnitDeployedMessage(entity.getEntityType().name(), entity.getEntityID(), pos.toString(), gameID);
 		ServerCommunicator.getInstance().sendMessage(message);
 		setMyTurn(false);
 	}
@@ -219,6 +218,7 @@ public class Player implements UnitOwner {
 		return false;
 	}
 
+	@Override
 	public String getGameID() {
 		return gameID;
 	}
@@ -227,11 +227,18 @@ public class Player implements UnitOwner {
 		this.gameID = gameID;
 	}
 
+	@Override
 	public Alliance getAlliance() {
 		return alliance;
 	}
 
 	public void setAlliance(Alliance alliance) {
 		this.alliance = alliance;
+	}
+
+	@Override
+	public void initiateUnits(String teamWithIdMap) {
+		// TODO Auto-generated method stub
+
 	}
 }

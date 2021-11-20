@@ -2,10 +2,10 @@ package com.jelte.norii.multiplayer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.jelte.norii.ai.EnemyType;
 import com.jelte.norii.battle.ApFileReader;
@@ -33,30 +33,32 @@ public class OnlineEnemy implements UnitOwner {
 	private String gameID;
 	private Alliance alliance;
 
-	public OnlineEnemy(final EnemyType type, String ownerName, String teamAsString, boolean playerStart, String gameID) {
+	public OnlineEnemy(String ownerName, boolean playerStart, String gameID) {
 		team = new ArrayList<>();
-		this.type = type;
+		type = EnemyType.ONLINE_PLAYER;
 		this.ownerName = ownerName;
 		json = new Json();
 		this.myTurn = playerStart;
 		this.gameID = gameID;
-		initiateUnits(teamAsString);
-		if(playerStart) {
+		if (playerStart) {
 			alliance = Alliance.TEAM_BLUE;
 			Player.getInstance().setAlliance(Alliance.TEAM_RED);
-		}else {
+		} else {
 			alliance = Alliance.TEAM_RED;
 			Player.getInstance().setAlliance(Alliance.TEAM_BLUE);
 		}
 	}
 
-	private void initiateUnits(String teamAsString) {
-		Array<String> teamNames = json.fromJson(Array.class, teamAsString);
-		for (final String name : teamNames) {
+	@Override
+	@SuppressWarnings("unchecked")
+	public void initiateUnits(String teamWithIdAsString) {
+		Map<Integer, String> teamNames = json.fromJson(Map.class, teamWithIdAsString);
+		for (final Entry<Integer, String> idWithName : teamNames.entrySet()) {
 			for (final EntityTypes entityType : EntityTypes.values()) {
-				if (name.equals(entityType.getEntityName())) {
+				if (idWithName.getValue().equals(entityType.getEntityName())) {
 					final Entity entity = new Entity(entityType, this, true);
 					entity.setPlayerUnit(false);
+					entity.setEntityID(idWithName.getKey());
 					team.add(entity);
 				}
 			}
@@ -70,9 +72,9 @@ public class OnlineEnemy implements UnitOwner {
 	}
 
 	@Override
-	public void spawnUnit(String unitName, TiledMapPosition spawnPosition) {
+	public void spawnUnit(String unitName, int unitID, TiledMapPosition spawnPosition) {
 		for (final Entity unit : team) {
-			if (unitName.equals(unit.getEntityType().name()) && !unit.isInBattle()) {
+			if ((unit.getEntityID() == unitID) && unitName.equals(unit.getEntityType().name()) && !unit.isInBattle()) {
 				unit.setCurrentPosition(spawnPosition);
 				unit.setPlayerUnit(false);
 				unit.getVisualComponent().spawn(spawnPosition);
@@ -202,7 +204,7 @@ public class OnlineEnemy implements UnitOwner {
 	@Override
 	public void playerUnitSpawned(Entity entity, TiledMapPosition pos) {
 		NetworkMessage message = new NetworkMessage(MessageType.UNIT_DEPLOYED);
-		message.makeUnitDeployedMessage(entity.getEntityType().name(), pos.toString(), gameID);
+		message.makeUnitDeployedMessage(entity.getEntityType().name(), entity.getEntityID(), pos.toString(), gameID);
 		ServerCommunicator.getInstance().sendMessage(message);
 	}
 
@@ -226,14 +228,14 @@ public class OnlineEnemy implements UnitOwner {
 		return true;
 	}
 
+	@Override
 	public String getGameID() {
 		return gameID;
 	}
 
 	@Override
 	public Alliance getAlliance() {
-		// TODO Auto-generated method stub
-		return null;
+		return alliance;
 	}
 
 }

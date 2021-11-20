@@ -13,7 +13,6 @@ import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityTypes;
 import com.jelte.norii.entities.Player;
 import com.jelte.norii.entities.UnitOwner;
-import com.jelte.norii.entities.UnitOwner.Alliance;
 import com.jelte.norii.utility.TiledMapPosition;
 
 public class AITeamLeader implements UnitOwner {
@@ -51,6 +50,7 @@ public class AITeamLeader implements UnitOwner {
 		ap = ApFileReader.getApData(0);
 	}
 
+	@Override
 	public void spawnUnits(List<TiledMapPosition> spawnPositions) {
 		for (final Entity unit : team) {
 			if (!spawnPositions.isEmpty()) {
@@ -65,10 +65,12 @@ public class AITeamLeader implements UnitOwner {
 		}
 	}
 
+	@Override
 	public void resetAI(BattleState stateOfBattle) {
 		aiDecisionMaker.resetAI(stateOfBattle);
 	}
 
+	@Override
 	public void processAi() {
 		if (aiDecisionMaker.processAi()) {
 			sendMessageToBattleManager(MessageToBattleScreen.AI_FINISHED_CALCULATING, battleManager.getActiveUnit());
@@ -76,6 +78,7 @@ public class AITeamLeader implements UnitOwner {
 
 	}
 
+	@Override
 	public BattleState getNextBattleState() {
 		return aiDecisionMaker.getResult();
 	}
@@ -106,6 +109,7 @@ public class AITeamLeader implements UnitOwner {
 		return team;
 	}
 
+	@Override
 	public void dispose() {
 		for (final Entity entity : team) {
 			entity.dispose();
@@ -182,17 +186,16 @@ public class AITeamLeader implements UnitOwner {
 		return name;
 	}
 
-
 	@Override
-	public void spawnUnit(String name, TiledMapPosition pos) {
+	public void spawnUnit(String name, int entityID, TiledMapPosition pos) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void playerUnitSpawned(Entity entity, TiledMapPosition pos) {
 		battleManager.setPlayerTurn(!battleManager.isPlayerTurn());
-		Player.getInstance().setMyTurn(true);//turn back to player because AI already placed units
+		Player.getInstance().setMyTurn(true);// turn back to player because AI already placed units
 	}
 
 	@Override
@@ -217,6 +220,18 @@ public class AITeamLeader implements UnitOwner {
 
 	@Override
 	public Alliance getAlliance() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void initiateUnits(String teamWithIdMap) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public String getGameID() {
 		// TODO Auto-generated method stub
 		return null;
 	}

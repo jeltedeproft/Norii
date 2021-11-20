@@ -10,9 +10,10 @@ import com.jelte.norii.battle.battleState.BattleState;
 import com.jelte.norii.utility.TiledMapPosition;
 
 public interface UnitOwner {
-	public enum Alliance{
+	public enum Alliance {
 		TEAM_RED, TEAM_BLUE
 	}
+
 	public void renderUnits(final Batch batch);
 
 	public void updateUnits(final float delta);
@@ -40,8 +41,8 @@ public interface UnitOwner {
 	public void addUnit(Entity unit);
 
 	public void spawnUnits(List<TiledMapPosition> spawnPositions);
-	
-	public void spawnUnit(String name, TiledMapPosition pos);
+
+	public void spawnUnit(String name, int entityID, TiledMapPosition pos);
 
 	public void playerUnitSpawned(Entity entity, TiledMapPosition pos);
 
@@ -66,8 +67,12 @@ public interface UnitOwner {
 	public void setMyTurn(boolean myTurn);
 
 	public boolean isAI();
-	
+
 	public boolean isOnlinePlayer();
-	
+
 	public Alliance getAlliance();
+
+	public void initiateUnits(String teamWithIdMap);
+
+	public String getGameID();
 }

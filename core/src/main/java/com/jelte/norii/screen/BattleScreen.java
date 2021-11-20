@@ -1,5 +1,6 @@
 package com.jelte.norii.screen;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -12,6 +13,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.jelte.norii.ai.EnemyType;
 import com.jelte.norii.audio.AudioCommand;
@@ -60,6 +62,7 @@ public class BattleScreen extends GameScreen {
 	private OrthographicCamera hudCamera;
 	private Hud hud;
 	private PauseMenuScreen pauseMenu;
+	private Json json;
 
 	private EntityStage entityStage;
 	private final String fpsTitle = "fps = ";
@@ -85,10 +88,24 @@ public class BattleScreen extends GameScreen {
 		mapMgr.loadMap(mapType);
 		currentMap = (BattleMap) mapMgr.getCurrentMap();
 		enemyTeamLeader = unitOwner;
+		json = new Json();
 	}
 
 	private void initializeEntityStage() {
 		Player.getInstance().initializeTeam();
+
+		// send team to enemy if online
+		if (enemyTeamLeader.getType().equals(EnemyType.ONLINE_PLAYER)) {
+			HashMap<Integer, String> teamWithId = new HashMap<>();
+			for (Entity unit : Player.getInstance().getTeam()) {
+				teamWithId.put(unit.getEntityID(), unit.getName());
+			}
+			String serializedTeamWithId = json.toJson(teamWithId);
+			NetworkMessage message = new NetworkMessage();
+			message.makeInitEnemyTeamMessage(enemyTeamLeader.getGameID(), serializedTeamWithId);
+			ServerCommunicator.getInstance().sendMessage(message);
+		}
+
 		entityStage = new EntityStage(Stream.concat(Player.getInstance().getTeam().stream(), enemyTeamLeader.getTeam().stream()).collect(Collectors.toList()));
 	}
 
@@ -222,13 +239,15 @@ public class BattleScreen extends GameScreen {
 				// self-deployment, set playerturn to true, check if all units deployed,
 				// deployment finished message?
 				TiledMapPosition pos = new TiledMapPosition().setPosFromString(message.getPos());
-				enemyTeamLeader.spawnUnit(message.getUnitType(), pos);
+				enemyTeamLeader.spawnUnit(message.getUnitType(), message.getUnitID(), pos);
 				ParticleMaker.deactivateParticle(ParticleMaker.getParticle(ParticleType.SPAWN, pos));
 				ParticleMaker.deactivateParticle(ParticleMaker.getParticle(ParticleType.PURPLE_SQUARE, pos));
 				hud.setLocked(false);
 				battlemanager.setPlayerTurn(true);
 				Player.getInstance().setMyTurn(true);
 				break;
+			case INIT_ENEMY_TEAM:
+				enemyTeamLeader.initiateUnits(message.getTeamWithIdMap());
 			default:
 				break;
 			}

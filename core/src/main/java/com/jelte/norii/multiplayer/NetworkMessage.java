@@ -27,9 +27,11 @@ public class NetworkMessage {
 	private String unitType = "";
 	private String pos = "";
 	private String gameID = "";
+	private String unitID = "";
+	private String teamWithIdMap = "";
 
 	public enum MessageType {
-		CONNECTED, SEARCH_OPPONENT, DISCONNECTED, BATTLE, TRY_LOGIN, LOGIN_VALIDATION, MOVE_MADE, UNIT_DEPLOYED
+		CONNECTED, SEARCH_OPPONENT, DISCONNECTED, BATTLE, TRY_LOGIN, LOGIN_VALIDATION, MOVE_MADE, UNIT_DEPLOYED, INIT_ENEMY_TEAM
 	}
 
 	public NetworkMessage() {
@@ -89,10 +91,18 @@ public class NetworkMessage {
 		sender = client;
 	}
 
-	public void makeUnitDeployedMessage(String unit, String pos, String gameID) {
+	public void makeUnitDeployedMessage(String unit, int unitID, String pos, String gameID) {
 		type = MessageType.UNIT_DEPLOYED;
 		unitType = unit;
 		this.pos = pos;
+		this.gameID = gameID;
+		this.unitID = Integer.toString(unitID);
+		sender = ServerCommunicator.getInstance().getClientID();
+	}
+
+	public void makeInitEnemyTeamMessage(String gameID, String teamWithIdMap) {
+		type = MessageType.INIT_ENEMY_TEAM;
+		this.teamWithIdMap = teamWithIdMap;
 		this.gameID = gameID;
 		sender = ServerCommunicator.getInstance().getClientID();
 	}
@@ -134,6 +144,10 @@ public class NetworkMessage {
 		stringToSend.append(SEPARATOR);
 		stringToSend.append(gameID);
 		stringToSend.append(SEPARATOR);
+		stringToSend.append(unitID);
+		stringToSend.append(SEPARATOR);
+		stringToSend.append(teamWithIdMap);
+		stringToSend.append(SEPARATOR);
 		stringToSend.append(END_TAG);
 		return stringToSend.toString();
 	}
@@ -159,6 +173,8 @@ public class NetworkMessage {
 			unitType = extract(tags, size, 14);
 			pos = extract(tags, size, 15);
 			gameID = extract(tags, size, 16);
+			unitID = extract(tags, size, 17);
+			teamWithIdMap = extract(tags, size, 18);
 		} else {
 			Gdx.app.log(TAG, "message was empty");
 		}
@@ -244,6 +260,14 @@ public class NetworkMessage {
 		return gameID;
 	}
 
+	public int getUnitID() {
+		return Integer.valueOf(unitID);
+	}
+
+	public String getTeamWithIdMap() {
+		return teamWithIdMap;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -289,6 +313,10 @@ public class NetworkMessage {
 		builder.append(pos + "\n");
 		builder.append("game ID : ");
 		builder.append(gameID + "\n");
+		builder.append("unit ID : ");
+		builder.append(unitID + "\n");
+		builder.append("teamWithIdMap : ");
+		builder.append(teamWithIdMap + "\n");
 
 		return builder.toString();
 	}

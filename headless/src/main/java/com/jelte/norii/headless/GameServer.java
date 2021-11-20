@@ -119,11 +119,10 @@ public class GameServer {
 			}
 			break;
 		case UNIT_DEPLOYED:
-			Integer id = Integer.parseInt(message.getGameID());
-			GameInstance battle = activeGames.get(id);
-			if (battle.containsClient(client)) {
-				battle.getOpponent(client).getSocket().writeFinalTextFrame(event.textData());
-			}
+			passMessageOnToOpponent(client, event, message);
+			break;
+		case INIT_ENEMY_TEAM:
+			passMessageOnToOpponent(client, event, message);
 			break;
 		default:
 			break;
@@ -135,6 +134,14 @@ public class GameServer {
 					c.getSocket().writeFinalTextFrame(returnMessage.messageToString());
 				}
 			});
+		}
+	}
+
+	private void passMessageOnToOpponent(ConnectedClient client, WebSocketFrame event, NetworkMessage message) {
+		Integer id = Integer.parseInt(message.getGameID());
+		GameInstance battle = activeGames.get(id);
+		if (battle.containsClient(client)) {
+			battle.getOpponent(client).getSocket().writeFinalTextFrame(event.textData());
 		}
 	}
 
@@ -188,11 +195,11 @@ public class GameServer {
 					// Change the gameID for each player to the ID of the new game
 					players.get(0).setGameID(gamesCreated);
 					players.get(1).setGameID(gamesCreated);
-					
+
 					// Create a game instance and add it to the list of all active game instances
 					final GameInstance newGame = new GameInstance(this, gamesCreated, players.get(0), players.get(1), mapType);
 					activeGames.put(gamesCreated, newGame);
-					
+
 					// Output matchup to log
 					Gdx.app.log(CLIENT_TAG, "Game " + gamesCreated + ": " + players.get(0).getPlayerName() + " vs " + players.get(1).getPlayerName());
 					gamesCreated++;

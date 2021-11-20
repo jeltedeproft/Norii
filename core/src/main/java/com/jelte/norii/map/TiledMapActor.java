@@ -7,9 +7,9 @@ import com.jelte.norii.utility.TiledMapPosition;
 public class TiledMapActor extends Actor {
 	private final Map tiledMap;
 	private final TiledMapTileLayer tiledLayer;
-	private Boolean isFreeSpawn;
-	private Boolean isAISpawn;
-	private Boolean isHovered;
+	private Boolean isFreeSpawn = false;
+	private Boolean isAISpawn = false;
+	private Boolean isHovered = false;
 	private TiledMapPosition actorPos = new TiledMapPosition();
 
 	public Boolean getIsFreeSpawn() {
