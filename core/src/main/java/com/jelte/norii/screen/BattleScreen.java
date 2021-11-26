@@ -98,7 +98,7 @@ public class BattleScreen extends GameScreen {
 		if (enemyTeamLeader.getType().equals(EnemyType.ONLINE_PLAYER)) {
 			HashMap<Integer, String> teamWithId = new HashMap<>();
 			for (Entity unit : Player.getInstance().getTeam()) {
-				teamWithId.put(unit.getEntityID(), unit.getName());
+				teamWithId.put(unit.getEntityID(), unit.getEntityData().getName());
 			}
 			String serializedTeamWithId = json.toJson(teamWithId);
 			NetworkMessage message = new NetworkMessage();

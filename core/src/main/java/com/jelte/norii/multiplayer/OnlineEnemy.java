@@ -1,6 +1,7 @@
 package com.jelte.norii.multiplayer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -52,13 +53,13 @@ public class OnlineEnemy implements UnitOwner {
 	@Override
 	@SuppressWarnings("unchecked")
 	public void initiateUnits(String teamWithIdAsString) {
-		Map<Integer, String> teamNames = json.fromJson(Map.class, teamWithIdAsString);
-		for (final Entry<Integer, String> idWithName : teamNames.entrySet()) {
+		HashMap<String, String> teamNames = json.fromJson(HashMap.class, teamWithIdAsString);
+		for (final Entry<String, String> idWithName : teamNames.entrySet()) {
 			for (final EntityTypes entityType : EntityTypes.values()) {
 				if (idWithName.getValue().equals(entityType.getEntityName())) {
 					final Entity entity = new Entity(entityType, this, true);
 					entity.setPlayerUnit(false);
-					entity.setEntityID(idWithName.getKey());
+					entity.setEntityID(Integer.parseInt(idWithName.getKey()));
 					team.add(entity);
 				}
 			}
