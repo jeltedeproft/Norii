@@ -246,8 +246,8 @@ public class BattleScreen extends GameScreen {
 				battlemanager.setPlayerTurn(true);
 				Player.getInstance().setMyTurn(true);
 				break;
-			case INIT_ENEMY_TEAM:
-				enemyTeamLeader.initiateUnits(message.getTeamWithIdMap());
+			case SYNCHRONIZE_UNIT_IDS:
+				enemyTeamLeader.synchronizeMultiplayerUnitsWithLocal(message.getTeamWithIdMap());
 			default:
 				break;
 			}

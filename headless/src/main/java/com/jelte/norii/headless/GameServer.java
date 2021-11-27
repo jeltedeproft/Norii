@@ -121,7 +121,7 @@ public class GameServer {
 		case UNIT_DEPLOYED:
 			passMessageOnToOpponent(client, event, message);
 			break;
-		case INIT_ENEMY_TEAM:
+		case SYNCHRONIZE_UNIT_IDS:
 			passMessageOnToOpponent(client, event, message);
 			break;
 		default:

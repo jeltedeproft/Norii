@@ -72,7 +72,7 @@ public interface UnitOwner {
 
 	public Alliance getAlliance();
 
-	public void initiateUnits(String teamWithIdMap);
+	public void synchronizeMultiplayerUnitsWithLocal(String teamWithIdMap);
 
 	public String getGameID();
 }

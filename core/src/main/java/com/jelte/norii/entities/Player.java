@@ -237,7 +237,7 @@ public class Player implements UnitOwner {
 	}
 
 	@Override
-	public void initiateUnits(String teamWithIdMap) {
+	public void synchronizeMultiplayerUnitsWithLocal(String teamWithIdMap) {
 		// TODO Auto-generated method stub
 
 	}

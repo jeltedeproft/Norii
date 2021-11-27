@@ -3,10 +3,10 @@ package com.jelte.norii.multiplayer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.jelte.norii.ai.EnemyType;
 import com.jelte.norii.battle.ApFileReader;
@@ -34,13 +34,14 @@ public class OnlineEnemy implements UnitOwner {
 	private String gameID;
 	private Alliance alliance;
 
-	public OnlineEnemy(String ownerName, boolean playerStart, String gameID) {
+	public OnlineEnemy(String ownerName, String teamAsString, boolean playerStart, String gameID) {
 		team = new ArrayList<>();
 		type = EnemyType.ONLINE_PLAYER;
 		this.ownerName = ownerName;
 		json = new Json();
 		this.myTurn = playerStart;
 		this.gameID = gameID;
+		initiateUnits(teamAsString);
 		if (playerStart) {
 			alliance = Alliance.TEAM_BLUE;
 			Player.getInstance().setAlliance(Alliance.TEAM_RED);
@@ -52,14 +53,27 @@ public class OnlineEnemy implements UnitOwner {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void initiateUnits(String teamWithIdAsString) {
-		HashMap<String, String> teamNames = json.fromJson(HashMap.class, teamWithIdAsString);
-		for (final Entry<String, String> idWithName : teamNames.entrySet()) {
+	public void synchronizeMultiplayerUnitsWithLocal(String teamWithIdAsString) {
+		HashMap<String, String> idWithUnitNames = json.fromJson(HashMap.class, teamWithIdAsString);
+		List<String> synchronizedUnitIds = new ArrayList<>();
+		for (final Entry<String, String> idWithName : idWithUnitNames.entrySet()) {
+			for (final Entity entity : team) {
+				if (!synchronizedUnitIds.contains(idWithName.getKey()) && (idWithName.getValue().equals(entity.getEntityData().getName()))) {
+					entity.setEntityID(Integer.parseInt(idWithName.getKey()));
+				}
+			}
+		}
+		ap = ApFileReader.getApData(0);
+	}
+
+	@SuppressWarnings("unchecked")
+	private void initiateUnits(String teamAsString) {
+		Array<String> teamNames = json.fromJson(Array.class, teamAsString);
+		for (final String name : teamNames) {
 			for (final EntityTypes entityType : EntityTypes.values()) {
-				if (idWithName.getValue().equals(entityType.getEntityName())) {
+				if (name.equals(entityType.getEntityName())) {
 					final Entity entity = new Entity(entityType, this, true);
 					entity.setPlayerUnit(false);
-					entity.setEntityID(Integer.parseInt(idWithName.getKey()));
 					team.add(entity);
 				}
 			}

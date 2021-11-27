@@ -31,7 +31,7 @@ public class NetworkMessage {
 	private String teamWithIdMap = "";
 
 	public enum MessageType {
-		CONNECTED, SEARCH_OPPONENT, DISCONNECTED, BATTLE, TRY_LOGIN, LOGIN_VALIDATION, MOVE_MADE, UNIT_DEPLOYED, INIT_ENEMY_TEAM
+		CONNECTED, SEARCH_OPPONENT, DISCONNECTED, BATTLE, TRY_LOGIN, LOGIN_VALIDATION, MOVE_MADE, UNIT_DEPLOYED, SYNCHRONIZE_UNIT_IDS
 	}
 
 	public NetworkMessage() {
@@ -101,7 +101,7 @@ public class NetworkMessage {
 	}
 
 	public void makeInitEnemyTeamMessage(String gameID, String teamWithIdMap) {
-		type = MessageType.INIT_ENEMY_TEAM;
+		type = MessageType.SYNCHRONIZE_UNIT_IDS;
 		this.teamWithIdMap = teamWithIdMap;
 		this.gameID = gameID;
 		sender = ServerCommunicator.getInstance().getClientID();
