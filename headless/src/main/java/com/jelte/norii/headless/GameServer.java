@@ -53,6 +53,7 @@ public class GameServer {
 	private void initServer() {
 		vertx = Vertx.vertx();
 		final HttpServerOptions options = new HttpServerOptions();
+		options.setIdleTimeout(0);
 		server = vertx.createHttpServer(options);
 		gamesCreated = 0;
 		activeGames = new HashMap<>();
