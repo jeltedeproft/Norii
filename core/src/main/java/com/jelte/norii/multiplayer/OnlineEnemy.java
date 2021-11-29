@@ -58,8 +58,9 @@ public class OnlineEnemy implements UnitOwner {
 		List<String> synchronizedUnitIds = new ArrayList<>();
 		for (final Entry<String, String> idWithName : idWithUnitNames.entrySet()) {
 			for (final Entity entity : team) {
-				if (!synchronizedUnitIds.contains(idWithName.getKey()) && (idWithName.getValue().equals(entity.getEntityData().getName()))) {
+				if (!synchronizedUnitIds.contains(idWithName.getKey()) && (idWithName.getValue().equals(entity.getEntityData().getName())) && !synchronizedUnitIds.contains(Integer.toString(entity.getEntityID()))) {
 					entity.setEntityID(Integer.parseInt(idWithName.getKey()));
+					synchronizedUnitIds.add(idWithName.getKey());
 				}
 			}
 		}
