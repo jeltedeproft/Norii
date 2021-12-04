@@ -75,4 +75,6 @@ public interface UnitOwner {
 	public void synchronizeMultiplayerUnitsWithLocal(String teamWithIdMap);
 
 	public String getGameID();
+
+	public void notifyDeploymentDone();
 }

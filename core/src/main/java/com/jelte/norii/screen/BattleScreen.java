@@ -248,6 +248,10 @@ public class BattleScreen extends GameScreen {
 				break;
 			case SYNCHRONIZE_UNIT_IDS:
 				enemyTeamLeader.synchronizeMultiplayerUnitsWithLocal(message.getTeamWithIdMap());
+				break;
+			case DEPLOYMENT_FINISHED:
+
+				break;
 			default:
 				break;
 			}
@@ -482,6 +486,7 @@ public class BattleScreen extends GameScreen {
 			hud.getHudMessages().hideInfoWindow(HudMessageTypes.NUMBER_OF_UNITS_DEPLOYED);
 			hud.getHudMessages().showNextTutorialMessage();
 			hud.getPortraitAndStats().setActionsVisible(true);
+			enemyTeamLeader.notifyDeploymentDone();
 			break;
 		case INVALID_SPELL_TARGET:
 			hud.getHudMessages().showPopup(HudMessageTypes.INVALID_SPELL_TARGET);

@@ -241,4 +241,10 @@ public class Player implements UnitOwner {
 		// TODO Auto-generated method stub
 
 	}
+
+	@Override
+	public void notifyDeploymentDone() {
+		// TODO Auto-generated method stub
+
+	}
 }

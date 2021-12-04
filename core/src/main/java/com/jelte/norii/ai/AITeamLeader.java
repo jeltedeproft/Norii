@@ -235,4 +235,10 @@ public class AITeamLeader implements UnitOwner {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public void notifyDeploymentDone() {
+		// TODO Auto-generated method stub
+
+	}
 }

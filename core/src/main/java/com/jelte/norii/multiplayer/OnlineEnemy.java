@@ -254,4 +254,11 @@ public class OnlineEnemy implements UnitOwner {
 		return alliance;
 	}
 
+	@Override
+	public void notifyDeploymentDone() {
+		NetworkMessage message = new NetworkMessage();
+		message.makeDeploymentFinishedMessage();
+		ServerCommunicator.getInstance().sendMessage(message);
+	}
+
 }
