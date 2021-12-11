@@ -322,11 +322,7 @@ public class NetworkMessage {
 
 	public EntityTypes  getUnitType() {
 		if(!(unitType.isBlank() || unitType.isEmpty() || unitType == null)) {
-			for(EntityTypes entityType : EntityTypes.values()) {
-				if(entityType.getEntityName().equals(unitType)) {
-					return entityType;
-				}
-			}
+			return EntityTypes.valueOf(unitType);
 		}
 		return null;
 	}
