@@ -44,6 +44,7 @@ public class AttackBattlePhase extends BattlePhase {
 			currentUnit.attack(entity, DamageType.PHYSICAL);
 			battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.UPDATE_UI, entity);
 			AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.ATTACK_SOUND);
+			battlemanager.getEnemyTeamLeader().playerUnitAttacked(currentUnit, entity.getCurrentPosition());
 			exit();
 		} else {
 			battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.INVALID_ATTACK_TARGET, battlemanager.getActiveUnit());

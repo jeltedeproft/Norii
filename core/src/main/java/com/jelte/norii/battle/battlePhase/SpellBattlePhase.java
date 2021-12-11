@@ -102,6 +102,7 @@ public class SpellBattlePhase extends BattlePhase {
 
 		if (isValidUnitTarget(currentUnit, target)) {
 			selectSpell(target, ability, currentUnit, target.getCurrentPosition());
+			battlemanager.getEnemyTeamLeader().playerUnitCastedSpell(currentUnit,ability, target.getCurrentPosition());
 		} else {
 			battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.INVALID_SPELL_TARGET, battlemanager.getActiveUnit());
 		}

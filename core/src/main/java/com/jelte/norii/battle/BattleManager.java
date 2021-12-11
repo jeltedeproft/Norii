@@ -21,8 +21,10 @@ import com.jelte.norii.battle.battlePhase.SelectUnitBattlePhase;
 import com.jelte.norii.battle.battlePhase.SpellBattlePhase;
 import com.jelte.norii.battle.battleState.BattleState;
 import com.jelte.norii.battle.battleState.Move;
+import com.jelte.norii.battle.battleState.MoveType;
 import com.jelte.norii.battle.battleState.SpellMove;
 import com.jelte.norii.entities.Entity;
+import com.jelte.norii.entities.EntityTypes;
 import com.jelte.norii.entities.Player;
 import com.jelte.norii.entities.UnitOwner;
 import com.jelte.norii.magic.Ability;
@@ -46,9 +48,8 @@ public class BattleManager {
 	private BattleState activeBattleState;
 	private UnitTurn activeTurn;
 	private boolean playerTurn;
-	private boolean aiUnitIsBussy = false;
-	private boolean aiIsCalculating = false;
-	private boolean aiFinishedCalculating = false;
+	private boolean enemyUnitIsDoingSomething = false;
+	private boolean enemyIsMakingDecision = false;
 	private int unitsDeployed;
 	private BattleScreen battleScreen;
 	private int turn = 0;
@@ -75,9 +76,9 @@ public class BattleManager {
 		Player.getInstance().setBattleManager(this);
 		enemyTeamLeader.setBattleManager(this);
 		activeUnit = Player.getInstance().getTeam().get(0);
-		playerTurn = enemyTeamLeader.isMyTurn();
+		playerTurn = !enemyTeamLeader.isMyTurn();
 		activeTurn = null;
-		aiIsCalculating = (enemyTeamLeader.isAI() && !playerTurn);
+		enemyIsMakingDecision = !playerTurn;
 		activeBattleState = new BattleState(width, height);
 		initializeStateOfBattle(unwalkableNodes);
 	}
@@ -138,24 +139,28 @@ public class BattleManager {
 	public void sendMessageToBattleScreen(MessageToBattleScreen message, Entity entity) {
 		switch (message) {
 		case CLICKED:
-			if (!aiUnitIsBussy) {
+			if (!enemyUnitIsDoingSomething) {
 				getCurrentBattleState().clickedOnUnit(entity);
 			}
 			break;
-		case AI_FINISHED_TURN:
+		case ENEMY_FINISHED_TURN:
 			swapTurn();
 			break;
 		case UNIT_DIED:
 			removeUnit(entity);
 			checkVictory();
 			break;
-		case AI_FINISHED_CALCULATING:
-			aiFinishedCalculating = true;
-			aiIsCalculating = false;
+		case FINISHED_PROCESSING_TURN:
+			enemyIsMakingDecision = false;
+			enemyUnitIsDoingSomething = true;
+			activeTurn = enemyTeamLeader.getProcessingResult();
+			executeTurn();
+			setCurrentBattleState(getSelectUnitBattleState());
+			getCurrentBattleState().entry();
 			break;
 		case ACTION_COMPLETED:
 			if (!playerTurn) {
-				executeNextMove();
+				executeTurn();
 			} else {
 				sendMessageToBattleScreen(MessageToBattleScreen.UNLOCK_UI, activeUnit);
 			}
@@ -174,8 +179,8 @@ public class BattleManager {
 
 		if (!playerTurn) {
 			Player.getInstance().setAp(ApFileReader.getApData(turn));
-			aiIsCalculating = true;
-			enemyTeamLeader.resetAI(activeBattleState);
+			enemyIsMakingDecision = true;
+			enemyTeamLeader.reset(activeBattleState);
 		} else {
 			turn++;
 			enemyTeamLeader.setAp(ApFileReader.getApData(turn));
@@ -185,31 +190,18 @@ public class BattleManager {
 
 	}
 
-	public void processAI() {
-		if (aiIsCalculating) {
-			enemyTeamLeader.processAi();
+	public void update() {
+		if (enemyIsMakingDecision) {
+			enemyTeamLeader.processMove();
 		}
-
-		if (aiFinishedCalculating) {
-			Gdx.app.debug(TAG, "finished calculating");
-			final BattleState newState = enemyTeamLeader.getNextBattleState();
-			aiUnitIsBussy = true;
-			aiIsCalculating = false;
-			aiFinishedCalculating = false;
-			activeTurn = newState.getTurn();
-			executeNextMove();
-			setCurrentBattleState(getSelectUnitBattleState());
-			getCurrentBattleState().entry();
-		}
-
 	}
-
-	private void executeNextMove() {
+	
+	private void executeTurn() {
 		final int entityID = activeTurn.getEntityID();
 		final Entity entity = getEntityByID(entityID);
 		final Move move = activeTurn.getNextMove();
 		if (move == null) {
-			aiUnitIsBussy = false;
+			enemyUnitIsDoingSomething = false;
 			if (entity.isPlayerUnit()) {
 				sendMessageToBattleScreen(MessageToBattleScreen.UNLOCK_UI, activeUnit);
 			}
@@ -218,29 +210,35 @@ public class BattleManager {
 			enemyTeamLeader.setAp(ApFileReader.getApData(turn));
 			return;
 		}
+		executeMove(entity, move);
+		if(!move.getMoveType().equals(MoveType.MOVE)) {
+			executeTurn();
+		}
+	}
+
+	public void executeMove(Entity entity, Move move) {
 		switch (move.getMoveType()) {
 		case SPELL:
 			final SpellMove spellMove = (SpellMove) move;
 			final SpellBattlePhase spellState = (SpellBattlePhase) spellBattleState;
 			spellState.executeSpellForAi(entity, spellMove.getAbility(), spellMove.getLocation());
-			executeNextMove();
 			break;
 		case MOVE:
 			final List<GridCell> path = MyPathFinder.getInstance().pathTowards(entity.getCurrentPosition(), new TiledMapPosition().setPositionFromTiles(move.getLocation().x, move.getLocation().y), entity.getAp());
 			activeBattleState.moveUnitTo(entity, new MyPoint(move.getLocation().x, move.getLocation().y));
 			entity.move(path);
+			//wait for move to complete before executing next one
 			break;
 		case ATTACK:
 			final Entity entityToAttack = getEntityByID(activeBattleState.get(move.getLocation().x, move.getLocation().y).getUnit().getEntityID());
 			entity.attack(entityToAttack, DamageType.PHYSICAL);
 			sendMessageToBattleScreen(MessageToBattleScreen.UPDATE_UI, entityToAttack);
 			AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.ATTACK_SOUND);
-			executeNextMove();
 			break;
 		case DUMMY:
-			// do nothing
+			break;
 		default:
-			// do nothing
+			break;
 		}
 	}
 
@@ -276,10 +274,9 @@ public class BattleManager {
 		activeBattleState.removeUnit(unit);
 	}
 
-	@SuppressWarnings("incomplete-switch")
+
 	private void executeOnDeathEffect(Entity unit) {
-		switch (unit.getEntityType()) {
-		case BOOMERANG:
+		if(unit.getEntityType().equals(EntityTypes.BOOMERANG)) {
 			for (final Ability ability : unit.getAbilities()) {
 				if (ability.getTargetLocation() != null) {
 					final SpellBattlePhase spellState = (SpellBattlePhase) spellBattleState;

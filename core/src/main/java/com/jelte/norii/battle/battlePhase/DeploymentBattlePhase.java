@@ -29,7 +29,14 @@ public class DeploymentBattlePhase extends BattlePhase {
 
 	@Override
 	public void exit() {
-		ParticleMaker.deactivateAllParticlesOfType(ParticleType.SPAWN);
+		Alliance alliance = Player.getInstance().getAlliance();
+		if(alliance.equals(Alliance.TEAM_BLUE)) {
+			ParticleMaker.deactivateAllParticlesOfType(ParticleType.SPAWN);
+		}
+		if(alliance.equals(Alliance.TEAM_RED)) {
+			ParticleMaker.deactivateAllParticlesOfType(ParticleType.PURPLE_SQUARE);
+		}
+		
 		battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.DEPLOYMENT_FINISHED, battlemanager.getActiveUnit());
 		battlemanager.setCurrentBattleState(battlemanager.getSelectUnitBattleState());
 		battlemanager.getCurrentBattleState().entry();

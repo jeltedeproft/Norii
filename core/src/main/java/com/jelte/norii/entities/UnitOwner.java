@@ -1,12 +1,15 @@
 package com.jelte.norii.entities;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.jelte.norii.ai.EnemyType;
+import com.jelte.norii.ai.UnitTurn;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.battle.MessageToBattleScreen;
 import com.jelte.norii.battle.battleState.BattleState;
+import com.jelte.norii.magic.Ability;
 import com.jelte.norii.utility.TiledMapPosition;
 
 public interface UnitOwner {
@@ -42,8 +45,16 @@ public interface UnitOwner {
 
 	public void spawnUnits(List<TiledMapPosition> spawnPositions);
 
-	public void spawnUnit(String name, int entityID, TiledMapPosition pos);
+	public void spawnUnit(EntityTypes entityType, int entityID, TiledMapPosition pos);
 
+	public void playerUnitMoved(Entity entity, TiledMapPosition pos);
+	
+	public void playerUnitAttacked(Entity entity, TiledMapPosition pos);
+	
+	public void playerUnitCastedSpell(Entity entity, Ability ability, TiledMapPosition pos);
+	
+	public void playerUnitSkipped(Entity entity);
+	
 	public void playerUnitSpawned(Entity entity, TiledMapPosition pos);
 
 	public void sendMessageToBattleManager(MessageToBattleScreen message, Entity entity);
@@ -54,9 +65,9 @@ public interface UnitOwner {
 
 	public void dispose();
 
-	public void resetAI(BattleState activeBattleState);
+	public void reset(BattleState activeBattleState);
 
-	public void processAi();
+	public void processMove();
 
 	public BattleState getNextBattleState();
 
@@ -72,9 +83,11 @@ public interface UnitOwner {
 
 	public Alliance getAlliance();
 
-	public void synchronizeMultiplayerUnitsWithLocal(String teamWithIdMap);
+	public void synchronizeMultiplayerUnitsWithLocal(HashMap<String,String> teamWithIdMap);
 
-	public String getGameID();
+	public int getGameID();
 
 	public void notifyDeploymentDone();
+
+	public UnitTurn getProcessingResult();
 }

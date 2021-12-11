@@ -156,7 +156,7 @@ public class LoginScreen extends GameScreen {
 			NetworkMessage oldestMessage = serverCom.getOldestMessageFromServer();
 			if (oldestMessage.getType() == MessageType.LOGIN_VALIDATION) {
 				Gdx.app.log("loginscreen", "received login_validatoin message");
-				if (oldestMessage.getLoginWorked().equalsIgnoreCase("true")) {
+				if (oldestMessage.getLoginWorked()) {
 					Gdx.app.log("loginscreen", "login is true");
 					ScreenManager.getInstance().showScreen(ScreenEnum.MAIN_MENU);
 				}

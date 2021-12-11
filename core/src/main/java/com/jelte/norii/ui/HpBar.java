@@ -57,5 +57,4 @@ public class HpBar {
 			getHealthBar().setVisible(false);
 		}
 	}
-
 }

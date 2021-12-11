@@ -1,6 +1,7 @@
 package com.jelte.norii.ai;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
@@ -13,6 +14,7 @@ import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityTypes;
 import com.jelte.norii.entities.Player;
 import com.jelte.norii.entities.UnitOwner;
+import com.jelte.norii.magic.Ability;
 import com.jelte.norii.utility.TiledMapPosition;
 
 public class AITeamLeader implements UnitOwner {
@@ -27,6 +29,7 @@ public class AITeamLeader implements UnitOwner {
 	private String name = "test";
 	private boolean isMyTurn = false;
 	private Alliance alliance;
+	private BattleState stateWithNextMove;
 
 	public AITeamLeader(final EnemyType type) {
 		this.type = type;
@@ -66,16 +69,22 @@ public class AITeamLeader implements UnitOwner {
 	}
 
 	@Override
-	public void resetAI(BattleState stateOfBattle) {
+	public void reset(BattleState stateOfBattle) {
 		aiDecisionMaker.resetAI(stateOfBattle);
 	}
 
 	@Override
-	public void processAi() {
+	public void processMove() {
 		if (aiDecisionMaker.processAi()) {
-			sendMessageToBattleManager(MessageToBattleScreen.AI_FINISHED_CALCULATING, battleManager.getActiveUnit());
+			stateWithNextMove = getNextBattleState();
+			sendMessageToBattleManager(MessageToBattleScreen.FINISHED_PROCESSING_TURN, battleManager.getActiveUnit());
 		}
 
+	}
+	
+	@Override
+	public UnitTurn getProcessingResult() {
+		return stateWithNextMove.getTurn();
 	}
 
 	@Override
@@ -185,11 +194,11 @@ public class AITeamLeader implements UnitOwner {
 	public String getName() {
 		return name;
 	}
-
+	
 	@Override
-	public void spawnUnit(String name, int entityID, TiledMapPosition pos) {
+	public void spawnUnit(EntityTypes entityType, int entityID, TiledMapPosition pos) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
@@ -220,25 +229,47 @@ public class AITeamLeader implements UnitOwner {
 
 	@Override
 	public Alliance getAlliance() {
-		// TODO Auto-generated method stub
-		return null;
+		return alliance;
 	}
 
 	@Override
-	public void synchronizeMultiplayerUnitsWithLocal(String teamWithIdMap) {
+	public void synchronizeMultiplayerUnitsWithLocal(HashMap teamWithIdMap) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
-	public String getGameID() {
-		// TODO Auto-generated method stub
-		return null;
+	public int getGameID() {
+		return 1;
 	}
 
 	@Override
 	public void notifyDeploymentDone() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void playerUnitMoved(Entity entity, TiledMapPosition pos) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void playerUnitAttacked(Entity entity, TiledMapPosition pos) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void playerUnitCastedSpell(Entity entity, Ability ability, TiledMapPosition pos) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void playerUnitSkipped(Entity entity) {
+		// TODO Auto-generated method stub
+		
 	}
 }

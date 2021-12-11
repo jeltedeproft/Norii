@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.jelte.norii.ai.EnemyType;
+import com.jelte.norii.ai.UnitTurn;
 import com.jelte.norii.battle.ApFileReader;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.battle.MessageToBattleScreen;
@@ -17,6 +18,7 @@ import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityTypes;
 import com.jelte.norii.entities.Player;
 import com.jelte.norii.entities.UnitOwner;
+import com.jelte.norii.magic.Ability;
 import com.jelte.norii.multiplayer.NetworkMessage.MessageType;
 import com.jelte.norii.utility.TiledMapPosition;
 
@@ -31,18 +33,18 @@ public class OnlineEnemy implements UnitOwner {
 	private String ownerName;
 	private Json json;
 	private boolean myTurn;
-	private String gameID;
+	private int gameID;
 	private Alliance alliance;
 
-	public OnlineEnemy(String ownerName, String teamAsString, boolean playerStart, String gameID) {
+	public OnlineEnemy(String ownerName, String teamAsString, boolean myTurn, int gameID) {
 		team = new ArrayList<>();
 		type = EnemyType.ONLINE_PLAYER;
 		this.ownerName = ownerName;
 		json = new Json();
-		this.myTurn = playerStart;
+		this.myTurn = myTurn;
 		this.gameID = gameID;
 		initiateUnits(teamAsString);
-		if (playerStart) {
+		if (myTurn) {
 			alliance = Alliance.TEAM_BLUE;
 			Player.getInstance().setAlliance(Alliance.TEAM_RED);
 		} else {
@@ -53,10 +55,9 @@ public class OnlineEnemy implements UnitOwner {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void synchronizeMultiplayerUnitsWithLocal(String teamWithIdAsString) {
-		HashMap<String, String> idWithUnitNames = json.fromJson(HashMap.class, teamWithIdAsString);
+	public void synchronizeMultiplayerUnitsWithLocal(HashMap<String,String> teamWithIdMap) {
 		List<String> synchronizedUnitIds = new ArrayList<>();
-		for (final Entry<String, String> idWithName : idWithUnitNames.entrySet()) {
+		for (final Entry<String, String> idWithName : teamWithIdMap.entrySet()) {
 			for (final Entity entity : team) {
 				if (!synchronizedUnitIds.contains(idWithName.getKey()) && (idWithName.getValue().equals(entity.getEntityData().getName())) && !synchronizedUnitIds.contains(Integer.toString(entity.getEntityID()))) {
 					entity.setEntityID(Integer.parseInt(idWithName.getKey()));
@@ -88,24 +89,25 @@ public class OnlineEnemy implements UnitOwner {
 	}
 
 	@Override
-	public void spawnUnit(String unitName, int unitID, TiledMapPosition spawnPosition) {
+	public void spawnUnit(EntityTypes entityType, int entityID, TiledMapPosition spawnPosition) {
 		for (final Entity unit : team) {
-			if ((unit.getEntityID() == unitID) && unitName.equals(unit.getEntityType().name()) && !unit.isInBattle()) {
+			if ((unit.getEntityID() == entityID) && entityType.equals(unit.getEntityType()) && !unit.isInBattle()) {
 				unit.setCurrentPosition(spawnPosition);
 				unit.setPlayerUnit(false);
 				unit.getVisualComponent().spawn(spawnPosition);
 				battleManager.addUnit(unit);
+				battleManager.sendMessageToBattleScreen(MessageToBattleScreen.ADD_UNIT_UI,unit);
 			}
 		}
 	}
 
 	@Override
-	public void resetAI(BattleState stateOfBattle) {
+	public void reset(BattleState stateOfBattle) {
 		// do nothing
 	}
 
 	@Override
-	public void processAi() {
+	public void processMove() {
 		// do nothing
 	}
 
@@ -154,7 +156,10 @@ public class OnlineEnemy implements UnitOwner {
 
 	@Override
 	public void applyModifiers() {
-		team.forEach(Entity::applyModifiers);
+//		team.forEach(Entity::applyModifiers);
+//		NetworkMessage message = new NetworkMessage(MessageType.UNIT_DEPLOYED);
+//		message.makeUnitDeployedMessage(entity.getEntityType().name(), entity.getEntityID(), pos.toString(), gameID);
+//		ServerCommunicator.getInstance().sendMessage(message);
 	}
 
 	@Override
@@ -245,7 +250,7 @@ public class OnlineEnemy implements UnitOwner {
 	}
 
 	@Override
-	public String getGameID() {
+	public int getGameID() {
 		return gameID;
 	}
 
@@ -257,8 +262,41 @@ public class OnlineEnemy implements UnitOwner {
 	@Override
 	public void notifyDeploymentDone() {
 		NetworkMessage message = new NetworkMessage();
-		message.makeDeploymentFinishedMessage();
+		message.makeDeploymentFinishedMessage(gameID);
 		ServerCommunicator.getInstance().sendMessage(message);
 	}
 
+	@Override
+	public void playerUnitMoved(Entity entity, TiledMapPosition pos) {
+		NetworkMessage message = new NetworkMessage(MessageType.UNIT_MOVED);
+		message.makeUnitMovedMessage(entity.getEntityType().name(), entity.getEntityID(), pos.toString(), gameID);
+		ServerCommunicator.getInstance().sendMessage(message);
+	}
+
+	@Override
+	public void playerUnitAttacked(Entity entity, TiledMapPosition pos) {
+		NetworkMessage message = new NetworkMessage(MessageType.UNIT_ATTACKED);
+		message.makeUnitAttackedMessage(entity.getEntityType().name(), entity.getEntityID(), pos.toString(), gameID);
+		ServerCommunicator.getInstance().sendMessage(message);
+	}
+
+	@Override
+	public void playerUnitCastedSpell(Entity entity, Ability ability, TiledMapPosition pos) {
+		NetworkMessage message = new NetworkMessage(MessageType.UNIT_CASTED_SPELL);
+		message.makeUnitCastedSpellMessage(entity.getEntityType().name(), entity.getEntityID(), pos.toString(), ability.getAbilityEnum().name(), gameID, null);
+		ServerCommunicator.getInstance().sendMessage(message);
+	}
+
+	@Override
+	public void playerUnitSkipped(Entity entity) {
+		NetworkMessage message = new NetworkMessage(MessageType.UNIT_SKIPPED);
+		message.makeUnitSkippedMessage(entity.getEntityType().name(), entity.getEntityID(), gameID);
+		ServerCommunicator.getInstance().sendMessage(message);
+	}
+
+	@Override
+	public UnitTurn getProcessingResult() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

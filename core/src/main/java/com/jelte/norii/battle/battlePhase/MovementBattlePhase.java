@@ -59,6 +59,7 @@ public class MovementBattlePhase extends BattlePhase {
 		final List<GridCell> path = MyPathFinder.getInstance().pathTowards(currentUnit.getCurrentPosition(), newUnitPos, currentUnit.getAp());
 		battlemanager.getBattleState().moveUnitTo(currentUnit, newUnitPos);
 		currentUnit.move(path);
+		battlemanager.getEnemyTeamLeader().playerUnitMoved(currentUnit, newUnitPos);
 	}
 
 	@Override

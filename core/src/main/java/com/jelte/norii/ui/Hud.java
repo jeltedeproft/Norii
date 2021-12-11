@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.jelte.norii.ai.EnemyType;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.screen.BattleScreen;
@@ -34,12 +35,22 @@ public class Hud {
 	private float tilePixelHeight;
 
 	private boolean locked;
+	private boolean isTutorial;
+	private boolean isOnline;
 
 	public static final float UI_VIEWPORT_WIDTH = 1000;
 	public static final float UI_VIEWPORT_HEIGHT = 1000;
 
-	public Hud(List<Entity> playerUnits, List<Entity> aiUnits, SpriteBatch spriteBatch, int mapWidth, int mapHeight, BattleScreen battleScreen, boolean isTutorial) {
-		final List<Entity> allUnits = Stream.concat(playerUnits.stream(), aiUnits.stream()).collect(Collectors.toList());
+	public Hud(List<Entity> playerUnits, List<Entity> aiUnits, SpriteBatch spriteBatch, int mapWidth, int mapHeight, BattleScreen battleScreen, EnemyType enemyType) {
+		isTutorial = enemyType == EnemyType.TUTORIAL;
+		isOnline = enemyType == EnemyType.ONLINE_PLAYER;
+		List<Entity> allUnits;
+		if(isOnline) {
+			allUnits = playerUnits;
+		}else {
+			allUnits = Stream.concat(playerUnits.stream(), aiUnits.stream()).collect(Collectors.toList());
+		}
+		
 		initVariables(spriteBatch, mapWidth, mapHeight, battleScreen);
 		createTileHoverParticle();
 		createCharacterHUD();

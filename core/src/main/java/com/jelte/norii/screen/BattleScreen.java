@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.jelte.norii.ai.EnemyType;
@@ -22,10 +23,15 @@ import com.jelte.norii.audio.AudioTypeEvent;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.battle.BattleScreenInputProcessor;
 import com.jelte.norii.battle.battleState.BattleStateGridHelper;
+import com.jelte.norii.battle.battleState.Move;
+import com.jelte.norii.battle.battleState.MoveType;
+import com.jelte.norii.battle.battleState.SpellMove;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityStage;
 import com.jelte.norii.entities.Player;
 import com.jelte.norii.entities.UnitOwner;
+import com.jelte.norii.entities.UnitOwner.Alliance;
+import com.jelte.norii.magic.AbilitiesEnum;
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.magic.Ability.LineOfSight;
 import com.jelte.norii.map.BattleMap;
@@ -36,6 +42,7 @@ import com.jelte.norii.map.MyPathFinder;
 import com.jelte.norii.map.TiledMapActor;
 import com.jelte.norii.multiplayer.NetworkMessage;
 import com.jelte.norii.multiplayer.ServerCommunicator;
+import com.jelte.norii.multiplayer.NetworkMessage.MessageType;
 import com.jelte.norii.particles.ParticleMaker;
 import com.jelte.norii.particles.ParticleType;
 import com.jelte.norii.ui.Hud;
@@ -112,7 +119,7 @@ public class BattleScreen extends GameScreen {
 	private void initializeHUD() {
 		hudCamera = new OrthographicCamera();
 		hudCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		hud = new Hud(Player.getInstance().getTeam(), enemyTeamLeader.getTeam(), spriteBatch, currentMap.getMapWidth(), currentMap.getMapHeight(), this, (enemyTeamLeader.getType() == EnemyType.TUTORIAL));
+		hud = new Hud(Player.getInstance().getTeam(), enemyTeamLeader.getTeam(), spriteBatch, currentMap.getMapWidth(), currentMap.getMapHeight(), this, enemyTeamLeader.getType());
 		if (enemyTeamLeader.getType() == EnemyType.TUTORIAL) {
 			hud.getHudMessages().showInfoWindow(HudMessageTypes.DEPLOY_UNITS_INFO);
 		}
@@ -227,7 +234,9 @@ public class BattleScreen extends GameScreen {
 	}
 
 	private void processAi() {
-		battlemanager.processAI();
+		if(enemyTeamLeader.isAI()) {
+			battlemanager.update();
+		}
 	}
 
 	private void processMessagesFromServer() {
@@ -238,7 +247,7 @@ public class BattleScreen extends GameScreen {
 				// get unit and position, deploy unit locally as well, unlock ui, continue
 				// self-deployment, set playerturn to true, check if all units deployed,
 				// deployment finished message?
-				TiledMapPosition pos = new TiledMapPosition().setPosFromString(message.getPos());
+				TiledMapPosition pos = message.getPos();
 				enemyTeamLeader.spawnUnit(message.getUnitType(), message.getUnitID(), pos);
 				ParticleMaker.deactivateParticle(ParticleMaker.getParticle(ParticleType.SPAWN, pos));
 				ParticleMaker.deactivateParticle(ParticleMaker.getParticle(ParticleType.PURPLE_SQUARE, pos));
@@ -250,7 +259,33 @@ public class BattleScreen extends GameScreen {
 				enemyTeamLeader.synchronizeMultiplayerUnitsWithLocal(message.getTeamWithIdMap());
 				break;
 			case DEPLOYMENT_FINISHED:
-
+				Alliance alliance = Player.getInstance().getAlliance();
+				if(alliance.equals(Alliance.TEAM_BLUE)) {
+					ParticleMaker.deactivateAllParticlesOfType(ParticleType.PURPLE_SQUARE);
+				}
+				if(alliance.equals(Alliance.TEAM_RED)) {
+					ParticleMaker.deactivateAllParticlesOfType(ParticleType.SPAWN);
+				}
+				break;
+			case MOVE_MADE:
+				TiledMapPosition position = message.getPos();
+				Move move;
+				MoveType type = message.getMoveType();
+				AbilitiesEnum abilityEnum = message.getAbility();
+				Ability ability = new Ability(abilityEnum, position.getTilePosAsPoint());
+				Array<MyPoint> affectedUnits = message.getAffectedUnits();
+				if(MoveType.SPELL.equals(type)) {
+					move = new SpellMove(type,position.getTilePosAsPoint(), ability,affectedUnits);
+				}else {
+					move = new Move(type,position.getTilePosAsPoint());
+				}
+				
+				
+				int unitID = message.getUnitID();
+				final Entity entity = battlemanager.getEntityByID(unitID);
+				battlemanager.executeMove(entity, move);
+				break;
+			case TURN_FINISHED:
 				break;
 			default:
 				break;
@@ -408,6 +443,7 @@ public class BattleScreen extends GameScreen {
 				final Entity skipEntity = battlemanager.getEntityByID(entityID);
 				skipEntity.getVisualComponent().setActive(false);
 				skipEntity.setFocused(false);
+				enemyTeamLeader.playerUnitSkipped(skipEntity);
 				battlemanager.setCurrentBattleState(battlemanager.getActionBattleState());
 				battlemanager.getCurrentBattleState().exit();
 				break;

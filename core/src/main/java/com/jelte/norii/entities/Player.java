@@ -1,15 +1,18 @@
 package com.jelte.norii.entities;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.ai.EnemyType;
+import com.jelte.norii.ai.UnitTurn;
 import com.jelte.norii.battle.ApFileReader;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.battle.MessageToBattleScreen;
 import com.jelte.norii.battle.battleState.BattleState;
+import com.jelte.norii.magic.Ability;
 import com.jelte.norii.multiplayer.NetworkMessage;
 import com.jelte.norii.multiplayer.NetworkMessage.MessageType;
 import com.jelte.norii.multiplayer.ServerCommunicator;
@@ -24,7 +27,7 @@ public class Player implements UnitOwner {
 	private EnemyType type;
 	private String name;
 	private boolean isMyTurn;
-	private String gameID;
+	private int gameID;
 	private Alliance alliance;
 
 	@Override
@@ -152,13 +155,13 @@ public class Player implements UnitOwner {
 	}
 
 	@Override
-	public void resetAI(BattleState activeBattleState) {
+	public void reset(BattleState activeBattleState) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void processAi() {
+	public void processMove() {
 		// TODO Auto-generated method stub
 
 	}
@@ -185,7 +188,7 @@ public class Player implements UnitOwner {
 	}
 
 	@Override
-	public void spawnUnit(String name, int unitID, TiledMapPosition pos) {
+	public void spawnUnit(EntityTypes entityType, int entityID, TiledMapPosition pos) {
 		// TODO Auto-generated method stub
 
 	}
@@ -219,11 +222,11 @@ public class Player implements UnitOwner {
 	}
 
 	@Override
-	public String getGameID() {
+	public int getGameID() {
 		return gameID;
 	}
 
-	public void setGameID(String gameID) {
+	public void setGameID(int gameID) {
 		this.gameID = gameID;
 	}
 
@@ -237,7 +240,7 @@ public class Player implements UnitOwner {
 	}
 
 	@Override
-	public void synchronizeMultiplayerUnitsWithLocal(String teamWithIdMap) {
+	public void synchronizeMultiplayerUnitsWithLocal(HashMap<String, String> teamWithIdMap) {
 		// TODO Auto-generated method stub
 
 	}
@@ -246,5 +249,36 @@ public class Player implements UnitOwner {
 	public void notifyDeploymentDone() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void playerUnitMoved(Entity entity, TiledMapPosition pos) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void playerUnitAttacked(Entity entity, TiledMapPosition pos) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void playerUnitCastedSpell(Entity entity, Ability ability, TiledMapPosition pos) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void playerUnitSkipped(Entity entity) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public UnitTurn getProcessingResult() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

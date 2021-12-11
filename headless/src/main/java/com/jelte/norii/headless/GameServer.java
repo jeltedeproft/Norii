@@ -122,6 +122,18 @@ public class GameServer {
 		case UNIT_DEPLOYED:
 			passMessageOnToOpponent(client, event, message);
 			break;
+		case UNIT_MOVED:
+			passMessageOnToOpponent(client, event, message);
+			break;
+		case UNIT_ATTACKED:
+			passMessageOnToOpponent(client, event, message);
+			break;
+		case UNIT_CASTED_SPELL:
+			passMessageOnToOpponent(client, event, message);
+			break;
+		case UNIT_SKIPPED:
+			passMessageOnToOpponent(client, event, message);
+			break;
 		case DEPLOYMENT_FINISHED:
 			passMessageOnToOpponent(client, event, message);
 			break;
@@ -142,7 +154,7 @@ public class GameServer {
 	}
 
 	private void passMessageOnToOpponent(ConnectedClient client, WebSocketFrame event, NetworkMessage message) {
-		Integer id = Integer.parseInt(message.getGameID());
+		Integer id = message.getGameID();
 		GameInstance battle = activeGames.get(id);
 		if (battle.containsClient(client)) {
 			battle.getOpponent(client).getSocket().writeFinalTextFrame(event.textData());

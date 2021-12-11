@@ -70,7 +70,7 @@ public class AIMoveDecider {
 
 		filterOutNumber(cellsToCastOn, FILTER_AMOUNT_OF_CELL_TARGETS);
 		for (final MyPoint point : cellsToCastOn) {
-			final UnitTurn spellAndMove = new UnitTurn(aiUnit.getEntityID(), new SpellMove(MoveType.SPELL, point, ability));
+			final UnitTurn spellAndMove = new UnitTurn(aiUnit.getEntityID(), new SpellMove(MoveType.SPELL, point, ability, null));
 			spellAndMove.addMove(decideMove(ability, aiUnit, battleState));
 			unitTurns.add(spellAndMove);
 		}
@@ -79,7 +79,7 @@ public class AIMoveDecider {
 
 	private void castNoTargetOrSelf(Ability ability, Entity aiUnit, BattleState battleState, final Array<UnitTurn> unitTurns) {
 		oldTime = debugTime("starting self/no target spells", oldTime);
-		final UnitTurn spellAndMove = new UnitTurn(aiUnit.getEntityID(), new SpellMove(MoveType.SPELL, new MyPoint(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY()), ability));
+		final UnitTurn spellAndMove = new UnitTurn(aiUnit.getEntityID(), new SpellMove(MoveType.SPELL, new MyPoint(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY()), ability, null));
 		spellAndMove.addMove(decideMove(ability, aiUnit, battleState));
 		unitTurns.add(spellAndMove);
 	}
