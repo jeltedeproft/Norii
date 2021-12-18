@@ -234,7 +234,10 @@ public class BattleManager {
 			AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.ATTACK_SOUND);
 			break;
 		case SKIP:
+			enemyUnitIsDoingSomething = false;
 			swapTurn();
+			enemyTeamLeader.setAp(ApFileReader.getApData(turn));
+			sendMessageToBattleScreen(MessageToBattleScreen.UNLOCK_UI, activeUnit);
 			break;
 		case DUMMY:
 			break;
