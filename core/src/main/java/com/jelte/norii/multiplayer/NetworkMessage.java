@@ -19,7 +19,7 @@ public class NetworkMessage {
 	public static final String ATTACK = "attack";
 	public static final String SKIP = "skip";
 	public static final String SPELL = "spell";
-	
+
 	private static final Json json = new Json();
 
 	private MessageType type;
@@ -46,7 +46,7 @@ public class NetworkMessage {
 	private String affectedUnits = "";
 
 	public enum MessageType {
-		CONNECTED, SEARCH_OPPONENT, DISCONNECTED, BATTLE, TRY_LOGIN, LOGIN_VALIDATION, MOVE_MADE, UNIT_DEPLOYED, SYNCHRONIZE_UNIT_IDS, DEPLOYMENT_FINISHED, UNIT_MOVED, UNIT_ATTACKED, UNIT_CASTED_SPELL, UNIT_SKIPPED, TURN_FINISHED
+		CONNECTED, SEARCH_OPPONENT, DISCONNECTED, BATTLE, TRY_LOGIN, LOGIN_VALIDATION, UNIT_DEPLOYED, SYNCHRONIZE_UNIT_IDS, DEPLOYMENT_FINISHED, UNIT_MOVED, UNIT_ATTACKED, UNIT_CASTED_SPELL, UNIT_SKIPPED, TURN_FINISHED
 	}
 
 	public NetworkMessage() {
@@ -119,9 +119,9 @@ public class NetworkMessage {
 		this.gameID = String.valueOf(gameID);
 		sender = ServerCommunicator.getInstance().getClientID();
 	}
-	
+
 	public void makeUnitMovedMessage(String unit, int unitID, String pos, int gameID) {
-		type = MessageType.MOVE_MADE;
+		type = MessageType.UNIT_MOVED;
 		unitType = unit;
 		this.moveType = MoveType.MOVE.name();
 		this.pos = pos;
@@ -131,7 +131,7 @@ public class NetworkMessage {
 	}
 
 	public void makeUnitAttackedMessage(String unit, int unitID, String pos, int gameID) {
-		type = MessageType.MOVE_MADE;
+		type = MessageType.UNIT_ATTACKED;
 		this.moveType = MoveType.ATTACK.name();
 		unitType = unit;
 		this.pos = pos;
@@ -141,7 +141,7 @@ public class NetworkMessage {
 	}
 
 	public void makeUnitCastedSpellMessage(String unit, int unitID, String pos, String ability, int gameID, Array<MyPoint> affectedUnits) {
-		type = MessageType.MOVE_MADE;
+		type = MessageType.UNIT_CASTED_SPELL;
 		this.moveType = MoveType.SPELL.name();
 		unitType = unit;
 		this.pos = pos;
@@ -152,16 +152,16 @@ public class NetworkMessage {
 		sender = ServerCommunicator.getInstance().getClientID();
 	}
 
-
 	public void makeUnitSkippedMessage(String unit, int unitID, int gameID) {
-		type = MessageType.MOVE_MADE;
+		type = MessageType.UNIT_SKIPPED;
 		this.moveType = MoveType.SKIP.name();
 		unitType = unit;
+		this.pos = "[0,0]";// not used
 		this.gameID = String.valueOf(gameID);
 		this.unitID = Integer.toString(unitID);
 		sender = ServerCommunicator.getInstance().getClientID();
 	}
-	
+
 	public void makeTurnFinishedMessage(String unit, int unitID, int gameID) {
 		type = MessageType.TURN_FINISHED;
 		unitType = unit;
@@ -320,8 +320,8 @@ public class NetworkMessage {
 		this.playerStart = playerStart;
 	}
 
-	public EntityTypes  getUnitType() {
-		if(!(unitType.isBlank() || unitType.isEmpty() || unitType == null)) {
+	public EntityTypes getUnitType() {
+		if (!(unitType.isBlank() || unitType.isEmpty() || (unitType == null))) {
 			return EntityTypes.valueOf(unitType);
 		}
 		return null;
@@ -348,11 +348,11 @@ public class NetworkMessage {
 		return MoveType.valueOf(moveType);
 	}
 
-	public AbilitiesEnum  getAbility() {
+	public AbilitiesEnum getAbility() {
 		return AbilitiesEnum.valueOf(abilityType);
 	}
-	
-	public Array<MyPoint> getAffectedUnits(){
+
+	public Array<MyPoint> getAffectedUnits() {
 		return stringToArrayOfMyPoints(affectedUnits);
 	}
 
@@ -403,37 +403,33 @@ public class NetworkMessage {
 		builder.append(unitID + "\n");
 		builder.append("teamWithIdMap : ");
 		builder.append(teamWithIdMap + "\n");
-		builder.append("moveType : ");
-		builder.append(moveType + "\n");
 
 		return builder.toString();
 	}
-	
 
 	private String convertArrayOfMyPointsToString(Array<MyPoint> affectedUnits) {
-		if(affectedUnits == null) {
+		if (affectedUnits == null) {
 			return "";
 		}
 		StringBuilder builder = new StringBuilder();
-		for(MyPoint myPoint : affectedUnits) {
+		for (MyPoint myPoint : affectedUnits) {
 			builder.append(myPoint.x);
 			builder.append(myPoint.y);
 			builder.append("@");
 		}
 		return builder.toString();
 	}
-	
 
 	private Array<MyPoint> stringToArrayOfMyPoints(String affectedUnits) {
-		if(affectedUnits.isBlank() || affectedUnits.isEmpty() || affectedUnits == null) {
+		if (affectedUnits.isBlank() || affectedUnits.isEmpty() || (affectedUnits == null)) {
 			return null;
 		}
 		Array<MyPoint> myPoints = new Array<>();
 		String[] points = affectedUnits.split("@");
-		for(String point : points) {
+		for (String point : points) {
 			int x = Integer.parseInt(point.substring(0, 1));
 			int y = Integer.parseInt(point.substring(1));
-			myPoints.add(new MyPoint(x,y));
+			myPoints.add(new MyPoint(x, y));
 		}
 		return myPoints;
 	}

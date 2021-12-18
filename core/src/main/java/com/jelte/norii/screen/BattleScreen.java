@@ -42,7 +42,6 @@ import com.jelte.norii.map.MyPathFinder;
 import com.jelte.norii.map.TiledMapActor;
 import com.jelte.norii.multiplayer.NetworkMessage;
 import com.jelte.norii.multiplayer.ServerCommunicator;
-import com.jelte.norii.multiplayer.NetworkMessage.MessageType;
 import com.jelte.norii.particles.ParticleMaker;
 import com.jelte.norii.particles.ParticleType;
 import com.jelte.norii.ui.Hud;
@@ -234,7 +233,7 @@ public class BattleScreen extends GameScreen {
 	}
 
 	private void processAi() {
-		if(enemyTeamLeader.isAI()) {
+		if (enemyTeamLeader.isAI()) {
 			battlemanager.update();
 		}
 	}
@@ -260,27 +259,25 @@ public class BattleScreen extends GameScreen {
 				break;
 			case DEPLOYMENT_FINISHED:
 				Alliance alliance = Player.getInstance().getAlliance();
-				if(alliance.equals(Alliance.TEAM_BLUE)) {
+				if (alliance.equals(Alliance.TEAM_BLUE)) {
 					ParticleMaker.deactivateAllParticlesOfType(ParticleType.PURPLE_SQUARE);
 				}
-				if(alliance.equals(Alliance.TEAM_RED)) {
+				if (alliance.equals(Alliance.TEAM_RED)) {
 					ParticleMaker.deactivateAllParticlesOfType(ParticleType.SPAWN);
 				}
 				break;
-			case MOVE_MADE:
+			case UNIT_MOVED:
+			case UNIT_ATTACKED:
+			case UNIT_SKIPPED:
+				executeMove(message);
+				break;
+			case UNIT_CASTED_SPELL:
 				TiledMapPosition position = message.getPos();
-				Move move;
 				MoveType type = message.getMoveType();
 				AbilitiesEnum abilityEnum = message.getAbility();
 				Ability ability = new Ability(abilityEnum, position.getTilePosAsPoint());
 				Array<MyPoint> affectedUnits = message.getAffectedUnits();
-				if(MoveType.SPELL.equals(type)) {
-					move = new SpellMove(type,position.getTilePosAsPoint(), ability,affectedUnits);
-				}else {
-					move = new Move(type,position.getTilePosAsPoint());
-				}
-				
-				
+				Move move = new SpellMove(type, position.getTilePosAsPoint(), ability, affectedUnits);
 				int unitID = message.getUnitID();
 				final Entity entity = battlemanager.getEntityByID(unitID);
 				battlemanager.executeMove(entity, move);
@@ -291,6 +288,15 @@ public class BattleScreen extends GameScreen {
 				break;
 			}
 		}
+	}
+
+	private void executeMove(NetworkMessage message) {
+		int unitID = message.getUnitID();
+		final Entity entity = battlemanager.getEntityByID(unitID);
+		TiledMapPosition position = message.getPos();
+		MoveType type = message.getMoveType();
+		Move move = new Move(type, position.getTilePosAsPoint());
+		battlemanager.executeMove(entity, move);
 	}
 
 	private void renderElements(final float delta) {

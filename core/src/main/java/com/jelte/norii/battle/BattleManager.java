@@ -6,7 +6,6 @@ import java.util.stream.Stream;
 
 import org.xguzm.pathfinding.grid.GridCell;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.ai.UnitTurn;
 import com.jelte.norii.audio.AudioCommand;
@@ -143,9 +142,6 @@ public class BattleManager {
 				getCurrentBattleState().clickedOnUnit(entity);
 			}
 			break;
-		case ENEMY_FINISHED_TURN:
-			swapTurn();
-			break;
 		case UNIT_DIED:
 			removeUnit(entity);
 			checkVictory();
@@ -159,9 +155,11 @@ public class BattleManager {
 			getCurrentBattleState().entry();
 			break;
 		case ACTION_COMPLETED:
-			if (!playerTurn) {
+			if (!playerTurn && enemyTeamLeader.isAI()) {
 				executeTurn();
-			} else {
+			}
+
+			if (playerTurn) {
 				sendMessageToBattleScreen(MessageToBattleScreen.UNLOCK_UI, activeUnit);
 			}
 			break;
@@ -195,7 +193,7 @@ public class BattleManager {
 			enemyTeamLeader.processMove();
 		}
 	}
-	
+
 	private void executeTurn() {
 		final int entityID = activeTurn.getEntityID();
 		final Entity entity = getEntityByID(entityID);
@@ -211,7 +209,7 @@ public class BattleManager {
 			return;
 		}
 		executeMove(entity, move);
-		if(!move.getMoveType().equals(MoveType.MOVE)) {
+		if (!move.getMoveType().equals(MoveType.MOVE)) {
 			executeTurn();
 		}
 	}
@@ -227,13 +225,16 @@ public class BattleManager {
 			final List<GridCell> path = MyPathFinder.getInstance().pathTowards(entity.getCurrentPosition(), new TiledMapPosition().setPositionFromTiles(move.getLocation().x, move.getLocation().y), entity.getAp());
 			activeBattleState.moveUnitTo(entity, new MyPoint(move.getLocation().x, move.getLocation().y));
 			entity.move(path);
-			//wait for move to complete before executing next one
+			// wait for move to complete before executing next one
 			break;
 		case ATTACK:
 			final Entity entityToAttack = getEntityByID(activeBattleState.get(move.getLocation().x, move.getLocation().y).getUnit().getEntityID());
 			entity.attack(entityToAttack, DamageType.PHYSICAL);
 			sendMessageToBattleScreen(MessageToBattleScreen.UPDATE_UI, entityToAttack);
 			AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.ATTACK_SOUND);
+			break;
+		case SKIP:
+			swapTurn();
 			break;
 		case DUMMY:
 			break;
@@ -274,9 +275,8 @@ public class BattleManager {
 		activeBattleState.removeUnit(unit);
 	}
 
-
 	private void executeOnDeathEffect(Entity unit) {
-		if(unit.getEntityType().equals(EntityTypes.BOOMERANG)) {
+		if (unit.getEntityType().equals(EntityTypes.BOOMERANG)) {
 			for (final Ability ability : unit.getAbilities()) {
 				if (ability.getTargetLocation() != null) {
 					final SpellBattlePhase spellState = (SpellBattlePhase) spellBattleState;

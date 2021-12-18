@@ -55,7 +55,7 @@ public class OnlineEnemy implements UnitOwner {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void synchronizeMultiplayerUnitsWithLocal(HashMap<String,String> teamWithIdMap) {
+	public void synchronizeMultiplayerUnitsWithLocal(HashMap<String, String> teamWithIdMap) {
 		List<String> synchronizedUnitIds = new ArrayList<>();
 		for (final Entry<String, String> idWithName : teamWithIdMap.entrySet()) {
 			for (final Entity entity : team) {
@@ -96,7 +96,7 @@ public class OnlineEnemy implements UnitOwner {
 				unit.setPlayerUnit(false);
 				unit.getVisualComponent().spawn(spawnPosition);
 				battleManager.addUnit(unit);
-				battleManager.sendMessageToBattleScreen(MessageToBattleScreen.ADD_UNIT_UI,unit);
+				battleManager.sendMessageToBattleScreen(MessageToBattleScreen.ADD_UNIT_UI, unit);
 			}
 		}
 	}
