@@ -33,4 +33,5 @@ sourceSets.test.java.srcDirs = ["src/"]
         testCompile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
         testCompile "com.badlogicgames.gdx:gdx:$gdxVersion"
         testCompile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        testCompile "org.assertj:assertj-core:3.11.1"
     }

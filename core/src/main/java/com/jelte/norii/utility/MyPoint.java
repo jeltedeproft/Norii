@@ -51,4 +51,28 @@ public class MyPoint implements Comparable<MyPoint> {
 	public int getY() {
 		return y;
 	}
+
+	public MyPoint incrementX() {
+		x++;
+		return this;
+	}
+
+	public MyPoint incrementY() {
+		y++;
+		return this;
+	}
+
+	public MyPoint decrementX() {
+		x--;
+		return this;
+	}
+
+	public MyPoint decrementY() {
+		y--;
+		return this;
+	}
+
+	public MyPoint makeCopy() {
+		return new MyPoint(x, y);
+	}
 }

@@ -3,6 +3,7 @@ package com.jelte.norii.entities;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Random;
 
 import org.xguzm.pathfinding.grid.GridCell;
 
@@ -20,6 +21,8 @@ import com.jelte.norii.utility.TiledMapPosition;
 
 public class Entity extends Actor {
 	public static final int MAX_XP = 100;
+	private static final Random random = new Random();
+
 	protected final EntityData entityData;
 
 	protected int hp;
@@ -471,7 +474,7 @@ public class Entity extends Actor {
 	public boolean isInvisible() {
 		return isInvis;
 	}
-	
+
 	public boolean isInBattle() {
 		return inBattle;
 	}

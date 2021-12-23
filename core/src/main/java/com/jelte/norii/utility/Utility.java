@@ -2,8 +2,10 @@
 package com.jelte.norii.utility;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import java.util.TreeMap;
 
@@ -184,5 +186,18 @@ public final class Utility {
 			builder.append(string);
 		}
 		return builder.toString();
+	}
+
+	public static boolean isBetween(float number, float min, float max) {
+		return (min <= number) && (number <= max);
+	}
+
+	public static <E> Optional<E> getRandom(Collection<E> e) {
+
+		return e.stream().skip((int) (e.size() * Math.random())).findFirst();
+	}
+
+	public static int incrementModulo(int x, int modulo) {
+		return ((x + 1) == modulo ? 0 : x + 1);
 	}
 }

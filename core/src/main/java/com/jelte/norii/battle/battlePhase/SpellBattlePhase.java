@@ -11,7 +11,7 @@ import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
 import com.badlogic.gdx.utils.Array;
-import com.jelte.norii.ai.AIDecisionMaker;
+import com.jelte.norii.ai.BattleStateModifier;
 import com.jelte.norii.audio.AudioCommand;
 import com.jelte.norii.audio.AudioManager;
 import com.jelte.norii.audio.AudioTypeEvent;
@@ -102,7 +102,7 @@ public class SpellBattlePhase extends BattlePhase {
 
 		if (isValidUnitTarget(currentUnit, target)) {
 			selectSpell(target, ability, currentUnit, target.getCurrentPosition());
-			battlemanager.getEnemyTeamLeader().playerUnitCastedSpell(currentUnit,ability, target.getCurrentPosition());
+			battlemanager.getEnemyTeamLeader().playerUnitCastedSpell(currentUnit, ability, target.getCurrentPosition());
 		} else {
 			battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.INVALID_SPELL_TARGET, battlemanager.getActiveUnit());
 		}
@@ -375,7 +375,7 @@ public class SpellBattlePhase extends BattlePhase {
 		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
 		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.ARROW);
 
-		final List<MyPoint> crossedCells = AIDecisionMaker.findLine(caster.getCurrentPosition().getTileX(), caster.getCurrentPosition().getTileY(), targetPos.getTileX(), targetPos.getTileY());
+		final List<MyPoint> crossedCells = BattleStateModifier.findLine(caster.getCurrentPosition().getTileX(), caster.getCurrentPosition().getTileY(), targetPos.getTileX(), targetPos.getTileY());
 		battlemanager.getBattleState();
 		for (final MyPoint point : crossedCells) {
 			if (battlemanager.getBattleState().get(point.x, point.y).isOccupied()) {
@@ -482,7 +482,7 @@ public class SpellBattlePhase extends BattlePhase {
 		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
 		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.HAMMER_SOUND);
 
-		final List<MyPoint> crossedCells = AIDecisionMaker.findLine(caster.getCurrentPosition().getTileX(), caster.getCurrentPosition().getTileY(), targetPos.getTileX(), targetPos.getTileY());
+		final List<MyPoint> crossedCells = BattleStateModifier.findLine(caster.getCurrentPosition().getTileX(), caster.getCurrentPosition().getTileY(), targetPos.getTileX(), targetPos.getTileY());
 		battlemanager.getBattleState();
 		for (final MyPoint point : crossedCells) {
 			if (battlemanager.getBattleState().get(point.x, point.y).isOccupied()) {
@@ -533,7 +533,7 @@ public class SpellBattlePhase extends BattlePhase {
 
 	private void castHammerbackBack(final Entity caster, final TiledMapPosition targetPos, final Ability ability) {
 		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.HAMMER_SOUND);
-		final List<MyPoint> crossedCells = AIDecisionMaker.findLine(caster.getCurrentPosition().getTileX(), caster.getCurrentPosition().getTileY(), targetPos.getTileX(), targetPos.getTileY());
+		final List<MyPoint> crossedCells = BattleStateModifier.findLine(caster.getCurrentPosition().getTileX(), caster.getCurrentPosition().getTileY(), targetPos.getTileX(), targetPos.getTileY());
 		battlemanager.getBattleState();
 		for (final MyPoint point : crossedCells) {
 			if (battlemanager.getBattleState().get(point.x, point.y).isOccupied()) {

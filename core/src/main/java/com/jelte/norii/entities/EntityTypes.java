@@ -1,5 +1,9 @@
 package com.jelte.norii.entities;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 //keep this in sync with JSON files. ORDER IS IMPORTANT
 public enum EntityTypes {
 	COMMANDER("Commander"), // 0
@@ -45,6 +49,10 @@ public enum EntityTypes {
 	CITIZEN("Citizen"), // 40
 	WARRIOR_GIRL("Warrior Girl"); // 41
 
+	private static final List<EntityTypes> TYPES = Collections.unmodifiableList(Arrays.asList(EntityTypes.values()));
+	private static final int SIZE = TYPES.size();
+	private static final java.util.Random RANDOM = new java.util.Random();
+
 	private String entityName;
 
 	public String getEntityName() {
@@ -53,5 +61,9 @@ public enum EntityTypes {
 
 	EntityTypes(final String entityName) {
 		this.entityName = entityName;
+	}
+
+	public static EntityTypes randomEntityType() {
+		return TYPES.get(RANDOM.nextInt(SIZE));
 	}
 }

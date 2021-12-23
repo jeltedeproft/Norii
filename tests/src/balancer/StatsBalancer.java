@@ -8,5 +8,5 @@ public class StatsBalancer {
 	// in the losing team
 	// 3. repeat x times
 
-	private BattleSimulator battleSimulator;
+	private TestBattleSimulator battleSimulator;
 }

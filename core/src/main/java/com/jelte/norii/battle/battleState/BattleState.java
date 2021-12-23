@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
@@ -24,6 +25,7 @@ public class BattleState implements Comparable<BattleState> {
 	private UnitTurn turn;
 	private final Map<Integer, Entity> units = new HashMap<>();
 	private final Map<Integer, List<Entity>> linkedUnitsIds = new HashMap<>();
+	private final Random random = new Random();
 
 	public static final int NO_UNIT = 0;
 	private static final String TAG = BattleState.class.getSimpleName();
@@ -109,7 +111,7 @@ public class BattleState implements Comparable<BattleState> {
 				if ((unit.getEntityID() == entity.getEntityID()) && (unit.getCurrentPosition().getTileX() >= 0) && (unit.getCurrentPosition().getTileY() >= 0)) {
 					stateOfField[to.x][to.y].setUnit(stateOfField[unit.getCurrentPosition().getTileX()][unit.getCurrentPosition().getTileY()].getUnit());
 					stateOfField[to.x][to.y].getUnit().setOnlyCurrentPosition(new TiledMapPosition().setPositionFromTiles(to.x, to.y));
-					if(oldSpotHasUnit(from)) {
+					if (oldSpotHasUnit(from)) {
 						stateOfField[from.x][from.y].removeUnit();
 					}
 					entityFound = true;
@@ -125,7 +127,7 @@ public class BattleState implements Comparable<BattleState> {
 	}
 
 	private boolean oldSpotHasUnit(MyPoint from) {
-		if((from.x >= 0) && (from.y >= 0)) {
+		if ((from.x >= 0) && (from.y >= 0)) {
 			return stateOfField[from.x][from.y].isOccupied();
 		}
 		return false;
@@ -383,7 +385,7 @@ public class BattleState implements Comparable<BattleState> {
 		final Entity unitToMove = stateOfField[targetPos.x][targetPos.y].getUnit();
 		int cellsToMove = maxCellsToMove;
 
-		while (isValid(nextPoint, cellsToMove)) {
+		while (canMoveTo(nextPoint, cellsToMove)) {
 			unitToMove.pushTo(nextPoint);
 			moveUnitTo(unitToMove, nextPoint);
 			nextPoint = calculateNextPoint(nextPoint, casterIsRight, casterIsLeft, casterIsDown, casterIsUp, isPulling);
@@ -391,20 +393,20 @@ public class BattleState implements Comparable<BattleState> {
 		}
 	}
 
-	private boolean isValid(MyPoint nextPoint, int cellsToMove) {
-		if ((nextPoint.x >= getWidth()) || (nextPoint.x < 0) || (nextPoint.y >= getHeight()) || (nextPoint.y < 0)) {
-			return false;
-		}
-
-		if (stateOfField[nextPoint.x][nextPoint.y].isWalkable() && stateOfField[nextPoint.x][nextPoint.y].isOccupied()) {
-			return false;
-		}
-
+	private boolean canMoveTo(MyPoint nextPoint, int cellsToMove) {
 		if (cellsToMove <= 0) {
 			return false;
 		}
 
-		return true;
+		return canMoveTo(nextPoint);
+	}
+
+	private boolean canMoveTo(MyPoint nextPoint) {
+		if ((nextPoint.x >= getWidth()) || (nextPoint.x < 0) || (nextPoint.y >= getHeight()) || (nextPoint.y < 0)) {
+			return false;
+		}
+
+		return (stateOfField[nextPoint.x][nextPoint.y].isWalkable() && !stateOfField[nextPoint.x][nextPoint.y].isOccupied());
 	}
 
 	private MyPoint calculateNextPoint(MyPoint oldPos, boolean casterIsRight, boolean casterIsLeft, boolean casterIsDown, boolean casterIsUp, boolean isPulling) {
@@ -504,5 +506,37 @@ public class BattleState implements Comparable<BattleState> {
 				}
 			}
 		}
+	}
+
+	public Entity getRandomUnit() {
+		Entity[] values = (Entity[]) units.values().toArray();
+		return values[random.nextInt(values.length)];
+	}
+
+	public Entity getRandomAiUnit() {
+		Entity unit = getRandomUnit();
+		while (unit.isPlayerUnit()) {
+			unit = getRandomUnit();
+		}
+		return unit;
+	}
+
+	public Entity getRandomPlayerUnit() {
+		Entity unit = getRandomUnit();
+		while (!unit.isPlayerUnit()) {
+			unit = getRandomUnit();
+		}
+		return unit;
+	}
+
+	public MyPoint getRandomMoveSpotForUnit(Entity unit, BattleState battleState) {
+		int randomInt = random.nextInt(4);
+		MyPoint currentPos = unit.getCurrentPosition().getTilePosAsPoint();
+
+		switch (randomInt) {
+		case 0:
+			//
+		}
+		return null;
 	}
 }

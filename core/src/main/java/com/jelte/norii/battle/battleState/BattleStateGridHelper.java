@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.badlogic.gdx.utils.Array;
-import com.jelte.norii.ai.AIDecisionMaker;
+import com.jelte.norii.ai.BattleStateModifier;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.magic.Ability.AffectedTeams;
@@ -95,7 +95,7 @@ public class BattleStateGridHelper {
 			break;
 		case STRAIGHT_LINE:
 			spotsToCheck.add(center);
-			spotsToCheck.addAll(AIDecisionMaker.findLine(center.x, center.y, caster.x, caster.y));
+			spotsToCheck.addAll(BattleStateModifier.findLine(center.x, center.y, caster.x, caster.y));
 			break;
 		case HORIZONTAL_LINE:
 			spotsToCheck.add(center);
@@ -442,7 +442,8 @@ public class BattleStateGridHelper {
 			return false;
 		}
 
-		return !(((deltaX == deltaY) && (deltaX >= range)) || (((deltaX == 0) && (deltaY > range)) || ((deltaY == 0) && (deltaX > range))) || checkLShapesDiagonal(deltaX, deltaY, range, areaOfEffectRange) || checkCorners(deltaX, deltaY, areaOfEffectRange));
+		return !(((deltaX == deltaY) && (deltaX >= range)) || (((deltaX == 0) && (deltaY > range)) || ((deltaY == 0) && (deltaX > range))) || checkLShapesDiagonal(deltaX, deltaY, range, areaOfEffectRange)
+				|| checkCorners(deltaX, deltaY, areaOfEffectRange));
 	}
 
 	private boolean checkCorners(int deltaX, int deltaY, int areaOfEffectRange) {
