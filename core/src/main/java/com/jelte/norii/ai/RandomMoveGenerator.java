@@ -55,8 +55,13 @@ public class RandomMoveGenerator implements MoveGenerator {
 
 	@Override
 	public Move generateSingleMovementMoveForPlayer(UnitOwner player, BattleState battleState) {
-		// TODO Auto-generated method stub
-		return null;
+		Entity randomUnit;
+		if (player.isAI()) {
+			randomUnit = battleState.getRandomAiUnit();
+		} else {
+			randomUnit = battleState.getRandomPlayerUnit();
+		}
+
 	}
 
 	@Override

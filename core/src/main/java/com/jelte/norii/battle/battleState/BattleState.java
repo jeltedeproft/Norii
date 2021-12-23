@@ -531,12 +531,18 @@ public class BattleState implements Comparable<BattleState> {
 
 	public MyPoint getRandomMoveSpotForUnit(Entity unit, BattleState battleState) {
 		int randomInt = random.nextInt(4);
-		MyPoint currentPos = unit.getCurrentPosition().getTilePosAsPoint();
+		MyPoint currentPos = unit.getCurrentPosition().getTilePosAsPoint().makeCopy();
 
 		switch (randomInt) {
 		case 0:
-			//
+			if(canMoveTo(currentPos.makeCopy().incrementX())) {
+				return currentPos.incrementX();
+			}else {
+				randomInt = Utility.incrementModulo(randomInt, 4);
+			}
 		}
 		return null;
 	}
+
+	private
 }
