@@ -28,23 +28,34 @@ public class BattleStateModifier {
 		final BattleState newState = battleState.makeCopy();
 		final Entity copyUnit = newState.get(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY()).getUnit();
 		for (final Move move : turn.getMoves()) {
-			switch (move.getMoveType()) {
-			case SPELL:
-				applySpellOnBattleState(copyUnit, (SpellMove) move, newState);
-				break;
-			case ATTACK:
-				applyAttackOnBattleState(copyUnit, move, newState);
-				break;
-			case MOVE:
-				newState.moveUnitTo(copyUnit, move.getLocation());
-				break;
-			case DUMMY:
-				// do nothing
-			default:
-				// do nothing
-			}
+			applyMoveToBattleState(newState, copyUnit, move);
 		}
 		return newState;
+	}
+	
+	public BattleState applyMove(Entity aiUnit, Move move, BattleState battleState) {
+		final BattleState newState = battleState.makeCopy();
+		final Entity copyUnit = newState.get(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY()).getUnit();
+		applyMoveToBattleState(newState, copyUnit, move);
+		return newState;
+	}
+
+	private void applyMoveToBattleState(final BattleState newState, final Entity copyUnit, final Move move) {
+		switch (move.getMoveType()) {
+		case SPELL:
+			applySpellOnBattleState(copyUnit, (SpellMove) move, newState);
+			break;
+		case ATTACK:
+			applyAttackOnBattleState(copyUnit, move, newState);
+			break;
+		case MOVE:
+			newState.moveUnitTo(copyUnit, move.getLocation());
+			break;
+		case DUMMY:
+			// do nothing
+		default:
+			// do nothing
+		}
 	}
 
 	private void applyAttackOnBattleState(Entity aiUnit, Move move, BattleState battleState) {
@@ -225,10 +236,14 @@ public class BattleStateModifier {
 		if (otherPortal != null) {
 			for (final Entity unitToTransport : unitsNextToPortal) {
 				final TiledMapPosition goal = battleState.findFreeSpotNextTo(otherPortal);
-				battleState.get(goal.getTileX(), goal.getTileY()).setUnit(battleState.get(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY()).getUnit());
-				battleState.get(unitToTransport.getCurrentPosition().getTileX(), unitToTransport.getCurrentPosition().getTileY()).removeUnit();
-				unitToTransport.setCurrentPosition(goal);
-				battleState.get(goal.getTileX(), goal.getTileY()).setOccupied(true);
+				if(goal != null) {
+					battleState.get(goal.getTileX(), goal.getTileY()).setUnit(battleState.get(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY()).getUnit());
+					battleState.get(unitToTransport.getCurrentPosition().getTileX(), unitToTransport.getCurrentPosition().getTileY()).removeUnit();
+					unitToTransport.setCurrentPosition(goal);
+					battleState.get(goal.getTileX(), goal.getTileY()).setOccupied(true);
+				}else {
+					System.out.println("no location next to otherPortal to transport to");
+				}
 			}
 		}
 	}

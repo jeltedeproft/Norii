@@ -16,7 +16,7 @@ import HeadlessRunnerTest.GdxTestRunner;
 
 @RunWith(GdxTestRunner.class)
 public class TestBattleSimulator {
-	private static final int NUMBER_OF_SIMULATIONS = 200;
+	private static final int NUMBER_OF_SIMULATIONS = 1;
 
 	private int simulationCounter = 0;
 	private SimulationResultKeeper resultKeeper;
@@ -32,7 +32,6 @@ public class TestBattleSimulator {
 
 	@Test
 	public void runSimulations() {
-		System.out.println("starting test");
 		while (simulationCounter <= NUMBER_OF_SIMULATIONS) {
 			runSimulation(simulationCounter);
 			simulationCounter++;

@@ -84,8 +84,10 @@ public class SimulationPlayer implements UnitOwner {
 
 	@Override
 	public void applyModifiers() {
-		// TODO Auto-generated method stub
-
+		Entity[] teamCopy = team.toArray(new Entity[0]);// make copy to prevent concurrentModificationException
+		for (Entity entity : teamCopy) {
+			entity.applyModifiers();
+		}
 	}
 
 	@Override
@@ -195,8 +197,7 @@ public class SimulationPlayer implements UnitOwner {
 
 	@Override
 	public EnemyType getType() {
-		// TODO Auto-generated method stub
-		return null;
+		return EnemyType.SIMULATION;
 	}
 
 	@Override

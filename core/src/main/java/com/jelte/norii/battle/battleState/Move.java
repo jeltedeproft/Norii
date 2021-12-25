@@ -1,15 +1,24 @@
 package com.jelte.norii.battle.battleState;
 
+import com.jelte.norii.entities.Entity;
 import com.jelte.norii.utility.MyPoint;
 
 public class Move {
 
-	private MoveType moveType;
-	private MyPoint location;
+	protected MoveType moveType;
+	protected MyPoint location;
+	protected Entity unit;
 
 	public Move(MoveType moveType, MyPoint location) {
 		this.moveType = moveType;
 		this.location = location;
+		this.unit = null;
+	}
+	
+	public Move(MoveType moveType, MyPoint location, Entity unit) {
+		this.moveType = moveType;
+		this.location = location;
+		this.unit = unit;
 	}
 
 	public MoveType getMoveType() {
@@ -28,17 +37,25 @@ public class Move {
 		this.location = location;
 	}
 
+	public Entity getUnit() {
+		return unit;
+	}
+
+	public void setUnit(Entity unit) {
+		this.unit = unit;
+	}
+
 	@Override
 	public String toString() {
 		if (this instanceof SpellMove) {
 			SpellMove spell = (SpellMove) this;
-			return ("casting " + spell.getAbility() + " on : " + location);
+			return ("casting " + spell.getAbility() + " \non : " + location + " \nfor unit : " + unit);
 		}
 
-		return "moving to : " + location;
+		return "moving " + unit + " \nto : " + location;
 	}
 
 	public Move makeCopy() {
-		return new Move(moveType, new MyPoint(location.x, location.y));
+		return new Move(moveType, new MyPoint(location.x, location.y),unit);
 	}
 }

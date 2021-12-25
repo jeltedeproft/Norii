@@ -1,12 +1,10 @@
 package balancer;
 
-import java.util.List;
-
 import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.ai.BattleStateModifier;
 import com.jelte.norii.ai.MoveGenerator;
 import com.jelte.norii.ai.RandomMoveGenerator;
-import com.jelte.norii.ai.UnitTurn;
+import com.jelte.norii.battle.ApFileReader;
 import com.jelte.norii.battle.battleState.BattleState;
 import com.jelte.norii.battle.battleState.Move;
 import com.jelte.norii.entities.Entity;
@@ -17,7 +15,7 @@ public class SimulationBattle {
 	public static final String PLAYER_ONE_NAME = "test1";
 	public static final String PLAYER_TWO_NAME = "test2";
 	private static final int NUMBER_OF_UNITS_PER_TEAM = 5;
-	private static final int MAX_NUMBER_OF_TURNS = 10000;
+	private static final int MAX_NUMBER_OF_TURNS = 200;
 
 	private UnitOwner balancer1;
 	private UnitOwner balancer2;
@@ -78,35 +76,37 @@ public class SimulationBattle {
 	public boolean hasEnded() {
 		if (turn >= MAX_NUMBER_OF_TURNS) {
 			System.out.println("reached max number of turns in simulation, turn = " + turn);
-			System.out.println("battle = \n \n" + battleState);
 		}
 		return (allyHasWon() || enemyHasWon() || (turn >= MAX_NUMBER_OF_TURNS));
 	}
 
 	public void executeTurn() {
 		if (allyTurn) {
-			List<Move> moves = generateMoves(balancer1);
-			Entity unit = battleState.getRandomPlayerUnit();
-			for (Move move : moves) {
-				System.out.println("move = " + move);
-				UnitTurn turn = new UnitTurn(unit.getEntityID(), move);
-				battleStateModifier.applyTurnToBattleState(unit, turn, battleState);
+			while(balancer1.getAp() > 0) {
+				Move move = moveGenerator.getMove(balancer1, battleState);
+				battleState = battleStateModifier.applyMove(move.getUnit(), move, battleState);
+				balancer1.setAp(balancer1.getAp() - 1);
 			}
+			balancer1.setAp(ApFileReader.getApData(turn + 1));
 		} else {
-			List<Move> moves = generateMoves(balancer2);
-			Entity unit = battleState.getRandomAiUnit();
-			for (Move move : moves) {
-				System.out.println("move = " + move);
-				UnitTurn turn = new UnitTurn(unit.getEntityID(), move);
-				battleStateModifier.applyTurnToBattleState(unit, turn, battleState);
+			while(balancer2.getAp() > 0) {
+				Move move = moveGenerator.getMove(balancer2, battleState);
+				battleState = battleStateModifier.applyMove(move.getUnit(), move, battleState);
+				balancer2.setAp(balancer2.getAp() - 1);
 			}
+			balancer2.setAp(ApFileReader.getApData(turn + 1));
 		}
+		cleanUpDeadUnits();
 		turn++;
 		allyTurn = !allyTurn;
 	}
 
-	private List<Move> generateMoves(UnitOwner balancer1) {
-		return moveGenerator.generateMovesForPlayerFullAp(balancer1, battleState);
+	private void cleanUpDeadUnits() {
+		for(Entity unit : battleState.getAllUnits()) {
+			if(unit.getHp() <= 0) {
+				battleState.removeUnit(unit);
+			}
+		}
 	}
 
 	private boolean allyHasWon() {
