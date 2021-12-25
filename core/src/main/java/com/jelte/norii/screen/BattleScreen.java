@@ -48,6 +48,7 @@ import com.jelte.norii.ui.Hud;
 import com.jelte.norii.ui.HudMessageTypes;
 import com.jelte.norii.ui.MessageToBattleScreen;
 import com.jelte.norii.utility.AssetManagerUtility;
+import com.jelte.norii.utility.GraphicalUtility;
 import com.jelte.norii.utility.MyPoint;
 import com.jelte.norii.utility.TiledMapPosition;
 import com.jelte.norii.utility.Utility;
@@ -341,9 +342,9 @@ public class BattleScreen extends GameScreen {
 
 	public void renderGrid() {
 		for (int x = 0; x < currentMap.getMapWidth(); x += 1)
-			Utility.drawDebugLine(new Vector2(x, 0), new Vector2(x, currentMap.getMapHeight()), mapCamera.combined);
+			GraphicalUtility.drawDebugLine(new Vector2(x, 0), new Vector2(x, currentMap.getMapHeight()), mapCamera.combined);
 		for (int y = 0; y < currentMap.getMapHeight(); y += 1)
-			Utility.drawDebugLine(new Vector2(0, y), new Vector2(currentMap.getMapWidth(), y), mapCamera.combined);
+			GraphicalUtility.drawDebugLine(new Vector2(0, y), new Vector2(currentMap.getMapWidth(), y), mapCamera.combined);
 	}
 
 	@Override

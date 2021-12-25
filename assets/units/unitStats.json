@@ -11,7 +11,7 @@
         "physicalDefense": 25,
         "basicAttackCost": 1,
         "spellExplanation": "this unit can blow himself up, dealing heavy damage to units adjavent to it",
-        "abilities": ["EXPLOSION"]
+        "ability": "EXPLOSION"
     },
 
     {
@@ -27,7 +27,7 @@
         "physicalDefense": 25,
         "basicAttackCost": 1,
         "spellExplanation": "this unit can blow himself up, dealing heavy damage to units adjavent to it",
-        "abilities": ["TURN_TO_STONE"]
+        "ability": "TURN_TO_STONE"
     },
 
     {
@@ -43,7 +43,7 @@
         "physicalDefense": 25,
         "basicAttackCost": 1,
         "spellExplanation": "this unit can blow himself up, dealing heavy damage to units adjavent to it",
-        "abilities": ["FIREBALL"]
+        "ability": "FIREBALL"
     },
 
     {
@@ -59,7 +59,7 @@
         "physicalDefense": 25,
         "basicAttackCost": 1,
         "spellExplanation": "this unit can blow himself up, dealing heavy damage to units adjavent to it",
-        "abilities": ["SWAP"]
+        "ability": "SWAP"
     },
 
     {
@@ -75,7 +75,7 @@
         "physicalDefense": 25,
         "basicAttackCost": 1,
         "spellExplanation": "this unit can blow himself up, dealing heavy damage to units adjavent to it",
-        "abilities": ["ICEFIELD"]
+        "ability": "ICEFIELD"
     },
 
     {
@@ -91,7 +91,7 @@
         "physicalDefense": 25,
         "basicAttackCost": 1,
         "spellExplanation": "this unit can blow himself up, dealing heavy damage to units adjavent to it",
-        "abilities": ["PUSH"]
+        "ability": "PUSH"
     },
 
     {
@@ -107,7 +107,7 @@
         "physicalDefense": 25,
         "basicAttackCost": 1,
         "spellExplanation": "this unit can blow himself up, dealing heavy damage to units adjavent to it",
-        "abilities": ["ARROW"]
+        "ability": "ARROW"
     },
 
     {
@@ -123,7 +123,7 @@
         "physicalDefense": 25,
         "basicAttackCost": 1,
         "spellExplanation": "this unit can blow himself up, dealing heavy damage to units adjavent to it",
-        "abilities": ["PULL"]
+        "ability": "PULL"
     },
 
     {
@@ -139,7 +139,7 @@
         "physicalDefense": 25,
         "basicAttackCost": 1,
         "spellExplanation": "this unit can blow himself up, dealing heavy damage to units adjavent to it",
-        "abilities": ["INVISIBLE"]
+        "ability": "INVISIBLE"
     },
 
     {
@@ -155,7 +155,7 @@
         "physicalDefense": 25,
         "basicAttackCost": 1,
         "spellExplanation": "this unit can heal people",
-        "abilities": ["HEAL"]
+        "ability": "HEAL"
     },
 
     {
@@ -171,7 +171,7 @@
         "physicalDefense": 25,
         "basicAttackCost": 1,
         "spellExplanation": "this unit can blow himself up, dealing heavy damage to units adjavent to it",
-        "abilities": ["SUMMON"]
+        "ability": "SUMMON"
     },
 
     {
@@ -187,7 +187,7 @@
         "physicalDefense": 25,
         "basicAttackCost": 1,
         "spellExplanation": "this unit can blow himself up, dealing heavy damage to units adjavent to it",
-        "abilities": ["CRACKLE"]
+        "ability": "CRACKLE"
     },
 
     {
@@ -203,7 +203,7 @@
         "physicalDefense": 25,
         "basicAttackCost": 1,
         "spellExplanation": "this unit can blow himself up, dealing heavy damage to units adjavent to it",
-        "abilities": ["PLANT_SHIELD"]
+        "ability": "PLANT_SHIELD"
     },
 
     {
@@ -219,7 +219,7 @@
         "physicalDefense": 25,
         "basicAttackCost": 1,
         "spellExplanation": "this unit can blow himself up, dealing heavy damage to units adjavent to it",
-        "abilities": ["FIREBALL"]
+        "ability": "FIREBALL"
     },
 
     {
@@ -235,7 +235,7 @@
         "physicalDefense": 25,
         "basicAttackCost": 1,
         "spellExplanation": "this unit can blow himself up, dealing heavy damage to units adjavent to it",
-        "abilities": ["FIREBALL"]
+        "ability": "FIREBALL"
     },
 
     {
@@ -251,7 +251,7 @@
         "physicalDefense": 25,
         "basicAttackCost": 1,
         "spellExplanation": "this unit can blow himself up, dealing heavy damage to units adjavent to it",
-        "abilities": ["TURN_TO_STONE"]
+        "ability": "TURN_TO_STONE"
     },
 
     {
@@ -267,7 +267,7 @@
         "physicalDefense": 25,
         "basicAttackCost": 1,
         "spellExplanation": "this unit can blow himself up, dealing heavy damage to units adjavent to it",
-        "abilities": ["FIREBALL"]
+        "ability": "FIREBALL"
     },
 
     {
@@ -283,7 +283,7 @@
         "physicalDefense": 25,
         "basicAttackCost": 1,
         "spellExplanation": "this unit can blow himself up, dealing heavy damage to units adjavent to it",
-        "abilities": ["FIREBALL"]
+        "ability": "FIREBALL"
     },
 
     {
@@ -299,7 +299,7 @@
         "physicalDefense": 25,
         "basicAttackCost": 1,
         "spellExplanation": "this unit can blow himself up, dealing heavy damage to units adjavent to it",
-        "abilities": ["PORTAL"]
+        "ability": "PORTAL"
     },
 
     {
@@ -315,7 +315,7 @@
         "physicalDefense": 25,
         "basicAttackCost": 1,
         "spellExplanation": "this unit can blow himself up, dealing heavy damage to units adjavent to it",
-        "abilities": ["FIREBALL"]
+        "ability": "FIREBALL"
     },
 
     {
@@ -331,7 +331,7 @@
         "physicalDefense": 25,
         "basicAttackCost": 1,
         "spellExplanation": "this unit can blow himself up, dealing heavy damage to units adjavent to it",
-        "abilities": ["FIREBALL"]
+        "ability": "FIREBALL"
     },
 
     {
@@ -347,7 +347,7 @@
         "physicalDefense": 25,
         "basicAttackCost": 1,
         "spellExplanation": "this unit can blow himself up, dealing heavy damage to units adjavent to it",
-        "abilities": ["SWAP"]
+        "ability": "SWAP"
     },
 
     {
@@ -363,7 +363,7 @@
         "physicalDefense": 25,
         "basicAttackCost": 1,
         "spellExplanation": "this unit can blow himself up, dealing heavy damage to units adjavent to it",
-        "abilities": ["FIREBALL"]
+        "ability": "FIREBALL"
     },
 
     {
@@ -379,7 +379,7 @@
         "physicalDefense": 25,
         "basicAttackCost": 1,
         "spellExplanation": "this unit can blow himself up, dealing heavy damage to units adjavent to it",
-        "abilities": ["FIREBALL"]
+        "ability": "FIREBALL"
     },
 
     {
@@ -395,7 +395,7 @@
         "physicalDefense": 25,
         "basicAttackCost": 1,
         "spellExplanation": "this unit can blow himself up, dealing heavy damage to units adjavent to it",
-        "abilities": ["FIREBALL"]
+        "ability": "FIREBALL"
     },
 
     {
@@ -411,7 +411,7 @@
         "physicalDefense": 25,
         "basicAttackCost": 1,
         "spellExplanation": "this unit can blow himself up, dealing heavy damage to units adjavent to it",
-        "abilities": ["FIREBALL"]
+        "ability": "FIREBALL"
     },
 
     {
@@ -427,7 +427,7 @@
         "physicalDefense": 25,
         "basicAttackCost": 1,
         "spellExplanation": "this unit can blow himself up, dealing heavy damage to units adjavent to it",
-        "abilities": ["FIREBALL"]
+        "ability": "FIREBALL"
     },
 
     {
@@ -443,7 +443,7 @@
         "physicalDefense": 25,
         "basicAttackCost": 1,
         "spellExplanation": "this unit can blow himself up, dealing heavy damage to units adjavent to it",
-        "abilities": ["FIREBALL"]
+        "ability": "FIREBALL"
     },
 
     {
@@ -459,7 +459,7 @@
         "physicalDefense": 25,
         "basicAttackCost": 1,
         "spellExplanation": "this unit can blow himself up, dealing heavy damage to units adjavent to it",
-        "abilities": ["FIREBALL"]
+        "ability": "FIREBALL"
     },
 
     {
@@ -475,7 +475,7 @@
         "physicalDefense": 25,
         "basicAttackCost": 1,
         "spellExplanation": "this unit can blow himself up, dealing heavy damage to units adjavent to it",
-        "abilities": ["FIREBALL"]
+        "ability": "FIREBALL"
     },
 
     {
@@ -491,7 +491,7 @@
         "physicalDefense": 25,
         "basicAttackCost": 1,
         "spellExplanation": "this unit can blow himself up, dealing heavy damage to units adjavent to it",
-        "abilities": ["FIREBALL"]
+        "ability": "FIREBALL"
     },
 
     {
@@ -507,7 +507,7 @@
         "physicalDefense": 25,
         "basicAttackCost": 1,
         "spellExplanation": "this unit can blow himself up, dealing heavy damage to units adjavent to it",
-        "abilities": ["HAMMERBACK"]
+        "ability": "HAMMERBACK"
     },
 
     {
@@ -523,7 +523,7 @@
         "physicalDefense": 25,
         "basicAttackCost": 1,
         "spellExplanation": "this unit can blow himself up, dealing heavy damage to units adjavent to it",
-        "abilities": []
+        "ability": "FIREBALL"
     },
 
     {
@@ -539,7 +539,7 @@
         "physicalDefense": 25,
         "basicAttackCost": 0,
         "spellExplanation": "this unit can blow himself up, dealing heavy damage to units adjavent to it",
-        "abilities": ["TRANSPORT"]
+        "ability": "TRANSPORT"
     },
 
     {
@@ -555,7 +555,7 @@
         "physicalDefense": 25,
         "basicAttackCost": 1,
         "spellExplanation": "this unit can blow himself up, dealing heavy damage to units adjavent to it",
-        "abilities": []
+        "ability": "FIREBALL"
     },
 
     {
@@ -571,7 +571,7 @@
         "physicalDefense": 100,
         "basicAttackCost": 0,
         "spellExplanation": "this unit can blow himself up, dealing heavy damage to units adjavent to it",
-        "abilities": []
+        "ability": "FIREBALL"
     },
 
     {
@@ -587,7 +587,7 @@
         "physicalDefense": 25,
         "basicAttackCost": 1,
         "spellExplanation": "this unit can blow himself up, dealing heavy damage to units adjavent to it",
-        "abilities": ["FIREBALL"]
+        "ability": "FIREBALL"
     },
 
     {
@@ -603,7 +603,7 @@
         "physicalDefense": 25,
         "basicAttackCost": 1,
         "spellExplanation": "this unit can blow himself up, dealing heavy damage to units adjavent to it",
-        "abilities": ["LOVE"]
+        "ability": "LOVE"
     },
 
     {
@@ -619,7 +619,7 @@
         "physicalDefense": 25,
         "basicAttackCost": 1,
         "spellExplanation": "Reduce AP of enemy and ally units",
-        "abilities": ["HOURGLASS"]
+        "ability": "HOURGLASS"
     },
 
     {
@@ -635,7 +635,7 @@
         "physicalDefense": 25,
         "basicAttackCost": 1,
         "spellExplanation": "Reduce magical resistance of enemies",
-        "abilities": ["MINDWARP"]
+        "ability": "MINDWARP"
     },
 
     {
@@ -651,7 +651,7 @@
         "physicalDefense": 25,
         "basicAttackCost": 1,
         "spellExplanation": "this unit does nothing for now",
-        "abilities": []
+        "ability": "FIREBALL"
     },
 
     {
@@ -667,6 +667,6 @@
         "physicalDefense": 25,
         "basicAttackCost": 1,
         "spellExplanation": "this unit does nothing for now",
-        "abilities": []
+        "ability": "FIREBALL"
     }
 ]

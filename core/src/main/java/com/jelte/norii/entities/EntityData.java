@@ -13,7 +13,7 @@ public class EntityData {
 	private int magicalDefense;
 	private int physicalDefense;
 	private int basicAttackCost;
-	private String[] abilities;
+	private String ability;
 	private String spellExplanation;
 
 	private Entity linkedEntity;
@@ -110,12 +110,12 @@ public class EntityData {
 		this.basicAttackCost = basicAttackCost;
 	}
 
-	public String[] getAbilties() {
-		return abilities;
+	public String getAbility() {
+		return ability;
 	}
 
-	public void setAbilties(final String[] abilties) {
-		this.abilities = abilties;
+	public void setAbility(final String ability) {
+		this.ability = ability;
 	}
 
 	public void setEntity(Entity entity) {
@@ -133,7 +133,7 @@ public class EntityData {
 	@Override
 	public String toString() {
 		return "id : " + id + "\n" + "name : " + name + "\n" + "portraitSpritePath : " + portraitSpritePath + "\n" + "entitySpriteFilePath : " + entitySpriteName + "\n" + "maxHP : " + maxHP + "\n" + "level : " + level + "\n"
-				+ "attackRange : " + attackRange + "\n" + "attackPower : " + attackPower + "\n" + "basicAttackCost : " + basicAttackCost + "\n";
+				+ "attackRange : " + attackRange + "\n" + "attackPower : " + attackPower + "\n" + "basicAttackCost : " + basicAttackCost + "\n" + "ability : " + ability + "\n";
 	}
 
 }

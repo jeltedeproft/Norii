@@ -3,7 +3,6 @@ package balancer;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.utility.Utility;
@@ -70,7 +69,7 @@ public class StatsAdjuster {
 	}
 
 	private void changeStat(Stats copyStats, StatsEnum stat, boolean strengthen) {
-		Optional<Ability> ability = Utility.getRandom(copyStats.getAbilities());
+		Ability ability = copyStats.getAbility();
 		switch (stat) {
 		case MAGICAL_DEFENSE:
 			int magDef = copyStats.getMagicalDefense();
@@ -97,28 +96,20 @@ public class StatsAdjuster {
 			copyStats.setAttackPower(calculateNewValue(attackPower, ATTACK_POWER_ADJUST_AMOUNT, strengthen));
 			break;
 		case AP_COST:
-			if (ability.isPresent()) {
-				int apCost = ability.get().getSpellData().getApCost();
-				ability.get().getSpellData().setApCost(calculateNewValue(apCost, AP_COST_ADJUST_AMOUNT, strengthen));
-			}
+			int apCost = ability.getSpellData().getApCost();
+			ability.getSpellData().setApCost(calculateNewValue(apCost, AP_COST_ADJUST_AMOUNT, strengthen));
 			break;
 		case DAMAGE:
-			if (ability.isPresent()) {
-				int damage = ability.get().getSpellData().getDamage();
-				ability.get().getSpellData().setDamage(calculateNewValue(damage, DAMAGE_ADJUST_AMOUNT, strengthen));
-			}
+			int damage = ability.getSpellData().getDamage();
+			ability.getSpellData().setDamage(calculateNewValue(damage, DAMAGE_ADJUST_AMOUNT, strengthen));
 			break;
 		case RANGE:
-			if (ability.isPresent()) {
-				int range = ability.get().getSpellData().getRange();
-				ability.get().getSpellData().setRange(calculateNewValue(range, RANGE_ADJUST_AMOUNT, strengthen));
-			}
+			int range = ability.getSpellData().getRange();
+			ability.getSpellData().setRange(calculateNewValue(range, RANGE_ADJUST_AMOUNT, strengthen));
 			break;
 		case AREA_OF_EFFECT_RANGE:
-			if (ability.isPresent()) {
-				int aoeRange = ability.get().getSpellData().getAreaOfEffectRange();
-				ability.get().getSpellData().setAreaOfEffectRange(calculateNewValue(aoeRange, AREA_OF_EFFECT_RANGE_ADJUST_AMOUNT, strengthen));
-			}
+			int aoeRange = ability.getSpellData().getAreaOfEffectRange();
+			ability.getSpellData().setAreaOfEffectRange(calculateNewValue(aoeRange, AREA_OF_EFFECT_RANGE_ADJUST_AMOUNT, strengthen));
 			break;
 		}
 

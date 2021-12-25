@@ -241,8 +241,8 @@ public class BottomBar {
 		if (entity != null) {
 			if (!entity.getEntityData().getName().equalsIgnoreCase(heroNameLabel.getText().toString())) {
 				spellImageButton.setEntity(entity);
-				if (!entity.getAbilities().isEmpty()) {
-					spellImageButton.setAbility((Ability) entity.getAbilities().toArray()[0]);
+				if (entity.getAbility() != null) {
+					spellImageButton.setAbility(entity.getAbility());
 				} else {
 					spellImageButton.clearAbility();
 					changeSpellImage("NoAbility");
@@ -267,10 +267,10 @@ public class BottomBar {
 	private void populateElementsForUI(final Entity entity) {
 		heroNameLabel.setText(entity.getEntityData().getName());
 		changeHeroImage(entity.getEntityData().getPortraitSpritePath());
-		for (final Ability ability : entity.getAbilities()) {
-			changeSpellImage(ability.getSpellData().getIconSpriteName());
-			changeSpellInfo(ability.getSpellData().getInfoText());
-		}
+		Ability ability = entity.getAbility();
+		changeSpellImage(ability.getSpellData().getIconSpriteName());
+		changeSpellInfo(ability.getSpellData().getInfoText());
+
 	}
 
 	private void changeSpellInfo(String infoText) {

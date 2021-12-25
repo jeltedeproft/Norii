@@ -450,7 +450,7 @@ public class AIMoveDecider {
 		return aiUnitPosition.getDistance(entityPosition);
 	}
 
-	private Array<MyPoint> getAbilityTargets(Ability ability, MyPoint casterPos, boolean isPlayerUnit, BattleState battleState) {
+	public static Array<MyPoint> getAbilityTargets(Ability ability, MyPoint casterPos, boolean isPlayerUnit, BattleState battleState) {
 
 		final Array<MyPoint> unitPositions = getVisibleUnitPositions(isPlayerUnit, ability, battleState);
 		final Array<MyPoint> points = BattleStateGridHelper.getInstance().getTargetPositionsInRangeAbility(casterPos, ability, unitPositions);
@@ -461,7 +461,7 @@ public class AIMoveDecider {
 		return points;
 	}
 
-	private Array<MyPoint> getVisibleUnitPositions(boolean isPlayerUnit, Ability ability, BattleState battleState) {
+	private static Array<MyPoint> getVisibleUnitPositions(boolean isPlayerUnit, Ability ability, BattleState battleState) {
 		switch (ability.getAffectedTeams()) {
 		case FRIENDLY:
 			if (isPlayerUnit) {
@@ -485,7 +485,7 @@ public class AIMoveDecider {
 		}
 	}
 
-	private Array<MyPoint> getUnitPositions(boolean isPlayerUnit, Ability ability, BattleState battleState) {
+	public static Array<MyPoint> getUnitPositions(boolean isPlayerUnit, Ability ability, BattleState battleState) {
 		switch (ability.getAffectedTeams()) {
 		case FRIENDLY:
 			if (isPlayerUnit) {
@@ -509,7 +509,7 @@ public class AIMoveDecider {
 		}
 	}
 
-	private Array<MyPoint> collectPoints(Array<Entity> allUnits) {
+	private static Array<MyPoint> collectPoints(Array<Entity> allUnits) {
 		final Array<MyPoint> points = new Array<>();
 		for (final Entity unit : allUnits) {
 			points.add(new MyPoint(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY()));

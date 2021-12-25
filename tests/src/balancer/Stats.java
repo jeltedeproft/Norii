@@ -1,9 +1,5 @@
 package balancer;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityTypes;
 import com.jelte.norii.magic.Ability;
@@ -19,8 +15,9 @@ public class Stats {
 	private int basicAttackCost;
 	private int attackPower;
 
-	// abilities
-	private Map<Ability, AbilityStats> abilityWithStats = new HashMap<>();
+	// ability
+	private Ability ability;
+	private AbilityStats abilityStats;
 
 	public Stats(Entity unit) {
 		magicalDefense = unit.getEntityData().getMagicalDefense();
@@ -29,11 +26,8 @@ public class Stats {
 		maxHP = unit.getEntityData().getMaxHP();
 		basicAttackCost = unit.getEntityData().getBasicAttackCost();
 		attackPower = unit.getEntityData().getAttackPower();
-
-		for (Ability ability : unit.getAbilities()) {
-			abilityWithStats.put(ability, new AbilityStats(ability));
-		}
-
+		ability = unit.getAbility();
+		abilityStats = new AbilityStats(unit.getAbility());
 		entityType = unit.getEntityType();
 	}
 
@@ -69,8 +63,8 @@ public class Stats {
 		return attackPower;
 	}
 
-	public Map<Ability, AbilityStats> getAbilityWithStats() {
-		return abilityWithStats;
+	public AbilityStats getAbilityStats() {
+		return abilityStats;
 	}
 
 	public void setEntityType(EntityTypes entityType) {
@@ -101,17 +95,22 @@ public class Stats {
 		this.attackPower = attackPower;
 	}
 
-	public void setAbilityWithStats(Map<Ability, AbilityStats> abilityWithStats) {
-		this.abilityWithStats = abilityWithStats;
+	public void setAbilityStats(AbilityStats abilityStats) {
+		this.abilityStats = abilityStats;
 	}
 
-	public Set<Ability> getAbilities() {
-		return abilityWithStats.keySet();
+	public Ability getAbility() {
+		return ability;
+	}
+
+	private void setAbility(Ability ability) {
+		this.ability = ability;
 	}
 
 	public Stats makeCopy() {
 		Stats stats = new Stats();
-		stats.setAbilityWithStats(abilityWithStats);
+		stats.setAbilityStats(abilityStats);
+		stats.setAbility(ability);
 		stats.setAttackPower(attackPower);
 		stats.setAttackRange(attackRange);
 		stats.setBasicAttackCost(basicAttackCost);

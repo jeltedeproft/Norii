@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
@@ -100,6 +101,36 @@ public class BattleState implements Comparable<BattleState> {
 
 	public BattleCell get(int width, int height) {
 		return stateOfField[width][height];
+	}
+
+	public void randomlyAddUnitsToBattleState(Array<Entity> units) {
+		for (Entity unit : units) {
+			if (isSpotFree()) {
+				placeUnitOnRandomFreeSpot(unit);
+			}
+		}
+	}
+
+	private void placeUnitOnRandomFreeSpot(Entity unit) {
+		int i = random.nextInt(getWidth());
+		int j = random.nextInt(getHeight());
+		while (!get(i, j).canMove()) {
+			i = random.nextInt(getWidth());
+			j = random.nextInt(getHeight());
+		}
+		unit.setCurrentPosition(new TiledMapPosition().setPositionFromTiles(i, j));
+		addEntity(unit);
+	}
+
+	private boolean isSpotFree() {
+		for (int i = 0; i < getWidth(); i++) {
+			for (int j = 0; j < getHeight(); j++) {
+				if (get(i, j).canMove()) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	public void moveUnitTo(Entity entity, MyPoint to) {
@@ -386,6 +417,7 @@ public class BattleState implements Comparable<BattleState> {
 		int cellsToMove = maxCellsToMove;
 
 		while (canMoveTo(nextPoint, cellsToMove)) {
+			System.out.println("moving to : " + nextPoint);
 			unitToMove.pushTo(nextPoint);
 			moveUnitTo(unitToMove, nextPoint);
 			nextPoint = calculateNextPoint(nextPoint, casterIsRight, casterIsLeft, casterIsDown, casterIsUp, isPulling);
@@ -453,6 +485,7 @@ public class BattleState implements Comparable<BattleState> {
 			for (int j = 0; j <= max; j++) {
 				for (int k = 0; k <= max; k++) {
 					if ((j + k) == max) {
+						// refactor this, use canWalkTo function
 						if ((!stateOfField[portalX + j][portalY + k].isOccupied()) && stateOfField[portalX + j][portalY + k].isWalkable()) {
 							return new TiledMapPosition().setPositionFromTiles(portalX + j, portalY + k);
 						}
@@ -484,6 +517,18 @@ public class BattleState implements Comparable<BattleState> {
 		return neighbours;
 	}
 
+	public Array<Entity> getNeighbours(MyPoint location, int range) {
+		final Array<Entity> neighbours = new Array<>();
+		final Map<Integer, Array<Entity>> distances = Utility.getDistancesWithTarget(location, getAllUnits());
+		for (int i = 1; i <= range; i++) {
+			if ((!distances.isEmpty()) && distances.containsKey(i)) {
+				neighbours.addAll(distances.get(i));// explode in distance 1
+			}
+		}
+
+		return neighbours;
+	}
+
 	public void linkUnits(MyPoint casterPos, MyPoint location) {
 		final Entity target = stateOfField[location.getX()][location.getY()].getUnit();
 		final int linkedIdCaster = stateOfField[location.getX()][location.getY()].getUnit().getEntityID();
@@ -509,8 +554,8 @@ public class BattleState implements Comparable<BattleState> {
 	}
 
 	public Entity getRandomUnit() {
-		Entity[] values = (Entity[]) units.values().toArray();
-		return values[random.nextInt(values.length)];
+		Optional<Entity> unit = Utility.getRandom(units.values());
+		return unit.get();
 	}
 
 	public Entity getRandomAiUnit() {
@@ -529,20 +574,59 @@ public class BattleState implements Comparable<BattleState> {
 		return unit;
 	}
 
-	public MyPoint getRandomMoveSpotForUnit(Entity unit, BattleState battleState) {
+	public MyPoint getRandomMoveSpotForUnit(Entity unit) {
+		int counter = 0;
 		int randomInt = random.nextInt(4);
 		MyPoint currentPos = unit.getCurrentPosition().getTilePosAsPoint().makeCopy();
 
-		switch (randomInt) {
-		case 0:
-			if(canMoveTo(currentPos.makeCopy().incrementX())) {
-				return currentPos.incrementX();
-			}else {
-				randomInt = Utility.incrementModulo(randomInt, 4);
-			}
+		while (!tryRandomDirection(currentPos, randomInt) && (counter < 4)) {
+			randomInt = Utility.incrementModulo(randomInt, 4);
+			counter++;
 		}
-		return null;
+
+		if (counter >= 4) {
+			return null;
+		} else {
+			return updatePos(currentPos, randomInt);
+		}
 	}
 
-	private
+	private MyPoint updatePos(MyPoint pos, int randomInt) {
+		switch (randomInt) {
+		case 0:
+			return pos.makeCopy().incrementX();
+		case 1:
+			return pos.makeCopy().incrementY();
+		case 2:
+			return pos.makeCopy().decrementX();
+		case 3:
+			return pos.makeCopy().decrementY();
+		default:
+			Gdx.app.log(TAG, "cant possible return any other number in this function");
+			return null;
+		}
+	}
+
+	private boolean tryRandomDirection(MyPoint pos, int randomInt) {
+		switch (randomInt) {
+		case 0:
+			return checkDirection(pos.makeCopy().incrementX());
+		case 1:
+			return checkDirection(pos.makeCopy().incrementY());
+		case 2:
+			return checkDirection(pos.makeCopy().decrementX());
+		case 3:
+			return checkDirection(pos.makeCopy().decrementY());
+		default:
+			return false;
+		}
+	}
+
+	private boolean checkDirection(MyPoint changedPos) {
+		if (canMoveTo(changedPos)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

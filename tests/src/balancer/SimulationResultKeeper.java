@@ -18,11 +18,11 @@ public class SimulationResultKeeper {
 	private final UnitOwner dummyOwner = new DummyOwner();
 
 	public SimulationResultKeeper() {
-		winrates = new EnumMap<EntityTypes, Integer>(winrates);
-		gamesPlayed = new EnumMap<EntityTypes, Integer>(gamesPlayed);
+		winrates = new EnumMap<EntityTypes, Integer>(EntityTypes.class);
+		gamesPlayed = new EnumMap<EntityTypes, Integer>(EntityTypes.class);
 
-		startingStats = new EnumMap<EntityTypes, Stats>(startingStats);
-		endingStats = new EnumMap<EntityTypes, Stats>(endingStats);
+		startingStats = new EnumMap<EntityTypes, Stats>(EntityTypes.class);
+		endingStats = new EnumMap<EntityTypes, Stats>(EntityTypes.class);
 
 		initStatsBeforeSimulation();
 	}

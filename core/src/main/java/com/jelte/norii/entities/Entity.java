@@ -47,7 +47,7 @@ public class Entity extends Actor {
 
 	protected EntityTypes entityType;
 
-	protected Collection<Ability> abilities;
+	protected Ability ability;
 	protected Collection<Modifier> modifiers;
 	protected EntityVisualComponentInterface visualComponent;
 
@@ -75,7 +75,6 @@ public class Entity extends Actor {
 		this.owner = owner;
 		this.isPlayerUnit = owner.isPlayer();
 
-		abilities = new ArrayList<>();
 		modifiers = new ArrayList<>();
 		entityID = java.lang.System.identityHashCode(this);
 		initAbilities();
@@ -87,9 +86,7 @@ public class Entity extends Actor {
 	}
 
 	private void initAbilities() {
-		for (final String abilityString : entityData.getAbilties()) {
-			addAbility(AbilitiesEnum.valueOf(abilityString));
-		}
+		setAbility(AbilitiesEnum.valueOf(entityData.getAbility()));
 	}
 
 	public void update(final float delta) {
@@ -275,18 +272,12 @@ public class Entity extends Actor {
 		return entityType;
 	}
 
-	public void addAbility(final AbilitiesEnum abilityEnum) {
-		final Ability ability = new Ability(abilityEnum);
-		abilities.add(ability);
+	public void setAbility(final AbilitiesEnum abilityEnum) {
+		this.ability = new Ability(abilityEnum);
 	}
 
-	public void addAbility(final AbilitiesEnum abilityEnum, MyPoint location) {
-		final Ability ability = new Ability(abilityEnum, location);
-		abilities.add(ability);
-	}
-
-	public void removeAbility(final AbilitiesEnum abilityEnum) {
-		abilities.removeIf(ability -> (ability.getId() == abilityEnum.ordinal()));
+	public void setAbility(final AbilitiesEnum abilityEnum, MyPoint location) {
+		this.ability = new Ability(abilityEnum, location);
 	}
 
 	public void addModifier(final ModifiersEnum type, final int turns, final int amount) {
@@ -334,8 +325,16 @@ public class Entity extends Actor {
 		return modifiers;
 	}
 
-	public Collection<Ability> getAbilities() {
-		return abilities;
+	private void setModifiers(Collection<Modifier> modifiers) {
+		this.modifiers = modifiers;
+	}
+
+	public Ability getAbility() {
+		return ability;
+	}
+
+	public void setAbility(Ability ability) {
+		this.ability = ability;
 	}
 
 	public int getScore() {
@@ -411,11 +410,6 @@ public class Entity extends Actor {
 			copyModifiers.add(new Modifier(mod.getType(), mod.getTurns(), mod.getAmount()));
 		}
 
-		final Collection<Ability> copyAbilities = new ArrayList<>();
-		for (final Ability ability : abilities) {
-			copyAbilities.add(new Ability(ability.getAbilityEnum()));
-		}
-
 		final Entity copy = new Entity(entityType, owner, false);
 		copy.setVisualComponent(new FakeEntityVisualComponent());
 		copy.setCurrentPosition(currentPlayerPosition);
@@ -423,8 +417,10 @@ public class Entity extends Actor {
 		copy.setInvisible(isInvis);
 		copy.setDirection(direction);
 		copy.setPlayerUnit(isPlayerUnit);
+		copy.setAbility(ability);
 		copy.setHp(hp);
 		copy.setXp(xp);
+		copy.setModifiers(copyModifiers);
 		return copy;
 	}
 

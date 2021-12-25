@@ -63,6 +63,10 @@ public class BattleCell {
 		occupied = false;
 	}
 
+	public boolean canMove() {
+		return (walkable && !occupied);
+	}
+
 	@Override
 	public String toString() {
 		return occupied + "unit:" + unit.getEntityID() + " with position : " + unit.getX() + ", " + unit.getY();

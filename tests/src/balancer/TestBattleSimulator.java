@@ -7,7 +7,10 @@ import java.util.Map;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.jelte.norii.battle.ApFileReader;
+import com.jelte.norii.entities.EntityFileReader;
 import com.jelte.norii.entities.EntityTypes;
+import com.jelte.norii.magic.SpellFileReader;
 
 import HeadlessRunnerTest.GdxTestRunner;
 
@@ -20,12 +23,16 @@ public class TestBattleSimulator {
 	private StatsAdjuster statsAdjuster;
 
 	public TestBattleSimulator() {
+		EntityFileReader.loadUnitStatsInMemory();
+		SpellFileReader.loadSpellsInMemory();
+		ApFileReader.loadApInMemory();
 		resultKeeper = new SimulationResultKeeper();
 		statsAdjuster = new StatsAdjuster();
 	}
 
 	@Test
-	private void runSimulations() {
+	public void runSimulations() {
+		System.out.println("starting test");
 		while (simulationCounter <= NUMBER_OF_SIMULATIONS) {
 			runSimulation(simulationCounter);
 			simulationCounter++;
@@ -37,11 +44,13 @@ public class TestBattleSimulator {
 	}
 
 	public void runSimulation(int simulationCounter) {
+		System.out.println("running simulation battle");
 		SimulationBattle battle = new SimulationBattle();
 		resultKeeper.updateParticipationRates(battle.getParticipants());
 		while (!battle.hasEnded()) {
 			battle.executeTurn();
 		}
+		System.out.println("winner is : " + battle.getWinningTeam());
 		resultKeeper.updateWinrates(simulationCounter, battle.getWinningTeam());
 	}
 

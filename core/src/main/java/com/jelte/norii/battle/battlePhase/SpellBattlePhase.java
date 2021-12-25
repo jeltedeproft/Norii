@@ -497,7 +497,7 @@ public class SpellBattlePhase extends BattlePhase {
 		hammerEntity.getVisualComponent().initiateInBattle(targetPos);
 		hammerEntity.setCurrentPosition(targetPos);
 		hammerEntity.addModifier(ModifiersEnum.DAMAGE_OVER_TIME_PHYSICAL, 3, 1);
-		hammerEntity.addAbility(AbilitiesEnum.HAMMERBACKBACK, caster.getCurrentPosition().getTilePosAsPoint());
+		hammerEntity.setAbility(AbilitiesEnum.HAMMERBACKBACK, caster.getCurrentPosition().getTilePosAsPoint());
 		battlemanager.addUnit(hammerEntity);
 		battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.ADD_UNIT_UI, hammerEntity);
 	}

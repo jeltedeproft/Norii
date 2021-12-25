@@ -9,11 +9,6 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.TreeMap;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.battle.battleState.BattleState;
 import com.jelte.norii.entities.Entity;
@@ -21,7 +16,6 @@ import com.jelte.norii.entities.Entity;
 public final class Utility {
 	private static final String TAG = Utility.class.getSimpleName();
 
-	private static ShapeRenderer debugRenderer = new ShapeRenderer();
 	public static final Random random = new Random();
 
 	public static int getRandomIntFrom1to(final int to) {
@@ -157,29 +151,6 @@ public final class Utility {
 
 	}
 
-	public static void drawDebugLine(Vector2 start, Vector2 end, int lineWidth, Color color, Matrix4 projectionMatrix) {
-		Gdx.gl.glLineWidth(lineWidth);
-		debugRenderer.setProjectionMatrix(projectionMatrix);
-		debugRenderer.begin(ShapeRenderer.ShapeType.Line);
-		debugRenderer.setColor(color);
-		debugRenderer.line(start, end);
-		debugRenderer.end();
-		Gdx.gl.glLineWidth(1);
-	}
-
-	public static void drawDebugLine(Vector2 start, Vector2 end, Matrix4 projectionMatrix) {
-		Gdx.gl.glLineWidth(1);
-		debugRenderer.setProjectionMatrix(projectionMatrix);
-		debugRenderer.begin(ShapeRenderer.ShapeType.Line);
-		debugRenderer.setColor(Color.BLACK);
-		final Color color = debugRenderer.getColor();
-		color.a = 0.2f;
-		debugRenderer.setColor(color);
-		debugRenderer.line(start, end);
-		debugRenderer.end();
-		Gdx.gl.glLineWidth(1);
-	}
-
 	public static String arrayOfStringsToString(Array<String> strings) {
 		StringBuilder builder = new StringBuilder();
 		for (String string : strings) {
@@ -193,8 +164,11 @@ public final class Utility {
 	}
 
 	public static <E> Optional<E> getRandom(Collection<E> e) {
-
 		return e.stream().skip((int) (e.size() * Math.random())).findFirst();
+	}
+
+	public static <E> E getRandom(Array<E> e) {
+		return e.get(random.nextInt(e.size));
 	}
 
 	public static int incrementModulo(int x, int modulo) {

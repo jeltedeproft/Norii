@@ -280,12 +280,12 @@ public class BattleManager {
 
 	private void executeOnDeathEffect(Entity unit) {
 		if (unit.getEntityType().equals(EntityTypes.BOOMERANG)) {
-			for (final Ability ability : unit.getAbilities()) {
-				if (ability.getTargetLocation() != null) {
-					final SpellBattlePhase spellState = (SpellBattlePhase) spellBattleState;
-					spellState.executeSpellForAi(unit, ability, ability.getTargetLocation());
-				}
+			final Ability ability = unit.getAbility();
+			if (ability.getTargetLocation() != null) {
+				final SpellBattlePhase spellState = (SpellBattlePhase) spellBattleState;
+				spellState.executeSpellForAi(unit, ability, ability.getTargetLocation());
 			}
+
 		}
 	}
 

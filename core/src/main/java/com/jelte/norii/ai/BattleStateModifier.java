@@ -170,7 +170,7 @@ public class BattleStateModifier {
 		hammerBackUnit.setCurrentPosition(new TiledMapPosition().setPositionFromTiles(location.x, location.y));
 		battleState.addEntity(hammerBackUnit);
 		battleState.get(location.x, location.y).getUnit().addModifier(new Modifier(ModifiersEnum.DAMAGE_OVER_TIME_MAGICAL, 3, 1));
-		battleState.get(location.x, location.y).getUnit().addAbility(AbilitiesEnum.HAMMERBACKBACK, casterPos);
+		battleState.get(location.x, location.y).getUnit().setAbility(AbilitiesEnum.HAMMERBACKBACK, casterPos);
 	}
 
 	private void castHammerBackBack(SpellMove move, BattleState battleState, final MyPoint casterPos, final MyPoint location, final int damage) {
@@ -203,7 +203,7 @@ public class BattleStateModifier {
 			portalEntity.setVisualComponent(new FakeEntityVisualComponent());
 			portalEntity.setCurrentPosition(new TiledMapPosition().setPositionFromTiles(location.x, location.y));
 			battleState.addEntity(portalEntity);
-			battleState.get(location.x, location.y).getUnit().addAbility(AbilitiesEnum.TRANSPORT, casterPos);
+			battleState.get(location.x, location.y).getUnit().setAbility(AbilitiesEnum.TRANSPORT, casterPos);
 		}
 	}
 
