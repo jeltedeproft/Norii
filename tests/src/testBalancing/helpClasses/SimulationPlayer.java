@@ -1,4 +1,4 @@
-package testBalancing;
+package testBalancing.helpClasses;
 
 import java.util.ArrayList;
 import java.util.HashMap;

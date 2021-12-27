@@ -111,6 +111,15 @@ public class BattleState implements Comparable<BattleState> {
 		}
 	}
 
+	public void placeUnitOnSpecificSpot(Entity unit, int i, int j) {
+		if (get(i, j).canMove()) {
+			unit.setCurrentPosition(new TiledMapPosition().setPositionFromTiles(i, j));
+			addEntity(unit);
+		} else {
+			Gdx.app.error(TAG, "unit " + unit.getEntityData().getName() + "cannot be placed on " + i + "," + j + "), it is not free");
+		}
+	}
+
 	private void placeUnitOnRandomFreeSpot(Entity unit) {
 		int i = random.nextInt(getWidth());
 		int j = random.nextInt(getHeight());

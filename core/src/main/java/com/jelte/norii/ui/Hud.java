@@ -42,15 +42,14 @@ public class Hud {
 	public static final float UI_VIEWPORT_HEIGHT = 1000;
 
 	public Hud(List<Entity> playerUnits, List<Entity> aiUnits, SpriteBatch spriteBatch, int mapWidth, int mapHeight, BattleScreen battleScreen, EnemyType enemyType) {
-		isTutorial = enemyType == EnemyType.TUTORIAL;
 		isOnline = enemyType == EnemyType.ONLINE_PLAYER;
 		List<Entity> allUnits;
-		if(isOnline) {
+		if (isOnline) {
 			allUnits = playerUnits;
-		}else {
+		} else {
 			allUnits = Stream.concat(playerUnits.stream(), aiUnits.stream()).collect(Collectors.toList());
 		}
-		
+
 		initVariables(spriteBatch, mapWidth, mapHeight, battleScreen);
 		createTileHoverParticle();
 		createCharacterHUD();
@@ -181,5 +180,13 @@ public class Hud {
 
 	public HudMessages getHudMessages() {
 		return hudMessages;
+	}
+
+	public boolean isTutorial() {
+		return isTutorial;
+	}
+
+	public void setTutorial(boolean isTutorial) {
+		this.isTutorial = isTutorial;
 	}
 }

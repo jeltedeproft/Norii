@@ -16,6 +16,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.jelte.norii.ai.AITeamLeader;
 import com.jelte.norii.ai.EnemyType;
 import com.jelte.norii.audio.AudioCommand;
 import com.jelte.norii.audio.AudioManager;
@@ -120,8 +121,12 @@ public class BattleScreen extends GameScreen {
 		hudCamera = new OrthographicCamera();
 		hudCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		hud = new Hud(Player.getInstance().getTeam(), enemyTeamLeader.getTeam(), spriteBatch, currentMap.getMapWidth(), currentMap.getMapHeight(), this, enemyTeamLeader.getType());
-		if (enemyTeamLeader.getType() == EnemyType.TUTORIAL) {
-			hud.getHudMessages().showInfoWindow(HudMessageTypes.DEPLOY_UNITS_INFO);
+		if (enemyTeamLeader.getType() == EnemyType.AI) {
+			AITeamLeader leader = (AITeamLeader) enemyTeamLeader;
+			if (leader.getAiTeamData().getName().equals("TeamTutorial")) {
+				hud.setTutorial(true);
+				hud.getHudMessages().showInfoWindow(HudMessageTypes.DEPLOY_UNITS_INFO);
+			}
 		}
 	}
 

@@ -1,4 +1,6 @@
-package testBalancing;
+package testBalancing.helpClasses;
+
+import testBalancing.TestBattleSimulator;
 
 public class StatsBalancer {
 

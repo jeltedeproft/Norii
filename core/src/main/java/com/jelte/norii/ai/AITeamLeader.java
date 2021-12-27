@@ -31,10 +31,14 @@ public class AITeamLeader implements UnitOwner {
 	private Alliance alliance;
 	private BattleState stateWithNextMove;
 
-	public AITeamLeader(final EnemyType type) {
-		this.type = type;
+	public enum LevelEnum {
+		DESERT_TEAM, TUTORIAL
+	}
+
+	public AITeamLeader(final LevelEnum levelEnum) {
+		this.type = EnemyType.AI;
 		alliance = Alliance.TEAM_RED;
-		aiTeamData = AITeamFileReader.getAITeamData().get(type.ordinal());
+		aiTeamData = AITeamFileReader.getAITeamData().get(levelEnum.ordinal());
 		aiDecisionMaker = new AIDecisionMaker();
 		initiateUnits();
 	}
@@ -51,6 +55,10 @@ public class AITeamLeader implements UnitOwner {
 			}
 		}
 		ap = ApFileReader.getApData(0);
+	}
+
+	public Level getAiTeamData() {
+		return aiTeamData;
 	}
 
 	@Override
@@ -81,7 +89,7 @@ public class AITeamLeader implements UnitOwner {
 		}
 
 	}
-	
+
 	@Override
 	public UnitTurn getProcessingResult() {
 		return stateWithNextMove.getTurn();
@@ -194,11 +202,11 @@ public class AITeamLeader implements UnitOwner {
 	public String getName() {
 		return name;
 	}
-	
+
 	@Override
 	public void spawnUnit(EntityTypes entityType, int entityID, TiledMapPosition pos) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -235,7 +243,7 @@ public class AITeamLeader implements UnitOwner {
 	@Override
 	public void synchronizeMultiplayerUnitsWithLocal(HashMap teamWithIdMap) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -252,24 +260,24 @@ public class AITeamLeader implements UnitOwner {
 	@Override
 	public void playerUnitMoved(Entity entity, TiledMapPosition pos) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void playerUnitAttacked(Entity entity, TiledMapPosition pos) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void playerUnitCastedSpell(Entity entity, Ability ability, TiledMapPosition pos) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void playerUnitSkipped(Entity entity) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

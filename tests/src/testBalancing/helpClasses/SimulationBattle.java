@@ -1,4 +1,4 @@
-package testBalancing;
+package testBalancing.helpClasses;
 
 import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.ai.BattleStateModifier;

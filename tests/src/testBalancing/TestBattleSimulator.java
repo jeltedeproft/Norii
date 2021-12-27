@@ -16,6 +16,10 @@ import com.jelte.norii.entities.EntityFileReader;
 import com.jelte.norii.entities.EntityTypes;
 import com.jelte.norii.magic.SpellFileReader;
 
+import testBalancing.helpClasses.SimulationBattle;
+import testBalancing.helpClasses.SimulationResultKeeper;
+import testBalancing.helpClasses.Stats;
+import testBalancing.helpClasses.StatsAdjuster;
 import testUtilities.GdxTestRunner;
 
 @RunWith(GdxTestRunner.class)

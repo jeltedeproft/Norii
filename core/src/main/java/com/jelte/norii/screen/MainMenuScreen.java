@@ -20,7 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.jelte.norii.ai.AITeamFileReader;
 import com.jelte.norii.ai.AITeamLeader;
-import com.jelte.norii.ai.EnemyType;
+import com.jelte.norii.ai.AITeamLeader.LevelEnum;
 import com.jelte.norii.audio.AudioCommand;
 import com.jelte.norii.audio.AudioManager;
 import com.jelte.norii.audio.AudioTypeEvent;
@@ -59,7 +59,7 @@ public class MainMenuScreen extends GameScreen {
 	private Label title;
 
 	private ArrayList<Entity> playerMonsters;
-	private EnemyType selectedLevel;
+	private LevelEnum selectedLevel;
 
 	protected float frameTime = 0f;
 	protected Sprite frameSprite = null;
@@ -98,7 +98,7 @@ public class MainMenuScreen extends GameScreen {
 		parallaxcamera.update();
 		mainMenuTableOfButtons = new Table();
 		mainMenuTableOfButtons.setFillParent(true);
-		selectedLevel = EnemyType.DESERT_TEAM;
+		selectedLevel = LevelEnum.DESERT_TEAM;
 	}
 
 	private void createBackground() {
@@ -175,10 +175,10 @@ public class MainMenuScreen extends GameScreen {
 			@Override
 			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
 				addTutorialUnitsToPlayer();
-				selectedLevel = EnemyType.TUTORIAL;
+				selectedLevel = LevelEnum.TUTORIAL;
 				loadLevelAssets();
 				UnitOwner enemyTeamLeader = new AITeamLeader(selectedLevel);
-				ScreenManager.getInstance().showScreen(ScreenEnum.BATTLE, enemyTeamLeader,MapType.BATTLE_MAP_THE_DARK_SWAMP);
+				ScreenManager.getInstance().showScreen(ScreenEnum.BATTLE, enemyTeamLeader, MapType.BATTLE_MAP_THE_DARK_SWAMP);
 				return true;
 			}
 		});
