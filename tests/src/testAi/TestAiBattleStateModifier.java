@@ -12,10 +12,12 @@ import com.jelte.norii.battle.ApFileReader;
 import com.jelte.norii.battle.battleState.BattleState;
 import com.jelte.norii.battle.battleState.Move;
 import com.jelte.norii.battle.battleState.MoveType;
+import com.jelte.norii.battle.battleState.SpellMove;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityFileReader;
 import com.jelte.norii.entities.EntityTypes;
 import com.jelte.norii.entities.UnitOwner;
+import com.jelte.norii.magic.AbilitiesEnum;
 import com.jelte.norii.magic.SpellFileReader;
 import com.jelte.norii.utility.MyPoint;
 
@@ -29,6 +31,8 @@ public class TestAiBattleStateModifier {
 	private static final String FILENAME_MOVE_OLD = "tests/ai/BattleStateModifier/move_old.txt";
 	private static final String FILENAME_ATTACK = "tests/ai/BattleStateModifier/attack.txt";
 	private static final String FILENAME_ATTACK_OLD = "tests/ai/BattleStateModifier/attack_old.txt";
+	private static final String FILENAME_FIREBALL = "tests/ai/BattleStateModifier/fireball.txt";
+	private static final String FILENAME_FIREBALL_OLD = "tests/ai/BattleStateModifier/fireball_old.txt";
 	private static final String PLAYER_ONE_NAME = "test1";
 	private static final String PLAYER_TWO_NAME = "test2";
 	private static final int BATTLESTATE_SIZE = 5; // must be bigger than units per team
@@ -45,6 +49,7 @@ public class TestAiBattleStateModifier {
 	private BattleState battleState;
 	private MoveGenerator moveGenerator;
 
+	//maak battlesttae aan in elke specifieke test in de plaats
 	@Before
 	public void prepareBattleState() {
 		EntityFileReader.loadUnitStatsInMemory();
@@ -109,6 +114,22 @@ public class TestAiBattleStateModifier {
 		copyBattleState = battleStateModifier.applyMove(unit, attackMove, copyBattleState);
 		TestUtil.resultsToFile(FILENAME_ATTACK, copyBattleState);
 		TestUtil.regressionTest(FILENAME_ATTACK, FILENAME_ATTACK_OLD);
+	}
+	
+	@Test
+	public void applyFireball() {
+		Entity unit = battleState.get(0, 0).getUnit();
+		Entity enemy = battleState.get(BATTLESTATE_SIZE - 1, 0).getUnit();
+		MyPoint pointToMoveTo = enemy.getCurrentPosition().getTilePosAsPoint().decrementX();
+		Move move = new Move(MoveType.MOVE, pointToMoveTo);
+		BattleState copyBattleState = battleStateModifier.applyMove(unit, move, battleState);
+
+		unit = copyBattleState.get(pointToMoveTo.x, pointToMoveTo.y).getUnit();
+		unit.setAbility(AbilitiesEnum.FIREBALL);
+		Move spellMove = new SpellMove(MoveType.SPELL, enemy.getCurrentPosition().getTilePosAsPoint(), unit.getAbility(), null);
+		copyBattleState = battleStateModifier.applyMove(unit, spellMove, copyBattleState);
+		TestUtil.resultsToFile(FILENAME_FIREBALL, copyBattleState);
+		TestUtil.regressionTest(FILENAME_FIREBALL, FILENAME_FIREBALL_OLD);
 	}
 
 }
