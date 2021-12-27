@@ -1,4 +1,4 @@
-package balancer;
+package testBalancing;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -8,43 +8,46 @@ import com.jelte.norii.magic.Ability;
 import com.jelte.norii.utility.Utility;
 
 public class StatsAdjuster {
-	private static final int MAGICAL_DEFENSE_ADJUST_AMOUNT = 2;
-	private static final int PHYSICAL_DEFENSE_ADJUST_AMOUNT = 2;
-	private static final int ATTACK_RANGE_ADJUST_AMOUNT = 2;
-	private static final int MAX_HP_ADJUST_AMOUNT = 2;
-	private static final int BASIC_ATTACK_COST_ADJUST_AMOUNT = 2;
-	private static final int ATTACK_POWER_ADJUST_AMOUNT = 2;
-	private static final int AP_COST_ADJUST_AMOUNT = 2;
-	private static final int DAMAGE_ADJUST_AMOUNT = 2;
-	private static final int RANGE_ADJUST_AMOUNT = 2;
-	private static final int AREA_OF_EFFECT_RANGE_ADJUST_AMOUNT = 2;
+	// UNIT
+	private static final int MAGICAL_DEFENSE_ADJUST_AMOUNT = 3;
+	private static final int PHYSICAL_DEFENSE_ADJUST_AMOUNT = 3;
+	private static final int ATTACK_RANGE_ADJUST_AMOUNT = 1;
+	private static final int MAX_HP_ADJUST_AMOUNT = 5;
+	private static final int BASIC_ATTACK_COST_ADJUST_AMOUNT = 1;
+	private static final int ATTACK_POWER_ADJUST_AMOUNT = 1;
+
+	// ABILITY
+	private static final int AP_COST_ADJUST_AMOUNT = 1;
+	private static final int DAMAGE_ADJUST_AMOUNT = 5;
+	private static final int RANGE_ADJUST_AMOUNT = 1;
+	private static final int AREA_OF_EFFECT_RANGE_ADJUST_AMOUNT = 1;
 
 	public Stats returnAdjustedStatsCopy(Stats stats, int gamesPlayed, int gamesWon) {
-		float winrate = gamesWon / gamesPlayed;
+		float winrate = (float) gamesWon / (float) gamesPlayed;
 		Stats copyStats = stats.makeCopy();
 
 		if (Utility.isBetween(winrate, 0.8f, 1.0f)) {
-			adjustStats(copyStats, 3);
+			adjustStats(copyStats, -3);
 		}
 
 		if (Utility.isBetween(winrate, 0.6f, 0.8f)) {
-			adjustStats(copyStats, 2);
-		}
-
-		if (Utility.isBetween(winrate, 0.5f, 0.6f)) {
-			adjustStats(copyStats, 1);
-		}
-
-		if (Utility.isBetween(winrate, 0.4f, 0.5f)) {
-			adjustStats(copyStats, -1);
-		}
-
-		if (Utility.isBetween(winrate, 0.2f, 0.4f)) {
 			adjustStats(copyStats, -2);
 		}
 
+		if (Utility.isBetween(winrate, 0.5f, 0.6f)) {
+			adjustStats(copyStats, -1);
+		}
+
+		if (Utility.isBetween(winrate, 0.4f, 0.5f)) {
+			adjustStats(copyStats, 1);
+		}
+
+		if (Utility.isBetween(winrate, 0.2f, 0.4f)) {
+			adjustStats(copyStats, 2);
+		}
+
 		if (Utility.isBetween(winrate, 0f, 0.2f)) {
-			adjustStats(copyStats, -3);
+			adjustStats(copyStats, 3);
 		}
 		return copyStats;
 	}
@@ -73,43 +76,73 @@ public class StatsAdjuster {
 		switch (stat) {
 		case MAGICAL_DEFENSE:
 			int magDef = copyStats.getMagicalDefense();
-			copyStats.setMagicalDefense(calculateNewValue(magDef, MAGICAL_DEFENSE_ADJUST_AMOUNT, strengthen));
+			int newmagDefValue = calculateNewValue(magDef, MAGICAL_DEFENSE_ADJUST_AMOUNT, strengthen);
+			if (newmagDefValue >= 0) {
+				copyStats.setMagicalDefense(newmagDefValue);
+			}
 			break;
 		case PHYSICAL_DEFENSE:
 			int phyDef = copyStats.getPhysicalDefense();
-			copyStats.setPhysicalDefense(calculateNewValue(phyDef, PHYSICAL_DEFENSE_ADJUST_AMOUNT, strengthen));
+			int newPhyDefValue = calculateNewValue(phyDef, PHYSICAL_DEFENSE_ADJUST_AMOUNT, strengthen);
+			if (newPhyDefValue >= 0) {
+				copyStats.setPhysicalDefense(newPhyDefValue);
+			}
 			break;
 		case ATTACK_RANGE:
 			int attackRange = copyStats.getAttackRange();
-			copyStats.setAttackRange(calculateNewValue(attackRange, ATTACK_RANGE_ADJUST_AMOUNT, strengthen));
+			int newAtkRangeValue = calculateNewValue(attackRange, ATTACK_RANGE_ADJUST_AMOUNT, strengthen);
+			if (newAtkRangeValue > 0) {
+				copyStats.setAttackRange(newAtkRangeValue);
+			}
 			break;
 		case MAX_HP:
 			int maxHP = copyStats.getMaxHP();
-			copyStats.setMaxHP(calculateNewValue(maxHP, MAX_HP_ADJUST_AMOUNT, strengthen));
+			int newMaxHpValue = calculateNewValue(maxHP, MAX_HP_ADJUST_AMOUNT, strengthen);
+			if (newMaxHpValue > 0) {
+				copyStats.setMaxHP(newMaxHpValue);
+			}
 			break;
 		case BASIC_ATTACK_COST:
 			int basicAttackCost = copyStats.getBasicAttackCost();
-			copyStats.setBasicAttackCost(calculateNewValue(basicAttackCost, BASIC_ATTACK_COST_ADJUST_AMOUNT, strengthen));
+			int newBasicAttackCostValue = calculateNewValue(basicAttackCost, BASIC_ATTACK_COST_ADJUST_AMOUNT, !strengthen);
+			if (newBasicAttackCostValue > 0) {
+				copyStats.setBasicAttackCost(newBasicAttackCostValue);
+			}
 			break;
 		case ATTACK_POWER:
 			int attackPower = copyStats.getAttackPower();
-			copyStats.setAttackPower(calculateNewValue(attackPower, ATTACK_POWER_ADJUST_AMOUNT, strengthen));
+			int newAttackPowerValue = calculateNewValue(attackPower, ATTACK_POWER_ADJUST_AMOUNT, strengthen);
+			if (newAttackPowerValue > 0) {
+				copyStats.setAttackPower(newAttackPowerValue);
+			}
 			break;
 		case AP_COST:
 			int apCost = ability.getSpellData().getApCost();
-			ability.getSpellData().setApCost(calculateNewValue(apCost, AP_COST_ADJUST_AMOUNT, strengthen));
+			int newApCostValue = calculateNewValue(apCost, AP_COST_ADJUST_AMOUNT, !strengthen);
+			if (newApCostValue > 0) {
+				copyStats.setApCost(newApCostValue);
+			}
 			break;
 		case DAMAGE:
 			int damage = ability.getSpellData().getDamage();
-			ability.getSpellData().setDamage(calculateNewValue(damage, DAMAGE_ADJUST_AMOUNT, strengthen));
+			int newDamageValue = calculateNewValue(damage, DAMAGE_ADJUST_AMOUNT, strengthen);
+			if (newDamageValue > 0) {
+				copyStats.setDamage(newDamageValue);
+			}
 			break;
 		case RANGE:
 			int range = ability.getSpellData().getRange();
-			ability.getSpellData().setRange(calculateNewValue(range, RANGE_ADJUST_AMOUNT, strengthen));
+			int newRangeValue = calculateNewValue(range, RANGE_ADJUST_AMOUNT, strengthen);
+			if (newRangeValue > 0) {
+				copyStats.setRange(newRangeValue);
+			}
 			break;
 		case AREA_OF_EFFECT_RANGE:
 			int aoeRange = ability.getSpellData().getAreaOfEffectRange();
-			ability.getSpellData().setAreaOfEffectRange(calculateNewValue(aoeRange, AREA_OF_EFFECT_RANGE_ADJUST_AMOUNT, strengthen));
+			int newAreaOfEffectRangeValue = calculateNewValue(aoeRange, AREA_OF_EFFECT_RANGE_ADJUST_AMOUNT, strengthen);
+			if (newAreaOfEffectRangeValue > 0) {
+				copyStats.setAreaOfEffectRange(newAreaOfEffectRangeValue);
+			}
 			break;
 		}
 

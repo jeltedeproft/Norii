@@ -417,7 +417,6 @@ public class BattleState implements Comparable<BattleState> {
 		int cellsToMove = maxCellsToMove;
 
 		while (canMoveTo(nextPoint, cellsToMove)) {
-			System.out.println("moving to : " + nextPoint);
 			unitToMove.pushTo(nextPoint);
 			moveUnitTo(unitToMove, nextPoint);
 			nextPoint = calculateNextPoint(nextPoint, casterIsRight, casterIsLeft, casterIsDown, casterIsUp, isPulling);
@@ -440,12 +439,12 @@ public class BattleState implements Comparable<BattleState> {
 
 		return (stateOfField[nextPoint.x][nextPoint.y].isWalkable() && !stateOfField[nextPoint.x][nextPoint.y].isOccupied());
 	}
-	
+
 	private boolean canMoveTo(int x, int y) {
 		if ((x >= getWidth()) || (x < 0) || (y >= getHeight()) || (y < 0)) {
 			return false;
 		}
-		
+
 		return (stateOfField[x][y].isWalkable() && !stateOfField[x][y].isOccupied());
 	}
 
@@ -493,19 +492,19 @@ public class BattleState implements Comparable<BattleState> {
 			for (int j = 0; j <= max; j++) {
 				for (int k = 0; k <= max; k++) {
 					if ((j + k) == max) {
-						if(canMoveTo(portalX + j,portalY + k)) {
+						if (canMoveTo(portalX + j, portalY + k)) {
 							return new TiledMapPosition().setPositionFromTiles(portalX + j, portalY + k);
 						}
-						
-						if(canMoveTo(portalX - j,portalY + k)) {
+
+						if (canMoveTo(portalX - j, portalY + k)) {
 							return new TiledMapPosition().setPositionFromTiles(portalX - j, portalY + k);
 						}
-						
-						if(canMoveTo(portalX + j,portalY - k)) {
+
+						if (canMoveTo(portalX + j, portalY - k)) {
 							return new TiledMapPosition().setPositionFromTiles(portalX + j, portalY - k);
 						}
-						
-						if(canMoveTo(portalX - j,portalY - k)) {
+
+						if (canMoveTo(portalX - j, portalY - k)) {
 							return new TiledMapPosition().setPositionFromTiles(portalX - j, portalY - k);
 						}
 					}

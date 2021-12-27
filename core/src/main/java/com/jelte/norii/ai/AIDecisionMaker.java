@@ -230,4 +230,11 @@ public class AIDecisionMaker {
 		}
 	}
 
+	@Override
+	public String toString() {
+		return "state of the decision maker \n___________________\n" + "turn index = " + turnIndex + "\n" + "entity index = " + entityIndex + "\n" + "battleState index = " + battleStateIndex + "\n" + "number of battle states = "
+				+ numberOfBattleStatesThisRound + "\n" + "current battlestate = " + currentBattleState + "\n" + "unit = " + unit + "\n" + "starting state = " + startingState + "\n" + "processing time counter = " + processingTimeCounter
+				+ "\n";
+	}
+
 }

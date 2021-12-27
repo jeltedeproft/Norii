@@ -29,6 +29,7 @@ public class MyPathFinder {
 	private HashMap<MyPoint, HashMap<MyPoint, List<GridCell>>> precalculatedPaths;
 	private int preprocessI = 0;
 	private int preprocessJ = 0;
+	private boolean preprocessingFinished = false;
 
 	private static MyPathFinder pathFinder;
 
@@ -51,6 +52,8 @@ public class MyPathFinder {
 				preprocessJ = 0;
 				preprocessI++;
 			}
+		} else {
+			preprocessingFinished = true;
 		}
 	}
 
@@ -331,6 +334,10 @@ public class MyPathFinder {
 
 	public AStarGridFinder<GridCell> getFinder() {
 		return aStarGridFinder;
+	}
+
+	public boolean isPreprocessingFinished() {
+		return preprocessingFinished;
 	}
 
 	public void dispose() {

@@ -1,4 +1,4 @@
-package balancer;
+package testBalancing;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -32,18 +32,21 @@ public class SimulationResultKeeper {
 			Entity dummyEntity = new Entity(type, dummyOwner, false);
 			Stats stats = new Stats(dummyEntity);
 			startingStats.put(type, stats);
+			endingStats.put(type, stats);
 		}
 	}
 
 	public void updateParticipationRates(Array<Entity> participatingUnits) {
 		for (Entity entity : participatingUnits) {
-			winrates.compute(entity.getEntityType(), (k, v) -> (v == null) ? 1 : v++);
+			int count = gamesPlayed.containsKey(entity.getEntityType()) ? gamesPlayed.get(entity.getEntityType()) : 0;
+			gamesPlayed.put(entity.getEntityType(), count + 1);
 		}
 	}
 
 	public void updateWinrates(int round, Array<Entity> winningTeam) {
 		for (Entity entity : winningTeam) {
-			winrates.compute(entity.getEntityType(), (k, v) -> (v == null) ? 1 : v++);
+			int count = winrates.containsKey(entity.getEntityType()) ? winrates.get(entity.getEntityType()) : 0;
+			winrates.put(entity.getEntityType(), count + 1);
 		}
 	}
 

@@ -174,4 +174,12 @@ public final class Utility {
 	public static int incrementModulo(int x, int modulo) {
 		return ((x + 1) == modulo ? 0 : x + 1);
 	}
+
+	public static int getTotalHpTeam(Array<Entity> team) {
+		int totalHP = 0;
+		for (Entity unit : team) {
+			totalHP += unit.getHp();
+		}
+		return totalHP;
+	}
 }

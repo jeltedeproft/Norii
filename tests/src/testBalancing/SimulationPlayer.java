@@ -1,11 +1,14 @@
-package balancer;
+package testBalancing;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.jelte.norii.ai.AITeamLeader;
 import com.jelte.norii.ai.EnemyType;
 import com.jelte.norii.ai.UnitTurn;
+import com.jelte.norii.battle.ApFileReader;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.battle.MessageToBattleScreen;
 import com.jelte.norii.battle.battleState.BattleState;
@@ -15,7 +18,22 @@ import com.jelte.norii.entities.UnitOwner;
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.utility.TiledMapPosition;
 
-public class DummyOwner implements UnitOwner {
+public class SimulationPlayer implements UnitOwner {
+
+	private static final String TAG = AITeamLeader.class.getSimpleName();
+
+	private List<Entity> team;
+	private int ap;
+	private boolean isMyTurn = false;
+	private boolean isPlayer;
+	private Alliance alliance;
+
+	public SimulationPlayer(boolean isMyTurn, boolean isPlayer) {
+		team = new ArrayList<Entity>();
+		this.isMyTurn = isMyTurn;
+		this.isPlayer = isPlayer;
+		ap = ApFileReader.getApData(0);
+	}
 
 	@Override
 	public void renderUnits(Batch batch) {
@@ -24,21 +42,22 @@ public class DummyOwner implements UnitOwner {
 	}
 
 	@Override
-	public void updateUnits(float delta) {
-		// TODO Auto-generated method stub
+	public void updateUnits(final float delta) {
+		team.removeIf(Entity::isDead);
 
+		for (final Entity entity : team) {
+			entity.update(delta);
+		}
 	}
 
 	@Override
 	public int getAp() {
-		// TODO Auto-generated method stub
-		return 0;
+		return ap;
 	}
 
 	@Override
 	public void setAp(int ap) {
-		// TODO Auto-generated method stub
-
+		this.ap = ap;
 	}
 
 	@Override
@@ -54,27 +73,26 @@ public class DummyOwner implements UnitOwner {
 	}
 
 	@Override
-	public List<Entity> getTeam() {
-		// TODO Auto-generated method stub
-		return null;
+	public void setTeam(final List<Entity> team) {
+		this.team = team;
 	}
 
 	@Override
-	public void setTeam(List<Entity> entities) {
-		// TODO Auto-generated method stub
-
+	public List<Entity> getTeam() {
+		return team;
 	}
 
 	@Override
 	public void applyModifiers() {
-		// TODO Auto-generated method stub
-
+		Entity[] teamCopy = team.toArray(new Entity[0]);// make copy to prevent concurrentModificationException
+		for (Entity entity : teamCopy) {
+			entity.applyModifiers();
+		}
 	}
 
 	@Override
 	public boolean isPlayer() {
-		// TODO Auto-generated method stub
-		return false;
+		return isPlayer;
 	}
 
 	@Override
@@ -85,14 +103,12 @@ public class DummyOwner implements UnitOwner {
 
 	@Override
 	public void removeUnit(Entity unit) {
-		// TODO Auto-generated method stub
-
+		team.remove(unit);
 	}
 
 	@Override
 	public void addUnit(Entity unit) {
-		// TODO Auto-generated method stub
-
+		team.add(unit);
 	}
 
 	@Override
@@ -181,38 +197,32 @@ public class DummyOwner implements UnitOwner {
 
 	@Override
 	public EnemyType getType() {
-		// TODO Auto-generated method stub
-		return null;
+		return EnemyType.SIMULATION;
 	}
 
 	@Override
 	public boolean isMyTurn() {
-		// TODO Auto-generated method stub
-		return false;
+		return isMyTurn;
 	}
 
 	@Override
 	public void setMyTurn(boolean myTurn) {
-		// TODO Auto-generated method stub
-
+		isMyTurn = myTurn;
 	}
 
 	@Override
 	public boolean isAI() {
-		// TODO Auto-generated method stub
-		return false;
+		return !isPlayer;
 	}
 
 	@Override
 	public boolean isOnlinePlayer() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public Alliance getAlliance() {
-		// TODO Auto-generated method stub
-		return null;
+		return alliance;
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package balancer;
+package testBalancing;
 
 public class StatsBalancer {
 

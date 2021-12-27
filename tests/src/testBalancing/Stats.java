@@ -1,4 +1,4 @@
-package balancer;
+package testBalancing;
 
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityTypes;
@@ -15,20 +15,32 @@ public class Stats {
 	private int basicAttackCost;
 	private int attackPower;
 
-	// ability
+	// ability stats
 	private Ability ability;
-	private AbilityStats abilityStats;
+	private int apCost;
+	private int mpCost;
+	private int damage;
+	private int range;
+	private int areaOfEffectRange;
 
 	public Stats(Entity unit) {
+		// unit
+		entityType = unit.getEntityType();
 		magicalDefense = unit.getEntityData().getMagicalDefense();
 		physicalDefense = unit.getEntityData().getPhysicalDefense();
 		attackRange = unit.getEntityData().getAttackRange();
 		maxHP = unit.getEntityData().getMaxHP();
 		basicAttackCost = unit.getEntityData().getBasicAttackCost();
 		attackPower = unit.getEntityData().getAttackPower();
+
+		// ability
 		ability = unit.getAbility();
-		abilityStats = new AbilityStats(unit.getAbility());
-		entityType = unit.getEntityType();
+		apCost = ability.getSpellData().getApCost();
+		mpCost = ability.getSpellData().getMpCost();
+		damage = ability.getSpellData().getDamage();
+		range = ability.getSpellData().getRange();
+		areaOfEffectRange = ability.getSpellData().getAreaOfEffectRange();
+
 	}
 
 	public Stats() {
@@ -63,10 +75,6 @@ public class Stats {
 		return attackPower;
 	}
 
-	public AbilityStats getAbilityStats() {
-		return abilityStats;
-	}
-
 	public void setEntityType(EntityTypes entityType) {
 		this.entityType = entityType;
 	}
@@ -95,10 +103,6 @@ public class Stats {
 		this.attackPower = attackPower;
 	}
 
-	public void setAbilityStats(AbilityStats abilityStats) {
-		this.abilityStats = abilityStats;
-	}
-
 	public Ability getAbility() {
 		return ability;
 	}
@@ -107,9 +111,48 @@ public class Stats {
 		this.ability = ability;
 	}
 
+	public int getApCost() {
+		return apCost;
+	}
+
+	public int getMpCost() {
+		return mpCost;
+	}
+
+	public int getDamage() {
+		return damage;
+	}
+
+	public int getRange() {
+		return range;
+	}
+
+	public int getAreaOfEffectRange() {
+		return areaOfEffectRange;
+	}
+
+	public void setApCost(int apCost) {
+		this.apCost = apCost;
+	}
+
+	public void setMpCost(int mpCost) {
+		this.mpCost = mpCost;
+	}
+
+	public void setDamage(int damage) {
+		this.damage = damage;
+	}
+
+	public void setRange(int range) {
+		this.range = range;
+	}
+
+	public void setAreaOfEffectRange(int areaOfEffectRange) {
+		this.areaOfEffectRange = areaOfEffectRange;
+	}
+
 	public Stats makeCopy() {
 		Stats stats = new Stats();
-		stats.setAbilityStats(abilityStats);
 		stats.setAbility(ability);
 		stats.setAttackPower(attackPower);
 		stats.setAttackRange(attackRange);
@@ -118,7 +161,19 @@ public class Stats {
 		stats.setMagicalDefense(magicalDefense);
 		stats.setMaxHP(maxHP);
 		stats.setPhysicalDefense(physicalDefense);
+		stats.setApCost(apCost);
+		stats.setMpCost(mpCost);
+		stats.setAreaOfEffectRange(areaOfEffectRange);
+		stats.setDamage(damage);
+		stats.setRange(range);
 		return stats;
+	}
+
+	@Override
+	public String toString() {
+		return "type = " + entityType + "\n" + "magical defense = " + magicalDefense + "\n" + "physicalDefense = " + physicalDefense + "\n" + "attack range = " + attackRange + "\n" + "basic attack cost = " + basicAttackCost + "\n"
+				+ "max HP = " + maxHP + "\n" + "attack power = " + attackPower + "\n" + "ability = " + ability.getName() + "\n" + "ap cost = " + getApCost() + "\n" + "mp cost = " + getMpCost() + "\n" + "damage = " + getDamage() + "\n"
+				+ "range = " + getRange() + "\n" + "area of effect range = " + getAreaOfEffectRange() + "\n";
 	}
 
 }

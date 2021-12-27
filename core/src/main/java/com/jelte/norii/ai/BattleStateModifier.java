@@ -32,7 +32,7 @@ public class BattleStateModifier {
 		}
 		return newState;
 	}
-	
+
 	public BattleState applyMove(Entity aiUnit, Move move, BattleState battleState) {
 		final BattleState newState = battleState.makeCopy();
 		final Entity copyUnit = newState.get(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY()).getUnit();
@@ -236,13 +236,13 @@ public class BattleStateModifier {
 		if (otherPortal != null) {
 			for (final Entity unitToTransport : unitsNextToPortal) {
 				final TiledMapPosition goal = battleState.findFreeSpotNextTo(otherPortal);
-				if(goal != null) {
+				if (goal != null) {
 					battleState.get(goal.getTileX(), goal.getTileY()).setUnit(battleState.get(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY()).getUnit());
 					battleState.get(unitToTransport.getCurrentPosition().getTileX(), unitToTransport.getCurrentPosition().getTileY()).removeUnit();
 					unitToTransport.setCurrentPosition(goal);
 					battleState.get(goal.getTileX(), goal.getTileY()).setOccupied(true);
-				}else {
-					System.out.println("no location next to otherPortal to transport to");
+				} else {
+					// System.out.println("no location next to otherPortal to transport to");
 				}
 			}
 		}
@@ -270,26 +270,27 @@ public class BattleStateModifier {
 
 		// damage target, update ui, increase entities hit and save unit in list
 		Entity target = battleState.get(location.x, location.y).getUnit();
+
 		entitiesHit = crackleTarget(move.getAbility(), usedTargets, entitiesHit, target);
 
 		// do same for that unit until enough units hit or no units closeby
 		// make sure that unit first cast on is not coming back later on
 		TreeMap<Integer, Array<Entity>> distancesToTarget = (TreeMap<Integer, Array<Entity>>) Utility.getDistancesWithTarget(location, battleState.getAllUnits());
-
 		while ((!distancesToTarget.isEmpty()) && (entitiesHit <= 3)) {
-			if (distancesToTarget.firstEntry().getValue().size == 0) {
-				int j = 5;
-			}
 			final Array<Entity> closestUnits = getFirstNotNull(distancesToTarget);
-			final Entity closestUnit = closestUnits.first();
-			if (Utility.checkIfUnitsWithinDistance(closestUnit, target, 4)) {
-				if (usedTargets.contains(closestUnit, false)) {
-					// skip this unit
-					closestUnits.removeIndex(0);
+			if (closestUnits != null) {
+				final Entity closestUnit = closestUnits.first();
+				if (Utility.checkIfUnitsWithinDistance(closestUnit, target, 4)) {
+					if (usedTargets.contains(closestUnit, false)) {
+						// skip this unit
+						closestUnits.removeIndex(0);
+					} else {
+						entitiesHit = crackleTarget(move.getAbility(), usedTargets, entitiesHit, closestUnit);
+						distancesToTarget = (TreeMap<Integer, Array<Entity>>) Utility.getDistancesWithTarget(closestUnit.getCurrentPosition().getTilePosAsPoint(), battleState.getAllUnits());
+						target = closestUnit;
+					}
 				} else {
-					entitiesHit = crackleTarget(move.getAbility(), usedTargets, entitiesHit, closestUnit);
-					distancesToTarget = (TreeMap<Integer, Array<Entity>>) Utility.getDistancesWithTarget(closestUnit.getCurrentPosition().getTilePosAsPoint(), battleState.getAllUnits());
-					target = closestUnit;
+					break;
 				}
 			} else {
 				break;
