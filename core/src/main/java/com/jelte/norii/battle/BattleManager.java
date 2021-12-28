@@ -11,17 +11,17 @@ import com.jelte.norii.ai.UnitTurn;
 import com.jelte.norii.audio.AudioCommand;
 import com.jelte.norii.audio.AudioManager;
 import com.jelte.norii.audio.AudioTypeEvent;
-import com.jelte.norii.battle.battlePhase.ActionBattlePhase;
-import com.jelte.norii.battle.battlePhase.AttackBattlePhase;
-import com.jelte.norii.battle.battlePhase.BattlePhase;
-import com.jelte.norii.battle.battlePhase.DeploymentBattlePhase;
-import com.jelte.norii.battle.battlePhase.MovementBattlePhase;
-import com.jelte.norii.battle.battlePhase.SelectUnitBattlePhase;
-import com.jelte.norii.battle.battlePhase.SpellBattlePhase;
 import com.jelte.norii.battle.battleState.BattleState;
 import com.jelte.norii.battle.battleState.Move;
 import com.jelte.norii.battle.battleState.MoveType;
 import com.jelte.norii.battle.battleState.SpellMove;
+import com.jelte.norii.battle.battlephase.ActionBattlePhase;
+import com.jelte.norii.battle.battlephase.AttackBattlePhase;
+import com.jelte.norii.battle.battlephase.BattlePhase;
+import com.jelte.norii.battle.battlephase.DeploymentBattlePhase;
+import com.jelte.norii.battle.battlephase.MovementBattlePhase;
+import com.jelte.norii.battle.battlephase.SelectUnitBattlePhase;
+import com.jelte.norii.battle.battlephase.SpellBattlePhase;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityTypes;
 import com.jelte.norii.entities.Player;
@@ -40,6 +40,7 @@ public class BattleManager {
 	private BattlePhase attackBattleState;
 	private BattlePhase spellBattleState;
 	private BattlePhase actionBattleState;
+	private BattlePhase waitOpponentBattleState;
 	private BattlePhase currentBattleState;
 
 	private Entity activeUnit;
@@ -151,8 +152,7 @@ public class BattleManager {
 			enemyUnitIsDoingSomething = true;
 			activeTurn = enemyTeamLeader.getProcessingResult();
 			executeTurn();
-			setCurrentBattleState(getSelectUnitBattleState());
-			getCurrentBattleState().entry();
+			getCurrentBattleState().exit();
 			break;
 		case ACTION_COMPLETED:
 			if (!playerTurn && enemyTeamLeader.isAI()) {
@@ -379,6 +379,14 @@ public class BattleManager {
 
 	public void setSelectUnitBattleState(BattlePhase selectUnitBattleState) {
 		this.selectUnitBattleState = selectUnitBattleState;
+	}
+
+	public BattlePhase getWaitOpponentBattleState() {
+		return waitOpponentBattleState;
+	}
+
+	public void setWaitOpponentBattleState(BattlePhase waitOpponentBattleState) {
+		this.waitOpponentBattleState = waitOpponentBattleState;
 	}
 
 	public List<Entity> getUnits() {

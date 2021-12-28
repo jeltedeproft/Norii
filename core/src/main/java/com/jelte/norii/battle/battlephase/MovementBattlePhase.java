@@ -1,4 +1,4 @@
-package com.jelte.norii.battle.battlePhase;
+package com.jelte.norii.battle.battlephase;
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class MovementBattlePhase extends BattlePhase {
 
 	@Override
 	public void entry() {
-		//
+		// do nothing
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class MovementBattlePhase extends BattlePhase {
 		battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.LOCK_UI, battlemanager.getActiveUnit());
 		ParticleMaker.deactivateAllParticlesOfType(ParticleType.MOVE);
 		updateUnit(actor);
-		battlemanager.getCurrentBattleState().exit();
+		exit();
 	}
 
 	private void updateUnit(TiledMapActor actor) {

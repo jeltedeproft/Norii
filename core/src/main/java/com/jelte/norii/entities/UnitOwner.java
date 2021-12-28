@@ -48,13 +48,13 @@ public interface UnitOwner {
 	public void spawnUnit(EntityTypes entityType, int entityID, TiledMapPosition pos);
 
 	public void playerUnitMoved(Entity entity, TiledMapPosition pos);
-	
+
 	public void playerUnitAttacked(Entity entity, TiledMapPosition pos);
-	
+
 	public void playerUnitCastedSpell(Entity entity, Ability ability, TiledMapPosition pos);
-	
+
 	public void playerUnitSkipped(Entity entity);
-	
+
 	public void playerUnitSpawned(Entity entity, TiledMapPosition pos);
 
 	public void sendMessageToBattleManager(MessageToBattleScreen message, Entity entity);
@@ -81,9 +81,13 @@ public interface UnitOwner {
 
 	public boolean isOnlinePlayer();
 
+	public boolean isSimulation();
+
+	public boolean isDummy();
+
 	public Alliance getAlliance();
 
-	public void synchronizeMultiplayerUnitsWithLocal(HashMap<String,String> teamWithIdMap);
+	public void synchronizeMultiplayerUnitsWithLocal(HashMap<String, String> teamWithIdMap);
 
 	public int getGameID();
 

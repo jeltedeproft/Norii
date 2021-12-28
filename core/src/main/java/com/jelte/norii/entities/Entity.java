@@ -33,7 +33,6 @@ public class Entity extends Actor implements Comparable<Entity> {
 
 	protected int basicAttackCost;
 
-	protected boolean isPlayerUnit;
 	protected boolean isDead;
 	protected boolean isInvis;
 	protected boolean isReal;
@@ -73,7 +72,6 @@ public class Entity extends Actor implements Comparable<Entity> {
 		xp = 0;
 
 		this.owner = owner;
-		this.isPlayerUnit = owner.isPlayer();
 
 		modifiers = new ArrayList<>();
 		entityID = java.lang.System.identityHashCode(this);
@@ -135,11 +133,11 @@ public class Entity extends Actor implements Comparable<Entity> {
 	}
 
 	public boolean canAttack() {
-		return isPlayerUnit && (owner.getAp() > basicAttackCost);
+		return owner.getAp() > basicAttackCost;
 	}
 
 	public boolean canCastSpell(Ability ability) {
-		return isPlayerUnit && (owner.getAp() >= ability.getSpellData().getApCost());
+		return owner.getAp() >= ability.getSpellData().getApCost();
 	}
 
 	public void damage(int damage, DamageType type) {
@@ -180,7 +178,7 @@ public class Entity extends Actor implements Comparable<Entity> {
 	}
 
 	public boolean canMove() {
-		return isPlayerUnit && (owner.getAp() > 0);
+		return owner.getAp() > 0;
 	}
 
 	public boolean isDead() {
@@ -204,11 +202,23 @@ public class Entity extends Actor implements Comparable<Entity> {
 	}
 
 	public boolean isPlayerUnit() {
-		return isPlayerUnit;
+		return owner.isPlayer();
 	}
 
-	public void setPlayerUnit(boolean isPlayerUnit) {
-		this.isPlayerUnit = isPlayerUnit;
+	public boolean isAIUnit() {
+		return owner.isAI();
+	}
+
+	public boolean isDummyUnit() {
+		return owner.isDummy();
+	}
+
+	public boolean isOnlineUnit() {
+		return owner.isOnlinePlayer();
+	}
+
+	public boolean isSimulationUnit() {
+		return owner.isSimulation();
 	}
 
 	public UnitOwner getOwner() {
@@ -339,7 +349,7 @@ public class Entity extends Actor implements Comparable<Entity> {
 
 	public int getScore() {
 		final int score = getModifiersScore();
-		if (isPlayerUnit) {
+		if (isPlayerUnit()) {
 			return score * (-1);
 		} else {
 			return score;
@@ -416,7 +426,6 @@ public class Entity extends Actor implements Comparable<Entity> {
 		copy.setEntityID(entityID);
 		copy.setInvisible(isInvis);
 		copy.setDirection(direction);
-		copy.setPlayerUnit(isPlayerUnit);
 		copy.setAbility(ability);
 		copy.setHp(hp);
 		copy.setXp(xp);
@@ -426,11 +435,7 @@ public class Entity extends Actor implements Comparable<Entity> {
 
 	@Override
 	public String toString() {
-		if (isPlayerUnit) {
-			return owner.getType() + ": name : " + entityData.getName() + "   ID:" + entityID + "   pos : (" + currentPlayerPosition.getTileX() + "," + currentPlayerPosition.getTileY() + ")";
-		} else {
-			return owner.getType() + ": name : " + entityData.getName() + "   ID:" + entityID + "   pos : (" + currentPlayerPosition.getTileX() + "," + currentPlayerPosition.getTileY() + ")";
-		}
+		return owner.getType() + ": name : " + entityData.getName() + "   ID:" + entityID + "   pos : (" + currentPlayerPosition.getTileX() + "," + currentPlayerPosition.getTileY() + ")";
 	}
 
 	@Override
@@ -450,9 +455,7 @@ public class Entity extends Actor implements Comparable<Entity> {
 		if (getClass() != obj.getClass())
 			return false;
 		final Entity other = (Entity) obj;
-		if (entityID != other.entityID)
-			return false;
-		return true;
+		return entityID == other.entityID;
 	}
 
 	public void draw(Batch batch) {

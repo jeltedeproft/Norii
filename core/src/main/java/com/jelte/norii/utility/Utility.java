@@ -62,7 +62,7 @@ public final class Utility {
 		return distancesWithTarget;
 	}
 
-	public static boolean checkIfUnitsWithinDistance(final Entity unit1, final TiledMapPosition targetPos, final int distance) {
+	public static boolean checkIfUnitWithinDistance(final Entity unit1, final TiledMapPosition targetPos, final int distance) {
 		final TiledMapPosition pos1 = unit1.getCurrentPosition();
 		return checkIfWithinDistance(pos1, targetPos, distance);
 	}
@@ -91,6 +91,29 @@ public final class Utility {
 	public static int getDistance(final MyPoint pos1, final Entity unit2) {
 		final TiledMapPosition pos2 = unit2.getCurrentPosition();
 		return (Math.abs(pos1.x - pos2.getTileX()) + Math.abs(pos1.y - pos2.getTileY()));
+	}
+
+	public static Array<Entity> getUnitsWithinDistanceFromTarget(final Entity unit, final Array<Entity> units, int distance) {
+		Array<Entity> closeUnits = new Array<>();
+		for (Entity entity : units) {
+			if (getDistanceBetweenUnits(unit, entity) <= distance) {
+				closeUnits.add(entity);
+			}
+		}
+		return closeUnits;
+	}
+
+	public static Entity getClosestUnit(Entity unit, Array<Entity> units) {
+		int closest = getDistanceBetweenUnits(units.get(0), unit);
+		Entity closestEntity = units.get(0);
+		for (Entity entity : units) {
+			int distance = getDistanceBetweenUnits(unit, entity);
+			if (distance < closest) {
+				closest = distance;
+				closestEntity = entity;
+			}
+		}
+		return closestEntity;
 	}
 
 	public static MyPoint getCenterOfGravityAi(BattleState battleState) {

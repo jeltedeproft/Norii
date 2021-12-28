@@ -1,4 +1,4 @@
-package com.jelte.norii.ai;
+package com.jelte.norii.ai.movegenerator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,12 +11,14 @@ import org.xguzm.pathfinding.grid.GridCell;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
+import com.jelte.norii.ai.UnitTurn;
 import com.jelte.norii.battle.battleState.BattleState;
 import com.jelte.norii.battle.battleState.BattleStateGridHelper;
 import com.jelte.norii.battle.battleState.Move;
 import com.jelte.norii.battle.battleState.MoveType;
 import com.jelte.norii.battle.battleState.SpellMove;
 import com.jelte.norii.entities.Entity;
+import com.jelte.norii.entities.UnitOwner;
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.magic.Ability.Target;
 import com.jelte.norii.map.MyPathFinder;
@@ -24,13 +26,15 @@ import com.jelte.norii.utility.MyPoint;
 import com.jelte.norii.utility.TiledMapPosition;
 import com.jelte.norii.utility.Utility;
 
-public class AIMoveDecider {
-	private static final String TAG = AIMoveDecider.class.getSimpleName();
+public class AbilityTargetMoveGenerator implements MoveGenerator {
+	private static final String TAG = AbilityTargetMoveGenerator.class.getSimpleName();
+	private static final String WRONG_ABILITY_TEAM = "ability does not have one of these affected teams : FRIENDLY, ENEMY, BOTH or NONE, returning null";
 	private static final int FILTER_AMOUNT_OF_CELL_TARGETS = 10;
 	private Long oldTime;
 	final Random random = new Random();
 
-	public Array<UnitTurn> generateMoves(Ability ability, Entity aiUnit, BattleState battleState) {
+	@Override
+	public Array<UnitTurn> getAllMovesUnit(Ability ability, Entity aiUnit, BattleState battleState) {
 		oldTime = System.currentTimeMillis();
 		final Array<UnitTurn> unitTurns = new Array<>();
 		Gdx.app.debug(TAG, "generating moves for : " + ability);
@@ -107,9 +111,9 @@ public class AIMoveDecider {
 		if (abilityTargets.isEmpty()) {
 			oldTime = debugTime("no units found in immediate vicinity, moving", oldTime);
 			if (distancesToTargets.isEmpty()) {
-				doNothing(aiUnit, unitTurns);
+				unitTurns.add(new UnitTurn(aiUnit.getEntityID(), new Move(MoveType.DUMMY, new MyPoint(0, 0))));
 			} else {
-				abilityTargets = tryToMoveAndCastSpell(ability, aiUnit, battleState, unitTurns, distancesToTargets, abilityTargets);// adds to unitTurns
+				tryToMoveAndCastSpell(ability, aiUnit, battleState, unitTurns, abilityTargets);
 			}
 			oldTime = debugTime("targets found without walking", oldTime);
 		} else {
@@ -167,18 +171,10 @@ public class AIMoveDecider {
 		unitTurns.add(moveAttack);
 	}
 
-	private void doNothing(Entity aiUnit, final Array<UnitTurn> unitTurns) {
-		// no targets, (the whole other team is invis?) or ability does not have targets
-		final MyPoint endMyPoint = new MyPoint(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY());
-		final UnitTurn doNothing = new UnitTurn(aiUnit.getEntityID(), new Move(MoveType.MOVE, endMyPoint));
-		unitTurns.add(doNothing);
-	}
-
 	// if goal is right next to start, then problem ==> just move in random
 	// direction? or complicated algorithm that decides move based on start,goal,
 	// ability??
-	private Array<MyPoint> tryToMoveAndCastSpell(Ability ability, Entity aiUnit, BattleState battleState, final Array<UnitTurn> unitTurns, final TreeMap<Integer, List<Entity>> distancesWithAbilityTargetUnits,
-			Array<MyPoint> abilityTargets) {
+	private Array<MyPoint> tryToMoveAndCastSpell(Ability ability, Entity aiUnit, BattleState battleState, final Array<UnitTurn> unitTurns, Array<MyPoint> abilityTargets) {
 		MyPoint endPoint = new MyPoint(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY());
 		final UnitTurn moveAndSpell = new UnitTurn(aiUnit.getEntityID(), new Move(MoveType.MOVE, endPoint));
 		int ap = aiUnit.getAp();
@@ -303,38 +299,6 @@ public class AIMoveDecider {
 		}
 	}
 
-	private MyPoint calculateMoveDestination(int i, MyPoint unitPoint, MyPoint target) {
-		if (i == 0) {
-			if (target.x < unitPoint.x) {
-				i++;
-			} else {
-				return new MyPoint(unitPoint.x + 1, unitPoint.y);
-			}
-		}
-
-		if (i == 1) {
-			if (target.x > unitPoint.x) {
-				i++;
-			} else {
-				return new MyPoint(unitPoint.x - 1, unitPoint.y);
-			}
-		}
-
-		if (i == 2) {
-			if (target.y < unitPoint.y) {
-				i++;
-			} else {
-				return new MyPoint(unitPoint.x, unitPoint.y + 1);
-			}
-		}
-
-		if (i == 3) {
-			return new MyPoint(unitPoint.x, unitPoint.y - 1);
-		} else {
-			return new MyPoint(unitPoint.x, unitPoint.y);
-		}
-	}
-
 	private boolean checkIfUnitOnPoint(MyPoint goal, BattleState battleState, Entity copyUnit) {
 		for (final Entity unit : battleState.getAllUnits()) {
 			if ((goal.equals(new MyPoint(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY())))
@@ -367,7 +331,7 @@ public class AIMoveDecider {
 		case NONE:
 			return new Move(MoveType.MOVE, trimPathConsideringApAndReachable(centerOfGravityAllUnits, aiUnit, battleState));
 		default:
-			Gdx.app.debug(TAG, "ability does not have one of these affected teams : FRIENDLY, ENEMY, BOTH or NONE, returning null");
+			Gdx.app.debug(TAG, WRONG_ABILITY_TEAM);
 			return null;
 		}
 	}
@@ -480,7 +444,7 @@ public class AIMoveDecider {
 		case NONE:
 			return new Array<>();
 		default:
-			Gdx.app.debug(TAG, "ability does not have one of these affected teams : FRIENDLY, ENEMY, BOTH or NONE, returning null");
+			Gdx.app.debug(TAG, WRONG_ABILITY_TEAM);
 			return null;
 		}
 	}
@@ -504,7 +468,7 @@ public class AIMoveDecider {
 		case NONE:
 			return new Array<>();
 		default:
-			Gdx.app.debug(TAG, "ability does not have one of these affected teams : FRIENDLY, ENEMY, BOTH or NONE, returning null");
+			Gdx.app.debug(TAG, WRONG_ABILITY_TEAM);
 			return null;
 		}
 	}
@@ -521,6 +485,18 @@ public class AIMoveDecider {
 		final Long newTime = System.currentTimeMillis();
 		Gdx.app.debug(TAG, log + " which took : " + (newTime - oldTime) + " ms");
 		return newTime;
+	}
+
+	@Override
+	public Move getMove(UnitOwner player, BattleState battleState) {
+		// not applicable for this generator
+		return null;
+	}
+
+	@Override
+	public List<Move> getMoves(UnitOwner player, BattleState battleState, int ap) {
+		// not applicable for this generator
+		return new ArrayList<>();
 	}
 
 }

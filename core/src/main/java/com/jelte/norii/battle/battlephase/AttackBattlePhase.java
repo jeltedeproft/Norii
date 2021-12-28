@@ -1,4 +1,4 @@
-package com.jelte.norii.battle.battlePhase;
+package com.jelte.norii.battle.battlephase;
 
 import com.badlogic.gdx.Input.Buttons;
 import com.jelte.norii.audio.AudioCommand;
@@ -39,7 +39,7 @@ public class AttackBattlePhase extends BattlePhase {
 
 	private void possibleAttack(Entity entity) {
 		final Entity currentUnit = battlemanager.getActiveUnit();
-		final boolean closeEnough = Utility.checkIfUnitsWithinDistance(entity, currentUnit.getCurrentPosition(), currentUnit.getEntityData().getAttackRange());
+		final boolean closeEnough = Utility.checkIfUnitWithinDistance(entity, currentUnit.getCurrentPosition(), currentUnit.getEntityData().getAttackRange());
 		if ((entity.isPlayerUnit() != currentUnit.isPlayerUnit()) && closeEnough) {
 			currentUnit.attack(entity, DamageType.PHYSICAL);
 			battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.UPDATE_UI, entity);

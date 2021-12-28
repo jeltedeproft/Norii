@@ -40,21 +40,19 @@ public class AITeamLeader implements UnitOwner {
 		alliance = Alliance.TEAM_RED;
 		aiTeamData = AITeamFileReader.getAITeamData().get(levelEnum.ordinal());
 		aiDecisionMaker = new AIDecisionMaker();
+		ap = ApFileReader.getApData(0);
 		initiateUnits();
 	}
 
 	private void initiateUnits() {
 		team = new ArrayList<>();
-		for (final String name : aiTeamData.getUnits()) {
-			for (final EntityTypes type : EntityTypes.values()) {
-				if (name.equals(type.getEntityName())) {
-					final Entity entity = new Entity(type, this, true);
-					entity.setPlayerUnit(false);
-					team.add(entity);
+		for (final String unitName : aiTeamData.getUnits()) {
+			for (final EntityTypes unitType : EntityTypes.values()) {
+				if (unitName.equals(unitType.getEntityName())) {
+					team.add(new Entity(unitType, this, true));
 				}
 			}
 		}
-		ap = ApFileReader.getApData(0);
 	}
 
 	public Level getAiTeamData() {
@@ -66,12 +64,11 @@ public class AITeamLeader implements UnitOwner {
 		for (final Entity unit : team) {
 			if (!spawnPositions.isEmpty()) {
 				unit.setCurrentPosition(spawnPositions.get(0));
-				unit.setPlayerUnit(false);
 				unit.getVisualComponent().spawn(spawnPositions.get(0));
 				spawnPositions.remove(0);
 				battleManager.addUnit(unit);
 			} else {
-				Gdx.app.debug(TAG, "maybe no more room to spawn ai units!");
+				Gdx.app.debug(TAG, "no more room to spawn ai units!");
 			}
 		}
 	}
@@ -204,8 +201,7 @@ public class AITeamLeader implements UnitOwner {
 
 	@Override
 	public void spawnUnit(EntityTypes entityType, int entityID, TiledMapPosition pos) {
-		// TODO Auto-generated method stub
-
+		// for online play
 	}
 
 	@Override
@@ -239,9 +235,10 @@ public class AITeamLeader implements UnitOwner {
 		return alliance;
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void synchronizeMultiplayerUnitsWithLocal(HashMap teamWithIdMap) {
-		// TODO Auto-generated method stub
+		// online
 
 	}
 
@@ -252,31 +249,41 @@ public class AITeamLeader implements UnitOwner {
 
 	@Override
 	public void notifyDeploymentDone() {
-		// TODO Auto-generated method stub
+		// online
 
 	}
 
 	@Override
 	public void playerUnitMoved(Entity entity, TiledMapPosition pos) {
-		// TODO Auto-generated method stub
+		// online
 
 	}
 
 	@Override
 	public void playerUnitAttacked(Entity entity, TiledMapPosition pos) {
-		// TODO Auto-generated method stub
+		// online
 
 	}
 
 	@Override
 	public void playerUnitCastedSpell(Entity entity, Ability ability, TiledMapPosition pos) {
-		// TODO Auto-generated method stub
+		// online
 
 	}
 
 	@Override
 	public void playerUnitSkipped(Entity entity) {
-		// TODO Auto-generated method stub
+		// online
 
+	}
+
+	@Override
+	public boolean isSimulation() {
+		return false;
+	}
+
+	@Override
+	public boolean isDummy() {
+		return false;
 	}
 }

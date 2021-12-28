@@ -1,4 +1,4 @@
-package com.jelte.norii.battle.battlePhase;
+package com.jelte.norii.battle.battlephase;
 
 import java.util.List;
 
@@ -17,8 +17,8 @@ public class DeploymentBattlePhase extends BattlePhase {
 	private static final String TAG = DeploymentBattlePhase.class.getSimpleName();
 
 	private final BattleManager battlemanager;
-	private int deployingUnitNumber;
 	private final List<Entity> playerUnits;
+	private int deployingUnitNumber;
 
 	public DeploymentBattlePhase(final BattleManager battlemanager) {
 		this.battlemanager = battlemanager;
@@ -29,17 +29,19 @@ public class DeploymentBattlePhase extends BattlePhase {
 
 	@Override
 	public void exit() {
-		Alliance alliance = Player.getInstance().getAlliance();
-		if(alliance.equals(Alliance.TEAM_BLUE)) {
-			ParticleMaker.deactivateAllParticlesOfType(ParticleType.SPAWN);
-		}
-		if(alliance.equals(Alliance.TEAM_RED)) {
-			ParticleMaker.deactivateAllParticlesOfType(ParticleType.PURPLE_SQUARE);
-		}
-		
+		removeSpawnParticles();
 		battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.DEPLOYMENT_FINISHED, battlemanager.getActiveUnit());
 		battlemanager.setCurrentBattleState(battlemanager.getSelectUnitBattleState());
 		battlemanager.getCurrentBattleState().entry();
+	}
+
+	private void removeSpawnParticles() {
+		if (Player.getInstance().getAlliance().equals(Alliance.TEAM_BLUE)) {
+			ParticleMaker.deactivateAllParticlesOfType(ParticleType.SPAWN);
+		}
+		if (Player.getInstance().getAlliance().equals(Alliance.TEAM_RED)) {
+			ParticleMaker.deactivateAllParticlesOfType(ParticleType.PURPLE_SQUARE);
+		}
 	}
 
 	@Override
@@ -50,12 +52,7 @@ public class DeploymentBattlePhase extends BattlePhase {
 	}
 
 	private void deployUnit(final TiledMapActor actor) {
-		boolean isPossibleSpawnPoint;
-		if (Player.getInstance().getAlliance() == Alliance.TEAM_BLUE) {
-			isPossibleSpawnPoint = actor.getIsFreeSpawn();
-		} else {
-			isPossibleSpawnPoint = actor.getIsAISpawn();
-		}
+		boolean isPossibleSpawnPoint = (Player.getInstance().getAlliance() == Alliance.TEAM_BLUE) ? actor.getIsFreeSpawn() : actor.getIsAISpawn();
 		if (Boolean.TRUE.equals(isPossibleSpawnPoint)) {
 			final TiledMapPosition newPosition = actor.getActorPos();
 
@@ -83,18 +80,18 @@ public class DeploymentBattlePhase extends BattlePhase {
 		initiateUnitInBattle(unitToDeploy, newPosition);
 	}
 
+	private void initiateUnitInBattle(final Entity unit, final TiledMapPosition pos) {
+		unit.setCurrentPosition(pos);
+		battlemanager.addUnit(unit);
+		unit.getVisualComponent().initiateInBattle(pos);
+	}
+
 	private void nextDeployment() {
 		deployingUnitNumber++;
 		if (deployingUnitNumber < playerUnits.size()) {
 			playerUnits.get(deployingUnitNumber).getVisualComponent().setInDeploymentPhase(true);
 		}
 		checkIfLastUnit();
-	}
-
-	private void initiateUnitInBattle(final Entity unit, final TiledMapPosition pos) {
-		unit.setCurrentPosition(pos);
-		battlemanager.addUnit(unit);
-		unit.getVisualComponent().initiateInBattle(pos);
 	}
 
 	private void checkIfLastUnit() {
@@ -109,7 +106,6 @@ public class DeploymentBattlePhase extends BattlePhase {
 
 	@Override
 	public void hoveredOnTile(TiledMapActor actor) {
-		// playerUnits.get(deployingUnitNumber).setCurrentPosition(actor.getActorPos());
 		playerUnits.get(deployingUnitNumber).getVisualComponent().setVisualPosition(actor.getActorPos());
 	}
 }

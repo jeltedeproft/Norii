@@ -1,4 +1,4 @@
-package com.jelte.norii.ai;
+package com.jelte.norii.battle.battleState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,10 +6,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import com.badlogic.gdx.utils.Array;
-import com.jelte.norii.battle.battleState.BattleState;
-import com.jelte.norii.battle.battleState.BattleStateGridHelper;
-import com.jelte.norii.battle.battleState.Move;
-import com.jelte.norii.battle.battleState.SpellMove;
+import com.jelte.norii.ai.UnitTurn;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityTypes;
 import com.jelte.norii.entities.FakeEntityVisualComponent;

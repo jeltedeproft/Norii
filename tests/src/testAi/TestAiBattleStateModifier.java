@@ -5,9 +5,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.badlogic.gdx.utils.Array;
-import com.jelte.norii.ai.BattleStateModifier;
 import com.jelte.norii.battle.ApFileReader;
 import com.jelte.norii.battle.battleState.BattleState;
+import com.jelte.norii.battle.battleState.BattleStateModifier;
 import com.jelte.norii.battle.battleState.Move;
 import com.jelte.norii.battle.battleState.MoveType;
 import com.jelte.norii.battle.battleState.SpellMove;

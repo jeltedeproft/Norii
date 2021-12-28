@@ -1,16 +1,17 @@
-package com.jelte.norii.ai;
+package com.jelte.norii.ai.movegenerator;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.utils.Array;
+import com.jelte.norii.ai.UnitTurn;
 import com.jelte.norii.battle.battleState.BattleState;
 import com.jelte.norii.battle.battleState.Move;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.UnitOwner;
 import com.jelte.norii.magic.Ability;
 
-public class UnitSpecificMoveGenerator implements MoveGenerator {
+public class AbilityMoveGenerator implements MoveGenerator {
 
 	@Override
 	public List<Move> getMoves(UnitOwner player, BattleState battleState, int ap) {
@@ -33,9 +34,9 @@ public class UnitSpecificMoveGenerator implements MoveGenerator {
 	@Override
 	public Move getMove(UnitOwner player, BattleState battleState) {
 		Entity unit = getRandomUnit(player, battleState);
-		switch(unit.getAbility().getAbilityEnum()) {
+		switch (unit.getAbility().getAbilityEnum()) {
 		case ARROW:
-			return generateArrowBehaviour(unit,battleState);
+			return generateArrowBehaviour(unit, battleState);
 		case CRACKLE:
 			return generateCrackleBehaviour();
 		case EXPLOSION:
@@ -63,7 +64,7 @@ public class UnitSpecificMoveGenerator implements MoveGenerator {
 		case PORTAL:
 			return generatePortalBehaviour();
 		case PULL:
-		    return generatePullBehaviour();
+			return generatePullBehaviour();
 		case PUSH:
 			return generatePushBehaviour();
 		case SUMMON:
@@ -75,7 +76,7 @@ public class UnitSpecificMoveGenerator implements MoveGenerator {
 		case TURN_TO_STONE:
 			return generateTurnToStoneBehaviour();
 		default:
-			return null;		
+			return null;
 		}
 	}
 
@@ -178,7 +179,6 @@ public class UnitSpecificMoveGenerator implements MoveGenerator {
 		return null;
 	}
 
-	
 	private Entity getRandomUnit(UnitOwner player, BattleState battleState) {
 		Entity randomUnit;
 		if (player.isAI()) {

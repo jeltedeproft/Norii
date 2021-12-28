@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.badlogic.gdx.utils.Array;
-import com.jelte.norii.ai.BattleStateModifier;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.magic.Ability.AffectedTeams;

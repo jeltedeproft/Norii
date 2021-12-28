@@ -1,4 +1,4 @@
-package com.jelte.norii.ai;
+package com.jelte.norii.ai.movegenerator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +7,7 @@ import java.util.Random;
 import java.util.Set;
 
 import com.badlogic.gdx.utils.Array;
+import com.jelte.norii.ai.UnitTurn;
 import com.jelte.norii.battle.battleState.BattleState;
 import com.jelte.norii.battle.battleState.BattleStateGridHelper;
 import com.jelte.norii.battle.battleState.Move;
@@ -23,7 +24,6 @@ public class RandomMoveGenerator implements MoveGenerator {
 
 	private static final float CHANCE_OF_MAKING_MOVE = 0.2f;
 	private static final float CHANCE_OF_MAKING_ATTACK = 0.1f;
-	private static final float CHANCE_OF_MAKING_SPELL = 0.7f;
 
 	private Random random = new Random();
 
@@ -41,8 +41,7 @@ public class RandomMoveGenerator implements MoveGenerator {
 
 	@Override
 	public Array<UnitTurn> getAllMovesUnit(Ability ability, Entity aiUnit, BattleState battleState) {
-		// TODO Auto-generated method stub
-		return null;
+		return null; // not applicable for this generator
 	}
 
 	@Override
@@ -61,19 +60,17 @@ public class RandomMoveGenerator implements MoveGenerator {
 
 	}
 
-
 	public Move generateSingleMovementMoveForPlayer(UnitOwner player, BattleState battleState) {
 		Entity randomUnit = getRandomUnit(player, battleState);
 
 		MyPoint location = battleState.getRandomMoveSpotForUnit(randomUnit);
 		if (location == null) {
-			return new Move(MoveType.MOVE, randomUnit.getCurrentPosition().getTilePosAsPoint(),randomUnit);
+			return new Move(MoveType.MOVE, randomUnit.getCurrentPosition().getTilePosAsPoint(), randomUnit);
 		} else {
-			return new Move(MoveType.MOVE, location,randomUnit);
+			return new Move(MoveType.MOVE, location, randomUnit);
 		}
 
 	}
-
 
 	public Move generateSingleAttackMoveForPlayer(UnitOwner player, BattleState battleState) {
 		Entity randomUnit = getRandomUnit(player, battleState);
@@ -82,14 +79,13 @@ public class RandomMoveGenerator implements MoveGenerator {
 		Move move;
 		if (!neighbours.isEmpty()) {
 			Entity unitToAttack = Utility.getRandom(neighbours);
-			move = new Move(MoveType.ATTACK, unitToAttack.getCurrentPosition().getTilePosAsPoint(),randomUnit);
+			move = new Move(MoveType.ATTACK, unitToAttack.getCurrentPosition().getTilePosAsPoint(), randomUnit);
 		} else {
-			move = new Move(MoveType.DUMMY, new MyPoint(0, 0),randomUnit);
+			move = new Move(MoveType.DUMMY, new MyPoint(0, 0), randomUnit);
 		}
 
 		return move;
 	}
-
 
 	public Move generateSingleSpellMoveForPlayer(UnitOwner player, BattleState battleState) {
 		Entity randomUnit = getRandomUnit(player, battleState);
@@ -99,29 +95,29 @@ public class RandomMoveGenerator implements MoveGenerator {
 			return castAbilityOnCell(ability, randomUnit, battleState);
 		case NO_TARGET:
 		case SELF:
-			return castNoTargetOrSelf(ability, randomUnit, battleState);
+			return castNoTargetOrSelf(ability, randomUnit);
 		case CELL:
 		case UNIT:
 			return castAbilityOnTarget(player, ability, randomUnit, battleState);
 		default:
-			return new Move(MoveType.DUMMY, new MyPoint(0, 0),randomUnit);
+			return new Move(MoveType.DUMMY, new MyPoint(0, 0), randomUnit);
 		}
 	}
 
 	private Move castAbilityOnTarget(UnitOwner player, Ability ability, Entity randomUnit, BattleState battleState) {
 		final MyPoint casterPos = new MyPoint(randomUnit.getCurrentPosition().getTileX(), randomUnit.getCurrentPosition().getTileY());
-		Array<MyPoint> abilityTargets = AIMoveDecider.getAbilityTargets(ability, casterPos, randomUnit.isPlayerUnit(), battleState);
+		Array<MyPoint> abilityTargets = AbilityTargetMoveGenerator.getAbilityTargets(ability, casterPos, randomUnit.isPlayerUnit(), battleState);
 		if (!abilityTargets.isEmpty()) {
 			MyPoint castPoint = Utility.getRandom(abilityTargets);
-			final Array<MyPoint> affectedUnits = BattleStateGridHelper.getInstance().getTargetsAbility(ability, castPoint, casterPos, AIMoveDecider.getUnitPositions(false, ability, battleState));
-			return new SpellMove(MoveType.SPELL, castPoint, ability, affectedUnits,randomUnit);
+			final Array<MyPoint> affectedUnits = BattleStateGridHelper.getInstance().getTargetsAbility(ability, castPoint, casterPos, AbilityTargetMoveGenerator.getUnitPositions(false, ability, battleState));
+			return new SpellMove(MoveType.SPELL, castPoint, ability, affectedUnits, randomUnit);
 		} else {
 			return generateSingleMovementMoveForPlayer(player, battleState);
 		}
 	}
 
-	private Move castNoTargetOrSelf(Ability ability, Entity randomUnit, BattleState battleState) {
-		return new SpellMove(MoveType.SPELL, new MyPoint(randomUnit.getCurrentPosition().getTileX(), randomUnit.getCurrentPosition().getTileY()), ability, null,randomUnit);
+	private Move castNoTargetOrSelf(Ability ability, Entity randomUnit) {
+		return new SpellMove(MoveType.SPELL, new MyPoint(randomUnit.getCurrentPosition().getTileX(), randomUnit.getCurrentPosition().getTileY()), ability, null, randomUnit);
 	}
 
 	private Move castAbilityOnCell(Ability ability, Entity randomUnit, BattleState battleState) {
@@ -134,10 +130,10 @@ public class RandomMoveGenerator implements MoveGenerator {
 
 		Optional<MyPoint> point = Utility.getRandom(cellsToCastOn);
 		if (point.isPresent()) {
-			return new SpellMove(MoveType.SPELL, point.get(), ability, null,randomUnit);
+			return new SpellMove(MoveType.SPELL, point.get(), ability, null, randomUnit);
 		}
 
-		return new Move(MoveType.DUMMY, new MyPoint(0, 0),randomUnit);
+		return new Move(MoveType.DUMMY, new MyPoint(0, 0), randomUnit);
 	}
 
 	private void filterUnits(Set<MyPoint> cellsToCastOn, BattleState battleState) {

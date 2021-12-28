@@ -14,11 +14,12 @@ import org.xguzm.pathfinding.grid.finders.AStarGridFinder;
 import org.xguzm.pathfinding.grid.finders.GridFinderOptions;
 
 import com.badlogic.gdx.Gdx;
-import com.jelte.norii.ai.AIMoveDecider;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.utility.MyPoint;
 import com.jelte.norii.utility.TiledMapPosition;
 import com.jelte.norii.utility.Utility;
+
+import movegenerator.AbilityTargetMoveGenerator;
 
 public class MyPathFinder {
 	private NavigationGridGraph<GridCell> navGrid;
@@ -134,7 +135,7 @@ public class MyPathFinder {
 	public List<GridCell> pathTowards(TiledMapPosition start, TiledMapPosition goal, int ap) {
 		oldTime = System.currentTimeMillis();
 		final List<GridCell> path = precalculatedPaths.get(start.getTilePosAsPoint()).get(goal.getTilePosAsPoint());
-		oldTime = AIMoveDecider.debugTime("find path from " + start + " to " + goal, oldTime);
+		oldTime = AbilityTargetMoveGenerator.debugTime("find path from " + start + " to " + goal, oldTime);
 		if (path == null) {
 			return adjustGoal(start, goal, path);
 		}
@@ -148,11 +149,11 @@ public class MyPathFinder {
 
 	private List<GridCell> adjustGoal(TiledMapPosition start, TiledMapPosition goal, List<GridCell> path) {
 		while ((path == null) || path.isEmpty()) {
-			oldTime = AIMoveDecider.debugTime("trying from : " + start + " to " + goal, oldTime);
+			oldTime = AbilityTargetMoveGenerator.debugTime("trying from : " + start + " to " + goal, oldTime);
 			goal = tryAdjacentTile(start, goal);
 			path = precalculatedPaths.get(start.getTilePosAsPoint()).get(goal.getTilePosAsPoint());
 		}
-		oldTime = AIMoveDecider.debugTime("goal adjusted", oldTime);
+		oldTime = AbilityTargetMoveGenerator.debugTime("goal adjusted", oldTime);
 		Gdx.app.debug("myPathFinder", "path after adjustment = " + path);
 		return path;
 	}
@@ -172,7 +173,7 @@ public class MyPathFinder {
 		while (path.size() > ap) {
 			path.remove(path.size() - 1);
 		}
-		oldTime = AIMoveDecider.debugTime("path chipped", oldTime);
+		oldTime = AbilityTargetMoveGenerator.debugTime("path chipped", oldTime);
 		return path;
 	}
 

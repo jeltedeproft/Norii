@@ -1,4 +1,4 @@
-package com.jelte.norii.battle.battlePhase;
+package com.jelte.norii.battle.battlephase;
 
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.magic.Ability;

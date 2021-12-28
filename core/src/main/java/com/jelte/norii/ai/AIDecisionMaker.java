@@ -6,7 +6,10 @@ import java.util.TreeMap;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
+import com.jelte.norii.ai.movegenerator.AbilityTargetMoveGenerator;
+import com.jelte.norii.ai.movegenerator.MoveGenerator;
 import com.jelte.norii.battle.battleState.BattleState;
+import com.jelte.norii.battle.battleState.BattleStateModifier;
 import com.jelte.norii.battle.battleState.Move;
 import com.jelte.norii.battle.battleState.SpellMove;
 import com.jelte.norii.entities.Entity;
@@ -27,7 +30,7 @@ public class AIDecisionMaker {
 	private int battleStateIndex;
 	private int numberOfBattleStatesThisRound;
 	private BattleState currentBattleState;
-	private AIMoveDecider aiMoveDecider;
+	private MoveGenerator abilityTargetMoveGenerator;
 	private Entity unit;
 	private BattleState startingState;
 	private Long processingTimeCounter = 0L;
@@ -37,7 +40,7 @@ public class AIDecisionMaker {
 	private BattleStateModifier battleStateModifier = new BattleStateModifier();
 
 	public AIDecisionMaker() {
-		aiMoveDecider = new AIMoveDecider();
+		abilityTargetMoveGenerator = new AbilityTargetMoveGenerator();
 		statesWithScores = new TreeMap<>();
 		for (int i = 0; i < NUMBER_OF_LAYERS; i++) {
 			allBattleStates.add(new Array<>());
@@ -63,20 +66,20 @@ public class AIDecisionMaker {
 
 		updateBattlestateAndEntityIfNecessary();
 
-		oldTime = AIMoveDecider.debugTime("\n\ngenerating moves for : " + unit, oldTime);
+		oldTime = AbilityTargetMoveGenerator.debugTime("\n\ngenerating moves for : " + unit, oldTime);
 		generateBattleStatesForUnit(unit, startingState);
-		oldTime = AIMoveDecider.debugTime("moves generated for unit : " + unit, oldTime);
+		oldTime = AbilityTargetMoveGenerator.debugTime("moves generated for unit : " + unit, oldTime);
 
 		entityIndex++;
 
 		nextBattlestateIfAllUnitsDone();// all units done?
 
 		if (isRoundFinished()) {
-			oldTime = AIMoveDecider.debugTime("\n\nNEXT ROUND", oldTime);
+			oldTime = AbilityTargetMoveGenerator.debugTime("\n\nNEXT ROUND", oldTime);
 			prepareNextRound();
 
 			if (turnIndex >= NUMBER_OF_LAYERS) {
-				oldTime = AIMoveDecider.debugTime("\n\nALL STATES DONE", oldTime);
+				oldTime = AbilityTargetMoveGenerator.debugTime("\n\nALL STATES DONE", oldTime);
 				return true;
 			}
 		}
@@ -84,7 +87,7 @@ public class AIDecisionMaker {
 		// check timer
 		processingTimeCounter += (System.currentTimeMillis() - startingTime);
 		if (processingTimeCounter > MAX_AI_THINKING_TIME) {
-			oldTime = AIMoveDecider.debugTime("\n\nEARLY CUTOFF TO TIME", oldTime);
+			oldTime = AbilityTargetMoveGenerator.debugTime("\n\nEARLY CUTOFF TO TIME", oldTime);
 		}
 		return processingTimeCounter > MAX_AI_THINKING_TIME;
 	}
@@ -105,7 +108,6 @@ public class AIDecisionMaker {
 	}
 
 	private void prepareNextRound() {
-		// all steps from this round done, next round
 		Array<BattleState> statesFromLastRound = allBattleStates.get(turnIndex);
 		statesFromLastRound.sort();
 		statesFromLastRound = limitNumberOfStatesTo(allBattleStates.get(turnIndex), SAVE_TOP_X_STATES_EVERY_ROUND);
@@ -127,28 +129,22 @@ public class AIDecisionMaker {
 	}
 
 	private void nextBattlestateIfAllUnitsDone() {
-		if ((turnIndex % 2) == 0) {
-			if (entityIndex >= startingState.getAiUnits().size) {
-				oldTime = AIMoveDecider.debugTime("\n\nNEXT BATTLESTATE", oldTime);
-				battleStateIndex++;
-				entityIndex = 0;
-			}
-		} else {
-			if (entityIndex >= startingState.getPlayerUnits().size) {
-				oldTime = AIMoveDecider.debugTime("\n\nNEXT BATTLESTATE", oldTime);
-				battleStateIndex++;
-				entityIndex = 0;
-			}
+		int size = (turnIndex % 2) == 0 ? startingState.getAiUnits().size : startingState.getPlayerUnits().size;
+
+		if (entityIndex >= size) {
+			oldTime = AbilityTargetMoveGenerator.debugTime("\n\nNEXT BATTLESTATE", oldTime);
+			battleStateIndex++;
+			entityIndex = 0;
 		}
 	}
 
 	private void generateBattleStatesForUnit(Entity unit, BattleState startingState) {
 		int oldScore = startingState.calculateScore();
 		Ability ability = unit.getAbility();
-		final Array<UnitTurn> turns = aiMoveDecider.generateMoves(ability, unit, startingState);
+		final Array<UnitTurn> turns = abilityTargetMoveGenerator.getAllMovesUnit(ability, unit, startingState);
 		for (final UnitTurn turn : turns) {
 			String abilityString = "";
-			for (Move move : turn.getMoves()) {
+			for (Move move : turn.getMoves()) {// this whole block is for the debug line can be removed
 				if (move instanceof SpellMove) {
 					SpellMove spellMove = (SpellMove) move;
 					abilityString = spellMove.getAbility().getName();
@@ -165,11 +161,7 @@ public class AIDecisionMaker {
 	}
 
 	private boolean isRoundFinished() {
-		if (turnIndex == 0) {
-			return battleStateIndex > 0;
-		} else {
-			return battleStateIndex >= (numberOfBattleStatesThisRound - 1);
-		}
+		return turnIndex == 0 ? (battleStateIndex > 0) : (battleStateIndex >= (numberOfBattleStatesThisRound - 1));
 	}
 
 	public BattleState getResult() {
@@ -207,13 +199,7 @@ public class AIDecisionMaker {
 
 	private int selectBattlestateFromResults(int i, Random random) {
 		int totalNumberOfStates = allBattleStates.get(NUMBER_OF_LAYERS - i).size;
-		int stateWePick;
-		if (totalNumberOfStates < RANDOMISATION_TOP_X_STATES) {
-			stateWePick = random.nextInt(totalNumberOfStates);
-		} else {
-			stateWePick = random.nextInt(RANDOMISATION_TOP_X_STATES);
-		}
-		return stateWePick;
+		return totalNumberOfStates < RANDOMISATION_TOP_X_STATES ? random.nextInt(totalNumberOfStates) : random.nextInt(RANDOMISATION_TOP_X_STATES);
 	}
 
 	private BattleState getInitialMoves(BattleState battleState) {

@@ -1,9 +1,8 @@
-package com.jelte.norii.battle.battlePhase;
+package com.jelte.norii.battle.battlephase;
 
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.jelte.norii.battle.BattleManager;
-import com.jelte.norii.battle.MessageToBattleScreen;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityAnimation.Direction;
 import com.jelte.norii.magic.ModifiersEnum;
@@ -22,8 +21,7 @@ public class ActionBattlePhase extends BattlePhase {
 
 	@Override
 	public void exit() {
-		battlemanager.swapTurn();
-		battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.LOCK_UI, battlemanager.getActiveUnit());
+
 	}
 
 	@Override

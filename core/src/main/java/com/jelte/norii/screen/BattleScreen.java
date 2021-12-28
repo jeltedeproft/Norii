@@ -249,9 +249,6 @@ public class BattleScreen extends GameScreen {
 			NetworkMessage message = ServerCommunicator.getInstance().getOldestMessageFromServer();
 			switch (message.getType()) {
 			case UNIT_DEPLOYED:
-				// get unit and position, deploy unit locally as well, unlock ui, continue
-				// self-deployment, set playerturn to true, check if all units deployed,
-				// deployment finished message?
 				TiledMapPosition pos = message.getPos();
 				enemyTeamLeader.spawnUnit(message.getUnitType(), message.getUnitID(), pos);
 				ParticleMaker.deactivateParticle(ParticleMaker.getParticle(ParticleType.SPAWN, pos));
@@ -456,8 +453,8 @@ public class BattleScreen extends GameScreen {
 				skipEntity.getVisualComponent().setActive(false);
 				skipEntity.setFocused(false);
 				enemyTeamLeader.playerUnitSkipped(skipEntity);
-				battlemanager.setCurrentBattleState(battlemanager.getActionBattleState());
-				battlemanager.getCurrentBattleState().exit();
+				battlemanager.setCurrentBattleState(battlemanager.getWaitOpponentBattleState());
+				battlemanager.getCurrentBattleState().entry();
 				break;
 			case CLICKED_ON_MOVE:
 				final Entity moveEntity = battlemanager.getEntityByID(entityID);
@@ -469,7 +466,7 @@ public class BattleScreen extends GameScreen {
 				break;
 			case CLICKED_ON_ATTACK:
 				final Entity attackEntity = battlemanager.getEntityByID(entityID);
-				if ((attackEntity.getAp() >= attackEntity.getEntityData().getBasicAttackCost()) && attackEntity.canAttack()) {
+				if (attackEntity.canAttack()) {
 					prepareAttack(attackEntity);
 				} else {
 					hud.getHudMessages().showPopup(HudMessageTypes.NOT_ENOUGH_AP);

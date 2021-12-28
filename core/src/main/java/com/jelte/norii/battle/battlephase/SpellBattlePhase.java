@@ -1,9 +1,7 @@
-package com.jelte.norii.battle.battlePhase;
+package com.jelte.norii.battle.battlephase;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import com.badlogic.gdx.Gdx;
@@ -11,13 +9,13 @@ import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
 import com.badlogic.gdx.utils.Array;
-import com.jelte.norii.ai.BattleStateModifier;
 import com.jelte.norii.audio.AudioCommand;
 import com.jelte.norii.audio.AudioManager;
 import com.jelte.norii.audio.AudioTypeEvent;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.battle.MessageToBattleScreen;
 import com.jelte.norii.battle.battleState.BattleStateGridHelper;
+import com.jelte.norii.battle.battleState.BattleStateModifier;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityAnimation;
 import com.jelte.norii.entities.EntityAnimationType;
@@ -226,7 +224,7 @@ public class SpellBattlePhase extends BattlePhase {
 			castPortal(currentUnit, targetPos, ability);
 			break;
 		case TRANSPORT:
-			castTransport(currentUnit, targetPos, ability);
+			castTransport(currentUnit);
 			break;
 		case HAMMERBACKBACK:
 			castHammerbackBack(currentUnit, targetPos, ability);
@@ -280,7 +278,6 @@ public class SpellBattlePhase extends BattlePhase {
 		battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.ADD_UNIT_UI, ghostEntity);
 	}
 
-	@SuppressWarnings("unchecked")
 	private void castCrackle(final Entity caster, final TiledMapPosition targetPos, final Ability ability) {
 		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
 		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.CRACKLE_SOUND);
@@ -291,38 +288,17 @@ public class SpellBattlePhase extends BattlePhase {
 		Entity target = getEntityAtPosition(targetPos.getTilePosAsPoint());
 		entitiesHit = crackleTarget(targetPos, ability, usedTargets, entitiesHit, target);
 
-		// do same for that unit until enough units hit or no units closeby
-		// make sure that unit first cast on is not coming back later on
-		TreeMap<Integer, Array<Entity>> distancesToTarget = (TreeMap<Integer, Array<Entity>>) Utility.getDistancesWithTarget(targetPos.getTilePosAsPoint(), battlemanager.getBattleState().getAllUnits());
-
-		while ((!distancesToTarget.isEmpty()) && (entitiesHit <= 3)) {
-			if (distancesToTarget.firstEntry().getValue().size == 0) {
-				int j = 5;
-			}
-			final Array<Entity> closestUnits = getFirstNotNull(distancesToTarget);
-			final Entity closestUnit = closestUnits.first();
-			if (Utility.checkIfUnitsWithinDistance(closestUnit, target, 4)) {
-				if (usedTargets.contains(closestUnit, false)) {
-					// skip this unit
-					closestUnits.removeIndex(0);
-				} else {
-					entitiesHit = crackleTarget(closestUnit.getCurrentPosition(), ability, usedTargets, entitiesHit, closestUnit);
-					distancesToTarget = (TreeMap<Integer, Array<Entity>>) Utility.getDistancesWithTarget(closestUnit.getCurrentPosition().getTilePosAsPoint(), battlemanager.getBattleState().getAllUnits());
-					target = closestUnit;
-				}
+		Array<Entity> closebyUnits = Utility.getUnitsWithinDistanceFromTarget(target, battlemanager.getBattleState().getAllUnits(), 4);
+		while ((!closebyUnits.isEmpty()) && (entitiesHit <= 3)) {
+			Entity closestUnit = Utility.getClosestUnit(target, closebyUnits);
+			if (usedTargets.contains(closestUnit, false)) {
+				closebyUnits.removeValue(closestUnit, true);
 			} else {
-				break;
+				entitiesHit = crackleTarget(closestUnit.getCurrentPosition(), ability, usedTargets, entitiesHit, closestUnit);
+				closebyUnits = Utility.getUnitsWithinDistanceFromTarget(closestUnit, battlemanager.getBattleState().getAllUnits(), 4);
+				target = closestUnit;
 			}
 		}
-	}
-
-	private Array<Entity> getFirstNotNull(TreeMap<Integer, Array<Entity>> distancesToTarget) {
-		for (Map.Entry<Integer, Array<Entity>> entry : distancesToTarget.entrySet()) {
-			if (!entry.getValue().isEmpty()) {
-				return entry.getValue();
-			}
-		}
-		return null;
 	}
 
 	private int crackleTarget(final TiledMapPosition targetPos, final Ability ability, Array<Entity> usedTargets, int entitiesHit, final Entity target) {
@@ -336,7 +312,7 @@ public class SpellBattlePhase extends BattlePhase {
 		return entitiesHit;
 	}
 
-	private void castTransport(Entity currentUnit, TiledMapPosition targetPos, Ability ability) {
+	private void castTransport(Entity currentUnit) {
 		final List<Entity> units = battlemanager.getUnits();
 		Entity otherPortal = null;
 		final Array<Entity> unitsNextToPortal = new Array<>();

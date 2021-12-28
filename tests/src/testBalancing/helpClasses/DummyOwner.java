@@ -239,4 +239,15 @@ public class DummyOwner implements UnitOwner {
 		return null;
 	}
 
+	@Override
+	public boolean isSimulation() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isDummy() {
+		return true;
+	}
+
 }
