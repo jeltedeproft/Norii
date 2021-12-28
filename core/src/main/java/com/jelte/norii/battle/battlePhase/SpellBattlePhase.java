@@ -459,8 +459,8 @@ public class SpellBattlePhase extends BattlePhase {
 		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
 		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.STONE_SOUND);
 		target.getVisualComponent().changeAnimation(new EntityAnimation("Rock"));
-		target.addModifier(ModifiersEnum.IMAGE_CHANGED, 2, 0);
-		target.addModifier(ModifiersEnum.STUNNED, 2, 0);
+		target.addModifier(ModifiersEnum.IMAGE_CHANGED, ability.getDurationInTurns(), 0);
+		target.addModifier(ModifiersEnum.STUNNED, ability.getDurationInTurns(), 0);
 	}
 
 	private void castPlantShield(final Entity caster, final TiledMapPosition targetPos, final Ability ability) {
@@ -472,8 +472,8 @@ public class SpellBattlePhase extends BattlePhase {
 		battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.ADD_UNIT_ENTITYSTAGE, rock);
 		rock.getVisualComponent().initiateInBattle(targetPos);
 		rock.setCurrentPosition(targetPos);
-		rock.addModifier(ModifiersEnum.STUNNED, 3, 0);
-		rock.addModifier(ModifiersEnum.PURE_DAMAGE, 3, 334);
+		rock.addModifier(ModifiersEnum.STUNNED, ability.getDurationInTurns(), 0);
+		rock.addModifier(ModifiersEnum.PURE_DAMAGE, ability.getDurationInTurns(), 334);
 		battlemanager.addUnit(rock);
 		battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.ADD_UNIT_UI, rock);
 	}
@@ -496,6 +496,7 @@ public class SpellBattlePhase extends BattlePhase {
 		battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.ADD_UNIT_ENTITYSTAGE, hammerEntity);
 		hammerEntity.getVisualComponent().initiateInBattle(targetPos);
 		hammerEntity.setCurrentPosition(targetPos);
+		// TO-DO : make a new modifier, kill when turns is over
 		hammerEntity.addModifier(ModifiersEnum.DAMAGE_OVER_TIME_PHYSICAL, 3, 1);
 		hammerEntity.setAbility(AbilitiesEnum.HAMMERBACKBACK, caster.getCurrentPosition().getTilePosAsPoint());
 		battlemanager.addUnit(hammerEntity);

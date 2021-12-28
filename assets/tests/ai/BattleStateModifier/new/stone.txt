@@ -1,0 +1,2 @@
+Artist  hp: 100/100 attackpower: 14 attackRange: 1 basic atk cost: 1 mag def: 25 phy def: 25 ap: 3 pos: [0,0]
+Black Cat  hp: 100/100 attackpower: 12 attackRange: 1 basic atk cost: 1 mag def: 25 phy def: 25 ap: 3 pos: [0,4]modifier: STUNNED turns left: 2 amount: 0  

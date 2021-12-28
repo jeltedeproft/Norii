@@ -19,7 +19,7 @@ import com.jelte.norii.magic.ModifiersEnum;
 import com.jelte.norii.utility.MyPoint;
 import com.jelte.norii.utility.TiledMapPosition;
 
-public class Entity extends Actor {
+public class Entity extends Actor implements Comparable<Entity> {
 	public static final int MAX_XP = 100;
 	private static final Random random = new Random();
 
@@ -485,5 +485,10 @@ public class Entity extends Actor {
 
 	public void kill() {
 		damage(1000000, DamageType.PURE_DAMAGE);
+	}
+
+	@Override
+	public int compareTo(Entity o) {
+		return toString().compareTo(o.toString());
 	}
 }

@@ -14,6 +14,7 @@ public class SpellData {
 	private String areaOfEffect;
 	private int damage;
 	private String damageType;
+	private int durationInTurns;
 	private int range;
 	private int areaOfEffectRange;
 	private String affectsTeam;
@@ -149,6 +150,14 @@ public class SpellData {
 
 	public void setInfoText(String infoText) {
 		this.infoText = infoText;
+	}
+
+	public int getDurationInTurns() {
+		return durationInTurns;
+	}
+
+	public void setDurationInTurns(int durationInTurns) {
+		this.durationInTurns = durationInTurns;
 	}
 
 }

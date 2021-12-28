@@ -1,6 +1,7 @@
 package com.jelte.norii.battle.battleState;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,25 +45,54 @@ public class BattleState implements Comparable<BattleState> {
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
-		sb.append("\n");
-		for (int i = stateOfField.length - 1; i >= 0; i--) {
-			final BattleCell[] row = stateOfField[i];
-			for (int j = 0; j < row.length; j++) {
-				final BattleCell cell = stateOfField[j][i];
-				if (cell.isOccupied() && cell.getUnit().isPlayerUnit()) {
-					sb.append("|    " + cell.getUnit().getHp() + "     |");
-				} else if (cell.isOccupied() && !cell.getUnit().isPlayerUnit()) {
-					sb.append("|    " + cell.getUnit().getHp() + "     |");
-				} else if (!cell.isWalkable()) {
-					sb.append("| XXXXXXXX |");
-				} else {
-					sb.append("|          |");
-				}
-			}
+		List<Entity> entities = new ArrayList<Entity>(units.values());
+		Collections.sort(entities);
+		for (Entity unit : entities) {
+			sb.append(printUnitAttributes(unit));
 			sb.append("\n");
 		}
 		return sb.toString();
 	}
+
+	private String printUnitAttributes(Entity unit) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(unit.getEntityData().getName() + "  hp: " + unit.getHp() + "/" + unit.getEntityData().getMaxHP());
+		sb.append(" attackpower: " + unit.getEntityData().getAttackPower());
+		sb.append(" attackRange: " + unit.getEntityData().getAttackRange());
+		sb.append(" basic atk cost: " + unit.getEntityData().getBasicAttackCost());
+		sb.append(" mag def: " + unit.getEntityData().getMagicalDefense());
+		sb.append(" phy def: " + unit.getEntityData().getPhysicalDefense());
+		sb.append(" ap: " + unit.getAp());
+		sb.append(" pos: " + unit.getCurrentPosition());
+		for (Modifier mod : unit.getModifiers()) {
+			sb.append("modifier: " + mod.getType().toString() + " turns left: " + mod.getTurns() + " amount: " + mod.getAmount() + "  ");
+		}
+
+		return sb.toString();
+	}
+
+//	@Override
+//	public String toString() {
+//		final StringBuilder sb = new StringBuilder();
+//		sb.append("\n");
+//		for (int i = stateOfField.length - 1; i >= 0; i--) {
+//			final BattleCell[] row = stateOfField[i];
+//			for (int j = 0; j < row.length; j++) {
+//				final BattleCell cell = stateOfField[j][i];
+//				if (cell.isOccupied() && cell.getUnit().isPlayerUnit()) {
+//					sb.append("|P   " + cell.getUnit().getHp() + "    P|");
+//				} else if (cell.isOccupied() && !cell.getUnit().isPlayerUnit()) {
+//					sb.append("|E   " + cell.getUnit().getHp() + "    E|");
+//				} else if (!cell.isWalkable()) {
+//					sb.append("| XXXXXXXX |");
+//				} else {
+//					sb.append("|          |");
+//				}
+//			}
+//			sb.append("\n");
+//		}
+//		return sb.toString();
+//	}
 
 	public BattleState(BattleCell[][] field, Array<Entity> unitsToAdd) {
 		stateOfField = field;

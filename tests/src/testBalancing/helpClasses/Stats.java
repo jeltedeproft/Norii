@@ -22,6 +22,7 @@ public class Stats {
 	private int damage;
 	private int range;
 	private int areaOfEffectRange;
+	private int durationInTurns;
 
 	public Stats(Entity unit) {
 		// unit
@@ -40,6 +41,7 @@ public class Stats {
 		damage = ability.getSpellData().getDamage();
 		range = ability.getSpellData().getRange();
 		areaOfEffectRange = ability.getSpellData().getAreaOfEffectRange();
+		durationInTurns = ability.getSpellData().getDurationInTurns();
 
 	}
 
@@ -151,6 +153,14 @@ public class Stats {
 		this.areaOfEffectRange = areaOfEffectRange;
 	}
 
+	public int getDurationInTurns() {
+		return durationInTurns;
+	}
+
+	public void setDurationInTurns(int durationInTurns) {
+		this.durationInTurns = durationInTurns;
+	}
+
 	public Stats makeCopy() {
 		Stats stats = new Stats();
 		stats.setAbility(ability);
@@ -166,6 +176,7 @@ public class Stats {
 		stats.setAreaOfEffectRange(areaOfEffectRange);
 		stats.setDamage(damage);
 		stats.setRange(range);
+		stats.setDurationInTurns(durationInTurns);
 		return stats;
 	}
 
@@ -173,7 +184,7 @@ public class Stats {
 	public String toString() {
 		return "type = " + entityType + "\n" + "magical defense = " + magicalDefense + "\n" + "physicalDefense = " + physicalDefense + "\n" + "attack range = " + attackRange + "\n" + "basic attack cost = " + basicAttackCost + "\n"
 				+ "max HP = " + maxHP + "\n" + "attack power = " + attackPower + "\n" + "ability = " + ability.getName() + "\n" + "ap cost = " + getApCost() + "\n" + "mp cost = " + getMpCost() + "\n" + "damage = " + getDamage() + "\n"
-				+ "range = " + getRange() + "\n" + "area of effect range = " + getAreaOfEffectRange() + "\n";
+				+ "range = " + getRange() + "\n" + "area of effect range = " + getAreaOfEffectRange() + "\n" + "duration in turns = " + durationInTurns + "\n";
 	}
 
 }

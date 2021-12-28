@@ -6,8 +6,6 @@ import org.junit.runner.RunWith;
 
 import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.ai.BattleStateModifier;
-import com.jelte.norii.ai.MoveGenerator;
-import com.jelte.norii.ai.RandomMoveGenerator;
 import com.jelte.norii.battle.ApFileReader;
 import com.jelte.norii.battle.battleState.BattleState;
 import com.jelte.norii.battle.battleState.Move;
@@ -19,7 +17,6 @@ import com.jelte.norii.entities.EntityTypes;
 import com.jelte.norii.entities.UnitOwner;
 import com.jelte.norii.magic.AbilitiesEnum;
 import com.jelte.norii.magic.SpellFileReader;
-import com.jelte.norii.utility.MyPoint;
 
 import testBalancing.helpClasses.SimulationPlayer;
 import testUtilities.GdxTestRunner;
@@ -27,12 +24,18 @@ import testUtilities.TestUtil;
 
 @RunWith(GdxTestRunner.class)
 public class TestAiBattleStateModifier {
-	private static final String FILENAME_MOVE = "tests/ai/BattleStateModifier/move.txt";
-	private static final String FILENAME_MOVE_OLD = "tests/ai/BattleStateModifier/move_old.txt";
-	private static final String FILENAME_ATTACK = "tests/ai/BattleStateModifier/attack.txt";
-	private static final String FILENAME_ATTACK_OLD = "tests/ai/BattleStateModifier/attack_old.txt";
-	private static final String FILENAME_FIREBALL = "tests/ai/BattleStateModifier/fireball.txt";
-	private static final String FILENAME_FIREBALL_OLD = "tests/ai/BattleStateModifier/fireball_old.txt";
+	private static final String BASE_NEW = "tests/ai/BattleStateModifier/new/";
+	private static final String BASE_ORIGINAL = "tests/ai/BattleStateModifier/original/";
+	private static final String FILENAME_MOVE = BASE_NEW + "move.txt";
+	private static final String FILENAME_MOVE_OLD = BASE_ORIGINAL + "move.txt";
+	private static final String FILENAME_ATTACK = BASE_NEW + "attack.txt";
+	private static final String FILENAME_ATTACK_OLD = BASE_ORIGINAL + "attack.txt";
+	private static final String FILENAME_FIREBALL = BASE_NEW + "fireball.txt";
+	private static final String FILENAME_FIREBALL_OLD = BASE_ORIGINAL + "fireball.txt";
+	private static final String FILENAME_TURN_TO_STONE = BASE_NEW + "stone.txt";
+	private static final String FILENAME_TURN_TO_STONE_OLD = BASE_ORIGINAL + "stone.txt";
+	private static final String FILENAME_SWAP = BASE_NEW + "swap.txt";
+	private static final String FILENAME_SWAP_OLD = BASE_ORIGINAL + "swap.txt";
 	private static final String PLAYER_ONE_NAME = "test1";
 	private static final String PLAYER_TWO_NAME = "test2";
 	private static final int BATTLESTATE_SIZE = 5; // must be bigger than units per team
@@ -44,92 +47,121 @@ public class TestAiBattleStateModifier {
 	Array<Entity> team1;
 	Array<Entity> team2;
 
-	private int turn = 0;
-	private boolean allyTurn;
-	private BattleState battleState;
-	private MoveGenerator moveGenerator;
-
-	//maak battlesttae aan in elke specifieke test in de plaats
 	@Before
 	public void prepareBattleState() {
 		EntityFileReader.loadUnitStatsInMemory();
 		SpellFileReader.loadSpellsInMemory();
 		ApFileReader.loadApInMemory();
+		battleStateModifier = new BattleStateModifier();
 		team1 = new Array<>();
 		team2 = new Array<>();
 		balancer1 = new SimulationPlayer(true, true);
 		balancer2 = new SimulationPlayer(false, false);
-
 		balancer1.setName(PLAYER_ONE_NAME);
 		balancer2.setName(PLAYER_TWO_NAME);
-
-		battleState = new BattleState(BATTLESTATE_SIZE, BATTLESTATE_SIZE);
-		moveGenerator = new RandomMoveGenerator();
-		battleStateModifier = new BattleStateModifier();
-
-		team1.add(new Entity(EntityTypes.ARTIST, balancer1, false));
-		team2.add(new Entity(EntityTypes.ARTIST, balancer2, false));
-
-		configureEntities();
-		specificallyPlaceUnits();
-	}
-
-	private void specificallyPlaceUnits() {
-		for (int i = 0; i < team1.size; i++) {
-			battleState.placeUnitOnSpecificSpot(team1.get(i), 0, i);
-		}
-		for (int i = 0; i < team2.size; i++) {
-			battleState.placeUnitOnSpecificSpot(team2.get(i), BATTLESTATE_SIZE - 1, i);
-		}
-	}
-
-	private void configureEntities() {
-		for (Entity unit : team1) {
-			unit.setPlayerUnit(true);
-		}
-		for (Entity unit : team2) {
-			unit.setPlayerUnit(false);
-		}
 	}
 
 	@Test
 	public void applyMove() {
-		Entity unit = battleState.get(0, 0).getUnit();
-		Move move = new Move(MoveType.MOVE, unit.getCurrentPosition().getTilePosAsPoint().incrementX());
-		BattleState copyBbattleState = battleStateModifier.applyMove(unit, move, battleState);
+		// setup
+		BattleState battleState = new BattleState(BATTLESTATE_SIZE, BATTLESTATE_SIZE);
+		Entity playerUnit = new Entity(EntityTypes.ARTIST, balancer1, false);
+		playerUnit.setPlayerUnit(true);
+		team1.add(playerUnit);
+		Entity enemyUnit = new Entity(EntityTypes.BLACK_CAT, balancer2, false);
+		enemyUnit.setPlayerUnit(false);
+		team2.add(enemyUnit);
+		battleState.placeUnitOnSpecificSpot(playerUnit, 0, 0);
+		battleState.placeUnitOnSpecificSpot(enemyUnit, BATTLESTATE_SIZE - 1, 0);
+
+		// move
+		Move move = new Move(MoveType.MOVE, playerUnit.getCurrentPosition().getTilePosAsPoint().incrementX());
+		BattleState copyBbattleState = battleStateModifier.applyMove(playerUnit, move, battleState);
 		TestUtil.resultsToFile(FILENAME_MOVE, copyBbattleState);
 		TestUtil.regressionTest(FILENAME_MOVE, FILENAME_MOVE_OLD);
 	}
 
 	@Test
 	public void applyAttack() {
-		Entity unit = battleState.get(0, 0).getUnit();
-		Entity enemy = battleState.get(BATTLESTATE_SIZE - 1, 0).getUnit();
-		MyPoint pointToMoveTo = enemy.getCurrentPosition().getTilePosAsPoint().decrementX();
-		Move move = new Move(MoveType.MOVE, pointToMoveTo);
-		BattleState copyBattleState = battleStateModifier.applyMove(unit, move, battleState);
+		// setup
+		BattleState battleState = new BattleState(BATTLESTATE_SIZE, BATTLESTATE_SIZE);
+		Entity playerUnit = new Entity(EntityTypes.ARTIST, balancer1, false);
+		playerUnit.setPlayerUnit(true);
+		team1.add(playerUnit);
+		Entity enemyUnit = new Entity(EntityTypes.BLACK_CAT, balancer2, false);
+		enemyUnit.setPlayerUnit(false);
+		team2.add(enemyUnit);
+		battleState.placeUnitOnSpecificSpot(playerUnit, 0, 0);
+		battleState.placeUnitOnSpecificSpot(enemyUnit, 0, 1);
 
-		unit = copyBattleState.get(pointToMoveTo.x, pointToMoveTo.y).getUnit();
-		Move attackMove = new Move(MoveType.ATTACK, enemy.getCurrentPosition().getTilePosAsPoint());
-		copyBattleState = battleStateModifier.applyMove(unit, attackMove, copyBattleState);
+		// attack
+		Move attackMove = new Move(MoveType.ATTACK, enemyUnit.getCurrentPosition().getTilePosAsPoint());
+		BattleState copyBattleState = battleStateModifier.applyMove(playerUnit, attackMove, battleState);
 		TestUtil.resultsToFile(FILENAME_ATTACK, copyBattleState);
 		TestUtil.regressionTest(FILENAME_ATTACK, FILENAME_ATTACK_OLD);
 	}
-	
+
 	@Test
 	public void applyFireball() {
-		Entity unit = battleState.get(0, 0).getUnit();
-		Entity enemy = battleState.get(BATTLESTATE_SIZE - 1, 0).getUnit();
-		MyPoint pointToMoveTo = enemy.getCurrentPosition().getTilePosAsPoint().decrementX();
-		Move move = new Move(MoveType.MOVE, pointToMoveTo);
-		BattleState copyBattleState = battleStateModifier.applyMove(unit, move, battleState);
+		// setup
+		BattleState battleState = new BattleState(BATTLESTATE_SIZE, BATTLESTATE_SIZE);
+		Entity playerUnit = new Entity(EntityTypes.ARTIST, balancer1, false);
+		playerUnit.setPlayerUnit(true);
+		team1.add(playerUnit);
+		Entity enemyUnit = new Entity(EntityTypes.BLACK_CAT, balancer2, false);
+		enemyUnit.setPlayerUnit(false);
+		team2.add(enemyUnit);
+		battleState.placeUnitOnSpecificSpot(playerUnit, 0, 0);
+		battleState.placeUnitOnSpecificSpot(enemyUnit, 0, 4);
 
-		unit = copyBattleState.get(pointToMoveTo.x, pointToMoveTo.y).getUnit();
-		unit.setAbility(AbilitiesEnum.FIREBALL);
-		Move spellMove = new SpellMove(MoveType.SPELL, enemy.getCurrentPosition().getTilePosAsPoint(), unit.getAbility(), null);
-		copyBattleState = battleStateModifier.applyMove(unit, spellMove, copyBattleState);
+		// fireball
+		playerUnit.setAbility(AbilitiesEnum.FIREBALL);
+		Move spellMove = new SpellMove(MoveType.SPELL, enemyUnit.getCurrentPosition().getTilePosAsPoint(), playerUnit.getAbility(), null);
+		BattleState copyBattleState = battleStateModifier.applyMove(playerUnit, spellMove, battleState);
 		TestUtil.resultsToFile(FILENAME_FIREBALL, copyBattleState);
 		TestUtil.regressionTest(FILENAME_FIREBALL, FILENAME_FIREBALL_OLD);
+	}
+
+	@Test
+	public void applyTurnToSTone() {
+		// setup
+		BattleState battleState = new BattleState(BATTLESTATE_SIZE, BATTLESTATE_SIZE);
+		Entity playerUnit = new Entity(EntityTypes.ARTIST, balancer1, false);
+		playerUnit.setPlayerUnit(true);
+		team1.add(playerUnit);
+		Entity enemyUnit = new Entity(EntityTypes.BLACK_CAT, balancer2, false);
+		enemyUnit.setPlayerUnit(false);
+		team2.add(enemyUnit);
+		battleState.placeUnitOnSpecificSpot(playerUnit, 0, 0);
+		battleState.placeUnitOnSpecificSpot(enemyUnit, 0, 4);
+
+		// turn to stone
+		playerUnit.setAbility(AbilitiesEnum.TURN_TO_STONE);
+		Move spellMove = new SpellMove(MoveType.SPELL, enemyUnit.getCurrentPosition().getTilePosAsPoint(), playerUnit.getAbility(), null);
+		BattleState copyBattleState = battleStateModifier.applyMove(playerUnit, spellMove, battleState);
+		TestUtil.resultsToFile(FILENAME_TURN_TO_STONE, copyBattleState);
+		TestUtil.regressionTest(FILENAME_TURN_TO_STONE, FILENAME_TURN_TO_STONE_OLD);
+	}
+
+	@Test
+	public void applySwap() {
+		// setup
+		BattleState battleState = new BattleState(BATTLESTATE_SIZE, BATTLESTATE_SIZE);
+		Entity playerUnit = new Entity(EntityTypes.ARTIST, balancer1, false);
+		playerUnit.setPlayerUnit(true);
+		team1.add(playerUnit);
+		Entity enemyUnit = new Entity(EntityTypes.BLACK_CAT, balancer2, false);
+		enemyUnit.setPlayerUnit(false);
+		team2.add(enemyUnit);
+		battleState.placeUnitOnSpecificSpot(playerUnit, 0, 0);
+		battleState.placeUnitOnSpecificSpot(enemyUnit, 0, 4);
+
+		// swap
+		playerUnit.setAbility(AbilitiesEnum.SWAP);
+		Move spellMove = new SpellMove(MoveType.SPELL, enemyUnit.getCurrentPosition().getTilePosAsPoint(), playerUnit.getAbility(), null);
+		BattleState copyBattleState = battleStateModifier.applyMove(playerUnit, spellMove, battleState);
+		TestUtil.resultsToFile(FILENAME_SWAP, copyBattleState);
+		TestUtil.regressionTest(FILENAME_SWAP, FILENAME_SWAP_OLD);
 	}
 
 }

@@ -87,7 +87,6 @@ public class AITeamLeader implements UnitOwner {
 			stateWithNextMove = getNextBattleState();
 			sendMessageToBattleManager(MessageToBattleScreen.FINISHED_PROCESSING_TURN, battleManager.getActiveUnit());
 		}
-
 	}
 
 	@Override

@@ -95,6 +95,14 @@ public class Ability {
 		return targetLocation;
 	}
 
+	public int getDurationInTurns() {
+		return spellData.getDurationInTurns();
+	}
+
+	public void setDurationInTurns(int durationInTurns) {
+		spellData.setDurationInTurns(durationInTurns);
+	}
+
 	@Override
 	public String toString() {
 		return "ability name : " + spellData.getName();
