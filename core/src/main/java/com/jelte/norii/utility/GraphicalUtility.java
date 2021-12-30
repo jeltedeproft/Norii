@@ -7,7 +7,6 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 
 public class GraphicalUtility {
-	private static final String TAG = GraphicalUtility.class.getSimpleName();
 	private static ShapeRenderer debugRenderer = new ShapeRenderer();
 
 	public static void drawDebugLine(Vector2 start, Vector2 end, int lineWidth, Color color, Matrix4 projectionMatrix) {
@@ -31,5 +30,9 @@ public class GraphicalUtility {
 		debugRenderer.line(start, end);
 		debugRenderer.end();
 		Gdx.gl.glLineWidth(1);
+	}
+
+	private GraphicalUtility() {
+		// static class
 	}
 }

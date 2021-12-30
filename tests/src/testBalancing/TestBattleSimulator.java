@@ -25,7 +25,7 @@ import testUtilities.GdxTestRunner;
 @RunWith(GdxTestRunner.class)
 public class TestBattleSimulator {
 	private static final int NUMBER_OF_SIMULATIONS_PER_ROUND = 50;
-	private static final int NUMBER_OF_ADAPTATION_ROUNDS = 500;
+	private static final int NUMBER_OF_ADAPTATION_ROUNDS = 10;
 	private static final String FILENAME_END_STATS = "tests/balancer/endStats.txt";
 	private static final String FILENAME_BEGIN_STATS = "tests/balancer/beginStats.txt";
 	private static final String FILENAME_WIN_RATE = "tests/balancer/winRate.txt";

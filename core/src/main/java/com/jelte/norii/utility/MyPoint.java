@@ -1,6 +1,9 @@
 package com.jelte.norii.utility;
 
+import com.badlogic.gdx.Gdx;
+
 public class MyPoint implements Comparable<MyPoint> {
+	private static final String TAG = MyPoint.class.getSimpleName();
 	public int x;
 	public int y;
 
@@ -40,8 +43,35 @@ public class MyPoint implements Comparable<MyPoint> {
 		return "(" + x + "," + y + ")";
 	}
 
-	private long getCompareKey() {
-		return (getX() * getX()) + (getY() * getY());
+	public MyPoint randomize(int xLimit, int yLimit) {
+		x = Utility.random.nextInt(xLimit);
+		y = Utility.random.nextInt(yLimit);
+		return this;
+	}
+
+	public MyPoint randomChange() {
+		return randomChange(Utility.random.nextInt(4));
+	}
+
+	public MyPoint randomChange(int randomInt) {
+		switch (randomInt) {
+		case 0:
+			return incrementX();
+		case 1:
+			return incrementY();
+		case 2:
+			return decrementX();
+		case 3:
+			return decrementY();
+		default:
+			Gdx.app.log(TAG, "cant possible return any other number in this function");
+			return null;
+		}
+	}
+
+	public void set(int x, int y) {
+		this.x = x;
+		this.y = y;
 	}
 
 	public int getX() {

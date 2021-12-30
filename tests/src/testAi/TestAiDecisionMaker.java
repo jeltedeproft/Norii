@@ -7,9 +7,10 @@ import org.junit.runner.RunWith;
 import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.ai.AIDecisionMaker;
 import com.jelte.norii.battle.ApFileReader;
-import com.jelte.norii.battle.battleState.BattleState;
+import com.jelte.norii.battle.battlestate.BattleState;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityFileReader;
+import com.jelte.norii.entities.EntityTypes;
 import com.jelte.norii.entities.UnitOwner;
 import com.jelte.norii.magic.SpellFileReader;
 import com.jelte.norii.map.BattleMap;
@@ -52,18 +53,23 @@ public class TestAiDecisionMaker {
 			MyPathFinder.getInstance().preprocessMap();
 		}
 		System.out.println("preprocesing finished");
-		battleState = new BattleState(currentMap.getMapWidth(), currentMap.getMapHeight());
 		balancer1 = new SimulationPlayer(true, true);
 		balancer2 = new SimulationPlayer(false, false);
-		TestUtil.collectRandomUnits(team1, NUMBER_OF_UNITS_PER_TEAM, balancer1);
-		TestUtil.collectRandomUnits(team2, NUMBER_OF_UNITS_PER_TEAM, balancer2);
-		battleState.randomlyAddUnitsToBattleState(team1);
-		battleState.randomlyAddUnitsToBattleState(team2);
-		decisionMaker.resetAI(battleState);
 	}
 
 	@Test
 	public void testOneRoundOfAiThinking() {
+		// setup
+		battleState = new BattleState(currentMap.getMapWidth(), currentMap.getMapHeight());
+		Entity playerUnit = new Entity(EntityTypes.ARTIST, balancer1, false);
+		team1.add(playerUnit);
+		Entity enemyUnit = new Entity(EntityTypes.BLACK_CAT, balancer2, false);
+		team2.add(enemyUnit);
+		battleState.placeUnitOnSpecificSpot(playerUnit, 0, 0);
+		battleState.placeUnitOnSpecificSpot(enemyUnit, 0, 4);
+		decisionMaker.resetAI(battleState);
+
+		// test
 		decisionMaker.processAi();
 		TestUtil.resultsToFile(FILENAME_ONE_ROUND, decisionMaker);
 		TestUtil.regressionTest(FILENAME_ONE_ROUND, FILENAME_ONE_ROUND_OLD);

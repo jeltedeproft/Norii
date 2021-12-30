@@ -6,11 +6,11 @@ import org.junit.runner.RunWith;
 
 import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.battle.ApFileReader;
-import com.jelte.norii.battle.battleState.BattleState;
-import com.jelte.norii.battle.battleState.BattleStateModifier;
-import com.jelte.norii.battle.battleState.Move;
-import com.jelte.norii.battle.battleState.MoveType;
-import com.jelte.norii.battle.battleState.SpellMove;
+import com.jelte.norii.battle.battlestate.BattleState;
+import com.jelte.norii.battle.battlestate.BattleStateModifier;
+import com.jelte.norii.battle.battlestate.Move;
+import com.jelte.norii.battle.battlestate.MoveType;
+import com.jelte.norii.battle.battlestate.SpellMove;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityFileReader;
 import com.jelte.norii.entities.EntityTypes;
@@ -66,10 +66,8 @@ public class TestAiBattleStateModifier {
 		// setup
 		BattleState battleState = new BattleState(BATTLESTATE_SIZE, BATTLESTATE_SIZE);
 		Entity playerUnit = new Entity(EntityTypes.ARTIST, balancer1, false);
-		playerUnit.setPlayerUnit(true);
 		team1.add(playerUnit);
 		Entity enemyUnit = new Entity(EntityTypes.BLACK_CAT, balancer2, false);
-		enemyUnit.setPlayerUnit(false);
 		team2.add(enemyUnit);
 		battleState.placeUnitOnSpecificSpot(playerUnit, 0, 0);
 		battleState.placeUnitOnSpecificSpot(enemyUnit, BATTLESTATE_SIZE - 1, 0);
@@ -86,10 +84,8 @@ public class TestAiBattleStateModifier {
 		// setup
 		BattleState battleState = new BattleState(BATTLESTATE_SIZE, BATTLESTATE_SIZE);
 		Entity playerUnit = new Entity(EntityTypes.ARTIST, balancer1, false);
-		playerUnit.setPlayerUnit(true);
 		team1.add(playerUnit);
 		Entity enemyUnit = new Entity(EntityTypes.BLACK_CAT, balancer2, false);
-		enemyUnit.setPlayerUnit(false);
 		team2.add(enemyUnit);
 		battleState.placeUnitOnSpecificSpot(playerUnit, 0, 0);
 		battleState.placeUnitOnSpecificSpot(enemyUnit, 0, 1);
@@ -106,10 +102,8 @@ public class TestAiBattleStateModifier {
 		// setup
 		BattleState battleState = new BattleState(BATTLESTATE_SIZE, BATTLESTATE_SIZE);
 		Entity playerUnit = new Entity(EntityTypes.ARTIST, balancer1, false);
-		playerUnit.setPlayerUnit(true);
 		team1.add(playerUnit);
 		Entity enemyUnit = new Entity(EntityTypes.BLACK_CAT, balancer2, false);
-		enemyUnit.setPlayerUnit(false);
 		team2.add(enemyUnit);
 		battleState.placeUnitOnSpecificSpot(playerUnit, 0, 0);
 		battleState.placeUnitOnSpecificSpot(enemyUnit, 0, 4);
@@ -127,10 +121,8 @@ public class TestAiBattleStateModifier {
 		// setup
 		BattleState battleState = new BattleState(BATTLESTATE_SIZE, BATTLESTATE_SIZE);
 		Entity playerUnit = new Entity(EntityTypes.ARTIST, balancer1, false);
-		playerUnit.setPlayerUnit(true);
 		team1.add(playerUnit);
 		Entity enemyUnit = new Entity(EntityTypes.BLACK_CAT, balancer2, false);
-		enemyUnit.setPlayerUnit(false);
 		team2.add(enemyUnit);
 		battleState.placeUnitOnSpecificSpot(playerUnit, 0, 0);
 		battleState.placeUnitOnSpecificSpot(enemyUnit, 0, 4);
@@ -148,10 +140,8 @@ public class TestAiBattleStateModifier {
 		// setup
 		BattleState battleState = new BattleState(BATTLESTATE_SIZE, BATTLESTATE_SIZE);
 		Entity playerUnit = new Entity(EntityTypes.ARTIST, balancer1, false);
-		playerUnit.setPlayerUnit(true);
 		team1.add(playerUnit);
 		Entity enemyUnit = new Entity(EntityTypes.BLACK_CAT, balancer2, false);
-		enemyUnit.setPlayerUnit(false);
 		team2.add(enemyUnit);
 		battleState.placeUnitOnSpecificSpot(playerUnit, 0, 0);
 		battleState.placeUnitOnSpecificSpot(enemyUnit, 0, 4);

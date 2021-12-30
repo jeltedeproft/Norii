@@ -11,7 +11,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class ParallaxUtils {
 
 	public enum WH {
-		width, height
+		WIDTH, HEIGHT
 	}
 
 	/**
@@ -23,21 +23,8 @@ public class ParallaxUtils {
 	 * @return if oneDimen is width then height else width
 	 */
 	public static float calculateOtherDimension(WH wh, float oneDimen, TextureRegion region) {
-		float result = 0;
-		switch (wh) {
-		// height_specified
-		case width:
-			result = region.getRegionHeight() * (oneDimen / region.getRegionWidth());
-			break;
-		// width_specified
-		case height:
-			result = region.getRegionWidth() * (oneDimen / region.getRegionHeight());
-			break;
-
-		}
-
-		return result;
-
+		return wh == WH.WIDTH	? region.getRegionHeight() * (oneDimen / region.getRegionWidth())
+								: region.getRegionWidth() * (oneDimen / region.getRegionHeight());
 	}
 
 	/**
@@ -50,19 +37,8 @@ public class ParallaxUtils {
 	 * @return if oneDimen is width then height else width
 	 */
 	public static float calculateOtherDimension(WH wh, float oneDimen, float originalWidth, float originalHeight) {
-		float result = 0;
-		switch (wh) {
-		case width:
-			result = originalHeight * (oneDimen / originalWidth);
-			break;
-		case height:
-			result = originalWidth * (oneDimen / originalHeight);
-			break;
-
-		}
-
-		return result;
-
+		return wh == WH.WIDTH	? originalHeight * (oneDimen / originalWidth)
+								: originalWidth * (oneDimen / originalHeight);
 	}
 
 }

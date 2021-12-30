@@ -9,12 +9,10 @@ import com.jelte.norii.entities.EntityData;
 import com.jelte.norii.entities.EntityFileReader;
 
 public class ProfileManager {
-	private static final String TAG = ProfileManager.class.getSimpleName();
 	private static ProfileManager profileManager;
 	private static final String PROPERTIES = "properties";
 	private Preferences preferences;
 	private final Json json;
-	private boolean isInitialised = false;
 
 	private ProfileManager() {
 		preferences = Gdx.app.getPreferences(PROPERTIES);
@@ -28,20 +26,20 @@ public class ProfileManager {
 		return profileManager;
 	}
 
+	@SuppressWarnings("unchecked")
 	public Array<String> getTeamHeroes() {
 		String serializedHeroes = preferences.getString(PropertiesEnum.TEAM_HEROES.getPropertyName());
-		Array<String> deserializedHeroes = json.fromJson(Array.class, serializedHeroes);
-		return deserializedHeroes;
+		return json.fromJson(Array.class, serializedHeroes);
 	}
 
 	public void setTeamHeroes(Array<String> heroes) {
 		preferences.putString(PropertiesEnum.TEAM_HEROES.getPropertyName(), json.toJson(heroes));
 	}
 
+	@SuppressWarnings("unchecked")
 	public Array<String> getAvailableHeroes() {
 		String serializedHeroes = preferences.getString(PropertiesEnum.AVAILABLE_HEROES.getPropertyName());
-		Array<String> deserializedHeroes = json.fromJson(Array.class, serializedHeroes);
-		return deserializedHeroes;
+		return json.fromJson(Array.class, serializedHeroes);
 	}
 
 	public void setAvailableHeroes(Array<String> heroes) {

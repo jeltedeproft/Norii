@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.jelte.norii.utility.Utility;
+
 //keep this in sync with JSON files. ORDER IS IMPORTANT
 public enum EntityTypes {
 	COMMANDER("Commander"), // 0
@@ -51,7 +53,6 @@ public enum EntityTypes {
 
 	private static final List<EntityTypes> TYPES = Collections.unmodifiableList(Arrays.asList(EntityTypes.values()));
 	private static final int SIZE = TYPES.size();
-	private static final java.util.Random RANDOM = new java.util.Random();
 
 	private String entityName;
 
@@ -64,6 +65,6 @@ public enum EntityTypes {
 	}
 
 	public static EntityTypes randomEntityType() {
-		return TYPES.get(RANDOM.nextInt(SIZE));
+		return TYPES.get(Utility.random.nextInt(SIZE));
 	}
 }

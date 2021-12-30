@@ -1,12 +1,23 @@
-[{
-        "id": 0,
-        "name": "TeamDesert",
-        "units": ["Shaman", "Beast Ogre", "Icarus", "Commander", "Black Slime Dark Blue Eyes", "Black Slime Green Eyes", "Black Dog", "Black Slime Pink Eyes"]
-    },
-
-    {
-        "id": 1,
-        "name": "TeamTutorial",
-        "units": ["Black Slime Red Eyes"]
-    }
+[
+	{
+		"id": 0,
+		"name": "TeamDesert",
+		"units": [
+			"Shaman",
+			"Beast Ogre",
+			"Icarus",
+			"Commander",
+			"Black Slime Dark Blue Eyes",
+			"Black Slime Green Eyes",
+			"Black Dog",
+			"Black Slime Pink Eyes"
+		]
+	},
+	{
+		"id": 1,
+		"name": "TeamTutorial",
+		"units": [
+			"Black Slime Red Eyes"
+		]
+	}
 ]

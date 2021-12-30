@@ -13,7 +13,7 @@ import com.jelte.norii.ai.UnitTurn;
 import com.jelte.norii.battle.ApFileReader;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.battle.MessageToBattleScreen;
-import com.jelte.norii.battle.battleState.BattleState;
+import com.jelte.norii.battle.battlestate.BattleState;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityTypes;
 import com.jelte.norii.entities.Player;
@@ -23,9 +23,6 @@ import com.jelte.norii.multiplayer.NetworkMessage.MessageType;
 import com.jelte.norii.utility.TiledMapPosition;
 
 public class OnlineEnemy implements UnitOwner {
-
-	private static final String TAG = OnlineEnemy.class.getSimpleName();
-
 	private List<Entity> team;
 	private BattleManager battleManager;
 	private int ap;
@@ -54,7 +51,6 @@ public class OnlineEnemy implements UnitOwner {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public void synchronizeMultiplayerUnitsWithLocal(HashMap<String, String> teamWithIdMap) {
 		List<String> synchronizedUnitIds = new ArrayList<>();
 		for (final Entry<String, String> idWithName : teamWithIdMap.entrySet()) {
@@ -75,7 +71,6 @@ public class OnlineEnemy implements UnitOwner {
 			for (final EntityTypes entityType : EntityTypes.values()) {
 				if (name.equals(entityType.getEntityName())) {
 					final Entity entity = new Entity(entityType, this, true);
-					entity.setPlayerUnit(false);
 					team.add(entity);
 				}
 			}
@@ -93,7 +88,6 @@ public class OnlineEnemy implements UnitOwner {
 		for (final Entity unit : team) {
 			if ((unit.getEntityID() == entityID) && entityType.equals(unit.getEntityType()) && !unit.isInBattle()) {
 				unit.setCurrentPosition(spawnPosition);
-				unit.setPlayerUnit(false);
 				unit.getVisualComponent().spawn(spawnPosition);
 				battleManager.addUnit(unit);
 				battleManager.sendMessageToBattleScreen(MessageToBattleScreen.ADD_UNIT_UI, unit);
@@ -164,6 +158,26 @@ public class OnlineEnemy implements UnitOwner {
 
 	@Override
 	public boolean isPlayer() {
+		return false;
+	}
+
+	@Override
+	public boolean isAI() {
+		return false;
+	}
+
+	@Override
+	public boolean isOnlinePlayer() {
+		return true;
+	}
+
+	@Override
+	public boolean isSimulation() {
+		return false;
+	}
+
+	@Override
+	public boolean isDummy() {
 		return false;
 	}
 
@@ -240,16 +254,6 @@ public class OnlineEnemy implements UnitOwner {
 	}
 
 	@Override
-	public boolean isAI() {
-		return false;
-	}
-
-	@Override
-	public boolean isOnlinePlayer() {
-		return true;
-	}
-
-	@Override
 	public int getGameID() {
 		return gameID;
 	}
@@ -296,7 +300,7 @@ public class OnlineEnemy implements UnitOwner {
 
 	@Override
 	public UnitTurn getProcessingResult() {
-		// TODO Auto-generated method stub
+		// not needed
 		return null;
 	}
 }

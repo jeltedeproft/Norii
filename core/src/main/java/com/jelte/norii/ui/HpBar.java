@@ -26,12 +26,8 @@ public class HpBar {
 
 		final Skin statusUISkin = AssetManagerUtility.getSkin();
 
-		ProgressBarStyle progressBarStyle;
-		if (entity.isPlayerUnit()) {
-			progressBarStyle = statusUISkin.get("blue-hp-bar", ProgressBarStyle.class);
-		} else {
-			progressBarStyle = statusUISkin.get("red-hp-bar", ProgressBarStyle.class);
-		}
+		ProgressBarStyle progressBarStyle = entity.isPlayerUnit()	? statusUISkin.get("blue-hp-bar", ProgressBarStyle.class)
+																	: statusUISkin.get("red-hp-bar", ProgressBarStyle.class);
 
 		healthBar = new ProgressBar(MIN_VALUE, MAX_VALUE, STEP_SIZE, false, progressBarStyle);
 		healthBar.setValue(MAX_VALUE);

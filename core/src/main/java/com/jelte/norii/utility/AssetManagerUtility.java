@@ -147,17 +147,29 @@ public class AssetManagerUtility implements Disposable {
 	}
 
 	public static Sprite getSprite(String spriteName) {
-		return getTextureAtlas(SPRITES_ATLAS_PATH).createSprite(spriteName);
+		TextureAtlas atlas = getTextureAtlas(SPRITES_ATLAS_PATH);
+		if (atlas != null) {
+			return atlas.createSprite(spriteName);
+		} else {
+			Gdx.app.debug(TAG, "can't create sprite, texture atlas is null: " + SPRITES_ATLAS_PATH);
+			return null;
+		}
 	}
 
 	public static Animation<TextureRegion> getAnimation(String animationName, float animationSpeed, PlayMode playMode) {
-		final Array<TextureAtlas.AtlasRegion> regions = getTextureAtlas(SPRITES_ATLAS_PATH).findRegions(animationName);
+		TextureAtlas atlas = getTextureAtlas(SPRITES_ATLAS_PATH);
+		if (atlas == null) {
+			Gdx.app.debug(TAG, "can't get animation, texture atlas is null: " + SPRITES_ATLAS_PATH);
+			return null;
+		}
+		final Array<TextureAtlas.AtlasRegion> regions = atlas.findRegions(animationName);
 
 		if ((regions == null) || (regions.size == 0)) {
+			Gdx.app.debug(TAG, "can't get animation, no region found in atlas: " + animationName);
 			return null;
-		} else {
-			return new Animation<>(animationSpeed, regions, playMode);
 		}
+
+		return new Animation<>(animationSpeed, regions, playMode);
 	}
 
 	public static float loadCompleted() {

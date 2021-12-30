@@ -1,4 +1,4 @@
-package com.jelte.norii.battle.battleState;
+package com.jelte.norii.battle.battlestate;
 
 import com.jelte.norii.entities.Entity;
 

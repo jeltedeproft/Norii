@@ -70,16 +70,16 @@ public class MultiplayerScreen extends GameScreen {
 		final TextureAtlas atlas = AssetManagerUtility.getTextureAtlas(AssetManagerUtility.SPRITES_ATLAS_PATH);
 
 		final TextureRegion backTrees = atlas.findRegion("background-back-trees");
-		final TextureRegionParallaxLayer backTreesLayer = new TextureRegionParallaxLayer(backTrees, worldHeight, new Vector2(.3f, .3f), WH.height);
+		final TextureRegionParallaxLayer backTreesLayer = new TextureRegionParallaxLayer(backTrees, worldHeight, new Vector2(.3f, .3f), WH.HEIGHT);
 
 		final TextureRegion lights = atlas.findRegion("background-light");
-		final TextureRegionParallaxLayer lightsLayer = new TextureRegionParallaxLayer(lights, worldHeight, new Vector2(.6f, .6f), WH.height);
+		final TextureRegionParallaxLayer lightsLayer = new TextureRegionParallaxLayer(lights, worldHeight, new Vector2(.6f, .6f), WH.HEIGHT);
 
 		final TextureRegion middleTrees = atlas.findRegion("background-middle-trees");
-		final TextureRegionParallaxLayer middleTreesLayer = new TextureRegionParallaxLayer(middleTrees, worldHeight, new Vector2(.75f, .75f), WH.height);
+		final TextureRegionParallaxLayer middleTreesLayer = new TextureRegionParallaxLayer(middleTrees, worldHeight, new Vector2(.75f, .75f), WH.HEIGHT);
 
 		final TextureRegion frontTrees = atlas.findRegion("foreground");
-		final TextureRegionParallaxLayer frontTreesLayer = new TextureRegionParallaxLayer(frontTrees, worldHeight, new Vector2(.6f, .6f), WH.height);
+		final TextureRegionParallaxLayer frontTreesLayer = new TextureRegionParallaxLayer(frontTrees, worldHeight, new Vector2(.6f, .6f), WH.HEIGHT);
 
 		parallaxBackground = new ParallaxBackground();
 		parallaxBackground.addLayers(backTreesLayer, lightsLayer, middleTreesLayer, frontTreesLayer);
@@ -136,7 +136,7 @@ public class MultiplayerScreen extends GameScreen {
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		updatebg(delta);
+		updatebg();
 		stage.act(delta);
 		stage.draw();
 		checkForStartGame();
@@ -147,21 +147,16 @@ public class MultiplayerScreen extends GameScreen {
 	private void checkForStartGame() {
 		if (ServerCommunicator.getInstance().isNextMessageOfType(MessageType.BATTLE)) {
 			NetworkMessage message = ServerCommunicator.getInstance().getOldestMessageFromServer();
-			UnitOwner enemyTeamLeader;
-			if ("true".equals(message.getPlayerStart())) {
-				enemyTeamLeader = new OnlineEnemy(message.getFighter2(), message.getTeam2(), false, message.getGameID());
-			} else {
-				enemyTeamLeader = new OnlineEnemy(message.getFighter1(), message.getTeam1(), true, message.getGameID());
-			}
+			UnitOwner enemyTeamLeader = "true".equals(message.getPlayerStart()) ? new OnlineEnemy(message.getFighter2(), message.getTeam2(), false, message.getGameID())
+																				: new OnlineEnemy(message.getFighter1(), message.getTeam1(), true, message.getGameID());
 			Player.getInstance().setGameID(message.getGameID());
-
 			MapType mapType = MapType.valueOf(message.getMap());
 			AssetManagerUtility.loadMapAsset(mapType.toString());
 			ScreenManager.getInstance().showScreen(ScreenEnum.BATTLE, enemyTeamLeader, mapType);// give team and map
 		}
 	}
 
-	public void updatebg(final float delta) {
+	public void updatebg() {
 		backgroundbatch.begin();
 		parallaxBackground.draw(parallaxCamera, backgroundbatch);
 		backgroundbatch.end();

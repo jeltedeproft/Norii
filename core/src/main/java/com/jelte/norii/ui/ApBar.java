@@ -1,8 +1,5 @@
 package com.jelte.norii.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
@@ -15,7 +12,6 @@ public class ApBar {
 	private int oldAp;
 	private final HorizontalGroup allAP;
 	private final Table table;
-	private final List<Button> apButtons;
 
 	private final float tilePixelWidth;
 	private final float tilePixelHeight;
@@ -24,7 +20,6 @@ public class ApBar {
 		tilePixelWidth = Hud.UI_VIEWPORT_WIDTH / mapWidth;
 		tilePixelHeight = Hud.UI_VIEWPORT_HEIGHT / mapHeight;
 
-		apButtons = new ArrayList<>();
 		allAP = new HorizontalGroup();
 		table = new Table();
 		table.setBackground(AssetManagerUtility.getSkin().getDrawable("window-noborder"));
@@ -33,7 +28,7 @@ public class ApBar {
 		table.setPosition(0, tilePixelHeight * (mapHeight - 2));
 		final Skin statusUISkin = AssetManagerUtility.getSkin();
 
-		for (int i = 0; i < ApFileReader.MAX_AP; i++) {
+		for (int i = 0; i < ApFileReader.maxAp; i++) {
 			final Button button = new Button(statusUISkin, "ap");
 			allAP.addActor(button);
 		}

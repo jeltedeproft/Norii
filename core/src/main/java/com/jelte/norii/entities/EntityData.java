@@ -16,10 +16,8 @@ public class EntityData {
 	private String ability;
 	private String spellExplanation;
 
-	private Entity linkedEntity;
-
 	public EntityData() {
-
+		// empty constructor
 	}
 
 	public int getID() {
@@ -116,10 +114,6 @@ public class EntityData {
 
 	public void setAbility(final String ability) {
 		this.ability = ability;
-	}
-
-	public void setEntity(Entity entity) {
-		this.linkedEntity = entity;
 	}
 
 	public String getSpellExplanation() {

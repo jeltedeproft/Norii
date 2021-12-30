@@ -12,8 +12,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.badlogic.gdx.utils.Array;
-import com.jelte.norii.battle.battleState.BattleState;
-import com.jelte.norii.battle.battleState.BattleStateGridHelper;
+import com.jelte.norii.battle.battlestate.BattleState;
+import com.jelte.norii.battle.battlestate.BattleStateGridHelper;
 import com.jelte.norii.magic.AbilitiesEnum;
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.magic.SpellFileReader;

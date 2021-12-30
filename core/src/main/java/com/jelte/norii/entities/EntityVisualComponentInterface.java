@@ -11,13 +11,9 @@ import com.jelte.norii.utility.TiledMapPosition;
 
 public interface EntityVisualComponentInterface {
 
+	public void initiateInBattle(TiledMapPosition pos);
+
 	public void update(final float delta);
-
-	public void dispose();
-
-	public void setAnimationType(EntityAnimationType type);
-
-	public void removeUnit();
 
 	public void move(List<GridCell> path);
 
@@ -27,13 +23,17 @@ public interface EntityVisualComponentInterface {
 
 	public void spawn(TiledMapPosition tiledMapPosition);
 
+	public void removeUnit();
+
+	public void dispose();
+
+	public void setAnimationType(EntityAnimationType type);
+
 	public void setActive(boolean b);
 
 	public void setDirection(Direction up);
 
 	public void setInDeploymentPhase(boolean b);
-
-	public void initiateInBattle(TiledMapPosition pos);
 
 	public void changeAnimation(EntityAnimation entityAnimation);
 

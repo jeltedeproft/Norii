@@ -1,16 +1,16 @@
 package testBalancing.helpClasses;
 
 import com.badlogic.gdx.utils.Array;
+import com.jelte.norii.ai.movegenerator.MoveGenerator;
+import com.jelte.norii.ai.movegenerator.RandomMoveGenerator;
 import com.jelte.norii.battle.ApFileReader;
-import com.jelte.norii.battle.battleState.BattleState;
-import com.jelte.norii.battle.battleState.BattleStateModifier;
-import com.jelte.norii.battle.battleState.Move;
+import com.jelte.norii.battle.battlestate.BattleState;
+import com.jelte.norii.battle.battlestate.BattleStateModifier;
+import com.jelte.norii.battle.battlestate.Move;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.UnitOwner;
 import com.jelte.norii.utility.Utility;
 
-import movegenerator.MoveGenerator;
-import movegenerator.RandomMoveGenerator;
 import testUtilities.TestUtil;
 
 public class SimulationBattle {
@@ -47,18 +47,8 @@ public class SimulationBattle {
 		TestUtil.collectRandomUnits(team1, NUMBER_OF_UNITS_PER_TEAM, balancer1);
 		TestUtil.collectRandomUnits(team2, NUMBER_OF_UNITS_PER_TEAM, balancer2);
 
-		configureEntities();
 		battleState.randomlyAddUnitsToBattleState(team1);
 		battleState.randomlyAddUnitsToBattleState(team2);
-	}
-
-	private void configureEntities() {
-		for (Entity unit : team1) {
-			unit.setPlayerUnit(true);
-		}
-		for (Entity unit : team2) {
-			unit.setPlayerUnit(false);
-		}
 	}
 
 	public boolean hasEnded() {

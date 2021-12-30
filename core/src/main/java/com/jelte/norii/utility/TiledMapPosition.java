@@ -31,8 +31,12 @@ public class TiledMapPosition {
 		return ((pos.tileCoordinates.x == tileCoordinates.x) && (pos.tileCoordinates.y == tileCoordinates.y));
 	}
 
-	public boolean isTileEqualTo(MyPoint MyPoint) {
-		return ((MyPoint.x == tileCoordinates.x) && (MyPoint.y == tileCoordinates.y));
+	public boolean isTileEqualTo(MyPoint myPoint) {
+		return ((myPoint.x == tileCoordinates.x) && (myPoint.y == tileCoordinates.y));
+	}
+
+	public boolean isTileEqualTo(int x, int y) {
+		return ((x == tileCoordinates.x) && (y == tileCoordinates.y));
 	}
 
 	public int getDistance(TiledMapPosition pos) {
@@ -52,11 +56,11 @@ public class TiledMapPosition {
 	}
 
 	public float getRealTiledX() {
-		return tileCoordinates.x * Map.TILE_WIDTH;
+		return (float) tileCoordinates.x * Map.TILE_WIDTH;
 	}
 
 	public float getRealTiledY() {
-		return tileCoordinates.y * Map.TILE_HEIGHT;
+		return (float) tileCoordinates.y * Map.TILE_HEIGHT;
 	}
 
 	public int getTileX() {

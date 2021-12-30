@@ -1,7 +1,7 @@
 package com.jelte.norii.ai;
 
 import com.badlogic.gdx.utils.Array;
-import com.jelte.norii.battle.battleState.Move;
+import com.jelte.norii.battle.battlestate.Move;
 
 public class UnitTurn {
 	private int entityID;

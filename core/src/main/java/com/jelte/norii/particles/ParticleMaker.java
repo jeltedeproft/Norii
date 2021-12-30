@@ -136,7 +136,7 @@ public class ParticleMaker {
 	}
 
 	public static void deactivateParticle(final Particle particle) {
-		if(particle != null) {
+		if (particle != null) {
 			particlesChanged = true;
 			particle.deactivate();
 		}

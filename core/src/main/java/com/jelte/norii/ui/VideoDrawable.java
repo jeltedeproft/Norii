@@ -11,7 +11,7 @@ import com.badlogic.gdx.video.VideoPlayer;
 import com.badlogic.gdx.video.VideoPlayerCreator;
 
 public class VideoDrawable extends BaseDrawable implements Disposable {
-	public VideoPlayer videoPlayer;
+	private VideoPlayer videoPlayer;
 
 	public VideoDrawable(FileHandle file) {
 		videoPlayer = VideoPlayerCreator.createVideoPlayer();

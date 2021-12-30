@@ -13,19 +13,19 @@ public class LoginWidget {
 	private static final String CREATE = "Create Account";
 	private static final String TITLE = "Log In";
 	private static final String LOGIN = "Log In";
-	
+
 	private Window window;
 	private Table mainTable;
-	
+
 	private Label usernameLabel;
 	private Label passwordLabel;
 	private Label createAccountLabel;
-	
+
 	private TextField usernameField;
 	private TextField passwordField;
-	
+
 	private TextButton loginTextButton;
-	
+
 	public LoginWidget() {
 		initWidgets();
 		fillWindow();
@@ -39,9 +39,9 @@ public class LoginWidget {
 		createAccountLabel = new Label(CREATE, AssetManagerUtility.getSkin());
 		usernameField = new TextField("", AssetManagerUtility.getSkin());
 		passwordField = new TextField("", AssetManagerUtility.getSkin());
-		loginTextButton = new TextButton(LOGIN,AssetManagerUtility.getSkin());
+		loginTextButton = new TextButton(LOGIN, AssetManagerUtility.getSkin());
 	}
-	
+
 	private void fillWindow() {
 		mainTable.add(usernameLabel);
 		mainTable.add(usernameField);
@@ -54,7 +54,7 @@ public class LoginWidget {
 		mainTable.add(createAccountLabel);
 		window.add(mainTable);
 	}
-	
+
 	public Window getWindow() {
 		return window;
 	}
@@ -62,11 +62,11 @@ public class LoginWidget {
 	public TextButton getLoginTextButton() {
 		return loginTextButton;
 	}
-	
+
 	public String getUsername() {
 		return usernameField.getMessageText();
 	}
-	
+
 	public String getPassword() {
 		return passwordField.getMessageText();
 	}

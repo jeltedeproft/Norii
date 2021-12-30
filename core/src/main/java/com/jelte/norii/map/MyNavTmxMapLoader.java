@@ -29,8 +29,7 @@ public class MyNavTmxMapLoader extends TmxMapLoader {
 		this(new InternalFileHandleResolver(), navigationLayerName, navigationProperty, navigationClosedValue);
 	}
 
-	public MyNavTmxMapLoader(FileHandleResolver handler, String navigationLayerName, String navigationProperty,
-			String navigationClosedValue) {
+	public MyNavTmxMapLoader(FileHandleResolver handler, String navigationLayerName, String navigationProperty, String navigationClosedValue) {
 		super(handler);
 		this.navigationLayerName = navigationLayerName;
 		this.navigationProperty = navigationProperty;

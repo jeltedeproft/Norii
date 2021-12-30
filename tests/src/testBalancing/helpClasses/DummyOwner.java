@@ -8,7 +8,7 @@ import com.jelte.norii.ai.EnemyType;
 import com.jelte.norii.ai.UnitTurn;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.battle.MessageToBattleScreen;
-import com.jelte.norii.battle.battleState.BattleState;
+import com.jelte.norii.battle.battlestate.BattleState;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityTypes;
 import com.jelte.norii.entities.UnitOwner;

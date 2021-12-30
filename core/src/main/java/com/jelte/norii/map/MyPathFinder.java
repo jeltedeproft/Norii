@@ -14,12 +14,11 @@ import org.xguzm.pathfinding.grid.finders.AStarGridFinder;
 import org.xguzm.pathfinding.grid.finders.GridFinderOptions;
 
 import com.badlogic.gdx.Gdx;
+import com.jelte.norii.ai.movegenerator.AbilityTargetMoveGenerator;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.utility.MyPoint;
 import com.jelte.norii.utility.TiledMapPosition;
 import com.jelte.norii.utility.Utility;
-
-import movegenerator.AbilityTargetMoveGenerator;
 
 public class MyPathFinder {
 	private NavigationGridGraph<GridCell> navGrid;
@@ -28,6 +27,7 @@ public class MyPathFinder {
 	private Map linkedMap;
 	private Long oldTime = System.currentTimeMillis();
 	private HashMap<MyPoint, HashMap<MyPoint, List<GridCell>>> precalculatedPaths;
+	private HashMap<MyPoint, HashMap<MyPoint, Boolean>> precalculatedLineOfSightsWithNonBlockableUnits;
 	private int preprocessI = 0;
 	private int preprocessJ = 0;
 	private boolean preprocessingFinished = false;
@@ -41,6 +41,7 @@ public class MyPathFinder {
 		gridFinderOptions.allowDiagonal = false;
 		aStarGridFinder = new AStarGridFinder<>(GridCell.class, gridFinderOptions);
 		precalculatedPaths = new HashMap<>();
+		precalculatedLineOfSightsWithNonBlockableUnits = new HashMap<>();
 	}
 
 	public void preprocessMap() {
@@ -48,6 +49,7 @@ public class MyPathFinder {
 			if (preprocessJ < linkedMap.getMapHeight()) {
 				final MyPoint point = new MyPoint(preprocessI, preprocessJ);
 				precalculatedPaths.put(point, calculatePathsToEveryOtherCell(point));
+				precalculatedLineOfSightsWithNonBlockableUnits.put(point, calculateLineOfSightWithoutBlocksToEveryOtherCell(point));
 				preprocessJ++;
 			} else {
 				preprocessJ = 0;
@@ -75,6 +77,22 @@ public class MyPathFinder {
 		return pathsToEveryOtherCell;
 	}
 
+	private HashMap<MyPoint, Boolean> calculateLineOfSightWithoutBlocksToEveryOtherCell(MyPoint point) {
+		final HashMap<MyPoint, Boolean> lineOfSightEveryOtherCell = new HashMap<>();
+		for (int i = 0; i < linkedMap.getMapWidth(); i++) {
+			for (int j = 0; j < linkedMap.getMapHeight(); j++) {
+				final MyPoint end = new MyPoint(i, j);
+				final GridCell unitCell = navGrid.getCell(point.x, point.y);
+				final GridCell targetCell = navGrid.getCell(end.x, end.y);
+				final NavigationGridGraphNode node = unitCell;
+				final NavigationGridGraphNode neigh = targetCell;
+				final boolean isLineOfSight = calculateLineOfSight(null, false, node, neigh);
+				lineOfSightEveryOtherCell.put(end, isLineOfSight);
+			}
+		}
+		return lineOfSightEveryOtherCell;
+	}
+
 	// PATH FINDING
 	public boolean canUnitWalkTo(Entity unit, GridCell cell) {
 		final GridCell center = navGrid.getCell(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY());
@@ -94,12 +112,8 @@ public class MyPathFinder {
 	}
 
 	public TiledMapPosition getClosestMoveSpotNextToUnit(Entity mover, Entity target) {
-		final int startX = mover.getCurrentPosition().getTileX();
-		final int startY = mover.getCurrentPosition().getTileY();
-		final int endX = target.getCurrentPosition().getTileX();
-		final int endY = target.getCurrentPosition().getTileY();
-		final MyPoint start = new MyPoint(startX, startY);
-		final MyPoint end = new MyPoint(endX, endY);
+		final MyPoint start = new MyPoint(mover.getCurrentPosition().getTileX(), mover.getCurrentPosition().getTileY());
+		final MyPoint end = new MyPoint(target.getCurrentPosition().getTileX(), target.getCurrentPosition().getTileY());
 		final List<GridCell> path = precalculatedPaths.get(start).get(end);
 		for (final GridCell cell : path) {
 			if (isNextTo(cell, target.getCurrentPosition())) {
@@ -110,12 +124,8 @@ public class MyPathFinder {
 	}
 
 	public List<GridCell> getPathFromUnitToUnit(Entity mover, Entity target) {
-		final int startX = mover.getCurrentPosition().getTileX();
-		final int startY = mover.getCurrentPosition().getTileY();
-		final int endX = target.getCurrentPosition().getTileX();
-		final int endY = target.getCurrentPosition().getTileY();
-		final MyPoint start = new MyPoint(startX, startY);
-		final MyPoint end = new MyPoint(endX, endY);
+		final MyPoint start = new MyPoint(mover.getCurrentPosition().getTileX(), mover.getCurrentPosition().getTileY());
+		final MyPoint end = new MyPoint(target.getCurrentPosition().getTileX(), target.getCurrentPosition().getTileY());
 		return removeEndPoint(precalculatedPaths.get(start).get(end));
 	}
 
@@ -210,6 +220,18 @@ public class MyPathFinder {
 		return lineOfSight(unitCell, targetCell, positionsUnits, unitsAreBlocking);
 	}
 
+	public boolean lineOfSight(TiledMapPosition from, TiledMapPosition to) {
+		final GridCell unitCell = navGrid.getCell(from.getTileX(), from.getTileY());
+		final GridCell targetCell = navGrid.getCell(to.getTileX(), to.getTileY());
+		return lineOfSight(unitCell, targetCell, null, false);
+	}
+
+	public boolean lineOfSight(MyPoint from, MyPoint to) {
+		final GridCell unitCell = navGrid.getCell(from.x, from.y);
+		final GridCell targetCell = navGrid.getCell(to.x, to.y);
+		return lineOfSight(unitCell, targetCell, null, false);
+	}
+
 	public boolean lineOfSight(final NavigationNode from, final NavigationNode to, final List<TiledMapPosition> positionsUnits, final boolean unitsAreBlocking) {
 		if ((from == null) || (to == null)) {
 			return false;
@@ -218,14 +240,27 @@ public class MyPathFinder {
 		final NavigationGridGraphNode node = (NavigationGridGraphNode) from;
 		final NavigationGridGraphNode neigh = (NavigationGridGraphNode) to;
 
+		MyPoint startingPoint = new MyPoint(node.getX(), node.getY());
+		MyPoint endingPoint = new MyPoint(neigh.getX(), neigh.getY());
+
+		if ((!unitsAreBlocking) && (Boolean.FALSE.equals(precalculatedLineOfSightsWithNonBlockableUnits.get(startingPoint).get(endingPoint)))) {
+			return false;
+		}
+
+		return calculateLineOfSight(positionsUnits, unitsAreBlocking, node, neigh);
+	}
+
+	private boolean calculateLineOfSight(final List<TiledMapPosition> positionsUnits, final boolean unitsAreBlocking, final NavigationGridGraphNode node, final NavigationGridGraphNode neigh) {
 		int x1 = node.getX();
 		int y1 = node.getY();
 		final int x2 = neigh.getX();
 		final int y2 = neigh.getY();
 		final int dx = Math.abs(x1 - x2);
 		final int dy = Math.abs(y1 - y2);
-		final int xinc = (x1 < x2) ? 1 : -1;
-		final int yinc = (y1 < y2) ? 1 : -1;
+		final int xinc = (x1 < x2)	? 1
+									: -1;
+		final int yinc = (y1 < y2)	? 1
+									: -1;
 
 		int error = dx - dy;
 

@@ -11,7 +11,7 @@ import com.jelte.norii.ai.UnitTurn;
 import com.jelte.norii.battle.ApFileReader;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.battle.MessageToBattleScreen;
-import com.jelte.norii.battle.battleState.BattleState;
+import com.jelte.norii.battle.battlestate.BattleState;
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.multiplayer.NetworkMessage;
 import com.jelte.norii.multiplayer.NetworkMessage.MessageType;
@@ -123,14 +123,22 @@ public class Player implements UnitOwner {
 
 	public void initializeTeam() {
 		final Array<String> heroNames = ProfileManager.getInstance().getTeamHeroes();
-		for (final String name : heroNames) {
-			for (final EntityTypes type : EntityTypes.values()) {
-				if (type.getEntityName().equals(name)) {
-					addUnit(new Entity(type, this, true));
+		for (final String heroName : heroNames) {
+			for (final EntityTypes entityType : EntityTypes.values()) {
+				if (entityType.getEntityName().equals(heroName)) {
+					addUnit(new Entity(entityType, this, true));
 				}
 			}
 		}
 		setAp(ApFileReader.getApData(0));
+	}
+
+	@Override
+	public void playerUnitSpawned(Entity entity, TiledMapPosition pos) {
+		NetworkMessage message = new NetworkMessage(MessageType.UNIT_DEPLOYED);
+		message.makeUnitDeployedMessage(entity.getEntityType().name(), entity.getEntityID(), pos.toString(), gameID);
+		ServerCommunicator.getInstance().sendMessage(message);
+		setMyTurn(false);
 	}
 
 	@Override
@@ -149,30 +157,6 @@ public class Player implements UnitOwner {
 	}
 
 	@Override
-	public void spawnUnits(List<TiledMapPosition> spawnPositions) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void reset(BattleState activeBattleState) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void processMove() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public BattleState getNextBattleState() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public EnemyType getType() {
 		return type;
 	}
@@ -185,20 +169,6 @@ public class Player implements UnitOwner {
 	@Override
 	public String getName() {
 		return name;
-	}
-
-	@Override
-	public void spawnUnit(EntityTypes entityType, int entityID, TiledMapPosition pos) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void playerUnitSpawned(Entity entity, TiledMapPosition pos) {
-		NetworkMessage message = new NetworkMessage(MessageType.UNIT_DEPLOYED);
-		message.makeUnitDeployedMessage(entity.getEntityType().name(), entity.getEntityID(), pos.toString(), gameID);
-		ServerCommunicator.getInstance().sendMessage(message);
-		setMyTurn(false);
 	}
 
 	@Override
@@ -240,45 +210,82 @@ public class Player implements UnitOwner {
 	}
 
 	@Override
+	public void spawnUnits(List<TiledMapPosition> spawnPositions) {
+		// nothing to do
+
+	}
+
+	@Override
+	public void reset(BattleState activeBattleState) {
+		// nothing to do
+
+	}
+
+	@Override
+	public void processMove() {
+		// nothing to do
+
+	}
+
+	@Override
+	public BattleState getNextBattleState() {
+		// nothing to do
+		return null;
+	}
+
+	@Override
+	public void spawnUnit(EntityTypes entityType, int entityID, TiledMapPosition pos) {
+		// nothing to do
+
+	}
+
+	@Override
 	public void synchronizeMultiplayerUnitsWithLocal(HashMap<String, String> teamWithIdMap) {
-		// TODO Auto-generated method stub
+		// nothing to do
 
 	}
 
 	@Override
 	public void notifyDeploymentDone() {
-		// TODO Auto-generated method stub
+		// nothing to do
 
 	}
 
 	@Override
 	public void playerUnitMoved(Entity entity, TiledMapPosition pos) {
-		// TODO Auto-generated method stub
-		
+		// nothing to do
+
 	}
 
 	@Override
 	public void playerUnitAttacked(Entity entity, TiledMapPosition pos) {
-		// TODO Auto-generated method stub
-		
+		// nothing to do
+
 	}
 
 	@Override
 	public void playerUnitCastedSpell(Entity entity, Ability ability, TiledMapPosition pos) {
-		// TODO Auto-generated method stub
-		
+		// nothing to do
+
 	}
 
 	@Override
 	public void playerUnitSkipped(Entity entity) {
-		// TODO Auto-generated method stub
-		
+		// nothing to do
 	}
-
 
 	@Override
 	public UnitTurn getProcessingResult() {
-		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public boolean isSimulation() {
+		return false;
+	}
+
+	@Override
+	public boolean isDummy() {
+		return false;
 	}
 }

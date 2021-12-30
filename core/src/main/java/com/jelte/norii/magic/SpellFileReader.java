@@ -30,7 +30,6 @@ public class SpellFileReader {
 				}
 				statsLoaded = true;
 			} catch (final ReflectionException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

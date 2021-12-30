@@ -7,11 +7,17 @@ import com.jelte.norii.utility.parallax.ParallaxUtils.WH;
 
 /**
  *
- * TextureRegionParallaxLayer is the direct extension of {@link ParallaxLayer}. It represents a layer in the parallax scrolling background with just one texture region per layer . It still is very nifty and useful as it encapsulates the
- * logic of padding in all the directions. The padding can help you avoid using single full screen texture regions of background.
+ * TextureRegionParallaxLayer is the direct extension of {@link ParallaxLayer}.
+ * It represents a layer in the parallax scrolling background with just one
+ * texture region per layer . It still is very nifty and useful as it
+ * encapsulates the logic of padding in all the directions. The padding can help
+ * you avoid using single full screen texture regions of background.
  * <p>
- * As an example let us suppose you wish to render repeatedly a single cloud region with 1/10 the width and height of the screen . You wish to render it at half way above the screen baseline. An plus no more than one could should be there
- * within one screen width. You can easily achieve this using proper bottom, left and right padding in this layer
+ * As an example let us suppose you wish to render repeatedly a single cloud
+ * region with 1/10 the width and height of the screen . You wish to render it
+ * at half way above the screen baseline. An plus no more than one could should
+ * be there within one screen width. You can easily achieve this using proper
+ * bottom, left and right padding in this layer
  *
  * @author Rahul
  *
@@ -19,11 +25,16 @@ import com.jelte.norii.utility.parallax.ParallaxUtils.WH;
 public class TextureRegionParallaxLayer extends ParallaxLayer {
 
 	private final TextureRegion texRegion;
-	private float padLeft = 0, padRight = 0, padBottom = 0, padTop = 0;
-	private float regionWidth, regionHeight;
+	private float padLeft = 0;
+	private float padRight = 0;
+	private float padBottom = 0;
+	private float padTop = 0;
+	private float regionWidth;
+	private float regionHeight;
 
 	/**
-	 * Creates a TextureRegionParallaxLayer with regionWidth and regionHeight equal that of the texRegion. Paddings are set to 0.
+	 * Creates a TextureRegionParallaxLayer with regionWidth and regionHeight equal
+	 * that of the texRegion. Paddings are set to 0.
 	 *
 	 * @param texRegion           the texture region
 	 * @param parallaxScrollRatio the parallax ratio in x and y direction
@@ -36,11 +47,12 @@ public class TextureRegionParallaxLayer extends ParallaxLayer {
 	}
 
 	/**
-	 * Creates a TextureRegionParallaxLayer with regionWidth and regionHeight equal to parameters width and height. Paddings are set to 0.
+	 * Creates a TextureRegionParallaxLayer with regionWidth and regionHeight equal
+	 * to parameters width and height. Paddings are set to 0.
 	 *
 	 * @param texRegion           the texture region
-	 * @param width               width to be used as regionWidth
-	 * @param height              height to be used as regionHeight
+	 * @param WIDTH               width to be used as regionWidth
+	 * @param HEIGHT              height to be used as regionHeight
 	 * @param parallaxScrollRatio the parallax ratio in x and y direction
 	 */
 	public TextureRegionParallaxLayer(TextureRegion texRegion, float regionWidth, float regionHeight, Vector2 parallaxScrollRatio) {
@@ -51,7 +63,9 @@ public class TextureRegionParallaxLayer extends ParallaxLayer {
 	}
 
 	/**
-	 * Creates a TextureRegionParallaxLayer with either regionWidth or regionHeight equal oneDimen specified, while the other is calculated maintaining the aspect ratio of the region. Paddings are set to 0.
+	 * Creates a TextureRegionParallaxLayer with either regionWidth or regionHeight
+	 * equal oneDimen specified, while the other is calculated maintaining the
+	 * aspect ratio of the region. Paddings are set to 0.
 	 *
 	 * @param texRegion           texRegion the texture region
 	 * @param oneDimen            either regionWidth of regionHeight
@@ -60,15 +74,15 @@ public class TextureRegionParallaxLayer extends ParallaxLayer {
 	 */
 	public TextureRegionParallaxLayer(TextureRegion texRegion, float oneDimen, Vector2 parallaxScrollRatio, WH wh) {
 		this.texRegion = texRegion;
-		switch (wh) {
-		case width:
+
+		if (wh == WH.WIDTH) {
 			setRegionWidth(oneDimen);
-			setRegionHeight(ParallaxUtils.calculateOtherDimension(WH.width, oneDimen, this.texRegion));
-			break;
-		case height:
+			setRegionHeight(ParallaxUtils.calculateOtherDimension(WH.WIDTH, oneDimen, this.texRegion));
+		}
+
+		if (wh == WH.HEIGHT) {
 			setRegionHeight(oneDimen);
-			setRegionWidth(ParallaxUtils.calculateOtherDimension(WH.height, oneDimen, this.texRegion));
-			break;
+			setRegionWidth(ParallaxUtils.calculateOtherDimension(WH.HEIGHT, oneDimen, this.texRegion));
 		}
 		setParallaxRatio(parallaxScrollRatio);
 	}
@@ -76,8 +90,12 @@ public class TextureRegionParallaxLayer extends ParallaxLayer {
 	/**
 	 * draws the texture region at x y ,with left and bottom padding
 	 * <p>
-	 * You might be wondering that why are topPadding and rightPadding not used , what is their use then . Well they are used by ParallaxBackground when it renders this layer . During rendering it pings the
-	 * {@link #getWidth()}/{@link #getHeight()} method of this layer which in {@link TextureRegionParallaxLayer} implementation return the sum of regionWidth/regionHeight and paddings.
+	 * You might be wondering that why are topPadding and rightPadding not used ,
+	 * what is their use then . Well they are used by ParallaxBackground when it
+	 * renders this layer . During rendering it pings the
+	 * {@link #getWidth()}/{@link #getHeight()} method of this layer which in
+	 * {@link TextureRegionParallaxLayer} implementation return the sum of
+	 * regionWidth/regionHeight and paddings.
 	 */
 	@Override
 	public void draw(Batch batch, float x, float y) {

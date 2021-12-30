@@ -23,10 +23,10 @@ import com.jelte.norii.audio.AudioManager;
 import com.jelte.norii.audio.AudioTypeEvent;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.battle.BattleScreenInputProcessor;
-import com.jelte.norii.battle.battleState.BattleStateGridHelper;
-import com.jelte.norii.battle.battleState.Move;
-import com.jelte.norii.battle.battleState.MoveType;
-import com.jelte.norii.battle.battleState.SpellMove;
+import com.jelte.norii.battle.battlestate.BattleStateGridHelper;
+import com.jelte.norii.battle.battlestate.Move;
+import com.jelte.norii.battle.battlestate.MoveType;
+import com.jelte.norii.battle.battlestate.SpellMove;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityStage;
 import com.jelte.norii.entities.Player;
@@ -55,6 +55,7 @@ import com.jelte.norii.utility.TiledMapPosition;
 import com.jelte.norii.utility.Utility;
 
 public class BattleScreen extends GameScreen {
+	private static final String FPS_TITLE = "fps = ";
 	public static final int VISIBLE_WIDTH = 21;
 	public static final int VISIBLE_HEIGHT = 21;
 	private static OrthographicCamera mapCamera = null;
@@ -71,9 +72,7 @@ public class BattleScreen extends GameScreen {
 	private Hud hud;
 	private PauseMenuScreen pauseMenu;
 	private Json json;
-
 	private EntityStage entityStage;
-	private final String fpsTitle = "fps = ";
 
 	private boolean isPaused;
 
@@ -102,19 +101,22 @@ public class BattleScreen extends GameScreen {
 	private void initializeEntityStage() {
 		Player.getInstance().initializeTeam();
 
-		// send team to enemy if online
 		if (enemyTeamLeader.getType().equals(EnemyType.ONLINE_PLAYER)) {
-			HashMap<Integer, String> teamWithId = new HashMap<>();
-			for (Entity unit : Player.getInstance().getTeam()) {
-				teamWithId.put(unit.getEntityID(), unit.getEntityData().getName());
-			}
-			String serializedTeamWithId = json.toJson(teamWithId);
-			NetworkMessage message = new NetworkMessage();
-			message.makeInitEnemyTeamMessage(enemyTeamLeader.getGameID(), serializedTeamWithId);
-			ServerCommunicator.getInstance().sendMessage(message);
+			sendTeamToOnlineEnemy();
 		}
 
 		entityStage = new EntityStage(Stream.concat(Player.getInstance().getTeam().stream(), enemyTeamLeader.getTeam().stream()).collect(Collectors.toList()));
+	}
+
+	private void sendTeamToOnlineEnemy() {
+		HashMap<Integer, String> teamWithId = new HashMap<>();
+		for (Entity unit : Player.getInstance().getTeam()) {
+			teamWithId.put(unit.getEntityID(), unit.getEntityData().getName());
+		}
+		String serializedTeamWithId = json.toJson(teamWithId);
+		NetworkMessage message = new NetworkMessage();
+		message.makeInitEnemyTeamMessage(enemyTeamLeader.getGameID(), serializedTeamWithId);
+		ServerCommunicator.getInstance().sendMessage(message);
 	}
 
 	private void initializeHUD() {
@@ -244,6 +246,7 @@ public class BattleScreen extends GameScreen {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void processMessagesFromServer() {
 		if (ServerCommunicator.getInstance().isNewMessage()) {
 			NetworkMessage message = ServerCommunicator.getInstance().getOldestMessageFromServer();
@@ -305,7 +308,7 @@ public class BattleScreen extends GameScreen {
 	private void renderElements(final float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		Gdx.graphics.setTitle(fpsTitle + Gdx.graphics.getFramesPerSecond());
+		Gdx.graphics.setTitle(FPS_TITLE + Gdx.graphics.getFramesPerSecond());
 		renderMap();
 		renderUnits();
 		renderParticles(delta);
@@ -449,57 +452,77 @@ public class BattleScreen extends GameScreen {
 		if (!hud.isLocked()) {
 			switch (message) {
 			case CLICKED_ON_SKIP:
-				final Entity skipEntity = battlemanager.getEntityByID(entityID);
-				skipEntity.getVisualComponent().setActive(false);
-				skipEntity.setFocused(false);
-				enemyTeamLeader.playerUnitSkipped(skipEntity);
-				battlemanager.setCurrentBattleState(battlemanager.getWaitOpponentBattleState());
-				battlemanager.getCurrentBattleState().entry();
+				skipUnit(entityID);
 				break;
 			case CLICKED_ON_MOVE:
-				final Entity moveEntity = battlemanager.getEntityByID(entityID);
-				if (moveEntity.canMove()) {
-					prepareMove(moveEntity);
-				} else {
-					hud.getHudMessages().showPopup(HudMessageTypes.NOT_ENOUGH_AP);
-				}
+				moveUnit(entityID);
 				break;
 			case CLICKED_ON_ATTACK:
-				final Entity attackEntity = battlemanager.getEntityByID(entityID);
-				if (attackEntity.canAttack()) {
-					prepareAttack(attackEntity);
-				} else {
-					hud.getHudMessages().showPopup(HudMessageTypes.NOT_ENOUGH_AP);
-				}
+				attackUnit(entityID);
 				break;
 			case CLICKED_ON_ABILITY:
-				final Entity spellEntity = battlemanager.getEntityByID(entityID);
-				if (ability != null) {
-					if (spellEntity.canCastSpell(ability)) {
-						hud.setLocked(true);
-						prepareSpell(spellEntity, ability);
-						hud.setLocked(false);
-					} else {
-						hud.getHudMessages().showPopup(HudMessageTypes.NOT_ENOUGH_AP);
-					}
-				}
+				abilityUnit(entityID, ability);
 				break;
 			case HOVERED_ON_MOVE:
-				final Entity showMoveEntity = battlemanager.getEntityByID(entityID);
-				final Set<MyPoint> pointsToMove = BattleStateGridHelper.getInstance().getPossibleCenterCellsFiltered(showMoveEntity.getCurrentPosition().getTilePosAsPoint(), LineOfSight.CIRCLE, showMoveEntity.getAp(),
-						battlemanager.getBattleState());
-				MyPathFinder.getInstance().filterPositionsByWalkability(showMoveEntity, pointsToMove);
-				for (final MyPoint cell : pointsToMove) {
-					if (!isUnitOnCell(cell)) {
-						final TiledMapPosition positionToPutMoveParticle = new TiledMapPosition().setPositionFromTiles(cell.x, cell.y);
-						ParticleMaker.addParticle(ParticleType.MOVE, positionToPutMoveParticle, 0);
-						battlemanager.setCurrentBattleState(battlemanager.getMovementBattleState());
-					}
-				}
+				hoveredOnMove(entityID);
 				break;
 			case STOP_HOVERED_ON_MOVE:
 				ParticleMaker.deactivateAllParticlesOfType(ParticleType.MOVE);
 				break;
+			}
+		}
+	}
+
+	private void skipUnit(int entityID) {
+		final Entity skipEntity = battlemanager.getEntityByID(entityID);
+		skipEntity.getVisualComponent().setActive(false);
+		skipEntity.setFocused(false);
+		enemyTeamLeader.playerUnitSkipped(skipEntity);
+		battlemanager.setCurrentBattleState(battlemanager.getWaitOpponentBattleState());
+		battlemanager.getCurrentBattleState().entry();
+	}
+
+	private void moveUnit(int entityID) {
+		final Entity moveEntity = battlemanager.getEntityByID(entityID);
+		if (moveEntity.canMove()) {
+			prepareMove(moveEntity);
+		} else {
+			hud.getHudMessages().showPopup(HudMessageTypes.NOT_ENOUGH_AP);
+		}
+	}
+
+	private void attackUnit(int entityID) {
+		final Entity attackEntity = battlemanager.getEntityByID(entityID);
+		if (attackEntity.canAttack()) {
+			prepareAttack(attackEntity);
+		} else {
+			hud.getHudMessages().showPopup(HudMessageTypes.NOT_ENOUGH_AP);
+		}
+	}
+
+	private void abilityUnit(int entityID, Ability ability) {
+		final Entity spellEntity = battlemanager.getEntityByID(entityID);
+		if (ability != null) {
+			if (spellEntity.canCastSpell(ability)) {
+				hud.setLocked(true);
+				prepareSpell(spellEntity, ability);
+				hud.setLocked(false);
+			} else {
+				hud.getHudMessages().showPopup(HudMessageTypes.NOT_ENOUGH_AP);
+			}
+		}
+	}
+
+	private void hoveredOnMove(int entityID) {
+		final Entity showMoveEntity = battlemanager.getEntityByID(entityID);
+		final Set<MyPoint> pointsToMove = BattleStateGridHelper.getInstance().getPossibleCenterCellsFiltered(showMoveEntity.getCurrentPosition().getTilePosAsPoint(), LineOfSight.CIRCLE, showMoveEntity.getAp(),
+				battlemanager.getBattleState());
+		MyPathFinder.getInstance().filterPositionsByWalkability(showMoveEntity, pointsToMove);
+		for (final MyPoint cell : pointsToMove) {
+			if (!isUnitOnCell(cell)) {
+				final TiledMapPosition positionToPutMoveParticle = new TiledMapPosition().setPositionFromTiles(cell.x, cell.y);
+				ParticleMaker.addParticle(ParticleType.MOVE, positionToPutMoveParticle, 0);
+				battlemanager.setCurrentBattleState(battlemanager.getMovementBattleState());
 			}
 		}
 	}

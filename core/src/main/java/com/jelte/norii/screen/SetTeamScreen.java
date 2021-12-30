@@ -33,6 +33,9 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.jelte.norii.entities.EntityData;
 import com.jelte.norii.entities.EntityFileReader;
+import com.jelte.norii.magic.AbilitiesEnum;
+import com.jelte.norii.magic.SpellData;
+import com.jelte.norii.magic.SpellFileReader;
 import com.jelte.norii.profile.ProfileManager;
 import com.jelte.norii.ui.VideoDrawable;
 import com.jelte.norii.utility.AssetManagerUtility;
@@ -41,6 +44,31 @@ import com.jelte.norii.utility.parallax.ParallaxUtils.WH;
 import com.jelte.norii.utility.parallax.TextureRegionParallaxLayer;
 
 public class SetTeamScreen extends GameScreen {
+	private static final int PREVIEW_VIDEO_HEIGHT = 250;
+	private static final int PREVIEW_VIDEO_WIDTH = 500;
+	private static final int ABILITY_INFO_HEIGHT = 250;
+	private static final int ABILITY_INFO_WIDTH = 500;
+	private static final int MAX_HEROES_PER_ROW = 4;
+	private static final int MAIN_TABLE_COLSPAN = 2;
+	private static final int SAVE_BUTTON_WIDTH = 150;
+	private static final int SAVE_BUTTON_HEIGHT = 50;
+	private static final int SAVE_BUTTON_PAD_TOP = 100;
+	private static final int EXIT_BUTTON_WIDTH = 100;
+	private static final int EXIT_BUTTON_HEIGHT = 50;
+	private static final int EXIT_BUTTON_PAD_TOP = 100;
+	private static final int ABILITY_TABLE_COLSPAN = 3;
+	private static final int SELECTED_HEROES_WIDTH = 500;
+	private static final int SELECTED_HEROES_COLSPAN = 1;
+	private static final int ALL_HEROES_TABLE_WIDTH = 500;
+	private static final int ALL_HEROES_TABLE_COLSPAN = 1;
+	private static final int ALL_HEROES_TABLE_SIZE = 50;
+	private static final int ALL_HEROES_TABLE_PAD = 0;
+	private static final int HEROES_TITLES_TABLE_COLSPAN = 2;
+	private static final int AVAILABLE_HEROES_LABEL_WIDTH = 700;
+	private static final int TEAM_LABEL_WIDTH = 700;
+	private static final int TITLE_PAD_TOP = 30;
+	private static final int TITLE_HEIGHT = 50;
+	private static final int TITLE_COLSPAN = 2;
 	private static final String TITLE_FONT = "bigFont";
 	private static final String TITLE = "SET TEAM";
 	private static final String YOUR_TEAM = "Your Team";
@@ -55,8 +83,8 @@ public class SetTeamScreen extends GameScreen {
 	private Label yourTeamLabel;
 	private Label availableHeroesLabel;
 	private Label notEmptyLabel;
-	private TextButton exit;
-	private TextButton save;
+	private TextButton exitTextButton;
+	private TextButton saveTextButton;
 	private Stage stage;
 	private Table mainTable;
 	private Table titleTable;
@@ -81,6 +109,7 @@ public class SetTeamScreen extends GameScreen {
 	private Array<ImageButton> availableHeroes;
 	private Array<ImageButton> teamHeroes;
 	private ObjectMap<Integer, EntityData> entityData;
+	private ObjectMap<Integer, SpellData> spellData;
 	private Map<String, String> heroNamesToImagePaths;
 	private float maxHeroCount;
 	private ImageButton button;
@@ -118,6 +147,7 @@ public class SetTeamScreen extends GameScreen {
 		teamHeroesNames = ProfileManager.getInstance().getTeamHeroes();
 		maxHeroCount = ProfileManager.getInstance().getMaxHeroCount();
 		entityData = EntityFileReader.getUnitData();
+		spellData = SpellFileReader.getSpellData();
 	}
 
 	private void createButtons() {
@@ -134,18 +164,25 @@ public class SetTeamScreen extends GameScreen {
 
 		notEmptyLabel = new Label(EMPTY_ERROR, statusUISkin, TITLE_FONT);
 
-		exit = new TextButton(EXIT, statusUISkin);
-		exit.align(Align.bottom);
-		save = new TextButton(SAVE, statusUISkin);
-		save.align(Align.bottom);
+		exitTextButton = new TextButton(EXIT, statusUISkin);
+		exitTextButton.align(Align.bottom);
+		saveTextButton = new TextButton(SAVE, statusUISkin);
+		saveTextButton.align(Align.bottom);
 	}
 
 	private void createHeroPortraits() {
 		final ImageButtonStyle btnStyle = button.getStyle();
-		for (final EntityData data : entityData.values()) {
-			final String heroImageName = data.getPortraitSpritePath();
+		for (final EntityData entity : entityData.values()) {
+			final SpellData spellForEntity = findSpellForUnit(entity);
+			final String heroImageName = entity.getPortraitSpritePath();
+			final String abilityIconName = spellForEntity.getIconSpriteName();
+
 			final TextureRegion tr = new TextureRegion(AssetManagerUtility.getSprite(heroImageName));
+			final TextureRegion trAbility = new TextureRegion(AssetManagerUtility.getSprite(abilityIconName));
+
 			final TextureRegionDrawable buttonImage = new TextureRegionDrawable(tr);
+			final TextureRegionDrawable abilityImage = new TextureRegionDrawable(trAbility);
+
 			final ImageButtonStyle heroButtonStyle = new ImageButtonStyle();
 			heroButtonStyle.imageUp = buttonImage;
 			heroButtonStyle.up = btnStyle.up;
@@ -156,8 +193,8 @@ public class SetTeamScreen extends GameScreen {
 			heroImageButton.addListener(new InputListener() {
 				@Override
 				public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
-					tryToAddHeroToTeam(heroImageName);
-					teamHeroesNames.add(data.getName());
+					tryAddHeroImageButtonToTeamPanel(heroImageName);
+					teamHeroesNames.add(entity.getName());
 					return true;
 				}
 			});
@@ -165,20 +202,36 @@ public class SetTeamScreen extends GameScreen {
 			heroImageButton.addListener(new InputListener() {
 				@Override
 				public void enter(InputEvent event, float x, float y, int pointer, @Null Actor fromActor) {
-					final ImageButtonStyle heroButtonStyle = new ImageButtonStyle();
-					heroButtonStyle.imageUp = buttonImage;
-					heroButtonStyle.up = btnStyle.up;
-					heroButtonStyle.down = btnStyle.down;
-					abilityIcon.setStyle(heroButtonStyle);
-					abilityInfo.setText(data.getSpellExplanation());
+					final ImageButtonStyle abilityButtonStyle = new ImageButtonStyle();
+					abilityButtonStyle.imageUp = abilityImage;
+					abilityButtonStyle.up = btnStyle.up;
+					abilityButtonStyle.down = btnStyle.down;
+					abilityIcon.setStyle(abilityButtonStyle);
+					abilityInfo.setText(entity.getName() + "\n__________\n" + swapVariables(entity.getSpellExplanation(), spellForEntity));
 				}
 			});
 
-			heroNamesToImagePaths.put(data.getName(), heroImageName);
+			heroNamesToImagePaths.put(entity.getName(), heroImageName);
 		}
 	}
 
-	private void tryToAddHeroToTeam(String heroImageName) {
+	private SpellData findSpellForUnit(EntityData entity) {
+		for (final SpellData spell : spellData.values()) {
+			if (AbilitiesEnum.valueOf(entity.getAbility()).ordinal() == spell.getId()) {
+				return spell;
+			}
+		}
+		return null;
+	}
+
+	protected String swapVariables(String spellExplanation, SpellData spellData) {
+		spellExplanation = spellExplanation.replaceFirst("%DAMAGE%", Integer.toString(spellData.getDamage()));
+		spellExplanation = spellExplanation.replaceFirst("%APCOST%", Integer.toString(spellData.getApCost()));
+		spellExplanation = spellExplanation.replaceFirst("%RANGE%", Integer.toString(spellData.getRange()));
+		return spellExplanation.replaceFirst("%TURNS%", Integer.toString(spellData.getDurationInTurns()));
+	}
+
+	private void tryAddHeroImageButtonToTeamPanel(String heroImageName) {
 		final int currentHeroes = teamHeroes.size;
 		if (currentHeroes < maxHeroCount) {
 			final ImageButtonStyle btnStyle = button.getStyle();
@@ -216,88 +269,95 @@ public class SetTeamScreen extends GameScreen {
 		abilityIcon = new ImageButton(imageButtonStyle);
 
 		abilityInfo = new TextArea("AbilityInfo", AssetManagerUtility.getSkin());
-		abilityInfo.setText("this unit can launche a fireball that damages a single target for 5 fire damage");
+		abilityInfo.setText("");
 
 		abilityTable.center();
 		abilityTable.add(abilityIcon);
-		abilityTable.add(abilityInfo).width(500).height(150);
+		abilityTable.add(abilityInfo).width(ABILITY_INFO_WIDTH).height(ABILITY_INFO_HEIGHT);
 
 		videoDrawable = new VideoDrawable(Gdx.files.internal("video/test.webm"));
 		final Image image = new Image(videoDrawable);
-		abilityTable.add(image).width(500).height(150);
+		abilityTable.add(image).width(PREVIEW_VIDEO_WIDTH).height(PREVIEW_VIDEO_HEIGHT);
 	}
 
 	private void createBackground() {
-		final int worldWidth = Gdx.graphics.getWidth();
 		final int worldHeight = Gdx.graphics.getHeight();
 
 		final TextureAtlas atlas = AssetManagerUtility.getTextureAtlas(AssetManagerUtility.SPRITES_ATLAS_PATH);
 
 		final TextureRegion backTrees = atlas.findRegion("background-back-trees");
-		final TextureRegionParallaxLayer backTreesLayer = new TextureRegionParallaxLayer(backTrees, worldHeight, new Vector2(.3f, .3f), WH.height);
+		final TextureRegionParallaxLayer backTreesLayer = new TextureRegionParallaxLayer(backTrees, worldHeight, new Vector2(.3f, .3f), WH.HEIGHT);
 
 		final TextureRegion lights = atlas.findRegion("background-light");
-		final TextureRegionParallaxLayer lightsLayer = new TextureRegionParallaxLayer(lights, worldHeight, new Vector2(.6f, .6f), WH.height);
+		final TextureRegionParallaxLayer lightsLayer = new TextureRegionParallaxLayer(lights, worldHeight, new Vector2(.6f, .6f), WH.HEIGHT);
 
 		final TextureRegion middleTrees = atlas.findRegion("background-middle-trees");
-		final TextureRegionParallaxLayer middleTreesLayer = new TextureRegionParallaxLayer(middleTrees, worldHeight, new Vector2(.75f, .75f), WH.height);
+		final TextureRegionParallaxLayer middleTreesLayer = new TextureRegionParallaxLayer(middleTrees, worldHeight, new Vector2(.75f, .75f), WH.HEIGHT);
 
 		final TextureRegion frontTrees = atlas.findRegion("foreground");
-		final TextureRegionParallaxLayer frontTreesLayer = new TextureRegionParallaxLayer(frontTrees, worldHeight, new Vector2(.6f, .6f), WH.height);
+		final TextureRegionParallaxLayer frontTreesLayer = new TextureRegionParallaxLayer(frontTrees, worldHeight, new Vector2(.6f, .6f), WH.HEIGHT);
 
 		parallaxBackground = new ParallaxBackground();
 		parallaxBackground.addLayers(backTreesLayer, lightsLayer, middleTreesLayer, frontTreesLayer);
 	}
 
 	private void addButtons() {
-		titleTable = new Table();
-		allHeroesTable = new Table();
-		selectedHeroesTableVerticalGroup = new VerticalGroup();
-		saveAndExitTable = new Table();
-		titleTable.add(titleLabel);
-		mainTable.setFillParent(true);
-		mainTable.add(titleTable).align(Align.top).colspan(2).height(50).padTop(30).expandX().fillX().row();
+		initTables();
 
-		heroesTitlesTable.add(yourTeamLabel).align(Align.top).width(700).expandX().fillX();
-		heroesTitlesTable.add(availableHeroesLabel).align(Align.right).width(700).expandX().fillX().row();
-		mainTable.add(heroesTitlesTable).colspan(2).expandX().fillX().row();
-
-		int count = 0;
-		for (final ImageButton heroButton : availableHeroes) {
-			if (count >= 4) {
-				allHeroesTable.add(heroButton).pad(0).size(50);
-				allHeroesTable.row();
-				count = 0;
-			} else {
-				allHeroesTable.add(heroButton).pad(0).size(50);
-				count++;
-			}
-		}
-
-		mainTable.add(allHeroesTable).align(Align.center).align(Align.center).colspan(1).width(500).expand();
-
-		for (final String name : teamHeroesNames) {
-			tryToAddHeroToTeam(heroNamesToImagePaths.get(name));
-		}
-		mainTable.add(selectedHeroesTableVerticalGroup).align(Align.center).colspan(1).width(500).expand().row();
-
-		mainTable.add(abilityTable).colspan(3).expandX().row();
-
-		saveAndExitTable.add(exit).padTop(100).height(50).width(100);
-		saveAndExitTable.add(save).padTop(100).height(50).width(150);
-
-		mainTable.add(saveAndExitTable).colspan(2);
+		addStuffToTables();
 
 		mainTable.pack();
 		stage.addActor(mainTable);
 
-		notEmptyLabel.setPosition(Gdx.app.getGraphics().getWidth() / 2, Gdx.app.getGraphics().getHeight() / 2);
+		notEmptyLabel.setPosition(Gdx.app.getGraphics().getWidth() / 2.0f, Gdx.app.getGraphics().getHeight() / 2.0f);
 		notEmptyLabel.setVisible(false);
 		stage.addActor(notEmptyLabel);
 	}
 
+	private void addStuffToTables() {
+		titleTable.add(titleLabel);
+		mainTable.add(titleTable).align(Align.top).colspan(TITLE_COLSPAN).height(TITLE_HEIGHT).padTop(TITLE_PAD_TOP).expandX().fillX().row();
+		heroesTitlesTable.add(yourTeamLabel).align(Align.top).width(TEAM_LABEL_WIDTH).expandX().fillX();
+		heroesTitlesTable.add(availableHeroesLabel).align(Align.right).width(AVAILABLE_HEROES_LABEL_WIDTH).expandX().fillX().row();
+		mainTable.add(heroesTitlesTable).colspan(HEROES_TITLES_TABLE_COLSPAN).expandX().fillX().row();
+
+		int count = 0;
+		for (final ImageButton heroButton : availableHeroes) {
+			if (count >= MAX_HEROES_PER_ROW) {
+				allHeroesTable.add(heroButton).pad(ALL_HEROES_TABLE_PAD).size(ALL_HEROES_TABLE_SIZE);
+				allHeroesTable.row();
+				count = 0;
+			} else {
+				allHeroesTable.add(heroButton).pad(ALL_HEROES_TABLE_PAD).size(ALL_HEROES_TABLE_SIZE);
+				count++;
+			}
+		}
+
+		mainTable.add(allHeroesTable).align(Align.center).align(Align.center).colspan(ALL_HEROES_TABLE_COLSPAN).width(ALL_HEROES_TABLE_WIDTH).expand();
+
+		for (final String name : teamHeroesNames) {
+			tryAddHeroImageButtonToTeamPanel(heroNamesToImagePaths.get(name));
+		}
+		mainTable.add(selectedHeroesTableVerticalGroup).align(Align.center).colspan(SELECTED_HEROES_COLSPAN).width(SELECTED_HEROES_WIDTH).expand().row();
+
+		mainTable.add(abilityTable).colspan(ABILITY_TABLE_COLSPAN).expandX().row();
+
+		saveAndExitTable.add(exitTextButton).padTop(EXIT_BUTTON_PAD_TOP).height(EXIT_BUTTON_HEIGHT).width(EXIT_BUTTON_WIDTH);
+		saveAndExitTable.add(saveTextButton).padTop(SAVE_BUTTON_PAD_TOP).height(SAVE_BUTTON_HEIGHT).width(SAVE_BUTTON_WIDTH);
+
+		mainTable.add(saveAndExitTable).colspan(MAIN_TABLE_COLSPAN);
+	}
+
+	private void initTables() {
+		titleTable = new Table();
+		allHeroesTable = new Table();
+		selectedHeroesTableVerticalGroup = new VerticalGroup();
+		saveAndExitTable = new Table();
+		mainTable.setFillParent(true);
+	}
+
 	private void addListeners() {
-		exit.addListener(new InputListener() {
+		exitTextButton.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
 				ScreenManager.getInstance().showScreen(ScreenEnum.MAIN_MENU);
@@ -305,7 +365,7 @@ public class SetTeamScreen extends GameScreen {
 			}
 		});
 
-		save.addListener(new InputListener() {
+		saveTextButton.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
 				if (teamHeroesNames.isEmpty()) {
@@ -331,14 +391,14 @@ public class SetTeamScreen extends GameScreen {
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		updatebg(delta);
+		updatebg();
 		stage.act(delta);
 		stage.draw();
 
 		parallaxCamera.translate(2, 0, 0);
 	}
 
-	public void updatebg(final float delta) {
+	public void updatebg() {
 		backgroundbatch.begin();
 		parallaxBackground.draw(parallaxCamera, backgroundbatch);
 		backgroundbatch.end();

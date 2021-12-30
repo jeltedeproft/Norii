@@ -11,10 +11,6 @@ import com.jelte.norii.ai.UnitTurn;
 import com.jelte.norii.audio.AudioCommand;
 import com.jelte.norii.audio.AudioManager;
 import com.jelte.norii.audio.AudioTypeEvent;
-import com.jelte.norii.battle.battleState.BattleState;
-import com.jelte.norii.battle.battleState.Move;
-import com.jelte.norii.battle.battleState.MoveType;
-import com.jelte.norii.battle.battleState.SpellMove;
 import com.jelte.norii.battle.battlephase.ActionBattlePhase;
 import com.jelte.norii.battle.battlephase.AttackBattlePhase;
 import com.jelte.norii.battle.battlephase.BattlePhase;
@@ -22,6 +18,10 @@ import com.jelte.norii.battle.battlephase.DeploymentBattlePhase;
 import com.jelte.norii.battle.battlephase.MovementBattlePhase;
 import com.jelte.norii.battle.battlephase.SelectUnitBattlePhase;
 import com.jelte.norii.battle.battlephase.SpellBattlePhase;
+import com.jelte.norii.battle.battlestate.BattleState;
+import com.jelte.norii.battle.battlestate.Move;
+import com.jelte.norii.battle.battlestate.MoveType;
+import com.jelte.norii.battle.battlestate.SpellMove;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityTypes;
 import com.jelte.norii.entities.Player;
@@ -53,8 +53,6 @@ public class BattleManager {
 	private int unitsDeployed;
 	private BattleScreen battleScreen;
 	private int turn = 0;
-
-	private static final String TAG = BattleManager.class.getSimpleName();
 
 	public BattleManager(UnitOwner enemyTeamLeader, int width, int height, Array<GridCell> unwalkableNodes, BattleScreen battleScreen) {
 		initVariables(enemyTeamLeader, width, height, unwalkableNodes, battleScreen);
@@ -223,7 +221,7 @@ public class BattleManager {
 			break;
 		case MOVE:
 			final List<GridCell> path = MyPathFinder.getInstance().pathTowards(entity.getCurrentPosition(), new TiledMapPosition().setPositionFromTiles(move.getLocation().x, move.getLocation().y), entity.getAp());
-			activeBattleState.moveUnitTo(entity, new MyPoint(move.getLocation().x, move.getLocation().y));
+			activeBattleState.moveUnitAndCreateIfNecessary(entity, new MyPoint(move.getLocation().x, move.getLocation().y));
 			entity.move(path);
 			// wait for move to complete before executing next one
 			break;
@@ -257,13 +255,7 @@ public class BattleManager {
 	}
 
 	public Entity getEntityByID(int entityID) {
-		for (final Entity entity : Player.getInstance().getTeam()) {
-			if (entity.getEntityID() == entityID) {
-				return entity;
-			}
-		}
-
-		for (final Entity entity : enemyTeamLeader.getTeam()) {
+		for (final Entity entity : activeBattleState.getAllUnits()) {
 			if (entity.getEntityID() == entityID) {
 				return entity;
 			}
@@ -293,7 +285,7 @@ public class BattleManager {
 		final MyPoint newPoint = new MyPoint(newPos.getTileX(), newPos.getTileY());
 		final MyPoint oldPoint = new MyPoint(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY());
 		if (!oldPoint.equals(newPoint)) {
-			activeBattleState.moveUnitTo(unit, newPoint);
+			activeBattleState.moveUnitAndCreateIfNecessary(unit, newPoint);
 		}
 	}
 

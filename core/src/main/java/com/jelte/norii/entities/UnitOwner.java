@@ -8,7 +8,7 @@ import com.jelte.norii.ai.EnemyType;
 import com.jelte.norii.ai.UnitTurn;
 import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.battle.MessageToBattleScreen;
-import com.jelte.norii.battle.battleState.BattleState;
+import com.jelte.norii.battle.battlestate.BattleState;
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.utility.TiledMapPosition;
 
@@ -36,6 +36,14 @@ public interface UnitOwner {
 	public void applyModifiers();
 
 	public boolean isPlayer();
+
+	public boolean isAI();
+
+	public boolean isOnlinePlayer();
+
+	public boolean isSimulation();
+
+	public boolean isDummy();
 
 	public void setBattleManager(BattleManager battleManager);
 
@@ -76,14 +84,6 @@ public interface UnitOwner {
 	public boolean isMyTurn();
 
 	public void setMyTurn(boolean myTurn);
-
-	public boolean isAI();
-
-	public boolean isOnlinePlayer();
-
-	public boolean isSimulation();
-
-	public boolean isDummy();
 
 	public Alliance getAlliance();
 

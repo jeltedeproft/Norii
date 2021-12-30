@@ -8,8 +8,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.jelte.norii.utility.AssetManagerUtility;
 
 public class EntityAnimation {
-	private static final String TAG = EntityAnimation.class.getSimpleName();
-
 	private static final float ANIMATION_DURATION = 0.1f;
 
 	private String spriteName;

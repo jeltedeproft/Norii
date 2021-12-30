@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.ai.UnitTurn;
-import com.jelte.norii.battle.battleState.BattleState;
-import com.jelte.norii.battle.battleState.Move;
+import com.jelte.norii.battle.battlestate.BattleState;
+import com.jelte.norii.battle.battlestate.Move;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.UnitOwner;
 import com.jelte.norii.magic.Ability;

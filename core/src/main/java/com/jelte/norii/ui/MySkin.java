@@ -27,6 +27,7 @@ public class MySkin extends Skin {
 		final Skin skin = this;
 
 		json.setSerializer(FreeTypeFontGenerator.class, new Json.ReadOnlySerializer<FreeTypeFontGenerator>() {
+			@SuppressWarnings("rawtypes")
 			@Override
 			public FreeTypeFontGenerator read(Json json, JsonValue jsonData, Class type) {
 				final String path = json.readValue("font", String.class, jsonData);

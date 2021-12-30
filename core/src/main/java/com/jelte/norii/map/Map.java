@@ -60,18 +60,6 @@ public abstract class Map {
 		initializeClassVariables(mapType);
 	}
 
-	private void setupMapProperties() {
-		prop = currentMap.getProperties();
-
-		mapWidth = prop.get("width", Integer.class);
-		mapHeight = prop.get("height", Integer.class);
-		tilePixelWidth = prop.get("tilewidth", Integer.class);
-		tilePixelHeight = prop.get("tileheight", Integer.class);
-
-		tilemapWidthInTiles = mapWidth;
-		tilemapHeightInTiles = mapHeight;
-	}
-
 	private void disposeMapAndStage() {
 		if (currentMap != null) {
 			currentMap.dispose();
@@ -82,6 +70,18 @@ public abstract class Map {
 		if (MyPathFinder.getInstance() != null) {
 			MyPathFinder.getInstance().dispose();
 		}
+	}
+
+	private void setupMapProperties() {
+		prop = currentMap.getProperties();
+
+		mapWidth = prop.get("width", Integer.class);
+		mapHeight = prop.get("height", Integer.class);
+		tilePixelWidth = prop.get("tilewidth", Integer.class);
+		tilePixelHeight = prop.get("tileheight", Integer.class);
+
+		tilemapWidthInTiles = mapWidth;
+		tilemapHeightInTiles = mapHeight;
 	}
 
 	private void initializeClassVariables(final MapFactory.MapType mapType) {

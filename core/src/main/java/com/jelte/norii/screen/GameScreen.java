@@ -2,9 +2,9 @@ package com.jelte.norii.screen;
 
 import com.badlogic.gdx.Screen;
 
-public class GameScreen implements Screen {
+public abstract class GameScreen implements Screen {
 
-	public GameScreen() {
+	protected GameScreen() {
 	}
 
 	@Override

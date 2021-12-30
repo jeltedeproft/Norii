@@ -1,7 +1,6 @@
 package com.jelte.norii.screen;
 
 import com.badlogic.gdx.Screen;
-import com.jelte.norii.ai.EnemyType;
 import com.jelte.norii.entities.UnitOwner;
 import com.jelte.norii.map.MapFactory.MapType;
 

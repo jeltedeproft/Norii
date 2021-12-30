@@ -25,6 +25,20 @@ import com.jelte.norii.utility.parallax.ParallaxUtils.WH;
 import com.jelte.norii.utility.parallax.TextureRegionParallaxLayer;
 
 public class SettingsScreen extends GameScreen {
+	private static final int SETTINGS_LABEL_WIDTH = 200;
+	private static final int SETTINGS_LABEL_HEIGHT = 75;
+	private static final int TITLE_WIDTH = 1000;
+	private static final int TITLE_HEIGHT = 250;
+	private static final int TITLE_SPACE_BOTTOM = 100;
+	private static final int TITLE_COLSPAN = 10;
+	private static final float SPEED_FOREGROUND_TREES = .6f;
+	private static final float SPEED_BACKGROUND_MIDDLE_TREES = .75f;
+	private static final float SPEED_BACKGROUND_LIGHT = .6f;
+	private static final float SPEED_BACKGROUND_TREES = .3f;
+	private static final String FOREGROUND = "foreground";
+	private static final String BACKGROUND_MIDDLE_TREES = "background-middle-trees";
+	private static final String BACKGROUND_LIGHT = "background-light";
+	private static final String BACKGROUND_BACK_TREES = "background-back-trees";
 	private static final String[] displayModes = { "2048 x 1080" };
 	private static final String TITLE_FONT = "bigFont";
 	private static final String TITLE = "SETTINGS";
@@ -34,7 +48,7 @@ public class SettingsScreen extends GameScreen {
 	private Label titleLabel;
 	private Label settingsLabel;
 	private SelectBox<String> aspectRatioSelectBox;
-	private TextButton exit;
+	private TextButton exitTextButton;
 	private Stage stage;
 	private Table table;
 	private OrthographicCamera parallaxCamera;
@@ -69,45 +83,44 @@ public class SettingsScreen extends GameScreen {
 		aspectRatioSelectBox = new SelectBox<>(statusUISkin);
 		aspectRatioSelectBox.setItems(displayModes);
 
-		exit = new TextButton(EXIT, statusUISkin);
+		exitTextButton = new TextButton(EXIT, statusUISkin);
 	}
 
 	private void createBackground() {
-		final int worldWidth = Gdx.graphics.getWidth();
 		final int worldHeight = Gdx.graphics.getHeight();
 
 		final TextureAtlas atlas = AssetManagerUtility.getTextureAtlas(AssetManagerUtility.SPRITES_ATLAS_PATH);
 
-		final TextureRegion backTrees = atlas.findRegion("background-back-trees");
-		final TextureRegionParallaxLayer backTreesLayer = new TextureRegionParallaxLayer(backTrees, worldHeight, new Vector2(.3f, .3f), WH.height);
+		final TextureRegion backTrees = atlas.findRegion(BACKGROUND_BACK_TREES);
+		final TextureRegionParallaxLayer backTreesLayer = new TextureRegionParallaxLayer(backTrees, worldHeight, new Vector2(SPEED_BACKGROUND_TREES, SPEED_BACKGROUND_TREES), WH.HEIGHT);
 
-		final TextureRegion lights = atlas.findRegion("background-light");
-		final TextureRegionParallaxLayer lightsLayer = new TextureRegionParallaxLayer(lights, worldHeight, new Vector2(.6f, .6f), WH.height);
+		final TextureRegion lights = atlas.findRegion(BACKGROUND_LIGHT);
+		final TextureRegionParallaxLayer lightsLayer = new TextureRegionParallaxLayer(lights, worldHeight, new Vector2(SPEED_BACKGROUND_LIGHT, SPEED_BACKGROUND_LIGHT), WH.HEIGHT);
 
-		final TextureRegion middleTrees = atlas.findRegion("background-middle-trees");
-		final TextureRegionParallaxLayer middleTreesLayer = new TextureRegionParallaxLayer(middleTrees, worldHeight, new Vector2(.75f, .75f), WH.height);
+		final TextureRegion middleTrees = atlas.findRegion(BACKGROUND_MIDDLE_TREES);
+		final TextureRegionParallaxLayer middleTreesLayer = new TextureRegionParallaxLayer(middleTrees, worldHeight, new Vector2(SPEED_BACKGROUND_MIDDLE_TREES, SPEED_BACKGROUND_MIDDLE_TREES), WH.HEIGHT);
 
-		final TextureRegion frontTrees = atlas.findRegion("foreground");
-		final TextureRegionParallaxLayer frontTreesLayer = new TextureRegionParallaxLayer(frontTrees, worldHeight, new Vector2(.6f, .6f), WH.height);
+		final TextureRegion frontTrees = atlas.findRegion(FOREGROUND);
+		final TextureRegionParallaxLayer frontTreesLayer = new TextureRegionParallaxLayer(frontTrees, worldHeight, new Vector2(SPEED_FOREGROUND_TREES, SPEED_FOREGROUND_TREES), WH.HEIGHT);
 
 		parallaxBackground = new ParallaxBackground();
 		parallaxBackground.addLayers(backTreesLayer, lightsLayer, middleTreesLayer, frontTreesLayer);
 	}
 
 	private void addButtons() {
-		table.add(titleLabel).expandX().colspan(10).spaceBottom(100).height(250).width(1000).row();
-		table.add(settingsLabel).height(75).width(200).row();
-		table.add(settingsLabel).height(75).width(200).row();
-		table.add(settingsLabel).height(75).width(200).row();
-		table.add(settingsLabel).height(75).width(200);
+		table.add(titleLabel).expandX().colspan(TITLE_COLSPAN).spaceBottom(TITLE_SPACE_BOTTOM).height(TITLE_HEIGHT).width(TITLE_WIDTH).row();
+		table.add(settingsLabel).height(SETTINGS_LABEL_HEIGHT).width(SETTINGS_LABEL_WIDTH).row();
+		table.add(settingsLabel).height(SETTINGS_LABEL_HEIGHT).width(SETTINGS_LABEL_WIDTH).row();
+		table.add(settingsLabel).height(SETTINGS_LABEL_HEIGHT).width(SETTINGS_LABEL_WIDTH).row();
+		table.add(settingsLabel).height(SETTINGS_LABEL_HEIGHT).width(SETTINGS_LABEL_WIDTH);
 		table.add(aspectRatioSelectBox).height(75).width(500).row();
-		table.add(exit).spaceTop(100).height(100).width(100).row();
+		table.add(exitTextButton).spaceTop(100).height(100).width(100).row();
 
 		stage.addActor(table);
 	}
 
 	private void addListeners() {
-		exit.addListener(new InputListener() {
+		exitTextButton.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
 				ScreenManager.getInstance().showScreen(ScreenEnum.MAIN_MENU);
@@ -138,14 +151,14 @@ public class SettingsScreen extends GameScreen {
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		updatebg(delta);
+		updatebg();
 		stage.act(delta);
 		stage.draw();
 
 		parallaxCamera.translate(2, 0, 0);
 	}
 
-	public void updatebg(final float delta) {
+	public void updatebg() {
 		backgroundbatch.begin();
 		parallaxBackground.draw(parallaxCamera, backgroundbatch);
 		backgroundbatch.end();

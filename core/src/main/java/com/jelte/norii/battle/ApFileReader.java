@@ -13,7 +13,7 @@ public class ApFileReader {
 	private static boolean statsLoaded = false;
 	private static ObjectMap<Integer, Integer> apData = new ObjectMap<>();
 	private static final String AP_FILE_LOCATION = "levels/ap.json";
-	public static int MAX_AP;
+	public static int maxAp;
 
 	private ApFileReader() {
 
@@ -32,7 +32,7 @@ public class ApFileReader {
 				}
 				statsLoaded = true;
 
-				MAX_AP = Collections.max(aps);
+				maxAp = Collections.max(aps);
 
 			} catch (final ReflectionException e) {
 				e.printStackTrace();

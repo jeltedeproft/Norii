@@ -10,12 +10,10 @@ import java.util.Random;
 import java.util.TreeMap;
 
 import com.badlogic.gdx.utils.Array;
-import com.jelte.norii.battle.battleState.BattleState;
+import com.jelte.norii.battle.battlestate.BattleState;
 import com.jelte.norii.entities.Entity;
 
 public final class Utility {
-	private static final String TAG = Utility.class.getSimpleName();
-
 	public static final Random random = new Random();
 
 	public static int getRandomIntFrom1to(final int to) {
@@ -158,10 +156,10 @@ public final class Utility {
 		return new MyPoint(sumX / numberOfElements, sumY / numberOfElements);
 	}
 
-	public static float clamp(final float var, final float max, final float min) {
-		if (var > min) {
-			if (var < max) {
-				return var;
+	public static float clamp(final float variable, final float max, final float min) {
+		if (variable > min) {
+			if (variable < max) {
+				return variable;
 			} else {
 				return max;
 			}
@@ -187,7 +185,7 @@ public final class Utility {
 	}
 
 	public static <E> Optional<E> getRandom(Collection<E> e) {
-		return e.stream().skip((int) (e.size() * Math.random())).findFirst();
+		return e.stream().skip((long) (e.size() * random.nextDouble())).findFirst();
 	}
 
 	public static <E> E getRandom(Array<E> e) {
@@ -195,7 +193,8 @@ public final class Utility {
 	}
 
 	public static int incrementModulo(int x, int modulo) {
-		return ((x + 1) == modulo ? 0 : x + 1);
+		return ((x + 1) == modulo	? 0
+									: x + 1);
 	}
 
 	public static int getTotalHpTeam(Array<Entity> team) {

@@ -3,7 +3,6 @@ package com.jelte.norii.ai.movegenerator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 import java.util.TreeMap;
 
@@ -12,11 +11,11 @@ import org.xguzm.pathfinding.grid.GridCell;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.ai.UnitTurn;
-import com.jelte.norii.battle.battleState.BattleState;
-import com.jelte.norii.battle.battleState.BattleStateGridHelper;
-import com.jelte.norii.battle.battleState.Move;
-import com.jelte.norii.battle.battleState.MoveType;
-import com.jelte.norii.battle.battleState.SpellMove;
+import com.jelte.norii.battle.battlestate.BattleState;
+import com.jelte.norii.battle.battlestate.BattleStateGridHelper;
+import com.jelte.norii.battle.battlestate.Move;
+import com.jelte.norii.battle.battlestate.MoveType;
+import com.jelte.norii.battle.battlestate.SpellMove;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.UnitOwner;
 import com.jelte.norii.magic.Ability;
@@ -31,7 +30,6 @@ public class AbilityTargetMoveGenerator implements MoveGenerator {
 	private static final String WRONG_ABILITY_TEAM = "ability does not have one of these affected teams : FRIENDLY, ENEMY, BOTH or NONE, returning null";
 	private static final int FILTER_AMOUNT_OF_CELL_TARGETS = 10;
 	private Long oldTime;
-	final Random random = new Random();
 
 	@Override
 	public Array<UnitTurn> getAllMovesUnit(Ability ability, Entity aiUnit, BattleState battleState) {
@@ -184,7 +182,7 @@ public class AbilityTargetMoveGenerator implements MoveGenerator {
 		while (abilityTargets.isEmpty() && (ap > 0)) {
 			endPoint = getRandomMovePoint(new MyPoint(copyUnit.getCurrentPosition().getTileX(), copyUnit.getCurrentPosition().getTileY()), copyBattleState, copyUnit, passedPoints);
 			passedPoints.add(new MyPoint(endPoint.x, endPoint.y));
-			copyBattleState.moveUnitTo(copyUnit, endPoint);
+			copyBattleState.moveUnitAndCreateIfNecessary(copyUnit, endPoint);
 			moveAndSpell.addMove(new Move(MoveType.MOVE, endPoint));
 			ap--;
 			abilityTargets = getAbilityTargets(ability, endPoint, copyUnit.isPlayerUnit(), copyBattleState);
@@ -200,8 +198,8 @@ public class AbilityTargetMoveGenerator implements MoveGenerator {
 	}
 
 	private MyPoint getRandomMovePoint(MyPoint unitPoint, BattleState copyBattleState, Entity copyUnit, List<MyPoint> passedPoints) {
-		int randomStartDirection = random.nextInt(4);
-		int direction = random.nextInt(4);
+		int randomStartDirection = Utility.random.nextInt(4);
+		int direction = Utility.random.nextInt(4);
 		MyPoint endPoint = new MyPoint(unitPoint.x, unitPoint.y);
 		do {
 			switch (direction) {
@@ -286,7 +284,7 @@ public class AbilityTargetMoveGenerator implements MoveGenerator {
 		final List<MyPoint> pointsAsList = new ArrayList<>();
 		pointsAsList.addAll(cellsToCastOn);
 		while (pointsAsList.size() > maxSize) {
-			pointsAsList.remove(random.nextInt(pointsAsList.size()));
+			pointsAsList.remove(Utility.random.nextInt(pointsAsList.size()));
 		}
 		cellsToCastOn.clear();
 		cellsToCastOn.addAll(pointsAsList);

@@ -26,7 +26,6 @@ import com.jelte.norii.utility.TiledMapPosition;
 public class EntityVisualComponent implements EntityVisualComponentInterface {
 	protected boolean isInAttackPhase;
 	protected boolean isActive;
-	private boolean isMoving;
 
 	protected EntityAnimation entityAnimation;
 	protected EntityAnimation entityTemporaryAnimation;
@@ -142,48 +141,9 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 		entityAnimation = entityTemporaryAnimation;
 	}
 
-	private float decideRotation(GridCell oldCell, GridCell cell) {
-		if ((oldCell.x == cell.x) && (oldCell.y > cell.y)) {
-			return 0.0f;
-		} else if ((oldCell.x == cell.x) && (oldCell.y < cell.y)) {
-			return 180.0f;
-		} else if ((oldCell.x > cell.x) && (oldCell.y == cell.y)) {
-			return 270.0f;
-		}
-		return 90.0f;
-	}
-
-	private void updatePositionFromActor() {
-		setDirection(decideDirection(this.getEntityactor().getRotation()));
-	}
-
-	private void stopWalkingAction() {
-		AudioManager.getInstance().onNotify(AudioCommand.SOUND_STOP, AudioTypeEvent.WALK_LOOP);
-		setAnimationType(EntityAnimationType.WALK);
-		isMoving = false;
-		entity.getOwner().sendMessageToBattleManager(MessageToBattleScreen.ACTION_COMPLETED, entity);
-	}
-
-	@Override
-	public void setAnimationType(EntityAnimationType type) {
-		getEntityAnimation().setCurrentAnimationType(type);
-	}
-
-	private Direction decideDirection(float rotation) {
-		if ((rotation >= 45) && (rotation < 135)) {
-			return Direction.RIGHT;
-		} else if ((rotation >= 135) && (rotation < 225)) {
-			return Direction.UP;
-		} else if ((rotation >= 225) && (rotation < 315)) {
-			return Direction.LEFT;
-		}
-		return Direction.DOWN;
-	}
-
 	@Override
 	public void move(List<GridCell> path) {
 		if (!path.isEmpty()) {
-			isMoving = true;
 			final SequenceAction sequence = createMoveSequence(path);
 			getEntityactor().addAction(sequence);
 		}
@@ -192,7 +152,6 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 	@Override
 	public void moveAttack(List<GridCell> path, Entity target) {
 		if (!path.isEmpty()) {
-			isMoving = true;
 			final SequenceAction sequence = createMoveSequence(path);
 			sequence.addAction(new AttackAction(entity, target));
 			getEntityactor().addAction(sequence);
@@ -217,14 +176,48 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 		return sequence;
 	}
 
+	private float decideRotation(GridCell oldCell, GridCell cell) {
+		if ((oldCell.x == cell.x) && (oldCell.y > cell.y)) {
+			return 0.0f;
+		} else if ((oldCell.x == cell.x) && (oldCell.y < cell.y)) {
+			return 180.0f;
+		} else if ((oldCell.x > cell.x) && (oldCell.y == cell.y)) {
+			return 270.0f;
+		}
+		return 90.0f;
+	}
+
+	private void updatePositionFromActor() {
+		setDirection(decideDirection(this.getEntityactor().getRotation()));
+	}
+
+	private Direction decideDirection(float rotation) {
+		if ((rotation >= 45) && (rotation < 135)) {
+			return Direction.RIGHT;
+		} else if ((rotation >= 135) && (rotation < 225)) {
+			return Direction.UP;
+		} else if ((rotation >= 225) && (rotation < 315)) {
+			return Direction.LEFT;
+		}
+		return Direction.DOWN;
+	}
+
+	private void stopWalkingAction() {
+		AudioManager.getInstance().onNotify(AudioCommand.SOUND_STOP, AudioTypeEvent.WALK_LOOP);
+		setAnimationType(EntityAnimationType.WALK);
+		entity.getOwner().sendMessageToBattleManager(MessageToBattleScreen.ACTION_COMPLETED, entity);
+	}
+
+	@Override
+	public void setAnimationType(EntityAnimationType type) {
+		getEntityAnimation().setCurrentAnimationType(type);
+	}
+
 	@Override
 	public void draw(Batch batch) {
 		if (entity.isInBattle()) {
 			final Color temp = batch.getColor();
 			batch.setColor(new Color(temp.r, temp.g, temp.b, getEntityactor().getColor().a));
-			if (getFrame() == null) {
-				int j = 5;
-			}
 			batch.draw(getFrame(), getEntityactor().getX(), getEntityactor().getY(), 1.0f, 1.0f);
 			batch.setColor(temp);
 		}

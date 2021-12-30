@@ -18,7 +18,6 @@ public class PauseMenuScreen extends GameScreen {
 	private static final String PAUSE_BACKGROUND = "bg";
 
 	private Stage stage;
-	private SpriteBatch spriteBatch;
 	private BattleScreen battleScreen;
 	private Table menuTable;
 	private Label title;
@@ -40,7 +39,6 @@ public class PauseMenuScreen extends GameScreen {
 	}
 
 	private void initVariables(Camera camera, BattleScreen battleScreen, SpriteBatch spriteBatch) {
-		this.spriteBatch = spriteBatch;
 		stage = new Stage(new ScreenViewport(camera), spriteBatch);
 		menuTable = new Table();
 		menuTable.setDebug(false);
@@ -59,7 +57,6 @@ public class PauseMenuScreen extends GameScreen {
 	}
 
 	private void createLayout() {
-
 		menuTable.background(new TextureRegionDrawable(new TextureRegion(AssetManagerUtility.getSprite(PAUSE_BACKGROUND))));
 		menuTable.row();
 		menuTable.add(title).spaceBottom(BOTTOM_PAD).padTop(TOP_PAD).row();

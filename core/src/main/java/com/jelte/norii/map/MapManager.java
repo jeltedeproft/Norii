@@ -8,11 +8,12 @@ public class MapManager {
 	private static final String TAG = MapManager.class.getSimpleName();
 
 	private Camera camera;
-	private boolean mapChanged = false;
 	private Map currentMap;
 
-	public MapManager() {
+	private boolean mapChanged = false;
 
+	public MapManager() {
+		// empty constructor
 	}
 
 	public void loadMap(MapFactory.MapType mapType) {

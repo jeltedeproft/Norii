@@ -3,7 +3,6 @@ package com.jelte.norii.entities;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Random;
 
 import org.xguzm.pathfinding.grid.GridCell;
 
@@ -21,7 +20,6 @@ import com.jelte.norii.utility.TiledMapPosition;
 
 public class Entity extends Actor implements Comparable<Entity> {
 	public static final int MAX_XP = 100;
-	private static final Random random = new Random();
 
 	protected final EntityData entityData;
 
@@ -55,32 +53,26 @@ public class Entity extends Actor implements Comparable<Entity> {
 	public Entity(final EntityTypes type, UnitOwner owner, boolean isReal) {
 		entityData = EntityFileReader.getUnitData().get(type.ordinal());
 		entityType = type;
-		entityData.setEntity(this);
 		initEntity(owner, isReal);
 	}
 
-	public void initEntity(UnitOwner owner, boolean isReal) {
+	public void initEntity(UnitOwner unitOwner, boolean isRealUnit) {
+		modifiers = new ArrayList<>();
 		oldPlayerPosition = new TiledMapPosition().setPositionFromScreen(-1000, -1000);
 		currentPlayerPosition = new TiledMapPosition().setPositionFromScreen(-1000, -1000);
 		hp = entityData.getMaxHP();
 		isDead = false;
 		statsChanged = true;
 		isInvis = false;
-		direction = Direction.DOWN;
-		this.isReal = isReal;
 		inBattle = false;
+		direction = Direction.DOWN;
+		isReal = isRealUnit;
 		xp = 0;
-
-		this.owner = owner;
-
-		modifiers = new ArrayList<>();
+		owner = unitOwner;
 		entityID = java.lang.System.identityHashCode(this);
+		visualComponent = isReal	? new EntityVisualComponent(this)
+									: new FakeEntityVisualComponent();
 		initAbilities();
-		if (isReal) {
-			visualComponent = new EntityVisualComponent(this);
-		} else {
-			visualComponent = new FakeEntityVisualComponent();
-		}
 	}
 
 	private void initAbilities() {
@@ -122,7 +114,7 @@ public class Entity extends Actor implements Comparable<Entity> {
 	}
 
 	public void setCurrentPositionFromScreen(int x, int y) {
-		if ((x != currentPlayerPosition.getTileX()) || (y != currentPlayerPosition.getTileY())) {
+		if (!currentPlayerPosition.isTileEqualTo(x, y)) {
 			setCurrentPosition(new TiledMapPosition().setPositionFromScreen(x, y));
 		}
 	}
@@ -147,11 +139,7 @@ public class Entity extends Actor implements Comparable<Entity> {
 		}
 		final int reducedDamage = calculateDamage(damage, type);
 		if (reducedDamage >= hp) {
-			hp = 0;
-			visualComponent.removeUnit();
-			inBattle = false;
-			setVisible(false);
-			isDead = true;
+			removeUnitFromBattle();
 		} else {
 			hp = hp - reducedDamage;
 		}
@@ -168,6 +156,14 @@ public class Entity extends Actor implements Comparable<Entity> {
 		}
 		damage -= (damage / 100) * factor;
 		return damage;
+	}
+
+	private void removeUnitFromBattle() {
+		hp = 0;
+		visualComponent.removeUnit();
+		inBattle = false;
+		setVisible(false);
+		isDead = true;
 	}
 
 	public void heal(final int healAmount) {

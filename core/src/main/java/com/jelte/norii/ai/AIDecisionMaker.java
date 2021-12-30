@@ -1,6 +1,5 @@
 package com.jelte.norii.ai;
 
-import java.util.Random;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -8,12 +7,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.ai.movegenerator.AbilityTargetMoveGenerator;
 import com.jelte.norii.ai.movegenerator.MoveGenerator;
-import com.jelte.norii.battle.battleState.BattleState;
-import com.jelte.norii.battle.battleState.BattleStateModifier;
-import com.jelte.norii.battle.battleState.Move;
-import com.jelte.norii.battle.battleState.SpellMove;
+import com.jelte.norii.battle.battlestate.BattleState;
+import com.jelte.norii.battle.battlestate.BattleStateModifier;
+import com.jelte.norii.battle.battlestate.Move;
+import com.jelte.norii.battle.battlestate.SpellMove;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.magic.Ability;
+import com.jelte.norii.utility.Utility;
 
 public class AIDecisionMaker {
 	private static final String TAG = AIDecisionMaker.class.getSimpleName();
@@ -36,7 +36,6 @@ public class AIDecisionMaker {
 	private Long processingTimeCounter = 0L;
 	private Long oldTime = 0L;
 
-	private Random random = new Random();
 	private BattleStateModifier battleStateModifier = new BattleStateModifier();
 
 	public AIDecisionMaker() {
@@ -129,7 +128,8 @@ public class AIDecisionMaker {
 	}
 
 	private void nextBattlestateIfAllUnitsDone() {
-		int size = (turnIndex % 2) == 0 ? startingState.getAiUnits().size : startingState.getPlayerUnits().size;
+		int size = (turnIndex % 2) == 0 ? startingState.getAiUnits().size
+										: startingState.getPlayerUnits().size;
 
 		if (entityIndex >= size) {
 			oldTime = AbilityTargetMoveGenerator.debugTime("\n\nNEXT BATTLESTATE", oldTime);
@@ -161,7 +161,8 @@ public class AIDecisionMaker {
 	}
 
 	private boolean isRoundFinished() {
-		return turnIndex == 0 ? (battleStateIndex > 0) : (battleStateIndex >= (numberOfBattleStatesThisRound - 1));
+		return turnIndex == 0	? (battleStateIndex > 0)
+								: (battleStateIndex >= (numberOfBattleStatesThisRound - 1));
 	}
 
 	public BattleState getResult() {
@@ -191,15 +192,16 @@ public class AIDecisionMaker {
 			pos++;
 		}
 
-		int stateWePick = selectBattlestateFromResults(i, random);
+		int stateWePick = selectBattlestateFromResults(i);
 		Gdx.app.debug(TAG, "we pick state : " + stateWePick);
 		Gdx.app.debug(TAG, "which is : " + getInitialMoves(allBattleStates.get(NUMBER_OF_LAYERS - i).get(stateWePick)).getTurn());
 		return getInitialMoves(allBattleStates.get(NUMBER_OF_LAYERS - i).get(stateWePick));
 	}
 
-	private int selectBattlestateFromResults(int i, Random random) {
+	private int selectBattlestateFromResults(int i) {
 		int totalNumberOfStates = allBattleStates.get(NUMBER_OF_LAYERS - i).size;
-		return totalNumberOfStates < RANDOMISATION_TOP_X_STATES ? random.nextInt(totalNumberOfStates) : random.nextInt(RANDOMISATION_TOP_X_STATES);
+		return totalNumberOfStates < RANDOMISATION_TOP_X_STATES ? Utility.random.nextInt(totalNumberOfStates)
+																: Utility.random.nextInt(RANDOMISATION_TOP_X_STATES);
 	}
 
 	private BattleState getInitialMoves(BattleState battleState) {
@@ -218,9 +220,8 @@ public class AIDecisionMaker {
 
 	@Override
 	public String toString() {
-		return "state of the decision maker \n___________________\n" + "turn index = " + turnIndex + "\n" + "entity index = " + entityIndex + "\n" + "battleState index = " + battleStateIndex + "\n" + "number of battle states = "
-				+ numberOfBattleStatesThisRound + "\n" + "current battlestate = " + currentBattleState + "\n" + "unit = " + unit + "\n" + "starting state = " + startingState + "\n" + "processing time counter = " + processingTimeCounter
-				+ "\n";
+		return "state of the decision maker \n___________________\n\n" + "turn index = " + turnIndex + "\n" + "entity index = " + entityIndex + "\n" + "battleState index = " + battleStateIndex + "\n" + "number of battle states = "
+				+ numberOfBattleStatesThisRound + "\n" + "starting state = \n" + startingState + "\n" + "current battlestate = \n" + currentBattleState + "\n" + "unit = " + unit.getEntityData().getName() + "\n";
 	}
 
 }

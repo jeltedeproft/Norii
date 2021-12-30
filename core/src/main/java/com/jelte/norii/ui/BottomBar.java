@@ -16,6 +16,8 @@ import com.jelte.norii.magic.Ability;
 import com.jelte.norii.utility.AssetManagerUtility;
 
 public class BottomBar {
+	private static final String NO_ABILITY_TEXT = "NoAbility";
+	private static final String BACKGROUND_SKIN = "windowgray";
 	private static final String UNKNOWN_HERO_IMAGE = "nochar";
 	private static final String MOVE_BUTTON_SPRITE_NAME = "move";
 	private static final String ATTACK_BUTTON_SPRITE_NAME = "attack";
@@ -166,12 +168,32 @@ public class BottomBar {
 	}
 
 	private void populateHeroImageAndStats() {
+		createMainTable();
+
+		final Table subtable = createSubTable();
+		final Table actionsTable = createActionsTable();
+		final Table infoTable = createInfoTable();
+
+		table.add(subtable).align(Align.topLeft).height(tilePixelHeight * 3).width(tilePixelWidth * 6);
+		table.add(actionsTable).align(Align.topLeft).height(tilePixelHeight * 3).width(tilePixelWidth * 6);
+		table.add(infoTable).align(Align.topLeft).height(tilePixelHeight * 3).width(tilePixelWidth * 6);
+
+		table.validate();
+		table.invalidateHierarchy();
+		table.pack();
+
+	}
+
+	private void createMainTable() {
 		table = new Table();
 		table.setBackground(AssetManagerUtility.getSkin().getDrawable("window-noborder"));
 		table.setTransform(false);
 		table.setPosition(0, 0);
 		table.pad(0);
 		table.add(heroImageButton).width(tilePixelWidth * 3).height((tilePixelHeight * 3)).pad(0).align(Align.bottomLeft);
+	}
+
+	private Table createSubTable() {
 		final Table subtable = new Table();
 		subtable.add(statsLabel).height(HERO_NAME_LABEL_HEIGHT).align(Align.topLeft).width(HERO_NAME_LABEL_WIDTH).padTop(7).padBottom(PAD_BOTTOM_TITLE);
 		subtable.row();
@@ -201,9 +223,11 @@ public class BottomBar {
 		subtable.add().padLeft(25).width(STATS_WIDTH);
 		subtable.add().padLeft(25).width(STATS_WIDTH);
 
-		subtable.setBackground(AssetManagerUtility.getSkin().getDrawable("windowgray"));
-		table.add(subtable).align(Align.topLeft).height(tilePixelHeight * 3).width(tilePixelWidth * 6);
+		subtable.setBackground(AssetManagerUtility.getSkin().getDrawable(BACKGROUND_SKIN));
+		return subtable;
+	}
 
+	private Table createActionsTable() {
 		final Table actionsTable = new Table();
 		actionsTable.add(actionsLabel).height(HERO_NAME_LABEL_HEIGHT).align(Align.topLeft).width(HERO_NAME_LABEL_WIDTH).padTop(7).padBottom(PAD_BOTTOM_TITLE);
 		actionsTable.row();
@@ -216,9 +240,11 @@ public class BottomBar {
 		actionsTable.add(skipImageButton).size(tilePixelWidth * 2, tilePixelHeight * 1).pad(ICON_PADDING);
 		actionsTable.add(spellImageButton).size(tilePixelWidth * 2, tilePixelHeight * 1).pad(ICON_PADDING);
 
-		actionsTable.setBackground(AssetManagerUtility.getSkin().getDrawable("windowgray"));
-		table.add(actionsTable).align(Align.topLeft).height(tilePixelHeight * 3).width(tilePixelWidth * 6);
+		actionsTable.setBackground(AssetManagerUtility.getSkin().getDrawable(BACKGROUND_SKIN));
+		return actionsTable;
+	}
 
+	private Table createInfoTable() {
 		final Table infoTable = new Table();
 		infoTable.add(infoLabel).height(HERO_NAME_LABEL_HEIGHT).align(Align.topLeft).width(HERO_NAME_LABEL_WIDTH).padTop(7).padBottom(PAD_BOTTOM_TITLE);
 		infoTable.row();
@@ -227,14 +253,8 @@ public class BottomBar {
 		infoTable.padLeft(5);
 		infoTable.add(abilityIcon).size(tilePixelWidth, tilePixelHeight);
 		infoTable.add(spellInfo).size(tilePixelWidth, tilePixelHeight);
-
-		infoTable.setBackground(AssetManagerUtility.getSkin().getDrawable("windowgray"));
-		table.add(infoTable).align(Align.topLeft).height(tilePixelHeight * 3).width(tilePixelWidth * 6);
-
-		table.validate();
-		table.invalidateHierarchy();
-		table.pack();
-
+		infoTable.setBackground(AssetManagerUtility.getSkin().getDrawable(BACKGROUND_SKIN));
+		return infoTable;
 	}
 
 	public void setHero(final Entity entity) {
@@ -245,7 +265,7 @@ public class BottomBar {
 					spellImageButton.setAbility(entity.getAbility());
 				} else {
 					spellImageButton.clearAbility();
-					changeSpellImage("NoAbility");
+					changeSpellImage(NO_ABILITY_TEXT);
 					spellInfo.setText("");
 				}
 				activeUnit = entity;

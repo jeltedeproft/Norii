@@ -13,82 +13,82 @@ public class FakeEntityVisualComponent implements EntityVisualComponentInterface
 
 	@Override
 	public void update(float delta) {
-		// TODO Auto-generated method stub
+		// nothing to do
 
 	}
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
+		// nothing to do
 
 	}
 
 	@Override
 	public void setAnimationType(EntityAnimationType type) {
-		// TODO Auto-generated method stub
+		// nothing to do
 
 	}
 
 	@Override
 	public void removeUnit() {
-		// TODO Auto-generated method stub
+		// nothing to do
 
 	}
 
 	@Override
 	public void move(List<GridCell> path) {
-		// TODO Auto-generated method stub
+		// nothing to do
 
 	}
 
 	@Override
 	public void moveAttack(List<GridCell> path, Entity target) {
-		// TODO Auto-generated method stub
+		// nothing to do
 
 	}
 
 	@Override
 	public void draw(Batch batch) {
-		// TODO Auto-generated method stub
+		// nothing to do
 
 	}
 
 	@Override
 	public void setActive(boolean b) {
-		// TODO Auto-generated method stub
+		// nothing to do
 
 	}
 
 	@Override
 	public void setDirection(Direction up) {
-		// TODO Auto-generated method stub
+		// nothing to do
 
 	}
 
 	@Override
 	public void setInDeploymentPhase(boolean b) {
-		// TODO Auto-generated method stub
+		// nothing to do
 
 	}
 
 	@Override
 	public void initiateInBattle(TiledMapPosition pos) {
-		// TODO Auto-generated method stub
+		// nothing to do
 	}
 
 	@Override
 	public void changeAnimation(EntityAnimation entityAnimation) {
-		// TODO Auto-generated method stub
+		// nothing to do
 	}
 
 	@Override
 	public void setEntityactor(EntityActor entityActor) {
-		// TODO Auto-generated method stub
+		// nothing to do
 	}
 
 	@Override
 	public void restoreAnimation() {
-		// TODO Auto-generated method stub
+		// nothing to do
 	}
 
 	@Override
@@ -103,7 +103,7 @@ public class FakeEntityVisualComponent implements EntityVisualComponentInterface
 
 	@Override
 	public void setActionsHovering(boolean b) {
-		// TODO Auto-generated method stub
+		// nothing to do
 	}
 
 	@Override
@@ -113,31 +113,31 @@ public class FakeEntityVisualComponent implements EntityVisualComponentInterface
 
 	@Override
 	public EntityActor getEntityactor() {
-		// TODO Auto-generated method stub
+		// nothing to do
 		return null;
 	}
 
 	@Override
 	public void spawn(TiledMapPosition tiledMapPosition) {
-		// TODO Auto-generated method stub
+		// nothing to do
 
 	}
 
 	@Override
 	public void setVisualPosition(TiledMapPosition actorPos) {
-		// TODO Auto-generated method stub
+		// nothing to do
 
 	}
 
 	@Override
 	public void updateBattleState(TiledMapPosition oldPosition) {
-		// TODO Auto-generated method stub
+		// nothing to do
 
 	}
 
 	@Override
 	public void pushTo(MyPoint casterNewPosition) {
-		// TODO Auto-generated method stub
+		// nothing to do
 
 	}
 

@@ -1,4 +1,4 @@
-package com.jelte.norii.battle.battleState;
+package com.jelte.norii.battle.battlestate;
 
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.utility.MyPoint;
@@ -14,7 +14,7 @@ public class Move {
 		this.location = location;
 		this.unit = null;
 	}
-	
+
 	public Move(MoveType moveType, MyPoint location, Entity unit) {
 		this.moveType = moveType;
 		this.location = location;
@@ -56,6 +56,6 @@ public class Move {
 	}
 
 	public Move makeCopy() {
-		return new Move(moveType, new MyPoint(location.x, location.y),unit);
+		return new Move(moveType, new MyPoint(location.x, location.y), unit);
 	}
 }

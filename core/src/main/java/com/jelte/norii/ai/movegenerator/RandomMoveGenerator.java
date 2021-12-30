@@ -3,16 +3,15 @@ package com.jelte.norii.ai.movegenerator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 import java.util.Set;
 
 import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.ai.UnitTurn;
-import com.jelte.norii.battle.battleState.BattleState;
-import com.jelte.norii.battle.battleState.BattleStateGridHelper;
-import com.jelte.norii.battle.battleState.Move;
-import com.jelte.norii.battle.battleState.MoveType;
-import com.jelte.norii.battle.battleState.SpellMove;
+import com.jelte.norii.battle.battlestate.BattleState;
+import com.jelte.norii.battle.battlestate.BattleStateGridHelper;
+import com.jelte.norii.battle.battlestate.Move;
+import com.jelte.norii.battle.battlestate.MoveType;
+import com.jelte.norii.battle.battlestate.SpellMove;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.UnitOwner;
 import com.jelte.norii.magic.Ability;
@@ -24,8 +23,6 @@ public class RandomMoveGenerator implements MoveGenerator {
 
 	private static final float CHANCE_OF_MAKING_MOVE = 0.2f;
 	private static final float CHANCE_OF_MAKING_ATTACK = 0.1f;
-
-	private Random random = new Random();
 
 	@Override
 	public List<Move> getMoves(UnitOwner player, BattleState battleState, int ap) {
@@ -46,7 +43,7 @@ public class RandomMoveGenerator implements MoveGenerator {
 
 	@Override
 	public Move getMove(UnitOwner player, BattleState battleState) {
-		float randomChance = random.nextFloat();
+		float randomChance = Utility.random.nextFloat();
 
 		if (randomChance <= CHANCE_OF_MAKING_MOVE) {
 			return generateSingleMovementMoveForPlayer(player, battleState);
@@ -76,15 +73,8 @@ public class RandomMoveGenerator implements MoveGenerator {
 		Entity randomUnit = getRandomUnit(player, battleState);
 		int attackRange = randomUnit.getAttackRange();
 		Array<Entity> neighbours = battleState.getNeighbours(randomUnit.getCurrentPosition().getTilePosAsPoint(), attackRange);
-		Move move;
-		if (!neighbours.isEmpty()) {
-			Entity unitToAttack = Utility.getRandom(neighbours);
-			move = new Move(MoveType.ATTACK, unitToAttack.getCurrentPosition().getTilePosAsPoint(), randomUnit);
-		} else {
-			move = new Move(MoveType.DUMMY, new MyPoint(0, 0), randomUnit);
-		}
-
-		return move;
+		return neighbours.isEmpty() ? new Move(MoveType.DUMMY, new MyPoint(0, 0), randomUnit)
+									: new Move(MoveType.ATTACK, Utility.getRandom(neighbours).getCurrentPosition().getTilePosAsPoint(), randomUnit);
 	}
 
 	public Move generateSingleSpellMoveForPlayer(UnitOwner player, BattleState battleState) {
@@ -143,13 +133,8 @@ public class RandomMoveGenerator implements MoveGenerator {
 	}
 
 	private Entity getRandomUnit(UnitOwner player, BattleState battleState) {
-		Entity randomUnit;
-		if (player.isAI()) {
-			randomUnit = battleState.getRandomAiUnit();
-		} else {
-			randomUnit = battleState.getRandomPlayerUnit();
-		}
-		return randomUnit;
+		return player.isAI()	? battleState.getRandomAiUnit()
+								: battleState.getRandomPlayerUnit();
 	}
 
 }

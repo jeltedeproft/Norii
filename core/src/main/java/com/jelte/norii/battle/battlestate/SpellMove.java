@@ -1,4 +1,4 @@
-package com.jelte.norii.battle.battleState;
+package com.jelte.norii.battle.battlestate;
 
 import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.entities.Entity;
@@ -14,9 +14,9 @@ public class SpellMove extends Move {
 		this.ability = ability;
 		this.affectedUnits = affectedUnits;
 	}
-	
+
 	public SpellMove(MoveType moveType, MyPoint location, Ability ability, Array<MyPoint> affectedUnits, Entity unit) {
-		super(moveType, location,unit);
+		super(moveType, location, unit);
 		this.ability = ability;
 		this.affectedUnits = affectedUnits;
 	}

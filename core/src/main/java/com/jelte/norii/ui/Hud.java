@@ -43,12 +43,8 @@ public class Hud {
 
 	public Hud(List<Entity> playerUnits, List<Entity> aiUnits, SpriteBatch spriteBatch, int mapWidth, int mapHeight, BattleScreen battleScreen, EnemyType enemyType) {
 		isOnline = enemyType == EnemyType.ONLINE_PLAYER;
-		List<Entity> allUnits;
-		if (isOnline) {
-			allUnits = playerUnits;
-		} else {
-			allUnits = Stream.concat(playerUnits.stream(), aiUnits.stream()).collect(Collectors.toList());
-		}
+		List<Entity> allUnits = isOnline	? playerUnits
+											: Stream.concat(playerUnits.stream(), aiUnits.stream()).collect(Collectors.toList());
 
 		initVariables(spriteBatch, mapWidth, mapHeight, battleScreen);
 		createTileHoverParticle();

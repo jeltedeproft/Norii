@@ -1,9 +1,7 @@
-package com.jelte.norii.battle.battleState;
+package com.jelte.norii.battle.battlestate;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.ai.UnitTurn;
@@ -46,7 +44,7 @@ public class BattleStateModifier {
 			applyAttackOnBattleState(copyUnit, move, newState);
 			break;
 		case MOVE:
-			newState.moveUnitTo(copyUnit, move.getLocation());
+			newState.moveUnitAndCreateIfNecessary(copyUnit, move.getLocation());
 			break;
 		case DUMMY:
 			// do nothing
@@ -191,13 +189,9 @@ public class BattleStateModifier {
 	}
 
 	private void castPortal(Entity unit, BattleState battleState, final MyPoint casterPos, final MyPoint location) {
-		final boolean playerUnit = unit.isPlayerUnit();
-		Array<Entity> entities;
-		if (playerUnit) {
-			entities = battleState.getPlayerUnits();
-		} else {
-			entities = battleState.getAiUnits();
-		}
+		Array<Entity> entities = unit.isPlayerUnit()	? battleState.getPlayerUnits()
+														: battleState.getAiUnits();
+
 		int portalCount = 0;
 		for (final Entity entity : entities) {
 			if (entity.getEntityType() == EntityTypes.PORTAL) {
@@ -267,50 +261,39 @@ public class BattleStateModifier {
 
 		// damage target, update ui, increase entities hit and save unit in list
 		Entity target = battleState.get(location.x, location.y).getUnit();
-
-		entitiesHit = crackleTarget(move.getAbility(), usedTargets, entitiesHit, target);
-
-		// do same for that unit until enough units hit or no units closeby
-		// make sure that unit first cast on is not coming back later on
-		TreeMap<Integer, Array<Entity>> distancesToTarget = (TreeMap<Integer, Array<Entity>>) Utility.getDistancesWithTarget(location, battleState.getAllUnits());
-		while ((!distancesToTarget.isEmpty()) && (entitiesHit <= 3)) {
-			final Array<Entity> closestUnits = getFirstNotNull(distancesToTarget);
-			if (closestUnits != null) {
-				final Entity closestUnit = closestUnits.first();
-				if (Utility.checkIfUnitsWithinDistance(closestUnit, target, 4)) {
-					if (usedTargets.contains(closestUnit, false)) {
-						// skip this unit
-						closestUnits.removeIndex(0);
-					} else {
-						entitiesHit = crackleTarget(move.getAbility(), usedTargets, entitiesHit, closestUnit);
-						distancesToTarget = (TreeMap<Integer, Array<Entity>>) Utility.getDistancesWithTarget(closestUnit.getCurrentPosition().getTilePosAsPoint(), battleState.getAllUnits());
-						target = closestUnit;
-					}
-				} else {
-					break;
-				}
-			} else {
-				break;
-			}
-		}
-	}
-
-	private Array<Entity> getFirstNotNull(TreeMap<Integer, Array<Entity>> distancesToTarget) {
-		for (Map.Entry<Integer, Array<Entity>> entry : distancesToTarget.entrySet()) {
-			if (!entry.getValue().isEmpty()) {
-				return entry.getValue();
-			}
-		}
-		return null;
-	}
-
-	private int crackleTarget(final Ability ability, Array<Entity> usedTargets, int entitiesHit, final Entity target) {
 		if (target != null) {
-			target.damage(ability.getSpellData().getDamage(), ability.getDamageType());
-			usedTargets.add(target);
+			crackleTarget(move.getAbility(), target);
 			entitiesHit++;
+			usedTargets.add(target);
+			Entity closestUnit = getClosestUnitTo(target, battleState, usedTargets);
+			while ((closestUnit != null) && (Utility.getDistanceBetweenUnits(target, closestUnit) <= 4) && (entitiesHit <= 3)) {
+				crackleTarget(move.getAbility(), target);
+				entitiesHit++;
+				usedTargets.add(target);
+			}
 		}
-		return entitiesHit;
+	}
+
+	private void crackleTarget(final Ability ability, final Entity target) {
+		target.damage(ability.getSpellData().getDamage(), ability.getDamageType());
+	}
+
+	private Entity getClosestUnitTo(Entity source, BattleState battleState, Array<Entity> usedTargets) {
+		Array<Entity> units = battleState.getAllUnits();
+		if (units.isEmpty()) {
+			return null;
+		}
+		Entity closestUnit = null;
+		int closestDistance = 1000000;
+
+		for (Entity unit : units) {
+			int distance = Utility.getDistanceBetweenUnits(source, unit);
+			if ((!usedTargets.contains(unit, false)) || ((closestUnit == null) || ((distance < closestDistance) && !usedTargets.contains(closestUnit, false)))) {
+				closestDistance = distance;
+				closestUnit = unit;
+			}
+		}
+		return closestUnit;
 	}
 
 	/** Bresenham algorithm to find all cells crossed by a line **/
@@ -320,8 +303,10 @@ public class BattleStateModifier {
 		final int dx = Math.abs(x1 - x0);
 		final int dy = Math.abs(y1 - y0);
 
-		final int sx = x0 < x1 ? 1 : -1;
-		final int sy = y0 < y1 ? 1 : -1;
+		final int sx = x0 < x1	? 1
+								: -1;
+		final int sy = y0 < y1	? 1
+								: -1;
 
 		int err = dx - dy;
 		int e2;

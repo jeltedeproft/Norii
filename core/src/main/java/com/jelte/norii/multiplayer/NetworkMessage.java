@@ -5,7 +5,7 @@ import java.util.HashMap;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
-import com.jelte.norii.battle.battleState.MoveType;
+import com.jelte.norii.battle.battlestate.MoveType;
 import com.jelte.norii.entities.EntityTypes;
 import com.jelte.norii.magic.AbilitiesEnum;
 import com.jelte.norii.utility.MyPoint;
@@ -339,7 +339,7 @@ public class NetworkMessage {
 		return Integer.valueOf(unitID);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "rawtypes" })
 	public HashMap getTeamWithIdMap() {
 		return json.fromJson(HashMap.class, teamWithIdMap);
 	}
@@ -421,7 +421,7 @@ public class NetworkMessage {
 	}
 
 	private Array<MyPoint> stringToArrayOfMyPoints(String affectedUnits) {
-		if (affectedUnits.isBlank() || affectedUnits.isEmpty() || (affectedUnits == null)) {
+		if (affectedUnits.isBlank() || affectedUnits.isEmpty()) {
 			return null;
 		}
 		Array<MyPoint> myPoints = new Array<>();

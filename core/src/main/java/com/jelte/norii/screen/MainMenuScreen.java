@@ -43,6 +43,8 @@ public class MainMenuScreen extends GameScreen {
 	private static final float BUTTON_HEIGHT_FACTOR = 1 / 18f;
 	private static final float BUTTON_PAD_BOTTOM = 40;
 	private static final float BUTTON_PAD_TOP = 40;
+	private static final String TITLE_FONT_NAME = "bigFont";
+	private static final String GENERAL_FONT_NAME = "lumos30";
 
 	private Stage stage;
 	private SpriteBatch backgroundbatch;
@@ -107,16 +109,16 @@ public class MainMenuScreen extends GameScreen {
 		final TextureAtlas atlas = AssetManagerUtility.getTextureAtlas(AssetManagerUtility.SPRITES_ATLAS_PATH);
 
 		final TextureRegion backTrees = atlas.findRegion("background-back-trees");
-		final TextureRegionParallaxLayer backTreesLayer = new TextureRegionParallaxLayer(backTrees, worldHeight, new Vector2(.3f, .3f), WH.height);
+		final TextureRegionParallaxLayer backTreesLayer = new TextureRegionParallaxLayer(backTrees, worldHeight, new Vector2(.3f, .3f), WH.HEIGHT);
 
 		final TextureRegion lights = atlas.findRegion("background-light");
-		final TextureRegionParallaxLayer lightsLayer = new TextureRegionParallaxLayer(lights, worldHeight, new Vector2(.6f, .6f), WH.height);
+		final TextureRegionParallaxLayer lightsLayer = new TextureRegionParallaxLayer(lights, worldHeight, new Vector2(.6f, .6f), WH.HEIGHT);
 
 		final TextureRegion middleTrees = atlas.findRegion("background-middle-trees");
-		final TextureRegionParallaxLayer middleTreesLayer = new TextureRegionParallaxLayer(middleTrees, worldHeight, new Vector2(.75f, .75f), WH.height);
+		final TextureRegionParallaxLayer middleTreesLayer = new TextureRegionParallaxLayer(middleTrees, worldHeight, new Vector2(.75f, .75f), WH.HEIGHT);
 
 		final TextureRegion frontTrees = atlas.findRegion("foreground");
-		final TextureRegionParallaxLayer frontTreesLayer = new TextureRegionParallaxLayer(frontTrees, worldHeight, new Vector2(.6f, .6f), WH.height);
+		final TextureRegionParallaxLayer frontTreesLayer = new TextureRegionParallaxLayer(frontTrees, worldHeight, new Vector2(.6f, .6f), WH.HEIGHT);
 
 		parallaxBackground = new ParallaxBackground();
 		parallaxBackground.addLayers(backTreesLayer, lightsLayer, middleTreesLayer, frontTreesLayer);
@@ -125,13 +127,13 @@ public class MainMenuScreen extends GameScreen {
 	private void createButtons() {
 		final Skin statusUISkin = AssetManagerUtility.getSkin();
 
-		title = new Label(" Norii\n_______", statusUISkin, "bigFont");
-		playButton = new TextButton("Play", statusUISkin, "lumos30");
-		multiplayerButton = new TextButton("Multiplayer", statusUISkin, "lumos30");
-		playTutorialButton = new TextButton("Play Tutorial", statusUISkin, "lumos30");
-		setTeamButton = new TextButton("Manage Team", statusUISkin, "lumos30");
-		settingsButton = new TextButton("Settings", statusUISkin, "lumos30");
-		exitButton = new TextButton("Exit", statusUISkin, "lumos30");
+		title = new Label(" Norii\n_______", statusUISkin, TITLE_FONT_NAME);
+		playButton = new TextButton("Play", statusUISkin, GENERAL_FONT_NAME);
+		multiplayerButton = new TextButton("Multiplayer", statusUISkin, GENERAL_FONT_NAME);
+		playTutorialButton = new TextButton("Play Tutorial", statusUISkin, GENERAL_FONT_NAME);
+		setTeamButton = new TextButton("Manage Team", statusUISkin, GENERAL_FONT_NAME);
+		settingsButton = new TextButton("Settings", statusUISkin, GENERAL_FONT_NAME);
+		exitButton = new TextButton("Exit", statusUISkin, GENERAL_FONT_NAME);
 	}
 
 	private void createLayout() {
@@ -250,10 +252,12 @@ public class MainMenuScreen extends GameScreen {
 
 	@Override
 	public void pause() {
+		// no-op
 	}
 
 	@Override
 	public void resume() {
+		// no-op
 	}
 
 	@Override

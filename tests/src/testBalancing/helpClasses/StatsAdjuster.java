@@ -169,10 +169,9 @@ public class StatsAdjuster {
 
 		private static final List<StatsEnum> STATS = Collections.unmodifiableList(Arrays.asList(StatsEnum.values()));
 		private static final int SIZE = STATS.size();
-		private static final java.util.Random RANDOM = new java.util.Random();
 
 		public static StatsEnum getRandomStat() {
-			return STATS.get(RANDOM.nextInt(SIZE));
+			return STATS.get(Utility.random.nextInt(SIZE));
 		}
 	}
 

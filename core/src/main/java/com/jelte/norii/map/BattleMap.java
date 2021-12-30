@@ -21,10 +21,10 @@ import com.jelte.norii.utility.TiledMapPosition;
 public class BattleMap extends Map {
 	private static final String TAG = BattleMap.class.getSimpleName();
 
-	private ArrayList<TiledMapPosition> unitSpawnPositions;
+	protected ArrayList<TiledMapPosition> unitSpawnPositions;
+	protected ArrayList<TiledMapPosition> enemyStartPositions;
 	protected Vector2 playerStartPositionRect;
 	protected TiledMapPosition convertedUnits;
-	protected ArrayList<TiledMapPosition> enemyStartPositions;
 
 	BattleMap(MapType mapType, final String mapPath) {
 		super(mapType, mapPath);
@@ -52,10 +52,8 @@ public class BattleMap extends Map {
 
 		if (spawnsLayer == null) {
 			Gdx.app.debug(TAG, "No spawn layer!");
-		} else {
-			if (unitSpawnPositions.isEmpty()) {
-				fillSpawnPositions();
-			}
+		} else if (unitSpawnPositions.isEmpty()) {
+			fillSpawnPositions();
 		}
 	}
 
@@ -101,7 +99,7 @@ public class BattleMap extends Map {
 		for (final TiledMapPosition pos : unitSpawnPositions) {
 			ParticleMaker.addParticle(ParticleType.SPAWN, pos, 0);
 		}
-		
+
 		for (final TiledMapPosition pos : enemyStartPositions) {
 			ParticleMaker.addParticle(ParticleType.PURPLE_SQUARE, pos, 0);
 		}

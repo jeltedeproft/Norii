@@ -1,4 +1,4 @@
-package com.jelte.norii.battle.battleState;
+package com.jelte.norii.battle.battlestate;
 
 import java.util.HashSet;
 import java.util.List;
@@ -16,7 +16,6 @@ import com.jelte.norii.utility.TiledMapPosition;
 
 public class BattleStateGridHelper {
 	private static BattleStateGridHelper instance;
-	private static final String TAG = BattleStateGridHelper.class.getSimpleName();
 
 	public Set<MyPoint> findTargets(MyPoint caster, MyPoint center, Ability ability, BattleState battleState) {
 		final AffectedTeams affectedTeams = ability.getAffectedTeams();
@@ -31,13 +30,6 @@ public class BattleStateGridHelper {
 			targets.addAll(collectTargets(caster, MyPoint, area, affectedTeams, battleState, ability.getSpellData().getAreaOfEffectRange()));
 		}
 		return targets;
-	}
-
-	// TO-DO optimize : return only subset of points
-	public Set<MyPoint> getAllPointsASpellCanHit(MyPoint center, LineOfSight lineOfSight, int range, BattleState battleState) {
-		final Set<MyPoint> points = getPossibleCenterCells(center, lineOfSight, range);
-		checkMyPointBounds(points, battleState);
-		return points;
 	}
 
 	public Set<MyPoint> getPossibleCenterCellsFiltered(MyPoint center, LineOfSight lineOfSight, int range, BattleState battleState) {
@@ -69,6 +61,143 @@ public class BattleStateGridHelper {
 		}
 	}
 
+	private Set<MyPoint> addLines(Set<MyPoint> myPoints, MyPoint centre, int range) {
+		addLineUpwards(myPoints, centre, range);
+		addLineLeft(myPoints, centre, range);
+		addLineRight(myPoints, centre, range);
+		addLineDownwards(myPoints, centre, range);
+		return myPoints;
+	}
+
+	private void addLineUpwards(Set<MyPoint> myPoints, MyPoint centre, int range) {
+		for (int i = 1; i <= range; i++) {
+			myPoints.add(new MyPoint(centre.x, centre.y + i));
+		}
+	}
+
+	private void addLineLeft(Set<MyPoint> myPoints, MyPoint centre, int range) {
+		for (int i = 1; i <= range; i++) {
+			myPoints.add(new MyPoint(centre.x - i, centre.y));
+		}
+	}
+
+	private void addLineRight(Set<MyPoint> myPoints, MyPoint centre, int range) {
+		for (int i = 1; i <= range; i++) {
+			myPoints.add(new MyPoint(centre.x + i, centre.y));
+		}
+	}
+
+	private void addLineDownwards(Set<MyPoint> myPoints, MyPoint centre, int range) {
+		for (int i = 1; i <= range; i++) {
+			myPoints.add(new MyPoint(centre.x, centre.y - i));
+		}
+	}
+
+	private Set<MyPoint> addUnfilledSquareAroundCentre(Set<MyPoint> myPoints, MyPoint centre, int range) {
+		myPoints.add(new MyPoint(centre.x + range, centre.y));
+		myPoints.add(new MyPoint(centre.x - range, centre.y));
+		myPoints.add(new MyPoint(centre.x, centre.y + range));
+		myPoints.add(new MyPoint(centre.x, centre.y - range));
+		for (int i = 1; i <= range; i++) {
+			myPoints.add(new MyPoint(centre.x + range, centre.y - i));
+			myPoints.add(new MyPoint(centre.x - range, centre.y - i));
+			myPoints.add(new MyPoint(centre.x + range, centre.y + i));
+			myPoints.add(new MyPoint(centre.x - range, centre.y + i));
+
+			myPoints.add(new MyPoint(centre.x + i, centre.y - range));
+			myPoints.add(new MyPoint(centre.x - i, centre.y - range));
+			myPoints.add(new MyPoint(centre.x + i, centre.y + range));
+			myPoints.add(new MyPoint(centre.x - i, centre.y + range));
+		}
+		return myPoints;
+	}
+
+	private Set<MyPoint> addFilledSquareAroundCentre(Set<MyPoint> myPoints, MyPoint centre, int range) {
+		addUnfilledSquareAroundCentre(myPoints, centre, range);
+		for (int i = centre.x - range; i <= (centre.x + range); i++) {
+			for (int j = centre.y - range; j <= (centre.y + range); j++) {
+				myPoints.add(new MyPoint(i, j));
+			}
+		}
+		return myPoints;
+	}
+
+	private Set<MyPoint> addUnfilledCircleAroundCentre(Set<MyPoint> myPoints, MyPoint centre, int range) {
+		final int centerX = centre.x;
+		final int centerY = centre.y;
+
+		for (int i = 0; i <= range; i++) {
+			for (int j = 0; j <= range; j++) {
+				if ((i + j) == range) {
+					myPoints.add(new MyPoint(centerX + i, centerY + j));
+					myPoints.add(new MyPoint(centerX - i, centerY + j));
+					myPoints.add(new MyPoint(centerX + i, centerY - j));
+					myPoints.add(new MyPoint(centerX - i, centerY - j));
+				}
+			}
+		}
+		return myPoints;
+	}
+
+	private Set<MyPoint> addFilledCircleAroundCentre(Set<MyPoint> points, MyPoint centre, int range) {
+		for (int i = 1; i <= range; i++) {
+			points.addAll(addUnfilledCircleAroundCentre(points, centre, i));
+		}
+		return points;
+	}
+
+	private Set<MyPoint> addDiagonalCrossAroundCentre(Set<MyPoint> points, MyPoint centre, int range) {
+		final int centerX = centre.x;
+		final int centerY = centre.y;
+
+		for (int i = 1; i <= range; i++) {
+			points.add(new MyPoint(centerX + i, centerY + i));
+			points.add(new MyPoint(centerX - i, centerY + i));
+			points.add(new MyPoint(centerX + i, centerY - i));
+			points.add(new MyPoint(centerX - i, centerY - i));
+		}
+
+		return points;
+	}
+
+	private Set<MyPoint> addCrossAroundCentre(Set<MyPoint> points, MyPoint centre, int range) {
+		final int centerX = centre.x;
+		final int centerY = centre.y;
+
+		for (int i = 1; i <= range; i++) {
+			points.add(new MyPoint(centerX + i, centerY));
+			points.add(new MyPoint(centerX - i, centerY));
+			points.add(new MyPoint(centerX, centerY + i));
+			points.add(new MyPoint(centerX, centerY - i));
+		}
+
+		return points;
+	}
+
+	private Set<MyPoint> addDiagonalTopRightAroundCentre(Set<MyPoint> points, MyPoint centre, int range) {
+		final int centerX = centre.x;
+		final int centerY = centre.y;
+
+		for (int i = 1; i <= range; i++) {
+			points.add(new MyPoint(centerX + i, centerY + i));
+			points.add(new MyPoint(centerX - i, centerY - i));
+		}
+
+		return points;
+	}
+
+	private Set<MyPoint> addDiagonalTopLeftAroundCentre(Set<MyPoint> points, MyPoint centre, int range) {
+		final int centerX = centre.x;
+		final int centerY = centre.y;
+
+		for (int i = 1; i <= range; i++) {
+			points.add(new MyPoint(centerX - i, centerY + i));
+			points.add(new MyPoint(centerX + i, centerY - i));
+		}
+
+		return points;
+	}
+
 	public Set<MyPoint> collectTargets(MyPoint caster, MyPoint center, AreaOfEffect area, AffectedTeams affectedTeams, BattleState stateOfBattle, int areaOfEffectRange) {
 		final Set<MyPoint> spotsToCheck = getSpotsAreaOfEffect(caster, center, area, areaOfEffectRange);
 
@@ -78,12 +207,6 @@ public class BattleStateGridHelper {
 		} else {
 			return spotsToCheck;
 		}
-	}
-
-	public Set<MyPoint> getAllPointsASpellCanHit(MyPoint caster, MyPoint center, AreaOfEffect areaOfEffect, int range, BattleState battleState) {
-		final Set<MyPoint> points = getSpotsAreaOfEffect(caster, center, areaOfEffect, range);
-		checkMyPointBounds(points, battleState);
-		return points;
 	}
 
 	private Set<MyPoint> getSpotsAreaOfEffect(MyPoint caster, MyPoint center, AreaOfEffect area, int areaOfEffectRange) {
@@ -158,192 +281,15 @@ public class BattleStateGridHelper {
 		return spotsToCheck;
 	}
 
-	private Set<MyPoint> getSpotsWithUnitsOn(Set<MyPoint> spotsToCheck, AffectedTeams affectedTeams, BattleState stateOfBattle) {
-		final Set<MyPoint> units = new HashSet<>();
-		switch (affectedTeams) {
-		case FRIENDLY:
-			for (final MyPoint MyPoint : spotsToCheck) {
-				if (hasCellAiUnit(MyPoint, stateOfBattle)) {
-					units.add(MyPoint);
-				}
-			}
-			break;
-		case ENEMY:
-			for (final MyPoint MyPoint : spotsToCheck) {
-				if (hasCellPlayerUnit(MyPoint, stateOfBattle)) {
-					units.add(MyPoint);
-				}
-			}
-			break;
-		case BOTH:
-			for (final MyPoint MyPoint : spotsToCheck) {
-				if (hasCellUnit(MyPoint, stateOfBattle)) {
-					units.add(MyPoint);
-				}
-			}
-			break;
-		}
-		return units;
-	}
-
-	private boolean hasCellAiUnit(MyPoint MyPoint, BattleState stateOfBattle) {
-		final BattleCell cell = stateOfBattle.get(MyPoint.x, MyPoint.y);
-		if (cell.isOccupied()) {
-			return !cell.getUnit().isPlayerUnit();
-		}
-		return false;
-	}
-
-	private boolean hasCellPlayerUnit(MyPoint MyPoint, BattleState stateOfBattle) {
-		final BattleCell cell = stateOfBattle.get(MyPoint.x, MyPoint.y);
-		if (cell.isOccupied()) {
-			return cell.getUnit().isPlayerUnit();
-		}
-		return false;
-	}
-
-	private boolean hasCellUnit(MyPoint MyPoint, BattleState stateOfBattle) {
-		return stateOfBattle.get(MyPoint.x, MyPoint.y).isOccupied();
-	}
-
-	private boolean isCellEmpty(MyPoint MyPoint, BattleState stateOfBattle) {
-		return !stateOfBattle.get(MyPoint.x, MyPoint.y).isOccupied();
-	}
-
-	private Set<MyPoint> addLines(Set<MyPoint> MyPoints, MyPoint centre, int range) {
-		addLineUpwards(MyPoints, centre, range);
-		addLineLeft(MyPoints, centre, range);
-		addLineRight(MyPoints, centre, range);
-		addLineDownwards(MyPoints, centre, range);
-		return MyPoints;
-	}
-
-	private void addLineUpwards(Set<MyPoint> MyPoints, MyPoint centre, int range) {
-		for (int i = 1; i <= range; i++) {
-			MyPoints.add(new MyPoint(centre.x, centre.y + i));
-		}
-	}
-
-	private void addLineLeft(Set<MyPoint> MyPoints, MyPoint centre, int range) {
-		for (int i = 1; i <= range; i++) {
-			MyPoints.add(new MyPoint(centre.x - i, centre.y));
-		}
-	}
-
-	private void addLineRight(Set<MyPoint> MyPoints, MyPoint centre, int range) {
-		for (int i = 1; i <= range; i++) {
-			MyPoints.add(new MyPoint(centre.x + i, centre.y));
-		}
-	}
-
-	private void addLineDownwards(Set<MyPoint> MyPoints, MyPoint centre, int range) {
-		for (int i = 1; i <= range; i++) {
-			MyPoints.add(new MyPoint(centre.x, centre.y - i));
-		}
-	}
-
-	private Set<MyPoint> addUnfilledSquareAroundCentre(Set<MyPoint> MyPoints, MyPoint centre, int range) {
-		MyPoints.add(new MyPoint(centre.x + range, centre.y));
-		MyPoints.add(new MyPoint(centre.x - range, centre.y));
-		MyPoints.add(new MyPoint(centre.x, centre.y + range));
-		MyPoints.add(new MyPoint(centre.x, centre.y - range));
-		for (int i = 1; i <= range; i++) {
-			MyPoints.add(new MyPoint(centre.x + range, centre.y - i));
-			MyPoints.add(new MyPoint(centre.x - range, centre.y - i));
-			MyPoints.add(new MyPoint(centre.x + range, centre.y + i));
-			MyPoints.add(new MyPoint(centre.x - range, centre.y + i));
-
-			MyPoints.add(new MyPoint(centre.x + i, centre.y - range));
-			MyPoints.add(new MyPoint(centre.x - i, centre.y - range));
-			MyPoints.add(new MyPoint(centre.x + i, centre.y + range));
-			MyPoints.add(new MyPoint(centre.x - i, centre.y + range));
-		}
-		return MyPoints;
-	}
-
-	private Set<MyPoint> addFilledSquareAroundCentre(Set<MyPoint> MyPoints, MyPoint centre, int range) {
-		addUnfilledSquareAroundCentre(MyPoints, centre, range);
-		for (int i = centre.x - range; i <= (centre.x + range); i++) {
-			for (int j = centre.y - range; j <= (centre.y + range); j++) {
-				MyPoints.add(new MyPoint(i, j));
-			}
-		}
-		return MyPoints;
-	}
-
-	private Set<MyPoint> addUnfilledCircleAroundCentre(Set<MyPoint> MyPoints, MyPoint centre, int range) {
-		final int centerX = centre.x;
-		final int centerY = centre.y;
-
-		for (int i = 0; i <= range; i++) {
-			for (int j = 0; j <= range; j++) {
-				if ((i + j) == range) {
-					MyPoints.add(new MyPoint(centerX + i, centerY + j));
-					MyPoints.add(new MyPoint(centerX - i, centerY + j));
-					MyPoints.add(new MyPoint(centerX + i, centerY - j));
-					MyPoints.add(new MyPoint(centerX - i, centerY - j));
-				}
-			}
-		}
-		return MyPoints;
-	}
-
-	private Set<MyPoint> addFilledCircleAroundCentre(Set<MyPoint> points, MyPoint centre, int range) {
-		for (int i = 1; i <= range; i++) {
-			points.addAll(addUnfilledCircleAroundCentre(points, centre, i));
-		}
+	public Set<MyPoint> getAllPointsASpellCanHit(MyPoint center, LineOfSight lineOfSight, int range, BattleState battleState) {
+		final Set<MyPoint> points = getPossibleCenterCells(center, lineOfSight, range);
+		checkMyPointBounds(points, battleState);
 		return points;
 	}
 
-	private Set<MyPoint> addDiagonalCrossAroundCentre(Set<MyPoint> points, MyPoint centre, int range) {
-		final int centerX = centre.x;
-		final int centerY = centre.y;
-
-		for (int i = 1; i <= range; i++) {
-			points.add(new MyPoint(centerX + i, centerY + i));
-			points.add(new MyPoint(centerX - i, centerY + i));
-			points.add(new MyPoint(centerX + i, centerY - i));
-			points.add(new MyPoint(centerX - i, centerY - i));
-		}
-
-		return points;
-	}
-
-	private Set<MyPoint> addCrossAroundCentre(Set<MyPoint> points, MyPoint centre, int range) {
-		final int centerX = centre.x;
-		final int centerY = centre.y;
-
-		for (int i = 1; i <= range; i++) {
-			points.add(new MyPoint(centerX + i, centerY));
-			points.add(new MyPoint(centerX - i, centerY));
-			points.add(new MyPoint(centerX, centerY + i));
-			points.add(new MyPoint(centerX, centerY - i));
-		}
-
-		return points;
-	}
-
-	private Set<MyPoint> addDiagonalTopRightAroundCentre(Set<MyPoint> points, MyPoint centre, int range) {
-		final int centerX = centre.x;
-		final int centerY = centre.y;
-
-		for (int i = 1; i <= range; i++) {
-			points.add(new MyPoint(centerX + i, centerY + i));
-			points.add(new MyPoint(centerX - i, centerY - i));
-		}
-
-		return points;
-	}
-
-	private Set<MyPoint> addDiagonalTopLeftAroundCentre(Set<MyPoint> points, MyPoint centre, int range) {
-		final int centerX = centre.x;
-		final int centerY = centre.y;
-
-		for (int i = 1; i <= range; i++) {
-			points.add(new MyPoint(centerX - i, centerY + i));
-			points.add(new MyPoint(centerX + i, centerY - i));
-		}
-
+	public Set<MyPoint> getAllPointsASpellCanHit(MyPoint caster, MyPoint center, AreaOfEffect areaOfEffect, int range, BattleState battleState) {
+		final Set<MyPoint> points = getSpotsAreaOfEffect(caster, center, areaOfEffect, range);
+		checkMyPointBounds(points, battleState);
 		return points;
 	}
 
@@ -351,6 +297,70 @@ public class BattleStateGridHelper {
 		final int maxWidth = stateOfBattle.getWidth() - 1;
 		final int maxHeight = stateOfBattle.getHeight() - 1;
 		points.removeIf(point -> (point.x > maxWidth) || (point.y > maxHeight) || (point.x < 0) || (point.y < 0));
+	}
+
+	private Set<MyPoint> getSpotsWithUnitsOn(Set<MyPoint> spotsToCheck, AffectedTeams affectedTeams, BattleState stateOfBattle) {
+		final Set<MyPoint> units = new HashSet<>();
+		switch (affectedTeams) {
+		case FRIENDLY:
+			getAiUnits(spotsToCheck, stateOfBattle, units);
+			break;
+		case ENEMY:
+			getPlayerUnits(spotsToCheck, stateOfBattle, units);
+			break;
+		case BOTH:
+			getAnyUnit(spotsToCheck, stateOfBattle, units);
+			break;
+		case NONE:
+			break;
+		default:
+			break;
+		}
+		return units;
+	}
+
+	private void getAiUnits(Set<MyPoint> spotsToCheck, BattleState stateOfBattle, final Set<MyPoint> units) {
+		for (final MyPoint MyPoint : spotsToCheck) {
+			if (hasCellAiUnit(MyPoint, stateOfBattle)) {
+				units.add(MyPoint);
+			}
+		}
+	}
+
+	private void getPlayerUnits(Set<MyPoint> spotsToCheck, BattleState stateOfBattle, final Set<MyPoint> units) {
+		for (final MyPoint MyPoint : spotsToCheck) {
+			if (hasCellPlayerUnit(MyPoint, stateOfBattle)) {
+				units.add(MyPoint);
+			}
+		}
+	}
+
+	private void getAnyUnit(Set<MyPoint> spotsToCheck, BattleState stateOfBattle, final Set<MyPoint> units) {
+		for (final MyPoint MyPoint : spotsToCheck) {
+			if (hasCellUnit(MyPoint, stateOfBattle)) {
+				units.add(MyPoint);
+			}
+		}
+	}
+
+	private boolean hasCellAiUnit(MyPoint myPoint, BattleState stateOfBattle) {
+		final BattleCell cell = stateOfBattle.get(myPoint.x, myPoint.y);
+		if (cell.isOccupied()) {
+			return !cell.getUnit().isPlayerUnit();
+		}
+		return false;
+	}
+
+	private boolean hasCellPlayerUnit(MyPoint myPoint, BattleState stateOfBattle) {
+		final BattleCell cell = stateOfBattle.get(myPoint.x, myPoint.y);
+		if (cell.isOccupied()) {
+			return cell.getUnit().isPlayerUnit();
+		}
+		return false;
+	}
+
+	private boolean hasCellUnit(MyPoint myPoint, BattleState stateOfBattle) {
+		return stateOfBattle.get(myPoint.x, myPoint.y).isOccupied();
 	}
 
 	public Array<MyPoint> getTargetPositionsInRangeAbility(MyPoint casterPos, Ability ability, Array<MyPoint> unitPositions) {
@@ -472,17 +482,16 @@ public class BattleStateGridHelper {
 	private boolean checkLineHorizontalLine(MyPoint casterPos, MyPoint targetPos, final int range, final int areaOfEffectRange) {
 		final int deltaX = Math.abs(casterPos.x - targetPos.x);
 		final int deltaY = Math.abs(casterPos.y - targetPos.y);
-		final int max = (areaOfEffectRange < range) ? range : areaOfEffectRange;
-		final int min = (areaOfEffectRange < range) ? areaOfEffectRange : range;
+		final int max = (areaOfEffectRange < range) ? range
+													: areaOfEffectRange;
+		final int min = (areaOfEffectRange < range) ? areaOfEffectRange
+													: range;
 
 		if ((deltaX == 0) || (deltaY == 0)) {
 			return false;
 		}
 
-		if ((deltaX > max) || (deltaY > max) || ((deltaX > min) && (deltaY > min))) {
-			return false;
-		}
-		return true;
+		return !((deltaX > max) || (deltaY > max) || ((deltaX > min) && (deltaY > min)));
 	}
 
 	private boolean checkCross(MyPoint casterPos, MyPoint targetPos, final int range) {
@@ -1144,47 +1153,11 @@ public class BattleStateGridHelper {
 		case CELL:
 			return castPoint.equals(targetPosition);
 		case STRAIGHT_LINE:
-			if (casterIsLeft) {
-				return ((diffX <= aoeRange) && (diffX >= 0) && (diffY == 0));
-			}
-			if (casterIsRight) {
-				return ((-diffX <= aoeRange) && (diffX <= 0) && (diffY == 0));
-			}
-			if (casterIsDown) {
-				return ((diffY <= aoeRange) && (diffY >= 0) && (diffX == 0));
-			}
-			if (casterIsUp) {
-				return ((-diffY <= aoeRange) && (diffY <= 0) && (diffX == 0));
-			}
-			return false;
+			return checkStraightLines(aoeRange, diffX, diffY, casterIsLeft, casterIsRight, casterIsDown, casterIsUp);
 		case HORIZONTAL_LINE:
-			if (casterIsLeft) {
-				return ((diffX <= aoeRange) && (diffX >= 0) && (diffY == 0));
-			}
-			if (casterIsRight) {
-				return ((-diffX <= aoeRange) && (diffX <= 0) && (diffY == 0));
-			}
-			if (casterIsDown) {
-				return ((diffXAbs <= (aoeRange / 2)) && (diffY == 0));
-			}
-			if (casterIsUp) {
-				return ((diffXAbs <= (aoeRange / 2)) && (diffY == 0));
-			}
-			return false;
+			return checkHorizontalLines(aoeRange, diffXAbs, diffX, diffY, casterIsLeft, casterIsRight, casterIsDown, casterIsUp);
 		case VERTICAL_LINE:
-			if (casterIsLeft) {
-				return ((diffY <= aoeRange) && (diffY >= 0) && (diffX == 0));
-			}
-			if (casterIsRight) {
-				return ((-diffY <= aoeRange) && (diffY <= 0) && (diffX == 0));
-			}
-			if (casterIsDown) {
-				return ((diffYAbs <= (aoeRange / 2)) && (diffX == 0));
-			}
-			if (casterIsUp) {
-				return ((diffYAbs <= (aoeRange / 2)) && (diffX == 0));
-			}
-			return false;
+			return checkHorizontalLines(aoeRange, diffYAbs, diffY, diffX, casterIsLeft, casterIsRight, casterIsDown, casterIsUp);
 		case CIRCLE:
 			return Math.abs((castPoint.x + castPoint.y) - (targetPosition.x + targetPosition.y)) <= aoeRange;
 		case CROSS:
@@ -1200,6 +1173,38 @@ public class BattleStateGridHelper {
 		default:
 			return false;
 		}
+	}
+
+	private boolean checkHorizontalLines(int aoeRange, final int diffXAbs, final int diffX, final int diffY, final boolean casterIsLeft, final boolean casterIsRight, final boolean casterIsDown, final boolean casterIsUp) {
+		if (casterIsLeft) {
+			return ((diffX <= aoeRange) && (diffX >= 0) && (diffY == 0));
+		}
+		if (casterIsRight) {
+			return ((-diffX <= aoeRange) && (diffX <= 0) && (diffY == 0));
+		}
+		if (casterIsDown) {
+			return ((diffXAbs <= (aoeRange / 2)) && (diffY == 0));
+		}
+		if (casterIsUp) {
+			return ((diffXAbs <= (aoeRange / 2)) && (diffY == 0));
+		}
+		return false;
+	}
+
+	private boolean checkStraightLines(int aoeRange, final int diffX, final int diffY, final boolean casterIsLeft, final boolean casterIsRight, final boolean casterIsDown, final boolean casterIsUp) {
+		if (casterIsLeft) {
+			return ((diffX <= aoeRange) && (diffX >= 0) && (diffY == 0));
+		}
+		if (casterIsRight) {
+			return ((-diffX <= aoeRange) && (diffX <= 0) && (diffY == 0));
+		}
+		if (casterIsDown) {
+			return ((diffY <= aoeRange) && (diffY >= 0) && (diffX == 0));
+		}
+		if (casterIsUp) {
+			return ((-diffY <= aoeRange) && (diffY <= 0) && (diffX == 0));
+		}
+		return false;
 	}
 
 	public Array<MyPoint> getTargetsAbility(Ability ability, MyPoint point, MyPoint casterPos, Array<MyPoint> targetPositions) {

@@ -23,8 +23,8 @@ public class EntityStage extends Stage {
 
 	private void initializeActor(final EntityActor actor) {
 		final Entity entity = actor.getEntity();
-		// DANGER : I assume every entity has a 32x32 size (map tile width x map tile
-		// height)
+		// TODO DANGER : I assume every entity has a 32x32 size (map tile width x map
+		// tileheight)
 		actor.setBounds(entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY(), 1, 1);
 		addActor(actor);
 		final EventListener eventListener = new EntityClickListener(actor);
