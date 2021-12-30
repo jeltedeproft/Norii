@@ -44,10 +44,10 @@ import com.jelte.norii.utility.parallax.ParallaxUtils.WH;
 import com.jelte.norii.utility.parallax.TextureRegionParallaxLayer;
 
 public class SetTeamScreen extends GameScreen {
-	private static final int PREVIEW_VIDEO_HEIGHT = 250;
+	private static final int PREVIEW_VIDEO_HEIGHT = 450;
 	private static final int PREVIEW_VIDEO_WIDTH = 500;
-	private static final int ABILITY_INFO_HEIGHT = 250;
-	private static final int ABILITY_INFO_WIDTH = 500;
+	private static final int ABILITY_INFO_HEIGHT = 450;
+	private static final int ABILITY_INFO_WIDTH = 300;
 	private static final int MAX_HEROES_PER_ROW = 4;
 	private static final int MAIN_TABLE_COLSPAN = 2;
 	private static final int SAVE_BUTTON_WIDTH = 150;
@@ -92,9 +92,12 @@ public class SetTeamScreen extends GameScreen {
 	private Table allHeroesTable;
 
 	// ability table
-	private Table abilityTable;
+	private Table unitInfoTable;
+	private Table unitStatsTable;
+	private Table abilityStatsTable;
 	private ImageButton abilityIcon;
 	private TextArea abilityInfo;
+	private TextArea unitInfo;
 	private VideoDrawable videoDrawable;
 
 	private VerticalGroup selectedHeroesTableVerticalGroup;
@@ -202,12 +205,16 @@ public class SetTeamScreen extends GameScreen {
 			heroImageButton.addListener(new InputListener() {
 				@Override
 				public void enter(InputEvent event, float x, float y, int pointer, @Null Actor fromActor) {
+					// ability
 					final ImageButtonStyle abilityButtonStyle = new ImageButtonStyle();
 					abilityButtonStyle.imageUp = abilityImage;
 					abilityButtonStyle.up = btnStyle.up;
 					abilityButtonStyle.down = btnStyle.down;
 					abilityIcon.setStyle(abilityButtonStyle);
-					abilityInfo.setText(entity.getName() + "\n__________\n" + swapVariables(entity.getSpellExplanation(), spellForEntity));
+					abilityInfo.setText("ability: " + spellForEntity.getName() + "\n__________\n damage: " + spellForEntity.getDamage());
+
+					// unit
+					unitInfo.setText(entity.getName() + "\n__________\n" + swapVariables(entity.getSpellExplanation(), spellForEntity));
 				}
 			});
 
@@ -263,21 +270,27 @@ public class SetTeamScreen extends GameScreen {
 	}
 
 	private void createAbilityInfoPanel() {
-		abilityTable = new Table();
+		unitInfoTable = new Table();
+		unitStatsTable = new Table();
+		abilityStatsTable = new Table();
 
-		final ImageButtonStyle imageButtonStyle = AssetManagerUtility.getSkin().get("Portrait", ImageButtonStyle.class);
-		abilityIcon = new ImageButton(imageButtonStyle);
+		unitInfo = new TextArea("UnitInfo", AssetManagerUtility.getSkin());
+		unitInfo.setText("");
 
 		abilityInfo = new TextArea("AbilityInfo", AssetManagerUtility.getSkin());
 		abilityInfo.setText("");
 
-		abilityTable.center();
-		abilityTable.add(abilityIcon);
-		abilityTable.add(abilityInfo).width(ABILITY_INFO_WIDTH).height(ABILITY_INFO_HEIGHT);
+		final ImageButtonStyle imageButtonStyle = AssetManagerUtility.getSkin().get("Portrait", ImageButtonStyle.class);
+		abilityIcon = new ImageButton(imageButtonStyle);
+
+		unitInfoTable.center();
+		unitInfoTable.add(unitInfo).width(ABILITY_INFO_WIDTH).height(ABILITY_INFO_HEIGHT);
+		unitInfoTable.add(abilityInfo).width(ABILITY_INFO_WIDTH).height(ABILITY_INFO_HEIGHT);
+		// unitInfoTable.add(abilityIcon);
 
 		videoDrawable = new VideoDrawable(Gdx.files.internal("video/test.webm"));
 		final Image image = new Image(videoDrawable);
-		abilityTable.add(image).width(PREVIEW_VIDEO_WIDTH).height(PREVIEW_VIDEO_HEIGHT);
+		unitInfoTable.add(image).width(PREVIEW_VIDEO_WIDTH).height(PREVIEW_VIDEO_HEIGHT);
 	}
 
 	private void createBackground() {
@@ -340,7 +353,7 @@ public class SetTeamScreen extends GameScreen {
 		}
 		mainTable.add(selectedHeroesTableVerticalGroup).align(Align.center).colspan(SELECTED_HEROES_COLSPAN).width(SELECTED_HEROES_WIDTH).expand().row();
 
-		mainTable.add(abilityTable).colspan(ABILITY_TABLE_COLSPAN).expandX().row();
+		mainTable.add(unitInfoTable).colspan(ABILITY_TABLE_COLSPAN).expandX().row();
 
 		saveAndExitTable.add(exitTextButton).padTop(EXIT_BUTTON_PAD_TOP).height(EXIT_BUTTON_HEIGHT).width(EXIT_BUTTON_WIDTH);
 		saveAndExitTable.add(saveTextButton).padTop(SAVE_BUTTON_PAD_TOP).height(SAVE_BUTTON_HEIGHT).width(SAVE_BUTTON_WIDTH);

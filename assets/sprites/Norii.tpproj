@@ -32,7 +32,7 @@ limitMemory=true
 useIndexes=true
 
 scaleFactors=[{suffix:"",factor:1,resampling:bicubic}]
-inputFiles=[{path:../../../../../Norri files/assetsUnpacked,type:Input,dirFilePrefix:null,recursive:false,flattenPaths:false}]
+inputFiles=[{path:../../../../norii_files,type:Input,dirFilePrefix:null,recursive:true,flattenPaths:false}]
 
 
 -PROJ-

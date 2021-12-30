@@ -2,7 +2,7 @@
 	{
 		"id": 0,
 		"name": "Fireball",
-		"iconSpriteName": "Fireball",
+		"iconSpriteName": "fireball",
 		"apCost": 1,
 		"mpCost": 0,
 		"lineOfSight": "LINE",
@@ -21,7 +21,7 @@
 	{
 		"id": 1,
 		"name": "Petrification",
-		"iconSpriteName": "Petrification",
+		"iconSpriteName": "petrification",
 		"apCost": 1,
 		"mpCost": 0,
 		"lineOfSight": "LINE",
@@ -40,7 +40,7 @@
 	{
 		"id": 2,
 		"name": "Swap",
-		"iconSpriteName": "Swap",
+		"iconSpriteName": "swap",
 		"apCost": 1,
 		"mpCost": 0,
 		"lineOfSight": "LINE",
@@ -59,7 +59,7 @@
 	{
 		"id": 3,
 		"name": "Hammerback",
-		"iconSpriteName": "Hammer",
+		"iconSpriteName": "hammer",
 		"apCost": 1,
 		"mpCost": 0,
 		"lineOfSight": "CIRCLE",
@@ -78,7 +78,7 @@
 	{
 		"id": 4,
 		"name": "HammerbackBack",
-		"iconSpriteName": "Hammer",
+		"iconSpriteName": "hammer",
 		"apCost": 1,
 		"mpCost": 0,
 		"lineOfSight": "CIRCLE",
@@ -97,7 +97,7 @@
 	{
 		"id": 5,
 		"name": "Ice Field",
-		"iconSpriteName": "Ice",
+		"iconSpriteName": "ice",
 		"apCost": 1,
 		"mpCost": 0,
 		"lineOfSight": "DIAGONAL_RIGHT",
@@ -116,7 +116,7 @@
 	{
 		"id": 6,
 		"name": "Push",
-		"iconSpriteName": "Wind",
+		"iconSpriteName": "wind",
 		"apCost": 1,
 		"mpCost": 0,
 		"lineOfSight": "LINE",
@@ -135,7 +135,7 @@
 	{
 		"id": 7,
 		"name": "Pull",
-		"iconSpriteName": "Pull",
+		"iconSpriteName": "pull",
 		"apCost": 1,
 		"mpCost": 0,
 		"lineOfSight": "LINE",
@@ -154,7 +154,7 @@
 	{
 		"id": 8,
 		"name": "Arrow",
-		"iconSpriteName": "Arrow",
+		"iconSpriteName": "arrow",
 		"apCost": 1,
 		"mpCost": 0,
 		"lineOfSight": "CIRCLE",
@@ -173,7 +173,7 @@
 	{
 		"id": 9,
 		"name": "Invisible",
-		"iconSpriteName": "Invisible",
+		"iconSpriteName": "invisible",
 		"apCost": 1,
 		"mpCost": 0,
 		"lineOfSight": "SELF",
@@ -192,7 +192,7 @@
 	{
 		"id": 10,
 		"name": "Heal",
-		"iconSpriteName": "Heal",
+		"iconSpriteName": "heal",
 		"apCost": 1,
 		"mpCost": 0,
 		"lineOfSight": "CIRCLE",
@@ -211,7 +211,7 @@
 	{
 		"id": 11,
 		"name": "Portal",
-		"iconSpriteName": "Portal",
+		"iconSpriteName": "portal",
 		"apCost": 5,
 		"mpCost": 0,
 		"lineOfSight": "CIRCLE",
@@ -230,7 +230,7 @@
 	{
 		"id": 12,
 		"name": "Transport",
-		"iconSpriteName": "Transport",
+		"iconSpriteName": "transport",
 		"apCost": 0,
 		"mpCost": 0,
 		"lineOfSight": "SELF",
@@ -268,7 +268,7 @@
 	{
 		"id": 14,
 		"name": "Crackle",
-		"iconSpriteName": "Crackle",
+		"iconSpriteName": "crackle",
 		"apCost": 1,
 		"mpCost": 0,
 		"lineOfSight": "CIRCLE",
