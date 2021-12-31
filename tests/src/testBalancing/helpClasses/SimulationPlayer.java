@@ -251,4 +251,10 @@ public class SimulationPlayer implements UnitOwner {
 		return false;
 	}
 
+	@Override
+	public void setAlliance(Alliance alliance) {
+		// TODO Auto-generated method stub
+
+	}
+
 }

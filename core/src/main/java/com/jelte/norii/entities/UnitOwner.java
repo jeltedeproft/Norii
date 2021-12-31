@@ -87,6 +87,8 @@ public interface UnitOwner {
 
 	public Alliance getAlliance();
 
+	public void setAlliance(Alliance alliance);
+
 	public void synchronizeMultiplayerUnitsWithLocal(HashMap<String, String> teamWithIdMap);
 
 	public int getGameID();

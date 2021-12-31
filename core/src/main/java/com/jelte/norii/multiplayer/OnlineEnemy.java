@@ -303,4 +303,9 @@ public class OnlineEnemy implements UnitOwner {
 		// not needed
 		return null;
 	}
+
+	@Override
+	public void setAlliance(Alliance alliance) {
+		this.alliance = alliance;
+	}
 }

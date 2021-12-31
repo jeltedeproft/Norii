@@ -45,18 +45,21 @@ public class MyPathFinder {
 	}
 
 	public void preprocessMap() {
-		if (preprocessI < linkedMap.getMapWidth()) {
-			if (preprocessJ < linkedMap.getMapHeight()) {
-				final MyPoint point = new MyPoint(preprocessI, preprocessJ);
-				precalculatedPaths.put(point, calculatePathsToEveryOtherCell(point));
-				precalculatedLineOfSightsWithNonBlockableUnits.put(point, calculateLineOfSightWithoutBlocksToEveryOtherCell(point));
-				preprocessJ++;
+		if (!preprocessingFinished) {
+			if (preprocessI < linkedMap.getMapWidth()) {
+				if (preprocessJ < linkedMap.getMapHeight()) {
+					final MyPoint point = new MyPoint(preprocessI, preprocessJ);
+					precalculatedPaths.put(point, calculatePathsToEveryOtherCell(point));
+					precalculatedLineOfSightsWithNonBlockableUnits.put(point, calculateLineOfSightWithoutBlocksToEveryOtherCell(point));
+					preprocessJ++;
+				} else {
+					preprocessJ = 0;
+					preprocessI++;
+				}
 			} else {
-				preprocessJ = 0;
-				preprocessI++;
+				preprocessingFinished = true;
+				System.out.println("processing map finished");
 			}
-		} else {
-			preprocessingFinished = true;
 		}
 	}
 

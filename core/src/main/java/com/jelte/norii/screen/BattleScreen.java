@@ -96,6 +96,14 @@ public class BattleScreen extends GameScreen {
 		currentMap = (BattleMap) mapMgr.getCurrentMap();
 		enemyTeamLeader = unitOwner;
 		json = new Json();
+		initTeams();
+	}
+
+	private void initTeams() {
+		if (enemyTeamLeader.isAI()) {
+			Player.getInstance().setAlliance(Alliance.TEAM_BLUE);
+			enemyTeamLeader.setAlliance(Alliance.TEAM_RED);
+		}
 	}
 
 	private void initializeEntityStage() {
@@ -264,13 +272,7 @@ public class BattleScreen extends GameScreen {
 				enemyTeamLeader.synchronizeMultiplayerUnitsWithLocal(message.getTeamWithIdMap());
 				break;
 			case DEPLOYMENT_FINISHED:
-				Alliance alliance = Player.getInstance().getAlliance();
-				if (alliance.equals(Alliance.TEAM_BLUE)) {
-					ParticleMaker.deactivateAllParticlesOfType(ParticleType.PURPLE_SQUARE);
-				}
-				if (alliance.equals(Alliance.TEAM_RED)) {
-					ParticleMaker.deactivateAllParticlesOfType(ParticleType.SPAWN);
-				}
+				deploymentfinished();
 				break;
 			case UNIT_MOVED:
 			case UNIT_ATTACKED:
@@ -293,6 +295,16 @@ public class BattleScreen extends GameScreen {
 			default:
 				break;
 			}
+		}
+	}
+
+	private void deploymentfinished() {
+		Alliance alliance = Player.getInstance().getAlliance();
+		if (alliance.equals(Alliance.TEAM_BLUE)) {
+			ParticleMaker.deactivateAllParticlesOfType(ParticleType.PURPLE_SQUARE);
+		}
+		if (alliance.equals(Alliance.TEAM_RED)) {
+			ParticleMaker.deactivateAllParticlesOfType(ParticleType.SPAWN);
 		}
 	}
 
@@ -555,6 +567,7 @@ public class BattleScreen extends GameScreen {
 			hud.getHudMessages().showNextTutorialMessage();
 			hud.getPortraitAndStats().setActionsVisible(true);
 			enemyTeamLeader.notifyDeploymentDone();
+			hud.setLocked(false);
 			break;
 		case INVALID_SPELL_TARGET:
 			hud.getHudMessages().showPopup(HudMessageTypes.INVALID_SPELL_TARGET);

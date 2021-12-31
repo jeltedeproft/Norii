@@ -250,4 +250,10 @@ public class DummyOwner implements UnitOwner {
 		return true;
 	}
 
+	@Override
+	public void setAlliance(Alliance alliance) {
+		// TODO Auto-generated method stub
+
+	}
+
 }

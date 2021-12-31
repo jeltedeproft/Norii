@@ -15,6 +15,8 @@ import com.jelte.norii.entities.EntityTypes;
 import com.jelte.norii.entities.Player;
 import com.jelte.norii.entities.UnitOwner;
 import com.jelte.norii.magic.Ability;
+import com.jelte.norii.particles.ParticleMaker;
+import com.jelte.norii.particles.ParticleType;
 import com.jelte.norii.utility.TiledMapPosition;
 
 public class AITeamLeader implements UnitOwner {
@@ -208,6 +210,7 @@ public class AITeamLeader implements UnitOwner {
 	public void playerUnitSpawned(Entity entity, TiledMapPosition pos) {
 		battleManager.setPlayerTurn(!battleManager.isPlayerTurn());
 		Player.getInstance().setMyTurn(true);// turn back to player because AI already placed units
+		battleManager.sendMessageToBattleScreen(MessageToBattleScreen.UNLOCK_UI, entity);
 	}
 
 	@Override
@@ -249,8 +252,13 @@ public class AITeamLeader implements UnitOwner {
 
 	@Override
 	public void notifyDeploymentDone() {
-		// online
-
+		Alliance alliance = Player.getInstance().getAlliance();
+		if (alliance.equals(Alliance.TEAM_BLUE)) {
+			ParticleMaker.deactivateAllParticlesOfType(ParticleType.PURPLE_SQUARE);
+		}
+		if (alliance.equals(Alliance.TEAM_RED)) {
+			ParticleMaker.deactivateAllParticlesOfType(ParticleType.SPAWN);
+		}
 	}
 
 	@Override
@@ -285,5 +293,10 @@ public class AITeamLeader implements UnitOwner {
 	@Override
 	public boolean isDummy() {
 		return false;
+	}
+
+	@Override
+	public void setAlliance(Alliance alliance) {
+		this.alliance = alliance;
 	}
 }

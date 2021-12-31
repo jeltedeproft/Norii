@@ -18,6 +18,7 @@ import com.jelte.norii.battle.battlephase.DeploymentBattlePhase;
 import com.jelte.norii.battle.battlephase.MovementBattlePhase;
 import com.jelte.norii.battle.battlephase.SelectUnitBattlePhase;
 import com.jelte.norii.battle.battlephase.SpellBattlePhase;
+import com.jelte.norii.battle.battlephase.WaitOpponentBattlePhase;
 import com.jelte.norii.battle.battlestate.BattleState;
 import com.jelte.norii.battle.battlestate.Move;
 import com.jelte.norii.battle.battlestate.MoveType;
@@ -63,6 +64,7 @@ public class BattleManager {
 		attackBattleState = new AttackBattlePhase(this);
 		spellBattleState = new SpellBattlePhase(this);
 		actionBattleState = new ActionBattlePhase(this);
+		waitOpponentBattleState = new WaitOpponentBattlePhase(this);
 
 		currentBattleState = deploymentBattleState;
 		currentBattleState.entry();
