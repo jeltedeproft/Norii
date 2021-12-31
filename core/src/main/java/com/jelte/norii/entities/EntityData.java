@@ -14,7 +14,7 @@ public class EntityData {
 	private int physicalDefense;
 	private int basicAttackCost;
 	private String ability;
-	private String spellExplanation;
+	private String unitExplanation;
 
 	public EntityData() {
 		// empty constructor
@@ -116,12 +116,12 @@ public class EntityData {
 		this.ability = ability;
 	}
 
-	public String getSpellExplanation() {
-		return spellExplanation;
+	public String getUnitExplanation() {
+		return unitExplanation;
 	}
 
-	public void setSpellExplanation(String spellExplanation) {
-		this.spellExplanation = spellExplanation;
+	public void setUnitExplanation(String spellExplanation) {
+		this.unitExplanation = spellExplanation;
 	}
 
 	@Override

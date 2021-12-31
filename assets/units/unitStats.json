@@ -11,7 +11,7 @@
 		"magicalDefense": 25,
 		"physicalDefense": 25,
 		"basicAttackCost": 1,
-		"spellExplanation": "this unit can blow himself up, dealing %DAMAGE% damage to units adjacent to it. ap cost: %APCOST%",
+		"unitExplanation": "",
 		"ability": "EXPLOSION"
 	},
 	{
@@ -26,7 +26,7 @@
 		"magicalDefense": 25,
 		"physicalDefense": 25,
 		"basicAttackCost": 1,
-		"spellExplanation": "this unit can turn someone to stone for %TURNS% turns. ap cost: %APCOST%",
+		"unitExplanation": "",
 		"ability": "TURN_TO_STONE"
 	},
 	{
@@ -41,7 +41,7 @@
 		"magicalDefense": 25,
 		"physicalDefense": 25,
 		"basicAttackCost": 1,
-		"spellExplanation": "this unit can cast a fireball, dealing %DAMAGE% damage to the target. ap cost: %APCOST%",
+		"unitExplanation": "",
 		"ability": "FIREBALL"
 	},
 	{
@@ -56,7 +56,7 @@
 		"magicalDefense": 25,
 		"physicalDefense": 25,
 		"basicAttackCost": 1,
-		"spellExplanation": "this unit can swap positions with any another unit withing range %RANGE%. ap cost: %APCOST%",
+		"unitExplanation": "",
 		"ability": "SWAP"
 	},
 	{
@@ -71,7 +71,7 @@
 		"magicalDefense": 25,
 		"physicalDefense": 25,
 		"basicAttackCost": 1,
-		"spellExplanation": "this unit can cast an icefield, dealing %DAMAGE% damage in an aoe. ap cost: %APCOST%",
+		"unitExplanation": "",
 		"ability": "ICEFIELD"
 	},
 	{
@@ -86,7 +86,7 @@
 		"magicalDefense": 25,
 		"physicalDefense": 25,
 		"basicAttackCost": 1,
-		"spellExplanation": "this unit can cast push. Pushing any unit away for %DAMAGE% cells. ap cost: %APCOST% ",
+		"unitExplanation": "",
 		"ability": "PUSH"
 	},
 	{
@@ -101,7 +101,7 @@
 		"magicalDefense": 25,
 		"physicalDefense": 25,
 		"basicAttackCost": 1,
-		"spellExplanation": "this unit can shoot an arrow across the battlefield. Dealing %DAMAGE% damage in a wide range. ap cost: %APCOST%",
+		"unitExplanation": "",
 		"ability": "ARROW"
 	},
 	{
@@ -116,7 +116,7 @@
 		"magicalDefense": 25,
 		"physicalDefense": 25,
 		"basicAttackCost": 1,
-		"spellExplanation": "this unit can pull units towards himself. Pulling them from across %DAMAGA% range. ap cost: %APCOST%",
+		"unitExplanation": "",
 		"ability": "PULL"
 	},
 	{
@@ -131,7 +131,7 @@
 		"magicalDefense": 25,
 		"physicalDefense": 25,
 		"basicAttackCost": 1,
-		"spellExplanation": "this unit can make himself invisible. Undetectable for the enemy. ap cost: %APCOST%",
+		"unitExplanation": "",
 		"ability": "INVISIBLE"
 	},
 	{
@@ -146,7 +146,7 @@
 		"magicalDefense": 25,
 		"physicalDefense": 25,
 		"basicAttackCost": 1,
-		"spellExplanation": "this unit can heal people for %DAMAGE%  hp. ap cost: %APCOST%",
+		"unitExplanation": "",
 		"ability": "HEAL"
 	},
 	{
@@ -161,7 +161,7 @@
 		"magicalDefense": 25,
 		"physicalDefense": 25,
 		"basicAttackCost": 1,
-		"spellExplanation": "this unit can summon a ghost.. ap cost: %APCOST%",
+		"unitExplanation": "",
 		"ability": "SUMMON"
 	},
 	{
@@ -176,7 +176,7 @@
 		"magicalDefense": 25,
 		"physicalDefense": 25,
 		"basicAttackCost": 1,
-		"spellExplanation": "this unit can zap people. The zap can transfer to other units in the area. Dealing %DAMAGE% damage to each. ap cost: %APCOST%",
+		"unitExplanation": "",
 		"ability": "CRACKLE"
 	},
 	{
@@ -191,7 +191,7 @@
 		"magicalDefense": 25,
 		"physicalDefense": 25,
 		"basicAttackCost": 1,
-		"spellExplanation": "this unit can plant a defensive stone. Blocking enemy line of attack for %TURNS% turns. ap cost: %APCOST%",
+		"unitExplanation": "",
 		"ability": "PLANT_SHIELD"
 	},
 	{
@@ -206,7 +206,7 @@
 		"magicalDefense": 25,
 		"physicalDefense": 25,
 		"basicAttackCost": 1,
-		"spellExplanation": "this unit can cast a fireball, dealing %DAMAGE% damage to the target. ap cost: %APCOST%",
+		"unitExplanation": "",
 		"ability": "FIREBALL"
 	},
 	{
@@ -221,7 +221,7 @@
 		"magicalDefense": 25,
 		"physicalDefense": 25,
 		"basicAttackCost": 1,
-		"spellExplanation": "this unit can cast a fireball, dealing %DAMAGE% damage to the target. ap cost: %APCOST%",
+		"unitExplanation": "",
 		"ability": "FIREBALL"
 	},
 	{
@@ -236,7 +236,7 @@
 		"magicalDefense": 25,
 		"physicalDefense": 25,
 		"basicAttackCost": 1,
-		"spellExplanation": "this unit can tuen someone to stone for %TURNS% turns. Rendering them immune to all damage and unable to perform actions. ap cost: %APCOST%",
+		"unitExplanation": "",
 		"ability": "TURN_TO_STONE"
 	},
 	{
@@ -251,7 +251,7 @@
 		"magicalDefense": 25,
 		"physicalDefense": 25,
 		"basicAttackCost": 1,
-		"spellExplanation": "this unit can cast a fireball, dealing %DAMAGE% damage to the target. ap cost: %APCOST%",
+		"unitExplanation": "",
 		"ability": "FIREBALL"
 	},
 	{
@@ -266,7 +266,7 @@
 		"magicalDefense": 25,
 		"physicalDefense": 25,
 		"basicAttackCost": 1,
-		"spellExplanation": "this unit can cast a fireball, dealing %DAMAGE% damage to the target. ap cost: %APCOST%",
+		"unitExplanation": "",
 		"ability": "FIREBALL"
 	},
 	{
@@ -281,7 +281,7 @@
 		"magicalDefense": 25,
 		"physicalDefense": 25,
 		"basicAttackCost": 1,
-		"spellExplanation": "this unit can create portals. 2 portals are required to transport units from one to another. ap cost: %APCOST%",
+		"unitExplanation": "",
 		"ability": "PORTAL"
 	},
 	{
@@ -296,7 +296,7 @@
 		"magicalDefense": 25,
 		"physicalDefense": 25,
 		"basicAttackCost": 1,
-		"spellExplanation": "this unit can cast a fireball, dealing %DAMAGE% damage to the target. ap cost: %APCOST%",
+		"unitExplanation": "",
 		"ability": "FIREBALL"
 	},
 	{
@@ -311,7 +311,7 @@
 		"magicalDefense": 25,
 		"physicalDefense": 25,
 		"basicAttackCost": 1,
-		"spellExplanation": "this unit can cast a fireball, dealing %DAMAGE% damage to the target. ap cost: %APCOST%",
+		"unitExplanation": "",
 		"ability": "FIREBALL"
 	},
 	{
@@ -326,7 +326,7 @@
 		"magicalDefense": 25,
 		"physicalDefense": 25,
 		"basicAttackCost": 1,
-		"spellExplanation": "this unit can swap positions with any another unit withing range %RANGE%. ap cost: %APCOST%",
+		"unitExplanation": "",
 		"ability": "SWAP"
 	},
 	{
@@ -341,7 +341,7 @@
 		"magicalDefense": 25,
 		"physicalDefense": 25,
 		"basicAttackCost": 1,
-		"spellExplanation": "this unit can cast a fireball, dealing %DAMAGE% damage to the target. ap cost: %APCOST%",
+		"unitExplanation": "",
 		"ability": "FIREBALL"
 	},
 	{
@@ -356,7 +356,7 @@
 		"magicalDefense": 25,
 		"physicalDefense": 25,
 		"basicAttackCost": 1,
-		"spellExplanation": "this unit can cast a fireball, dealing %DAMAGE% damage to the target. ap cost: %APCOST%",
+		"unitExplanation": "",
 		"ability": "FIREBALL"
 	},
 	{
@@ -371,7 +371,7 @@
 		"magicalDefense": 25,
 		"physicalDefense": 25,
 		"basicAttackCost": 1,
-		"spellExplanation": "this unit can cast a fireball, dealing %DAMAGE% damage to the target. ap cost: %APCOST%",
+		"unitExplanation": "",
 		"ability": "FIREBALL"
 	},
 	{
@@ -386,7 +386,7 @@
 		"magicalDefense": 25,
 		"physicalDefense": 25,
 		"basicAttackCost": 1,
-		"spellExplanation": "this unit can cast a fireball, dealing %DAMAGE% damage to the target. ap cost: %APCOST%",
+		"unitExplanation": "",
 		"ability": "FIREBALL"
 	},
 	{
@@ -401,7 +401,7 @@
 		"magicalDefense": 25,
 		"physicalDefense": 25,
 		"basicAttackCost": 1,
-		"spellExplanation": "this unit can cast a fireball, dealing %DAMAGE% damage to the target. ap cost: %APCOST%",
+		"unitExplanation": "",
 		"ability": "FIREBALL"
 	},
 	{
@@ -416,7 +416,7 @@
 		"magicalDefense": 25,
 		"physicalDefense": 25,
 		"basicAttackCost": 1,
-		"spellExplanation": "this unit can cast a fireball, dealing %DAMAGE% damage to the target. ap cost: %APCOST%",
+		"unitExplanation": "",
 		"ability": "FIREBALL"
 	},
 	{
@@ -431,7 +431,7 @@
 		"magicalDefense": 25,
 		"physicalDefense": 25,
 		"basicAttackCost": 1,
-		"spellExplanation": "this unit can cast a fireball, dealing %DAMAGE% damage to the target. ap cost: %APCOST%",
+		"unitExplanation": "",
 		"ability": "FIREBALL"
 	},
 	{
@@ -446,7 +446,7 @@
 		"magicalDefense": 25,
 		"physicalDefense": 25,
 		"basicAttackCost": 1,
-		"spellExplanation": "this unit can cast a fireball, dealing %DAMAGE% damage to the target. ap cost: %APCOST%",
+		"unitExplanation": "",
 		"ability": "FIREBALL"
 	},
 	{
@@ -461,7 +461,7 @@
 		"magicalDefense": 25,
 		"physicalDefense": 25,
 		"basicAttackCost": 1,
-		"spellExplanation": "this unit can cast a fireball, dealing %DAMAGE% damage to the target. ap cost: %APCOST%",
+		"unitExplanation": "",
 		"ability": "FIREBALL"
 	},
 	{
@@ -476,7 +476,7 @@
 		"magicalDefense": 25,
 		"physicalDefense": 25,
 		"basicAttackCost": 1,
-		"spellExplanation": "this unit can throw a hammer. It will stagnate for 1 turn and then come back dealing %DAMAGE% damage to all units across its path. ap cost: %APCOST%",
+		"unitExplanation": "",
 		"ability": "HAMMERBACK"
 	},
 	{
@@ -491,7 +491,7 @@
 		"magicalDefense": 25,
 		"physicalDefense": 25,
 		"basicAttackCost": 1,
-		"spellExplanation": "this unit can cast a fireball, dealing %DAMAGE% damage to the target. ap cost: %APCOST%",
+		"unitExplanation": "",
 		"ability": "FIREBALL"
 	},
 	{
@@ -506,7 +506,7 @@
 		"magicalDefense": 50,
 		"physicalDefense": 50,
 		"basicAttackCost": 0,
-		"spellExplanation": "this unit can transport units to its brother portal. ap cost: %APCOST%",
+		"unitExplanation": "",
 		"ability": "TRANSPORT"
 	},
 	{
@@ -521,7 +521,7 @@
 		"magicalDefense": 25,
 		"physicalDefense": 25,
 		"basicAttackCost": 1,
-		"spellExplanation": "this unit can be summoned. (has fireball but needs dummy ability in stead)",
+		"unitExplanation": "",
 		"ability": "FIREBALL"
 	},
 	{
@@ -536,7 +536,7 @@
 		"magicalDefense": 90,
 		"physicalDefense": 90,
 		"basicAttackCost": 0,
-		"spellExplanation": "this unit can cast a fireball, dealing %DAMAGE% damage to the target. ap cost: %APCOST%",
+		"unitExplanation": "",
 		"ability": "FIREBALL"
 	},
 	{
@@ -551,7 +551,7 @@
 		"magicalDefense": 25,
 		"physicalDefense": 25,
 		"basicAttackCost": 1,
-		"spellExplanation": "this unit can cast a fireball, dealing %DAMAGE% damage to the target. ap cost: %APCOST%",
+		"unitExplanation": "",
 		"ability": "FIREBALL"
 	},
 	{
@@ -566,7 +566,7 @@
 		"magicalDefense": 25,
 		"physicalDefense": 25,
 		"basicAttackCost": 1,
-		"spellExplanation": "this unit can make someone fall in love. After the bond is created the enemy will share 50% of the damage for %DAMAGE% turns. ap cost: %APCOST%",
+		"unitExplanation": "",
 		"ability": "LOVE"
 	},
 	{
@@ -581,7 +581,7 @@
 		"magicalDefense": 25,
 		"physicalDefense": 25,
 		"basicAttackCost": 1,
-		"spellExplanation": "Reduce AP by %DAMAGE% of enemy and ally units. ap cost: %APCOST%",
+		"unitExplanation": "",
 		"ability": "HOURGLASS"
 	},
 	{
@@ -596,7 +596,7 @@
 		"magicalDefense": 25,
 		"physicalDefense": 25,
 		"basicAttackCost": 1,
-		"spellExplanation": "Reduce magical resistance by %DAMAGE% of enemies. ap cost: %APCOST%",
+		"unitExplanation": "",
 		"ability": "MINDWARP"
 	},
 	{
@@ -611,7 +611,7 @@
 		"magicalDefense": 25,
 		"physicalDefense": 25,
 		"basicAttackCost": 1,
-		"spellExplanation": "this unit can cast a fireball, dealing %DAMAGE% damage to the target. ap cost: %APCOST%",
+		"unitExplanation": "",
 		"ability": "FIREBALL"
 	},
 	{
@@ -626,7 +626,7 @@
 		"magicalDefense": 25,
 		"physicalDefense": 25,
 		"basicAttackCost": 1,
-		"spellExplanation": "this unit can cast a fireball, dealing %DAMAGE% damage to the target. ap cost: %APCOST%",
+		"unitExplanation": "",
 		"ability": "FIREBALL"
 	}
 ]

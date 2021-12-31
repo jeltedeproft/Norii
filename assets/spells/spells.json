@@ -16,7 +16,7 @@
 		"areaOfEffectRange": 2,
 		"affectsTeam": "ENEMY",
 		"target": "UNIT",
-		"infoText": "Cast a Fireball."
+		"infoText": "Cast a Fireball on a target enemy unit."
 	},
 	{
 		"id": 1,
@@ -35,7 +35,7 @@
 		"areaOfEffectRange": 2,
 		"affectsTeam": "BOTH",
 		"target": "UNIT",
-		"infoText": "Turn an ally\n or enemy to stone."
+		"infoText": "Turn an ally or enemy to stone."
 	},
 	{
 		"id": 2,
@@ -54,7 +54,7 @@
 		"areaOfEffectRange": 2,
 		"affectsTeam": "BOTH",
 		"target": "UNIT",
-		"infoText": "Cast Swap."
+		"infoText": "Swap positions with any other unit."
 	},
 	{
 		"id": 3,
@@ -73,7 +73,7 @@
 		"areaOfEffectRange": 2,
 		"affectsTeam": "ENEMY",
 		"target": "CELL_BUT_NO_UNIT",
-		"infoText": "Cast Hammerback."
+		"infoText": "Throw a hammer which damages in a line. Comes back around"
 	},
 	{
 		"id": 4,
@@ -92,7 +92,7 @@
 		"areaOfEffectRange": 2,
 		"affectsTeam": "ENEMY",
 		"target": "CELL_BUT_NO_UNIT",
-		"infoText": "Cast Hammerback."
+		"infoText": "The returning hammer"
 	},
 	{
 		"id": 5,
@@ -111,7 +111,7 @@
 		"areaOfEffectRange": 3,
 		"affectsTeam": "ENEMY",
 		"target": "CELL",
-		"infoText": "Cast Ice Field."
+		"infoText": "Plunge the battlefield in coldness."
 	},
 	{
 		"id": 6,
@@ -149,7 +149,7 @@
 		"areaOfEffectRange": 1,
 		"affectsTeam": "BOTH",
 		"target": "UNIT",
-		"infoText": "Pull another character\n towards you."
+		"infoText": "Pull another character towards you."
 	},
 	{
 		"id": 8,
@@ -168,7 +168,7 @@
 		"areaOfEffectRange": 1,
 		"affectsTeam": "ENEMY",
 		"target": "CELL",
-		"infoText": "Shoot an arrow\n across the battlefield."
+		"infoText": "Shoot an arrow across the battlefield."
 	},
 	{
 		"id": 9,

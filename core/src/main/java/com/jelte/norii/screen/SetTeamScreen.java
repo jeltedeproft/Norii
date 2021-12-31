@@ -48,14 +48,14 @@ public class SetTeamScreen extends GameScreen {
 	private static final int PREVIEW_VIDEO_WIDTH = 500;
 	private static final int ABILITY_INFO_HEIGHT = 450;
 	private static final int ABILITY_INFO_WIDTH = 300;
-	private static final int MAX_HEROES_PER_ROW = 4;
+	private static final int MAX_HEROES_PER_ROW = 5;
 	private static final int MAIN_TABLE_COLSPAN = 2;
 	private static final int SAVE_BUTTON_WIDTH = 150;
 	private static final int SAVE_BUTTON_HEIGHT = 50;
-	private static final int SAVE_BUTTON_PAD_TOP = 100;
+	private static final int SAVE_BUTTON_PAD_TOP = 0;
 	private static final int EXIT_BUTTON_WIDTH = 100;
 	private static final int EXIT_BUTTON_HEIGHT = 50;
-	private static final int EXIT_BUTTON_PAD_TOP = 100;
+	private static final int EXIT_BUTTON_PAD_TOP = 0;
 	private static final int ABILITY_TABLE_COLSPAN = 3;
 	private static final int SELECTED_HEROES_WIDTH = 500;
 	private static final int SELECTED_HEROES_COLSPAN = 1;
@@ -66,7 +66,7 @@ public class SetTeamScreen extends GameScreen {
 	private static final int HEROES_TITLES_TABLE_COLSPAN = 2;
 	private static final int AVAILABLE_HEROES_LABEL_WIDTH = 700;
 	private static final int TEAM_LABEL_WIDTH = 700;
-	private static final int TITLE_PAD_TOP = 30;
+	private static final int TITLE_PAD_TOP = 50;
 	private static final int TITLE_HEIGHT = 50;
 	private static final int TITLE_COLSPAN = 2;
 	private static final String TITLE_FONT = "bigFont";
@@ -211,10 +211,13 @@ public class SetTeamScreen extends GameScreen {
 					abilityButtonStyle.up = btnStyle.up;
 					abilityButtonStyle.down = btnStyle.down;
 					abilityIcon.setStyle(abilityButtonStyle);
-					abilityInfo.setText("ability: " + spellForEntity.getName() + "\n__________\n damage: " + spellForEntity.getDamage());
+					abilityInfo.setText("ability: " + spellForEntity.getName() + "\n__________\n" + swapVariables(spellForEntity.getInfoText(), spellForEntity) + "\n" + "damage: " + spellForEntity.getDamage() + "\n" + "ap cost = "
+							+ spellForEntity.getApCost() + "\n" + "line of sight = " + spellForEntity.getLineOfSight() + "\n" + "aoe = " + spellForEntity.getAreaOfEffect() + "\n" + "aoe range = " + spellForEntity.getAreaOfEffectRange()
+							+ "\n" + "range = " + spellForEntity.getRange());
 
 					// unit
-					unitInfo.setText(entity.getName() + "\n__________\n" + swapVariables(entity.getSpellExplanation(), spellForEntity));
+					unitInfo.setText(entity.getName() + "\n__________\n" + entity.getUnitExplanation() + "\n" + "max hp = " + entity.getMaxHP() + "\n" + "attack range = " + entity.getAttackRange() + "\n" + "attack power = "
+							+ entity.getAttackPower() + "\n" + "mag def = " + entity.getMagicalDefense() + "\n" + "phy def = " + entity.getPhysicalDefense() + "\n" + "attack cost = " + entity.getBasicAttackCost());
 				}
 			});
 
@@ -327,6 +330,14 @@ public class SetTeamScreen extends GameScreen {
 		stage.addActor(notEmptyLabel);
 	}
 
+	private void initTables() {
+		titleTable = new Table();
+		allHeroesTable = new Table();
+		selectedHeroesTableVerticalGroup = new VerticalGroup();
+		saveAndExitTable = new Table();
+		mainTable.setFillParent(true);
+	}
+
 	private void addStuffToTables() {
 		titleTable.add(titleLabel);
 		mainTable.add(titleTable).align(Align.top).colspan(TITLE_COLSPAN).height(TITLE_HEIGHT).padTop(TITLE_PAD_TOP).expandX().fillX().row();
@@ -359,14 +370,6 @@ public class SetTeamScreen extends GameScreen {
 		saveAndExitTable.add(saveTextButton).padTop(SAVE_BUTTON_PAD_TOP).height(SAVE_BUTTON_HEIGHT).width(SAVE_BUTTON_WIDTH);
 
 		mainTable.add(saveAndExitTable).colspan(MAIN_TABLE_COLSPAN);
-	}
-
-	private void initTables() {
-		titleTable = new Table();
-		allHeroesTable = new Table();
-		selectedHeroesTableVerticalGroup = new VerticalGroup();
-		saveAndExitTable = new Table();
-		mainTable.setFillParent(true);
 	}
 
 	private void addListeners() {
