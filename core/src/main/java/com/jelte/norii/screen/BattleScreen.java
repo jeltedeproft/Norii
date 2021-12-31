@@ -306,6 +306,7 @@ public class BattleScreen extends GameScreen {
 		if (alliance.equals(Alliance.TEAM_RED)) {
 			ParticleMaker.deactivateAllParticlesOfType(ParticleType.SPAWN);
 		}
+		hud.setLocked(false);
 	}
 
 	private void executeMove(NetworkMessage message) {
@@ -567,7 +568,6 @@ public class BattleScreen extends GameScreen {
 			hud.getHudMessages().showNextTutorialMessage();
 			hud.getPortraitAndStats().setActionsVisible(true);
 			enemyTeamLeader.notifyDeploymentDone();
-			hud.setLocked(false);
 			break;
 		case INVALID_SPELL_TARGET:
 			hud.getHudMessages().showPopup(HudMessageTypes.INVALID_SPELL_TARGET);
