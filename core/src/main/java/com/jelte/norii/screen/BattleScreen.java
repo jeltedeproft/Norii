@@ -602,6 +602,12 @@ public class BattleScreen extends GameScreen {
 		case LOCK_UI:
 			hud.setLocked(true);
 			break;
+		case PLAYER_TURN:
+			hud.getHudMessages().showPopup(HudMessageTypes.PLAYER_TURN);
+			break;
+		case ENEMY_TURN:
+			hud.getHudMessages().showPopup(HudMessageTypes.ENEMY_TURN);
+			break;
 		default:
 			break;
 		}

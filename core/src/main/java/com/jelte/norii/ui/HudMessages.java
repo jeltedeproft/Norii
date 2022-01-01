@@ -26,6 +26,8 @@ public class HudMessages {
 	public static final String EXPLAIN_END_TURN_MESSAGE = "Press skip to end your turn.";
 	public static final String EXPLAIN_CANCEL_MESSAGE = "Right click on the mouse to cancel any action.";
 	public static final String EXPLAIN_WIN_LOSE_MESSAGE = "Once all your enemies are defeated\n, you win the round";
+	public static final String PLAYER_TURN_MESSAGE = "Player turn";
+	public static final String ENEMY_TURN_MESSAGE = "Enemy turn";
 
 	private final EnumMap<HudMessageTypes, HudMessagePopup> messageTypesToPopups;
 	private final EnumMap<HudMessageTypes, HudMessageWindow> tutorialMessageTypesToWindows;
@@ -62,6 +64,8 @@ public class HudMessages {
 		messageTypesToPopups.put(HudMessageTypes.AI_VICTORY, new HudMessagePopup(AI_VICTORY_MESSAGE, this));
 		messageTypesToPopups.put(HudMessageTypes.PLAYER_VICTORY, new HudMessagePopup(PLAYER_VICTORY_MESSAGE, this));
 		messageTypesToPopups.put(HudMessageTypes.NUMBER_OF_UNITS_DEPLOYED, new HudMessagePopup(NUMBER_OF_UNITS_DEPLOYED_MESSAGE, this));
+		messageTypesToPopups.put(HudMessageTypes.PLAYER_TURN, new HudMessagePopup(PLAYER_TURN_MESSAGE, this));
+		messageTypesToPopups.put(HudMessageTypes.ENEMY_TURN, new HudMessagePopup(ENEMY_TURN_MESSAGE, this));
 
 		tutorialMessageTypesToWindows.put(HudMessageTypes.DEPLOY_UNITS_INFO, new HudMessageWindow(DEPLOY_UNITS_MESSAGE, this));
 		tutorialMessageTypesToWindows.put(HudMessageTypes.SELECT_UNIT_INFO, new HudMessageWindow(SELECT_UNIT_MESSAGE, this));

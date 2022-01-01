@@ -20,6 +20,15 @@ android-horizontal-scrollbar-knob
   orig: 10, 4
   offset: 0, 0
   index: -1
+android-horizontal-scrollbar-knob
+  rotate: false
+  xy: 123, 400
+  size: 10, 4
+  split: 1, 1, 1, 1
+  pad: 1, 1, 0, 0
+  orig: 10, 4
+  offset: 0, 0
+  index: -1
 apptheme_btn_radio_on_disabled_focused_holo_light
   rotate: false
   xy: 1, 71
@@ -253,6 +262,14 @@ tree-plus
   xy: 1, 1
   size: 21, 18
   orig: 21, 18
+  offset: 0, 0
+  index: -1
+window
+  rotate: false
+  xy: 55, 189
+  size: 27, 34
+  split: 5, 4, 26, 3
+  orig: 27, 34
   offset: 0, 0
   index: -1
 window

@@ -49,7 +49,11 @@ public enum EntityTypes {
 	ASTROLOGER("Astrologer"), // 38
 	ARTIST("Artist"), // 39
 	CITIZEN("Citizen"), // 40
-	WARRIOR_GIRL("Warrior Girl"); // 41
+	WARRIOR_GIRL("Warrior Girl"), // 41
+	YELLOW_SLIME("Yellow Slime"), // 42
+	WHITE_DEMON("White Demon"), // 43
+	SNAKE_QUEEN("Snake Queen"), // 44
+	PINK_ALIEN("Pink Alien"); // 45
 
 	private static final List<EntityTypes> TYPES = Collections.unmodifiableList(Arrays.asList(EntityTypes.values()));
 	private static final int SIZE = TYPES.size();

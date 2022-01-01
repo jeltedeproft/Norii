@@ -179,7 +179,9 @@ public class BattleManager {
 			Player.getInstance().setAp(ApFileReader.getApData(turn));
 			enemyIsMakingDecision = true;
 			enemyTeamLeader.reset(activeBattleState);
+			sendMessageToBattleScreen(MessageToBattleScreen.ENEMY_TURN, activeUnit);
 		} else {
+			sendMessageToBattleScreen(MessageToBattleScreen.PLAYER_TURN, activeUnit);
 			turn++;
 			enemyTeamLeader.setAp(ApFileReader.getApData(turn));
 			setCurrentBattleState(getSelectUnitBattleState());

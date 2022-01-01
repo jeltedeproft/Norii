@@ -2,6 +2,7 @@
 package com.jelte.norii.utility;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -203,5 +204,19 @@ public final class Utility {
 			totalHP += unit.getHp();
 		}
 		return totalHP;
+	}
+
+	public static boolean stringContainsItemFromList(String inputStr, String[] items) {
+		return Arrays.stream(items).anyMatch(inputStr::contains);
+	}
+
+	public static boolean checkIfArrayOfStringsContainsElementFromOtherArray(Array<String> teamHeroesNames, String[] heroNames) {
+		List<String> heroNamesList = Arrays.asList(heroNames);
+		for (String str : teamHeroesNames) {
+			if (heroNamesList.contains(str)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

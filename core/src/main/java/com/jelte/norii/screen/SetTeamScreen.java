@@ -39,6 +39,7 @@ import com.jelte.norii.magic.SpellFileReader;
 import com.jelte.norii.profile.ProfileManager;
 import com.jelte.norii.ui.VideoDrawable;
 import com.jelte.norii.utility.AssetManagerUtility;
+import com.jelte.norii.utility.Utility;
 import com.jelte.norii.utility.parallax.ParallaxBackground;
 import com.jelte.norii.utility.parallax.ParallaxUtils.WH;
 import com.jelte.norii.utility.parallax.TextureRegionParallaxLayer;
@@ -69,20 +70,23 @@ public class SetTeamScreen extends GameScreen {
 	private static final int TITLE_PAD_TOP = 50;
 	private static final int TITLE_HEIGHT = 50;
 	private static final int TITLE_COLSPAN = 2;
+	private static final int FADE_IN_DURATION = 2;
+	private static final int FADE_OUT_DURATION = 2;
 	private static final String TITLE_FONT = "bigFont";
 	private static final String TITLE = "SET TEAM";
 	private static final String YOUR_TEAM = "Your Team";
 	private static final String EMPTY_ERROR = "Team can't be empty";
+	private static final String NO_HERO_ERROR = "Team must contain a hero";
 	private static final String AVAILABLE = "Available Heroes";
 	private static final String EXIT = "exit";
 	private static final String SAVE = "Save and Exit";
-	private static final int FADE_IN_DURATION = 2;
-	private static final int FADE_OUT_DURATION = 2;
+	private static final String[] HERO_NAMES = { "Yellow Slime", "White Demon", "Snake Queen", "Pink Alien" };
 
 	private Label titleLabel;
 	private Label yourTeamLabel;
 	private Label availableHeroesLabel;
 	private Label notEmptyLabel;
+	private Label noHeroLabel;
 	private TextButton exitTextButton;
 	private TextButton saveTextButton;
 	private Stage stage;
@@ -166,6 +170,7 @@ public class SetTeamScreen extends GameScreen {
 		availableHeroesLabel.setAlignment(Align.center);
 
 		notEmptyLabel = new Label(EMPTY_ERROR, statusUISkin, TITLE_FONT);
+		noHeroLabel = new Label(NO_HERO_ERROR, statusUISkin, TITLE_FONT);
 
 		exitTextButton = new TextButton(EXIT, statusUISkin);
 		exitTextButton.align(Align.bottom);
@@ -175,6 +180,7 @@ public class SetTeamScreen extends GameScreen {
 
 	private void createHeroPortraits() {
 		final ImageButtonStyle btnStyle = button.getStyle();
+		final ImageButtonStyle heroBtnStyle = AssetManagerUtility.getSkin().get("HeroButton", ImageButtonStyle.class);
 		for (final EntityData entity : entityData.values()) {
 			final SpellData spellForEntity = findSpellForUnit(entity);
 			final String heroImageName = entity.getPortraitSpritePath();
@@ -186,17 +192,16 @@ public class SetTeamScreen extends GameScreen {
 			final TextureRegionDrawable buttonImage = new TextureRegionDrawable(tr);
 			final TextureRegionDrawable abilityImage = new TextureRegionDrawable(trAbility);
 
-			final ImageButtonStyle heroButtonStyle = new ImageButtonStyle();
-			heroButtonStyle.imageUp = buttonImage;
-			heroButtonStyle.up = btnStyle.up;
-			heroButtonStyle.down = btnStyle.down;
-			final ImageButton heroImageButton = new ImageButton(heroButtonStyle);
+			// TODO use something else than checking if explanation contains hero.
+			final ImageButton heroImageButton = entity.getUnitExplanation().contains("HERO")	? createHeroButton(buttonImage, heroBtnStyle)
+																								: createRegularButton(buttonImage, btnStyle);
+
 			availableHeroes.add(heroImageButton);
 
 			heroImageButton.addListener(new InputListener() {
 				@Override
 				public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
-					tryAddHeroImageButtonToTeamPanel(heroImageName);
+					tryAddHeroImageButtonToTeamPanel(heroImageName, entity);
 					teamHeroesNames.add(entity.getName());
 					return true;
 				}
@@ -225,6 +230,22 @@ public class SetTeamScreen extends GameScreen {
 		}
 	}
 
+	private ImageButton createHeroButton(TextureRegionDrawable buttonImage, ImageButtonStyle heroBtnStyle) {
+		final ImageButtonStyle heroButtonStyle = new ImageButtonStyle();
+		heroButtonStyle.imageUp = buttonImage;
+		heroButtonStyle.up = heroBtnStyle.up;
+		heroButtonStyle.down = heroBtnStyle.down;
+		return new ImageButton(heroButtonStyle);
+	}
+
+	private ImageButton createRegularButton(TextureRegionDrawable buttonImage, ImageButtonStyle btnStyle) {
+		final ImageButtonStyle buttonStyle = new ImageButtonStyle();
+		buttonStyle.imageUp = buttonImage;
+		buttonStyle.up = btnStyle.up;
+		buttonStyle.down = btnStyle.down;
+		return new ImageButton(buttonStyle);
+	}
+
 	private SpellData findSpellForUnit(EntityData entity) {
 		for (final SpellData spell : spellData.values()) {
 			if (AbilitiesEnum.valueOf(entity.getAbility()).ordinal() == spell.getId()) {
@@ -241,17 +262,17 @@ public class SetTeamScreen extends GameScreen {
 		return spellExplanation.replaceFirst("%TURNS%", Integer.toString(spellData.getDurationInTurns()));
 	}
 
-	private void tryAddHeroImageButtonToTeamPanel(String heroImageName) {
+	private void tryAddHeroImageButtonToTeamPanel(String heroImageName, EntityData entity) {
 		final int currentHeroes = teamHeroes.size;
 		if (currentHeroes < maxHeroCount) {
 			final ImageButtonStyle btnStyle = button.getStyle();
+			final ImageButtonStyle heroBtnStyle = AssetManagerUtility.getSkin().get("HeroButton", ImageButtonStyle.class);
+
 			final TextureRegion tr = new TextureRegion(AssetManagerUtility.getSprite(heroImageName));
 			final TextureRegionDrawable buttonImage = new TextureRegionDrawable(tr);
-			final ImageButtonStyle heroButtonStyle = new ImageButtonStyle();
-			heroButtonStyle.imageUp = buttonImage;
-			heroButtonStyle.up = btnStyle.up;
-			heroButtonStyle.down = btnStyle.down;
-			final ImageButton heroImageButton = new ImageButton(heroButtonStyle);
+			// TODO use something else than checking if explanation contains hero.
+			final ImageButton heroImageButton = entity.getUnitExplanation().contains("HERO")	? createHeroButton(buttonImage, heroBtnStyle)
+																								: createRegularButton(buttonImage, btnStyle);
 			teamHeroes.add(heroImageButton);
 			selectedHeroesTableVerticalGroup.addActor(heroImageButton);
 
@@ -328,6 +349,10 @@ public class SetTeamScreen extends GameScreen {
 		notEmptyLabel.setPosition(Gdx.app.getGraphics().getWidth() / 2.0f, Gdx.app.getGraphics().getHeight() / 2.0f);
 		notEmptyLabel.setVisible(false);
 		stage.addActor(notEmptyLabel);
+
+		noHeroLabel.setPosition(Gdx.app.getGraphics().getWidth() / 2.0f, Gdx.app.getGraphics().getHeight() / 2.0f);
+		noHeroLabel.setVisible(false);
+		stage.addActor(noHeroLabel);
 	}
 
 	private void initTables() {
@@ -360,7 +385,7 @@ public class SetTeamScreen extends GameScreen {
 		mainTable.add(allHeroesTable).align(Align.center).align(Align.center).colspan(ALL_HEROES_TABLE_COLSPAN).width(ALL_HEROES_TABLE_WIDTH).expand();
 
 		for (final String name : teamHeroesNames) {
-			tryAddHeroImageButtonToTeamPanel(heroNamesToImagePaths.get(name));
+			tryAddHeroImageButtonToTeamPanel(heroNamesToImagePaths.get(name), getEntityDataFromName(name));
 		}
 		mainTable.add(selectedHeroesTableVerticalGroup).align(Align.center).colspan(SELECTED_HEROES_COLSPAN).width(SELECTED_HEROES_WIDTH).expand().row();
 
@@ -370,6 +395,15 @@ public class SetTeamScreen extends GameScreen {
 		saveAndExitTable.add(saveTextButton).padTop(SAVE_BUTTON_PAD_TOP).height(SAVE_BUTTON_HEIGHT).width(SAVE_BUTTON_WIDTH);
 
 		mainTable.add(saveAndExitTable).colspan(MAIN_TABLE_COLSPAN);
+	}
+
+	private EntityData getEntityDataFromName(String name) {
+		for (final EntityData entity : entityData.values()) {
+			if (entity.getName().equals(name)) {
+				return entity;
+			}
+		}
+		return null;
 	}
 
 	private void addListeners() {
@@ -387,6 +421,9 @@ public class SetTeamScreen extends GameScreen {
 				if (teamHeroesNames.isEmpty()) {
 					notEmptyLabel.setVisible(true);
 					notEmptyLabel.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(FADE_IN_DURATION), Actions.fadeOut(FADE_OUT_DURATION)));
+				} else if (!Utility.checkIfArrayOfStringsContainsElementFromOtherArray(teamHeroesNames, HERO_NAMES)) {
+					noHeroLabel.setVisible(true);
+					noHeroLabel.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(FADE_IN_DURATION), Actions.fadeOut(FADE_OUT_DURATION)));
 				} else {
 					ProfileManager.getInstance().setTeamHeroes(teamHeroesNames);
 					ProfileManager.getInstance().saveSettings();
