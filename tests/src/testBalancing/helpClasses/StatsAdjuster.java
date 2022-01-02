@@ -22,6 +22,7 @@ public class StatsAdjuster {
 	private static final int RANGE_ADJUST_AMOUNT = 1;
 	private static final int AREA_OF_EFFECT_RANGE_ADJUST_AMOUNT = 1;
 	private static final int DURATION_IN_TURNS_ADJUST_AMOUNT = 1;
+	private static final int AMOUNT_ADJUST_AMOUNT = 1;
 
 	public Stats returnAdjustedStatsCopy(Stats stats, int gamesPlayed, int gamesWon) {
 		float winrate = (float) gamesWon / (float) gamesPlayed;
@@ -152,6 +153,13 @@ public class StatsAdjuster {
 				copyStats.setDurationInTurns(newdurationInTurnsValue);
 			}
 			break;
+		case AMOUNT:
+			int amount = ability.getSpellData().getAmount();
+			int newAmountValue = calculateNewValue(amount, AMOUNT_ADJUST_AMOUNT, strengthen);
+			if ((newAmountValue != 0) && (newAmountValue > 0)) {
+				copyStats.setDurationInTurns(newAmountValue);
+			}
+			break;
 		}
 
 	}
@@ -165,7 +173,7 @@ public class StatsAdjuster {
 	}
 
 	private enum StatsEnum {
-		MAGICAL_DEFENSE, PHYSICAL_DEFENSE, ATTACK_RANGE, MAX_HP, BASIC_ATTACK_COST, ATTACK_POWER, AP_COST, DAMAGE, RANGE, AREA_OF_EFFECT_RANGE, DURATION_IN_TURNS;
+		MAGICAL_DEFENSE, PHYSICAL_DEFENSE, ATTACK_RANGE, MAX_HP, BASIC_ATTACK_COST, ATTACK_POWER, AP_COST, DAMAGE, RANGE, AREA_OF_EFFECT_RANGE, DURATION_IN_TURNS, AMOUNT;
 
 		private static final List<StatsEnum> STATS = Collections.unmodifiableList(Arrays.asList(StatsEnum.values()));
 		private static final int SIZE = STATS.size();

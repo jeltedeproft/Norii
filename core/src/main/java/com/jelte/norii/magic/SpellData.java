@@ -15,6 +15,7 @@ public class SpellData {
 	private int damage;
 	private String damageType;
 	private int durationInTurns;
+	private int amount;
 	private int range;
 	private int areaOfEffectRange;
 	private String affectsTeam;
@@ -158,6 +159,14 @@ public class SpellData {
 
 	public void setDurationInTurns(int durationInTurns) {
 		this.durationInTurns = durationInTurns;
+	}
+
+	public int getAmount() {
+		return amount;
+	}
+
+	public void setAmount(int amount) {
+		this.amount = amount;
 	}
 
 }

@@ -65,6 +65,7 @@ public class DeploymentBattlePhase extends BattlePhase {
 				ParticleMaker.deactivateParticle(ParticleMaker.getParticle(ParticleType.SPAWN, newPosition));
 				ParticleMaker.deactivateParticle(ParticleMaker.getParticle(ParticleType.PURPLE_SQUARE, newPosition));
 				battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.UNIT_DEPLOYED, battlemanager.getActiveUnit());
+				battlemanager.getEnemyTeamLeader().playerUnitSpawned(playerUnits.get(deployingUnitNumber), newPosition);
 				nextDeployment();
 			} else {
 				Gdx.app.debug(TAG, "can't deploy unit, units is null or activeunitindex is > the length of units");
@@ -76,7 +77,6 @@ public class DeploymentBattlePhase extends BattlePhase {
 
 	private void deployUnit(final TiledMapPosition newPosition) {
 		final Entity unitToDeploy = playerUnits.get(deployingUnitNumber);
-		battlemanager.getEnemyTeamLeader().playerUnitSpawned(unitToDeploy, newPosition);
 		unitToDeploy.getVisualComponent().setInDeploymentPhase(false);
 		initiateUnitInBattle(unitToDeploy, newPosition);
 	}

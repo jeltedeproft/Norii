@@ -24,6 +24,8 @@ public enum AudioTypeEvent {
 	TRANSPORT("audio/transport.mp3"),
 	INVISIBLE("audio/invisible.mp3"),
 	LOVE("audio/love.wav"),
+	HOURGLASS("audio/hourglass.wav"),
+	MIND_WARP("audio/mindwarp.wav"),
 	NONE("");
 
 	private final String audioFullFilePath;

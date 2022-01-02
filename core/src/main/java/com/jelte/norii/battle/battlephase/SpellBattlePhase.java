@@ -23,6 +23,7 @@ import com.jelte.norii.entities.EntityTypes;
 import com.jelte.norii.magic.AbilitiesEnum;
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.magic.Ability.AffectedTeams;
+import com.jelte.norii.magic.Modifier;
 import com.jelte.norii.magic.ModifiersEnum;
 import com.jelte.norii.map.MyPathFinder;
 import com.jelte.norii.map.TiledMapActor;
@@ -235,8 +236,49 @@ public class SpellBattlePhase extends BattlePhase {
 		case PLANT_SHIELD:
 			castPlantShield(currentUnit, targetPos, ability);
 			break;
+		case HOURGLASS:
+			castHourglass(currentUnit, targetPos, ability);
+			break;
+		case MINDWARP:
+			castMindWarp(currentUnit, targetPos, ability);
+			break;
 		default:
 			break;
+		}
+	}
+
+	private void castMindWarp(Entity caster, TiledMapPosition targetPos, Ability ability) {
+		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
+		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.MIND_WARP);
+
+		final Set<MyPoint> targetCells = BattleStateGridHelper.getInstance().getAllPointsASpellCanHit(caster.getCurrentPosition().getTilePosAsPoint(), targetPos.getTilePosAsPoint(), ability.getAreaOfEffect(),
+				ability.getSpellData().getRange(), battlemanager.getBattleState());
+
+		for (final MyPoint cell : targetCells) {
+			ParticleMaker.addParticle(ParticleType.FIREBALL, cell, 0);
+			final Entity possibleTarget = getEntityAtPosition(cell);
+			if (possibleTarget != null) {
+				possibleTarget.addModifier(new Modifier(ModifiersEnum.REDUCE_MAGICAL_DEFENSE, ability.getDurationInTurns(), ability.getSpellData().getAmount()));
+				battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.UPDATE_UI, possibleTarget);
+			}
+		}
+
+	}
+
+	private void castHourglass(Entity caster, TiledMapPosition targetPos, Ability ability) {
+		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
+		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.HOURGLASS);
+
+		final Set<MyPoint> targetCells = BattleStateGridHelper.getInstance().getAllPointsASpellCanHit(caster.getCurrentPosition().getTilePosAsPoint(), targetPos.getTilePosAsPoint(), ability.getAreaOfEffect(),
+				ability.getSpellData().getRange(), battlemanager.getBattleState());
+
+		for (final MyPoint cell : targetCells) {
+			ParticleMaker.addParticle(ParticleType.FIREBALL, cell, 0);
+			final Entity possibleTarget = getEntityAtPosition(cell);
+			if (possibleTarget != null) {
+				possibleTarget.addModifier(new Modifier(ModifiersEnum.REDUCE_PHYSICAL_DEFENSE, ability.getDurationInTurns(), ability.getSpellData().getAmount()));
+				battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.UPDATE_UI, possibleTarget);
+			}
 		}
 	}
 
@@ -244,10 +286,10 @@ public class SpellBattlePhase extends BattlePhase {
 		caster.setAp(caster.getAp() - ability.getSpellData().getApCost());
 		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.LOVE);
 		final Entity possibleTarget = getEntityAtPosition(targetPos.getTilePosAsPoint());
-		final int damage = ability.getSpellData().getDamage();
+		final int turns = ability.getSpellData().getDurationInTurns();
 		if (possibleTarget != null) {
 			ParticleMaker.addParticle(ParticleType.LOVE, targetPos, 0);
-			caster.addModifier(ModifiersEnum.LINKED, damage, possibleTarget.getEntityID());
+			caster.addModifier(ModifiersEnum.LINKED, turns, possibleTarget.getEntityID());
 			battlemanager.getBattleState().linkUnits(caster.getCurrentPosition().getTilePosAsPoint(), targetPos.getTilePosAsPoint());
 			battlemanager.sendMessageToBattleScreen(MessageToBattleScreen.UPDATE_UI, possibleTarget);
 		}

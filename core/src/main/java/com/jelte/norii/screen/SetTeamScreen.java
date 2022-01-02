@@ -50,6 +50,7 @@ public class SetTeamScreen extends GameScreen {
 	private static final int ABILITY_INFO_HEIGHT = 450;
 	private static final int ABILITY_INFO_WIDTH = 300;
 	private static final int MAX_HEROES_PER_ROW = 5;
+	private static final int MAX_COLUMN_LENGTH_TEAM = 7;
 	private static final int MAIN_TABLE_COLSPAN = 2;
 	private static final int SAVE_BUTTON_WIDTH = 150;
 	private static final int SAVE_BUTTON_HEIGHT = 50;
@@ -105,6 +106,7 @@ public class SetTeamScreen extends GameScreen {
 	private VideoDrawable videoDrawable;
 
 	private VerticalGroup selectedHeroesTableVerticalGroup;
+	private VerticalGroup selectedHeroesTableVerticalGroup2;
 	private Table saveAndExitTable;
 
 	private OrthographicCamera parallaxCamera;
@@ -274,7 +276,7 @@ public class SetTeamScreen extends GameScreen {
 			final ImageButton heroImageButton = entity.getUnitExplanation().contains("HERO")	? createHeroButton(buttonImage, heroBtnStyle)
 																								: createRegularButton(buttonImage, btnStyle);
 			teamHeroes.add(heroImageButton);
-			selectedHeroesTableVerticalGroup.addActor(heroImageButton);
+			addHeroToTeam(heroImageButton);
 
 			heroImageButton.addListener(new InputListener() {
 				@Override
@@ -286,11 +288,23 @@ public class SetTeamScreen extends GameScreen {
 						}
 					}
 					heroImageButton.remove();
-					selectedHeroesTableVerticalGroup.removeActor(heroImageButton);
+					removeHeroFromTeam(heroImageButton);
 					return true;
 				}
 			});
 		}
+	}
+
+	private void addHeroToTeam(final ImageButton heroImageButton) {
+		if (selectedHeroesTableVerticalGroup.getChildren().size <= MAX_COLUMN_LENGTH_TEAM) {
+			selectedHeroesTableVerticalGroup.addActor(heroImageButton);
+		} else {
+			selectedHeroesTableVerticalGroup2.addActor(heroImageButton);
+		}
+	}
+
+	private void removeHeroFromTeam(final ImageButton heroImageButton) {
+		selectedHeroesTableVerticalGroup.removeActor(heroImageButton);
 	}
 
 	private void createAbilityInfoPanel() {
@@ -359,6 +373,7 @@ public class SetTeamScreen extends GameScreen {
 		titleTable = new Table();
 		allHeroesTable = new Table();
 		selectedHeroesTableVerticalGroup = new VerticalGroup();
+		selectedHeroesTableVerticalGroup2 = new VerticalGroup();
 		saveAndExitTable = new Table();
 		mainTable.setFillParent(true);
 	}
@@ -387,7 +402,10 @@ public class SetTeamScreen extends GameScreen {
 		for (final String name : teamHeroesNames) {
 			tryAddHeroImageButtonToTeamPanel(heroNamesToImagePaths.get(name), getEntityDataFromName(name));
 		}
-		mainTable.add(selectedHeroesTableVerticalGroup).align(Align.center).colspan(SELECTED_HEROES_COLSPAN).width(SELECTED_HEROES_WIDTH).expand().row();
+		Table selectedHeroesTable = new Table();
+		selectedHeroesTable.add(selectedHeroesTableVerticalGroup);
+		selectedHeroesTable.add(selectedHeroesTableVerticalGroup2);
+		mainTable.add(selectedHeroesTable).align(Align.center).colspan(SELECTED_HEROES_COLSPAN).width(SELECTED_HEROES_WIDTH).expand().row();
 
 		mainTable.add(unitInfoTable).colspan(ABILITY_TABLE_COLSPAN).expandX().row();
 
