@@ -63,6 +63,10 @@ public class MyPathFinder {
 		}
 	}
 
+	public float getPreprocessingMapProgress() {
+		return ((preprocessI * linkedMap.getMapWidth()) + preprocessJ) / (float) (linkedMap.getMapWidth() * linkedMap.getMapHeight());
+	}
+
 	private HashMap<MyPoint, List<GridCell>> calculatePathsToEveryOtherCell(MyPoint point) {
 		final HashMap<MyPoint, List<GridCell>> pathsToEveryOtherCell = new HashMap<>();
 		for (int i = 0; i < linkedMap.getMapWidth(); i++) {

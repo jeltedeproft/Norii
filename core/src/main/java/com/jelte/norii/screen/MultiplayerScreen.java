@@ -152,7 +152,7 @@ public class MultiplayerScreen extends GameScreen {
 			Player.getInstance().setGameID(message.getGameID());
 			MapType mapType = MapType.valueOf(message.getMap());
 			AssetManagerUtility.loadMapAsset(mapType.toString());
-			ScreenManager.getInstance().showScreen(ScreenEnum.BATTLE, enemyTeamLeader, mapType);// give team and map
+			ScreenManager.getInstance().showScreen(ScreenEnum.LOAD, enemyTeamLeader, mapType);// give team and map
 		}
 	}
 

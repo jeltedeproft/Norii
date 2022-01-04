@@ -293,6 +293,7 @@ public class Entity extends Actor implements Comparable<Entity> {
 
 	public void addModifier(Modifier mod) {
 		modifiers.add(mod);
+		applymod(mod);
 	}
 
 	public boolean hasModifier(final ModifiersEnum type) {

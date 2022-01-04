@@ -87,10 +87,6 @@ public class MainMenuScreen extends GameScreen {
 		ProfileManager.getInstance().initialise();
 	}
 
-	private void loadLevelAssets() {
-		AssetManagerUtility.loadMapAsset(MapType.BATTLE_MAP_THE_DARK_SWAMP.toString());
-	}
-
 	private void initializeClassVariables() {
 		backgroundbatch = new SpriteBatch();
 		playerMonsters = new ArrayList<>();
@@ -159,7 +155,7 @@ public class MainMenuScreen extends GameScreen {
 			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
 				loadLevelAssets();
 				UnitOwner enemyTeamLeader = new AITeamLeader(selectedLevel);
-				ScreenManager.getInstance().showScreen(ScreenEnum.BATTLE, enemyTeamLeader, MapType.BATTLE_MAP_THE_DARK_SWAMP);
+				ScreenManager.getInstance().showScreen(ScreenEnum.LOAD, enemyTeamLeader, MapType.BATTLE_MAP_THE_DARK_SWAMP);
 				return true;
 			}
 		});
@@ -180,7 +176,7 @@ public class MainMenuScreen extends GameScreen {
 				selectedLevel = LevelEnum.TUTORIAL;
 				loadLevelAssets();
 				UnitOwner enemyTeamLeader = new AITeamLeader(selectedLevel);
-				ScreenManager.getInstance().showScreen(ScreenEnum.BATTLE, enemyTeamLeader, MapType.BATTLE_MAP_THE_DARK_SWAMP);
+				ScreenManager.getInstance().showScreen(ScreenEnum.LOAD, enemyTeamLeader, MapType.BATTLE_MAP_THE_DARK_SWAMP);
 				return true;
 			}
 		});
@@ -210,6 +206,10 @@ public class MainMenuScreen extends GameScreen {
 		});
 	}
 
+	private void loadLevelAssets() {
+		AssetManagerUtility.loadMapAsset(MapType.BATTLE_MAP_THE_DARK_SWAMP.toString());
+	}
+
 	private void addTutorialUnitsToPlayer() {
 		playerMonsters.add(new Entity(EntityTypes.BLACK_SLIME_RED_EYES, Player.getInstance(), true));
 		Player.getInstance().setTeam(playerMonsters);
@@ -219,7 +219,7 @@ public class MainMenuScreen extends GameScreen {
 	public void render(final float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		updatebg(delta);
+		updatebg();
 
 		stage.getViewport().apply();
 		stage.act(delta);
@@ -228,7 +228,7 @@ public class MainMenuScreen extends GameScreen {
 		parallaxcamera.translate(2, 0, 0);
 	}
 
-	public void updatebg(final float delta) {
+	public void updatebg() {
 		backgroundbatch.begin();
 		parallaxBackground.draw(parallaxcamera, backgroundbatch);
 		backgroundbatch.end();

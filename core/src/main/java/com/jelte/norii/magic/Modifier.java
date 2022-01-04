@@ -35,6 +35,12 @@ public class Modifier {
 		case PURE_DAMAGE:
 			unit.damage(amount, DamageType.PURE_DAMAGE);
 			break;
+		case REDUCE_MAGICAL_DEFENSE:
+			unit.getEntityData().setMagicalDefense(unit.getEntityData().getMagicalDefense() - amount);
+			break;
+		case REDUCE_PHYSICAL_DEFENSE:
+			unit.getEntityData().setPhysicalDefense(unit.getEntityData().getPhysicalDefense() - amount);
+			break;
 		case STUNNED:
 			break;
 		case INVISIBLE:
@@ -53,6 +59,12 @@ public class Modifier {
 			break;
 		case IMPROVE_DAMAGE:
 			unit.getEntityData().setAttackPower(unit.getEntityData().getAttackPower() - amount);
+			break;
+		case REDUCE_MAGICAL_DEFENSE:
+			unit.getEntityData().setMagicalDefense(unit.getEntityData().getMagicalDefense() + amount);
+			break;
+		case REDUCE_PHYSICAL_DEFENSE:
+			unit.getEntityData().setPhysicalDefense(unit.getEntityData().getPhysicalDefense() + amount);
 			break;
 		case IMAGE_CHANGED:
 			unit.getVisualComponent().restoreAnimation();

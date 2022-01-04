@@ -37,7 +37,6 @@ import com.jelte.norii.magic.Ability;
 import com.jelte.norii.magic.Ability.LineOfSight;
 import com.jelte.norii.map.BattleMap;
 import com.jelte.norii.map.Map;
-import com.jelte.norii.map.MapFactory.MapType;
 import com.jelte.norii.map.MapManager;
 import com.jelte.norii.map.MyPathFinder;
 import com.jelte.norii.map.TiledMapActor;
@@ -76,8 +75,8 @@ public class BattleScreen extends GameScreen {
 
 	private boolean isPaused;
 
-	public BattleScreen(UnitOwner unitOwner, MapType mapType) {
-		initializeVariables(unitOwner, mapType);
+	public BattleScreen(UnitOwner enemy, MapManager mapMgr) {
+		initializeVariables(enemy, mapMgr);
 		initializeEntityStage();
 		initializeHUD();
 		initializePauseMenu();
@@ -86,15 +85,14 @@ public class BattleScreen extends GameScreen {
 		spawnEnemyUnits();
 	}
 
-	private void initializeVariables(UnitOwner unitOwner, MapType mapType) {
+	private void initializeVariables(UnitOwner enemy, MapManager mapMgr) {
 		mapCamera = new OrthographicCamera();
 		mapCamera.setToOrtho(false, VISIBLE_WIDTH, VISIBLE_HEIGHT);
 		spriteBatch = new SpriteBatch(900);
 		isPaused = false;
-		mapMgr = new MapManager();
-		mapMgr.loadMap(mapType);
+		this.mapMgr = mapMgr;
 		currentMap = (BattleMap) mapMgr.getCurrentMap();
-		enemyTeamLeader = unitOwner;
+		enemyTeamLeader = enemy;
 		json = new Json();
 		initTeams();
 	}
@@ -157,7 +155,6 @@ public class BattleScreen extends GameScreen {
 		battlemanager = new BattleManager(enemyTeamLeader, currentMap.getMapWidth(), currentMap.getMapHeight(), currentMap.getNavLayer().getUnwalkableNodes(), this);
 		battlescreenInputProcessor.setBattleManager(battlemanager);
 		currentMap.setStage(this);
-		MyPathFinder.getInstance().setMap(currentMap);
 	}
 
 	private void spawnEnemyUnits() {
@@ -196,10 +193,6 @@ public class BattleScreen extends GameScreen {
 
 	@Override
 	public void render(final float delta) {
-		// System.out.println("max sprites in batch : " +
-		// spriteBatch.maxSpritesInBatch);
-		// System.out.println("spritebatch render calls : " + spriteBatch.renderCalls);
-		MyPathFinder.getInstance().preprocessMap();// do this in render loop so we dont block gui
 		if (isPaused) {
 			updatePauseMenu();
 			renderPauseMenu(delta);
@@ -398,60 +391,6 @@ public class BattleScreen extends GameScreen {
 		currentMap.dispose();
 	}
 
-	private void prepareMove(final Entity unit) {
-		final Set<MyPoint> pointsToMove = BattleStateGridHelper.getInstance().getPossibleCenterCellsFiltered(unit.getCurrentPosition().getTilePosAsPoint(), LineOfSight.CIRCLE, unit.getAp(), battlemanager.getBattleState());
-		MyPathFinder.getInstance().filterPositionsByWalkability(unit, pointsToMove);
-		ParticleMaker.deactivateAllParticles();
-		for (final MyPoint cell : pointsToMove) {
-			if (!isUnitOnCell(cell)) {
-				final TiledMapPosition positionToPutMoveParticle = new TiledMapPosition().setPositionFromTiles(cell.x, cell.y);
-				ParticleMaker.addParticle(ParticleType.MOVE, positionToPutMoveParticle, 0);
-				battlemanager.setCurrentBattleState(battlemanager.getMovementBattleState());
-			}
-		}
-	}
-
-	private void prepareAttack(final Entity unit) {
-		ParticleMaker.deactivateAllParticles();
-		final Set<MyPoint> pointsToAttack = BattleStateGridHelper.getInstance().getPossibleCenterCells(unit.getCurrentPosition().getTilePosAsPoint(), LineOfSight.CIRCLE, unit.getEntityData().getAttackRange());
-		for (final MyPoint cell : pointsToAttack) {
-			final TiledMapPosition positionToPutAttackParticle = new TiledMapPosition().setPositionFromTiles(cell.x, cell.y);
-			ParticleMaker.addParticle(ParticleType.ATTACK, positionToPutAttackParticle, 0);
-		}
-		battlemanager.setCurrentBattleState(battlemanager.getAttackBattleState());
-	}
-
-	private void prepareSpell(final Entity unit, final Ability ability) {
-		ParticleMaker.deactivateAllParticles();
-		final List<TiledMapPosition> positions = battlemanager.getUnits().stream().map(Entity::getCurrentPosition).collect(Collectors.toList());
-		final Set<MyPoint> spellPath = BattleStateGridHelper.getInstance().calculateSpellPath(unit, ability, positions, battlemanager.getBattleState());
-
-		for (final MyPoint cell : spellPath) {
-			final TiledMapPosition positionToPutSpellParticle = new TiledMapPosition().setPositionFromTiles(cell.x, cell.y);
-			ParticleMaker.addParticle(ParticleType.SPELL, positionToPutSpellParticle, 0);
-		}
-
-		battlemanager.getSpellBattleState().setAbility(ability);
-		battlemanager.setCurrentBattleState(battlemanager.getSpellBattleState());
-	}
-
-	private boolean isUnitOnCell(final MyPoint cell) {
-		for (final Entity entity : battlemanager.getBattleState().getAllUnits()) {
-			if (entity.getCurrentPosition().isTileEqualTo(cell)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public static OrthographicCamera getCamera() {
-		return mapCamera;
-	}
-
-	public boolean isPaused() {
-		return isPaused;
-	}
-
 	public void clickedOnTileMapActor(TiledMapActor actor) {
 		battlemanager.getCurrentBattleState().clickedOnTile(actor);
 	}
@@ -487,6 +426,7 @@ public class BattleScreen extends GameScreen {
 	}
 
 	private void skipUnit(int entityID) {
+		ParticleMaker.deactivateAllParticles();
 		final Entity skipEntity = battlemanager.getEntityByID(entityID);
 		skipEntity.getVisualComponent().setActive(false);
 		skipEntity.setFocused(false);
@@ -504,6 +444,28 @@ public class BattleScreen extends GameScreen {
 		}
 	}
 
+	private void prepareMove(final Entity unit) {
+		final Set<MyPoint> pointsToMove = BattleStateGridHelper.getInstance().getPossibleCenterCellsFiltered(unit.getCurrentPosition().getTilePosAsPoint(), LineOfSight.CIRCLE, unit.getAp(), battlemanager.getBattleState());
+		MyPathFinder.getInstance().filterPositionsByWalkability(unit, pointsToMove);
+		ParticleMaker.deactivateAllParticles();
+		for (final MyPoint cell : pointsToMove) {
+			if (!isUnitOnCell(cell)) {
+				final TiledMapPosition positionToPutMoveParticle = new TiledMapPosition().setPositionFromTiles(cell.x, cell.y);
+				ParticleMaker.addParticle(ParticleType.MOVE, positionToPutMoveParticle, 0);
+				battlemanager.setCurrentBattleState(battlemanager.getMovementBattleState());
+			}
+		}
+	}
+
+	private boolean isUnitOnCell(final MyPoint cell) {
+		for (final Entity entity : battlemanager.getBattleState().getAllUnits()) {
+			if (entity.getCurrentPosition().isTileEqualTo(cell)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	private void attackUnit(int entityID) {
 		final Entity attackEntity = battlemanager.getEntityByID(entityID);
 		if (attackEntity.canAttack()) {
@@ -511,6 +473,16 @@ public class BattleScreen extends GameScreen {
 		} else {
 			hud.getHudMessages().showPopup(HudMessageTypes.NOT_ENOUGH_AP);
 		}
+	}
+
+	private void prepareAttack(final Entity unit) {
+		ParticleMaker.deactivateAllParticles();
+		final Set<MyPoint> pointsToAttack = BattleStateGridHelper.getInstance().getPossibleCenterCells(unit.getCurrentPosition().getTilePosAsPoint(), LineOfSight.CIRCLE, unit.getEntityData().getAttackRange());
+		for (final MyPoint cell : pointsToAttack) {
+			final TiledMapPosition positionToPutAttackParticle = new TiledMapPosition().setPositionFromTiles(cell.x, cell.y);
+			ParticleMaker.addParticle(ParticleType.ATTACK, positionToPutAttackParticle, 0);
+		}
+		battlemanager.setCurrentBattleState(battlemanager.getAttackBattleState());
 	}
 
 	private void abilityUnit(int entityID, Ability ability) {
@@ -524,6 +496,20 @@ public class BattleScreen extends GameScreen {
 				hud.getHudMessages().showPopup(HudMessageTypes.NOT_ENOUGH_AP);
 			}
 		}
+	}
+
+	private void prepareSpell(final Entity unit, final Ability ability) {
+		ParticleMaker.deactivateAllParticles();
+		final List<TiledMapPosition> positions = battlemanager.getUnits().stream().map(Entity::getCurrentPosition).collect(Collectors.toList());
+		final Set<MyPoint> spellPath = BattleStateGridHelper.getInstance().calculateSpellPath(unit, ability, positions, battlemanager.getBattleState());
+
+		for (final MyPoint cell : spellPath) {
+			final TiledMapPosition positionToPutSpellParticle = new TiledMapPosition().setPositionFromTiles(cell.x, cell.y);
+			ParticleMaker.addParticle(ParticleType.SPELL, positionToPutSpellParticle, 0);
+		}
+
+		battlemanager.getSpellBattleState().setAbility(ability);
+		battlemanager.setCurrentBattleState(battlemanager.getSpellBattleState());
 	}
 
 	private void hoveredOnMove(int entityID) {
@@ -611,5 +597,13 @@ public class BattleScreen extends GameScreen {
 		default:
 			break;
 		}
+	}
+
+	public static OrthographicCamera getCamera() {
+		return mapCamera;
+	}
+
+	public boolean isPaused() {
+		return isPaused;
 	}
 }
