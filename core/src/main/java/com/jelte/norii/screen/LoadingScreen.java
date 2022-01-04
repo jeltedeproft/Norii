@@ -131,7 +131,6 @@ public class LoadingScreen extends GameScreen {
 		}
 
 		// Interpolate the percentage to make it more smooth
-		System.out.println("progress = " + MyPathFinder.getInstance().getPreprocessingMapProgress());
 		percent = Interpolation.linear.apply(percent, MyPathFinder.getInstance().getPreprocessingMapProgress(), 0.1f);
 
 		// Update positions (and size) to match the percentage
