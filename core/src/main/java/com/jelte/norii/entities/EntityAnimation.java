@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.jelte.norii.utility.AssetManagerUtility;
 
 public class EntityAnimation {
-	private static final float ANIMATION_DURATION = 0.1f;
+	private static final float ANIMATION_DURATION = 0.5f;
 
 	private String spriteName;
 	protected float frameTime = 0f;

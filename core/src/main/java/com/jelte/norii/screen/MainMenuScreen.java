@@ -41,8 +41,8 @@ import com.jelte.norii.utility.parallax.TextureRegionParallaxLayer;
 public class MainMenuScreen extends GameScreen {
 	private static final float BUTTON_WIDTH_FACTOR = 1 / 5f;
 	private static final float BUTTON_HEIGHT_FACTOR = 1 / 18f;
-	private static final float BUTTON_PAD_BOTTOM = 40;
-	private static final float BUTTON_PAD_TOP = 40;
+	private static final float BUTTON_PAD_BOTTOM_PERCENT = 2;
+	private static final float BUTTON_PAD_TOP_PERCENT = 2;
 	private static final String TITLE_FONT_NAME = "bigFont";
 	private static final String GENERAL_FONT_NAME = "lumos30";
 
@@ -65,6 +65,9 @@ public class MainMenuScreen extends GameScreen {
 
 	protected float frameTime = 0f;
 	protected Sprite frameSprite = null;
+	
+	private int initialWidth;
+	private int initialHeight;
 
 	public MainMenuScreen() {
 		loadAssets();
@@ -90,9 +93,11 @@ public class MainMenuScreen extends GameScreen {
 	private void initializeClassVariables() {
 		backgroundbatch = new SpriteBatch();
 		playerMonsters = new ArrayList<>();
-		stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), backgroundbatch);
+		initialWidth = Gdx.graphics.getWidth();
+		initialHeight = Gdx.graphics.getHeight();
+		stage = new Stage(new FitViewport(initialWidth, initialHeight), backgroundbatch);
 		parallaxcamera = new OrthographicCamera();
-		parallaxcamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		parallaxcamera.setToOrtho(false, initialWidth, initialHeight);
 		parallaxcamera.update();
 		mainMenuTableOfButtons = new Table();
 		mainMenuTableOfButtons.setFillParent(true);
@@ -100,21 +105,19 @@ public class MainMenuScreen extends GameScreen {
 	}
 
 	private void createBackground() {
-		final int worldHeight = Gdx.graphics.getHeight();
-
 		final TextureAtlas atlas = AssetManagerUtility.getTextureAtlas(AssetManagerUtility.SPRITES_ATLAS_PATH);
 
 		final TextureRegion backTrees = atlas.findRegion("background-back-trees");
-		final TextureRegionParallaxLayer backTreesLayer = new TextureRegionParallaxLayer(backTrees, worldHeight, new Vector2(.3f, .3f), WH.HEIGHT);
+		final TextureRegionParallaxLayer backTreesLayer = new TextureRegionParallaxLayer(backTrees, initialHeight, new Vector2(.3f, .3f), WH.HEIGHT);
 
 		final TextureRegion lights = atlas.findRegion("background-light");
-		final TextureRegionParallaxLayer lightsLayer = new TextureRegionParallaxLayer(lights, worldHeight, new Vector2(.6f, .6f), WH.HEIGHT);
+		final TextureRegionParallaxLayer lightsLayer = new TextureRegionParallaxLayer(lights, initialHeight, new Vector2(.6f, .6f), WH.HEIGHT);
 
 		final TextureRegion middleTrees = atlas.findRegion("background-middle-trees");
-		final TextureRegionParallaxLayer middleTreesLayer = new TextureRegionParallaxLayer(middleTrees, worldHeight, new Vector2(.75f, .75f), WH.HEIGHT);
+		final TextureRegionParallaxLayer middleTreesLayer = new TextureRegionParallaxLayer(middleTrees, initialHeight, new Vector2(.75f, .75f), WH.HEIGHT);
 
 		final TextureRegion frontTrees = atlas.findRegion("foreground");
-		final TextureRegionParallaxLayer frontTreesLayer = new TextureRegionParallaxLayer(frontTrees, worldHeight, new Vector2(.6f, .6f), WH.HEIGHT);
+		final TextureRegionParallaxLayer frontTreesLayer = new TextureRegionParallaxLayer(frontTrees, initialHeight, new Vector2(.6f, .6f), WH.HEIGHT);
 
 		parallaxBackground = new ParallaxBackground();
 		parallaxBackground.addLayers(backTreesLayer, lightsLayer, middleTreesLayer, frontTreesLayer);
@@ -133,18 +136,18 @@ public class MainMenuScreen extends GameScreen {
 	}
 
 	private void createLayout() {
-		final int width = Gdx.graphics.getWidth();
-		final int height = Gdx.graphics.getHeight();
-		final float buttonWidth = width * BUTTON_WIDTH_FACTOR;
-		final float buttonHeight = height * BUTTON_HEIGHT_FACTOR;
+		final float buttonWidth = initialWidth * BUTTON_WIDTH_FACTOR;
+		final float buttonHeight = initialHeight * BUTTON_HEIGHT_FACTOR;
+		final float buttonPadBottom = (initialHeight / 100) * BUTTON_PAD_BOTTOM_PERCENT;
+		final float buttonPadTop = (initialHeight / 100) * BUTTON_PAD_TOP_PERCENT;
 
-		mainMenuTableOfButtons.add(title).spaceBottom(BUTTON_PAD_BOTTOM).padTop(BUTTON_PAD_TOP).row();
-		mainMenuTableOfButtons.add(playButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM).padTop(BUTTON_PAD_TOP).row();
-		mainMenuTableOfButtons.add(multiplayerButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM).padTop(BUTTON_PAD_TOP).row();
-		mainMenuTableOfButtons.add(playTutorialButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM).padTop(BUTTON_PAD_TOP).row();
-		mainMenuTableOfButtons.add(setTeamButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM).padTop(BUTTON_PAD_TOP).row();
-		mainMenuTableOfButtons.add(settingsButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM).padTop(BUTTON_PAD_TOP).row();
-		mainMenuTableOfButtons.add(exitButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM).padTop(BUTTON_PAD_TOP).row();
+		mainMenuTableOfButtons.add(title).spaceBottom(buttonPadBottom).padTop(buttonPadTop).row();
+		mainMenuTableOfButtons.add(playButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM_PERCENT).padTop(BUTTON_PAD_TOP_PERCENT).row();
+		mainMenuTableOfButtons.add(multiplayerButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM_PERCENT).padTop(BUTTON_PAD_TOP_PERCENT).row();
+		mainMenuTableOfButtons.add(playTutorialButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM_PERCENT).padTop(BUTTON_PAD_TOP_PERCENT).row();
+		mainMenuTableOfButtons.add(setTeamButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM_PERCENT).padTop(BUTTON_PAD_TOP_PERCENT).row();
+		mainMenuTableOfButtons.add(settingsButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM_PERCENT).padTop(BUTTON_PAD_TOP_PERCENT).row();
+		mainMenuTableOfButtons.add(exitButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM_PERCENT).padTop(BUTTON_PAD_TOP_PERCENT).row();
 
 		stage.addActor(mainMenuTableOfButtons);
 	}
