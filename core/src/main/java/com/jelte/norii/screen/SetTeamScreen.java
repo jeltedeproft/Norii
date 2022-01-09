@@ -45,31 +45,31 @@ import com.jelte.norii.utility.parallax.ParallaxUtils.WH;
 import com.jelte.norii.utility.parallax.TextureRegionParallaxLayer;
 
 public class SetTeamScreen extends GameScreen {
-	private static final int PREVIEW_VIDEO_HEIGHT = 450;
-	private static final int PREVIEW_VIDEO_WIDTH = 500;
-	private static final int ABILITY_INFO_HEIGHT = 450;
-	private static final int ABILITY_INFO_WIDTH = 300;
+	private static final int PREVIEW_VIDEO_HEIGHT_PERCENT = 15;
+	private static final int PREVIEW_VIDEO_WIDTH_PERCENT = 25;
+	private static final int ABILITY_INFO_HEIGHT_PERCENT = 15;
+	private static final int ABILITY_INFO_WIDTH_PERCENT = 25;
 	private static final int MAX_HEROES_PER_ROW = 5;
 	private static final int MAX_COLUMN_LENGTH_TEAM = 7;
 	private static final int MAIN_TABLE_COLSPAN = 2;
-	private static final int SAVE_BUTTON_WIDTH = 150;
-	private static final int SAVE_BUTTON_HEIGHT = 50;
-	private static final int SAVE_BUTTON_PAD_TOP = 0;
-	private static final int EXIT_BUTTON_WIDTH = 100;
-	private static final int EXIT_BUTTON_HEIGHT = 50;
-	private static final int EXIT_BUTTON_PAD_TOP = 0;
+	private static final int SAVE_BUTTON_WIDTH_PERCENT = 15;
+	private static final int SAVE_BUTTON_HEIGHT_PERCENT = 10;
+	private static final int SAVE_BUTTON_PAD_TOP_PERCENT = 0;
+	private static final int EXIT_BUTTON_WIDTH_PERCENT = 15;
+	private static final int EXIT_BUTTON_HEIGHT_PERCENT = 10;
+	private static final int EXIT_BUTTON_PAD_TOP_PERCENT = 0;
 	private static final int ABILITY_TABLE_COLSPAN = 3;
-	private static final int SELECTED_HEROES_WIDTH = 500;
+	private static final int SELECTED_HEROES_WIDTH_PERCENT = 50;
 	private static final int SELECTED_HEROES_COLSPAN = 1;
-	private static final int ALL_HEROES_TABLE_WIDTH = 500;
+	private static final int ALL_HEROES_TABLE_WIDTH_PERCENT = 50;
 	private static final int ALL_HEROES_TABLE_COLSPAN = 1;
-	private static final int ALL_HEROES_TABLE_SIZE = 50;
-	private static final int ALL_HEROES_TABLE_PAD = 0;
+	private static final int HERO_BUTTON_SIZE_PERCENT = 5;
+	private static final int HERO_BUTTON_PAD_PERCENT = 0;
 	private static final int HEROES_TITLES_TABLE_COLSPAN = 2;
-	private static final int AVAILABLE_HEROES_LABEL_WIDTH = 700;
-	private static final int TEAM_LABEL_WIDTH = 700;
-	private static final int TITLE_PAD_TOP = 50;
-	private static final int TITLE_HEIGHT = 50;
+	private static final int AVAILABLE_HEROES_LABEL_WIDTH_PERCENT = 25;
+	private static final int TEAM_LABEL_WIDTH_PERCENT = 25;
+	private static final int TITLE_PAD_TOP_PERCENT = 5;
+	private static final int TITLE_HEIGHT_PERCENT = 15;
 	private static final int TITLE_COLSPAN = 2;
 	private static final int FADE_IN_DURATION = 2;
 	private static final int FADE_OUT_DURATION = 2;
@@ -123,6 +123,11 @@ public class SetTeamScreen extends GameScreen {
 	private float maxHeroCount;
 	private ImageButton button;
 
+	private int screenWidth;
+	private int screenHeight;
+	private int widthPercent;
+	private int heightPercent;
+
 	public SetTeamScreen() {
 		initializeVariables();
 		fillAvailableHeroes();
@@ -135,11 +140,15 @@ public class SetTeamScreen extends GameScreen {
 	}
 
 	private void initializeVariables() {
+		screenWidth = Gdx.graphics.getWidth();
+		screenHeight = Gdx.graphics.getHeight();
+		widthPercent = screenWidth / 100;
+		heightPercent = screenHeight / 100;
 		backgroundbatch = new SpriteBatch();
 		button = new ImageButton(AssetManagerUtility.getSkin());
-		stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), backgroundbatch);
+		stage = new Stage(new FitViewport(screenWidth, screenHeight), backgroundbatch);
 		parallaxCamera = new OrthographicCamera();
-		parallaxCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		parallaxCamera.setToOrtho(false, screenWidth, screenHeight);
 		parallaxCamera.update();
 		mainTable = new Table();
 		titleTable = new Table();
@@ -322,31 +331,29 @@ public class SetTeamScreen extends GameScreen {
 		abilityIcon = new ImageButton(imageButtonStyle);
 
 		unitInfoTable.center();
-		unitInfoTable.add(unitInfo).width(ABILITY_INFO_WIDTH).height(ABILITY_INFO_HEIGHT);
-		unitInfoTable.add(abilityInfo).width(ABILITY_INFO_WIDTH).height(ABILITY_INFO_HEIGHT);
+		unitInfoTable.add(unitInfo).width(ABILITY_INFO_WIDTH_PERCENT * widthPercent).height(ABILITY_INFO_HEIGHT_PERCENT * heightPercent);
+		unitInfoTable.add(abilityInfo).width(ABILITY_INFO_WIDTH_PERCENT * widthPercent).height(ABILITY_INFO_HEIGHT_PERCENT * heightPercent);
 		// unitInfoTable.add(abilityIcon);
 
 		videoDrawable = new VideoDrawable(Gdx.files.internal("video/test.webm"));
 		final Image image = new Image(videoDrawable);
-		unitInfoTable.add(image).width(PREVIEW_VIDEO_WIDTH).height(PREVIEW_VIDEO_HEIGHT);
+		unitInfoTable.add(image).width(PREVIEW_VIDEO_WIDTH_PERCENT * widthPercent).height(PREVIEW_VIDEO_HEIGHT_PERCENT * heightPercent);
 	}
 
 	private void createBackground() {
-		final int worldHeight = Gdx.graphics.getHeight();
-
 		final TextureAtlas atlas = AssetManagerUtility.getTextureAtlas(AssetManagerUtility.SPRITES_ATLAS_PATH);
 
 		final TextureRegion backTrees = atlas.findRegion("background-back-trees");
-		final TextureRegionParallaxLayer backTreesLayer = new TextureRegionParallaxLayer(backTrees, worldHeight, new Vector2(.3f, .3f), WH.HEIGHT);
+		final TextureRegionParallaxLayer backTreesLayer = new TextureRegionParallaxLayer(backTrees, screenHeight, new Vector2(.3f, .3f), WH.HEIGHT);
 
 		final TextureRegion lights = atlas.findRegion("background-light");
-		final TextureRegionParallaxLayer lightsLayer = new TextureRegionParallaxLayer(lights, worldHeight, new Vector2(.6f, .6f), WH.HEIGHT);
+		final TextureRegionParallaxLayer lightsLayer = new TextureRegionParallaxLayer(lights, screenHeight, new Vector2(.6f, .6f), WH.HEIGHT);
 
 		final TextureRegion middleTrees = atlas.findRegion("background-middle-trees");
-		final TextureRegionParallaxLayer middleTreesLayer = new TextureRegionParallaxLayer(middleTrees, worldHeight, new Vector2(.75f, .75f), WH.HEIGHT);
+		final TextureRegionParallaxLayer middleTreesLayer = new TextureRegionParallaxLayer(middleTrees, screenHeight, new Vector2(.75f, .75f), WH.HEIGHT);
 
 		final TextureRegion frontTrees = atlas.findRegion("foreground");
-		final TextureRegionParallaxLayer frontTreesLayer = new TextureRegionParallaxLayer(frontTrees, worldHeight, new Vector2(.6f, .6f), WH.HEIGHT);
+		final TextureRegionParallaxLayer frontTreesLayer = new TextureRegionParallaxLayer(frontTrees, screenHeight, new Vector2(.6f, .6f), WH.HEIGHT);
 
 		parallaxBackground = new ParallaxBackground();
 		parallaxBackground.addLayers(backTreesLayer, lightsLayer, middleTreesLayer, frontTreesLayer);
@@ -360,11 +367,11 @@ public class SetTeamScreen extends GameScreen {
 		mainTable.pack();
 		stage.addActor(mainTable);
 
-		notEmptyLabel.setPosition(Gdx.app.getGraphics().getWidth() / 2.0f, Gdx.app.getGraphics().getHeight() / 2.0f);
+		notEmptyLabel.setPosition(screenWidth / 2.0f, screenHeight / 2.0f);
 		notEmptyLabel.setVisible(false);
 		stage.addActor(notEmptyLabel);
 
-		noHeroLabel.setPosition(Gdx.app.getGraphics().getWidth() / 2.0f, Gdx.app.getGraphics().getHeight() / 2.0f);
+		noHeroLabel.setPosition(screenWidth / 2.0f, screenHeight / 2.0f);
 		noHeroLabel.setVisible(false);
 		stage.addActor(noHeroLabel);
 	}
@@ -380,24 +387,24 @@ public class SetTeamScreen extends GameScreen {
 
 	private void addStuffToTables() {
 		titleTable.add(titleLabel);
-		mainTable.add(titleTable).align(Align.top).colspan(TITLE_COLSPAN).height(TITLE_HEIGHT).padTop(TITLE_PAD_TOP).expandX().fillX().row();
-		heroesTitlesTable.add(yourTeamLabel).align(Align.top).width(TEAM_LABEL_WIDTH).expandX().fillX();
-		heroesTitlesTable.add(availableHeroesLabel).align(Align.right).width(AVAILABLE_HEROES_LABEL_WIDTH).expandX().fillX().row();
+		mainTable.add(titleTable).align(Align.top).colspan(TITLE_COLSPAN).height(TITLE_HEIGHT_PERCENT * heightPercent).padTop(TITLE_PAD_TOP_PERCENT * heightPercent).expandX().fillX().row();
+		heroesTitlesTable.add(yourTeamLabel).align(Align.top).width(TEAM_LABEL_WIDTH_PERCENT * widthPercent).expandX().fillX();
+		heroesTitlesTable.add(availableHeroesLabel).align(Align.right).width(AVAILABLE_HEROES_LABEL_WIDTH_PERCENT * widthPercent).expandX().fillX().row();
 		mainTable.add(heroesTitlesTable).colspan(HEROES_TITLES_TABLE_COLSPAN).expandX().fillX().row();
 
 		int count = 0;
 		for (final ImageButton heroButton : availableHeroes) {
 			if (count >= MAX_HEROES_PER_ROW) {
-				allHeroesTable.add(heroButton).pad(ALL_HEROES_TABLE_PAD).size(ALL_HEROES_TABLE_SIZE);
+				allHeroesTable.add(heroButton).pad(HERO_BUTTON_PAD_PERCENT * heightPercent).size(HERO_BUTTON_SIZE_PERCENT * heightPercent);
 				allHeroesTable.row();
 				count = 0;
 			} else {
-				allHeroesTable.add(heroButton).pad(ALL_HEROES_TABLE_PAD).size(ALL_HEROES_TABLE_SIZE);
+				allHeroesTable.add(heroButton).pad(HERO_BUTTON_PAD_PERCENT * heightPercent).size(HERO_BUTTON_SIZE_PERCENT * heightPercent);
 				count++;
 			}
 		}
 
-		mainTable.add(allHeroesTable).align(Align.center).align(Align.center).colspan(ALL_HEROES_TABLE_COLSPAN).width(ALL_HEROES_TABLE_WIDTH).expand();
+		mainTable.add(allHeroesTable).align(Align.center).align(Align.center).colspan(ALL_HEROES_TABLE_COLSPAN).width(ALL_HEROES_TABLE_WIDTH_PERCENT * widthPercent).expand();
 
 		for (final String name : teamHeroesNames) {
 			tryAddHeroImageButtonToTeamPanel(heroNamesToImagePaths.get(name), getEntityDataFromName(name));
@@ -405,12 +412,12 @@ public class SetTeamScreen extends GameScreen {
 		Table selectedHeroesTable = new Table();
 		selectedHeroesTable.add(selectedHeroesTableVerticalGroup);
 		selectedHeroesTable.add(selectedHeroesTableVerticalGroup2);
-		mainTable.add(selectedHeroesTable).align(Align.center).colspan(SELECTED_HEROES_COLSPAN).width(SELECTED_HEROES_WIDTH).expand().row();
+		mainTable.add(selectedHeroesTable).align(Align.center).colspan(SELECTED_HEROES_COLSPAN).width(SELECTED_HEROES_WIDTH_PERCENT * widthPercent).expand().row();
 
 		mainTable.add(unitInfoTable).colspan(ABILITY_TABLE_COLSPAN).expandX().row();
 
-		saveAndExitTable.add(exitTextButton).padTop(EXIT_BUTTON_PAD_TOP).height(EXIT_BUTTON_HEIGHT).width(EXIT_BUTTON_WIDTH);
-		saveAndExitTable.add(saveTextButton).padTop(SAVE_BUTTON_PAD_TOP).height(SAVE_BUTTON_HEIGHT).width(SAVE_BUTTON_WIDTH);
+		saveAndExitTable.add(exitTextButton).padTop(EXIT_BUTTON_PAD_TOP_PERCENT * heightPercent).height(EXIT_BUTTON_HEIGHT_PERCENT * heightPercent).width(EXIT_BUTTON_WIDTH_PERCENT * widthPercent);
+		saveAndExitTable.add(saveTextButton).padTop(SAVE_BUTTON_PAD_TOP_PERCENT * heightPercent).height(SAVE_BUTTON_HEIGHT_PERCENT * heightPercent).width(SAVE_BUTTON_WIDTH_PERCENT * widthPercent);
 
 		mainTable.add(saveAndExitTable).colspan(MAIN_TABLE_COLSPAN);
 	}
