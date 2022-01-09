@@ -53,39 +53,26 @@ public class LoadingScreen extends GameScreen {
 
 	@Override
 	public void show() {
-		// Initialize the stage where we will place everything
 		stage = new Stage();
 
-		// Get our textureatlas from the manager
 		final TextureAtlas atlas = AssetManagerUtility.getTextureAtlas(AssetManagerUtility.SPRITES_ATLAS_PATH);
 
-		// Grab the regions from the atlas and create some images
 		logo = new Image(atlas.findRegion("libgdx-logo"));
 		loadingFrame = new Image(atlas.findRegion("loading-frame"));
 		loadingBarHidden = new Image(atlas.findRegion("loading-bar-hidden"));
 		screenBg = new Image(atlas.findRegion("screen-bg"));
 		loadingBg = new Image(atlas.findRegion("loading-frame-bg"));
 
-		// Add the loading bar animation
 		Animation<TextureRegion> anim = new Animation<>(0.05f, atlas.findRegions("loading-bar-anim"));
 		anim.setPlayMode(PlayMode.LOOP_REVERSED);
 		loadingBar = new LoadingBar(anim);
 
-		// Or if you only need a static bar, you can do
-		// loadingBar = new Image(atlas.findRegion("loading-bar1"));
-
-		// Add all the actors to the stage
 		stage.addActor(screenBg);
 		stage.addActor(loadingBar);
 		stage.addActor(loadingBg);
 		stage.addActor(loadingBarHidden);
 		stage.addActor(loadingFrame);
 		stage.addActor(logo);
-
-		// Add everything to be loaded, for instance:
-		// game.manager.load("data/assets1.pack", TextureAtlas.class);
-		// game.manager.load("data/assets2.pack", TextureAtlas.class);
-		// game.manager.load("data/assets3.pack", TextureAtlas.class);
 	}
 
 	@Override
