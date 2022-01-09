@@ -26,6 +26,14 @@ import com.jelte.norii.utility.parallax.ParallaxUtils.WH;
 import com.jelte.norii.utility.parallax.TextureRegionParallaxLayer;
 
 public class LoginScreen extends GameScreen {
+	private static final int EXIT_BUTTON_WIDTH_PERCENT = 15;
+	private static final int EXIT_BUTTON_HEIGHT_PERCENT = 10;
+	private static final int EXIT_BUTTON_SPACE_TOP_PERCENT = 5;
+	private static final int LOGIN_WINDOW_WIDTH_PERCENT = 70;
+	private static final int LOGIN_WINDOW_HEIGHT_PERCENT = 60;
+	private static final int TITLE_LABEL_WIDTH_PERCENT = 15;
+	private static final int TITLE_LABEL_HEIGHT_PERCENT = 10;
+	private static final int TITLE_LABEL_SPACE_BOTTOM_PERCENT = 5;
 	private static final String TITLE_FONT = "bigFont";
 	private static final String TITLE = "LOGIN";
 	private static final String EXIT = "quit";
@@ -39,6 +47,11 @@ public class LoginScreen extends GameScreen {
 	private SpriteBatch backgroundbatch;
 	private LoginWidget loginWidget;
 	private ServerCommunicator serverCom = ServerCommunicator.getInstance();
+	
+	private int screenWidth;
+	private int screenHeight;
+	private int widthPercent;
+	private int heightPercent;
 
 	public LoginScreen() {
 		loadAssets();
@@ -55,10 +68,14 @@ public class LoginScreen extends GameScreen {
 	}
 
 	private void initializeVariables() {
+		screenWidth = Gdx.graphics.getWidth();
+		screenHeight = Gdx.graphics.getHeight();
+		widthPercent = screenWidth / 100;
+		heightPercent = screenHeight / 100;
 		backgroundbatch = new SpriteBatch();
-		stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), backgroundbatch);
+		stage = new Stage(new FitViewport(screenWidth, screenHeight), backgroundbatch);
 		parallaxCamera = new OrthographicCamera();
-		parallaxCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		parallaxCamera.setToOrtho(false, screenWidth, screenHeight);
 		parallaxCamera.update();
 		table = new Table();
 		table.setFillParent(true);
@@ -66,21 +83,19 @@ public class LoginScreen extends GameScreen {
 	}
 
 	private void createBackground() {
-		final int worldHeight = Gdx.graphics.getHeight();
-
 		final TextureAtlas atlas = AssetManagerUtility.getTextureAtlas(AssetManagerUtility.SPRITES_ATLAS_PATH);
 
 		final TextureRegion backTrees = atlas.findRegion("background-back-trees");
-		final TextureRegionParallaxLayer backTreesLayer = new TextureRegionParallaxLayer(backTrees, worldHeight, new Vector2(.3f, .3f), WH.HEIGHT);
+		final TextureRegionParallaxLayer backTreesLayer = new TextureRegionParallaxLayer(backTrees, screenHeight, new Vector2(.3f, .3f), WH.HEIGHT);
 
 		final TextureRegion lights = atlas.findRegion("background-light");
-		final TextureRegionParallaxLayer lightsLayer = new TextureRegionParallaxLayer(lights, worldHeight, new Vector2(.6f, .6f), WH.HEIGHT);
+		final TextureRegionParallaxLayer lightsLayer = new TextureRegionParallaxLayer(lights, screenHeight, new Vector2(.6f, .6f), WH.HEIGHT);
 
 		final TextureRegion middleTrees = atlas.findRegion("background-middle-trees");
-		final TextureRegionParallaxLayer middleTreesLayer = new TextureRegionParallaxLayer(middleTrees, worldHeight, new Vector2(.75f, .75f), WH.HEIGHT);
+		final TextureRegionParallaxLayer middleTreesLayer = new TextureRegionParallaxLayer(middleTrees, screenHeight, new Vector2(.75f, .75f), WH.HEIGHT);
 
 		final TextureRegion frontTrees = atlas.findRegion("foreground");
-		final TextureRegionParallaxLayer frontTreesLayer = new TextureRegionParallaxLayer(frontTrees, worldHeight, new Vector2(.6f, .6f), WH.HEIGHT);
+		final TextureRegionParallaxLayer frontTreesLayer = new TextureRegionParallaxLayer(frontTrees, screenHeight, new Vector2(.6f, .6f), WH.HEIGHT);
 
 		parallaxBackground = new ParallaxBackground();
 		parallaxBackground.addLayers(backTreesLayer, lightsLayer, middleTreesLayer, frontTreesLayer);
@@ -96,9 +111,9 @@ public class LoginScreen extends GameScreen {
 	}
 
 	private void addButtons() {
-		table.add(titleLabel).expandX().colspan(10).spaceBottom(100).height(250).width(1000).row();
-		table.add(loginWidget.getWindow()).height(300).width(300).row();
-		table.add(exitTextButton).spaceTop(100).height(100).width(100).row();
+		table.add(titleLabel).expandX().colspan(10).spaceBottom(TITLE_LABEL_SPACE_BOTTOM_PERCENT * heightPercent).height(TITLE_LABEL_HEIGHT_PERCENT * heightPercent).width(TITLE_LABEL_WIDTH_PERCENT * widthPercent).row();
+		table.add(loginWidget.getWindow()).height(LOGIN_WINDOW_HEIGHT_PERCENT * heightPercent).width(LOGIN_WINDOW_WIDTH_PERCENT * widthPercent).row();
+		table.add(exitTextButton).spaceTop(EXIT_BUTTON_SPACE_TOP_PERCENT * heightPercent).height(EXIT_BUTTON_HEIGHT_PERCENT * heightPercent).width(EXIT_BUTTON_WIDTH_PERCENT * widthPercent).row();
 
 		stage.addActor(table);
 	}
@@ -152,10 +167,8 @@ public class LoginScreen extends GameScreen {
 	private void checkLogin() {
 		if (serverCom.isNewMessage()) {
 			NetworkMessage oldestMessage = serverCom.getOldestMessageFromServer();
-			if (oldestMessage.getType() == MessageType.LOGIN_VALIDATION) {
-				if (oldestMessage.getLoginWorked()) {
-					ScreenManager.getInstance().showScreen(ScreenEnum.MAIN_MENU);
-				}
+			if ((oldestMessage.getType() == MessageType.LOGIN_VALIDATION) && oldestMessage.getLoginWorked()) {
+				ScreenManager.getInstance().showScreen(ScreenEnum.MAIN_MENU);
 			}
 		}
 	}
