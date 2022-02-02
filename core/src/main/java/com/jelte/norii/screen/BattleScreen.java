@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -77,6 +78,9 @@ public class BattleScreen extends GameScreen {
 	private Json json;
 	private EntityStage entityStage;
 	private FrameBuffer fbo;
+	private ShaderProgram shader;
+	private String vertexShader;
+	private String fragmentShader;
 
 	private boolean isPaused;
 
@@ -93,7 +97,7 @@ public class BattleScreen extends GameScreen {
 	private void initializeVariables(UnitOwner enemy, MapManager mapMgr) {
 		mapCamera = new OrthographicCamera();
 		mapCamera.setToOrtho(false, VISIBLE_WIDTH, VISIBLE_HEIGHT);
-		fbo = new FrameBuffer(Pixmap.Format.RGBA8888, 672, 672, true);
+		fbo = new FrameBuffer(Pixmap.Format.RGBA8888, 672, 672, false);
 		spriteBatch = new SpriteBatch(900);
 		isPaused = false;
 		this.mapMgr = mapMgr;
@@ -101,6 +105,9 @@ public class BattleScreen extends GameScreen {
 		enemyTeamLeader = enemy;
 		json = new Json();
 		initTeams();
+		fragmentShader = Gdx.files.internal("shaders/pixelScaler.frag").readString();
+		shader = new ShaderProgram(spriteBatch.getShader().getVertexShaderSource(), fragmentShader);
+		shader.pedantic = false;
 	}
 
 	private void initTeams() {
@@ -328,10 +335,10 @@ public class BattleScreen extends GameScreen {
 		renderGrid();
 		renderHUD(delta);
 		fbo.end();
+		spriteBatch.setShader(shader);
 		spriteBatch.begin();
 		Texture texture = fbo.getColorBufferTexture();
 		TextureRegion textureRegion = new TextureRegion(texture);
-		// and.... FLIP! V (vertical) only
 		textureRegion.flip(false, true);
 		spriteBatch.draw(textureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		spriteBatch.end();
@@ -380,6 +387,23 @@ public class BattleScreen extends GameScreen {
 
 		hud.resize(width, height);
 		pauseMenu.resize(width, height);
+		
+		
+		boolean needNewFrameBuffer = false;
+	    float ratio = (float)width / (float) height;
+	    int gameWidth = (int)(672 / ratio);
+	    
+	    
+	    if (fbo != null && (fbo.getWidth() != gameWidth || fbo.getHeight() != 672)){
+	    	fbo.dispose();
+	        needNewFrameBuffer = true;
+	    }
+	    
+	    if (fbo == null || needNewFrameBuffer) {
+	    	fbo = new FrameBuffer(Pixmap.Format.RGBA8888, gameWidth, 672, false);
+	    }
+	    	
+
 	}
 
 	@Override

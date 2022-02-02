@@ -1,4 +1,4 @@
-#version 150
+#version 130
 #ifdef GL_ES
 	#define PRECISION mediump
 	precision PRECISION float;
@@ -21,7 +21,8 @@
 
 #define gaussian(a,b)	exp2((a)*(a)*-(b))
 
-varying vec2 v_texCoords;
+out vec2 v_texCoords;
+out vec4 color;
 uniform sampler2D u_texture;
 uniform float u_amount;
 uniform float u_speed;
@@ -146,7 +147,7 @@ void main() {
     
     	col = pow( col, vec3(1.0/2.4) ) * 1.055 - 0.055;			// linear => SRGB
     
-    	gl_FragColor = vec4( col, 1.0 );
+    	color = vec4( col, 1.0 );
     }
     
     //fragColor = texelFetch( iChannel0, ivec2(fragCoord), 0);

@@ -40,6 +40,7 @@ public class EffectGroup extends Table {
 		time = 0;
 		shaderProgram = new ShaderProgram(batch.getShader().getVertexShaderSource(), Gdx.files.internal(fragmentShaderFile).readString());
 		shaderProgram.pedantic = false;
+		System.out.println(shaderProgram.getLog());
 		if (!shaderProgram.isCompiled()) {
 			System.out.println(shaderProgram.getLog());
 		}
@@ -57,7 +58,7 @@ public class EffectGroup extends Table {
 			}
 		});
 		this.addAction(Actions.delay(1, enable));
-		disabled = false;
+		//disabled = false;
 		time = 0;
 
 	}
