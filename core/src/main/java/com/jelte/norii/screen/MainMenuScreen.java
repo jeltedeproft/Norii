@@ -3,6 +3,7 @@ package com.jelte.norii.screen;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -17,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.jelte.norii.ai.AITeamFileReader;
 import com.jelte.norii.ai.AITeamLeader;
@@ -33,6 +35,7 @@ import com.jelte.norii.entities.UnitOwner;
 import com.jelte.norii.magic.SpellFileReader;
 import com.jelte.norii.map.MapFactory.MapType;
 import com.jelte.norii.profile.ProfileManager;
+import com.jelte.norii.ui.EffectGroup;
 import com.jelte.norii.utility.AssetManagerUtility;
 import com.jelte.norii.utility.parallax.ParallaxBackground;
 import com.jelte.norii.utility.parallax.ParallaxUtils.WH;
@@ -51,6 +54,7 @@ public class MainMenuScreen extends GameScreen {
 	private OrthographicCamera parallaxcamera;
 	private ParallaxBackground parallaxBackground;
 
+	private EffectGroup shadedGroup;
 	private Table mainMenuTableOfButtons;
 	private TextButton playButton;
 	private TextButton multiplayerButton;
@@ -65,7 +69,7 @@ public class MainMenuScreen extends GameScreen {
 
 	protected float frameTime = 0f;
 	protected Sprite frameSprite = null;
-	
+
 	private int initialWidth;
 	private int initialHeight;
 
@@ -102,6 +106,8 @@ public class MainMenuScreen extends GameScreen {
 		mainMenuTableOfButtons = new Table();
 		mainMenuTableOfButtons.setFillParent(true);
 		selectedLevel = LevelEnum.DESERT_TEAM;
+		shadedGroup = new EffectGroup(backgroundbatch, "shaders/pixelArt.frag");
+		shadedGroup.setFillParent(true);
 	}
 
 	private void createBackground() {
@@ -127,6 +133,7 @@ public class MainMenuScreen extends GameScreen {
 		final Skin statusUISkin = AssetManagerUtility.getSkin();
 
 		title = new Label(" Norii\n_______", statusUISkin, TITLE_FONT_NAME);
+		title.setColor(Color.RED);
 		playButton = new TextButton("Play", statusUISkin, GENERAL_FONT_NAME);
 		multiplayerButton = new TextButton("Multiplayer", statusUISkin, GENERAL_FONT_NAME);
 		playTutorialButton = new TextButton("Play Tutorial", statusUISkin, GENERAL_FONT_NAME);
@@ -149,7 +156,15 @@ public class MainMenuScreen extends GameScreen {
 		mainMenuTableOfButtons.add(settingsButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM_PERCENT).padTop(BUTTON_PAD_TOP_PERCENT).row();
 		mainMenuTableOfButtons.add(exitButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM_PERCENT).padTop(BUTTON_PAD_TOP_PERCENT).row();
 
-		stage.addActor(mainMenuTableOfButtons);
+		shadedGroup.addActor(mainMenuTableOfButtons);
+		stage.addActor(shadedGroup);
+
+		mainMenuTableOfButtons.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				shadedGroup.start(x, y);
+			}
+		});
 	}
 
 	private void addListeners() {

@@ -10,7 +10,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -72,6 +76,7 @@ public class BattleScreen extends GameScreen {
 	private PauseMenuScreen pauseMenu;
 	private Json json;
 	private EntityStage entityStage;
+	private FrameBuffer fbo;
 
 	private boolean isPaused;
 
@@ -88,6 +93,7 @@ public class BattleScreen extends GameScreen {
 	private void initializeVariables(UnitOwner enemy, MapManager mapMgr) {
 		mapCamera = new OrthographicCamera();
 		mapCamera.setToOrtho(false, VISIBLE_WIDTH, VISIBLE_HEIGHT);
+		fbo = new FrameBuffer(Pixmap.Format.RGBA8888, 672, 672, true);
 		spriteBatch = new SpriteBatch(900);
 		isPaused = false;
 		this.mapMgr = mapMgr;
@@ -312,6 +318,7 @@ public class BattleScreen extends GameScreen {
 	}
 
 	private void renderElements(final float delta) {
+		fbo.begin();
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		Gdx.graphics.setTitle(FPS_TITLE + Gdx.graphics.getFramesPerSecond());
@@ -320,6 +327,14 @@ public class BattleScreen extends GameScreen {
 		renderParticles(delta);
 		renderGrid();
 		renderHUD(delta);
+		fbo.end();
+		spriteBatch.begin();
+		Texture texture = fbo.getColorBufferTexture();
+		TextureRegion textureRegion = new TextureRegion(texture);
+		// and.... FLIP! V (vertical) only
+		textureRegion.flip(false, true);
+		spriteBatch.draw(textureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		spriteBatch.end();
 	}
 
 	private void renderMap() {
