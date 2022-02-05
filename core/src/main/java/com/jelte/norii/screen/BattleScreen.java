@@ -348,8 +348,13 @@ public class BattleScreen extends GameScreen {
 		Texture texture = fbo.getColorBufferTexture();
 		TextureRegion textureRegion = new TextureRegion(texture);
 		textureRegion.flip(false, true);
-		spriteBatch.draw(textureRegion, 0, 0, 1000, 1000);
+		mapCamera.setToOrtho(false, fbo.getWidth(), fbo.getHeight());
+		mapCamera.update();
+		spriteBatch.setProjectionMatrix(mapCamera.combined);
+		spriteBatch.draw(textureRegion, 0, 0, fbo.getWidth(), fbo.getHeight());
 		spriteBatch.end();
+		mapCamera.setToOrtho(false, VISIBLE_WIDTH, VISIBLE_HEIGHT);
+		mapCamera.update();
 	}
 
 	private void renderMap() {
