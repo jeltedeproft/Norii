@@ -367,11 +367,11 @@ public class SetTeamScreen extends GameScreen {
 		mainTable.pack();
 		stage.addActor(mainTable);
 
-		notEmptyLabel.setPosition(screenWidth / 2.0f, screenHeight / 2.0f);
+		notEmptyLabel.setPosition(screenWidth * 0.5f, screenHeight * 0.5f);
 		notEmptyLabel.setVisible(false);
 		stage.addActor(notEmptyLabel);
 
-		noHeroLabel.setPosition(screenWidth / 2.0f, screenHeight / 2.0f);
+		noHeroLabel.setPosition(screenWidth * 0.5f, screenHeight * 0.5f);
 		noHeroLabel.setVisible(false);
 		stage.addActor(noHeroLabel);
 	}

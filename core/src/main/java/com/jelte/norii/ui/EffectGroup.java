@@ -11,16 +11,18 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.jelte.norii.map.BattleMap;
 
 public class EffectGroup extends Table {
-
+	private static final String TAG = EffectGroup.class.getSimpleName();
+	
 	private FrameBuffer fbo;
 	private String vertexShader;
 	private String fragmentShader;
 	private ShaderProgram shaderProgram;
 	private float time;
 
-	private boolean disabled;
+	private boolean disabled = true;
 
 	private float shockWavePositionX;
 	private float shockWavePositionY;
@@ -40,9 +42,9 @@ public class EffectGroup extends Table {
 		time = 0;
 		shaderProgram = new ShaderProgram(batch.getShader().getVertexShaderSource(), Gdx.files.internal(fragmentShaderFile).readString());
 		shaderProgram.pedantic = false;
-		System.out.println(shaderProgram.getLog());
+		Gdx.app.debug(TAG, shaderProgram.getLog());
 		if (!shaderProgram.isCompiled()) {
-			System.out.println(shaderProgram.getLog());
+			Gdx.app.debug(TAG, shaderProgram.getLog());
 		}
 		fbo = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 	}

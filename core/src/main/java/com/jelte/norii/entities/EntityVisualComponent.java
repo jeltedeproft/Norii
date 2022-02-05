@@ -161,7 +161,7 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 	}
 
 	public SequenceAction createMoveSequence(List<GridCell> path) {
-		getEntityactor().setOrigin(getEntityactor().getWidth() / 2, getEntityactor().getHeight() / 2);
+		getEntityactor().setOrigin(getEntityactor().getWidth() * 0.5f, getEntityactor().getHeight() * 0.5f);
 		AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_LOOP, AudioTypeEvent.WALK_LOOP);
 		setAnimationType(EntityAnimationType.WALK);
 		GridCell oldCell = new GridCell(entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY());
@@ -256,7 +256,7 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 
 	@Override
 	public void pushTo(MyPoint casterNewPosition) {
-		getEntityactor().setOrigin(getEntityactor().getWidth() / 2, getEntityactor().getHeight() / 2);
+		getEntityactor().setOrigin(getEntityactor().getWidth() * 0.5f, getEntityactor().getHeight() * 0.5f);
 		final SequenceAction sequence = Actions.sequence();
 		sequence.addAction(run(updatePositionAction));
 		sequence.addAction(moveTo(casterNewPosition.x, casterNewPosition.y, 0.05f));

@@ -27,7 +27,7 @@ public class ParticleMaker {
 	}
 
 	public static void drawAllActiveParticles(final SpriteBatch spriteBatch, final float delta) {
-		spriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE); // performance-optim.: manually set blend function to additive!
+		//spriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE); // performance-optim.: manually set blend function to additive!, cant use thise wit hframeBuffer
 		for (final ArrayList<Particle> particleTypeList : allParticles.values()) {
 			for (final Particle particle : particleTypeList) {
 				if (particle.isActive()) {
@@ -41,7 +41,7 @@ public class ParticleMaker {
 				}
 			}
 		}
-		spriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA); // performance-optim.: manually reset blend function!
+		//spriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA); // performance-optim.: manually reset blend function!
 	}
 
 	public static void deactivateAllParticlesOfType(final ParticleType particletype) {

@@ -22,7 +22,7 @@ public class ParticleEffectActor extends Actor {
 	@Override
 	public void act(float delta) {
 		super.act(delta);
-		acc.set(getWidth() / 2, getHeight() / 2);
+		acc.set(getWidth() * 0.5f, getHeight() * 0.5f);
 		localToStageCoordinates(acc);
 		particleEffect.setPosition(acc.x, acc.y);
 		particleEffect.update(delta);

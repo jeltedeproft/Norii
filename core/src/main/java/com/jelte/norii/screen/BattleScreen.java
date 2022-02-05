@@ -49,6 +49,7 @@ import com.jelte.norii.multiplayer.NetworkMessage;
 import com.jelte.norii.multiplayer.ServerCommunicator;
 import com.jelte.norii.particles.ParticleMaker;
 import com.jelte.norii.particles.ParticleType;
+import com.jelte.norii.ui.EffectGroup;
 import com.jelte.norii.ui.Hud;
 import com.jelte.norii.ui.HudMessageTypes;
 import com.jelte.norii.ui.MessageToBattleScreen;
@@ -59,6 +60,7 @@ import com.jelte.norii.utility.TiledMapPosition;
 import com.jelte.norii.utility.Utility;
 
 public class BattleScreen extends GameScreen {
+	private static final String TAG = BattleScreen.class.getSimpleName();
 	private static final String FPS_TITLE = "fps = ";
 	public static final int VISIBLE_WIDTH = 21;
 	public static final int VISIBLE_HEIGHT = 21;
@@ -108,6 +110,10 @@ public class BattleScreen extends GameScreen {
 		fragmentShader = Gdx.files.internal("shaders/pixelScaler.frag").readString();
 		shader = new ShaderProgram(spriteBatch.getShader().getVertexShaderSource(), fragmentShader);
 		shader.pedantic = false;
+		Gdx.app.debug(TAG, shader.getLog());
+		if (!shader.isCompiled()) {
+			Gdx.app.debug(TAG, shader.getLog());
+		}
 	}
 
 	private void initTeams() {
@@ -189,7 +195,7 @@ public class BattleScreen extends GameScreen {
 		multiplexer.addProcessor(currentMap.getTiledMapStage());
 		Gdx.input.setInputProcessor(multiplexer);
 
-		mapCamera.position.set(currentMap.getMapWidth() / 2f, currentMap.getMapHeight() / 2f, 0f);
+		mapCamera.position.set(currentMap.getMapWidth() * 0.5f, currentMap.getMapHeight() * 0.5f, 0f);
 		mapRenderer = new OrthogonalTiledMapRenderer(mapMgr.getCurrentTiledMap(), Map.UNIT_SCALE, spriteBatch);
 		mapRenderer.setView(mapCamera);
 		currentMap.makeSpawnParticles();
@@ -248,8 +254,8 @@ public class BattleScreen extends GameScreen {
 	}
 
 	private void updateCameras() {
-		mapCamera.position.x = Utility.clamp(mapCamera.position.x, currentMap.getTilemapWidthInTiles() - (mapCamera.viewportWidth / 2), 0 + (mapCamera.viewportWidth / 2));
-		mapCamera.position.y = Utility.clamp(mapCamera.position.y, currentMap.getTilemapHeightInTiles() - (mapCamera.viewportHeight / 2), 0 + (mapCamera.viewportHeight / 2));
+		mapCamera.position.x = Utility.clamp(mapCamera.position.x, currentMap.getTilemapWidthInTiles() - (mapCamera.viewportWidth * 0.5f), 0 + (mapCamera.viewportWidth * 0.5f));
+		mapCamera.position.y = Utility.clamp(mapCamera.position.y, currentMap.getTilemapHeightInTiles() - (mapCamera.viewportHeight * 0.5f), 0 + (mapCamera.viewportHeight * 0.5f));
 		mapCamera.update();
 		hudCamera.update();
 	}
@@ -325,10 +331,12 @@ public class BattleScreen extends GameScreen {
 	}
 
 	private void renderElements(final float delta) {
+		Gdx.gl.glClearColor(0, 0, 0, 0);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		fbo.begin();
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		Gdx.graphics.setTitle(FPS_TITLE + Gdx.graphics.getFramesPerSecond());
+		Gdx.graphics.setTitle(FPS_TITLE + Gdx.graphics.getFramesPerSecond() + "(" + Gdx.graphics.getWidth() + "," + Gdx.graphics.getHeight() + ")");
 		renderMap();
 		renderUnits();
 		renderParticles(delta);
@@ -340,7 +348,7 @@ public class BattleScreen extends GameScreen {
 		Texture texture = fbo.getColorBufferTexture();
 		TextureRegion textureRegion = new TextureRegion(texture);
 		textureRegion.flip(false, true);
-		spriteBatch.draw(textureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		spriteBatch.draw(textureRegion, 0, 0, 1000, 1000);
 		spriteBatch.end();
 	}
 
@@ -387,23 +395,6 @@ public class BattleScreen extends GameScreen {
 
 		hud.resize(width, height);
 		pauseMenu.resize(width, height);
-		
-		
-		boolean needNewFrameBuffer = false;
-	    float ratio = (float)width / (float) height;
-	    int gameWidth = (int)(672 / ratio);
-	    
-	    
-	    if (fbo != null && (fbo.getWidth() != gameWidth || fbo.getHeight() != 672)){
-	    	fbo.dispose();
-	        needNewFrameBuffer = true;
-	    }
-	    
-	    if (fbo == null || needNewFrameBuffer) {
-	    	fbo = new FrameBuffer(Pixmap.Format.RGBA8888, gameWidth, 672, false);
-	    }
-	    	
-
 	}
 
 	@Override

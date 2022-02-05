@@ -1,5 +1,19 @@
 #version 330 core
 
+#ifdef GL_ES
+    #define PRECISION mediump
+    precision PRECISION float;
+    precision PRECISION int;
+#else
+    #define PRECISION
+#endif
+
+in vec2 v_texCoords;
+uniform sampler2D u_texture;
+uniform float u_amount;
+uniform float u_speed;
+uniform float u_time;
+
 in vec2 frag_uv;
 
 uniform sampler2D virtual_screen;
@@ -15,9 +29,9 @@ float sharpen(float pix_coord) {
 
 void main() {
     vec2 vres = textureSize(virtual_screen, 0);
-    frag_color = texture(virtual_screen, vec2(
-        sharpen(frag_uv.x * vres.x) / vres.x,
-        sharpen(frag_uv.y * vres.y) / vres.y
+    frag_color = texture2D(virtual_screen, vec2(
+        sharpen(v_texCoords.x * vres.x) / vres.x,
+        sharpen(v_texCoords.y * vres.y) / vres.y
     ));
     // To visualize how this makes the grid:
     // frag_color = vec4(

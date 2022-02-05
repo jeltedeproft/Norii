@@ -81,15 +81,15 @@ public class LoadingScreen extends GameScreen {
 		screenBg.setSize(stage.getWidth(), stage.getHeight());
 
 		// Place the loading frame in the middle of the screen
-		loadingFrame.setX((stage.getWidth() - loadingFrame.getWidth()) / 2);
-		loadingFrame.setY((stage.getHeight() - loadingFrame.getHeight()) / 2);
+		loadingFrame.setX((stage.getWidth() - loadingFrame.getWidth()) * 0.5f);
+		loadingFrame.setY((stage.getHeight() - loadingFrame.getHeight()) * 0.5f);
 
 		// Place the loading bar at the same spot as the frame, adjusted a few px
 		loadingBar.setX(loadingFrame.getX() + 15);
 		loadingBar.setY(loadingFrame.getY() + 5);
 
 		// Place the logo in the middle of the screen
-		logo.setX((stage.getWidth() - logo.getWidth()) / 2);
+		logo.setX((stage.getWidth() - logo.getWidth()) * 0.5f);
 		logo.setY(loadingFrame.getY() + loadingFrame.getHeight() + 15);
 
 		// Place the image that will hide the bar on top of the bar, adjusted a few px

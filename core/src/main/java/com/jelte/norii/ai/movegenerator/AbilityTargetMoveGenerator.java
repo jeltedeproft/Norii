@@ -313,7 +313,7 @@ public class AbilityTargetMoveGenerator implements MoveGenerator {
 		final MyPoint centerOfGravityAllUnits = Utility.getCenterOfGravityAllUnits(battleState);
 		oldTime = debugTime("centersofgravirty", oldTime);
 		// if low hp run away
-		if (aiUnit.getHp() <= ((aiUnit.getEntityData().getMaxHP() / 100.0f) * 10)) {
+		if (aiUnit.getHp() <= ((aiUnit.getEntityData().getMaxHP() * 0.01f) * 10)) {
 			final MyPoint originalGoal = MyPathFinder.getInstance().getPositionFurthestAwayFrom(centerOfGravityEnemies);
 			final MyPoint trimmedGoal = trimPathConsideringApAndReachable(originalGoal, aiUnit, battleState);
 			return new Move(MoveType.MOVE, trimmedGoal);

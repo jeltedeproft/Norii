@@ -1183,10 +1183,10 @@ public class BattleStateGridHelper {
 			return ((-diffX <= aoeRange) && (diffX <= 0) && (diffY == 0));
 		}
 		if (casterIsDown) {
-			return ((diffXAbs <= (aoeRange / 2)) && (diffY == 0));
+			return ((diffXAbs <= (aoeRange * 0.5f)) && (diffY == 0));
 		}
 		if (casterIsUp) {
-			return ((diffXAbs <= (aoeRange / 2)) && (diffY == 0));
+			return ((diffXAbs <= (aoeRange * 0.5f)) && (diffY == 0));
 		}
 		return false;
 	}

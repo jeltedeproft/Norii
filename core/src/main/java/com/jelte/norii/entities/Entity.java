@@ -154,7 +154,7 @@ public class Entity extends Actor implements Comparable<Entity> {
 		if (type == DamageType.MAGICAL) {
 			factor = magicalDefense;
 		}
-		damage -= (damage / 100) * factor;
+		damage -= (damage * 0.01f) * factor;
 		return damage;
 	}
 
