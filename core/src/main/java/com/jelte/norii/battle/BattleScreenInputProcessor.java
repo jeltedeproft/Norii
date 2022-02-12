@@ -173,6 +173,7 @@ public class BattleScreenInputProcessor implements InputProcessor {
 
 	@Override
 	public boolean scrolled(float amountX, float amountY) {
+		mapCamera.zoom += amountY;
 		return false;
 	}
 

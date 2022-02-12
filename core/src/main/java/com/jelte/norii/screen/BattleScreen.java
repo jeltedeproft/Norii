@@ -203,6 +203,7 @@ public class BattleScreen extends GameScreen {
 		final FitViewport vp = new FitViewport(VISIBLE_WIDTH, VISIBLE_HEIGHT, mapCamera);
 		currentMap.getTiledMapStage().setViewport(vp);
 		entityStage.setViewport(vp);
+		currentMap.getTiledMapStage().getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
 	}
 
 	@Override
@@ -370,7 +371,6 @@ public class BattleScreen extends GameScreen {
 		if (battlemanager.getActiveUnit().getVisualComponent().isActive()) {
 			spriteBatch.draw(AssetManagerUtility.getSprite("purple"), battlemanager.getActiveUnit().getVisualComponent().getEntityactor().getX(), battlemanager.getActiveUnit().getVisualComponent().getEntityactor().getY(), 1.0f, 1.0f);
 		}
-		entityStage.getViewport().apply();
 		Player.getInstance().renderUnits(spriteBatch);
 		enemyTeamLeader.renderUnits(spriteBatch);
 	}
@@ -381,8 +381,8 @@ public class BattleScreen extends GameScreen {
 	}
 
 	private void renderHUD(final float delta) {
-		spriteBatch.setProjectionMatrix(hud.getStage().getCamera().combined);
 		hud.getStage().getViewport().apply();
+		spriteBatch.setProjectionMatrix(hud.getStage().getCamera().combined);
 		hud.render(delta);
 	}
 
@@ -395,11 +395,11 @@ public class BattleScreen extends GameScreen {
 
 	@Override
 	public void resize(final int width, final int height) {
-		currentMap.getTiledMapStage().getViewport().update(width, height, false);
-		entityStage.getViewport().update(width, height, false);
-
-		hud.resize(width, height);
-		pauseMenu.resize(width, height);
+//		currentMap.getTiledMapStage().getViewport().update(width, height, false);
+//		entityStage.getViewport().update(width, height, false);
+//
+//		hud.resize(width, height);
+//		pauseMenu.resize(width, height);
 	}
 
 	@Override
