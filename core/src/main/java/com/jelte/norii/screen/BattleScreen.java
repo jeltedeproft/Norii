@@ -11,6 +11,7 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -21,6 +22,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.crashinvaders.vfx.VfxManager;
+import com.crashinvaders.vfx.effects.CrtEffect;
+import com.crashinvaders.vfx.effects.GaussianBlurEffect;
+import com.crashinvaders.vfx.effects.OldTvEffect;
+import com.crashinvaders.vfx.effects.VignettingEffect;
+import com.crashinvaders.vfx.effects.WaterDistortionEffect;
 import com.jelte.norii.ai.AITeamLeader;
 import com.jelte.norii.ai.EnemyType;
 import com.jelte.norii.audio.AudioCommand;
@@ -49,6 +56,9 @@ import com.jelte.norii.multiplayer.NetworkMessage;
 import com.jelte.norii.multiplayer.ServerCommunicator;
 import com.jelte.norii.particles.ParticleMaker;
 import com.jelte.norii.particles.ParticleType;
+import com.jelte.norii.shaders.GlitchEffect;
+import com.jelte.norii.shaders.MonochromeEffect;
+import com.jelte.norii.shaders.PixelScalerEffect;
 import com.jelte.norii.ui.EffectGroup;
 import com.jelte.norii.ui.Hud;
 import com.jelte.norii.ui.HudMessageTypes;
@@ -83,6 +93,11 @@ public class BattleScreen extends GameScreen {
 	private ShaderProgram shader;
 	private String vertexShader;
 	private String fragmentShader;
+	private VfxManager vfxManager;
+	private GlitchEffect vfxEffect;
+	private MonochromeEffect monochromeVfxEffect;
+	private PixelScalerEffect pixelScalerEffect;
+	private WaterDistortionEffect effect;
 
 	private boolean isPaused;
 
@@ -107,6 +122,12 @@ public class BattleScreen extends GameScreen {
 		enemyTeamLeader = enemy;
 		json = new Json();
 		initTeams();
+		vfxManager = new VfxManager(Format.RGBA8888);
+//        vfxEffect = new GlitchEffect();
+		monochromeVfxEffect = new MonochromeEffect();
+		pixelScalerEffect = new PixelScalerEffect();
+		vfxManager.setBlendingEnabled(true);
+		vfxManager.addEffect(pixelScalerEffect);
 		fragmentShader = Gdx.files.internal("shaders/pixelScaler.frag").readString();
 		shader = new ShaderProgram(spriteBatch.getShader().getVertexShaderSource(), fragmentShader);
 		shader.pedantic = false;
@@ -334,28 +355,48 @@ public class BattleScreen extends GameScreen {
 	private void renderElements(final float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		fbo.begin();
-		Gdx.gl.glClearColor(0, 0, 0, 0);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		//fbo.begin();
+		
+        // Clean up internal buffers, as we don't need any information from the last render.
+        vfxManager.cleanUpBuffers();
+
+        // Begin render to an off-screen buffer.
+        vfxManager.beginInputCapture();
+        
+//		Gdx.gl.glClearColor(0, 0, 0, 0);
+//		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		Gdx.graphics.setTitle(FPS_TITLE + Gdx.graphics.getFramesPerSecond() + "(" + Gdx.graphics.getWidth() + "," + Gdx.graphics.getHeight() + ")");
 		renderMap();
 		renderUnits();
 		renderParticles(delta);
 		renderGrid();
 		renderHUD(delta);
-		fbo.end();
-		spriteBatch.setShader(shader);
-		spriteBatch.begin();
-		Texture texture = fbo.getColorBufferTexture();
-		TextureRegion textureRegion = new TextureRegion(texture);
-		textureRegion.flip(false, true);
-		mapCamera.setToOrtho(false, fbo.getWidth(), fbo.getHeight());
-		mapCamera.update();
-		spriteBatch.setProjectionMatrix(mapCamera.combined);
-		spriteBatch.draw(textureRegion, 0, 0, fbo.getWidth(), fbo.getHeight());
-		spriteBatch.end();
-		mapCamera.setToOrtho(false, VISIBLE_WIDTH, VISIBLE_HEIGHT);
-		mapCamera.update();
+		
+		
+        // End render to an off-screen buffer.
+        vfxManager.endInputCapture();
+        vfxManager.update(Gdx.graphics.getDeltaTime());
+
+        // Apply the effects chain to the captured frame.
+        // In our case, only one effect (gaussian blur) will be applied.
+        vfxManager.applyEffects();
+
+        // Render result to the screen.
+        vfxManager.renderToScreen();
+        
+//		fbo.end();
+//		spriteBatch.setShader(shader);
+//		spriteBatch.begin();
+//		Texture texture = fbo.getColorBufferTexture();
+//		TextureRegion textureRegion = new TextureRegion(texture);
+//		textureRegion.flip(false, true);
+//		mapCamera.setToOrtho(false, fbo.getWidth(), fbo.getHeight());
+//		mapCamera.update();
+//		spriteBatch.setProjectionMatrix(mapCamera.combined);
+//		spriteBatch.draw(textureRegion, 0, 0, fbo.getWidth(), fbo.getHeight());
+//		spriteBatch.end();
+//		mapCamera.setToOrtho(false, VISIBLE_WIDTH, VISIBLE_HEIGHT);
+//		mapCamera.update();
 	}
 
 	private void renderMap() {
@@ -395,11 +436,12 @@ public class BattleScreen extends GameScreen {
 
 	@Override
 	public void resize(final int width, final int height) {
-//		currentMap.getTiledMapStage().getViewport().update(width, height, false);
-//		entityStage.getViewport().update(width, height, false);
-//
-//		hud.resize(width, height);
-//		pauseMenu.resize(width, height);
+		vfxManager.resize(width, height);
+		currentMap.getTiledMapStage().getViewport().update(width, height, false);
+		entityStage.getViewport().update(width, height, false);
+
+		hud.resize(width, height);
+		pauseMenu.resize(width, height);
 	}
 
 	@Override
@@ -424,6 +466,8 @@ public class BattleScreen extends GameScreen {
 		mapRenderer.dispose();
 		pauseMenu.dispose();
 		currentMap.dispose();
+        vfxManager.dispose();
+        vfxEffect.dispose();
 	}
 
 	public void clickedOnTileMapActor(TiledMapActor actor) {
