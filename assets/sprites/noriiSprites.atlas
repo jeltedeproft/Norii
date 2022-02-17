@@ -2,7 +2,7 @@
 noriiSprites.png
 size: 4096, 2048
 format: RGBA8888
-filter: Nearest, Nearest
+filter: MipMapLinearLinear , MipMapLinearLinear 
 repeat: none
 ArtistIdleDown
   rotate: false
