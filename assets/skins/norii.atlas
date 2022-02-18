@@ -2,22 +2,13 @@
 norii.png
 size: 512,512
 format: RGBA8888
-filter: MipMapLinearLinear,MipMapLinearLinear
+filter: MipMapLinearLinear,Linear
 repeat: none
 CommanderProfileSmall
   rotate: false
   xy: 1, 391
   size: 120, 120
   orig: 120, 120
-  offset: 0, 0
-  index: -1
-android-horizontal-scrollbar-knob
-  rotate: false
-  xy: 123, 400
-  size: 10, 4
-  split: 1, 1, 1, 1
-  pad: 1, 1, 0, 0
-  orig: 10, 4
   offset: 0, 0
   index: -1
 android-horizontal-scrollbar-knob
@@ -262,14 +253,6 @@ tree-plus
   xy: 1, 1
   size: 21, 18
   orig: 21, 18
-  offset: 0, 0
-  index: -1
-window
-  rotate: false
-  xy: 55, 189
-  size: 27, 34
-  split: 5, 4, 26, 3
-  orig: 27, 34
   offset: 0, 0
   index: -1
 window

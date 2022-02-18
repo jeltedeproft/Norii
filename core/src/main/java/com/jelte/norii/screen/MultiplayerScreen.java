@@ -182,7 +182,7 @@ public class MultiplayerScreen extends GameScreen {
 
 	@Override
 	public void resize(int width, int height) {
-		stage.getViewport().setScreenSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		stage.getViewport().update(width, height, false);
 	}
 
 	@Override

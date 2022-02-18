@@ -80,13 +80,8 @@ public class BattleScreen extends GameScreen {
 	private PauseMenuScreen pauseMenu;
 	private Json json;
 	private EntityStage entityStage;
-	private FrameBuffer fbo;
-	private ShaderProgram shader;
-	private String vertexShader;
-	private String fragmentShader;
 	private VfxManager vfxManager;
 	private PixelScalerEffect vfxEffect;
-	private WaterDistortionEffect effect;
 
 	private boolean isPaused;
 
@@ -103,7 +98,6 @@ public class BattleScreen extends GameScreen {
 	private void initializeVariables(UnitOwner enemy, MapManager mapMgr) {
 		mapCamera = new OrthographicCamera();
 		mapCamera.setToOrtho(false, VISIBLE_WIDTH, VISIBLE_HEIGHT);
-		fbo = new FrameBuffer(Pixmap.Format.RGBA8888, 672, 672, false);
 		spriteBatch = new SpriteBatch(900);
 		isPaused = false;
 		this.mapMgr = mapMgr;
@@ -115,13 +109,6 @@ public class BattleScreen extends GameScreen {
 		vfxEffect = new PixelScalerEffect();
 		vfxManager.setBlendingEnabled(true);
 		vfxManager.addEffect(vfxEffect);
-		fragmentShader = Gdx.files.internal("shaders/pixelScaler.frag").readString();
-		shader = new ShaderProgram(spriteBatch.getShader().getVertexShaderSource(), fragmentShader);
-		shader.pedantic = false;
-		Gdx.app.debug(TAG, shader.getLog());
-		if (!shader.isCompiled()) {
-			Gdx.app.debug(TAG, shader.getLog());
-		}
 	}
 
 	private void initTeams() {
@@ -342,48 +329,21 @@ public class BattleScreen extends GameScreen {
 	private void renderElements(final float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		// fbo.begin();
-
-		// Clean up internal buffers, as we don't need any information from the last
-		// render.
+		Gdx.graphics.setTitle(FPS_TITLE + Gdx.graphics.getFramesPerSecond() + "(" + Gdx.graphics.getWidth() + "," + Gdx.graphics.getHeight() + ")");
+		
 		vfxManager.cleanUpBuffers();
-
-		// Begin render to an off-screen buffer.
 		vfxManager.beginInputCapture();
 
-//		Gdx.gl.glClearColor(0, 0, 0, 0);
-//		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		Gdx.graphics.setTitle(FPS_TITLE + Gdx.graphics.getFramesPerSecond() + "(" + Gdx.graphics.getWidth() + "," + Gdx.graphics.getHeight() + ")");
 		renderMap();
 		renderUnits();
 		renderParticles(delta);
 		renderGrid();
 		renderHUD(delta);
 
-		// End render to an off-screen buffer.
 		vfxManager.endInputCapture();
 		vfxManager.update(Gdx.graphics.getDeltaTime());
-
-		// Apply the effects chain to the captured frame.
-		// In our case, only one effect (gaussian blur) will be applied.
 		vfxManager.applyEffects();
-
-		// Render result to the screen.
 		vfxManager.renderToScreen();
-
-//		fbo.end();
-//		spriteBatch.setShader(shader);
-//		spriteBatch.begin();
-//		Texture texture = fbo.getColorBufferTexture();
-//		TextureRegion textureRegion = new TextureRegion(texture);
-//		textureRegion.flip(false, true);
-//		mapCamera.setToOrtho(false, fbo.getWidth(), fbo.getHeight());
-//		mapCamera.update();
-//		spriteBatch.setProjectionMatrix(mapCamera.combined);
-//		spriteBatch.draw(textureRegion, 0, 0, fbo.getWidth(), fbo.getHeight());
-//		spriteBatch.end();
-//		mapCamera.setToOrtho(false, VISIBLE_WIDTH, VISIBLE_HEIGHT);
-//		mapCamera.update();
 	}
 
 	private void renderMap() {
