@@ -1,5 +1,6 @@
 package com.jelte.norii.ui;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.magic.Ability;
+import com.jelte.norii.screen.BattleScreen;
 import com.jelte.norii.utility.AssetManagerUtility;
 
 public class BottomBar {
@@ -30,7 +32,7 @@ public class BottomBar {
 	private static final int WINDOW_PADDING = 0;
 	private static final int HERO_NAME_LABEL_HEIGHT = 15;
 	private static final int HERO_NAME_LABEL_WIDTH = 55;
-	private static final int STATS_WIDTH = 80;
+	private static final int STATS_WIDTH = 20;
 	private static final int STATS_HEIGHT = 20;
 	private static final int PAD_BOTTOM_TITLE = 10;
 	private static final float ICON_PADDING = 2f;
@@ -45,7 +47,6 @@ public class BottomBar {
 	private Table table;
 
 	private Label heroNameLabel;
-	private Label underscore;
 	private Label hpLabel;
 	private Label hp;
 	private Label magDefLabel;
@@ -64,13 +65,17 @@ public class BottomBar {
 	private Label spellInfo;
 	private ImageButton abilityIcon;
 
+	private Table subtable;
+	private Table actionsTable;
+	private Table infoTable;
+
 	private Entity activeUnit;
 	private boolean actionsVisible;
 	private final Hud hud;
 
-	public BottomBar(int mapWidth, int mapHeight, Hud hud) {
-		tilePixelWidth = Hud.UI_VIEWPORT_WIDTH / mapWidth;
-		tilePixelHeight = Hud.UI_VIEWPORT_HEIGHT / mapHeight;
+	public BottomBar(Hud hud) {
+		tilePixelWidth = Hud.UI_VIEWPORT_WIDTH / BattleScreen.VISIBLE_WIDTH;
+		tilePixelHeight = Hud.UI_VIEWPORT_HEIGHT / BattleScreen.VISIBLE_HEIGHT;
 		this.hud = hud;
 
 		initElementsForUI();
@@ -91,7 +96,6 @@ public class BottomBar {
 	private void initStatsMenu() {
 		final Skin statusUISkin = AssetManagerUtility.getSkin();
 		heroNameLabel = new Label("", statusUISkin);
-		underscore = new Label("______", statusUISkin);
 		hpLabel = new Label("hp: ", statusUISkin);
 		hp = new Label("", statusUISkin);
 		magDefLabel = new Label("mag def: ", statusUISkin);
@@ -102,10 +106,10 @@ public class BottomBar {
 
 	private void initActions() {
 		final Skin statusUISkin = AssetManagerUtility.getSkin();
-		actionsLabel = new Label(ACTIONS, AssetManagerUtility.getSkin());
-		infoLabel = new Label(INFO, AssetManagerUtility.getSkin());
-		statsLabel = new Label(STATS, AssetManagerUtility.getSkin());
-		spellInfo = new Label("", AssetManagerUtility.getSkin());
+		actionsLabel = new Label(ACTIONS, statusUISkin);
+		infoLabel = new Label(INFO, statusUISkin);
+		statsLabel = new Label(STATS, statusUISkin);
+		spellInfo = new Label("", statusUISkin);
 		final ImageButtonStyle abilityIconStyle = new ImageButtonStyle();
 		abilityIcon = new ImageButton(abilityIconStyle);
 		moveImageButton = new TextButton(MOVE_BUTTON_SPRITE_NAME, statusUISkin, DEFAULT_SKIN);
@@ -170,9 +174,9 @@ public class BottomBar {
 	private void populateHeroImageAndStats() {
 		createMainTable();
 
-		final Table subtable = createSubTable();
-		final Table actionsTable = createActionsTable();
-		final Table infoTable = createInfoTable();
+		subtable = createSubTable();
+		actionsTable = createActionsTable();
+		infoTable = createInfoTable();
 
 		table.add(subtable).align(Align.topLeft).height(tilePixelHeight * 3).width(tilePixelWidth * 6);
 		table.add(actionsTable).align(Align.topLeft).height(tilePixelHeight * 3).width(tilePixelWidth * 6);
@@ -195,6 +199,7 @@ public class BottomBar {
 
 	private Table createSubTable() {
 		final Table subtable = new Table();
+		subtable.debugAll();
 		subtable.add(statsLabel).height(HERO_NAME_LABEL_HEIGHT).align(Align.topLeft).width(HERO_NAME_LABEL_WIDTH).padTop(7).padBottom(PAD_BOTTOM_TITLE);
 		subtable.row();
 		subtable.align(Align.topLeft);
@@ -203,22 +208,20 @@ public class BottomBar {
 		subtable.align(Align.topLeft);
 		subtable.add(heroNameLabel).height(HERO_NAME_LABEL_HEIGHT).align(Align.topLeft).width(HERO_NAME_LABEL_WIDTH).padTop(10).padBottom(0);
 		subtable.row();
-		subtable.add(underscore).height(HERO_NAME_LABEL_HEIGHT).align(Align.topLeft).width(HERO_NAME_LABEL_WIDTH).padTop(0).padBottom(5);
-		subtable.row();
 
 		subtable.add(hpLabel).align(Align.bottomLeft).width(STATS_WIDTH).height(STATS_HEIGHT);
-		subtable.add(hp).height(STATS_HEIGHT).width(STATS_WIDTH).padBottom(5);
+		subtable.add(hp).height(STATS_HEIGHT).width(STATS_WIDTH).padBottom(5).padLeft(20);
 		subtable.row();
 
 		subtable.add(magDefLabel).align(Align.bottomLeft).width(STATS_WIDTH).height(STATS_HEIGHT).colspan(1);
-		subtable.add(magDef).height(STATS_HEIGHT).padBottom(5);
+		subtable.add(magDef).width(STATS_WIDTH).height(STATS_HEIGHT).padBottom(5).padLeft(25);
 		subtable.add().padLeft(25).width(STATS_WIDTH);
 		subtable.add().padLeft(25).width(STATS_WIDTH);
 		subtable.add().padLeft(25).width(STATS_WIDTH);
 		subtable.row();
 
 		subtable.add(phyDefLabel).align(Align.bottomLeft).width(STATS_WIDTH).height(STATS_HEIGHT).colspan(1);
-		subtable.add(phyDef).height(STATS_HEIGHT);
+		subtable.add(phyDef).width(STATS_WIDTH).height(STATS_HEIGHT).padLeft(25);
 		subtable.add().padLeft(25).width(STATS_WIDTH);
 		subtable.add().padLeft(25).width(STATS_WIDTH);
 		subtable.add().padLeft(25).width(STATS_WIDTH);
@@ -336,6 +339,12 @@ public class BottomBar {
 		skipImageButton.setVisible(actionsVisible);
 		attackImageButton.setVisible(actionsVisible);
 		spellImageButton.setVisible(actionsVisible);
+	}
+
+	public void readjustSize() {
+		subtable.setWidth(Gdx.graphics.getWidth() / 5);
+		actionsTable.setWidth(Gdx.graphics.getWidth() / 5);
+		infoTable.setWidth(Gdx.graphics.getWidth() / 5);
 	}
 
 }

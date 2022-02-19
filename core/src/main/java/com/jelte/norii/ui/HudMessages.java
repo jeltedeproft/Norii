@@ -35,18 +35,10 @@ public class HudMessages {
 	private final EnumMap<HudMessageTypes, Boolean> tutorialMessageTypesDisplayed;
 
 	private final Stage stage;
-	private final int mapWidth;
-	private final int mapHeight;
-	private final float tilePixelWidth;
-	private final float tilePixelHeight;
 	private final boolean isTutorial;
 
-	public HudMessages(Stage stage, int mapWidth, int mapHeight, float tilePixelWidth, float tilePixelHeight, boolean isTutorial) {
+	public HudMessages(Stage stage, boolean isTutorial) {
 		this.stage = stage;
-		this.mapWidth = mapWidth;
-		this.mapHeight = mapHeight;
-		this.tilePixelWidth = tilePixelWidth;
-		this.tilePixelHeight = tilePixelHeight;
 		this.isTutorial = isTutorial;
 		messageTypesToPopups = new EnumMap<>(HudMessageTypes.class);
 		tutorialMessageTypesToWindows = new EnumMap<>(HudMessageTypes.class);
@@ -56,24 +48,24 @@ public class HudMessages {
 	}
 
 	private void createInfoMessages(boolean isTutorial) {
-		messageTypesToPopups.put(HudMessageTypes.INVALID_ATTACK_TARGET, new HudMessagePopup(INVALID_ATTACK_TARGET_MESSAGE, this));
-		messageTypesToPopups.put(HudMessageTypes.INVALID_MOVE, new HudMessagePopup(INVALID_MOVE_MESSAGE, this));
-		messageTypesToPopups.put(HudMessageTypes.INVALID_SPAWN_POINT, new HudMessagePopup(INVALID_SPAWN_POINT_MESSAGE, this));
-		messageTypesToPopups.put(HudMessageTypes.INVALID_SPELL_TARGET, new HudMessagePopup(INVALID_SPELL_TARGET_MESSAGE, this));
-		messageTypesToPopups.put(HudMessageTypes.NOT_ENOUGH_AP, new HudMessagePopup(NOT_ENOUGH_AP_MESSAGE, this));
-		messageTypesToPopups.put(HudMessageTypes.AI_VICTORY, new HudMessagePopup(AI_VICTORY_MESSAGE, this));
-		messageTypesToPopups.put(HudMessageTypes.PLAYER_VICTORY, new HudMessagePopup(PLAYER_VICTORY_MESSAGE, this));
-		messageTypesToPopups.put(HudMessageTypes.NUMBER_OF_UNITS_DEPLOYED, new HudMessagePopup(NUMBER_OF_UNITS_DEPLOYED_MESSAGE, this));
-		messageTypesToPopups.put(HudMessageTypes.PLAYER_TURN, new HudMessagePopup(PLAYER_TURN_MESSAGE, this));
-		messageTypesToPopups.put(HudMessageTypes.ENEMY_TURN, new HudMessagePopup(ENEMY_TURN_MESSAGE, this));
+		messageTypesToPopups.put(HudMessageTypes.INVALID_ATTACK_TARGET, new HudMessagePopup(INVALID_ATTACK_TARGET_MESSAGE));
+		messageTypesToPopups.put(HudMessageTypes.INVALID_MOVE, new HudMessagePopup(INVALID_MOVE_MESSAGE));
+		messageTypesToPopups.put(HudMessageTypes.INVALID_SPAWN_POINT, new HudMessagePopup(INVALID_SPAWN_POINT_MESSAGE));
+		messageTypesToPopups.put(HudMessageTypes.INVALID_SPELL_TARGET, new HudMessagePopup(INVALID_SPELL_TARGET_MESSAGE));
+		messageTypesToPopups.put(HudMessageTypes.NOT_ENOUGH_AP, new HudMessagePopup(NOT_ENOUGH_AP_MESSAGE));
+		messageTypesToPopups.put(HudMessageTypes.AI_VICTORY, new HudMessagePopup(AI_VICTORY_MESSAGE));
+		messageTypesToPopups.put(HudMessageTypes.PLAYER_VICTORY, new HudMessagePopup(PLAYER_VICTORY_MESSAGE));
+		messageTypesToPopups.put(HudMessageTypes.NUMBER_OF_UNITS_DEPLOYED, new HudMessagePopup(NUMBER_OF_UNITS_DEPLOYED_MESSAGE));
+		messageTypesToPopups.put(HudMessageTypes.PLAYER_TURN, new HudMessagePopup(PLAYER_TURN_MESSAGE));
+		messageTypesToPopups.put(HudMessageTypes.ENEMY_TURN, new HudMessagePopup(ENEMY_TURN_MESSAGE));
 
-		tutorialMessageTypesToWindows.put(HudMessageTypes.DEPLOY_UNITS_INFO, new HudMessageWindow(DEPLOY_UNITS_MESSAGE, this));
-		tutorialMessageTypesToWindows.put(HudMessageTypes.SELECT_UNIT_INFO, new HudMessageWindow(SELECT_UNIT_MESSAGE, this));
-		tutorialMessageTypesToWindows.put(HudMessageTypes.EXPLAIN_ACTION_INFO, new HudMessageWindow(EXPLAIN_ACTION_MESSAGE, this));
-		tutorialMessageTypesToWindows.put(HudMessageTypes.EXPLAIN_TURNING_INFO, new HudMessageWindow(EXPLAIN_TURNING_MESSAGE, this));
-		tutorialMessageTypesToWindows.put(HudMessageTypes.EXPLAIN_END_TURN_INFO, new HudMessageWindow(EXPLAIN_END_TURN_MESSAGE, this));
-		tutorialMessageTypesToWindows.put(HudMessageTypes.EXPLAIN_CANCEL_INFO, new HudMessageWindow(EXPLAIN_CANCEL_MESSAGE, this));
-		tutorialMessageTypesToWindows.put(HudMessageTypes.EXPLAIN_WIN_LOSE_INFO, new HudMessageWindow(EXPLAIN_WIN_LOSE_MESSAGE, this));
+		tutorialMessageTypesToWindows.put(HudMessageTypes.DEPLOY_UNITS_INFO, new HudMessageWindow(DEPLOY_UNITS_MESSAGE));
+		tutorialMessageTypesToWindows.put(HudMessageTypes.SELECT_UNIT_INFO, new HudMessageWindow(SELECT_UNIT_MESSAGE));
+		tutorialMessageTypesToWindows.put(HudMessageTypes.EXPLAIN_ACTION_INFO, new HudMessageWindow(EXPLAIN_ACTION_MESSAGE));
+		tutorialMessageTypesToWindows.put(HudMessageTypes.EXPLAIN_TURNING_INFO, new HudMessageWindow(EXPLAIN_TURNING_MESSAGE));
+		tutorialMessageTypesToWindows.put(HudMessageTypes.EXPLAIN_END_TURN_INFO, new HudMessageWindow(EXPLAIN_END_TURN_MESSAGE));
+		tutorialMessageTypesToWindows.put(HudMessageTypes.EXPLAIN_CANCEL_INFO, new HudMessageWindow(EXPLAIN_CANCEL_MESSAGE));
+		tutorialMessageTypesToWindows.put(HudMessageTypes.EXPLAIN_WIN_LOSE_INFO, new HudMessageWindow(EXPLAIN_WIN_LOSE_MESSAGE));
 
 		tutorialMessageTypesToWindows.get(HudMessageTypes.DEPLOY_UNITS_INFO).setVisible(isTutorial);
 
@@ -129,21 +121,5 @@ public class HudMessages {
 	public void updateNumberOfDeployedUnits(int number, int max) {
 		messageTypesToPopups.get(HudMessageTypes.NUMBER_OF_UNITS_DEPLOYED).getPopupMessage().setText("deployed " + number + " / " + max + " units");
 		showPopup(HudMessageTypes.NUMBER_OF_UNITS_DEPLOYED);
-	}
-
-	public int getMapWidth() {
-		return mapWidth;
-	}
-
-	public int getMapHeight() {
-		return mapHeight;
-	}
-
-	public float getTilePixelWidth() {
-		return tilePixelWidth;
-	}
-
-	public float getTilePixelHeight() {
-		return tilePixelHeight;
 	}
 }

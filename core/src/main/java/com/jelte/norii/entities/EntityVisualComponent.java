@@ -77,7 +77,6 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 		sequence.addAction(Actions.fadeOut(1));
 		sequence.addAction(run(cleanup));
 		getEntityactor().addAction(sequence);
-		entity.getOwner().sendMessageToBattleManager(MessageToBattleScreen.REMOVE_HUD_UNIT, entity);
 		entity.getOwner().sendMessageToBattleManager(MessageToBattleScreen.UNIT_DIED, entity);
 	}
 
@@ -179,7 +178,8 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 	private float decideRotation(GridCell oldCell, GridCell cell) {
 		if ((oldCell.x == cell.x) && (oldCell.y > cell.y)) {
 			return 0.0f;
-		} else if ((oldCell.x == cell.x) && (oldCell.y < cell.y)) {
+		}
+		if ((oldCell.x == cell.x) && (oldCell.y < cell.y)) {
 			return 180.0f;
 		} else if ((oldCell.x > cell.x) && (oldCell.y == cell.y)) {
 			return 270.0f;
@@ -194,7 +194,8 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 	private Direction decideDirection(float rotation) {
 		if ((rotation >= 45) && (rotation < 135)) {
 			return Direction.RIGHT;
-		} else if ((rotation >= 135) && (rotation < 225)) {
+		}
+		if ((rotation >= 135) && (rotation < 225)) {
 			return Direction.UP;
 		} else if ((rotation >= 225) && (rotation < 315)) {
 			return Direction.LEFT;

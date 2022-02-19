@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.jelte.norii.battle.ApFileReader;
+import com.jelte.norii.screen.BattleScreen;
 import com.jelte.norii.utility.AssetManagerUtility;
 
 public class ApBar {
@@ -13,19 +14,17 @@ public class ApBar {
 	private final HorizontalGroup allAP;
 	private final Table table;
 
-	private final float tilePixelWidth;
 	private final float tilePixelHeight;
 
-	public ApBar(int mapWidth, int mapHeight) {
-		tilePixelWidth = Hud.UI_VIEWPORT_WIDTH / mapWidth;
-		tilePixelHeight = Hud.UI_VIEWPORT_HEIGHT / mapHeight;
+	public ApBar() {
+		tilePixelHeight = Hud.UI_VIEWPORT_HEIGHT / BattleScreen.VISIBLE_HEIGHT;
 
 		allAP = new HorizontalGroup();
 		table = new Table();
 		table.setBackground(AssetManagerUtility.getSkin().getDrawable("window-noborder"));
 		table.setTransform(false);
 		table.pad(0);
-		table.setPosition(0, tilePixelHeight * (mapHeight - 2));
+		table.setPosition(0, tilePixelHeight * (BattleScreen.VISIBLE_HEIGHT - 2));
 		final Skin statusUISkin = AssetManagerUtility.getSkin();
 
 		for (int i = 0; i < ApFileReader.maxAp; i++) {

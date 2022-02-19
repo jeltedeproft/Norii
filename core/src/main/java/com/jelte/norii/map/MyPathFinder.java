@@ -49,8 +49,13 @@ public class MyPathFinder {
 			if (preprocessI < linkedMap.getMapWidth()) {
 				if (preprocessJ < linkedMap.getMapHeight()) {
 					final MyPoint point = new MyPoint(preprocessI, preprocessJ);
-					precalculatedPaths.put(point, calculatePathsToEveryOtherCell(point));
-					precalculatedLineOfSightsWithNonBlockableUnits.put(point, calculateLineOfSightWithoutBlocksToEveryOtherCell(point));
+					if (navGrid.getCell(preprocessI, preprocessJ).isWalkable()) {
+						precalculatedPaths.put(point, calculatePathsToEveryOtherCell(point));
+						precalculatedLineOfSightsWithNonBlockableUnits.put(point, calculateLineOfSightWithoutBlocksToEveryOtherCell(point));
+					} else {
+						precalculatedPaths.put(point, null);
+						precalculatedLineOfSightsWithNonBlockableUnits.put(point, null);
+					}
 					preprocessJ++;
 				} else {
 					preprocessJ = 0;
@@ -63,6 +68,28 @@ public class MyPathFinder {
 		}
 	}
 
+	private HashMap<MyPoint, Boolean> createNullLineOfSights() {
+		final HashMap<MyPoint, Boolean> lineOfSightEveryOtherCell = new HashMap<>();
+		for (int i = 0; i < linkedMap.getMapWidth(); i++) {
+			for (int j = 0; j < linkedMap.getMapHeight(); j++) {
+				final MyPoint end = new MyPoint(i, j);
+				lineOfSightEveryOtherCell.put(end, false);
+			}
+		}
+		return lineOfSightEveryOtherCell;
+	}
+
+	private HashMap<MyPoint, List<GridCell>> createNullPaths() {
+		final HashMap<MyPoint, List<GridCell>> pathsToEveryOtherCell = new HashMap<>();
+		for (int i = 0; i < linkedMap.getMapWidth(); i++) {
+			for (int j = 0; j < linkedMap.getMapHeight(); j++) {
+				final MyPoint end = new MyPoint(i, j);
+				pathsToEveryOtherCell.put(end, null);
+			}
+		}
+		return pathsToEveryOtherCell;
+	}
+
 	public float getPreprocessingMapProgress() {
 		return ((preprocessI * linkedMap.getMapWidth()) + preprocessJ) / (float) (linkedMap.getMapWidth() * linkedMap.getMapHeight());
 	}
@@ -72,10 +99,14 @@ public class MyPathFinder {
 		for (int i = 0; i < linkedMap.getMapWidth(); i++) {
 			for (int j = 0; j < linkedMap.getMapHeight(); j++) {
 				final MyPoint end = new MyPoint(i, j);
-				final List<GridCell> path = aStarGridFinder.findPath(point.x, point.y, i, j, navGrid);
-				if (path != null) {
-					final List<GridCell> copy = new ArrayList<>(path);
-					pathsToEveryOtherCell.put(end, copy);
+				if (navGrid.getCell(i, i).isWalkable()) {
+					final List<GridCell> path = aStarGridFinder.findPath(point.x, point.y, i, j, navGrid);
+					if (path != null) {
+						final List<GridCell> copy = new ArrayList<>(path);
+						pathsToEveryOtherCell.put(end, copy);
+					} else {
+						pathsToEveryOtherCell.put(end, null);
+					}
 				} else {
 					pathsToEveryOtherCell.put(end, null);
 				}
@@ -89,12 +120,17 @@ public class MyPathFinder {
 		for (int i = 0; i < linkedMap.getMapWidth(); i++) {
 			for (int j = 0; j < linkedMap.getMapHeight(); j++) {
 				final MyPoint end = new MyPoint(i, j);
-				final GridCell unitCell = navGrid.getCell(point.x, point.y);
-				final GridCell targetCell = navGrid.getCell(end.x, end.y);
-				final NavigationGridGraphNode node = unitCell;
-				final NavigationGridGraphNode neigh = targetCell;
-				final boolean isLineOfSight = calculateLineOfSight(null, false, node, neigh);
-				lineOfSightEveryOtherCell.put(end, isLineOfSight);
+				if (navGrid.getCell(i, i).isWalkable()) {
+					final GridCell unitCell = navGrid.getCell(point.x, point.y);
+					final GridCell targetCell = navGrid.getCell(end.x, end.y);
+					final NavigationGridGraphNode node = unitCell;
+					final NavigationGridGraphNode neigh = targetCell;
+					final boolean isLineOfSight = calculateLineOfSight(null, false, node, neigh);
+					lineOfSightEveryOtherCell.put(end, isLineOfSight);
+				} else {
+					lineOfSightEveryOtherCell.put(end, false);
+				}
+
 			}
 		}
 		return lineOfSightEveryOtherCell;
@@ -178,9 +214,11 @@ public class MyPathFinder {
 	private TiledMapPosition tryAdjacentTile(TiledMapPosition start, TiledMapPosition goal) {
 		if (start.getTileX() < goal.getTileX()) {
 			return goal.changeX(-1);
-		} else if (start.getTileX() > goal.getTileX()) {
+		}
+		if (start.getTileX() > goal.getTileX()) {
 			return goal.changeX(1);
-		} else if (start.getTileY() < goal.getTileY()) {
+		}
+		if (start.getTileY() < goal.getTileY()) {
 			return goal.changeY(-1);
 		}
 		return goal.changeY(1);
@@ -264,10 +302,8 @@ public class MyPathFinder {
 		final int y2 = neigh.getY();
 		final int dx = Math.abs(x1 - x2);
 		final int dy = Math.abs(y1 - y2);
-		final int xinc = (x1 < x2)	? 1
-									: -1;
-		final int yinc = (y1 < y2)	? 1
-									: -1;
+		final int xinc = (x1 < x2) ? 1 : -1;
+		final int yinc = (y1 < y2) ? 1 : -1;
 
 		int error = dx - dy;
 
@@ -285,10 +321,8 @@ public class MyPathFinder {
 				if (!navGrid.isWalkable(x1, y1) || isUnitOnCell(x1, y1, x2, y2, positionsUnits)) {
 					return false;
 				}
-			} else {
-				if (!navGrid.isWalkable(x1, y1)) {
-					return false;
-				}
+			} else if (!navGrid.isWalkable(x1, y1)) {
+				return false;
 			}
 
 		}
@@ -364,7 +398,7 @@ public class MyPathFinder {
 
 	private boolean isUnitOnCell(final int x2, final int y2, final int targetX, final int targetY, final List<TiledMapPosition> positionsUnits) {
 		for (final TiledMapPosition pos : positionsUnits) {
-			if ((pos.getTileX() == x2) && (pos.getTileY() == y2) && !((pos.getTileX() == targetX) && (pos.getTileY() == targetY))) {
+			if ((pos.getTileX() == x2) && (pos.getTileY() == y2) && ((pos.getTileX() != targetX) || (pos.getTileY() != targetY))) {
 				return true;
 			}
 		}
@@ -395,8 +429,9 @@ public class MyPathFinder {
 	}
 
 	public static MyPathFinder getInstance() {
-		if (pathFinder == null)
+		if (pathFinder == null) {
 			pathFinder = new MyPathFinder();
+		}
 		return pathFinder;
 	}
 }

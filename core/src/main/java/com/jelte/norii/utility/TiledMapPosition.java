@@ -1,7 +1,6 @@
 package com.jelte.norii.utility;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.jelte.norii.map.Map;
 import com.jelte.norii.screen.BattleScreen;
 
@@ -41,18 +40,6 @@ public class TiledMapPosition {
 
 	public int getDistance(TiledMapPosition pos) {
 		return (Math.abs(tileCoordinates.x - pos.getTileX()) + (Math.abs(tileCoordinates.y - pos.getTileY())));
-	}
-
-	public float getCameraX() {
-		final OrthographicCamera cam = BattleScreen.getCamera();
-		final float xDifference = cam.position.x - (cam.viewportWidth * 0.5f);
-		return (tileCoordinates.x - xDifference) * (Gdx.graphics.getWidth() / (float) BattleScreen.VISIBLE_WIDTH);
-	}
-
-	public float getCameraY() {
-		final OrthographicCamera cam = BattleScreen.getCamera();
-		final float yDifference = cam.position.y - (cam.viewportHeight * 0.5f);
-		return (tileCoordinates.y - yDifference) * (Gdx.graphics.getHeight() / (float) BattleScreen.VISIBLE_HEIGHT);
 	}
 
 	public float getRealTiledX() {

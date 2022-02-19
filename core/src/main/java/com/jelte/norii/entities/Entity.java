@@ -15,6 +15,7 @@ import com.jelte.norii.magic.Ability;
 import com.jelte.norii.magic.Ability.DamageType;
 import com.jelte.norii.magic.Modifier;
 import com.jelte.norii.magic.ModifiersEnum;
+import com.jelte.norii.ui.HpBar;
 import com.jelte.norii.utility.MyPoint;
 import com.jelte.norii.utility.TiledMapPosition;
 
@@ -41,6 +42,7 @@ public class Entity extends Actor implements Comparable<Entity> {
 	protected TiledMapPosition oldPlayerPosition;
 	protected TiledMapPosition currentPlayerPosition;
 	protected Direction direction;
+	protected HpBar hpBar;
 
 	protected EntityTypes entityType;
 
@@ -70,8 +72,8 @@ public class Entity extends Actor implements Comparable<Entity> {
 		xp = 0;
 		owner = unitOwner;
 		entityID = java.lang.System.identityHashCode(this);
-		visualComponent = isReal	? new EntityVisualComponent(this)
-									: new FakeEntityVisualComponent();
+		visualComponent = isReal ? new EntityVisualComponent(this) : new FakeEntityVisualComponent();
+		hpBar = new HpBar();
 		initAbilities();
 	}
 
@@ -81,6 +83,7 @@ public class Entity extends Actor implements Comparable<Entity> {
 
 	public void update(final float delta) {
 		visualComponent.update(delta);
+		hpBar.update(this);
 	}
 
 	public EntityData getEntityData() {
@@ -164,6 +167,8 @@ public class Entity extends Actor implements Comparable<Entity> {
 		inBattle = false;
 		setVisible(false);
 		isDead = true;
+		hpBar.getHealthBar().setVisible(false);
+		hpBar.getHealthBar().remove();
 	}
 
 	public void heal(final int healAmount) {
@@ -348,9 +353,12 @@ public class Entity extends Actor implements Comparable<Entity> {
 		final int score = getModifiersScore();
 		if (isPlayerUnit()) {
 			return score * (-1);
-		} else {
-			return score;
 		}
+		return score;
+	}
+
+	public HpBar getHpBar() {
+		return hpBar;
 	}
 
 	private int getModifiersScore() {
@@ -445,17 +453,18 @@ public class Entity extends Actor implements Comparable<Entity> {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if ((obj == null) || (getClass() != obj.getClass())) {
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
+		}
 		final Entity other = (Entity) obj;
 		return entityID == other.entityID;
 	}
 
 	public void draw(Batch batch) {
+		hpBar.getHealthBar().draw(batch, 100.0f);
 		visualComponent.draw(batch);
 	}
 

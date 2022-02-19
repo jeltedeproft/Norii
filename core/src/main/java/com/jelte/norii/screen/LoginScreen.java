@@ -3,18 +3,23 @@ package com.jelte.norii.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.jelte.norii.multiplayer.NetworkMessage;
 import com.jelte.norii.multiplayer.NetworkMessage.MessageType;
@@ -50,8 +55,8 @@ public class LoginScreen extends GameScreen {
 	
 	private int screenWidth;
 	private int screenHeight;
-	private int widthPercent;
-	private int heightPercent;
+	private float widthPercent;
+	private float heightPercent;
 
 	public LoginScreen() {
 		loadAssets();
@@ -70,10 +75,10 @@ public class LoginScreen extends GameScreen {
 	private void initializeVariables() {
 		screenWidth = Gdx.graphics.getWidth();
 		screenHeight = Gdx.graphics.getHeight();
-		widthPercent = screenWidth / 100;
-		heightPercent = screenHeight / 100;
+		widthPercent = screenWidth * 0.01f;
+		heightPercent = screenHeight * 0.01f;
 		backgroundbatch = new SpriteBatch();
-		stage = new Stage(new FitViewport(screenWidth, screenHeight), backgroundbatch);
+		stage = new Stage(new ExtendViewport(screenWidth, screenHeight), backgroundbatch);
 		parallaxCamera = new OrthographicCamera();
 		parallaxCamera.setToOrtho(false, screenWidth, screenHeight);
 		parallaxCamera.update();
@@ -175,7 +180,7 @@ public class LoginScreen extends GameScreen {
 
 	@Override
 	public void resize(int width, int height) {
-		stage.getViewport().update(width, height, false);
+		stage.getViewport().update(width, height, true);
 	}
 
 	@Override

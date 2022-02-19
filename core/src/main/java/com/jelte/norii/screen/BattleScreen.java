@@ -10,14 +10,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.crashinvaders.vfx.VfxManager;
 import com.jelte.norii.ai.AITeamLeader;
 import com.jelte.norii.ai.EnemyType;
 import com.jelte.norii.audio.AudioCommand;
@@ -46,7 +44,6 @@ import com.jelte.norii.multiplayer.NetworkMessage;
 import com.jelte.norii.multiplayer.ServerCommunicator;
 import com.jelte.norii.particles.ParticleMaker;
 import com.jelte.norii.particles.ParticleType;
-import com.jelte.norii.shaders.PixelScalerEffect;
 import com.jelte.norii.ui.Hud;
 import com.jelte.norii.ui.HudMessageTypes;
 import com.jelte.norii.ui.MessageToBattleScreen;
@@ -54,14 +51,13 @@ import com.jelte.norii.utility.AssetManagerUtility;
 import com.jelte.norii.utility.GraphicalUtility;
 import com.jelte.norii.utility.MyPoint;
 import com.jelte.norii.utility.TiledMapPosition;
-import com.jelte.norii.utility.Utility;
 
 public class BattleScreen extends GameScreen {
 	private static final String TAG = BattleScreen.class.getSimpleName();
 	private static final String FPS_TITLE = "fps = ";
 	public static final int VISIBLE_WIDTH = 21;
 	public static final int VISIBLE_HEIGHT = 21;
-	private static OrthographicCamera mapCamera = null;
+	private OrthographicCamera mapCamera = null;
 
 	private OrthogonalTiledMapRenderer mapRenderer = null;
 	private SpriteBatch spriteBatch;
@@ -76,8 +72,8 @@ public class BattleScreen extends GameScreen {
 	private PauseMenuScreen pauseMenu;
 	private Json json;
 	private EntityStage entityStage;
-	private VfxManager vfxManager;
-	private PixelScalerEffect vfxEffect;
+//	private VfxManager vfxManager;
+//	private PixelScalerEffect vfxEffect;
 
 	private boolean isPaused;
 
@@ -101,10 +97,10 @@ public class BattleScreen extends GameScreen {
 		enemyTeamLeader = enemy;
 		json = new Json();
 		initTeams();
-		vfxManager = new VfxManager(Format.RGBA8888);
-		vfxEffect = new PixelScalerEffect();
-		vfxManager.setBlendingEnabled(true);
-		vfxManager.addEffect(vfxEffect);
+//		vfxManager = new VfxManager(Format.RGBA8888);
+//		vfxEffect = new PixelScalerEffect();
+//		vfxManager.setBlendingEnabled(true);
+//		vfxManager.addEffect(vfxEffect);
 	}
 
 	private void initTeams() {
@@ -122,6 +118,8 @@ public class BattleScreen extends GameScreen {
 		}
 
 		entityStage = new EntityStage(Stream.concat(Player.getInstance().getTeam().stream(), enemyTeamLeader.getTeam().stream()).collect(Collectors.toList()));
+		Player.getInstance().getTeam().stream().forEach(entity -> entity.getHpBar().init(entity));
+		enemyTeamLeader.getTeam().stream().forEach(entity -> entity.getHpBar().init(entity));
 	}
 
 	private void sendTeamToOnlineEnemy() {
@@ -138,7 +136,7 @@ public class BattleScreen extends GameScreen {
 	private void initializeHUD() {
 		hudCamera = new OrthographicCamera();
 		hudCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		hud = new Hud(Player.getInstance().getTeam(), enemyTeamLeader.getTeam(), spriteBatch, currentMap.getMapWidth(), currentMap.getMapHeight(), this, enemyTeamLeader.getType());
+		hud = new Hud(Player.getInstance().getTeam(), enemyTeamLeader.getTeam(), spriteBatch, this, enemyTeamLeader.getType());
 		if (enemyTeamLeader.getType() == EnemyType.AI) {
 			AITeamLeader leader = (AITeamLeader) enemyTeamLeader;
 			if (leader.getAiTeamData().getName().equals("TeamTutorial")) {
@@ -223,7 +221,6 @@ public class BattleScreen extends GameScreen {
 	}
 
 	private void updateElements(final float delta) {
-		hud.update(battlemanager.getUnits());
 		hud.updateApBar(Player.getInstance().getAp());
 		battlescreenInputProcessor.update();
 		battlemanager.getCurrentBattleState().update();
@@ -246,8 +243,8 @@ public class BattleScreen extends GameScreen {
 	}
 
 	private void updateCameras() {
-		mapCamera.position.x = Utility.clamp(mapCamera.position.x, currentMap.getTilemapWidthInTiles() - (mapCamera.viewportWidth * 0.5f), 0 + (mapCamera.viewportWidth * 0.5f));
-		mapCamera.position.y = Utility.clamp(mapCamera.position.y, currentMap.getTilemapHeightInTiles() - (mapCamera.viewportHeight * 0.5f), 0 + (mapCamera.viewportHeight * 0.5f));
+		// mapCamera.position.x = Utility.clamp(mapCamera.position.x, currentMap.getTilemapWidthInTiles() - (mapCamera.viewportWidth * 0.5f), 0 + (mapCamera.viewportWidth * 0.5f));
+		// mapCamera.position.y = Utility.clamp(mapCamera.position.y, currentMap.getTilemapHeightInTiles() - (mapCamera.viewportHeight * 0.5f), 0 + (mapCamera.viewportHeight * 0.5f));
 		mapCamera.update();
 		hudCamera.update();
 	}
@@ -327,8 +324,8 @@ public class BattleScreen extends GameScreen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		Gdx.graphics.setTitle(FPS_TITLE + Gdx.graphics.getFramesPerSecond() + "(" + Gdx.graphics.getWidth() + "," + Gdx.graphics.getHeight() + ")");
 
-		vfxManager.cleanUpBuffers();
-		vfxManager.beginInputCapture();
+//		vfxManager.cleanUpBuffers();
+//		vfxManager.beginInputCapture();
 
 		renderMap();
 		renderUnits();
@@ -336,10 +333,10 @@ public class BattleScreen extends GameScreen {
 		renderGrid();
 		renderHUD();
 
-		vfxManager.endInputCapture();
-		vfxManager.update(Gdx.graphics.getDeltaTime());
-		vfxManager.applyEffects();
-		vfxManager.renderToScreen();
+//		vfxManager.endInputCapture();
+//		vfxManager.update(Gdx.graphics.getDeltaTime());
+//		vfxManager.applyEffects();
+//		vfxManager.renderToScreen();
 	}
 
 	private void renderMap() {
@@ -371,15 +368,17 @@ public class BattleScreen extends GameScreen {
 	}
 
 	public void renderGrid() {
-		for (int x = 0; x < currentMap.getMapWidth(); x += 1)
+		for (int x = 0; x < currentMap.getMapWidth(); x += 1) {
 			GraphicalUtility.drawDebugLine(new Vector2(x, 0), new Vector2(x, currentMap.getMapHeight()), mapCamera.combined);
-		for (int y = 0; y < currentMap.getMapHeight(); y += 1)
+		}
+		for (int y = 0; y < currentMap.getMapHeight(); y += 1) {
 			GraphicalUtility.drawDebugLine(new Vector2(0, y), new Vector2(currentMap.getMapWidth(), y), mapCamera.combined);
+		}
 	}
 
 	@Override
 	public void resize(final int width, final int height) {
-		vfxManager.resize(width, height);
+		// vfxManager.resize(width, height);
 		currentMap.getTiledMapStage().getViewport().update(width, height, false);
 		entityStage.getViewport().update(width, height, false);
 
@@ -409,8 +408,8 @@ public class BattleScreen extends GameScreen {
 		mapRenderer.dispose();
 		pauseMenu.dispose();
 		currentMap.dispose();
-		vfxManager.dispose();
-		vfxEffect.dispose();
+//		vfxManager.dispose();
+//		vfxEffect.dispose();
 	}
 
 	public void clickedOnTileMapActor(TiledMapActor actor) {
@@ -419,7 +418,9 @@ public class BattleScreen extends GameScreen {
 
 	public void hoveredOnTileMapActor(TiledMapActor actor) {
 		battlemanager.getCurrentBattleState().hoveredOnTile(actor);
-		hud.setPositionTileHover(actor.getActorPos().getTileX(), actor.getActorPos().getTileY());
+		final float xDifference = mapCamera.position.x - (mapCamera.viewportWidth * 0.5f);
+		final float yDifference = mapCamera.position.y - (mapCamera.viewportHeight * 0.5f);
+		hud.setPositionTileHover(actor.getActorPos().getTileX() - xDifference, actor.getActorPos().getTileY() - yDifference);
 	}
 
 	public void messageFromUi(MessageToBattleScreen message, int entityID, Ability ability) {
@@ -555,7 +556,6 @@ public class BattleScreen extends GameScreen {
 			hud.updateBottomBar(entity);
 			break;
 		case UPDATE_UI:
-			hud.update(battlemanager.getUnits());
 			hud.updateBottomBar(entity);
 			break;
 		case SET_CHARACTER_HUD:
@@ -595,9 +595,6 @@ public class BattleScreen extends GameScreen {
 		case FOCUS_CAMERA:
 			mapCamera.position.set(entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY(), 0f);
 			break;
-		case REMOVE_HUD_UNIT:
-			hud.removeUnit(entity);
-			break;
 		case ADD_UNIT_UI:
 			hud.addUnit(entity);
 			break;
@@ -619,10 +616,6 @@ public class BattleScreen extends GameScreen {
 		default:
 			break;
 		}
-	}
-
-	public static OrthographicCamera getCamera() {
-		return mapCamera;
 	}
 
 	public boolean isPaused() {

@@ -6,9 +6,9 @@ import com.jelte.norii.utility.AssetManagerUtility;
 public class HudMessagePopup {
 	private Label popupMessage;
 
-	public HudMessagePopup(String text, HudMessages hudMessages) {
+	public HudMessagePopup(String text) {
 		popupMessage = new Label(text, AssetManagerUtility.getSkin());
-		popupMessage.setPosition((hudMessages.getMapWidth() / HudMessages.POPUP_WIDTH_FACTOR) * hudMessages.getTilePixelWidth(), (hudMessages.getMapHeight() / HudMessages.POPUP_HEIGHT_FACTOR) * hudMessages.getTilePixelHeight());
+		popupMessage.setPosition((Hud.UI_VIEWPORT_WIDTH / HudMessages.POPUP_WIDTH_FACTOR), (Hud.UI_VIEWPORT_HEIGHT / HudMessages.POPUP_HEIGHT_FACTOR));
 		popupMessage.setVisible(false);
 	}
 
