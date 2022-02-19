@@ -11,7 +11,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.jelte.norii.ai.EnemyType;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.magic.Ability;
@@ -63,7 +63,7 @@ public class Hud {
 		tilePixelWidth = UI_VIEWPORT_WIDTH / mapWidth;
 		tilePixelHeight = UI_VIEWPORT_HEIGHT / mapHeight;
 		entityIdWithHpBar = new HashMap<>();
-		stage = new Stage(new FitViewport(UI_VIEWPORT_WIDTH, UI_VIEWPORT_HEIGHT), spriteBatch);
+		stage = new Stage(new ExtendViewport(UI_VIEWPORT_WIDTH, UI_VIEWPORT_HEIGHT), spriteBatch);
 	}
 
 	private void createTileHoverParticle() {
@@ -145,8 +145,7 @@ public class Hud {
 		stage.getViewport().update(width, height, true);
 	}
 
-	public void render(float delta) {
-		stage.act(delta);
+	public void render() {
 		stage.draw();
 	}
 

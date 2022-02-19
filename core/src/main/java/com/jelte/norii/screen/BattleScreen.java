@@ -10,18 +10,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.FrameBuffer;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.crashinvaders.vfx.VfxManager;
-import com.crashinvaders.vfx.effects.WaterDistortionEffect;
 import com.jelte.norii.ai.AITeamLeader;
 import com.jelte.norii.ai.EnemyType;
 import com.jelte.norii.audio.AudioCommand;
@@ -195,7 +191,7 @@ public class BattleScreen extends GameScreen {
 		mapRenderer.setView(mapCamera);
 		currentMap.makeSpawnParticles();
 
-		final FitViewport vp = new FitViewport(VISIBLE_WIDTH, VISIBLE_HEIGHT, mapCamera);
+		final ExtendViewport vp = new ExtendViewport(VISIBLE_WIDTH, VISIBLE_HEIGHT, mapCamera);
 		currentMap.getTiledMapStage().setViewport(vp);
 		entityStage.setViewport(vp);
 		currentMap.getTiledMapStage().getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
@@ -232,7 +228,7 @@ public class BattleScreen extends GameScreen {
 		battlescreenInputProcessor.update();
 		battlemanager.getCurrentBattleState().update();
 		updateUnits(delta);
-		updateStages();
+		updateStages(delta);
 		updateCameras();
 		processAi();
 		processMessagesFromServer();
@@ -243,9 +239,9 @@ public class BattleScreen extends GameScreen {
 		enemyTeamLeader.updateUnits(delta);
 	}
 
-	private void updateStages() {
+	private void updateStages(float delta) {
 		entityStage.act();
-		hud.getStage().act();
+		hud.getStage().act(delta);
 		currentMap.getTiledMapStage().act();
 	}
 
@@ -330,7 +326,7 @@ public class BattleScreen extends GameScreen {
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		Gdx.graphics.setTitle(FPS_TITLE + Gdx.graphics.getFramesPerSecond() + "(" + Gdx.graphics.getWidth() + "," + Gdx.graphics.getHeight() + ")");
-		
+
 		vfxManager.cleanUpBuffers();
 		vfxManager.beginInputCapture();
 
@@ -338,7 +334,7 @@ public class BattleScreen extends GameScreen {
 		renderUnits();
 		renderParticles(delta);
 		renderGrid();
-		renderHUD(delta);
+		renderHUD();
 
 		vfxManager.endInputCapture();
 		vfxManager.update(Gdx.graphics.getDeltaTime());
@@ -368,10 +364,10 @@ public class BattleScreen extends GameScreen {
 		spriteBatch.end();
 	}
 
-	private void renderHUD(final float delta) {
+	private void renderHUD() {
 		hud.getStage().getViewport().apply();
 		spriteBatch.setProjectionMatrix(hud.getStage().getCamera().combined);
-		hud.render(delta);
+		hud.render();
 	}
 
 	public void renderGrid() {
