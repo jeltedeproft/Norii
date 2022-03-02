@@ -1,6 +1,7 @@
 package com.jelte.norii.map;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -48,13 +49,13 @@ public class MyPathFinder {
 		if (!preprocessingFinished) {
 			if (preprocessI < linkedMap.getMapWidth()) {
 				if (preprocessJ < linkedMap.getMapHeight()) {
-					final MyPoint point = new MyPoint(preprocessI, preprocessJ);
+					final MyPoint start = new MyPoint(preprocessI, preprocessJ);
 					if (navGrid.getCell(preprocessI, preprocessJ).isWalkable()) {
-						precalculatedPaths.put(point, calculatePathsToEveryOtherCell(point));
-						precalculatedLineOfSightsWithNonBlockableUnits.put(point, calculateLineOfSightWithoutBlocksToEveryOtherCell(point));
+						precalculatedPaths.put(start, calculatePathsToEveryOtherCell(start));
+						precalculatedLineOfSightsWithNonBlockableUnits.put(start, calculateLineOfSightWithoutBlocksToEveryOtherCell(start));
 					} else {
-						precalculatedPaths.put(point, null);
-						precalculatedLineOfSightsWithNonBlockableUnits.put(point, null);
+						precalculatedPaths.put(start, null);
+						precalculatedLineOfSightsWithNonBlockableUnits.put(start, null);
 					}
 					preprocessJ++;
 				} else {
@@ -63,49 +64,54 @@ public class MyPathFinder {
 				}
 			} else {
 				preprocessingFinished = true;
-				System.out.println("processing map finished");
 			}
 		}
-	}
-
-	private HashMap<MyPoint, Boolean> createNullLineOfSights() {
-		final HashMap<MyPoint, Boolean> lineOfSightEveryOtherCell = new HashMap<>();
-		for (int i = 0; i < linkedMap.getMapWidth(); i++) {
-			for (int j = 0; j < linkedMap.getMapHeight(); j++) {
-				final MyPoint end = new MyPoint(i, j);
-				lineOfSightEveryOtherCell.put(end, false);
-			}
-		}
-		return lineOfSightEveryOtherCell;
-	}
-
-	private HashMap<MyPoint, List<GridCell>> createNullPaths() {
-		final HashMap<MyPoint, List<GridCell>> pathsToEveryOtherCell = new HashMap<>();
-		for (int i = 0; i < linkedMap.getMapWidth(); i++) {
-			for (int j = 0; j < linkedMap.getMapHeight(); j++) {
-				final MyPoint end = new MyPoint(i, j);
-				pathsToEveryOtherCell.put(end, null);
-			}
-		}
-		return pathsToEveryOtherCell;
 	}
 
 	public float getPreprocessingMapProgress() {
 		return ((preprocessI * linkedMap.getMapWidth()) + preprocessJ) / (float) (linkedMap.getMapWidth() * linkedMap.getMapHeight());
 	}
 
-	private HashMap<MyPoint, List<GridCell>> calculatePathsToEveryOtherCell(MyPoint point) {
+	private HashMap<MyPoint, List<GridCell>> calculatePathsToEveryOtherCell(MyPoint start) {
 		final HashMap<MyPoint, List<GridCell>> pathsToEveryOtherCell = new HashMap<>();
 		for (int i = 0; i < linkedMap.getMapWidth(); i++) {
 			for (int j = 0; j < linkedMap.getMapHeight(); j++) {
 				final MyPoint end = new MyPoint(i, j);
-				if (navGrid.getCell(i, i).isWalkable()) {
-					final List<GridCell> path = aStarGridFinder.findPath(point.x, point.y, i, j, navGrid);
-					if (path != null) {
-						final List<GridCell> copy = new ArrayList<>(path);
-						pathsToEveryOtherCell.put(end, copy);
+				final MyPoint closestStartNeighbour = getClosestStartNeighbour(start, end);
+				final MyPoint closestEndNeighbour = getClosestEndNeighbour(start, end);
+				final MyPoint closestStartNeighbour2 = getClosestStartNeighbour2(start, end);
+				final MyPoint closestEndNeighbour2 = getClosestEndNeighbour2(start, end);
+				if (start.equals(end)) {
+					List<GridCell> path = new ArrayList<>();
+					path.add(new GridCell(start.x, start.y));
+					pathsToEveryOtherCell.put(end, path);
+				} else if (navGrid.getCell(i, i).isWalkable()) {
+					if (existsPathInOppositeDirection(start, end)) {
+						pathsToEveryOtherCell.put(end, reversePath(precalculatedPaths.get(end).get(start)));
+					} else if (existsPath(closestStartNeighbour, end)) {
+						List<GridCell> pathStartNeighbour = precalculatedPaths.get(closestStartNeighbour).get(end);
+						pathStartNeighbour.add(0, new GridCell(start.x, start.y));
+						pathsToEveryOtherCell.put(end, pathStartNeighbour);
+					} else if (existsPath(start, closestEndNeighbour)) {
+						List<GridCell> pathEndNeighbour = precalculatedPaths.get(start).get(closestEndNeighbour);
+						pathEndNeighbour.add(new GridCell(end.x, end.y));
+						pathsToEveryOtherCell.put(end, pathEndNeighbour);
+					} else if (existsPath(closestStartNeighbour2, end)) {
+						List<GridCell> pathStartNeighbour = precalculatedPaths.get(closestStartNeighbour2).get(end);
+						pathStartNeighbour.add(0, new GridCell(start.x, start.y));
+						pathsToEveryOtherCell.put(end, pathStartNeighbour);
+					} else if (existsPath(start, closestEndNeighbour2)) {
+						List<GridCell> pathEndNeighbour = precalculatedPaths.get(start).get(closestEndNeighbour2);
+						pathEndNeighbour.add(new GridCell(end.x, end.y));
+						pathsToEveryOtherCell.put(end, pathEndNeighbour);
 					} else {
-						pathsToEveryOtherCell.put(end, null);
+						final List<GridCell> path = aStarGridFinder.findPath(start.x, start.y, i, j, navGrid);
+						if (path != null) {
+							final List<GridCell> copy = new ArrayList<>(path);
+							pathsToEveryOtherCell.put(end, copy);
+						} else {
+							pathsToEveryOtherCell.put(end, null);
+						}
 					}
 				} else {
 					pathsToEveryOtherCell.put(end, null);
@@ -113,6 +119,68 @@ public class MyPathFinder {
 			}
 		}
 		return pathsToEveryOtherCell;
+	}
+
+	private boolean existsPath(MyPoint start, MyPoint end) {
+		HashMap<MyPoint, List<GridCell>> path = precalculatedPaths.get(start);
+		return ((path != null) && (path.get(end) != null));
+	}
+
+	private boolean existsPathInOppositeDirection(MyPoint start, MyPoint end) {
+		HashMap<MyPoint, List<GridCell>> path = precalculatedPaths.get(end);
+		if (path != null) {
+			return path.get(start) != null;
+		}
+		return false;
+	}
+
+	private List<GridCell> reversePath(List<GridCell> list) {
+		Collections.reverse(list);
+		return list;
+	}
+
+	private MyPoint getClosestEndNeighbour(MyPoint start, MyPoint end) {
+		if ((start.x < end.x) && (start.y < end.y)) {
+			return new MyPoint(end.x - 1, end.y);
+		}
+		if ((start.x > end.x) && (start.y < end.y)) {
+			return new MyPoint(end.x + 1, end.y);
+		}
+		if ((start.x < end.x) && (start.y > end.y)) {
+			return new MyPoint(end.x - 1, end.y);
+		}
+		return new MyPoint(end.x + 1, end.y);
+	}
+
+	private MyPoint getClosestStartNeighbour(MyPoint start, MyPoint end) {
+		if ((start.x < end.x) && (start.y < end.y)) {
+			return new MyPoint(start.x + 1, start.y);
+		}
+		if ((start.x > end.x) && (start.y < end.y)) {
+			return new MyPoint(start.x - 1, start.y);
+		}
+		if ((start.x < end.x) && (start.y > end.y)) {
+			return new MyPoint(start.x + 1, start.y);
+		}
+		return new MyPoint(start.x - 1, start.y);
+	}
+
+	private MyPoint getClosestEndNeighbour2(MyPoint start, MyPoint end) {
+		if (((start.x < end.x) && (start.y < end.y)) || ((start.x > end.x) && (start.y < end.y))) {
+			return new MyPoint(end.x, end.y - 1);
+		}
+		if ((start.x < end.x) && (start.y > end.y)) {
+		}
+		return new MyPoint(end.x, end.y + 1);
+	}
+
+	private MyPoint getClosestStartNeighbour2(MyPoint start, MyPoint end) {
+		if (((start.x < end.x) && (start.y < end.y)) || ((start.x > end.x) && (start.y < end.y))) {
+			return new MyPoint(start.x, start.y + 1);
+		}
+		if ((start.x < end.x) && (start.y > end.y)) {
+		}
+		return new MyPoint(start.x, start.y - 1);
 	}
 
 	private HashMap<MyPoint, Boolean> calculateLineOfSightWithoutBlocksToEveryOtherCell(MyPoint point) {

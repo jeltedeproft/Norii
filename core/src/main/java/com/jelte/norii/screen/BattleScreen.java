@@ -135,7 +135,7 @@ public class BattleScreen extends GameScreen {
 
 	private void initializeHUD() {
 		hudCamera = new OrthographicCamera();
-		hudCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		hudCamera.setToOrtho(false, Hud.UI_VIEWPORT_WIDTH, Hud.UI_VIEWPORT_HEIGHT);
 		hud = new Hud(Player.getInstance().getTeam(), enemyTeamLeader.getTeam(), spriteBatch, this, enemyTeamLeader.getType());
 		if (enemyTeamLeader.getType() == EnemyType.AI) {
 			AITeamLeader leader = (AITeamLeader) enemyTeamLeader;
@@ -379,11 +379,10 @@ public class BattleScreen extends GameScreen {
 	@Override
 	public void resize(final int width, final int height) {
 		// vfxManager.resize(width, height);
-		currentMap.getTiledMapStage().getViewport().update(width, height, false);
-		entityStage.getViewport().update(width, height, false);
-
-		hud.resize(width, height);
-		pauseMenu.resize(width, height);
+		currentMap.getTiledMapStage().getViewport().update(width, height, true);
+		entityStage.getViewport().update(width, height, true);
+		hud.getStage().getViewport().update(width, height, true);
+		pauseMenu.getStage().getViewport().update(width, height, true);
 	}
 
 	@Override
@@ -420,6 +419,7 @@ public class BattleScreen extends GameScreen {
 		battlemanager.getCurrentBattleState().hoveredOnTile(actor);
 		final float xDifference = mapCamera.position.x - (mapCamera.viewportWidth * 0.5f);
 		final float yDifference = mapCamera.position.y - (mapCamera.viewportHeight * 0.5f);
+		// System.out.println("setting tilehoverpos to : (" + (actor.getActorPos().getTileX() - xDifference) + "," + (actor.getActorPos().getTileY() - yDifference) + ")");
 		hud.setPositionTileHover(actor.getActorPos().getTileX() - xDifference, actor.getActorPos().getTileY() - yDifference);
 	}
 

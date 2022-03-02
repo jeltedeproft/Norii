@@ -7,7 +7,9 @@ import java.util.stream.Stream;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.jelte.norii.ai.EnemyType;
@@ -53,6 +55,7 @@ public class Hud {
 		tilePixelWidth = UI_VIEWPORT_WIDTH / BattleScreen.VISIBLE_WIDTH;
 		tilePixelHeight = UI_VIEWPORT_HEIGHT / BattleScreen.VISIBLE_HEIGHT;
 		stage = new Stage(new ExtendViewport(UI_VIEWPORT_WIDTH, UI_VIEWPORT_HEIGHT), spriteBatch);
+		stage.setDebugAll(true);
 	}
 
 	private void createTileHoverParticle() {
@@ -72,11 +75,24 @@ public class Hud {
 	}
 
 	private void createCharacterHUD() {
+		Table bottom = new Table();
 		portraitAndStats = new BottomBar(this);
-		stage.addActor(portraitAndStats.getTable());
+		bottom.add(portraitAndStats);
+		wrapTableAndAddToStage(bottom).bottom().left().expand();
 
+		Table topLeft = new Table();
 		apIndicator = new ApBar();
-		stage.addActor(apIndicator.getTable());
+		topLeft.add(apIndicator);
+		wrapTableAndAddToStage(topLeft).top().left().expand();
+	}
+
+	private Cell<Table> wrapTableAndAddToStage(Table table) {
+		Table root = new Table();
+		root.setFillParent(true);
+
+		stage.addActor(root);
+
+		return root.add(table);
 	}
 
 	private void createHudMessages(boolean isTutorial) {
@@ -84,7 +100,7 @@ public class Hud {
 	}
 
 	public void setPositionTileHover(float viewportTileX, float viewportTileY) {
-		onTileHover.setPosition(tilePixelWidth * viewportTileX, tilePixelHeight * viewportTileY);
+		onTileHover.setPosition(tilePixelWidth * (int) viewportTileX, tilePixelHeight * (int) viewportTileY);
 	}
 
 	public void updateApBar(int currentAp) {
@@ -101,11 +117,6 @@ public class Hud {
 
 	public Image getTileHoverImage() {
 		return onTileHover;
-	}
-
-	public void resize(int width, int height) {
-		stage.getViewport().update(width, height, true);
-		portraitAndStats.readjustSize();
 	}
 
 	public void render() {
