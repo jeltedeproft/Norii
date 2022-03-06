@@ -114,26 +114,30 @@ public class BattleScreenInputProcessor implements InputProcessor {
 	}
 
 	private void setLeftMove(boolean t) {
-		if (rightCameraMove && t)
+		if (rightCameraMove && t) {
 			rightCameraMove = false;
+		}
 		leftCameraMove = t;
 	}
 
 	private void setRightMove(boolean t) {
-		if (leftCameraMove && t)
+		if (leftCameraMove && t) {
 			leftCameraMove = false;
+		}
 		rightCameraMove = t;
 	}
 
 	private void setUpMove(boolean t) {
-		if (downCameraMove && t)
+		if (downCameraMove && t) {
 			downCameraMove = false;
+		}
 		upCameraMove = t;
 	}
 
 	private void setDownMove(boolean t) {
-		if (upCameraMove && t)
+		if (upCameraMove && t) {
 			upCameraMove = false;
+		}
 		downCameraMove = t;
 	}
 
@@ -173,7 +177,6 @@ public class BattleScreenInputProcessor implements InputProcessor {
 
 	@Override
 	public boolean scrolled(float amountX, float amountY) {
-		mapCamera.zoom += amountY;
 		return false;
 	}
 

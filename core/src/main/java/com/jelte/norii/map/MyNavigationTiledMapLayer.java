@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.Array;
 
 public class MyNavigationTiledMapLayer extends MapLayer implements NavigationGridGraph<GridCell> {
 
-	NavigationGrid<GridCell> navGrid;
+	public NavigationGrid<GridCell> navGrid;
 
 	public MyNavigationTiledMapLayer() {
 		this(null);

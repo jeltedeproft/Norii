@@ -8,7 +8,7 @@ public enum MessageToBattleScreen {
 	CLICKED,
 	PLAYER_WINS,
 	AI_WINS,
-	FOCUS_CAMERA,
+	FOCUS_CAMERA, // not used
 	UPDATE_POS,
 	ADD_UNIT_UI,
 	ADD_UNIT_ENTITYSTAGE,

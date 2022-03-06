@@ -23,7 +23,7 @@ public class ApBar extends Table {
 			final Button button = new Button(statusUISkin, "ap");
 			allAP.addActor(button);
 		}
-		add(allAP).width(Hud.UI_VIEWPORT_WIDTH).height(Hud.UI_VIEWPORT_HEIGHT * 0.1f);
+		add(allAP).height(Hud.UI_VIEWPORT_HEIGHT * 0.1f);
 		validate();
 		invalidateHierarchy();
 		pack();

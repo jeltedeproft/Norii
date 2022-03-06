@@ -55,7 +55,6 @@ public class Hud {
 		tilePixelWidth = UI_VIEWPORT_WIDTH / BattleScreen.VISIBLE_WIDTH;
 		tilePixelHeight = UI_VIEWPORT_HEIGHT / BattleScreen.VISIBLE_HEIGHT;
 		stage = new Stage(new ExtendViewport(UI_VIEWPORT_WIDTH, UI_VIEWPORT_HEIGHT), spriteBatch);
-		stage.setDebugAll(true);
 	}
 
 	private void createTileHoverParticle() {
@@ -99,8 +98,8 @@ public class Hud {
 		hudMessages = new HudMessages(stage, isTutorial);
 	}
 
-	public void setPositionTileHover(float viewportTileX, float viewportTileY) {
-		onTileHover.setPosition(tilePixelWidth * (int) viewportTileX, tilePixelHeight * (int) viewportTileY);
+	public void setPositionTileHover(int viewportTileX, int viewportTileY, float xDifference, float yDifference) {
+		onTileHover.setPosition(tilePixelWidth * (viewportTileX - xDifference), tilePixelWidth * (viewportTileY - yDifference));
 	}
 
 	public void updateApBar(int currentAp) {

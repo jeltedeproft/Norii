@@ -37,6 +37,7 @@ import com.jelte.norii.magic.Ability;
 import com.jelte.norii.magic.Ability.LineOfSight;
 import com.jelte.norii.map.BattleMap;
 import com.jelte.norii.map.Map;
+import com.jelte.norii.map.MapFactory.MapType;
 import com.jelte.norii.map.MapManager;
 import com.jelte.norii.map.MyPathFinder;
 import com.jelte.norii.map.TiledMapActor;
@@ -48,9 +49,11 @@ import com.jelte.norii.ui.Hud;
 import com.jelte.norii.ui.HudMessageTypes;
 import com.jelte.norii.ui.MessageToBattleScreen;
 import com.jelte.norii.utility.AssetManagerUtility;
+import com.jelte.norii.utility.CreateMapInfo;
 import com.jelte.norii.utility.GraphicalUtility;
 import com.jelte.norii.utility.MyPoint;
 import com.jelte.norii.utility.TiledMapPosition;
+import com.jelte.norii.utility.Utility;
 
 public class BattleScreen extends GameScreen {
 	private static final String TAG = BattleScreen.class.getSimpleName();
@@ -163,6 +166,7 @@ public class BattleScreen extends GameScreen {
 		battlemanager = new BattleManager(enemyTeamLeader, currentMap.getMapWidth(), currentMap.getMapHeight(), currentMap.getNavLayer().getUnwalkableNodes(), this);
 		battlescreenInputProcessor.setBattleManager(battlemanager);
 		currentMap.setStage(this);
+		CreateMapInfo mapInfo = new CreateMapInfo(MapType.BATTLE_MAP_THE_DARK_SWAMP, mapMgr); // comment this out if not needed, only once
 	}
 
 	private void spawnEnemyUnits() {
@@ -184,7 +188,7 @@ public class BattleScreen extends GameScreen {
 		multiplexer.addProcessor(currentMap.getTiledMapStage());
 		Gdx.input.setInputProcessor(multiplexer);
 
-		mapCamera.position.set(currentMap.getMapWidth() * 0.5f, currentMap.getMapHeight() * 0.5f, 0f);
+		mapCamera.position.set(enemyTeamLeader.getTeam().get(0).getCurrentPosition().getTileX(), enemyTeamLeader.getTeam().get(0).getCurrentPosition().getTileY(), 0f);
 		mapRenderer = new OrthogonalTiledMapRenderer(mapMgr.getCurrentTiledMap(), Map.UNIT_SCALE, spriteBatch);
 		mapRenderer.setView(mapCamera);
 		currentMap.makeSpawnParticles();
@@ -243,8 +247,8 @@ public class BattleScreen extends GameScreen {
 	}
 
 	private void updateCameras() {
-		// mapCamera.position.x = Utility.clamp(mapCamera.position.x, currentMap.getTilemapWidthInTiles() - (mapCamera.viewportWidth * 0.5f), 0 + (mapCamera.viewportWidth * 0.5f));
-		// mapCamera.position.y = Utility.clamp(mapCamera.position.y, currentMap.getTilemapHeightInTiles() - (mapCamera.viewportHeight * 0.5f), 0 + (mapCamera.viewportHeight * 0.5f));
+		mapCamera.position.x = Utility.clamp(mapCamera.position.x, currentMap.getTilemapWidthInTiles() - (mapCamera.viewportWidth * 0.5f), 0 + (mapCamera.viewportWidth * 0.5f));
+		mapCamera.position.y = Utility.clamp(mapCamera.position.y, currentMap.getTilemapHeightInTiles() - (mapCamera.viewportHeight * 0.5f), 0 + (mapCamera.viewportHeight * 0.5f));
 		mapCamera.update();
 		hudCamera.update();
 	}
@@ -379,10 +383,10 @@ public class BattleScreen extends GameScreen {
 	@Override
 	public void resize(final int width, final int height) {
 		// vfxManager.resize(width, height);
-		currentMap.getTiledMapStage().getViewport().update(width, height, true);
-		entityStage.getViewport().update(width, height, true);
+		currentMap.getTiledMapStage().getViewport().update(width, height, false);
+		entityStage.getViewport().update(width, height, false);
 		hud.getStage().getViewport().update(width, height, true);
-		pauseMenu.getStage().getViewport().update(width, height, true);
+		pauseMenu.getStage().getViewport().update(width, height, false);
 	}
 
 	@Override
@@ -419,8 +423,7 @@ public class BattleScreen extends GameScreen {
 		battlemanager.getCurrentBattleState().hoveredOnTile(actor);
 		final float xDifference = mapCamera.position.x - (mapCamera.viewportWidth * 0.5f);
 		final float yDifference = mapCamera.position.y - (mapCamera.viewportHeight * 0.5f);
-		// System.out.println("setting tilehoverpos to : (" + (actor.getActorPos().getTileX() - xDifference) + "," + (actor.getActorPos().getTileY() - yDifference) + ")");
-		hud.setPositionTileHover(actor.getActorPos().getTileX() - xDifference, actor.getActorPos().getTileY() - yDifference);
+		hud.setPositionTileHover(actor.getActorPos().getTileX(), actor.getActorPos().getTileY(), xDifference, yDifference);
 	}
 
 	public void messageFromUi(MessageToBattleScreen message, int entityID, Ability ability) {

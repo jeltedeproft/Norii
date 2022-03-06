@@ -16,8 +16,8 @@ import com.jelte.norii.magic.Ability;
 import com.jelte.norii.utility.AssetManagerUtility;
 
 public class BottomBar extends Table {
-	private static final int PAD_TOP_HERO_NAME_LABEL = 1;
-	private static final int PAD_BOTTOM_STATS = 1;
+	private static final int PAD_TOP_HERO_NAME_LABEL = 10;
+	private static final int PAD_BOTTOM_STATS = 10;
 	private static final int PAD_LEFT_STATS = 5;
 	private static final String NO_ABILITY_TEXT = "NoAbility";
 	private static final String BACKGROUND_SKIN = "windowgray";
@@ -31,12 +31,12 @@ public class BottomBar extends Table {
 	private static final String STATS = "Stats";
 
 	private static final int WINDOW_PADDING = 0;
-	private static final int HERO_NAME_LABEL_HEIGHT = 2;
-	private static final int HERO_NAME_LABEL_WIDTH = 5;
-	private static final int STATS_WIDTH = 2;
-	private static final int STATS_HEIGHT = 2;
-	private static final int PAD_BOTTOM_TITLE = 1;
-	private static final float ICON_PADDING = 0.2f;
+	private static final int HERO_NAME_LABEL_HEIGHT = 20;
+	private static final int HERO_NAME_LABEL_WIDTH = 50;
+	private static final int STATS_WIDTH = 20;
+	private static final int STATS_HEIGHT = 20;
+	private static final int PAD_BOTTOM_TITLE = 10;
+	private static final int ICON_PADDING = 10;
 
 	private int heroHP;
 	private int heroMagDef;
@@ -148,8 +148,8 @@ public class BottomBar extends Table {
 		final TextureRegionDrawable trd = new TextureRegionDrawable(tr);
 		final ImageButtonStyle oldStyle = abilityIcon.getStyle();
 		oldStyle.imageUp = trd;
-		oldStyle.imageUp.setMinHeight(Hud.UI_VIEWPORT_HEIGHT * 0.1f);
-		oldStyle.imageUp.setMinWidth(Hud.UI_VIEWPORT_WIDTH * 0.1f);
+		oldStyle.imageUp.setMinHeight(Hud.UI_VIEWPORT_HEIGHT * 0.2f);
+		oldStyle.imageUp.setMinWidth(Hud.UI_VIEWPORT_WIDTH * 0.2f);
 		abilityIcon.setStyle(oldStyle);
 	}
 
@@ -158,8 +158,8 @@ public class BottomBar extends Table {
 		final TextureRegionDrawable trd = new TextureRegionDrawable(tr);
 		final ImageButtonStyle oldStyle = heroImageButton.getStyle();
 		oldStyle.imageUp = trd;
-		oldStyle.imageUp.setMinHeight(Hud.UI_VIEWPORT_HEIGHT * 0.1f);
-		oldStyle.imageUp.setMinWidth(Hud.UI_VIEWPORT_WIDTH * 0.1f);
+		oldStyle.imageUp.setMinHeight(Hud.UI_VIEWPORT_HEIGHT * 0.2f);
+		oldStyle.imageUp.setMinWidth(Hud.UI_VIEWPORT_WIDTH * 0.2f);
 		heroImageButton.setStyle(oldStyle);
 	}
 
@@ -170,13 +170,13 @@ public class BottomBar extends Table {
 	private void populateHeroImageAndStats() {
 		configureMainTable();
 
-		subtable = createSubTable();
+		subtable = createStatsTable();
 		actionsTable = createActionsTable();
 		infoTable = createInfoTable();
 
-		add(subtable).align(Align.topLeft).height(Hud.UI_VIEWPORT_HEIGHT * 0.2f).width(Hud.UI_VIEWPORT_WIDTH * 0.33f);
-		add(actionsTable).align(Align.topLeft).height(Hud.UI_VIEWPORT_HEIGHT * 0.2f).width(Hud.UI_VIEWPORT_WIDTH * 0.33f);
-		add(infoTable).align(Align.topLeft).height(Hud.UI_VIEWPORT_HEIGHT * 0.2f).width(Hud.UI_VIEWPORT_WIDTH * 0.33f);
+		add(subtable).align(Align.topLeft).height(Hud.UI_VIEWPORT_HEIGHT * 0.15f).width(Hud.UI_VIEWPORT_WIDTH * 0.33f);
+		add(actionsTable).align(Align.topLeft).height(Hud.UI_VIEWPORT_HEIGHT * 0.15f).width(Hud.UI_VIEWPORT_WIDTH * 0.33f);
+		add(infoTable).align(Align.topLeft).height(Hud.UI_VIEWPORT_HEIGHT * 0.15f).width(Hud.UI_VIEWPORT_WIDTH * 0.70f);
 
 		validate();
 		invalidateHierarchy();
@@ -188,40 +188,38 @@ public class BottomBar extends Table {
 		setBackground(AssetManagerUtility.getSkin().getDrawable("window-noborder"));
 		setTransform(false);
 		pad(0);
-		add(heroImageButton).width(Hud.UI_VIEWPORT_WIDTH * 0.1f).height((Hud.UI_VIEWPORT_HEIGHT * 0.1f)).pad(0).align(Align.bottomLeft);
+		add(heroImageButton).width(Hud.UI_VIEWPORT_WIDTH * 0.1f).height((Hud.UI_VIEWPORT_HEIGHT * 0.15f)).pad(0).align(Align.center);
 	}
 
-	private Table createSubTable() {
-		final Table table = new Table();
-		table.debugAll();
-		table.add(statsLabel).height(HERO_NAME_LABEL_HEIGHT).align(Align.topLeft).width(HERO_NAME_LABEL_WIDTH).padTop(7).padBottom(PAD_BOTTOM_TITLE);
-		table.row();
-		table.align(Align.topLeft);
-		table.pad(WINDOW_PADDING);
-		table.padLeft(5);
-		table.align(Align.topLeft);
-		table.add(heroNameLabel).height(HERO_NAME_LABEL_HEIGHT).align(Align.topLeft).width(HERO_NAME_LABEL_WIDTH).padTop(PAD_TOP_HERO_NAME_LABEL).padBottom(0);
-		table.row();
+	private Table createStatsTable() {
+		final Table statsTable = new Table();
+		statsTable.add(statsLabel).height(HERO_NAME_LABEL_HEIGHT).align(Align.topLeft).width(HERO_NAME_LABEL_WIDTH).padTop(7).padBottom(PAD_BOTTOM_TITLE);
+		statsTable.row();
+		statsTable.align(Align.topLeft);
+		statsTable.pad(WINDOW_PADDING);
+		statsTable.padLeft(5);
+		statsTable.add(heroNameLabel).height(HERO_NAME_LABEL_HEIGHT).align(Align.topLeft).width(HERO_NAME_LABEL_WIDTH).padTop(PAD_TOP_HERO_NAME_LABEL).padBottom(0);
+		statsTable.row();
 
-		table.add(hpLabel).align(Align.bottomLeft).width(STATS_WIDTH).height(STATS_HEIGHT);
-		table.add(hp).height(STATS_HEIGHT).width(STATS_WIDTH).padBottom(PAD_BOTTOM_STATS).padLeft(PAD_LEFT_STATS);
-		table.row();
+		statsTable.add(hpLabel).align(Align.bottomLeft).width(STATS_WIDTH).height(STATS_HEIGHT);
+		statsTable.add(hp).height(STATS_HEIGHT).width(STATS_WIDTH).padBottom(PAD_BOTTOM_STATS).padLeft(PAD_LEFT_STATS);
+		statsTable.row();
 
-		table.add(magDefLabel).align(Align.bottomLeft).width(STATS_WIDTH).height(STATS_HEIGHT).colspan(1);
-		table.add(magDef).width(STATS_WIDTH).height(STATS_HEIGHT).padBottom(PAD_BOTTOM_STATS).padLeft(PAD_LEFT_STATS);
-		table.add().padLeft(PAD_LEFT_STATS).width(STATS_WIDTH);
-		table.add().padLeft(PAD_LEFT_STATS).width(STATS_WIDTH);
-		table.add().padLeft(PAD_LEFT_STATS).width(STATS_WIDTH);
-		table.row();
+		statsTable.add(magDefLabel).align(Align.bottomLeft).width(STATS_WIDTH).height(STATS_HEIGHT).colspan(1);
+		statsTable.add(magDef).width(STATS_WIDTH).height(STATS_HEIGHT).padBottom(PAD_BOTTOM_STATS).padLeft(PAD_LEFT_STATS);
+		statsTable.add().padLeft(PAD_LEFT_STATS).width(STATS_WIDTH);
+		statsTable.add().padLeft(PAD_LEFT_STATS).width(STATS_WIDTH);
+		statsTable.add().padLeft(PAD_LEFT_STATS).width(STATS_WIDTH);
+		statsTable.row();
 
-		table.add(phyDefLabel).align(Align.bottomLeft).width(STATS_WIDTH).height(STATS_HEIGHT).colspan(1);
-		table.add(phyDef).width(STATS_WIDTH).height(STATS_HEIGHT).padLeft(PAD_LEFT_STATS);
-		table.add().padLeft(PAD_LEFT_STATS).width(STATS_WIDTH);
-		table.add().padLeft(PAD_LEFT_STATS).width(STATS_WIDTH);
-		table.add().padLeft(PAD_LEFT_STATS).width(STATS_WIDTH);
+		statsTable.add(phyDefLabel).align(Align.bottomLeft).width(STATS_WIDTH).height(STATS_HEIGHT).colspan(1);
+		statsTable.add(phyDef).width(STATS_WIDTH).height(STATS_HEIGHT).padLeft(PAD_LEFT_STATS);
+		statsTable.add().padLeft(PAD_LEFT_STATS).width(STATS_WIDTH);
+		statsTable.add().padLeft(PAD_LEFT_STATS).width(STATS_WIDTH);
+		statsTable.add().padLeft(PAD_LEFT_STATS).width(STATS_WIDTH);
 
-		table.setBackground(AssetManagerUtility.getSkin().getDrawable(BACKGROUND_SKIN));
-		return table;
+		statsTable.setBackground(AssetManagerUtility.getSkin().getDrawable(BACKGROUND_SKIN));
+		return statsTable;
 	}
 
 	private Table createActionsTable() {
@@ -231,11 +229,11 @@ public class BottomBar extends Table {
 		table.align(Align.topLeft);
 		table.pad(WINDOW_PADDING);
 		table.padLeft(5);
-		table.add(moveImageButton).size(Hud.UI_VIEWPORT_WIDTH * 0.07f, Hud.UI_VIEWPORT_HEIGHT * 0.04f).pad(ICON_PADDING);
-		table.add(attackImageButton).size(Hud.UI_VIEWPORT_WIDTH * 0.07f, Hud.UI_VIEWPORT_HEIGHT * 0.04f).pad(ICON_PADDING);
+		table.add(moveImageButton).size(Hud.UI_VIEWPORT_WIDTH * 0.1f, Hud.UI_VIEWPORT_HEIGHT * 0.04f).pad(ICON_PADDING);
+		table.add(attackImageButton).size(Hud.UI_VIEWPORT_WIDTH * 0.1f, Hud.UI_VIEWPORT_HEIGHT * 0.04f).pad(ICON_PADDING);
 		table.row();
-		table.add(skipImageButton).size(Hud.UI_VIEWPORT_WIDTH * 0.07f, Hud.UI_VIEWPORT_HEIGHT * 0.04f).pad(ICON_PADDING);
-		table.add(spellImageButton).size(Hud.UI_VIEWPORT_WIDTH * 0.07f, Hud.UI_VIEWPORT_HEIGHT * 0.04f).pad(ICON_PADDING);
+		table.add(skipImageButton).size(Hud.UI_VIEWPORT_WIDTH * 0.1f, Hud.UI_VIEWPORT_HEIGHT * 0.04f).pad(ICON_PADDING);
+		table.add(spellImageButton).size(Hud.UI_VIEWPORT_WIDTH * 0.1f, Hud.UI_VIEWPORT_HEIGHT * 0.04f).pad(ICON_PADDING);
 
 		table.setBackground(AssetManagerUtility.getSkin().getDrawable(BACKGROUND_SKIN));
 		return table;
