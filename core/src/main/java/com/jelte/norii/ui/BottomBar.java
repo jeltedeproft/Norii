@@ -20,7 +20,7 @@ public class BottomBar extends Table {
 	private static final int PAD_BOTTOM_STATS = 10;
 	private static final int PAD_LEFT_STATS = 5;
 	private static final String NO_ABILITY_TEXT = "NoAbility";
-	private static final String BACKGROUND_SKIN = "windowgray";
+	private static final String BACKGROUND_SKIN = "windowWood10Patch";
 	private static final String UNKNOWN_HERO_IMAGE = "nochar";
 	private static final String MOVE_BUTTON_SPRITE_NAME = "move";
 	private static final String ATTACK_BUTTON_SPRITE_NAME = "attack";
