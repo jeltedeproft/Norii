@@ -9,6 +9,7 @@ public class SelectUnitBattlePhase extends BattlePhase {
 
 	public SelectUnitBattlePhase(final BattleManager battlemanager) {
 		this.battlemanager = battlemanager;
+		state = BattleManager.BattleStateEnum.SELECT_UNIT;
 	}
 
 	@Override

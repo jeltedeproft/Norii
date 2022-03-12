@@ -18,6 +18,7 @@ public class AttackBattlePhase extends BattlePhase {
 
 	public AttackBattlePhase(BattleManager battlemanager) {
 		this.battlemanager = battlemanager;
+		state = BattleManager.BattleStateEnum.ATTACK;
 	}
 
 	@Override

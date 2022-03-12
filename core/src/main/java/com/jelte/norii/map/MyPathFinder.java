@@ -1,7 +1,8 @@
 package com.jelte.norii.map;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -14,6 +15,7 @@ import org.xguzm.pathfinding.grid.finders.AStarGridFinder;
 import org.xguzm.pathfinding.grid.finders.GridFinderOptions;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.jelte.norii.ai.movegenerator.AbilityTargetMoveGenerator;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.utility.MyPoint;
@@ -26,8 +28,10 @@ public class MyPathFinder {
 	private AStarGridFinder<GridCell> aStarGridFinder;
 	private Map linkedMap;
 	private Long oldTime = System.currentTimeMillis();
-	private HashMap<MyPoint, HashMap<MyPoint, List<GridCell>>> precalculatedPaths;
-	private HashMap<MyPoint, HashMap<MyPoint, Boolean>> precalculatedLineOfSightsWithNonBlockableUnits;
+	private List<String> lineOfSights = new ArrayList<>();
+	private List<String> paths = new ArrayList<>();
+	private FileHandle pathsFile;
+	private FileHandle losFile;
 	private boolean preprocessingFinished = false;
 
 	private static MyPathFinder pathFinder;
@@ -38,12 +42,28 @@ public class MyPathFinder {
 		gridFinderOptions = new GridFinderOptions();
 		gridFinderOptions.allowDiagonal = false;
 		aStarGridFinder = new AStarGridFinder<>(GridCell.class, gridFinderOptions);
-		precalculatedPaths = new HashMap<>();
-		precalculatedLineOfSightsWithNonBlockableUnits = new HashMap<>();
+		pathsFile = Gdx.files.local("maps/" + map.getMapType().name() + "_paths.txt");
+		losFile = Gdx.files.local("maps/" + map.getMapType().name() + "_lineOfSights.txt");
 	}
 
 	public void preprocessMap() {
-		// TODO load map data from file and import into hashmaps
+		String line;
+		try (BufferedReader reader = pathsFile.reader(1028, "utf-8");) {
+			while ((line = reader.readLine()) != null) {
+				paths.add(line);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		try (BufferedReader reader = losFile.reader(1028, "utf-8");) {
+			while ((line = reader.readLine()) != null) {
+				lineOfSights.add(line);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		preprocessingFinished = true;
 	}
 
 	public float getPreprocessingMapProgress() {
@@ -54,26 +74,29 @@ public class MyPathFinder {
 	// PATH FINDING
 	public boolean canUnitWalkTo(Entity unit, GridCell cell) {
 		final GridCell center = navGrid.getCell(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY());
-		return isCloseEnough(center, cell, unit.getAp()) && pathExists(center, cell, unit.getAp());
+		return isCloseEnough(center, cell, unit.getAp()) && pathExists(center, cell);
 	}
 
 	public boolean canUnitWalkTo(Entity unit, MyPoint point) {
 		final GridCell center = navGrid.getCell(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY());
 		final GridCell target = navGrid.getCell(point.x, point.y);
-		return isCloseEnough(center, target, unit.getAp()) && pathExists(center, target, unit.getAp());
+		return isCloseEnough(center, target, unit.getAp()) && pathExists(center, target);
 	}
 
 	public boolean canUnitWalkTo(Entity unit, TiledMapPosition pos) {
 		final GridCell center = navGrid.getCell(unit.getCurrentPosition().getTileX(), unit.getCurrentPosition().getTileY());
 		final GridCell target = navGrid.getCell(pos.getTileX(), pos.getTileY());
-		return isCloseEnough(center, target, unit.getAp()) && pathExists(center, target, unit.getAp());
+		return isCloseEnough(center, target, unit.getAp()) && pathExists(center, target);
 	}
 
-	private boolean pathExists(final GridCell center, final GridCell gridcell, final int range) {
+	private boolean pathExists(final GridCell center, final GridCell gridcell) {
 		final MyPoint start = new MyPoint(center.x, center.y);
 		final MyPoint end = new MyPoint(gridcell.x, gridcell.y);
-		final List<GridCell> path = precalculatedPaths.get(start).get(end);
-		return ((path != null) && (path.size() <= range) && (!path.isEmpty()));
+		return paths.contains(start.toStringWithLeading0(2) + end.toStringWithLeading0(2));
+	}
+
+	private boolean pathExists(TiledMapPosition start, TiledMapPosition end) {
+		return paths.contains(new MyPoint(start.getTileX(), start.getTileY()).toStringWithLeading0(2) + new MyPoint(end.getTileX(), end.getTileY()).toStringWithLeading0(2));
 	}
 
 	public List<GridCell> pathTowards(MyPoint start, MyPoint goal, int ap) {
@@ -84,24 +107,25 @@ public class MyPathFinder {
 
 	public List<GridCell> pathTowards(TiledMapPosition start, TiledMapPosition goal, int ap) {
 		oldTime = System.currentTimeMillis();
-		final List<GridCell> path = precalculatedPaths.get(start.getTilePosAsPoint()).get(goal.getTilePosAsPoint());
+		if (pathExists(start, goal)) {
+			final List<GridCell> path = aStarGridFinder.findPath(start.getTileX(), start.getTileY(), goal.getTileX(), goal.getTileY(), navGrid);
+			if (path.size() <= ap) {
+				return path;
+			}
+
+			return chippedPath(path, ap);
+		}
+
 		oldTime = AbilityTargetMoveGenerator.debugTime("find path from " + start + " to " + goal, oldTime);
-		if (path == null) {
-			return adjustGoal(start, goal, path);
-		}
-
-		if (path.size() <= ap) {
-			return path;
-		}
-
-		return chippedPath(path, ap);
+		return adjustGoal(start, goal);
 	}
 
-	private List<GridCell> adjustGoal(TiledMapPosition start, TiledMapPosition goal, List<GridCell> path) {
+	private List<GridCell> adjustGoal(TiledMapPosition start, TiledMapPosition goal) {
+		List<GridCell> path = null;
 		while ((path == null) || path.isEmpty()) {
 			oldTime = AbilityTargetMoveGenerator.debugTime("trying from : " + start + " to " + goal, oldTime);
 			goal = tryAdjacentTile(start, goal);
-			path = precalculatedPaths.get(start.getTilePosAsPoint()).get(goal.getTilePosAsPoint());
+			path = aStarGridFinder.findPath(start.getTileX(), start.getTileY(), goal.getTileX(), goal.getTileY(), navGrid);
 		}
 		oldTime = AbilityTargetMoveGenerator.debugTime("goal adjusted", oldTime);
 		Gdx.app.debug("myPathFinder", "path after adjustment = " + path);
@@ -185,7 +209,7 @@ public class MyPathFinder {
 		MyPoint startingPoint = new MyPoint(node.getX(), node.getY());
 		MyPoint endingPoint = new MyPoint(neigh.getX(), neigh.getY());
 
-		if ((!unitsAreBlocking) && (Boolean.FALSE.equals(precalculatedLineOfSightsWithNonBlockableUnits.get(startingPoint).get(endingPoint)))) {
+		if ((!unitsAreBlocking) && (Boolean.FALSE.equals(lineOfSights.contains(startingPoint.toStringWithLeading0(2) + endingPoint.toStringWithLeading0(2))))) {
 			return false;
 		}
 
@@ -255,15 +279,6 @@ public class MyPathFinder {
 		return (Math.abs(x1 - x2) + (Math.abs(y1 - y2)));
 	}
 
-	private List<GridCell> removeEndPoint(List<GridCell> path) {
-		path.remove(path.size() - 1);
-		return path;
-	}
-
-	private boolean isNextTo(GridCell cell, TiledMapPosition target) {
-		return ((Math.abs(cell.x - target.getTileX()) == 1) && (Math.abs(cell.y - target.getTileY()) == 0)) || ((Math.abs(cell.x - target.getTileX()) == 0) && (Math.abs(cell.y - target.getTileY()) == 1));
-	}
-
 	public void filterPositionsByLineOfSight(Entity unit, Set<MyPoint> positions, List<TiledMapPosition> sortedUnits, final boolean unitsAreBlocking) {
 		for (final Iterator<MyPoint> posIterator = positions.iterator(); posIterator.hasNext();) {
 			final MyPoint pos = posIterator.next();
@@ -311,8 +326,7 @@ public class MyPathFinder {
 	}
 
 	public boolean isPreprocessingFinished() {
-		return true;
-		// return preprocessingFinished;
+		return preprocessingFinished;
 	}
 
 	public void dispose() {

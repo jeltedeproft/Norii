@@ -37,7 +37,6 @@ import com.jelte.norii.magic.Ability;
 import com.jelte.norii.magic.Ability.LineOfSight;
 import com.jelte.norii.map.BattleMap;
 import com.jelte.norii.map.Map;
-import com.jelte.norii.map.MapFactory.MapType;
 import com.jelte.norii.map.MapManager;
 import com.jelte.norii.map.MyPathFinder;
 import com.jelte.norii.map.TiledMapActor;
@@ -49,7 +48,6 @@ import com.jelte.norii.ui.Hud;
 import com.jelte.norii.ui.HudMessageTypes;
 import com.jelte.norii.ui.MessageToBattleScreen;
 import com.jelte.norii.utility.AssetManagerUtility;
-import com.jelte.norii.utility.CreateMapInfo;
 import com.jelte.norii.utility.GraphicalUtility;
 import com.jelte.norii.utility.MyPoint;
 import com.jelte.norii.utility.TiledMapPosition;
@@ -166,7 +164,7 @@ public class BattleScreen extends GameScreen {
 		battlemanager = new BattleManager(enemyTeamLeader, currentMap.getMapWidth(), currentMap.getMapHeight(), currentMap.getNavLayer().getUnwalkableNodes(), this);
 		battlescreenInputProcessor.setBattleManager(battlemanager);
 		currentMap.setStage(this);
-		CreateMapInfo mapInfo = new CreateMapInfo(MapType.BATTLE_MAP_THE_DARK_SWAMP, mapMgr); // comment this out if not needed, only once
+		// CreateMapInfo mapInfo = new CreateMapInfo(MapType.BATTLE_MAP_THE_DARK_SWAMP, mapMgr); // comment this out if not needed, only once
 	}
 
 	private void spawnEnemyUnits() {
@@ -462,11 +460,13 @@ public class BattleScreen extends GameScreen {
 	}
 
 	private void moveUnit(int entityID) {
-		final Entity moveEntity = battlemanager.getEntityByID(entityID);
-		if (moveEntity.canMove()) {
-			prepareMove(moveEntity);
-		} else {
-			hud.getHudMessages().showPopup(HudMessageTypes.NOT_ENOUGH_AP);
+		if (battlemanager.getCurrentBattleState().getState() != BattleManager.BattleStateEnum.MOVEMENT) {
+			final Entity moveEntity = battlemanager.getEntityByID(entityID);
+			if (moveEntity.canMove()) {
+				prepareMove(moveEntity);
+			} else {
+				hud.getHudMessages().showPopup(HudMessageTypes.NOT_ENOUGH_AP);
+			}
 		}
 	}
 
@@ -478,9 +478,9 @@ public class BattleScreen extends GameScreen {
 			if (!isUnitOnCell(cell)) {
 				final TiledMapPosition positionToPutMoveParticle = new TiledMapPosition().setPositionFromTiles(cell.x, cell.y);
 				ParticleMaker.addParticle(ParticleType.MOVE, positionToPutMoveParticle, 0);
-				battlemanager.setCurrentBattleState(battlemanager.getMovementBattleState());
 			}
 		}
+		battlemanager.setCurrentBattleState(battlemanager.getMovementBattleState());
 	}
 
 	private boolean isUnitOnCell(final MyPoint cell) {

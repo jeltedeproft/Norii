@@ -12,6 +12,7 @@ public class ActionBattlePhase extends BattlePhase {
 
 	public ActionBattlePhase(final BattleManager battlemanager) {
 		this.battlemanager = battlemanager;
+		state = BattleManager.BattleStateEnum.ACTION;
 	}
 
 	@Override

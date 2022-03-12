@@ -8,6 +8,7 @@ public class WaitOpponentBattlePhase extends BattlePhase {
 
 	public WaitOpponentBattlePhase(final BattleManager battlemanager) {
 		this.battlemanager = battlemanager;
+		state = BattleManager.BattleStateEnum.WAIT;
 	}
 
 	@Override

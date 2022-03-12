@@ -38,6 +38,7 @@ public class SpellBattlePhase extends BattlePhase {
 
 	public SpellBattlePhase(final BattleManager battlemanager) {
 		this.battlemanager = battlemanager;
+		state = BattleManager.BattleStateEnum.SPELL;
 	}
 
 	@Override
@@ -145,9 +146,8 @@ public class SpellBattlePhase extends BattlePhase {
 
 		if (ability.getGoesTroughUnits()) {
 			return MyPathFinder.getInstance().lineOfSight(caster, targetPos, battlemanager.getUnits(), false);
-		} else {
-			return MyPathFinder.getInstance().lineOfSight(caster, targetPos, battlemanager.getUnits(), true);
 		}
+		return MyPathFinder.getInstance().lineOfSight(caster, targetPos, battlemanager.getUnits(), true);
 	}
 
 	private boolean checkTarget(Entity caster, TiledMapPosition targetPos, Ability ability, boolean isTile) {

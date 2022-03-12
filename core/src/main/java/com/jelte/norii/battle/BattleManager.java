@@ -55,6 +55,16 @@ public class BattleManager {
 	private BattleScreen battleScreen;
 	private int turn = 0;
 
+	public enum BattleStateEnum {
+		DEPLOYMENT,
+		SELECT_UNIT,
+		MOVEMENT,
+		ATTACK,
+		SPELL,
+		ACTION,
+		WAIT
+	}
+
 	public BattleManager(UnitOwner enemyTeamLeader, int width, int height, Array<GridCell> unwalkableNodes, BattleScreen battleScreen) {
 		initVariables(enemyTeamLeader, width, height, unwalkableNodes, battleScreen);
 

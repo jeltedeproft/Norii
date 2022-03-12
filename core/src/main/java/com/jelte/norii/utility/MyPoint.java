@@ -15,10 +15,10 @@ public class MyPoint implements Comparable<MyPoint> {
 	@Override
 	public int compareTo(MyPoint o) {
 		final int xComp = Integer.compare(x, o.x);
-		if (xComp == 0)
+		if (xComp == 0) {
 			return Integer.compare(y, o.y);
-		else
-			return xComp;
+		}
+		return xComp;
 	}
 
 	@Override
@@ -41,6 +41,12 @@ public class MyPoint implements Comparable<MyPoint> {
 	@Override
 	public String toString() {
 		return "(" + x + "," + y + ")";
+	}
+
+	public String toStringWithLeading0(int size) {
+		String paddedX = String.format("%0" + size + "d", x);
+		String paddedY = String.format("%0" + size + "d", y);
+		return paddedX + paddedY;
 	}
 
 	public MyPoint randomize(int xLimit, int yLimit) {
