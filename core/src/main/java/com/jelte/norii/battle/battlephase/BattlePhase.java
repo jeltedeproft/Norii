@@ -1,11 +1,13 @@
 package com.jelte.norii.battle.battlephase;
 
+import com.jelte.norii.battle.BattleManager;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.magic.Ability;
 import com.jelte.norii.map.TiledMapActor;
 
 public abstract class BattlePhase {
 	protected Ability ability;
+	protected static BattleManager.BattleStateEnum state;
 
 	public abstract void exit();
 
@@ -42,5 +44,9 @@ public abstract class BattlePhase {
 
 	public void setAbility(Ability ability) {
 		this.ability = ability;
+	}
+
+	public static BattleManager.BattleStateEnum getState() {
+		return state;
 	}
 }

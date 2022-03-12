@@ -167,8 +167,6 @@ public class Entity extends Actor implements Comparable<Entity> {
 		inBattle = false;
 		setVisible(false);
 		isDead = true;
-		hpBar.getHealthBar().setVisible(false);
-		hpBar.getHealthBar().remove();
 	}
 
 	public void heal(final int healAmount) {

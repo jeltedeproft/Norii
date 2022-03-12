@@ -72,6 +72,8 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 
 	@Override
 	public void removeUnit() {
+		entity.getHpBar().getHealthBar().setVisible(false);
+		entity.getHpBar().getHealthBar().remove();
 		setAnimationType(EntityAnimationType.WALK);
 		final SequenceAction sequence = Actions.sequence();
 		sequence.addAction(Actions.fadeOut(1));
@@ -181,7 +183,8 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 		}
 		if ((oldCell.x == cell.x) && (oldCell.y < cell.y)) {
 			return 180.0f;
-		} else if ((oldCell.x > cell.x) && (oldCell.y == cell.y)) {
+		}
+		if ((oldCell.x > cell.x) && (oldCell.y == cell.y)) {
 			return 270.0f;
 		}
 		return 90.0f;
@@ -197,7 +200,8 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 		}
 		if ((rotation >= 135) && (rotation < 225)) {
 			return Direction.UP;
-		} else if ((rotation >= 225) && (rotation < 315)) {
+		}
+		if ((rotation >= 225) && (rotation < 315)) {
 			return Direction.LEFT;
 		}
 		return Direction.DOWN;

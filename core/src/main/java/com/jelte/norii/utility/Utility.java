@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.TreeMap;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.battle.battlestate.BattleState;
@@ -158,15 +160,13 @@ public final class Utility {
 	}
 
 	public static float clamp(final float variable, final float max, final float min) {
-		if (variable > min) {
-			if (variable < max) {
-				return variable;
-			} else {
-				return max;
-			}
-		} else {
+		if (variable <= min) {
 			return min;
 		}
+		if (variable < max) {
+			return variable;
+		}
+		return max;
 	}
 
 	private Utility() {
@@ -194,8 +194,7 @@ public final class Utility {
 	}
 
 	public static int incrementModulo(int x, int modulo) {
-		return ((x + 1) == modulo	? 0
-									: x + 1);
+		return ((x + 1) == modulo ? 0 : x + 1);
 	}
 
 	public static int getTotalHpTeam(Array<Entity> team) {
@@ -218,5 +217,9 @@ public final class Utility {
 			}
 		}
 		return false;
+	}
+
+	public static <T, U> List<U> convertStringListToIntList(List<T> listOfString, Function<T, U> function) {
+		return listOfString.stream().map(function).collect(Collectors.toList());
 	}
 }

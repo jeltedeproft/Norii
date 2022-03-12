@@ -32,7 +32,7 @@ public abstract class Map {
 	protected MapLayer spawnsLayer = null;
 	protected MyNavigationTiledMapLayer navLayer = null;
 
-	protected MapFactory.MapType currentMapType;
+	protected MapFactory.MapType mapType;
 	protected MapProperties prop;
 
 	protected int mapWidth;
@@ -49,12 +49,11 @@ public abstract class Map {
 		disposeMapAndStage();
 
 		AssetManagerUtility.loadMapAsset(fullMapPath);
-		if (AssetManagerUtility.isAssetLoaded(fullMapPath)) {
-			currentMap = AssetManagerUtility.getMapAsset(fullMapPath);
-		} else {
+		if (!AssetManagerUtility.isAssetLoaded(fullMapPath)) {
 			Gdx.app.debug(TAG, "Map not loaded");
 			return;
 		}
+		currentMap = AssetManagerUtility.getMapAsset(fullMapPath);
 
 		setupMapProperties();
 		initializeClassVariables(mapType);
@@ -86,7 +85,7 @@ public abstract class Map {
 
 	private void initializeClassVariables(final MapFactory.MapType mapType) {
 		json = new Json();
-		currentMapType = mapType;
+		this.mapType = mapType;
 	}
 
 	public MyNavigationTiledMapLayer getNavLayer() {
@@ -123,6 +122,10 @@ public abstract class Map {
 
 	public int getTilemapHeightInTiles() {
 		return tilemapHeightInTiles;
+	}
+
+	public MapFactory.MapType getMapType() {
+		return mapType;
 	}
 
 	public abstract void unloadMusic();

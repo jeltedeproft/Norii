@@ -20,6 +20,7 @@ public class MovementBattlePhase extends BattlePhase {
 
 	public MovementBattlePhase(BattleManager battlemanager) {
 		this.battlemanager = battlemanager;
+		state = BattleManager.BattleStateEnum.MOVEMENT;
 	}
 
 	@Override
