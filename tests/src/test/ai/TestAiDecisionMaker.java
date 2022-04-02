@@ -1,4 +1,4 @@
-package testAi;
+package test.ai;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,12 +15,13 @@ import com.jelte.norii.entities.UnitOwner;
 import com.jelte.norii.magic.SpellFileReader;
 import com.jelte.norii.map.BattleMap;
 import com.jelte.norii.map.MapFactory.MapType;
+
+import test.balancing.helpClasses.SimulationPlayer;
+import test.utilities.GdxTestRunner;
+import test.utilities.TestUtil;
+
 import com.jelte.norii.map.MapManager;
 import com.jelte.norii.map.MyPathFinder;
-
-import testBalancing.helpClasses.SimulationPlayer;
-import testUtilities.GdxTestRunner;
-import testUtilities.TestUtil;
 
 @RunWith(GdxTestRunner.class)
 public class TestAiDecisionMaker {

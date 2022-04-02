@@ -1,4 +1,4 @@
-package testBalancing.helpClasses;
+package test.balancing.helpClasses;
 
 import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.ai.movegenerator.MoveGenerator;
@@ -11,7 +11,7 @@ import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.UnitOwner;
 import com.jelte.norii.utility.Utility;
 
-import testUtilities.TestUtil;
+import test.utilities.TestUtil;
 
 public class SimulationBattle {
 	public static final String PLAYER_ONE_NAME = "test1";

@@ -96,10 +96,10 @@ public class RandomMoveGenerator implements MoveGenerator {
 
 	private Move castAbilityOnTarget(UnitOwner player, Ability ability, Entity randomUnit, BattleState battleState) {
 		final MyPoint casterPos = new MyPoint(randomUnit.getCurrentPosition().getTileX(), randomUnit.getCurrentPosition().getTileY());
-		Array<MyPoint> abilityTargets = AbilityTargetMoveGenerator.getAbilityTargets(ability, casterPos, randomUnit.isPlayerUnit(), battleState);
+		Array<MyPoint> abilityTargets = TargetMoveGenerator.getAbilityTargets(ability, casterPos, randomUnit.isPlayerUnit(), battleState);
 		if (!abilityTargets.isEmpty()) {
 			MyPoint castPoint = Utility.getRandom(abilityTargets);
-			final Array<MyPoint> affectedUnits = BattleStateGridHelper.getInstance().getTargetsAbility(ability, castPoint, casterPos, AbilityTargetMoveGenerator.getUnitPositions(false, ability, battleState));
+			final Array<MyPoint> affectedUnits = BattleStateGridHelper.getInstance().getTargetsAbility(ability, castPoint, casterPos, TargetMoveGenerator.getUnitPositions(false, ability, battleState));
 			return new SpellMove(MoveType.SPELL, castPoint, ability, affectedUnits, randomUnit);
 		} else {
 			return generateSingleMovementMoveForPlayer(player, battleState);

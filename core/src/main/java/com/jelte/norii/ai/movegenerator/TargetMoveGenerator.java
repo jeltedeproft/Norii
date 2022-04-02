@@ -25,8 +25,8 @@ import com.jelte.norii.utility.MyPoint;
 import com.jelte.norii.utility.TiledMapPosition;
 import com.jelte.norii.utility.Utility;
 
-public class AbilityTargetMoveGenerator implements MoveGenerator {
-	private static final String TAG = AbilityTargetMoveGenerator.class.getSimpleName();
+public class TargetMoveGenerator implements MoveGenerator {
+	private static final String TAG = TargetMoveGenerator.class.getSimpleName();
 	private static final String WRONG_ABILITY_TEAM = "ability does not have one of these affected teams : FRIENDLY, ENEMY, BOTH or NONE, returning null";
 	private static final int FILTER_AMOUNT_OF_CELL_TARGETS = 10;
 	private Long oldTime;

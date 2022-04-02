@@ -1,4 +1,4 @@
-package testBalancing;
+package test.balancing;
 
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
@@ -16,11 +16,11 @@ import com.jelte.norii.entities.EntityFileReader;
 import com.jelte.norii.entities.EntityTypes;
 import com.jelte.norii.magic.SpellFileReader;
 
-import testBalancing.helpClasses.SimulationBattle;
-import testBalancing.helpClasses.SimulationResultKeeper;
-import testBalancing.helpClasses.Stats;
-import testBalancing.helpClasses.StatsAdjuster;
-import testUtilities.GdxTestRunner;
+import test.balancing.helpClasses.SimulationBattle;
+import test.balancing.helpClasses.SimulationResultKeeper;
+import test.balancing.helpClasses.Stats;
+import test.balancing.helpClasses.StatsAdjuster;
+import test.utilities.GdxTestRunner;
 
 @RunWith(GdxTestRunner.class)
 public class TestBattleSimulator {

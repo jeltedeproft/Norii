@@ -1,4 +1,4 @@
-package testBalancing.helpClasses;
+package test.balancing.helpClasses;
 
 import java.util.HashMap;
 import java.util.List;

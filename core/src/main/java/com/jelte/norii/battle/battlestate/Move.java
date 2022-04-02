@@ -1,5 +1,7 @@
 package com.jelte.norii.battle.battlestate;
 
+import java.util.Objects;
+
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.utility.MyPoint;
 
@@ -58,4 +60,22 @@ public class Move {
 	public Move makeCopy() {
 		return new Move(moveType, new MyPoint(location.x, location.y), unit);
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(location, moveType, unit);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Move other = (Move) obj;
+		return Objects.equals(location, other.location) && (moveType == other.moveType) && Objects.equals(unit, other.unit);
+	}
+
 }

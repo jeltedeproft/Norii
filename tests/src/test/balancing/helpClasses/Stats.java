@@ -1,4 +1,4 @@
-package testBalancing.helpClasses;
+package test.balancing.helpClasses;
 
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.entities.EntityTypes;

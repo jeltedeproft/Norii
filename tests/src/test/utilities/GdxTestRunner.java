@@ -1,4 +1,4 @@
-package testUtilities;
+package test.utilities;
 
 import static org.mockito.Mockito.mock;
 

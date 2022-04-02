@@ -5,7 +5,7 @@ import java.util.TreeMap;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
-import com.jelte.norii.ai.movegenerator.AbilityTargetMoveGenerator;
+import com.jelte.norii.ai.movegenerator.TargetMoveGenerator;
 import com.jelte.norii.ai.movegenerator.MoveGenerator;
 import com.jelte.norii.battle.battlestate.BattleState;
 import com.jelte.norii.battle.battlestate.BattleStateModifier;
@@ -39,7 +39,7 @@ public class AIDecisionMaker {
 	private BattleStateModifier battleStateModifier = new BattleStateModifier();
 
 	public AIDecisionMaker() {
-		abilityTargetMoveGenerator = new AbilityTargetMoveGenerator();
+		abilityTargetMoveGenerator = new TargetMoveGenerator();
 		statesWithScores = new TreeMap<>();
 		for (int i = 0; i < NUMBER_OF_LAYERS; i++) {
 			allBattleStates.add(new Array<>());
@@ -65,20 +65,20 @@ public class AIDecisionMaker {
 
 		updateBattlestateAndEntityIfNecessary();
 
-		oldTime = AbilityTargetMoveGenerator.debugTime("\n\ngenerating moves for : " + unit, oldTime);
+		oldTime = TargetMoveGenerator.debugTime("\n\ngenerating moves for : " + unit, oldTime);
 		generateBattleStatesForUnit(unit, startingState);
-		oldTime = AbilityTargetMoveGenerator.debugTime("moves generated for unit : " + unit, oldTime);
+		oldTime = TargetMoveGenerator.debugTime("moves generated for unit : " + unit, oldTime);
 
 		entityIndex++;
 
 		nextBattlestateIfAllUnitsDone();// all units done?
 
 		if (isRoundFinished()) {
-			oldTime = AbilityTargetMoveGenerator.debugTime("\n\nNEXT ROUND", oldTime);
+			oldTime = TargetMoveGenerator.debugTime("\n\nNEXT ROUND", oldTime);
 			prepareNextRound();
 
 			if (turnIndex >= NUMBER_OF_LAYERS) {
-				oldTime = AbilityTargetMoveGenerator.debugTime("\n\nALL STATES DONE", oldTime);
+				oldTime = TargetMoveGenerator.debugTime("\n\nALL STATES DONE", oldTime);
 				return true;
 			}
 		}
@@ -86,7 +86,7 @@ public class AIDecisionMaker {
 		// check timer
 		processingTimeCounter += (System.currentTimeMillis() - startingTime);
 		if (processingTimeCounter > MAX_AI_THINKING_TIME) {
-			oldTime = AbilityTargetMoveGenerator.debugTime("\n\nEARLY CUTOFF TO TIME", oldTime);
+			oldTime = TargetMoveGenerator.debugTime("\n\nEARLY CUTOFF TO TIME", oldTime);
 		}
 		return processingTimeCounter > MAX_AI_THINKING_TIME;
 	}
@@ -132,7 +132,7 @@ public class AIDecisionMaker {
 										: startingState.getPlayerUnits().size;
 
 		if (entityIndex >= size) {
-			oldTime = AbilityTargetMoveGenerator.debugTime("\n\nNEXT BATTLESTATE", oldTime);
+			oldTime = TargetMoveGenerator.debugTime("\n\nNEXT BATTLESTATE", oldTime);
 			battleStateIndex++;
 			entityIndex = 0;
 		}

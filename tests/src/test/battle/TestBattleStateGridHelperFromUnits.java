@@ -1,4 +1,4 @@
-package testBattle;
+package test.battle;
 
 import static org.junit.Assert.assertEquals;
 
@@ -19,7 +19,7 @@ import com.jelte.norii.magic.Ability;
 import com.jelte.norii.magic.SpellFileReader;
 import com.jelte.norii.utility.MyPoint;
 
-import testUtilities.GdxTestRunner;
+import test.utilities.GdxTestRunner;
 
 @RunWith(GdxTestRunner.class)
 public class TestBattleStateGridHelperFromUnits {

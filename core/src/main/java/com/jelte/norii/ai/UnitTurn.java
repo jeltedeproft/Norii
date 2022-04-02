@@ -1,5 +1,7 @@
 package com.jelte.norii.ai;
 
+import java.util.Objects;
+
 import com.badlogic.gdx.utils.Array;
 import com.jelte.norii.battle.battlestate.Move;
 
@@ -70,4 +72,22 @@ public class UnitTurn {
 		}
 		return copy;
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(moves);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		UnitTurn other = (UnitTurn) obj;
+		return Objects.equals(moves, other.moves);
+	}
+
 }

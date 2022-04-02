@@ -1,4 +1,4 @@
-package testBalancing.helpClasses;
+package test.balancing.helpClasses;
 
 import java.util.Arrays;
 import java.util.Collections;

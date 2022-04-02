@@ -14,7 +14,7 @@ import org.xguzm.pathfinding.grid.finders.AStarGridFinder;
 import org.xguzm.pathfinding.grid.finders.GridFinderOptions;
 
 import com.badlogic.gdx.Gdx;
-import com.jelte.norii.ai.movegenerator.AbilityTargetMoveGenerator;
+import com.jelte.norii.ai.movegenerator.TargetMoveGenerator;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.utility.MyPoint;
 import com.jelte.norii.utility.TiledMapPosition;
@@ -85,7 +85,7 @@ public class MyPathFinder {
 	public List<GridCell> pathTowards(TiledMapPosition start, TiledMapPosition goal, int ap) {
 		oldTime = System.currentTimeMillis();
 		final List<GridCell> path = precalculatedPaths.get(start.getTilePosAsPoint()).get(goal.getTilePosAsPoint());
-		oldTime = AbilityTargetMoveGenerator.debugTime("find path from " + start + " to " + goal, oldTime);
+		oldTime = TargetMoveGenerator.debugTime("find path from " + start + " to " + goal, oldTime);
 		if (path == null) {
 			return adjustGoal(start, goal, path);
 		}
@@ -99,11 +99,11 @@ public class MyPathFinder {
 
 	private List<GridCell> adjustGoal(TiledMapPosition start, TiledMapPosition goal, List<GridCell> path) {
 		while ((path == null) || path.isEmpty()) {
-			oldTime = AbilityTargetMoveGenerator.debugTime("trying from : " + start + " to " + goal, oldTime);
+			oldTime = TargetMoveGenerator.debugTime("trying from : " + start + " to " + goal, oldTime);
 			goal = tryAdjacentTile(start, goal);
 			path = precalculatedPaths.get(start.getTilePosAsPoint()).get(goal.getTilePosAsPoint());
 		}
-		oldTime = AbilityTargetMoveGenerator.debugTime("goal adjusted", oldTime);
+		oldTime = TargetMoveGenerator.debugTime("goal adjusted", oldTime);
 		Gdx.app.debug("myPathFinder", "path after adjustment = " + path);
 		return path;
 	}
@@ -125,7 +125,7 @@ public class MyPathFinder {
 		while (path.size() > ap) {
 			path.remove(path.size() - 1);
 		}
-		oldTime = AbilityTargetMoveGenerator.debugTime("path chipped", oldTime);
+		oldTime = TargetMoveGenerator.debugTime("path chipped", oldTime);
 		return path;
 	}
 

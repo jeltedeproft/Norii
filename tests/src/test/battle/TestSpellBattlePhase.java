@@ -1,4 +1,4 @@
-package testBattle;
+package test.battle;
 
 public class TestSpellBattlePhase {
 

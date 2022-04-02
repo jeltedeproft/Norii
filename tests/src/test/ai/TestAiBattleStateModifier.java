@@ -1,4 +1,4 @@
-package testAi;
+package test.ai;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,9 +18,9 @@ import com.jelte.norii.entities.UnitOwner;
 import com.jelte.norii.magic.AbilitiesEnum;
 import com.jelte.norii.magic.SpellFileReader;
 
-import testBalancing.helpClasses.SimulationPlayer;
-import testUtilities.GdxTestRunner;
-import testUtilities.TestUtil;
+import test.balancing.helpClasses.SimulationPlayer;
+import test.utilities.GdxTestRunner;
+import test.utilities.TestUtil;
 
 @RunWith(GdxTestRunner.class)
 public class TestAiBattleStateModifier {
