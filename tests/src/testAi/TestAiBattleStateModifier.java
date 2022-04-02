@@ -17,6 +17,7 @@ import com.jelte.norii.entities.EntityTypes;
 import com.jelte.norii.entities.UnitOwner;
 import com.jelte.norii.magic.AbilitiesEnum;
 import com.jelte.norii.magic.SpellFileReader;
+import com.jelte.norii.utility.MyPoint;
 
 import testBalancing.helpClasses.SimulationPlayer;
 import testUtilities.GdxTestRunner;
@@ -36,6 +37,8 @@ public class TestAiBattleStateModifier {
 	private static final String FILENAME_TURN_TO_STONE_OLD = BASE_ORIGINAL + "stone.txt";
 	private static final String FILENAME_SWAP = BASE_NEW + "swap.txt";
 	private static final String FILENAME_SWAP_OLD = BASE_ORIGINAL + "swap.txt";
+	private static final String FILENAME_ARROW = BASE_NEW + "arrow.txt";
+	private static final String FILENAME_ARROW_OLD = BASE_ORIGINAL + "arrow.txt";
 	private static final String PLAYER_ONE_NAME = "test1";
 	private static final String PLAYER_TWO_NAME = "test2";
 	private static final int BATTLESTATE_SIZE = 5; // must be bigger than units per team
@@ -152,6 +155,27 @@ public class TestAiBattleStateModifier {
 		BattleState copyBattleState = battleStateModifier.applyMove(playerUnit, spellMove, battleState);
 		TestUtil.resultsToFile(FILENAME_SWAP, copyBattleState);
 		TestUtil.regressionTest(FILENAME_SWAP, FILENAME_SWAP_OLD);
+	}
+
+	@Test
+	public void applyArrow() {
+		// setup
+		BattleState battleState = new BattleState(BATTLESTATE_SIZE, BATTLESTATE_SIZE);
+		Entity playerUnit = new Entity(EntityTypes.ARTIST, balancer1, false);
+		team1.add(playerUnit);
+		Entity enemyUnit = new Entity(EntityTypes.BLACK_CAT, balancer2, false);
+		team2.add(enemyUnit);
+		battleState.placeUnitOnSpecificSpot(playerUnit, 0, 0);
+		battleState.placeUnitOnSpecificSpot(enemyUnit, 4, 4);
+
+		// swap
+		playerUnit.setAbility(AbilitiesEnum.ARROW);
+		final Array<MyPoint> affectedUnits = new Array<>();
+		affectedUnits.add(new MyPoint(4, 4));
+		Move spellMove = new SpellMove(MoveType.SPELL, enemyUnit.getCurrentPosition().getTilePosAsPoint(), playerUnit.getAbility(), affectedUnits);
+		BattleState copyBattleState = battleStateModifier.applyMove(playerUnit, spellMove, battleState);
+		TestUtil.resultsToFile(FILENAME_ARROW, copyBattleState);
+		TestUtil.regressionTest(FILENAME_ARROW, FILENAME_ARROW_OLD);
 	}
 
 }

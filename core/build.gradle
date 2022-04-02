@@ -10,7 +10,7 @@ dependencies {
     api "com.github.MrStahlfelge.gdx-websockets:core:$wsVersion"
     implementation "com.github.MrStahlfelge.gdx-websockets:serialization:$websocketSerializationVersion"
 	implementation "com.github.xaguzman:pathfinding:0.2.6"
-	implementation 'com.github.raeleus.TenPatch:tenpatch:5.0.0'
+	implementation 'com.github.raeleus.TenPatch:tenpatch:5.2.2'
 	implementation 'com.github.raeleus:stripe:master-SNAPSHOT'
 	implementation "com.badlogicgames.gdx-video:gdx-video:$gdxVideoVersion"
 	implementation 'com.crashinvaders.vfx:gdx-vfx-core:0.5.0'

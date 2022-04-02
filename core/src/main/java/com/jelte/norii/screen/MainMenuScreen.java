@@ -41,12 +41,12 @@ import com.jelte.norii.utility.parallax.TextureRegionParallaxLayer;
 public class MainMenuScreen extends GameScreen {
 	private static final float HEIGHT_REDUCTION_FACTOR = 0.01f;
 	private static final float BUTTON_WIDTH_FACTOR = 0.3f;
-	private static final float BUTTON_HEIGHT_FACTOR = 0.055f;
+	private static final float BUTTON_HEIGHT_FACTOR = 0.105f;
 	private static final float TITLE_PAD_BOTTOM_PERCENT = 8;
-	private static final float BUTTON_PAD_BOTTOM_PERCENT = 2;
-	private static final float BUTTON_PAD_TOP_PERCENT = 2;
+	private static final float BUTTON_PAD_BOTTOM_PERCENT = 0.1f;
+	private static final float BUTTON_PAD_TOP_PERCENT = 0.1f;
 	private static final String TITLE_FONT_NAME = "bigFont";
-	private static final String GENERAL_FONT_NAME = "lumos30";
+	private static final String TEXT_BUTTON_STYLE = "lumos30";
 
 	private Stage stage;
 	private SpriteBatch backgroundbatch;
@@ -110,20 +110,16 @@ public class MainMenuScreen extends GameScreen {
 		final TextureAtlas atlas = AssetManagerUtility.getTextureAtlas(AssetManagerUtility.SPRITES_ATLAS_PATH);
 
 		final TextureRegion backTrees = atlas.findRegion("background-back-trees");
-		final TextureRegionParallaxLayer backTreesLayer = new TextureRegionParallaxLayer(backTrees, initialHeight,
-				new Vector2(.3f, .3f), WH.HEIGHT);
+		final TextureRegionParallaxLayer backTreesLayer = new TextureRegionParallaxLayer(backTrees, initialHeight, new Vector2(.3f, .3f), WH.HEIGHT);
 
 		final TextureRegion lights = atlas.findRegion("background-light");
-		final TextureRegionParallaxLayer lightsLayer = new TextureRegionParallaxLayer(lights, initialHeight,
-				new Vector2(.6f, .6f), WH.HEIGHT);
+		final TextureRegionParallaxLayer lightsLayer = new TextureRegionParallaxLayer(lights, initialHeight, new Vector2(.6f, .6f), WH.HEIGHT);
 
 		final TextureRegion middleTrees = atlas.findRegion("background-middle-trees");
-		final TextureRegionParallaxLayer middleTreesLayer = new TextureRegionParallaxLayer(middleTrees, initialHeight,
-				new Vector2(.75f, .75f), WH.HEIGHT);
+		final TextureRegionParallaxLayer middleTreesLayer = new TextureRegionParallaxLayer(middleTrees, initialHeight, new Vector2(.75f, .75f), WH.HEIGHT);
 
 		final TextureRegion frontTrees = atlas.findRegion("foreground");
-		final TextureRegionParallaxLayer frontTreesLayer = new TextureRegionParallaxLayer(frontTrees, initialHeight,
-				new Vector2(.6f, .6f), WH.HEIGHT);
+		final TextureRegionParallaxLayer frontTreesLayer = new TextureRegionParallaxLayer(frontTrees, initialHeight, new Vector2(.6f, .6f), WH.HEIGHT);
 
 		parallaxBackground = new ParallaxBackground();
 		parallaxBackground.addLayers(backTreesLayer, lightsLayer, middleTreesLayer, frontTreesLayer);
@@ -133,12 +129,12 @@ public class MainMenuScreen extends GameScreen {
 		final Skin statusUISkin = AssetManagerUtility.getSkin();
 
 		title = new Label(" Norii", statusUISkin, TITLE_FONT_NAME);
-		playButton = new TextButton("Play", statusUISkin, GENERAL_FONT_NAME);
-		multiplayerButton = new TextButton("Multiplayer", statusUISkin, GENERAL_FONT_NAME);
-		playTutorialButton = new TextButton("Play Tutorial", statusUISkin, GENERAL_FONT_NAME);
-		setTeamButton = new TextButton("Manage Team", statusUISkin, GENERAL_FONT_NAME);
-		settingsButton = new TextButton("Settings", statusUISkin, GENERAL_FONT_NAME);
-		exitButton = new TextButton("Exit", statusUISkin, GENERAL_FONT_NAME);
+		playButton = new TextButton("Play", statusUISkin, TEXT_BUTTON_STYLE);
+		multiplayerButton = new TextButton("Multiplayer", statusUISkin, TEXT_BUTTON_STYLE);
+		playTutorialButton = new TextButton("Play Tutorial", statusUISkin, TEXT_BUTTON_STYLE);
+		setTeamButton = new TextButton("Manage Team", statusUISkin, TEXT_BUTTON_STYLE);
+		settingsButton = new TextButton("Settings", statusUISkin, TEXT_BUTTON_STYLE);
+		exitButton = new TextButton("Exit", statusUISkin, TEXT_BUTTON_STYLE);
 	}
 
 	private void createLayout() {
@@ -148,18 +144,12 @@ public class MainMenuScreen extends GameScreen {
 		final float buttonPadTop = (initialHeight * HEIGHT_REDUCTION_FACTOR) * BUTTON_PAD_TOP_PERCENT;
 
 		mainMenuTableOfButtons.add(title).spaceBottom(titlePadBottom).padTop(buttonPadTop).row();
-		mainMenuTableOfButtons.add(playButton).height(buttonHeight).width(buttonWidth)
-				.spaceBottom(BUTTON_PAD_BOTTOM_PERCENT).padTop(BUTTON_PAD_TOP_PERCENT).row();
-		mainMenuTableOfButtons.add(multiplayerButton).height(buttonHeight).width(buttonWidth)
-				.spaceBottom(BUTTON_PAD_BOTTOM_PERCENT).padTop(BUTTON_PAD_TOP_PERCENT).row();
-		mainMenuTableOfButtons.add(playTutorialButton).height(buttonHeight).width(buttonWidth)
-				.spaceBottom(BUTTON_PAD_BOTTOM_PERCENT).padTop(BUTTON_PAD_TOP_PERCENT).row();
-		mainMenuTableOfButtons.add(setTeamButton).height(buttonHeight).width(buttonWidth)
-				.spaceBottom(BUTTON_PAD_BOTTOM_PERCENT).padTop(BUTTON_PAD_TOP_PERCENT).row();
-		mainMenuTableOfButtons.add(settingsButton).height(buttonHeight).width(buttonWidth)
-				.spaceBottom(BUTTON_PAD_BOTTOM_PERCENT).padTop(BUTTON_PAD_TOP_PERCENT).row();
-		mainMenuTableOfButtons.add(exitButton).height(buttonHeight).width(buttonWidth)
-				.spaceBottom(BUTTON_PAD_BOTTOM_PERCENT).padTop(BUTTON_PAD_TOP_PERCENT).row();
+		mainMenuTableOfButtons.add(playButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM_PERCENT).padTop(BUTTON_PAD_TOP_PERCENT).row();
+		mainMenuTableOfButtons.add(multiplayerButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM_PERCENT).padTop(BUTTON_PAD_TOP_PERCENT).row();
+		mainMenuTableOfButtons.add(playTutorialButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM_PERCENT).padTop(BUTTON_PAD_TOP_PERCENT).row();
+		mainMenuTableOfButtons.add(setTeamButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM_PERCENT).padTop(BUTTON_PAD_TOP_PERCENT).row();
+		mainMenuTableOfButtons.add(settingsButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM_PERCENT).padTop(BUTTON_PAD_TOP_PERCENT).row();
+		mainMenuTableOfButtons.add(exitButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM_PERCENT).padTop(BUTTON_PAD_TOP_PERCENT).row();
 
 		stage.addActor(mainMenuTableOfButtons);
 	}
@@ -167,20 +157,17 @@ public class MainMenuScreen extends GameScreen {
 	private void addListeners() {
 		playButton.addListener(new InputListener() {
 			@Override
-			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer,
-					final int button) {
+			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
 				loadLevelAssets();
 				UnitOwner enemyTeamLeader = new AITeamLeader(selectedLevel);
-				ScreenManager.getInstance().showScreen(ScreenEnum.LOAD, enemyTeamLeader,
-						MapType.BATTLE_MAP_THE_DARK_SWAMP);
+				ScreenManager.getInstance().showScreen(ScreenEnum.LOAD, enemyTeamLeader, MapType.BATTLE_MAP_THE_DARK_SWAMP);
 				return true;
 			}
 		});
 
 		multiplayerButton.addListener(new InputListener() {
 			@Override
-			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer,
-					final int button) {
+			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
 				loadLevelAssets();
 				ScreenManager.getInstance().showScreen(ScreenEnum.MULTIPLAYER, selectedLevel);
 				return true;
@@ -189,22 +176,19 @@ public class MainMenuScreen extends GameScreen {
 
 		playTutorialButton.addListener(new InputListener() {
 			@Override
-			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer,
-					final int button) {
+			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
 				addTutorialUnitsToPlayer();
 				selectedLevel = LevelEnum.TUTORIAL;
 				loadLevelAssets();
 				UnitOwner enemyTeamLeader = new AITeamLeader(selectedLevel);
-				ScreenManager.getInstance().showScreen(ScreenEnum.LOAD, enemyTeamLeader,
-						MapType.BATTLE_MAP_THE_DARK_SWAMP);
+				ScreenManager.getInstance().showScreen(ScreenEnum.LOAD, enemyTeamLeader, MapType.BATTLE_MAP_THE_DARK_SWAMP);
 				return true;
 			}
 		});
 
 		setTeamButton.addListener(new InputListener() {
 			@Override
-			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer,
-					final int button) {
+			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
 				ScreenManager.getInstance().showScreen(ScreenEnum.TEAM);
 				return true;
 			}
@@ -212,8 +196,7 @@ public class MainMenuScreen extends GameScreen {
 
 		settingsButton.addListener(new InputListener() {
 			@Override
-			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer,
-					final int button) {
+			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
 				ScreenManager.getInstance().showScreen(ScreenEnum.SETTINGS);
 				return true;
 			}
@@ -221,8 +204,7 @@ public class MainMenuScreen extends GameScreen {
 
 		exitButton.addListener(new InputListener() {
 			@Override
-			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer,
-					final int button) {
+			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
 				Gdx.app.exit();
 				return true;
 			}

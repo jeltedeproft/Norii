@@ -50,6 +50,7 @@ dependencies {
 	implementation "com.badlogicgames.gdx-video:gdx-video-gwt:$gdxVideoVersion"
 	implementation "com.badlogicgames.gdx-video:gdx-video-gwt:$gdxVideoVersion:sources"
 	implementation 'com.crashinvaders.vfx:gdx-vfx-gwt:0.5.0'
+	implementation 'com.github.raeleus.TenPatch:tenpatch:5.2.2:sources'
 }
 
 import org.akhikhl.gretty.AppBeforeIntegrationTestTask

@@ -1,6 +1,5 @@
 package com.jelte.norii.screen;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -124,14 +123,7 @@ public class BattleScreen extends GameScreen {
 	}
 
 	private void sendTeamToOnlineEnemy() {
-		HashMap<Integer, String> teamWithId = new HashMap<>();
-		for (Entity unit : Player.getInstance().getTeam()) {
-			teamWithId.put(unit.getEntityID(), unit.getEntityData().getName());
-		}
-		String serializedTeamWithId = json.toJson(teamWithId);
-		NetworkMessage message = new NetworkMessage();
-		message.makeInitEnemyTeamMessage(enemyTeamLeader.getGameID(), serializedTeamWithId);
-		ServerCommunicator.getInstance().sendMessage(message);
+		enemyTeamLeader.giveTeamInformation();
 	}
 
 	private void initializeHUD() {

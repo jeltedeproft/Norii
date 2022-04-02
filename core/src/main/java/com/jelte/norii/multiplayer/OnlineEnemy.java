@@ -308,4 +308,16 @@ public class OnlineEnemy implements UnitOwner {
 	public void setAlliance(Alliance alliance) {
 		this.alliance = alliance;
 	}
+
+	@Override
+	public void giveTeamInformation() {
+		HashMap<Integer, String> teamWithId = new HashMap<>();
+		for (Entity unit : Player.getInstance().getTeam()) {
+			teamWithId.put(unit.getEntityID(), unit.getEntityData().getName());
+		}
+		String serializedTeamWithId = json.toJson(teamWithId);
+		NetworkMessage message = new NetworkMessage();
+		message.makeInitEnemyTeamMessage(getGameID(), serializedTeamWithId);
+		ServerCommunicator.getInstance().sendMessage(message);
+	}
 }

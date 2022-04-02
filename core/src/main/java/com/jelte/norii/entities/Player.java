@@ -205,6 +205,7 @@ public class Player implements UnitOwner {
 		return alliance;
 	}
 
+	@Override
 	public void setAlliance(Alliance alliance) {
 		this.alliance = alliance;
 	}
@@ -287,5 +288,11 @@ public class Player implements UnitOwner {
 	@Override
 	public boolean isDummy() {
 		return false;
+	}
+
+	@Override
+	public void giveTeamInformation() {
+		// TODO Auto-generated method stub
+
 	}
 }

@@ -14,86 +14,89 @@ import com.jelte.norii.utility.TiledMapPosition;
 
 public interface UnitOwner {
 	public enum Alliance {
-		TEAM_RED, TEAM_BLUE
+		TEAM_RED,
+		TEAM_BLUE
 	}
 
-	public void renderUnits(final Batch batch);
+	void renderUnits(final Batch batch);
 
-	public void updateUnits(final float delta);
+	void updateUnits(final float delta);
 
-	public int getAp();
+	int getAp();
 
-	public void setAp(int ap);
+	void setAp(int ap);
 
-	public void setName(String name);
+	void setName(String name);
 
-	public String getName();
+	String getName();
 
-	public List<Entity> getTeam();
+	List<Entity> getTeam();
 
-	public void setTeam(List<Entity> entities);
+	void setTeam(List<Entity> entities);
 
-	public void applyModifiers();
+	void applyModifiers();
 
-	public boolean isPlayer();
+	boolean isPlayer();
 
-	public boolean isAI();
+	boolean isAI();
 
-	public boolean isOnlinePlayer();
+	boolean isOnlinePlayer();
 
-	public boolean isSimulation();
+	boolean isSimulation();
 
-	public boolean isDummy();
+	boolean isDummy();
 
-	public void setBattleManager(BattleManager battleManager);
+	void setBattleManager(BattleManager battleManager);
 
-	public void removeUnit(Entity unit);
+	void removeUnit(Entity unit);
 
-	public void addUnit(Entity unit);
+	void addUnit(Entity unit);
 
-	public void spawnUnits(List<TiledMapPosition> spawnPositions);
+	void spawnUnits(List<TiledMapPosition> spawnPositions);
 
-	public void spawnUnit(EntityTypes entityType, int entityID, TiledMapPosition pos);
+	void spawnUnit(EntityTypes entityType, int entityID, TiledMapPosition pos);
 
-	public void playerUnitMoved(Entity entity, TiledMapPosition pos);
+	void playerUnitMoved(Entity entity, TiledMapPosition pos);
 
-	public void playerUnitAttacked(Entity entity, TiledMapPosition pos);
+	void playerUnitAttacked(Entity entity, TiledMapPosition pos);
 
-	public void playerUnitCastedSpell(Entity entity, Ability ability, TiledMapPosition pos);
+	void playerUnitCastedSpell(Entity entity, Ability ability, TiledMapPosition pos);
 
-	public void playerUnitSkipped(Entity entity);
+	void playerUnitSkipped(Entity entity);
 
-	public void playerUnitSpawned(Entity entity, TiledMapPosition pos);
+	void playerUnitSpawned(Entity entity, TiledMapPosition pos);
 
-	public void sendMessageToBattleManager(MessageToBattleScreen message, Entity entity);
+	void sendMessageToBattleManager(MessageToBattleScreen message, Entity entity);
 
-	public void sendMessageToBattleManager(MessageToBattleScreen message, Entity entity, TiledMapPosition oldPosition);
+	void sendMessageToBattleManager(MessageToBattleScreen message, Entity entity, TiledMapPosition oldPosition);
 
-	public void sendMessageToBattleManager(MessageToBattleScreen message, Entity entity, int damage);
+	void sendMessageToBattleManager(MessageToBattleScreen message, Entity entity, int damage);
 
-	public void dispose();
+	void dispose();
 
-	public void reset(BattleState activeBattleState);
+	void reset(BattleState activeBattleState);
 
-	public void processMove();
+	void processMove();
 
-	public BattleState getNextBattleState();
+	BattleState getNextBattleState();
 
-	public EnemyType getType();
+	EnemyType getType();
 
-	public boolean isMyTurn();
+	boolean isMyTurn();
 
-	public void setMyTurn(boolean myTurn);
+	void setMyTurn(boolean myTurn);
 
-	public Alliance getAlliance();
+	Alliance getAlliance();
 
-	public void setAlliance(Alliance alliance);
+	void setAlliance(Alliance alliance);
 
-	public void synchronizeMultiplayerUnitsWithLocal(HashMap<String, String> teamWithIdMap);
+	void synchronizeMultiplayerUnitsWithLocal(HashMap<String, String> teamWithIdMap);
 
-	public int getGameID();
+	int getGameID();
 
-	public void notifyDeploymentDone();
+	void notifyDeploymentDone();
 
-	public UnitTurn getProcessingResult();
+	UnitTurn getProcessingResult();
+
+	void giveTeamInformation();
 }

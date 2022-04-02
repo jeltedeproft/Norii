@@ -25,7 +25,7 @@ public class SimulationPlayer implements UnitOwner {
 	private Alliance alliance;
 
 	public SimulationPlayer(boolean isMyTurn, boolean isPlayer) {
-		team = new ArrayList<Entity>();
+		team = new ArrayList<>();
 		this.isMyTurn = isMyTurn;
 		this.isPlayer = isPlayer;
 		ap = ApFileReader.getApData(0);
@@ -253,6 +253,11 @@ public class SimulationPlayer implements UnitOwner {
 
 	@Override
 	public void setAlliance(Alliance alliance) {
+		this.alliance = alliance;
+	}
+
+	@Override
+	public void giveTeamInformation() {
 		// TODO Auto-generated method stub
 
 	}
