@@ -164,7 +164,7 @@ public class BattleScreen extends GameScreen {
 		battlemanager = new BattleManager(enemyTeamLeader, currentMap.getMapWidth(), currentMap.getMapHeight(), currentMap.getNavLayer().getUnwalkableNodes(), this);
 		battlescreenInputProcessor.setBattleManager(battlemanager);
 		currentMap.setStage(this);
-		// CreateMapInfo mapInfo = new CreateMapInfo(MapType.BATTLE_MAP_THE_DARK_SWAMP, mapMgr); // comment this out if not needed, only once
+		CreateMapInfo mapInfo = new CreateMapInfo(MapType.TEST_MAP, mapMgr); // comment this out if not needed, only once
 	}
 
 	private void spawnEnemyUnits() {

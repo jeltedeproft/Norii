@@ -19,8 +19,6 @@ public abstract class Map {
 	protected static final String MAP_COLLISION_LAYER = "items";
 	protected static final String MAP_SPAWNS_LAYER = "Spawn points";
 	protected static final String BACKGROUND_LAYER = "background";
-	protected static final String BACKGROUND_LAYER2 = "background2";
-	protected static final String BACKGROUND_LAYER3 = "background3";
 	protected static final String NAVIGATION_LAYER = "navigation";
 
 	protected static final String PLAYER_START = "PLAYER_START";

@@ -11,6 +11,12 @@ public class MapFactory {
 			public String toString() {
 				return "maps/greentown.tmx";
 			}
+		},
+		TEST_MAP {
+			@Override
+			public String toString() {
+				return "maps/TestMap.tmx";
+			}
 		}
 	}
 

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.2" tiledversion="1.3.3" orientation="orthogonal" renderorder="right-down" width="5" height="5" tilewidth="32" tileheight="32" infinite="0" nextlayerid="4" nextobjectid="21">
+ <tileset firstgid="1" name="grass" tilewidth="32" tileheight="32" tilecount="64" columns="8">
+  <image source="tilesets/TX Tileset Grass.png" width="256" height="256"/>
+ </tileset>
+ <layer id="2" name="navigation" width="5" height="5">
+  <data encoding="base64">
+   IQAAACEAAAAhAAAAIQAAACEAAAAhAAAAIQAAAAAAAAAhAAAAIQAAACEAAAAhAAAAAAAAACEAAAAhAAAAIQAAACEAAAAAAAAAIQAAACEAAAAhAAAAIQAAACEAAAAhAAAAIQAAAA==
+  </data>
+ </layer>
+ <layer id="1" name="background" width="5" height="5">
+  <data encoding="base64">
+   EwAAABMAAAATAAAAEwAAABMAAAATAAAAEwAAABMAAAATAAAAEwAAABMAAAATAAAAEwAAABMAAAATAAAAEwAAABMAAAATAAAAEwAAABMAAAATAAAAEwAAABMAAAATAAAAEwAAAA==
+  </data>
+ </layer>
+ <objectgroup id="3" name="Spawn points">
+  <object id="1" name="PLAYER_START" x="0" y="0" width="32" height="32"/>
+  <object id="2" name="PLAYER_START" x="0" y="32" width="32" height="32"/>
+  <object id="3" name="PLAYER_START" x="0" y="64" width="32" height="32"/>
+  <object id="4" name="PLAYER_START" x="0" y="96" width="32" height="32"/>
+  <object id="5" name="PLAYER_START" x="0" y="128" width="32" height="32"/>
+  <object id="6" name="PLAYER_START" x="32" y="128" width="32" height="32"/>
+  <object id="7" name="PLAYER_START" x="32" y="96" width="32" height="32"/>
+  <object id="8" name="PLAYER_START" x="32" y="64" width="32" height="32"/>
+  <object id="9" name="PLAYER_START" x="32" y="32" width="32" height="32"/>
+  <object id="10" name="PLAYER_START" x="32" y="0" width="32" height="32"/>
+  <object id="11" name="ENEMY_START" x="128" y="0" width="32" height="32"/>
+  <object id="12" name="ENEMY_START" x="128" y="32" width="32" height="32"/>
+  <object id="13" name="ENEMY_START" x="128" y="64" width="32" height="32"/>
+  <object id="14" name="ENEMY_START" x="128" y="96" width="32" height="32"/>
+  <object id="15" name="ENEMY_START" x="128" y="128" width="32" height="32"/>
+  <object id="16" name="ENEMY_START" x="96" y="128" width="32" height="32"/>
+  <object id="17" name="ENEMY_START" x="96" y="96" width="32" height="32"/>
+  <object id="18" name="ENEMY_START" x="96" y="64" width="32" height="32"/>
+  <object id="19" name="ENEMY_START" x="96" y="32" width="32" height="32"/>
+  <object id="20" name="ENEMY_START" x="96" y="0" width="32" height="32"/>
+ </objectgroup>
+</map>

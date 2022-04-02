@@ -19,6 +19,7 @@ import com.jelte.norii.audio.AudioManager;
 import com.jelte.norii.audio.AudioTypeEvent;
 import com.jelte.norii.battle.MessageToBattleScreen;
 import com.jelte.norii.entities.EntityAnimation.Direction;
+import com.jelte.norii.ui.HpBar;
 import com.jelte.norii.utility.AssetManagerUtility;
 import com.jelte.norii.utility.MyPoint;
 import com.jelte.norii.utility.TiledMapPosition;
@@ -30,6 +31,7 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 	protected EntityAnimation entityAnimation;
 	protected EntityAnimation entityTemporaryAnimation;
 	protected EntityActor entityactor;
+	protected HpBar hpBar;
 
 	private Runnable updatePositionAction;
 	private Runnable stopWalkAction;
@@ -39,6 +41,7 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 
 	public EntityVisualComponent(Entity entity) {
 		this.entity = entity;
+		hpBar = new HpBar();
 		isInAttackPhase = false;
 		entityAnimation = new EntityAnimation(entity.getEntityData().getEntitySpriteName());
 		initActions();
@@ -53,6 +56,7 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 	@Override
 	public void update(final float delta) {
 		entityAnimation.update(delta);
+		hpBar.update(entity);
 	}
 
 	@Override
@@ -80,6 +84,8 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 		sequence.addAction(run(cleanup));
 		getEntityactor().addAction(sequence);
 		entity.getOwner().sendMessageToBattleManager(MessageToBattleScreen.UNIT_DIED, entity);
+		hpBar.getHealthBar().setVisible(false);
+		hpBar.getHealthBar().remove();
 	}
 
 	public void cleanUpDeadUnit() {
@@ -221,6 +227,7 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 	@Override
 	public void draw(Batch batch) {
 		if (entity.isInBattle()) {
+			hpBar.getHealthBar().draw(batch, 100.0f);
 			final Color temp = batch.getColor();
 			batch.setColor(new Color(temp.r, temp.g, temp.b, getEntityactor().getColor().a));
 			batch.draw(getFrame(), getEntityactor().getX(), getEntityactor().getY(), 1.0f, 1.0f);
@@ -266,6 +273,11 @@ public class EntityVisualComponent implements EntityVisualComponentInterface {
 		sequence.addAction(run(updatePositionAction));
 		sequence.addAction(moveTo(casterNewPosition.x, casterNewPosition.y, 0.05f));
 		getEntityactor().addAction(sequence);
+	}
+
+	@Override
+	public HpBar getHpBar() {
+		return hpBar;
 	}
 
 }

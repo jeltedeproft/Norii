@@ -6,6 +6,7 @@ import org.xguzm.pathfinding.grid.GridCell;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.jelte.norii.entities.EntityAnimation.Direction;
+import com.jelte.norii.ui.HpBar;
 import com.jelte.norii.utility.MyPoint;
 import com.jelte.norii.utility.TiledMapPosition;
 
@@ -56,5 +57,7 @@ public interface EntityVisualComponentInterface {
 	public void updateBattleState(TiledMapPosition oldPlayerPosition);
 
 	public void pushTo(MyPoint casterNewPosition);
+
+	public HpBar getHpBar();
 
 }

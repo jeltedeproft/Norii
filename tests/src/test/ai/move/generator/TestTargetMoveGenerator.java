@@ -1,5 +1,7 @@
 package test.ai.move.generator;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,8 +22,6 @@ import com.jelte.norii.utility.MyPoint;
 
 import test.balancing.helpClasses.SimulationPlayer;
 import test.utilities.GdxTestRunner;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(GdxTestRunner.class)
 public class TestTargetMoveGenerator {
@@ -67,7 +67,10 @@ public class TestTargetMoveGenerator {
 		expectedResult.add(new UnitTurn(playerUnit.getEntityID(), expectedMoves));
 
 		// move
-		Array<UnitTurn> turns = moveGenerator.getAllMovesUnit(playerUnit.getAbility(), playerUnit, battleState);
+		Array<UnitTurn> result = moveGenerator.getAllMovesUnit(playerUnit.getAbility(), playerUnit, battleState);
+
+		assertThat(expectedResult.toArray()).isEqualTo(result.toArray());
+		System.out.println("end");
 	}
 
 }

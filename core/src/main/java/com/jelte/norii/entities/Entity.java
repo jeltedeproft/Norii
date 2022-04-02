@@ -42,7 +42,6 @@ public class Entity extends Actor implements Comparable<Entity> {
 	protected TiledMapPosition oldPlayerPosition;
 	protected TiledMapPosition currentPlayerPosition;
 	protected Direction direction;
-	protected HpBar hpBar;
 
 	protected EntityTypes entityType;
 
@@ -72,8 +71,9 @@ public class Entity extends Actor implements Comparable<Entity> {
 		xp = 0;
 		owner = unitOwner;
 		entityID = java.lang.System.identityHashCode(this);
-		visualComponent = isReal ? new EntityVisualComponent(this) : new FakeEntityVisualComponent();
-		hpBar = new HpBar();
+		visualComponent = isReal	? new EntityVisualComponent(this)
+									: new FakeEntityVisualComponent();
+
 		initAbilities();
 	}
 
@@ -83,7 +83,6 @@ public class Entity extends Actor implements Comparable<Entity> {
 
 	public void update(final float delta) {
 		visualComponent.update(delta);
-		hpBar.update(this);
 	}
 
 	public EntityData getEntityData() {
@@ -356,7 +355,7 @@ public class Entity extends Actor implements Comparable<Entity> {
 	}
 
 	public HpBar getHpBar() {
-		return hpBar;
+		return visualComponent.getHpBar();
 	}
 
 	private int getModifiersScore() {
@@ -462,7 +461,6 @@ public class Entity extends Actor implements Comparable<Entity> {
 	}
 
 	public void draw(Batch batch) {
-		hpBar.getHealthBar().draw(batch, 100.0f);
 		visualComponent.draw(batch);
 	}
 
