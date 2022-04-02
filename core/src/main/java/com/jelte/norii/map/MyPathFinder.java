@@ -16,7 +16,7 @@ import org.xguzm.pathfinding.grid.finders.GridFinderOptions;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.jelte.norii.ai.movegenerator.AbilityTargetMoveGenerator;
+import com.jelte.norii.ai.movegenerator.TargetMoveGenerator;
 import com.jelte.norii.entities.Entity;
 import com.jelte.norii.utility.MyPoint;
 import com.jelte.norii.utility.TiledMapPosition;
@@ -116,7 +116,7 @@ public class MyPathFinder {
 			return chippedPath(path, ap);
 		}
 
-		oldTime = AbilityTargetMoveGenerator.debugTime("find path from " + start + " to " + goal, oldTime);
+		oldTime = TargetMoveGenerator.debugTime("find path from " + start + " to " + goal, oldTime);
 		return adjustGoal(start, goal);
 	}
 
