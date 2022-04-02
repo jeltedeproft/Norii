@@ -252,11 +252,11 @@ public class TargetMoveGenerator implements MoveGenerator {
 		for (final MyPoint target : abilityTargets) {
 			final Set<MyPoint> positionsToCastSpell = BattleStateGridHelper.getInstance().getAllCastPointsWhereTargetIsHit(ability, target, new MyPoint(copyUnit.getCurrentPosition().getTileX(), copyUnit.getCurrentPosition().getTileY()),
 					copyBattleState);
-			for (final MyPoint MyPoint : positionsToCastSpell) {
+			for (final MyPoint castPoint : positionsToCastSpell) {
 				final UnitTurn moveAndSpellCopy = moveAndSpell.makeCopy();
-				final Array<MyPoint> affectedUnits = BattleStateGridHelper.getInstance().getTargetsAbility(ability, MyPoint, new MyPoint(copyUnit.getCurrentPosition().getTileX(), copyUnit.getCurrentPosition().getTileY()),
+				final Array<MyPoint> affectedUnits = BattleStateGridHelper.getInstance().getTargetsAbility(ability, castPoint, new MyPoint(copyUnit.getCurrentPosition().getTileX(), copyUnit.getCurrentPosition().getTileY()),
 						getUnitPositions(false, ability, copyBattleState));
-				moveAndSpellCopy.addMove(new SpellMove(MoveType.SPELL, MyPoint, ability, affectedUnits));
+				moveAndSpellCopy.addMove(new SpellMove(MoveType.SPELL, castPoint, ability, affectedUnits));
 				unitTurns.add(moveAndSpellCopy);
 			}
 		}

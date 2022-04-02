@@ -256,4 +256,10 @@ public class DummyOwner implements UnitOwner {
 
 	}
 
+	@Override
+	public void giveTeamInformation() {
+		// TODO Auto-generated method stub
+
+	}
+
 }

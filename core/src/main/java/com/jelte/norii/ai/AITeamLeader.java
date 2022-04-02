@@ -34,7 +34,8 @@ public class AITeamLeader implements UnitOwner {
 	private BattleState stateWithNextMove;
 
 	public enum LevelEnum {
-		DESERT_TEAM, TUTORIAL
+		DESERT_TEAM,
+		TUTORIAL
 	}
 
 	public AITeamLeader(final LevelEnum levelEnum) {
@@ -298,5 +299,11 @@ public class AITeamLeader implements UnitOwner {
 	@Override
 	public void setAlliance(Alliance alliance) {
 		this.alliance = alliance;
+	}
+
+	@Override
+	public void giveTeamInformation() {
+		// TODO Auto-generated method stub
+
 	}
 }

@@ -135,6 +135,7 @@ public class LoginScreen extends GameScreen {
 				NetworkMessage message = new NetworkMessage(NetworkMessage.MessageType.TRY_LOGIN);
 				message.makeLoginMessage(username, password);
 				ServerCommunicator.getInstance().sendMessage(message);
+				ScreenManager.getInstance().showScreen(ScreenEnum.MAIN_MENU);// for now dont wait on login validation
 				return true;
 			}
 		});
@@ -168,7 +169,7 @@ public class LoginScreen extends GameScreen {
 		if (serverCom.isNewMessage()) {
 			NetworkMessage oldestMessage = serverCom.getOldestMessageFromServer();
 			if ((oldestMessage.getType() == MessageType.LOGIN_VALIDATION) && oldestMessage.getLoginWorked()) {
-				ScreenManager.getInstance().showScreen(ScreenEnum.MAIN_MENU);
+				// ScreenManager.getInstance().showScreen(ScreenEnum.MAIN_MENU); //uncomment this when we have login
 			}
 		}
 	}

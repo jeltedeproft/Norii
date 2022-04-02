@@ -204,9 +204,8 @@ public class BattleStateGridHelper {
 		if (!spotsToCheck.isEmpty()) {
 			checkMyPointBounds(spotsToCheck, stateOfBattle);
 			return getSpotsWithUnitsOn(spotsToCheck, affectedTeams, stateOfBattle);
-		} else {
-			return spotsToCheck;
 		}
+		return spotsToCheck;
 	}
 
 	private Set<MyPoint> getSpotsAreaOfEffect(MyPoint caster, MyPoint center, AreaOfEffect area, int areaOfEffectRange) {
@@ -428,7 +427,7 @@ public class BattleStateGridHelper {
 	private boolean checkLineCircleBorder(MyPoint casterPos, MyPoint targetPos, int range, int areaOfEffectRange) {
 		final int deltaX = Math.abs(casterPos.x - targetPos.x);
 		final int deltaY = Math.abs(casterPos.y - targetPos.y);
-		return ((deltaX + deltaY) <= (range + areaOfEffectRange)) && !((deltaX == 0) && (deltaY == areaOfEffectRange));
+		return ((deltaX + deltaY) <= (range + areaOfEffectRange)) && ((deltaX != 0) || (deltaY != areaOfEffectRange));
 	}
 
 	private boolean checkLineSquareBorder(MyPoint casterPos, MyPoint targetPos, int range, int areaOfEffectRange) {
@@ -440,7 +439,7 @@ public class BattleStateGridHelper {
 		}
 
 		final int limit = (areaOfEffectRange * 2) + 1;
-		return !((deltaX > limit) && (deltaY > limit));
+		return ((deltaX <= limit) || (deltaY <= limit));
 	}
 
 	private boolean checkLineDiagonal(MyPoint casterPos, MyPoint targetPos, int range, int areaOfEffectRange) {
@@ -451,8 +450,7 @@ public class BattleStateGridHelper {
 			return false;
 		}
 
-		return !(((deltaX == deltaY) && (deltaX >= range)) || (((deltaX == 0) && (deltaY > range)) || ((deltaY == 0) && (deltaX > range))) || checkLShapesDiagonal(deltaX, deltaY, range, areaOfEffectRange)
-				|| checkCorners(deltaX, deltaY, areaOfEffectRange));
+		return (((deltaX != deltaY) || (deltaX < range)) && (((deltaX != 0) || (deltaY <= range)) && ((deltaY != 0) || (deltaX <= range))) && !checkLShapesDiagonal(deltaX, deltaY, range, areaOfEffectRange) && !checkCorners(deltaX, deltaY, areaOfEffectRange));
 	}
 
 	private boolean checkCorners(int deltaX, int deltaY, int areaOfEffectRange) {
@@ -482,16 +480,14 @@ public class BattleStateGridHelper {
 	private boolean checkLineHorizontalLine(MyPoint casterPos, MyPoint targetPos, final int range, final int areaOfEffectRange) {
 		final int deltaX = Math.abs(casterPos.x - targetPos.x);
 		final int deltaY = Math.abs(casterPos.y - targetPos.y);
-		final int max = (areaOfEffectRange < range) ? range
-													: areaOfEffectRange;
-		final int min = (areaOfEffectRange < range) ? areaOfEffectRange
-													: range;
+		final int max = (areaOfEffectRange < range) ? range : areaOfEffectRange;
+		final int min = (areaOfEffectRange < range) ? areaOfEffectRange : range;
 
 		if ((deltaX == 0) || (deltaY == 0)) {
 			return false;
 		}
 
-		return !((deltaX > max) || (deltaY > max) || ((deltaX > min) && (deltaY > min)));
+		return ((deltaX <= max) && (deltaY <= max) && ((deltaX <= min) || (deltaY <= min)));
 	}
 
 	private boolean checkCross(MyPoint casterPos, MyPoint targetPos, final int range) {
@@ -690,11 +686,7 @@ public class BattleStateGridHelper {
 		final int deltaX = casterPos.x - targetPos.x;
 		final int deltaY = casterPos.y - targetPos.y;
 		final int max = range + areaOfEffectRange;
-		if ((Math.abs(casterPos.x - targetPos.x) > max) || (Math.abs(casterPos.y - targetPos.y) > range)) {
-			return false;
-		}
-
-		if (deltaX == deltaY) {
+		if ((Math.abs(casterPos.x - targetPos.x) > max) || (Math.abs(casterPos.y - targetPos.y) > range) || (deltaX == deltaY)) {
 			return false;
 		}
 
@@ -705,11 +697,7 @@ public class BattleStateGridHelper {
 		final int deltaX = casterPos.x - targetPos.x;
 		final int deltaY = casterPos.y - targetPos.y;
 		final int max = range + areaOfEffectRange;
-		if ((Math.abs(casterPos.x - targetPos.x) > range) || (Math.abs(casterPos.y - targetPos.y) > max)) {
-			return false;
-		}
-
-		if (deltaX == deltaY) {
+		if ((Math.abs(casterPos.x - targetPos.x) > range) || (Math.abs(casterPos.y - targetPos.y) > max) || (deltaX == deltaY)) {
 			return false;
 		}
 
@@ -761,11 +749,7 @@ public class BattleStateGridHelper {
 		final int deltaX = casterPos.x - targetPos.x;
 		final int deltaY = casterPos.y - targetPos.y;
 		final int max = range + areaOfEffectRange;
-		if ((Math.abs(casterPos.x - targetPos.x) > max) || (Math.abs(casterPos.y - targetPos.y) > range)) {
-			return false;
-		}
-
-		if (deltaX == deltaY) {
+		if ((Math.abs(casterPos.x - targetPos.x) > max) || (Math.abs(casterPos.y - targetPos.y) > range) || (deltaX == deltaY)) {
 			return false;
 		}
 
@@ -776,11 +760,7 @@ public class BattleStateGridHelper {
 		final int deltaX = casterPos.x - targetPos.x;
 		final int deltaY = casterPos.y - targetPos.y;
 		final int max = range + areaOfEffectRange;
-		if ((Math.abs(casterPos.x - targetPos.x) > range) || (Math.abs(casterPos.y - targetPos.y) > max)) {
-			return false;
-		}
-
-		if (deltaX == deltaY) {
+		if ((Math.abs(casterPos.x - targetPos.x) > range) || (Math.abs(casterPos.y - targetPos.y) > max) || (deltaX == deltaY)) {
 			return false;
 		}
 
@@ -1035,7 +1015,7 @@ public class BattleStateGridHelper {
 
 		for (int i = 0; i <= range; i++) {
 			for (int j = 0; j <= range; j++) {
-				if (((i + j) == aoeRange) && !((i == 0) && (j == 0))) {
+				if (((i + j) == aoeRange) && ((i != 0) || (j != 0))) {
 					tryToAddPotentialCenter(targetPosition, new MyPoint(casterPosition.x + i, casterPosition.y + j), casterPosition, spotsToCastAbilityHittingTarget, aoeRange, area);
 					tryToAddPotentialCenter(targetPosition, new MyPoint(casterPosition.x - i, casterPosition.y + j), casterPosition, spotsToCastAbilityHittingTarget, aoeRange, area);
 					tryToAddPotentialCenter(targetPosition, new MyPoint(casterPosition.x + i, casterPosition.y - j), casterPosition, spotsToCastAbilityHittingTarget, aoeRange, area);
@@ -1088,7 +1068,7 @@ public class BattleStateGridHelper {
 
 		for (int i = 0; i <= range; i++) {
 			for (int j = 0; j <= range; j++) {
-				if ((j <= aoeRange) && (i <= aoeRange) && !((i == 0) && (j == 0))) {
+				if ((j <= aoeRange) && (i <= aoeRange) && ((i != 0) || (j != 0))) {
 					tryToAddPotentialCenter(targetPosition, new MyPoint(casterPosition.x + i, casterPosition.y + j), casterPosition, spotsToCastAbilityHittingTarget, aoeRange, area);
 					tryToAddPotentialCenter(targetPosition, new MyPoint(casterPosition.x - i, casterPosition.y + j), casterPosition, spotsToCastAbilityHittingTarget, aoeRange, area);
 					tryToAddPotentialCenter(targetPosition, new MyPoint(casterPosition.x + i, casterPosition.y - j), casterPosition, spotsToCastAbilityHittingTarget, aoeRange, area);
@@ -1107,7 +1087,7 @@ public class BattleStateGridHelper {
 
 		for (int i = 0; i <= range; i++) {
 			for (int j = 0; j <= range; j++) {
-				if (((i + j) <= aoeRange) && !((i == 0) && (j == 0))) {
+				if (((i + j) <= aoeRange) && ((i != 0) || (j != 0))) {
 					tryToAddPotentialCenter(targetPosition, new MyPoint(casterPosition.x + i, casterPosition.y + j), casterPosition, spotsToCastAbilityHittingTarget, aoeRange, area);
 					tryToAddPotentialCenter(targetPosition, new MyPoint(casterPosition.x - i, casterPosition.y + j), casterPosition, spotsToCastAbilityHittingTarget, aoeRange, area);
 					tryToAddPotentialCenter(targetPosition, new MyPoint(casterPosition.x + i, casterPosition.y - j), casterPosition, spotsToCastAbilityHittingTarget, aoeRange, area);
@@ -1182,10 +1162,7 @@ public class BattleStateGridHelper {
 		if (casterIsRight) {
 			return ((-diffX <= aoeRange) && (diffX <= 0) && (diffY == 0));
 		}
-		if (casterIsDown) {
-			return ((diffXAbs <= (aoeRange * 0.5f)) && (diffY == 0));
-		}
-		if (casterIsUp) {
+		if (casterIsDown || casterIsUp) {
 			return ((diffXAbs <= (aoeRange * 0.5f)) && (diffY == 0));
 		}
 		return false;
@@ -1207,10 +1184,10 @@ public class BattleStateGridHelper {
 		return false;
 	}
 
-	public Array<MyPoint> getTargetsAbility(Ability ability, MyPoint point, MyPoint casterPos, Array<MyPoint> targetPositions) {
+	public Array<MyPoint> getTargetsAbility(Ability ability, MyPoint castPoint, MyPoint casterPos, Array<MyPoint> targetPositions) {
 		final Array<MyPoint> targets = new Array<>();
 		for (final MyPoint targetPosition : targetPositions) {
-			if (checkIfTargetInAreaOfEffect(point, targetPosition, casterPos, ability.getAreaOfEffect(), ability.getSpellData().getAreaOfEffectRange())) {
+			if (checkIfTargetInAreaOfEffect(castPoint, targetPosition, casterPos, ability.getAreaOfEffect(), ability.getSpellData().getAreaOfEffectRange())) {
 				targets.add(targetPosition);
 			}
 		}
@@ -1267,7 +1244,7 @@ public class BattleStateGridHelper {
 		final int currentUnitX = currentUnit.getCurrentPosition().getTileX();
 		final int currentUnitY = currentUnit.getCurrentPosition().getTileY();
 
-		return (Math.abs(unitX - currentUnitX) <= 1) && (Math.abs(unitY - currentUnitY) <= 1) && !((unitX == currentUnitX) && (unitY == currentUnitY));
+		return (Math.abs(unitX - currentUnitX) <= 1) && (Math.abs(unitY - currentUnitY) <= 1) && ((unitX != currentUnitX) || (unitY != currentUnitY));
 	}
 
 	public static BattleStateGridHelper getInstance() {

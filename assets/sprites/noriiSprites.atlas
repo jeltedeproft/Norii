@@ -8165,6 +8165,13 @@ DarkMageDieDown
   size: 32, 19
   orig: 32, 32
   offset: 0, 0
+  index: 5
+DarkMageDieDown
+  rotate: false
+  xy: 522, 755
+  size: 32, 19
+  orig: 32, 32
+  offset: 0, 0
   index: 4
 DarkMageDieDown
   rotate: false
@@ -8179,21 +8186,14 @@ DarkMageDieDown
   size: 32, 19
   orig: 32, 32
   offset: 0, 0
+  index: 6
+DarkMageDieDown
+  rotate: false
+  xy: 522, 755
+  size: 32, 19
+  orig: 32, 32
+  offset: 0, 0
   index: 3
-DarkMageDieDown
-  rotate: false
-  xy: 522, 755
-  size: 32, 19
-  orig: 32, 32
-  offset: 0, 0
-  index: 6
-DarkMageDieDown
-  rotate: false
-  xy: 522, 755
-  size: 32, 19
-  orig: 32, 32
-  offset: 0, 0
-  index: 5
 DarkMageDieLeft
   rotate: false
   xy: 3080, 1808
@@ -8201,13 +8201,6 @@ DarkMageDieLeft
   orig: 32, 32
   offset: 0, 1
   index: 6
-DarkMageDieLeft
-  rotate: false
-  xy: 3080, 1808
-  size: 32, 23
-  orig: 32, 32
-  offset: 0, 1
-  index: 5
 DarkMageDieLeft
   rotate: false
   xy: 3080, 1808
@@ -8221,13 +8214,6 @@ DarkMageDieLeft
   size: 32, 23
   orig: 32, 32
   offset: 0, 1
-  index: 4
-DarkMageDieLeft
-  rotate: false
-  xy: 3080, 1808
-  size: 32, 23
-  orig: 32, 32
-  offset: 0, 1
   index: 3
 DarkMageDieLeft
   rotate: false
@@ -8235,7 +8221,21 @@ DarkMageDieLeft
   size: 32, 23
   orig: 32, 32
   offset: 0, 1
+  index: 4
+DarkMageDieLeft
+  rotate: false
+  xy: 3080, 1808
+  size: 32, 23
+  orig: 32, 32
+  offset: 0, 1
   index: 1
+DarkMageDieLeft
+  rotate: false
+  xy: 3080, 1808
+  size: 32, 23
+  orig: 32, 32
+  offset: 0, 1
+  index: 5
 DarkMageDieRight
   rotate: false
   xy: 1474, 1629
@@ -8243,13 +8243,6 @@ DarkMageDieRight
   orig: 32, 32
   offset: 0, 1
   index: 4
-DarkMageDieRight
-  rotate: false
-  xy: 1474, 1629
-  size: 32, 22
-  orig: 32, 32
-  offset: 0, 1
-  index: 2
 DarkMageDieRight
   rotate: false
   xy: 1474, 1629
@@ -8277,6 +8270,13 @@ DarkMageDieRight
   size: 32, 22
   orig: 32, 32
   offset: 0, 1
+  index: 2
+DarkMageDieRight
+  rotate: false
+  xy: 1474, 1629
+  size: 32, 22
+  orig: 32, 32
+  offset: 0, 1
   index: 5
 DarkMageDieUp
   rotate: false
@@ -8291,14 +8291,14 @@ DarkMageDieUp
   size: 32, 25
   orig: 32, 32
   offset: 0, 4
-  index: 5
+  index: 6
 DarkMageDieUp
   rotate: false
   xy: 2828, 1781
   size: 32, 25
   orig: 32, 32
   offset: 0, 4
-  index: 2
+  index: 5
 DarkMageDieUp
   rotate: false
   xy: 2828, 1781
@@ -8312,14 +8312,14 @@ DarkMageDieUp
   size: 32, 25
   orig: 32, 32
   offset: 0, 4
-  index: 6
+  index: 3
 DarkMageDieUp
   rotate: false
   xy: 2828, 1781
   size: 32, 25
   orig: 32, 32
   offset: 0, 4
-  index: 3
+  index: 2
 DarkMageHurtDown
   rotate: false
   xy: 3029, 1835
@@ -16362,14 +16362,14 @@ RockIdleLeft
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 2
+  index: 1
 RockIdleLeft
   rotate: false
   xy: 4061, 1946
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 1
+  index: 2
 RockIdleRight
   rotate: false
   xy: 4061, 1946
@@ -20618,14 +20618,14 @@ WarriorGirlIdleDown
   size: 32, 25
   orig: 32, 32
   offset: 0, 5
-  index: 1
+  index: 13
 WarriorGirlIdleDown
   rotate: false
   xy: 656, 1014
   size: 32, 25
   orig: 32, 32
   offset: 0, 5
-  index: 13
+  index: 1
 WarriorGirlWalkDown
   rotate: false
   xy: 3097, 1833
