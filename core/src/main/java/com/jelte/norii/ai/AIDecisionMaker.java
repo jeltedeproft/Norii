@@ -5,8 +5,8 @@ import java.util.TreeMap;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
-import com.jelte.norii.ai.movegenerator.TargetMoveGenerator;
 import com.jelte.norii.ai.movegenerator.MoveGenerator;
+import com.jelte.norii.ai.movegenerator.TargetMoveGenerator;
 import com.jelte.norii.battle.battlestate.BattleState;
 import com.jelte.norii.battle.battlestate.BattleStateModifier;
 import com.jelte.norii.battle.battlestate.Move;
@@ -61,10 +61,11 @@ public class AIDecisionMaker {
 	// returns true when finished or time is up
 	public boolean processAi() {
 		oldTime = System.currentTimeMillis();
+		System.out.println("a");
 		final Long startingTime = System.currentTimeMillis();
 
 		updateBattlestateAndEntityIfNecessary();
-
+		System.out.println("b");
 		oldTime = TargetMoveGenerator.debugTime("\n\ngenerating moves for : " + unit, oldTime);
 		generateBattleStatesForUnit(unit, startingState);
 		oldTime = TargetMoveGenerator.debugTime("moves generated for unit : " + unit, oldTime);

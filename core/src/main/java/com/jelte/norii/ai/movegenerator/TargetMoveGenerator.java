@@ -71,7 +71,7 @@ public class TargetMoveGenerator implements MoveGenerator {
 
 		filterOutNumber(cellsToCastOn, FILTER_AMOUNT_OF_CELL_TARGETS);
 		for (final MyPoint point : cellsToCastOn) {
-			final UnitTurn spellAndMove = new UnitTurn(aiUnit.getEntityID(), new SpellMove(MoveType.SPELL, point, ability, null));
+			final UnitTurn spellAndMove = new UnitTurn(aiUnit.getEntityID(), new SpellMove(MoveType.SPELL, point, ability, null, aiUnit));
 			spellAndMove.addMove(decideMove(ability, aiUnit, battleState));
 			unitTurns.add(spellAndMove);
 		}
@@ -80,7 +80,7 @@ public class TargetMoveGenerator implements MoveGenerator {
 
 	private void castNoTargetOrSelf(Ability ability, Entity aiUnit, BattleState battleState, final Array<UnitTurn> unitTurns) {
 		oldTime = debugTime("starting self/no target spells", oldTime);
-		final UnitTurn spellAndMove = new UnitTurn(aiUnit.getEntityID(), new SpellMove(MoveType.SPELL, new MyPoint(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY()), ability, null));
+		final UnitTurn spellAndMove = new UnitTurn(aiUnit.getEntityID(), new SpellMove(MoveType.SPELL, new MyPoint(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY()), ability, null, aiUnit));
 		spellAndMove.addMove(decideMove(ability, aiUnit, battleState));
 		unitTurns.add(spellAndMove);
 	}
@@ -109,7 +109,7 @@ public class TargetMoveGenerator implements MoveGenerator {
 		if (abilityTargets.isEmpty()) {
 			oldTime = debugTime("no units found in immediate vicinity, moving", oldTime);
 			if (distancesToTargets.isEmpty()) {
-				unitTurns.add(new UnitTurn(aiUnit.getEntityID(), new Move(MoveType.DUMMY, new MyPoint(0, 0))));
+				unitTurns.add(new UnitTurn(aiUnit.getEntityID(), new Move(MoveType.DUMMY, new MyPoint(0, 0), aiUnit)));
 			} else {
 				tryToMoveAndCastSpell(ability, aiUnit, battleState, unitTurns, abilityTargets);
 			}
@@ -142,9 +142,9 @@ public class TargetMoveGenerator implements MoveGenerator {
 				goal = new MyPoint(path.get(path.size() - i).x, path.get(path.size() - i).y);
 				i++;
 			}
-			unitTurns.add(new UnitTurn(aiUnit.getEntityID(), new Move(MoveType.MOVE, goal)));
+			unitTurns.add(new UnitTurn(aiUnit.getEntityID(), new Move(MoveType.MOVE, goal, aiUnit)));
 		} else {
-			unitTurns.add(new UnitTurn(aiUnit.getEntityID(), new Move(MoveType.MOVE, aiUnit.getCurrentPosition().getTilePosAsPoint())));
+			unitTurns.add(new UnitTurn(aiUnit.getEntityID(), new Move(MoveType.MOVE, aiUnit.getCurrentPosition().getTilePosAsPoint(), aiUnit)));
 		}
 	}
 
@@ -164,8 +164,8 @@ public class TargetMoveGenerator implements MoveGenerator {
 			i++;
 		}
 		final MyPoint attackGoal = new MyPoint(distancesWithAbilityTargetUnits.firstEntry().getValue().get(0).getCurrentPosition().getTileX(), distancesWithAbilityTargetUnits.firstEntry().getValue().get(0).getCurrentPosition().getTileY());
-		final UnitTurn moveAttack = new UnitTurn(aiUnit.getEntityID(), new Move(MoveType.MOVE, moveGoal));
-		moveAttack.addMove(new Move(MoveType.ATTACK, attackGoal));
+		final UnitTurn moveAttack = new UnitTurn(aiUnit.getEntityID(), new Move(MoveType.MOVE, moveGoal, aiUnit));
+		moveAttack.addMove(new Move(MoveType.ATTACK, attackGoal, aiUnit));
 		unitTurns.add(moveAttack);
 	}
 
@@ -174,7 +174,7 @@ public class TargetMoveGenerator implements MoveGenerator {
 	// ability??
 	private Array<MyPoint> tryToMoveAndCastSpell(Ability ability, Entity aiUnit, BattleState battleState, final Array<UnitTurn> unitTurns, Array<MyPoint> abilityTargets) {
 		MyPoint endPoint = new MyPoint(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY());
-		final UnitTurn moveAndSpell = new UnitTurn(aiUnit.getEntityID(), new Move(MoveType.MOVE, endPoint));
+		final UnitTurn moveAndSpell = new UnitTurn(aiUnit.getEntityID(), new Move(MoveType.MOVE, endPoint, aiUnit));
 		int ap = aiUnit.getAp();
 		final BattleState copyBattleState = battleState.makeCopy();
 		final Entity copyUnit = copyBattleState.get(aiUnit.getCurrentPosition().getTileX(), aiUnit.getCurrentPosition().getTileY()).getUnit();
@@ -183,7 +183,7 @@ public class TargetMoveGenerator implements MoveGenerator {
 			endPoint = getRandomMovePoint(new MyPoint(copyUnit.getCurrentPosition().getTileX(), copyUnit.getCurrentPosition().getTileY()), copyBattleState, copyUnit, passedPoints);
 			passedPoints.add(new MyPoint(endPoint.x, endPoint.y));
 			copyBattleState.moveUnitAndCreateIfNecessary(copyUnit, endPoint);
-			moveAndSpell.addMove(new Move(MoveType.MOVE, endPoint));
+			moveAndSpell.addMove(new Move(MoveType.MOVE, endPoint, aiUnit));
 			ap--;
 			abilityTargets = getAbilityTargets(ability, endPoint, copyUnit.isPlayerUnit(), copyBattleState);
 		}
@@ -256,7 +256,7 @@ public class TargetMoveGenerator implements MoveGenerator {
 				final UnitTurn moveAndSpellCopy = moveAndSpell.makeCopy();
 				final Array<MyPoint> affectedUnits = BattleStateGridHelper.getInstance().getTargetsAbility(ability, castPoint, new MyPoint(copyUnit.getCurrentPosition().getTileX(), copyUnit.getCurrentPosition().getTileY()),
 						getUnitPositions(false, ability, copyBattleState));
-				moveAndSpellCopy.addMove(new SpellMove(MoveType.SPELL, castPoint, ability, affectedUnits));
+				moveAndSpellCopy.addMove(new SpellMove(MoveType.SPELL, castPoint, ability, affectedUnits, copyUnit));
 				unitTurns.add(moveAndSpellCopy);
 			}
 		}
@@ -271,7 +271,7 @@ public class TargetMoveGenerator implements MoveGenerator {
 			oldTime = debugTime("finished 1 target - decideMove", oldTime);
 			for (final MyPoint MyPoint : positionsToCastSpell) {
 				final Array<MyPoint> affectedUnits = BattleStateGridHelper.getInstance().getTargetsAbility(ability, MyPoint, casterPos, getUnitPositions(false, ability, battleState));
-				final UnitTurn spellAndMove = new UnitTurn(aiUnit.getEntityID(), new SpellMove(MoveType.SPELL, MyPoint, ability, affectedUnits));
+				final UnitTurn spellAndMove = new UnitTurn(aiUnit.getEntityID(), new SpellMove(MoveType.SPELL, MyPoint, ability, affectedUnits, aiUnit));
 				spellAndMove.addMove(moveAfterSpell);
 				unitTurns.add(spellAndMove);
 			}
@@ -311,23 +311,23 @@ public class TargetMoveGenerator implements MoveGenerator {
 		final MyPoint centerOfGravityEnemies = Utility.getCenterOfGravityPlayers(battleState);
 		final MyPoint centerOfGravityAllies = Utility.getCenterOfGravityAi(battleState);
 		final MyPoint centerOfGravityAllUnits = Utility.getCenterOfGravityAllUnits(battleState);
-		oldTime = debugTime("centersofgravirty", oldTime);
+		oldTime = debugTime("centersofgravity", oldTime);
 		// if low hp run away
 		if (aiUnit.getHp() <= ((aiUnit.getEntityData().getMaxHP() * 0.01f) * 10)) {
 			final MyPoint originalGoal = MyPathFinder.getInstance().getPositionFurthestAwayFrom(centerOfGravityEnemies);
 			final MyPoint trimmedGoal = trimPathConsideringApAndReachable(originalGoal, aiUnit, battleState);
-			return new Move(MoveType.MOVE, trimmedGoal);
+			return new Move(MoveType.MOVE, trimmedGoal, aiUnit);
 		}
 		oldTime = debugTime("check low hp run away", oldTime);
 		switch (ability.getAffectedTeams()) {
 		case FRIENDLY:
-			return new Move(MoveType.MOVE, trimPathConsideringApAndReachable(centerOfGravityAllies, aiUnit, battleState));
+			return new Move(MoveType.MOVE, trimPathConsideringApAndReachable(centerOfGravityAllies, aiUnit, battleState), aiUnit);
 		case ENEMY:
-			return new Move(MoveType.MOVE, trimPathConsideringApAndReachable(centerOfGravityEnemies, aiUnit, battleState));
+			return new Move(MoveType.MOVE, trimPathConsideringApAndReachable(centerOfGravityEnemies, aiUnit, battleState), aiUnit);
 		case BOTH:
-			return new Move(MoveType.MOVE, trimPathConsideringApAndReachable(centerOfGravityAllUnits, aiUnit, battleState));
+			return new Move(MoveType.MOVE, trimPathConsideringApAndReachable(centerOfGravityAllUnits, aiUnit, battleState), aiUnit);
 		case NONE:
-			return new Move(MoveType.MOVE, trimPathConsideringApAndReachable(centerOfGravityAllUnits, aiUnit, battleState));
+			return new Move(MoveType.MOVE, trimPathConsideringApAndReachable(centerOfGravityAllUnits, aiUnit, battleState), aiUnit);
 		default:
 			Gdx.app.debug(TAG, WRONG_ABILITY_TEAM);
 			return null;

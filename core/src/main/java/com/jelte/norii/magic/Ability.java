@@ -105,7 +105,7 @@ public class Ability {
 
 	@Override
 	public String toString() {
-		return "ability name : " + spellData.getName();
+		return spellData.getName();
 	}
 
 }

@@ -156,7 +156,8 @@ public class BattleScreen extends GameScreen {
 		battlemanager = new BattleManager(enemyTeamLeader, currentMap.getMapWidth(), currentMap.getMapHeight(), currentMap.getNavLayer().getUnwalkableNodes(), this);
 		battlescreenInputProcessor.setBattleManager(battlemanager);
 		currentMap.setStage(this);
-		CreateMapInfo mapInfo = new CreateMapInfo(MapType.TEST_MAP, mapMgr); // comment this out if not needed, only once
+		// CreateMapInfo mapInfo = new CreateMapInfo(MapType.TEST_MAP, mapMgr); //
+		// comment this out if not needed, only once
 	}
 
 	private void spawnEnemyUnits() {
@@ -280,9 +281,9 @@ public class BattleScreen extends GameScreen {
 				AbilitiesEnum abilityEnum = message.getAbility();
 				Ability ability = new Ability(abilityEnum, position.getTilePosAsPoint());
 				Array<MyPoint> affectedUnits = message.getAffectedUnits();
-				Move move = new SpellMove(type, position.getTilePosAsPoint(), ability, affectedUnits);
 				int unitID = message.getUnitID();
 				final Entity entity = battlemanager.getEntityByID(unitID);
+				Move move = new SpellMove(type, position.getTilePosAsPoint(), ability, affectedUnits, entity);
 				battlemanager.executeMove(entity, move);
 				break;
 			case TURN_FINISHED:
@@ -309,7 +310,7 @@ public class BattleScreen extends GameScreen {
 		final Entity entity = battlemanager.getEntityByID(unitID);
 		TiledMapPosition position = message.getPos();
 		MoveType type = message.getMoveType();
-		Move move = new Move(type, position.getTilePosAsPoint());
+		Move move = new Move(type, position.getTilePosAsPoint(), entity);
 		battlemanager.executeMove(entity, move);
 	}
 

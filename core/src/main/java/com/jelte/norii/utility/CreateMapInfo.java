@@ -37,6 +37,7 @@ public class CreateMapInfo {
 		FileHandle losFile = Gdx.files.local("maps/" + mapType.name() + "_lineOfSights.txt");
 		writePathsToFile(pathsFile);
 		writeLosToFile(losFile);
+		System.out.println("finished preporcessing the map");
 	}
 
 	private static void preprocessMap() {
@@ -115,8 +116,10 @@ public class CreateMapInfo {
 		final int y2 = neigh.getY();
 		final int dx = Math.abs(x1 - x2);
 		final int dy = Math.abs(y1 - y2);
-		final int xinc = (x1 < x2) ? 1 : -1;
-		final int yinc = (y1 < y2) ? 1 : -1;
+		final int xinc = (x1 < x2)	? 1
+									: -1;
+		final int yinc = (y1 < y2)	? 1
+									: -1;
 
 		int error = dx - dy;
 

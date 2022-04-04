@@ -213,6 +213,7 @@ public class MainMenuScreen extends GameScreen {
 
 	private void loadLevelAssets() {
 		AssetManagerUtility.loadMapAsset(MapType.BATTLE_MAP_THE_DARK_SWAMP.toString());
+		AssetManagerUtility.loadMapAsset(MapType.TEST_MAP.toString());
 	}
 
 	private void addTutorialUnitsToPlayer() {

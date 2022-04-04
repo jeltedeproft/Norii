@@ -11,12 +11,6 @@ public class Move {
 	protected MyPoint location;
 	protected Entity unit;
 
-	public Move(MoveType moveType, MyPoint location) {
-		this.moveType = moveType;
-		this.location = location;
-		this.unit = null;
-	}
-
 	public Move(MoveType moveType, MyPoint location, Entity unit) {
 		this.moveType = moveType;
 		this.location = location;
@@ -51,10 +45,10 @@ public class Move {
 	public String toString() {
 		if (this instanceof SpellMove) {
 			SpellMove spell = (SpellMove) this;
-			return ("casting " + spell.getAbility() + " \non : " + location + " \nfor unit : " + unit);
+			return (unit.getEntityData().getName() + " casts " + spell.getAbility() + " --> " + location);
 		}
 
-		return "moving " + unit + " \nto : " + location;
+		return unit.getEntityData().getName() + " moves " + " --> " + location;
 	}
 
 	public Move makeCopy() {

@@ -9,12 +9,6 @@ public class SpellMove extends Move {
 	Ability ability;
 	Array<MyPoint> affectedUnits;
 
-	public SpellMove(MoveType moveType, MyPoint location, Ability ability, Array<MyPoint> affectedUnits) {
-		super(moveType, location);
-		this.ability = ability;
-		this.affectedUnits = affectedUnits;
-	}
-
 	public SpellMove(MoveType moveType, MyPoint location, Ability ability, Array<MyPoint> affectedUnits, Entity unit) {
 		super(moveType, location, unit);
 		this.ability = ability;

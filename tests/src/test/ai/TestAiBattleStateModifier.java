@@ -76,7 +76,7 @@ public class TestAiBattleStateModifier {
 		battleState.placeUnitOnSpecificSpot(enemyUnit, BATTLESTATE_SIZE - 1, 0);
 
 		// move
-		Move move = new Move(MoveType.MOVE, playerUnit.getCurrentPosition().getTilePosAsPoint().incrementX());
+		Move move = new Move(MoveType.MOVE, playerUnit.getCurrentPosition().getTilePosAsPoint().incrementX(), playerUnit);
 		BattleState copyBbattleState = battleStateModifier.applyMove(playerUnit, move, battleState);
 		TestUtil.resultsToFile(FILENAME_MOVE, copyBbattleState);
 		TestUtil.regressionTest(FILENAME_MOVE, FILENAME_MOVE_OLD);
@@ -94,7 +94,7 @@ public class TestAiBattleStateModifier {
 		battleState.placeUnitOnSpecificSpot(enemyUnit, 0, 1);
 
 		// attack
-		Move attackMove = new Move(MoveType.ATTACK, enemyUnit.getCurrentPosition().getTilePosAsPoint());
+		Move attackMove = new Move(MoveType.ATTACK, enemyUnit.getCurrentPosition().getTilePosAsPoint(), playerUnit);
 		BattleState copyBattleState = battleStateModifier.applyMove(playerUnit, attackMove, battleState);
 		TestUtil.resultsToFile(FILENAME_ATTACK, copyBattleState);
 		TestUtil.regressionTest(FILENAME_ATTACK, FILENAME_ATTACK_OLD);
@@ -113,7 +113,7 @@ public class TestAiBattleStateModifier {
 
 		// fireball
 		playerUnit.setAbility(AbilitiesEnum.FIREBALL);
-		Move spellMove = new SpellMove(MoveType.SPELL, enemyUnit.getCurrentPosition().getTilePosAsPoint(), playerUnit.getAbility(), null);
+		Move spellMove = new SpellMove(MoveType.SPELL, enemyUnit.getCurrentPosition().getTilePosAsPoint(), playerUnit.getAbility(), null, playerUnit);
 		BattleState copyBattleState = battleStateModifier.applyMove(playerUnit, spellMove, battleState);
 		TestUtil.resultsToFile(FILENAME_FIREBALL, copyBattleState);
 		TestUtil.regressionTest(FILENAME_FIREBALL, FILENAME_FIREBALL_OLD);
@@ -132,10 +132,10 @@ public class TestAiBattleStateModifier {
 
 		// turn to stone
 		playerUnit.setAbility(AbilitiesEnum.TURN_TO_STONE);
-		Move spellMove = new SpellMove(MoveType.SPELL, enemyUnit.getCurrentPosition().getTilePosAsPoint(), playerUnit.getAbility(), null);
+		Move spellMove = new SpellMove(MoveType.SPELL, enemyUnit.getCurrentPosition().getTilePosAsPoint(), playerUnit.getAbility(), null, playerUnit);
 		BattleState copyBattleState = battleStateModifier.applyMove(playerUnit, spellMove, battleState);
 		TestUtil.resultsToFile(FILENAME_TURN_TO_STONE, copyBattleState);
-		TestUtil.regressionTest(FILENAME_TURN_TO_STONE, FILENAME_TURN_TO_STONE_OLD);
+		TestUtil.regressionTest(FILENAME_TURN_TO_STONE_OLD, FILENAME_TURN_TO_STONE);
 	}
 
 	@Test
@@ -151,7 +151,7 @@ public class TestAiBattleStateModifier {
 
 		// swap
 		playerUnit.setAbility(AbilitiesEnum.SWAP);
-		Move spellMove = new SpellMove(MoveType.SPELL, enemyUnit.getCurrentPosition().getTilePosAsPoint(), playerUnit.getAbility(), null);
+		Move spellMove = new SpellMove(MoveType.SPELL, enemyUnit.getCurrentPosition().getTilePosAsPoint(), playerUnit.getAbility(), null, playerUnit);
 		BattleState copyBattleState = battleStateModifier.applyMove(playerUnit, spellMove, battleState);
 		TestUtil.resultsToFile(FILENAME_SWAP, copyBattleState);
 		TestUtil.regressionTest(FILENAME_SWAP, FILENAME_SWAP_OLD);
@@ -172,7 +172,7 @@ public class TestAiBattleStateModifier {
 		playerUnit.setAbility(AbilitiesEnum.ARROW);
 		final Array<MyPoint> affectedUnits = new Array<>();
 		affectedUnits.add(new MyPoint(4, 4));
-		Move spellMove = new SpellMove(MoveType.SPELL, enemyUnit.getCurrentPosition().getTilePosAsPoint(), playerUnit.getAbility(), affectedUnits);
+		Move spellMove = new SpellMove(MoveType.SPELL, enemyUnit.getCurrentPosition().getTilePosAsPoint(), playerUnit.getAbility(), affectedUnits, playerUnit);
 		BattleState copyBattleState = battleStateModifier.applyMove(playerUnit, spellMove, battleState);
 		TestUtil.resultsToFile(FILENAME_ARROW, copyBattleState);
 		TestUtil.regressionTest(FILENAME_ARROW, FILENAME_ARROW_OLD);

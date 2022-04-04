@@ -15,13 +15,12 @@ import com.jelte.norii.entities.UnitOwner;
 import com.jelte.norii.magic.SpellFileReader;
 import com.jelte.norii.map.BattleMap;
 import com.jelte.norii.map.MapFactory.MapType;
+import com.jelte.norii.map.MapManager;
+import com.jelte.norii.map.MyPathFinder;
 
 import test.balancing.helpClasses.SimulationPlayer;
 import test.utilities.GdxTestRunner;
 import test.utilities.TestUtil;
-
-import com.jelte.norii.map.MapManager;
-import com.jelte.norii.map.MyPathFinder;
 
 @RunWith(GdxTestRunner.class)
 public class TestAiDecisionMaker {
@@ -46,7 +45,7 @@ public class TestAiDecisionMaker {
 		SpellFileReader.loadSpellsInMemory();
 		ApFileReader.loadApInMemory();
 		mapMgr = new MapManager();
-		mapMgr.loadMap(MapType.BATTLE_MAP_THE_DARK_SWAMP);
+		mapMgr.loadMap(MapType.TEST_MAP);
 		currentMap = (BattleMap) mapMgr.getCurrentMap();
 		MyPathFinder.getInstance().setMap(currentMap);
 		while (!MyPathFinder.getInstance().isPreprocessingFinished()) {
@@ -74,6 +73,5 @@ public class TestAiDecisionMaker {
 		decisionMaker.processAi();
 		TestUtil.resultsToFile(FILENAME_ONE_ROUND, decisionMaker);
 		TestUtil.regressionTest(FILENAME_ONE_ROUND, FILENAME_ONE_ROUND_OLD);
-		// assertThat(decisionMaker).isEqualToComparingFieldByFieldRecursively(endingStats.get(type));
 	}
 }

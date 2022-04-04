@@ -1,0 +1,3 @@
+[Demon casts Fireball --> (4,0)
+Demon moves  --> (0,1)
+]
