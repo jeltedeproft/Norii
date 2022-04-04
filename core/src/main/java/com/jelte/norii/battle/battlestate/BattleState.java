@@ -46,29 +46,12 @@ public class BattleState implements Comparable<BattleState> {
 		}
 	}
 
-	public BattleState(BattleCell[][] field, Array<Entity> unitsToAdd) {
-		stateOfField = field;
-		score = 0;
-		for (final Entity unit : unitsToAdd) {
-			units.put(unit.getEntityID(), unit);
-		}
-	}
-
 	public BattleState(BattleCell[][] field, int score, Array<Entity> unitsToAdd) {
 		stateOfField = field;
 		this.score = score;
 		for (final Entity unit : unitsToAdd) {
 			units.put(unit.getEntityID(), unit);
 		}
-	}
-
-	public BattleState(BattleCell[][] field, int score, Array<Entity> unitsToAdd, UnitTurn turn) {
-		stateOfField = field;
-		this.score = score;
-		for (final Entity unit : unitsToAdd) {
-			units.put(unit.getEntityID(), unit);
-		}
-		this.turn = turn;
 	}
 
 	// MOVEMENT
@@ -134,14 +117,18 @@ public class BattleState implements Comparable<BattleState> {
 	}
 
 	private MyPoint calculateNextPoint(MyPoint oldPos, boolean casterIsRight, boolean casterIsLeft, boolean casterIsDown, boolean casterIsUp, boolean isPulling) {
-		if ((casterIsRight && isPulling) || (casterIsLeft && !isPulling))
+		if ((isPulling ? casterIsRight : casterIsLeft)) {
 			return new MyPoint(oldPos.x + 1, oldPos.y);
-		if (casterIsRight || casterIsLeft)
+		}
+		if (casterIsRight || casterIsLeft) {
 			return new MyPoint(oldPos.x - 1, oldPos.y);
-		if ((casterIsDown && isPulling) || (casterIsUp && !isPulling))
+		}
+		if ((isPulling ? casterIsDown : casterIsUp)) {
 			return new MyPoint(oldPos.x, oldPos.y - 1);
-		if (casterIsDown || casterIsUp)
+		}
+		if (casterIsDown || casterIsUp) {
 			return new MyPoint(oldPos.x, oldPos.y + 1);
+		}
 		Gdx.app.debug(TAG, "next point in push calculation needs to be in one of 4 directions, returning null");
 		return null;
 	}
@@ -246,7 +233,8 @@ public class BattleState implements Comparable<BattleState> {
 		if (random == 0) {
 			if (to.x > from.x) {
 				return new MyPoint(from.x + 1, from.y);
-			} else if (to.x < from.x) {
+			}
+			if (to.x < from.x) {
 				return new MyPoint(from.x - 1, from.y);
 			}
 		}
@@ -257,7 +245,8 @@ public class BattleState implements Comparable<BattleState> {
 	private MyPoint yUpOrYDown(MyPoint from, MyPoint to) {
 		if (to.y > from.y) {
 			return new MyPoint(from.x, from.y + 1);
-		} else if (to.y < from.y) {
+		}
+		if (to.y < from.y) {
 			return new MyPoint(from.x, from.y - 1);
 		} else {
 			return new MyPoint(from.x, from.y);
@@ -521,20 +510,21 @@ public class BattleState implements Comparable<BattleState> {
 	public int compareTo(BattleState battleState) {
 		final int thisScore = calculateScore();
 		final int otherScore = battleState.calculateScore();
-		if (thisScore == otherScore)
+		if (thisScore == otherScore) {
 			return 0;
-		else if (thisScore < otherScore)
+		}
+		if (thisScore < otherScore) {
 			return 1;
-		else
+		} else {
 			return -1;
+		}
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null)
+		if ((obj == null) || (getClass() != obj.getClass())) {
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
+		}
 		final BattleState battleState = (BattleState) obj;
 		if ((getHeight() == battleState.getHeight()) && (getWidth() == battleState.getWidth())) {
 			for (int i = 0; i < (getWidth() - 1); i++) {
@@ -560,9 +550,8 @@ public class BattleState implements Comparable<BattleState> {
 		Optional<Entity> unit = Utility.getRandom(units.values());
 		if (unit.isPresent()) {
 			return unit.get();
-		} else {
-			return null;
 		}
+		return null;
 
 	}
 
@@ -596,9 +585,8 @@ public class BattleState implements Comparable<BattleState> {
 
 		if (counter < 4) {
 			return testPoint;
-		} else {
-			return null;
 		}
+		return null;
 	}
 
 	@Override

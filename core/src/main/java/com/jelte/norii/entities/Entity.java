@@ -71,8 +71,7 @@ public class Entity extends Actor implements Comparable<Entity> {
 		xp = 0;
 		owner = unitOwner;
 		entityID = java.lang.System.identityHashCode(this);
-		visualComponent = isReal	? new EntityVisualComponent(this)
-									: new FakeEntityVisualComponent();
+		visualComponent = isReal ? new EntityVisualComponent(this) : new FakeEntityVisualComponent();
 
 		initAbilities();
 	}
@@ -95,6 +94,10 @@ public class Entity extends Actor implements Comparable<Entity> {
 
 	public TiledMapPosition getCurrentPosition() {
 		return currentPlayerPosition;
+	}
+
+	public MyPoint getCurrentPositionPoint() {
+		return new MyPoint(currentPlayerPosition.getTileX(), currentPlayerPosition.getTileY());
 	}
 
 	public TiledMapPosition getOldPlayerPosition() {
