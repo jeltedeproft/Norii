@@ -7,7 +7,7 @@ buildscript {
 		gradlePluginPortal()
 	}
 	dependencies {
-		classpath "org.wisepersist:gwt-gradle-plugin:$gwtPluginVersion"
+		classpath "org.docstr:gwt-gradle-plugin:$gwtPluginVersion"
 	}
 }
 

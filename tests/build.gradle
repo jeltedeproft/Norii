@@ -1,37 +1,75 @@
 
+plugins {
+	id 'java'
+	id 'eclipse' // optional (to generate Eclipse project files)
+}
 
-apply plugin: "java"
+repositories {
+	mavenCentral()
+	gradlePluginPortal()
+}
 
-sourceCompatibility = 11.0
+test {
+	useJUnitPlatform()
+
+    testLogging {
+        exceptionFormat = "full"
+        showStackTraces = true
+        showExceptions = true
+        showCauses = true
+        displayGranularity = 0
+        events = [
+            "standardOut",
+            "standardError",
+            "started",
+            "passed",
+            "skipped",
+            "failed"
+        ]
+        showStandardStreams = true
+    }
+
+    reports {
+        junitXml.configure {
+            enabled(true)
+        }
+    }
+}
+
+java.sourceCompatibility = 11
+java.targetCompatibility = 11
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 
-//sourceSets.main.java.srcDirs = [ "src/main/java/" ]
-eclipse.project.name = appName + '-tests'
-sourceSets.test.java.srcDirs = ["src/"]
+sourceSets.main.resources.srcDirs += [ rootProject.file('assets').path ]
+
+
+
+
+eclipse.project {
+    name = appName + "-tests"
+}
+
+project(":tests") {
+    sourceSets.test.java.srcDirs = ["src/main/java"]
     		
-
-    dependencies {
-        compile project(":core")
-        compile project(":headless")
+    dependencies {    
+        api project(':core')
         
-        compile "junit:junit:4.+"
-        compile "org.mockito:mockito-all:1.9.+"
-        
-        compile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx:$gdxVersion"        
-        
-        compile platform("io.vertx:vertx-stack-depchain:$vertxVersion")
-	    compile "io.vertx:vertx-web"
-	    implementation "io.vertx:vertx-core:$vertxVersion"
-	    implementation 'com.groupon.vertx:vertx-utils:3.5.2'
+        api "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+        api "com.badlogicgames.gdx:gdx:$gdxVersion"
+        api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"         
 
-        testCompile 'junit:junit:4.+'
-        testCompile "org.mockito:mockito-all:1.9.+"
-        testImplementation "io.vertx:vertx-junit5"
+        testImplementation(platform('org.junit:junit-bom:5.10.2'))
+		testImplementation "org.junit.jupiter:junit-jupiter-api:5.8.1"
+    	testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.8.1"
+		testRuntimeOnly('org.junit.platform:junit-platform-launcher')
+        testImplementation "org.mockito:mockito-core:$mockitoCoreVersion"
+        testImplementation "org.mockito:mockito-junit-jupiter:3.11.2"
 
-        testCompile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
-        testCompile "com.badlogicgames.gdx:gdx:$gdxVersion"
-        testCompile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        testCompile "org.assertj:assertj-core:3.11.1"
+        testImplementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+        testImplementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+        testImplementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+       
     }
+}

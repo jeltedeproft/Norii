@@ -4,7 +4,7 @@ buildscript {
 		gradlePluginPortal()
 	}
 	dependencies {
-		classpath 'org.gretty:gretty:3.0.2'
+		classpath 'org.gretty:gretty:4.1.6'
 	}
 }
 apply plugin: "gwt"
@@ -54,7 +54,7 @@ dependencies {
 }
 
 import org.akhikhl.gretty.AppBeforeIntegrationTestTask
-import org.wisepersist.gradle.plugins.gwt.GwtSuperDev
+import org.docstr.gradle.plugins.gwt.GwtSuperDev
 
 gretty.httpPort = 8080
 gretty.resourceBase = project.buildDir.path + "/gwt/draftOut"
@@ -90,6 +90,17 @@ task superDev(type: GwtSuperDev) {
 		gwt.modules = gwt.devModules
 	}
 }
+
+//// We delete the (temporary) war/ folder because if any extra files get into it, problems occur.
+//// The war/ folder shouldn't be committed to version control.
+clean.delete += [file("war")]
+
+// This next line can be changed if you want to, for instance, always build into the
+// docs/ folder of a Git repo, which can be set to automatically publish on GitHub Pages.
+// This is relative to the html/ folder.
+var outputPath = "build/dist/"
+
+
 task dist(dependsOn: [clean, compileGwt]) {
     doLast {
 		file("build/dist").mkdirs()
@@ -116,18 +127,11 @@ task addSource {
 }
 
 task distZip(type: Zip, dependsOn: dist){
-	//// The next lines copy the dist but remove the recompile button (circling arrow) from the HTML page.
-	from('build/dist/') {
-		exclude '**/*.html'
-	}
-	from('build/dist/') {
-		include '**/*.html'
-		filter { String line -> line.replaceAll('<a class="superdev" .+', '') }
-	}
-	//// The next line attempts to name the zip with a unique timestamp, removing spaces and ':' for compatibility.
-	archiveName "dist-${(new Date().toString()).replace(' ', '-').replace(':', '-')}.zip"
-	//// The result will be in html/build/ with a name containing the above probably-unique timestamp.
-	destinationDir(file("build"))
+  //// This uses the output of the dist task, which removes the superdev button from index.html .
+  from(outputPath)
+  archiveBaseName.set("${appName}-dist")
+  //// The result will be in html/build/ with a name containing "-dist".
+  destinationDirectory.set(file("build"))
 }
 
 tasks.compileGwt.dependsOn(addSource)
