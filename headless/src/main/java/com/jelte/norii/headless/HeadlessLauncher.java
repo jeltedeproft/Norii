@@ -5,8 +5,7 @@ import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.backends.headless.HeadlessApplicationConfiguration;
 
 /**
- * Launches the headless application. Can be converted into a utilities project
- * or a server application.
+ * Launches the headless application. Can be converted into a utilities project or a server application.
  */
 public class HeadlessLauncher {
 	public static void main(String[] args) {
@@ -21,7 +20,7 @@ public class HeadlessLauncher {
 
 	private static HeadlessApplicationConfiguration getDefaultConfiguration() {
 		HeadlessApplicationConfiguration configuration = new HeadlessApplicationConfiguration();
-		configuration.renderInterval = -1f; // When this value is negative, Main#render() is never called.
+		configuration.updatesPerSecond = -1; // When this value is negative, Main#render() is never called.
 		return configuration;
 	}
 }

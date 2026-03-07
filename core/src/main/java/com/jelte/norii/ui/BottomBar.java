@@ -280,12 +280,14 @@ public class BottomBar extends Table {
 	}
 
 	private void populateElementsForUI(final Entity entity) {
-		heroNameLabel.setText(entity.getEntityData().getName());
+		String displayName = entity.getEntityData().isKing()
+				? entity.getEntityData().getName() + " [KING]"
+				: entity.getEntityData().getName();
+		heroNameLabel.setText(displayName);
 		changeHeroImage(entity.getEntityData().getPortraitSpritePath());
 		Ability ability = entity.getAbility();
 		changeSpellImage(ability.getSpellData().getIconSpriteName());
 		changeSpellInfo(ability.getSpellData().getInfoText());
-
 	}
 
 	private void changeSpellInfo(String infoText) {

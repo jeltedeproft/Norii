@@ -5,11 +5,16 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -77,6 +82,13 @@ public class BattleScreen extends GameScreen {
 //	private VfxManager vfxManager;
 //	private PixelScalerEffect vfxEffect;
 
+	private ShapeRenderer shapeRenderer;
+	private float totalTime = 0f;
+
+	private static final Color KING_RING_COLOR = new Color(1f, 0.84f, 0f, 0.85f);
+	private static final Color ACTIVE_UNIT_RING_COLOR = new Color(0.4f, 0.8f, 1f, 0.9f);
+	private static final Color GRID_LINE_COLOR = new Color(0.3f, 0.4f, 0.6f, 0.18f);
+
 	private boolean isPaused;
 
 	public BattleScreen(UnitOwner enemy, MapManager mapMgr) {
@@ -98,6 +110,7 @@ public class BattleScreen extends GameScreen {
 		currentMap = (BattleMap) mapMgr.getCurrentMap();
 		enemyTeamLeader = enemy;
 		json = new Json();
+		shapeRenderer = new ShapeRenderer();
 		initTeams();
 //		vfxManager = new VfxManager(Format.RGBA8888);
 //		vfxEffect = new PixelScalerEffect();
@@ -317,23 +330,17 @@ public class BattleScreen extends GameScreen {
 	}
 
 	private void renderElements(final float delta) {
-		Gdx.gl.glClearColor(0, 0, 0, 0);
+		totalTime += delta;
+		Gdx.gl.glClearColor(0.04f, 0.05f, 0.12f, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		Gdx.graphics.setTitle(FPS_TITLE + Gdx.graphics.getFramesPerSecond() + "(" + Gdx.graphics.getWidth() + "," + Gdx.graphics.getHeight() + ")");
-
-//		vfxManager.cleanUpBuffers();
-//		vfxManager.beginInputCapture();
 
 		renderMap();
 		renderUnits();
 		renderParticles(delta);
 		renderGrid();
+		renderUnitHighlights();
 		renderHUD();
-
-//		vfxManager.endInputCapture();
-//		vfxManager.update(Gdx.graphics.getDeltaTime());
-//		vfxManager.applyEffects();
-//		vfxManager.renderToScreen();
 	}
 
 	private void renderMap() {
@@ -345,10 +352,6 @@ public class BattleScreen extends GameScreen {
 
 	private void renderUnits() {
 		spriteBatch.begin();
-
-		if (battlemanager.getActiveUnit().getVisualComponent().isActive()) {
-			spriteBatch.draw(AssetManagerUtility.getSprite("purple"), battlemanager.getActiveUnit().getVisualComponent().getEntityactor().getX(), battlemanager.getActiveUnit().getVisualComponent().getEntityactor().getY(), 1.0f, 1.0f);
-		}
 		Player.getInstance().renderUnits(spriteBatch);
 		enemyTeamLeader.renderUnits(spriteBatch);
 	}
@@ -356,6 +359,54 @@ public class BattleScreen extends GameScreen {
 	private void renderParticles(final float delta) {
 		ParticleMaker.drawAllActiveParticles(spriteBatch, delta);
 		spriteBatch.end();
+	}
+
+	private void renderUnitHighlights() {
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		shapeRenderer.setProjectionMatrix(mapCamera.combined);
+
+		// Draw king indicator rings (pulsing gold)
+		float kingPulse = 0.65f + 0.35f * (float) Math.sin(totalTime * 3.0f);
+		List<Entity> allUnits = battlemanager.getUnits();
+		for (Entity entity : allUnits) {
+			if (entity.getEntityData().isKing() && entity.getCurrentPosition().getTileX() >= 0) {
+				float cx = entity.getCurrentPosition().getTileX() + 0.5f;
+				float cy = entity.getCurrentPosition().getTileY() + 0.5f;
+				Color kingColor = new Color(KING_RING_COLOR);
+				kingColor.a = kingColor.a * kingPulse;
+				shapeRenderer.begin(ShapeType.Line);
+				Gdx.gl.glLineWidth(3f);
+				shapeRenderer.setColor(kingColor);
+				shapeRenderer.circle(cx, cy, 0.55f, 32);
+				shapeRenderer.end();
+				shapeRenderer.begin(ShapeType.Line);
+				Gdx.gl.glLineWidth(1.5f);
+				kingColor.a *= 0.5f;
+				shapeRenderer.setColor(kingColor);
+				shapeRenderer.circle(cx, cy, 0.65f, 32);
+				shapeRenderer.end();
+				Gdx.gl.glLineWidth(1f);
+			}
+		}
+
+		// Draw active unit selection ring (cyan glow)
+		Entity activeUnit = battlemanager.getActiveUnit();
+		if (activeUnit != null && activeUnit.getVisualComponent().isActive() && activeUnit.getCurrentPosition().getTileX() >= 0) {
+			float pulse = 0.7f + 0.3f * (float) Math.sin(totalTime * 5.0f);
+			float cx = activeUnit.getCurrentPosition().getTileX() + 0.5f;
+			float cy = activeUnit.getCurrentPosition().getTileY() + 0.5f;
+			Color selColor = new Color(ACTIVE_UNIT_RING_COLOR);
+			selColor.a = selColor.a * pulse;
+			shapeRenderer.begin(ShapeType.Line);
+			Gdx.gl.glLineWidth(2.5f);
+			shapeRenderer.setColor(selColor);
+			shapeRenderer.rect(activeUnit.getCurrentPosition().getTileX() + 0.05f, activeUnit.getCurrentPosition().getTileY() + 0.05f, 0.9f, 0.9f);
+			shapeRenderer.end();
+			Gdx.gl.glLineWidth(1f);
+		}
+
+		Gdx.gl.glDisable(GL20.GL_BLEND);
 	}
 
 	private void renderHUD() {
@@ -366,10 +417,10 @@ public class BattleScreen extends GameScreen {
 
 	public void renderGrid() {
 		for (int x = 0; x < currentMap.getMapWidth(); x += 1) {
-			GraphicalUtility.drawDebugLine(new Vector2(x, 0), new Vector2(x, currentMap.getMapHeight()), mapCamera.combined);
+			GraphicalUtility.drawDebugLine(new Vector2(x, 0), new Vector2(x, currentMap.getMapHeight()), 1, GRID_LINE_COLOR, mapCamera.combined);
 		}
 		for (int y = 0; y < currentMap.getMapHeight(); y += 1) {
-			GraphicalUtility.drawDebugLine(new Vector2(0, y), new Vector2(currentMap.getMapWidth(), y), mapCamera.combined);
+			GraphicalUtility.drawDebugLine(new Vector2(0, y), new Vector2(currentMap.getMapWidth(), y), 1, GRID_LINE_COLOR, mapCamera.combined);
 		}
 	}
 
@@ -404,8 +455,7 @@ public class BattleScreen extends GameScreen {
 		mapRenderer.dispose();
 		pauseMenu.dispose();
 		currentMap.dispose();
-//		vfxManager.dispose();
-//		vfxEffect.dispose();
+		shapeRenderer.dispose();
 	}
 
 	public void clickedOnTileMapActor(TiledMapActor actor) {
@@ -610,6 +660,9 @@ public class BattleScreen extends GameScreen {
 			break;
 		case ENEMY_TURN:
 			hud.getHudMessages().showPopup(HudMessageTypes.ENEMY_TURN);
+			break;
+		case KING_IN_DANGER:
+			hud.getHudMessages().showPopup(HudMessageTypes.KING_IN_DANGER);
 			break;
 		default:
 			break;

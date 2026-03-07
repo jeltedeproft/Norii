@@ -54,6 +54,8 @@ public class BattleManager {
 	private int unitsDeployed;
 	private BattleScreen battleScreen;
 	private int turn = 0;
+	private boolean playerHadKingAtStart = false;
+	private boolean aiHadKingAtStart = false;
 
 	public enum BattleStateEnum {
 		DEPLOYMENT,
@@ -103,6 +105,13 @@ public class BattleManager {
 		activeBattleState.addEntity(unit);
 		if (unit.isPlayerUnit()) {
 			unitsDeployed++;
+			if (unit.getEntityData().isKing()) {
+				playerHadKingAtStart = true;
+			}
+		} else {
+			if (unit.getEntityData().isKing()) {
+				aiHadKingAtStart = true;
+			}
 		}
 	}
 
@@ -241,6 +250,9 @@ public class BattleManager {
 			break;
 		case ATTACK:
 			final Entity entityToAttack = getEntityByID(activeBattleState.get(move.getLocation().x, move.getLocation().y).getUnit().getEntityID());
+			if (entityToAttack.getEntityData().isKing()) {
+				sendMessageToBattleScreen(MessageToBattleScreen.KING_IN_DANGER, entityToAttack);
+			}
 			entity.attack(entityToAttack, DamageType.PHYSICAL);
 			sendMessageToBattleScreen(MessageToBattleScreen.UPDATE_UI, entityToAttack);
 			AudioManager.getInstance().onNotify(AudioCommand.SOUND_PLAY_ONCE, AudioTypeEvent.ATTACK_SOUND);
@@ -259,13 +271,38 @@ public class BattleManager {
 	}
 
 	private void checkVictory() {
-		if (activeBattleState.getAiUnits().isEmpty()) {
-			sendMessageToBattleScreen(MessageToBattleScreen.PLAYER_WINS, activeUnit);
+		boolean aiKingAlive = false;
+		for (Entity e : activeBattleState.getAiUnits()) {
+			if (e.getEntityData().isKing()) {
+				aiKingAlive = true;
+				break;
+			}
+		}
+		boolean playerKingAlive = false;
+		for (Entity e : activeBattleState.getPlayerUnits()) {
+			if (e.getEntityData().isKing()) {
+				playerKingAlive = true;
+				break;
+			}
 		}
 
-		if (activeBattleState.getPlayerUnits().isEmpty()) {
+		boolean aiDefeated = aiHadKingAtStart ? !aiKingAlive : activeBattleState.getAiUnits().isEmpty();
+		boolean playerDefeated = playerHadKingAtStart ? !playerKingAlive : activeBattleState.getPlayerUnits().isEmpty();
+
+		if (aiDefeated) {
+			sendMessageToBattleScreen(MessageToBattleScreen.PLAYER_WINS, activeUnit);
+		}
+		if (playerDefeated) {
 			sendMessageToBattleScreen(MessageToBattleScreen.AI_WINS, activeUnit);
 		}
+	}
+
+	public boolean isPlayerHadKingAtStart() {
+		return playerHadKingAtStart;
+	}
+
+	public boolean isAiHadKingAtStart() {
+		return aiHadKingAtStart;
 	}
 
 	public Entity getEntityByID(int entityID) {

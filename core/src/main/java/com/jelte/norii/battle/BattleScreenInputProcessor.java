@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+
 import com.jelte.norii.screen.BattleScreen;
 
 public class BattleScreenInputProcessor implements InputProcessor {
@@ -177,6 +178,11 @@ public class BattleScreenInputProcessor implements InputProcessor {
 
 	@Override
 	public boolean scrolled(float amountX, float amountY) {
+		return false;
+	}
+
+	@Override
+	public boolean touchCancelled(int screenX, int screenY, int pointer, int button) {
 		return false;
 	}
 

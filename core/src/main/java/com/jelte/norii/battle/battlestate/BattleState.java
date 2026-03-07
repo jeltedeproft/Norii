@@ -400,6 +400,25 @@ public class BattleState implements Comparable<BattleState> {
 			}
 		}
 
+		// King-based win/loss scoring: heavily weight king survival
+		boolean playerKingAlive = false;
+		boolean aiKingAlive = false;
+		for (Entity e : units.values()) {
+			if (e.getEntityData().isKing()) {
+				if (e.isPlayerUnit()) {
+					playerKingAlive = true;
+				} else {
+					aiKingAlive = true;
+				}
+			}
+		}
+		if (!playerKingAlive) {
+			sum += 200; // AI wins big
+		}
+		if (!aiKingAlive) {
+			sum -= 200; // Player wins big
+		}
+
 		if (getPlayerUnits().isEmpty()) {
 			sum += 50;
 		}

@@ -39,4 +39,8 @@ subprojects {
 	}
 }
 
+ext {
+    gdxControllersVersion = '2.0.1' // see badges above for latest versions
+}
+
 eclipse.project.name = 'Norii' + '-parent'

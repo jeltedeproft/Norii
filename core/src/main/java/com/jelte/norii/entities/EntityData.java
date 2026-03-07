@@ -15,6 +15,7 @@ public class EntityData {
 	private int basicAttackCost;
 	private String ability;
 	private String unitExplanation;
+	private boolean isKing;
 
 	public EntityData() {
 		// empty constructor
@@ -122,6 +123,14 @@ public class EntityData {
 
 	public void setUnitExplanation(String spellExplanation) {
 		this.unitExplanation = spellExplanation;
+	}
+
+	public boolean isKing() {
+		return isKing;
+	}
+
+	public void setIsKing(boolean isKing) {
+		this.isKing = isKing;
 	}
 
 	@Override

@@ -16,8 +16,9 @@ public class HudMessages {
 	public static final String INVALID_SPAWN_POINT_MESSAGE = "Invalid Spawn Point";
 	public static final String INVALID_SPELL_TARGET_MESSAGE = "Invalid Spell Target";
 	public static final String NOT_ENOUGH_AP_MESSAGE = "Not enough AP";
-	public static final String AI_VICTORY_MESSAGE = "You Lose!";
-	public static final String PLAYER_VICTORY_MESSAGE = "You Win!";
+	public static final String AI_VICTORY_MESSAGE = "Your Commander has fallen!\nYou Lose!";
+	public static final String PLAYER_VICTORY_MESSAGE = "Enemy Commander defeated!\nYou Win!";
+	public static final String KING_IN_DANGER_MESSAGE = "Your Commander is in danger!";
 	public static final String DEPLOY_UNITS_MESSAGE = "Deploy your units \n on one of the \n blue squares";
 	public static final String NUMBER_OF_UNITS_DEPLOYED_MESSAGE = "Deployed 0/0 units";
 	public static final String SELECT_UNIT_MESSAGE = "Click once on a \n unit to select it.";
@@ -25,7 +26,7 @@ public class HudMessages {
 	public static final String EXPLAIN_TURNING_MESSAGE = "You can change the direction your character is facing, \n by pressing W, A, S, D.";
 	public static final String EXPLAIN_END_TURN_MESSAGE = "Press skip to end your turn.";
 	public static final String EXPLAIN_CANCEL_MESSAGE = "Right click on the mouse to cancel any action.";
-	public static final String EXPLAIN_WIN_LOSE_MESSAGE = "Once all your enemies are defeated\n, you win the round";
+	public static final String EXPLAIN_WIN_LOSE_MESSAGE = "Defeat the enemy Commander to win!\nProtect your own Commander at all costs.";
 	public static final String PLAYER_TURN_MESSAGE = "Player turn";
 	public static final String ENEMY_TURN_MESSAGE = "Enemy turn";
 
@@ -58,6 +59,7 @@ public class HudMessages {
 		messageTypesToPopups.put(HudMessageTypes.NUMBER_OF_UNITS_DEPLOYED, new HudMessagePopup(NUMBER_OF_UNITS_DEPLOYED_MESSAGE));
 		messageTypesToPopups.put(HudMessageTypes.PLAYER_TURN, new HudMessagePopup(PLAYER_TURN_MESSAGE));
 		messageTypesToPopups.put(HudMessageTypes.ENEMY_TURN, new HudMessagePopup(ENEMY_TURN_MESSAGE));
+		messageTypesToPopups.put(HudMessageTypes.KING_IN_DANGER, new HudMessagePopup(KING_IN_DANGER_MESSAGE));
 
 		tutorialMessageTypesToWindows.put(HudMessageTypes.DEPLOY_UNITS_INFO, new HudMessageWindow(DEPLOY_UNITS_MESSAGE));
 		tutorialMessageTypesToWindows.put(HudMessageTypes.SELECT_UNIT_INFO, new HudMessageWindow(SELECT_UNIT_MESSAGE));

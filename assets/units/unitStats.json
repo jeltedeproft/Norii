@@ -4,15 +4,16 @@
 		"name": "Commander",
 		"portraitSpritePath": "CommanderIdleDown",
 		"entitySpriteName": "Commander",
-		"maxHP": 100,
+		"maxHP": 150,
 		"level": 1,
 		"attackRange": 1,
-		"attackPower": 12,
-		"magicalDefense": 25,
-		"physicalDefense": 25,
+		"attackPower": 14,
+		"magicalDefense": 30,
+		"physicalDefense": 30,
 		"basicAttackCost": 1,
-		"unitExplanation": "",
-		"ability": "EXPLOSION"
+		"unitExplanation": "The Commander leads the team. If the Commander falls, the battle is lost!",
+		"ability": "EXPLOSION",
+		"isKing": true
 	},
 	{
 		"id": 1,

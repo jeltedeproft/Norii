@@ -223,7 +223,7 @@ public class MainMenuScreen extends GameScreen {
 
 	@Override
 	public void render(final float delta) {
-		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClearColor(0.04f, 0.02f, 0.08f, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		updatebg();
 
@@ -231,7 +231,7 @@ public class MainMenuScreen extends GameScreen {
 		stage.act(delta);
 		stage.draw();
 
-		parallaxcamera.translate(2, 0, 0);
+		parallaxcamera.translate(delta * 60f, 0, 0);
 	}
 
 	public void updatebg() {
