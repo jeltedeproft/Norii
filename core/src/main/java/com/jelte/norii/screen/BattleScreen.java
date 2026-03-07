@@ -342,6 +342,7 @@ public class BattleScreen extends GameScreen {
 		renderParticles(delta);
 		renderGrid();
 		renderUnitHighlights();
+		renderVignette();
 		renderHUD();
 	}
 
@@ -408,6 +409,23 @@ public class BattleScreen extends GameScreen {
 			Gdx.gl.glLineWidth(1f);
 		}
 
+		Gdx.gl.glDisable(GL20.GL_BLEND);
+	}
+
+	private void renderVignette() {
+		final float w = com.jelte.norii.ui.Hud.UI_VIEWPORT_WIDTH;
+		final float h = com.jelte.norii.ui.Hud.UI_VIEWPORT_HEIGHT;
+		final float edge = w * 0.16f;
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		shapeRenderer.setProjectionMatrix(hudCamera.combined);
+		shapeRenderer.begin(ShapeType.Filled);
+		shapeRenderer.setColor(0f, 0f, 0f, 0.28f);
+		shapeRenderer.rect(0, 0, edge, h);
+		shapeRenderer.rect(w - edge, 0, edge, h);
+		shapeRenderer.rect(edge, 0, w - edge * 2f, edge);
+		shapeRenderer.rect(edge, h - edge, w - edge * 2f, edge);
+		shapeRenderer.end();
 		Gdx.gl.glDisable(GL20.GL_BLEND);
 	}
 
@@ -637,22 +655,46 @@ public class BattleScreen extends GameScreen {
 			hud.getHudMessages().showPopup(HudMessageTypes.INVALID_MOVE);
 			break;
 		case AI_WINS:
+			final Runnable aiWinsContinue;
 			if (CampaignManager.getInstance().isCampaignBattleActive()) {
-				CampaignManager.getInstance().endCampaignBattle();
-				ScreenManager.getInstance().showScreen(ScreenEnum.CAMPAIGN);
+				aiWinsContinue = new Runnable() {
+					@Override
+					public void run() {
+						CampaignManager.getInstance().endCampaignBattle();
+						ScreenManager.getInstance().showScreen(ScreenEnum.CAMPAIGN);
+					}
+				};
 			} else {
-				hud.getHudMessages().showPopup(HudMessageTypes.AI_VICTORY);
+				aiWinsContinue = new Runnable() {
+					@Override
+					public void run() {
+						ScreenManager.getInstance().showScreen(ScreenEnum.MAIN_MENU);
+					}
+				};
 			}
+			hud.getHudMessages().showVictory(false, "Your Commander has fallen...", aiWinsContinue);
 			break;
 		case PLAYER_WINS:
+			final Runnable playerWinsContinue;
 			if (CampaignManager.getInstance().isCampaignBattleActive()) {
-				CampaignManager.getInstance().completeCampaignLevel();
-				CampaignManager.getInstance().endCampaignBattle();
-				int lvl = CampaignManager.getInstance().getActiveLevelIndex();
-				ScreenManager.getInstance().showScreen(ScreenEnum.STORY, lvl, StoryType.OUTRO);
+				playerWinsContinue = new Runnable() {
+					@Override
+					public void run() {
+						CampaignManager.getInstance().completeCampaignLevel();
+						CampaignManager.getInstance().endCampaignBattle();
+						int lvl = CampaignManager.getInstance().getActiveLevelIndex();
+						ScreenManager.getInstance().showScreen(ScreenEnum.STORY, lvl, StoryType.OUTRO);
+					}
+				};
 			} else {
-				hud.getHudMessages().showPopup(HudMessageTypes.PLAYER_VICTORY);
+				playerWinsContinue = new Runnable() {
+					@Override
+					public void run() {
+						ScreenManager.getInstance().showScreen(ScreenEnum.MAIN_MENU);
+					}
+				};
 			}
+			hud.getHudMessages().showVictory(true, "Enemy Commander defeated!", playerWinsContinue);
 			break;
 		case FOCUS_CAMERA:
 			mapCamera.position.set(entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY(), 0f);
@@ -670,10 +712,10 @@ public class BattleScreen extends GameScreen {
 			hud.setLocked(true);
 			break;
 		case PLAYER_TURN:
-			hud.getHudMessages().showPopup(HudMessageTypes.PLAYER_TURN);
+			hud.getHudMessages().showTurnBanner(true);
 			break;
 		case ENEMY_TURN:
-			hud.getHudMessages().showPopup(HudMessageTypes.ENEMY_TURN);
+			hud.getHudMessages().showTurnBanner(false);
 			break;
 		case KING_IN_DANGER:
 			hud.getHudMessages().showPopup(HudMessageTypes.KING_IN_DANGER);

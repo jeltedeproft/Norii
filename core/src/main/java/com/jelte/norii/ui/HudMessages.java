@@ -16,9 +16,6 @@ public class HudMessages {
 	public static final String INVALID_SPAWN_POINT_MESSAGE = "Invalid Spawn Point";
 	public static final String INVALID_SPELL_TARGET_MESSAGE = "Invalid Spell Target";
 	public static final String NOT_ENOUGH_AP_MESSAGE = "Not enough AP";
-	public static final String AI_VICTORY_MESSAGE = "Your Commander has fallen!\nYou Lose!";
-	public static final String PLAYER_VICTORY_MESSAGE = "Enemy Commander defeated!\nYou Win!";
-	public static final String KING_IN_DANGER_MESSAGE = "Your Commander is in danger!";
 	public static final String DEPLOY_UNITS_MESSAGE = "Deploy your units \n on one of the \n blue squares";
 	public static final String NUMBER_OF_UNITS_DEPLOYED_MESSAGE = "Deployed 0/0 units";
 	public static final String SELECT_UNIT_MESSAGE = "Click once on a \n unit to select it.";
@@ -27,8 +24,7 @@ public class HudMessages {
 	public static final String EXPLAIN_END_TURN_MESSAGE = "Press skip to end your turn.";
 	public static final String EXPLAIN_CANCEL_MESSAGE = "Right click on the mouse to cancel any action.";
 	public static final String EXPLAIN_WIN_LOSE_MESSAGE = "Defeat the enemy Commander to win!\nProtect your own Commander at all costs.";
-	public static final String PLAYER_TURN_MESSAGE = "Player turn";
-	public static final String ENEMY_TURN_MESSAGE = "Enemy turn";
+	public static final String KING_IN_DANGER_MESSAGE = "Your Commander is in danger!";
 
 	private final EnumMap<HudMessageTypes, HudMessagePopup> messageTypesToPopups;
 	private final EnumMap<HudMessageTypes, HudMessageWindow> tutorialMessageTypesToWindows;
@@ -37,6 +33,9 @@ public class HudMessages {
 
 	private final Stage stage;
 	private final boolean isTutorial;
+
+	private VictoryOverlay victoryOverlay;
+	private TurnBanner turnBanner;
 
 	public HudMessages(Stage stage, boolean isTutorial) {
 		this.stage = stage;
@@ -54,11 +53,7 @@ public class HudMessages {
 		messageTypesToPopups.put(HudMessageTypes.INVALID_SPAWN_POINT, new HudMessagePopup(INVALID_SPAWN_POINT_MESSAGE));
 		messageTypesToPopups.put(HudMessageTypes.INVALID_SPELL_TARGET, new HudMessagePopup(INVALID_SPELL_TARGET_MESSAGE));
 		messageTypesToPopups.put(HudMessageTypes.NOT_ENOUGH_AP, new HudMessagePopup(NOT_ENOUGH_AP_MESSAGE));
-		messageTypesToPopups.put(HudMessageTypes.AI_VICTORY, new HudMessagePopup(AI_VICTORY_MESSAGE));
-		messageTypesToPopups.put(HudMessageTypes.PLAYER_VICTORY, new HudMessagePopup(PLAYER_VICTORY_MESSAGE));
 		messageTypesToPopups.put(HudMessageTypes.NUMBER_OF_UNITS_DEPLOYED, new HudMessagePopup(NUMBER_OF_UNITS_DEPLOYED_MESSAGE));
-		messageTypesToPopups.put(HudMessageTypes.PLAYER_TURN, new HudMessagePopup(PLAYER_TURN_MESSAGE));
-		messageTypesToPopups.put(HudMessageTypes.ENEMY_TURN, new HudMessagePopup(ENEMY_TURN_MESSAGE));
 		messageTypesToPopups.put(HudMessageTypes.KING_IN_DANGER, new HudMessagePopup(KING_IN_DANGER_MESSAGE));
 
 		tutorialMessageTypesToWindows.put(HudMessageTypes.DEPLOY_UNITS_INFO, new HudMessageWindow(DEPLOY_UNITS_MESSAGE));
@@ -88,6 +83,13 @@ public class HudMessages {
 		}
 
 		tutorialMessageTypesDisplayed.put(HudMessageTypes.DEPLOY_UNITS_INFO, true);
+
+		// Turn banner and victory overlay are added last so they render on top
+		turnBanner = new TurnBanner();
+		stage.addActor(turnBanner);
+
+		victoryOverlay = new VictoryOverlay();
+		stage.addActor(victoryOverlay);
 	}
 
 	public void showPopup(HudMessageTypes type) {
@@ -95,6 +97,18 @@ public class HudMessages {
 			messageTypesToPopups.get(type).getPopupMessage().setVisible(true);
 			messageTypesToPopups.get(type).getPopupMessage().addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(POPUP_MESSAGE_FADE_IN_OUT_DURATION), Actions.fadeOut(POPUP_MESSAGE_FADE_IN_OUT_DURATION)));
 		}
+	}
+
+	public void showTurnBanner(boolean playerTurn) {
+		if (playerTurn) {
+			turnBanner.showPlayerTurn();
+		} else {
+			turnBanner.showEnemyTurn();
+		}
+	}
+
+	public void showVictory(boolean playerWon, String subtitle, Runnable onContinue) {
+		victoryOverlay.show(playerWon, subtitle, onContinue);
 	}
 
 	public void showInfoWindow(HudMessageTypes type) {
@@ -123,5 +137,14 @@ public class HudMessages {
 	public void updateNumberOfDeployedUnits(int number, int max) {
 		messageTypesToPopups.get(HudMessageTypes.NUMBER_OF_UNITS_DEPLOYED).getPopupMessage().setText("deployed " + number + " / " + max + " units");
 		showPopup(HudMessageTypes.NUMBER_OF_UNITS_DEPLOYED);
+	}
+
+	public void dispose() {
+		if (victoryOverlay != null) {
+			victoryOverlay.dispose();
+		}
+		if (turnBanner != null) {
+			turnBanner.dispose();
+		}
 	}
 }

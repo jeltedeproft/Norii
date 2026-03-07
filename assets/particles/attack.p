@@ -84,22 +84,22 @@ scalingCount: 1
 scaling0: 1.0
 timelineCount: 1
 timeline0: 0.0
-- X Scale - 
+- X Scale -
 lowMin: 0.0
 lowMax: 0.0
-highMin: 30.0
-highMax: 30.0
+highMin: 36.0
+highMax: 36.0
 relative: false
 scalingCount: 1
 scaling0: 1.0
 timelineCount: 1
 timeline0: 0.0
-- Y Scale - 
+- Y Scale -
 active: true
 lowMin: 0.0
 lowMax: 0.0
-highMin: 30.0
-highMax: 30.0
+highMin: 36.0
+highMax: 36.0
 relative: false
 scalingCount: 1
 scaling0: 1.0
@@ -115,11 +115,11 @@ active: false
 active: false
 - Gravity - 
 active: false
-- Tint - 
+- Tint -
 colorsCount: 3
-colors0: 0.8156863
-colors1: 0.30588236
-colors2: 0.039215688
+colors0: 0.96862745
+colors1: 0.12156863
+colors2: 0.12156863
 timelineCount: 1
 timeline0: 0.0
 - Transparency - 

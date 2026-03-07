@@ -123,6 +123,7 @@ public class Hud {
 	}
 
 	public void dispose() {
+		hudMessages.dispose();
 		stage.dispose();
 	}
 
