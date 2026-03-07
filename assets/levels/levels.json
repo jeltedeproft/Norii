@@ -19,5 +19,57 @@
 		"units": [
 			"Black Slime Red Eyes"
 		]
+	},
+	{
+		"id": 2,
+		"name": "TeamDarkAwakening",
+		"units": [
+			"Black Slime Red Eyes",
+			"Black Slime Green Eyes",
+			"Black Slime Blue Eyes"
+		]
+	},
+	{
+		"id": 3,
+		"name": "TeamForestShadows",
+		"units": [
+			"Black Slime Pink Eyes",
+			"Black Slime Yellow Eyes",
+			"Ghost",
+			"Blue Ghosty"
+		]
+	},
+	{
+		"id": 4,
+		"name": "TeamCrossroads",
+		"units": [
+			"Shaman",
+			"Dark Mage",
+			"Black Dog",
+			"Black Slime Dark Blue Eyes"
+		]
+	},
+	{
+		"id": 5,
+		"name": "TeamDarkFortress",
+		"units": [
+			"Beast Ogre",
+			"Black Cat",
+			"Black Skeleton",
+			"Shaman",
+			"Black Slime Purple Eyes"
+		]
+	},
+	{
+		"id": 6,
+		"name": "TeamShadowThrone",
+		"units": [
+			"Commander",
+			"Icarus",
+			"Shaman",
+			"Beast Ogre",
+			"Black Dog",
+			"Dark Mage"
+		]
 	}
 ]

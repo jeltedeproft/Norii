@@ -67,6 +67,9 @@ The Gradle multi-project build has these subprojects:
 ### Multiplayer
 `ServerCommunicator` handles WebSocket communication. `OnlineEnemy` implements `UnitOwner` for remote opponents, receiving moves via `MyWebSocketAdapter`.
 
+### Campaign System
+5-level single-player campaign "The Shadow Chronicles" in `assets/campaign/campaign.json`. Flow: `CampaignScreen` → `StoryScreen (intro)` → `LoadingScreen` → `BattleScreen` → `StoryScreen (outro)` → `CampaignScreen`. `CampaignManager` (singleton) tracks active battle state. `CampaignFileReader` reads the JSON. Progress persisted via `ProfileManager.getCampaignProgress()` (key `campaignProgress` in libGDX Preferences). Reward units are unlocked in `ProfileManager.availableHeroes` on level completion. Enemy teams use `AITeamLeader.LevelEnum` values `CAMPAIGN_1`–`CAMPAIGN_5` (ordinals 2–6, matching levels.json ids 2–6).
+
 ### King Mechanic
 Each team can have a "King" unit (currently only the **Commander**, marked `"isKing": true` in `unitStats.json`). When the King dies, that team immediately loses — regardless of remaining units. If neither team has a King, the old "all units dead" condition applies (used by the Tutorial level). The AI scoring (`BattleState.calculateScore()`) weights king survival at ±200 points so the AI actively prioritizes attacking/protecting kings.
 

@@ -1,0 +1,52 @@
+[
+	{
+		"id": 0,
+		"chapter": "Chapter I",
+		"name": "The Dark Awakening",
+		"subtitle": "A kingdom in peril",
+		"introText": "The peaceful village of Elmwood lies in ruins. Shadow creatures have crossed the border under cover of night, leaving nothing but ash in their wake.\n\nYou are the Commander of the Royal Guard. It falls to you to drive them back.\n\nThis will be your first test. It will not be your last.",
+		"outroText": "The slimes retreat into the darkness. The village is saved — for now.\n\nBut the shadows stretch far beyond Elmwood. Reports arrive from the Whispering Forest: the trees have gone silent, and creatures of darkness stir within.\n\nYour march continues.",
+		"enemyLevelId": 2,
+		"rewardUnit": "Icarus"
+	},
+	{
+		"id": 1,
+		"chapter": "Chapter II",
+		"name": "Forest of Shadows",
+		"subtitle": "Where light dares not enter",
+		"introText": "The Whispering Forest has long been a place of eerie beauty. Today it is something worse.\n\nGhosts drift between the ancient trees. Dark slimes ooze across the roots. Something has twisted this place.\n\nYou push forward. Somewhere in this forest, an ally is waiting to be found.",
+		"outroText": "As the last creature dissolves into shadow, a figure descends from the canopy — Icarus, a winged warrior who has been hiding for days.\n\n'I have been watching you, Commander,' he says. 'You fight well. Let me fight with you.'\n\nA new ally joins your cause. The darkness has given you something in return.",
+		"enemyLevelId": 3,
+		"rewardUnit": "Dark Mage"
+	},
+	{
+		"id": 2,
+		"chapter": "Chapter III",
+		"name": "The Crossroads of Fate",
+		"subtitle": "Every path leads to war",
+		"introText": "At the crossroads of the kingdom's three great roads, a rival warband blocks your path.\n\nTheir Shaman is feared across the realm — she can swap positions in the blink of an eye, turning the tide of any battle. Beside her, a Dark Mage channels sinister power.\n\nThere is no going around them. You must go through.",
+		"outroText": "The warband scatters. The Shaman vanishes into smoke.\n\nThe Dark Mage kneels before you. 'I serve power,' he says simply. 'And you have it.' He rises and falls into step behind you.\n\nThe fortress of the Shadow Warlord looms on the horizon. Its gates will not open easily.",
+		"enemyLevelId": 4,
+		"rewardUnit": "Beast Ogre"
+	},
+	{
+		"id": 3,
+		"chapter": "Chapter IV",
+		"name": "Siege of the Dark Fortress",
+		"subtitle": "Iron gates and darker hearts",
+		"introText": "The Dark Fortress. For a generation, no army has breached its walls.\n\nA Beast Ogre guards the gate, its footsteps shaking the earth. Beside it, a Black Cat assassin moves like smoke and shadow.\n\nYour Commander must survive. Lose the Commander, and the army crumbles. This is what it means to lead.",
+		"outroText": "The gates fall. The Ogre roars its last.\n\nAmong the debris, the Beast Ogre — now freed from its dark binding — lumbers toward you. It was not a willing servant of the Warlord. It is now yours.\n\nOne battle remains. The Warlord has fled deep into the cursed swamp. The Shadow Throne awaits.",
+		"enemyLevelId": 5,
+		"rewardUnit": "Shaman"
+	},
+	{
+		"id": 4,
+		"chapter": "Chapter V",
+		"name": "The Shadow Throne",
+		"subtitle": "End what was begun",
+		"introText": "This is it.\n\nThe Shadow Warlord — the Demon — sits upon his throne in the heart of the cursed swamp. He is served by his most powerful champions: Icarus, the Shaman, the Beast Ogre, and more.\n\nHe is their King. Destroy him, and the darkness ends.\n\nProtect your Commander. Hunt theirs.\n\nFor Norii.",
+		"outroText": "The Demon falls.\n\nA silence spreads across the swamp, deeper than any you have known. Then, slowly, the shadows begin to recede.\n\nThe curse is broken.\n\nYou return to Elmwood — the village where it all began. The people cheer. The sky is clear for the first time in years.\n\nBut you know the truth that every Commander learns: darkness is patient. It will return.\n\nAnd so will you.",
+		"enemyLevelId": 6,
+		"rewardUnit": null
+	}
+]

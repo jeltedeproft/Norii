@@ -35,7 +35,12 @@ public class AITeamLeader implements UnitOwner {
 
 	public enum LevelEnum {
 		DESERT_TEAM,
-		TUTORIAL
+		TUTORIAL,
+		CAMPAIGN_1,
+		CAMPAIGN_2,
+		CAMPAIGN_3,
+		CAMPAIGN_4,
+		CAMPAIGN_5
 	}
 
 	public AITeamLeader(final LevelEnum levelEnum) {

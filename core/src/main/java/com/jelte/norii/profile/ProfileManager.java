@@ -54,6 +54,16 @@ public class ProfileManager {
 		preferences.putInteger(PropertiesEnum.MAX_HERO_COUNT.getPropertyName(), count);
 	}
 
+	/** Returns the index of the highest campaign level completed, or -1 if none. */
+	public int getCampaignProgress() {
+		return preferences.getInteger(PropertiesEnum.CAMPAIGN_PROGRESS.getPropertyName(), -1);
+	}
+
+	public void setCampaignProgress(int highestLevelCompleted) {
+		preferences.putInteger(PropertiesEnum.CAMPAIGN_PROGRESS.getPropertyName(), highestLevelCompleted);
+		saveSettings();
+	}
+
 	public void saveSettings() {
 		preferences.flush();
 	}

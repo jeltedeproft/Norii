@@ -4,6 +4,7 @@ import com.badlogic.gdx.Screen;
 import com.jelte.norii.entities.UnitOwner;
 import com.jelte.norii.map.MapFactory.MapType;
 import com.jelte.norii.map.MapManager;
+import com.jelte.norii.screen.StoryScreen.StoryType;
 
 public enum ScreenEnum {
 
@@ -51,6 +52,20 @@ public enum ScreenEnum {
 			final UnitOwner unitOwner = (UnitOwner) params[ScreenEnum.ScreenParams.UNIT_OWNER.ordinal()];
 			final MapType mapType = (MapType) params[ScreenEnum.ScreenParams.MAP.ordinal()];
 			return new LoadingScreen(unitOwner, mapType);
+		}
+	},
+	CAMPAIGN {
+		@Override
+		public Screen getScreen(Object... params) {
+			return new CampaignScreen();
+		}
+	},
+	STORY {
+		@Override
+		public Screen getScreen(Object... params) {
+			final int levelIndex = (int) params[0];
+			final StoryType storyType = (StoryType) params[1];
+			return new StoryScreen(levelIndex, storyType);
 		}
 	};
 

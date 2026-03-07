@@ -49,6 +49,8 @@ import com.jelte.norii.multiplayer.NetworkMessage;
 import com.jelte.norii.multiplayer.ServerCommunicator;
 import com.jelte.norii.particles.ParticleMaker;
 import com.jelte.norii.particles.ParticleType;
+import com.jelte.norii.campaign.CampaignManager;
+import com.jelte.norii.screen.StoryScreen.StoryType;
 import com.jelte.norii.ui.Hud;
 import com.jelte.norii.ui.HudMessageTypes;
 import com.jelte.norii.ui.MessageToBattleScreen;
@@ -635,10 +637,22 @@ public class BattleScreen extends GameScreen {
 			hud.getHudMessages().showPopup(HudMessageTypes.INVALID_MOVE);
 			break;
 		case AI_WINS:
-			hud.getHudMessages().showPopup(HudMessageTypes.AI_VICTORY);
+			if (CampaignManager.getInstance().isCampaignBattleActive()) {
+				CampaignManager.getInstance().endCampaignBattle();
+				ScreenManager.getInstance().showScreen(ScreenEnum.CAMPAIGN);
+			} else {
+				hud.getHudMessages().showPopup(HudMessageTypes.AI_VICTORY);
+			}
 			break;
 		case PLAYER_WINS:
-			hud.getHudMessages().showPopup(HudMessageTypes.PLAYER_VICTORY);
+			if (CampaignManager.getInstance().isCampaignBattleActive()) {
+				CampaignManager.getInstance().completeCampaignLevel();
+				CampaignManager.getInstance().endCampaignBattle();
+				int lvl = CampaignManager.getInstance().getActiveLevelIndex();
+				ScreenManager.getInstance().showScreen(ScreenEnum.STORY, lvl, StoryType.OUTRO);
+			} else {
+				hud.getHudMessages().showPopup(HudMessageTypes.PLAYER_VICTORY);
+			}
 			break;
 		case FOCUS_CAMERA:
 			mapCamera.position.set(entity.getCurrentPosition().getTileX(), entity.getCurrentPosition().getTileY(), 0f);

@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.jelte.norii.ai.AITeamFileReader;
 import com.jelte.norii.ai.AITeamLeader;
+import com.jelte.norii.campaign.CampaignFileReader;
 import com.jelte.norii.ai.AITeamLeader.LevelEnum;
 import com.jelte.norii.audio.AudioCommand;
 import com.jelte.norii.audio.AudioManager;
@@ -54,6 +55,7 @@ public class MainMenuScreen extends GameScreen {
 	private ParallaxBackground parallaxBackground;
 
 	private Table mainMenuTableOfButtons;
+	private TextButton campaignButton;
 	private TextButton playButton;
 	private TextButton multiplayerButton;
 	private TextButton playTutorialButton;
@@ -89,6 +91,7 @@ public class MainMenuScreen extends GameScreen {
 		ApFileReader.loadApInMemory();
 		SpellFileReader.loadSpellsInMemory();
 		AITeamFileReader.loadLevelsInMemory();
+		CampaignFileReader.loadCampaignInMemory();
 		ProfileManager.getInstance().initialise();
 	}
 
@@ -129,7 +132,8 @@ public class MainMenuScreen extends GameScreen {
 		final Skin statusUISkin = AssetManagerUtility.getSkin();
 
 		title = new Label(" Norii", statusUISkin, TITLE_FONT_NAME);
-		playButton = new TextButton("Play", statusUISkin, TEXT_BUTTON_STYLE);
+		campaignButton = new TextButton("Campaign", statusUISkin, TEXT_BUTTON_STYLE);
+		playButton = new TextButton("Quick Battle", statusUISkin, TEXT_BUTTON_STYLE);
 		multiplayerButton = new TextButton("Multiplayer", statusUISkin, TEXT_BUTTON_STYLE);
 		playTutorialButton = new TextButton("Play Tutorial", statusUISkin, TEXT_BUTTON_STYLE);
 		setTeamButton = new TextButton("Manage Team", statusUISkin, TEXT_BUTTON_STYLE);
@@ -144,6 +148,7 @@ public class MainMenuScreen extends GameScreen {
 		final float buttonPadTop = (initialHeight * HEIGHT_REDUCTION_FACTOR) * BUTTON_PAD_TOP_PERCENT;
 
 		mainMenuTableOfButtons.add(title).spaceBottom(titlePadBottom).padTop(buttonPadTop).row();
+		mainMenuTableOfButtons.add(campaignButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM_PERCENT).padTop(BUTTON_PAD_TOP_PERCENT).row();
 		mainMenuTableOfButtons.add(playButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM_PERCENT).padTop(BUTTON_PAD_TOP_PERCENT).row();
 		mainMenuTableOfButtons.add(multiplayerButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM_PERCENT).padTop(BUTTON_PAD_TOP_PERCENT).row();
 		mainMenuTableOfButtons.add(playTutorialButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM_PERCENT).padTop(BUTTON_PAD_TOP_PERCENT).row();
@@ -155,6 +160,14 @@ public class MainMenuScreen extends GameScreen {
 	}
 
 	private void addListeners() {
+		campaignButton.addListener(new InputListener() {
+			@Override
+			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
+				ScreenManager.getInstance().showScreen(ScreenEnum.CAMPAIGN);
+				return true;
+			}
+		});
+
 		playButton.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer, final int button) {
