@@ -14,6 +14,8 @@ public class ApBar extends Table {
 
 	public ApBar() {
 		allAP = new HorizontalGroup();
+		allAP.space(4);
+		allAP.pad(4);
 		setBackground(AssetManagerUtility.getSkin().getDrawable("window-noborder"));
 		setTransform(false);
 		pad(0);
@@ -23,7 +25,7 @@ public class ApBar extends Table {
 			final Button button = new Button(statusUISkin, "ap");
 			allAP.addActor(button);
 		}
-		add(allAP).height(Hud.UI_VIEWPORT_HEIGHT * 0.1f);
+		add(allAP);
 		validate();
 		invalidateHierarchy();
 		pack();

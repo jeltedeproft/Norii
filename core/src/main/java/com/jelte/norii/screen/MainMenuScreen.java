@@ -17,7 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.Align;
 import com.jelte.norii.ai.AITeamFileReader;
 import com.jelte.norii.ai.AITeamLeader;
 import com.jelte.norii.campaign.CampaignFileReader;
@@ -34,18 +34,15 @@ import com.jelte.norii.entities.UnitOwner;
 import com.jelte.norii.magic.SpellFileReader;
 import com.jelte.norii.map.MapFactory.MapType;
 import com.jelte.norii.profile.ProfileManager;
+import com.jelte.norii.ui.PixelViewport;
 import com.jelte.norii.utility.AssetManagerUtility;
 import com.jelte.norii.utility.parallax.ParallaxBackground;
 import com.jelte.norii.utility.parallax.ParallaxUtils.WH;
 import com.jelte.norii.utility.parallax.TextureRegionParallaxLayer;
 
 public class MainMenuScreen extends GameScreen {
-	private static final float HEIGHT_REDUCTION_FACTOR = 0.01f;
-	private static final float BUTTON_WIDTH_FACTOR = 0.3f;
-	private static final float BUTTON_HEIGHT_FACTOR = 0.105f;
-	private static final float TITLE_PAD_BOTTOM_PERCENT = 8;
-	private static final float BUTTON_PAD_BOTTOM_PERCENT = 0.1f;
-	private static final float BUTTON_PAD_TOP_PERCENT = 0.1f;
+	private static final float BUTTON_WIDTH = 280f;
+	private static final float BUTTON_HEIGHT = 32f;
 	private static final String TITLE_FONT_NAME = "bigFont";
 	private static final String TEXT_BUTTON_STYLE = "lumos30";
 
@@ -100,7 +97,7 @@ public class MainMenuScreen extends GameScreen {
 		playerMonsters = new ArrayList<>();
 		initialWidth = Gdx.graphics.getWidth();
 		initialHeight = Gdx.graphics.getHeight();
-		stage = new Stage(new ExtendViewport(initialWidth, initialHeight), backgroundbatch);
+		stage = new Stage(new PixelViewport(), backgroundbatch);
 		parallaxcamera = new OrthographicCamera();
 		parallaxcamera.setToOrtho(false, initialWidth, initialHeight);
 		parallaxcamera.update();
@@ -131,7 +128,8 @@ public class MainMenuScreen extends GameScreen {
 	private void createButtons() {
 		final Skin statusUISkin = AssetManagerUtility.getSkin();
 
-		title = new Label(" Norii", statusUISkin, TITLE_FONT_NAME);
+		title = new Label("Norii", statusUISkin, TITLE_FONT_NAME);
+		title.setAlignment(Align.center);
 		campaignButton = new TextButton("Campaign", statusUISkin, TEXT_BUTTON_STYLE);
 		playButton = new TextButton("Quick Battle", statusUISkin, TEXT_BUTTON_STYLE);
 		multiplayerButton = new TextButton("Multiplayer", statusUISkin, TEXT_BUTTON_STYLE);
@@ -142,20 +140,19 @@ public class MainMenuScreen extends GameScreen {
 	}
 
 	private void createLayout() {
-		final float buttonWidth = initialWidth * BUTTON_WIDTH_FACTOR;
-		final float buttonHeight = initialHeight * BUTTON_HEIGHT_FACTOR;
-		final float titlePadBottom = (initialHeight * HEIGHT_REDUCTION_FACTOR) * TITLE_PAD_BOTTOM_PERCENT;
-		final float buttonPadTop = (initialHeight * HEIGHT_REDUCTION_FACTOR) * BUTTON_PAD_TOP_PERCENT;
+		final Table panel = new Table();
+		panel.setBackground(AssetManagerUtility.getSkin().getDrawable("windowBackground10Patch"));
+		panel.pad(16, 22, 18, 22);
+		panel.add(title).padBottom(12).row();
+		panel.add(campaignButton).height(BUTTON_HEIGHT).width(BUTTON_WIDTH).padBottom(5).row();
+		panel.add(playButton).height(BUTTON_HEIGHT).width(BUTTON_WIDTH).padBottom(5).row();
+		panel.add(multiplayerButton).height(BUTTON_HEIGHT).width(BUTTON_WIDTH).padBottom(5).row();
+		panel.add(playTutorialButton).height(BUTTON_HEIGHT).width(BUTTON_WIDTH).padBottom(5).row();
+		panel.add(setTeamButton).height(BUTTON_HEIGHT).width(BUTTON_WIDTH).padBottom(5).row();
+		panel.add(settingsButton).height(BUTTON_HEIGHT).width(BUTTON_WIDTH).padBottom(5).row();
+		panel.add(exitButton).height(BUTTON_HEIGHT).width(BUTTON_WIDTH);
 
-		mainMenuTableOfButtons.add(title).spaceBottom(titlePadBottom).padTop(buttonPadTop).row();
-		mainMenuTableOfButtons.add(campaignButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM_PERCENT).padTop(BUTTON_PAD_TOP_PERCENT).row();
-		mainMenuTableOfButtons.add(playButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM_PERCENT).padTop(BUTTON_PAD_TOP_PERCENT).row();
-		mainMenuTableOfButtons.add(multiplayerButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM_PERCENT).padTop(BUTTON_PAD_TOP_PERCENT).row();
-		mainMenuTableOfButtons.add(playTutorialButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM_PERCENT).padTop(BUTTON_PAD_TOP_PERCENT).row();
-		mainMenuTableOfButtons.add(setTeamButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM_PERCENT).padTop(BUTTON_PAD_TOP_PERCENT).row();
-		mainMenuTableOfButtons.add(settingsButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM_PERCENT).padTop(BUTTON_PAD_TOP_PERCENT).row();
-		mainMenuTableOfButtons.add(exitButton).height(buttonHeight).width(buttonWidth).spaceBottom(BUTTON_PAD_BOTTOM_PERCENT).padTop(BUTTON_PAD_TOP_PERCENT).row();
-
+		mainMenuTableOfButtons.add(panel);
 		stage.addActor(mainMenuTableOfButtons);
 	}
 
@@ -238,6 +235,7 @@ public class MainMenuScreen extends GameScreen {
 	public void render(final float delta) {
 		Gdx.gl.glClearColor(0.04f, 0.02f, 0.08f, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		PixelViewport.beginFullScreen();
 		updatebg();
 
 		stage.getViewport().apply();
@@ -256,6 +254,7 @@ public class MainMenuScreen extends GameScreen {
 	@Override
 	public void resize(final int width, final int height) {
 		stage.getViewport().update(width, height, true);
+		parallaxcamera.setToOrtho(false, width, height);
 	}
 
 	@Override

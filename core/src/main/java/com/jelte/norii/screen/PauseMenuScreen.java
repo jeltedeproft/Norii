@@ -1,8 +1,6 @@
 package com.jelte.norii.screen;
 
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -10,13 +8,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.Align;
+import com.jelte.norii.ui.PixelViewport;
 import com.jelte.norii.utility.AssetManagerUtility;
 
 public class PauseMenuScreen extends GameScreen {
-	private static final String PAUSE_BACKGROUND = "bg";
-
 	private Stage stage;
 	private BattleScreen battleScreen;
 	private Table menuTable;
@@ -27,19 +23,15 @@ public class PauseMenuScreen extends GameScreen {
 
 	private boolean isVisible;
 
-	private static final int TITLE_FONT_SCALE = 2;
-	private static final int BOTTOM_PAD = 10;
-	private static final int TOP_PAD = 50;
-
-	public PauseMenuScreen(Camera camera, BattleScreen battleScreen, SpriteBatch spriteBatch) {
-		initVariables(camera, battleScreen, spriteBatch);
+	public PauseMenuScreen(BattleScreen battleScreen, SpriteBatch spriteBatch) {
+		initVariables(battleScreen, spriteBatch);
 		createUI();
 		createLayout();
 		addListeners();
 	}
 
-	private void initVariables(Camera camera, BattleScreen battleScreen, SpriteBatch spriteBatch) {
-		stage = new Stage(new ScreenViewport(camera), spriteBatch);
+	private void initVariables(BattleScreen battleScreen, SpriteBatch spriteBatch) {
+		stage = new Stage(new PixelViewport(), spriteBatch);
 		menuTable = new Table();
 		menuTable.setDebug(false);
 		menuTable.setFillParent(true);
@@ -49,20 +41,22 @@ public class PauseMenuScreen extends GameScreen {
 
 	private void createUI() {
 		final Skin statusUISkin = AssetManagerUtility.getSkin();
-		title = new Label("Pause", statusUISkin);
-		title.setFontScale(TITLE_FONT_SCALE);
+		title = new Label("Paused", statusUISkin, "bigFont");
+		title.setAlignment(Align.center);
 		resumeButton = new TextButton("Resume", statusUISkin);
 		settingButton = new TextButton("Settings", statusUISkin);
 		mainMenuButton = new TextButton("Main Menu", statusUISkin);
 	}
 
 	private void createLayout() {
-		menuTable.background(new TextureRegionDrawable(new TextureRegion(AssetManagerUtility.getSprite(PAUSE_BACKGROUND))));
-		menuTable.row();
-		menuTable.add(title).spaceBottom(BOTTOM_PAD).padTop(TOP_PAD).row();
-		menuTable.add(resumeButton).spaceBottom(BOTTOM_PAD).row();
-		menuTable.add(settingButton).spaceBottom(BOTTOM_PAD).row();
-		menuTable.add(mainMenuButton).spaceBottom(BOTTOM_PAD).row();
+		Table panel = new Table();
+		panel.setBackground(AssetManagerUtility.getSkin().getDrawable("windowBackground10Patch"));
+		panel.pad(18, 22, 18, 22);
+		panel.add(title).padBottom(12).row();
+		panel.add(resumeButton).width(200).height(32).padBottom(6).row();
+		panel.add(settingButton).width(200).height(32).padBottom(6).row();
+		panel.add(mainMenuButton).width(200).height(32);
+		menuTable.add(panel);
 		stage.addActor(menuTable);
 	}
 

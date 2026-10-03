@@ -18,19 +18,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.jelte.norii.ui.PixelViewport;
 import com.jelte.norii.utility.AssetManagerUtility;
 import com.jelte.norii.utility.parallax.ParallaxBackground;
 import com.jelte.norii.utility.parallax.ParallaxUtils.WH;
 import com.jelte.norii.utility.parallax.TextureRegionParallaxLayer;
 
 public class SettingsScreen extends GameScreen {
-	private static final int SETTINGS_LABEL_WIDTH = 200;
-	private static final int SETTINGS_LABEL_HEIGHT = 75;
-	private static final int TITLE_WIDTH = 1000;
-	private static final int TITLE_HEIGHT = 250;
-	private static final int TITLE_SPACE_BOTTOM = 100;
-	private static final int TITLE_COLSPAN = 10;
 	private static final float SPEED_FOREGROUND_TREES = .6f;
 	private static final float SPEED_BACKGROUND_MIDDLE_TREES = .75f;
 	private static final float SPEED_BACKGROUND_LIGHT = .6f;
@@ -41,9 +35,9 @@ public class SettingsScreen extends GameScreen {
 	private static final String BACKGROUND_BACK_TREES = "background-back-trees";
 	private static final String[] displayModes = { "2048 x 1080" };
 	private static final String TITLE_FONT = "bigFont";
-	private static final String TITLE = "SETTINGS";
-	private static final String EXIT = "exit";
-	private static final String ASPECT_RATIO = "aspect ratio";
+	private static final String TITLE = "Settings";
+	private static final String EXIT = "Exit";
+	private static final String ASPECT_RATIO = "Aspect ratio";
 
 	private Label titleLabel;
 	private Label settingsLabel;
@@ -65,7 +59,7 @@ public class SettingsScreen extends GameScreen {
 
 	private void initializeVariables() {
 		backgroundbatch = new SpriteBatch();
-		stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), backgroundbatch);
+		stage = new Stage(new PixelViewport(), backgroundbatch);
 		parallaxCamera = new OrthographicCamera();
 		parallaxCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		parallaxCamera.update();
@@ -77,7 +71,7 @@ public class SettingsScreen extends GameScreen {
 		final Skin statusUISkin = AssetManagerUtility.getSkin();
 
 		titleLabel = new Label(TITLE, statusUISkin, TITLE_FONT);
-		titleLabel.setAlignment(Align.top);
+		titleLabel.setAlignment(Align.center);
 		settingsLabel = new Label(ASPECT_RATIO, statusUISkin);
 
 		aspectRatioSelectBox = new SelectBox<>(statusUISkin);
@@ -108,13 +102,10 @@ public class SettingsScreen extends GameScreen {
 	}
 
 	private void addButtons() {
-		table.add(titleLabel).expandX().colspan(TITLE_COLSPAN).spaceBottom(TITLE_SPACE_BOTTOM).height(TITLE_HEIGHT).width(TITLE_WIDTH).row();
-		table.add(settingsLabel).height(SETTINGS_LABEL_HEIGHT).width(SETTINGS_LABEL_WIDTH).row();
-		table.add(settingsLabel).height(SETTINGS_LABEL_HEIGHT).width(SETTINGS_LABEL_WIDTH).row();
-		table.add(settingsLabel).height(SETTINGS_LABEL_HEIGHT).width(SETTINGS_LABEL_WIDTH).row();
-		table.add(settingsLabel).height(SETTINGS_LABEL_HEIGHT).width(SETTINGS_LABEL_WIDTH);
-		table.add(aspectRatioSelectBox).height(75).width(500).row();
-		table.add(exitTextButton).spaceTop(100).height(100).width(100).row();
+		table.add(titleLabel).padBottom(18).row();
+		table.add(settingsLabel).padBottom(8).row();
+		table.add(aspectRatioSelectBox).width(220).height(28).padBottom(18).row();
+		table.add(exitTextButton).width(160).height(32).row();
 
 		stage.addActor(table);
 	}
@@ -149,9 +140,11 @@ public class SettingsScreen extends GameScreen {
 
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClearColor(0.04f, 0.02f, 0.08f, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		PixelViewport.beginFullScreen();
 		updatebg();
+		stage.getViewport().apply();
 		stage.act(delta);
 		stage.draw();
 
@@ -166,7 +159,8 @@ public class SettingsScreen extends GameScreen {
 
 	@Override
 	public void resize(int width, int height) {
-		stage.getViewport().update(width, height, false);
+		stage.getViewport().update(width, height, true);
+		parallaxCamera.setToOrtho(false, width, height);
 	}
 
 	@Override

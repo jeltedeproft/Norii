@@ -87,9 +87,9 @@ public class BattleScreen extends GameScreen {
 	private ShapeRenderer shapeRenderer;
 	private float totalTime = 0f;
 
-	private static final Color KING_RING_COLOR = new Color(1f, 0.84f, 0f, 0.85f);
-	private static final Color ACTIVE_UNIT_RING_COLOR = new Color(0.4f, 0.8f, 1f, 0.9f);
-	private static final Color GRID_LINE_COLOR = new Color(0.3f, 0.4f, 0.6f, 0.18f);
+	private static final Color KING_RING_COLOR = new Color(0.95f, 0.78f, 0.28f, 0.85f);
+	private static final Color ACTIVE_UNIT_RING_COLOR = new Color(0.94f, 0.91f, 0.82f, 0.9f);
+	private static final Color GRID_LINE_COLOR = new Color(0.35f, 0.42f, 0.38f, 0.18f);
 
 	private boolean isPaused;
 
@@ -157,7 +157,7 @@ public class BattleScreen extends GameScreen {
 	}
 
 	private void initializePauseMenu() {
-		pauseMenu = new PauseMenuScreen(hudCamera, this, spriteBatch);
+		pauseMenu = new PauseMenuScreen(this, spriteBatch);
 	}
 
 	private void initializeInput() {
@@ -333,7 +333,7 @@ public class BattleScreen extends GameScreen {
 
 	private void renderElements(final float delta) {
 		totalTime += delta;
-		Gdx.gl.glClearColor(0.04f, 0.05f, 0.12f, 1f);
+		Gdx.gl.glClearColor(0.04f, 0.02f, 0.08f, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		Gdx.graphics.setTitle(FPS_TITLE + Gdx.graphics.getFramesPerSecond() + "(" + Gdx.graphics.getWidth() + "," + Gdx.graphics.getHeight() + ")");
 

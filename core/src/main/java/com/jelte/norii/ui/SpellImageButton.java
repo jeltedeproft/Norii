@@ -11,7 +11,7 @@ public class SpellImageButton extends TextButton {
 	private Ability ability;
 
 	public SpellImageButton() {
-		super("", AssetManagerUtility.getSkin(), "default");
+		super("Cast", AssetManagerUtility.getSkin(), "default");
 	}
 
 	public Entity getEntity() {
@@ -33,7 +33,7 @@ public class SpellImageButton extends TextButton {
 
 	public void clearAbility() {
 		this.ability = null;
-		this.setText("/");
+		this.setText("Cast");
 	}
 
 }

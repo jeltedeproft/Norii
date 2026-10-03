@@ -15,7 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.jelte.norii.ui.PixelViewport;
 import com.jelte.norii.multiplayer.NetworkMessage;
 import com.jelte.norii.multiplayer.NetworkMessage.MessageType;
 import com.jelte.norii.multiplayer.ServerCommunicator;
@@ -26,17 +26,9 @@ import com.jelte.norii.utility.parallax.ParallaxUtils.WH;
 import com.jelte.norii.utility.parallax.TextureRegionParallaxLayer;
 
 public class LoginScreen extends GameScreen {
-	private static final int EXIT_BUTTON_WIDTH_PERCENT = 15;
-	private static final int EXIT_BUTTON_HEIGHT_PERCENT = 10;
-	private static final int EXIT_BUTTON_SPACE_TOP_PERCENT = 5;
-	private static final int LOGIN_WINDOW_WIDTH_PERCENT = 70;
-	private static final int LOGIN_WINDOW_HEIGHT_PERCENT = 60;
-	private static final int TITLE_LABEL_WIDTH_PERCENT = 15;
-	private static final int TITLE_LABEL_HEIGHT_PERCENT = 10;
-	private static final int TITLE_LABEL_SPACE_BOTTOM_PERCENT = 5;
 	private static final String TITLE_FONT = "bigFont";
-	private static final String TITLE = "LOGIN";
-	private static final String EXIT = "quit";
+	private static final String TITLE = "Login";
+	private static final String EXIT = "Quit";
 
 	private Label titleLabel;
 	private TextButton exitTextButton;
@@ -47,11 +39,6 @@ public class LoginScreen extends GameScreen {
 	private SpriteBatch backgroundbatch;
 	private LoginWidget loginWidget;
 	private ServerCommunicator serverCom = ServerCommunicator.getInstance();
-
-	private int screenWidth;
-	private int screenHeight;
-	private float widthPercent;
-	private float heightPercent;
 
 	public LoginScreen() {
 		loadAssets();
@@ -68,14 +55,12 @@ public class LoginScreen extends GameScreen {
 	}
 
 	private void initializeVariables() {
-		screenWidth = Gdx.graphics.getWidth();
-		screenHeight = Gdx.graphics.getHeight();
-		widthPercent = screenWidth * 0.01f;
-		heightPercent = screenHeight * 0.01f;
+		int windowWidth = Gdx.graphics.getWidth();
+		int windowHeight = Gdx.graphics.getHeight();
 		backgroundbatch = new SpriteBatch();
-		stage = new Stage(new ExtendViewport(screenWidth, screenHeight), backgroundbatch);
+		stage = new Stage(new PixelViewport(), backgroundbatch);
 		parallaxCamera = new OrthographicCamera();
-		parallaxCamera.setToOrtho(false, screenWidth, screenHeight);
+		parallaxCamera.setToOrtho(false, windowWidth, windowHeight);
 		parallaxCamera.update();
 		table = new Table();
 		table.setFillParent(true);
@@ -86,16 +71,17 @@ public class LoginScreen extends GameScreen {
 		final TextureAtlas atlas = AssetManagerUtility.getTextureAtlas(AssetManagerUtility.SPRITES_ATLAS_PATH);
 
 		final TextureRegion backTrees = atlas.findRegion("background-back-trees");
-		final TextureRegionParallaxLayer backTreesLayer = new TextureRegionParallaxLayer(backTrees, screenHeight, new Vector2(.3f, .3f), WH.HEIGHT);
+		int windowHeight = Gdx.graphics.getHeight();
+		final TextureRegionParallaxLayer backTreesLayer = new TextureRegionParallaxLayer(backTrees, windowHeight, new Vector2(.3f, .3f), WH.HEIGHT);
 
 		final TextureRegion lights = atlas.findRegion("background-light");
-		final TextureRegionParallaxLayer lightsLayer = new TextureRegionParallaxLayer(lights, screenHeight, new Vector2(.6f, .6f), WH.HEIGHT);
+		final TextureRegionParallaxLayer lightsLayer = new TextureRegionParallaxLayer(lights, windowHeight, new Vector2(.6f, .6f), WH.HEIGHT);
 
 		final TextureRegion middleTrees = atlas.findRegion("background-middle-trees");
-		final TextureRegionParallaxLayer middleTreesLayer = new TextureRegionParallaxLayer(middleTrees, screenHeight, new Vector2(.75f, .75f), WH.HEIGHT);
+		final TextureRegionParallaxLayer middleTreesLayer = new TextureRegionParallaxLayer(middleTrees, windowHeight, new Vector2(.75f, .75f), WH.HEIGHT);
 
 		final TextureRegion frontTrees = atlas.findRegion("foreground");
-		final TextureRegionParallaxLayer frontTreesLayer = new TextureRegionParallaxLayer(frontTrees, screenHeight, new Vector2(.6f, .6f), WH.HEIGHT);
+		final TextureRegionParallaxLayer frontTreesLayer = new TextureRegionParallaxLayer(frontTrees, windowHeight, new Vector2(.6f, .6f), WH.HEIGHT);
 
 		parallaxBackground = new ParallaxBackground();
 		parallaxBackground.addLayers(backTreesLayer, lightsLayer, middleTreesLayer, frontTreesLayer);
@@ -105,15 +91,15 @@ public class LoginScreen extends GameScreen {
 		final Skin statusUISkin = AssetManagerUtility.getSkin();
 
 		titleLabel = new Label(TITLE, statusUISkin, TITLE_FONT);
-		titleLabel.setAlignment(Align.top);
+		titleLabel.setAlignment(Align.center);
 
 		exitTextButton = new TextButton(EXIT, statusUISkin);
 	}
 
 	private void addButtons() {
-		table.add(titleLabel).expandX().colspan(10).spaceBottom(TITLE_LABEL_SPACE_BOTTOM_PERCENT * heightPercent).height(TITLE_LABEL_HEIGHT_PERCENT * heightPercent).width(TITLE_LABEL_WIDTH_PERCENT * widthPercent).row();
-		table.add(loginWidget.getWindow()).height(LOGIN_WINDOW_HEIGHT_PERCENT * heightPercent).width(LOGIN_WINDOW_WIDTH_PERCENT * widthPercent).row();
-		table.add(exitTextButton).spaceTop(EXIT_BUTTON_SPACE_TOP_PERCENT * heightPercent).height(EXIT_BUTTON_HEIGHT_PERCENT * heightPercent).width(EXIT_BUTTON_WIDTH_PERCENT * widthPercent).row();
+		table.add(titleLabel).padBottom(12).row();
+		table.add(loginWidget.getWindow()).width(300).height(180).row();
+		table.add(exitTextButton).padTop(12).width(140).height(32).row();
 
 		stage.addActor(table);
 	}
@@ -149,9 +135,11 @@ public class LoginScreen extends GameScreen {
 
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClearColor(0.04f, 0.02f, 0.08f, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		PixelViewport.beginFullScreen();
 		updatebg();
+		stage.getViewport().apply();
 		stage.act(delta);
 		stage.draw();
 
@@ -177,6 +165,7 @@ public class LoginScreen extends GameScreen {
 	@Override
 	public void resize(int width, int height) {
 		stage.getViewport().update(width, height, true);
+		parallaxCamera.setToOrtho(false, width, height);
 	}
 
 	@Override

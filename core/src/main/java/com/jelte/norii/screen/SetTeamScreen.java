@@ -30,7 +30,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Null;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.jelte.norii.ui.PixelViewport;
 import com.jelte.norii.entities.EntityData;
 import com.jelte.norii.entities.EntityFileReader;
 import com.jelte.norii.magic.AbilitiesEnum;
@@ -45,31 +45,31 @@ import com.jelte.norii.utility.parallax.ParallaxUtils.WH;
 import com.jelte.norii.utility.parallax.TextureRegionParallaxLayer;
 
 public class SetTeamScreen extends GameScreen {
-	private static final int PREVIEW_VIDEO_HEIGHT_PERCENT = 15;
-	private static final int PREVIEW_VIDEO_WIDTH_PERCENT = 25;
-	private static final int ABILITY_INFO_HEIGHT_PERCENT = 15;
-	private static final int ABILITY_INFO_WIDTH_PERCENT = 25;
+	private static final int PREVIEW_VIDEO_HEIGHT_PERCENT = 18;
+	private static final int PREVIEW_VIDEO_WIDTH_PERCENT = 18;
+	private static final int ABILITY_INFO_HEIGHT_PERCENT = 18;
+	private static final int ABILITY_INFO_WIDTH_PERCENT = 20;
 	private static final int MAX_HEROES_PER_ROW = 5;
 	private static final int MAX_COLUMN_LENGTH_TEAM = 7;
 	private static final int MAIN_TABLE_COLSPAN = 2;
-	private static final int SAVE_BUTTON_WIDTH_PERCENT = 15;
-	private static final int SAVE_BUTTON_HEIGHT_PERCENT = 10;
+	private static final int SAVE_BUTTON_WIDTH_PERCENT = 36;
+	private static final int SAVE_BUTTON_HEIGHT_PERCENT = 8;
 	private static final int SAVE_BUTTON_PAD_TOP_PERCENT = 0;
-	private static final int EXIT_BUTTON_WIDTH_PERCENT = 15;
-	private static final int EXIT_BUTTON_HEIGHT_PERCENT = 10;
+	private static final int EXIT_BUTTON_WIDTH_PERCENT = 28;
+	private static final int EXIT_BUTTON_HEIGHT_PERCENT = 8;
 	private static final int EXIT_BUTTON_PAD_TOP_PERCENT = 0;
 	private static final int ABILITY_TABLE_COLSPAN = 3;
 	private static final int SELECTED_HEROES_WIDTH_PERCENT = 50;
 	private static final int SELECTED_HEROES_COLSPAN = 1;
 	private static final int ALL_HEROES_TABLE_WIDTH_PERCENT = 50;
 	private static final int ALL_HEROES_TABLE_COLSPAN = 1;
-	private static final int HERO_BUTTON_SIZE_PERCENT = 5;
+	private static final int HERO_BUTTON_SIZE_PERCENT = 8;
 	private static final int HERO_BUTTON_PAD_PERCENT = 0;
 	private static final int HEROES_TITLES_TABLE_COLSPAN = 2;
 	private static final int AVAILABLE_HEROES_LABEL_WIDTH_PERCENT = 25;
 	private static final int TEAM_LABEL_WIDTH_PERCENT = 25;
 	private static final int TITLE_PAD_TOP_PERCENT = 5;
-	private static final int TITLE_HEIGHT_PERCENT = 15;
+	private static final int TITLE_HEIGHT_PERCENT = 8;
 	private static final int TITLE_COLSPAN = 2;
 	private static final int FADE_IN_DURATION = 2;
 	private static final int FADE_OUT_DURATION = 2;
@@ -140,15 +140,17 @@ public class SetTeamScreen extends GameScreen {
 	}
 
 	private void initializeVariables() {
-		screenWidth = Gdx.graphics.getWidth();
-		screenHeight = Gdx.graphics.getHeight();
+		int windowWidth = Gdx.graphics.getWidth();
+		int windowHeight = Gdx.graphics.getHeight();
+		screenWidth = PixelViewport.WIDTH;
+		screenHeight = PixelViewport.HEIGHT;
 		widthPercent = screenWidth / 100;
 		heightPercent = screenHeight / 100;
 		backgroundbatch = new SpriteBatch();
 		button = new ImageButton(AssetManagerUtility.getSkin());
-		stage = new Stage(new FitViewport(screenWidth, screenHeight), backgroundbatch);
+		stage = new Stage(new PixelViewport(), backgroundbatch);
 		parallaxCamera = new OrthographicCamera();
-		parallaxCamera.setToOrtho(false, screenWidth, screenHeight);
+		parallaxCamera.setToOrtho(false, windowWidth, windowHeight);
 		parallaxCamera.update();
 		mainTable = new Table();
 		titleTable = new Table();
@@ -180,8 +182,8 @@ public class SetTeamScreen extends GameScreen {
 		availableHeroesLabel = new Label(YOUR_TEAM, statusUISkin);
 		availableHeroesLabel.setAlignment(Align.center);
 
-		notEmptyLabel = new Label(EMPTY_ERROR, statusUISkin, TITLE_FONT);
-		noHeroLabel = new Label(NO_HERO_ERROR, statusUISkin, TITLE_FONT);
+		notEmptyLabel = new Label(EMPTY_ERROR, statusUISkin);
+		noHeroLabel = new Label(NO_HERO_ERROR, statusUISkin);
 
 		exitTextButton = new TextButton(EXIT, statusUISkin);
 		exitTextButton.align(Align.bottom);
@@ -344,16 +346,17 @@ public class SetTeamScreen extends GameScreen {
 		final TextureAtlas atlas = AssetManagerUtility.getTextureAtlas(AssetManagerUtility.SPRITES_ATLAS_PATH);
 
 		final TextureRegion backTrees = atlas.findRegion("background-back-trees");
-		final TextureRegionParallaxLayer backTreesLayer = new TextureRegionParallaxLayer(backTrees, screenHeight, new Vector2(.3f, .3f), WH.HEIGHT);
+		int windowHeight = Gdx.graphics.getHeight();
+		final TextureRegionParallaxLayer backTreesLayer = new TextureRegionParallaxLayer(backTrees, windowHeight, new Vector2(.3f, .3f), WH.HEIGHT);
 
 		final TextureRegion lights = atlas.findRegion("background-light");
-		final TextureRegionParallaxLayer lightsLayer = new TextureRegionParallaxLayer(lights, screenHeight, new Vector2(.6f, .6f), WH.HEIGHT);
+		final TextureRegionParallaxLayer lightsLayer = new TextureRegionParallaxLayer(lights, windowHeight, new Vector2(.6f, .6f), WH.HEIGHT);
 
 		final TextureRegion middleTrees = atlas.findRegion("background-middle-trees");
-		final TextureRegionParallaxLayer middleTreesLayer = new TextureRegionParallaxLayer(middleTrees, screenHeight, new Vector2(.75f, .75f), WH.HEIGHT);
+		final TextureRegionParallaxLayer middleTreesLayer = new TextureRegionParallaxLayer(middleTrees, windowHeight, new Vector2(.75f, .75f), WH.HEIGHT);
 
 		final TextureRegion frontTrees = atlas.findRegion("foreground");
-		final TextureRegionParallaxLayer frontTreesLayer = new TextureRegionParallaxLayer(frontTrees, screenHeight, new Vector2(.6f, .6f), WH.HEIGHT);
+		final TextureRegionParallaxLayer frontTreesLayer = new TextureRegionParallaxLayer(frontTrees, windowHeight, new Vector2(.6f, .6f), WH.HEIGHT);
 
 		parallaxBackground = new ParallaxBackground();
 		parallaxBackground.addLayers(backTreesLayer, lightsLayer, middleTreesLayer, frontTreesLayer);
@@ -467,9 +470,11 @@ public class SetTeamScreen extends GameScreen {
 
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClearColor(0.04f, 0.02f, 0.08f, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		PixelViewport.beginFullScreen();
 		updatebg();
+		stage.getViewport().apply();
 		stage.act(delta);
 		stage.draw();
 
@@ -484,7 +489,8 @@ public class SetTeamScreen extends GameScreen {
 
 	@Override
 	public void resize(int width, int height) {
-		stage.getViewport().update(width, height);
+		stage.getViewport().update(width, height, true);
+		parallaxCamera.setToOrtho(false, width, height);
 	}
 
 	@Override

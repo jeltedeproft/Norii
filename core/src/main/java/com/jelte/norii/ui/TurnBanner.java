@@ -13,8 +13,8 @@ import com.badlogic.gdx.utils.Disposable;
 import com.jelte.norii.utility.AssetManagerUtility;
 
 public class TurnBanner extends Table implements Disposable {
-	private static final Color PLAYER_TURN_COLOR = new Color(0.3f, 0.75f, 1f, 1f);
-	private static final Color ENEMY_TURN_COLOR = new Color(1f, 0.35f, 0.25f, 1f);
+	private static final Color PLAYER_TURN_COLOR = new Color(0.83f, 0.67f, 0.19f, 1f);
+	private static final Color ENEMY_TURN_COLOR = new Color(0.86f, 0.32f, 0.24f, 1f);
 	private static final float DISPLAY_DURATION = 1.5f;
 	private static final float BANNER_HEIGHT = Hud.UI_VIEWPORT_HEIGHT * 0.11f;
 	private static final float BANNER_Y = (Hud.UI_VIEWPORT_HEIGHT - BANNER_HEIGHT) * 0.5f;
@@ -24,7 +24,7 @@ public class TurnBanner extends Table implements Disposable {
 
 	public TurnBanner() {
 		Pixmap bgPixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-		bgPixmap.setColor(0.04f, 0.04f, 0.1f, 0.88f);
+		bgPixmap.setColor(0.04f, 0.02f, 0.08f, 0.88f);
 		bgPixmap.fill();
 		bgTexture = new Texture(bgPixmap);
 		bgPixmap.dispose();

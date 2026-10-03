@@ -18,7 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.jelte.norii.ui.PixelViewport;
 import com.jelte.norii.campaign.CampaignData;
 import com.jelte.norii.campaign.CampaignFileReader;
 import com.jelte.norii.campaign.CampaignManager;
@@ -48,7 +48,7 @@ public class StoryScreen extends GameScreen {
 		this.level = CampaignFileReader.getLevel(levelIndex);
 		batch = new SpriteBatch();
 		shapeRenderer = new ShapeRenderer();
-		stage = new Stage(new ScreenViewport(), batch);
+		stage = new Stage(new PixelViewport(), batch);
 		parallaxCamera = new OrthographicCamera();
 		parallaxCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		buildBackground();
@@ -67,29 +67,27 @@ public class StoryScreen extends GameScreen {
 
 	private void buildUI() {
 		Skin skin = AssetManagerUtility.getSkin();
-		int w = Gdx.graphics.getWidth();
-		int h = Gdx.graphics.getHeight();
 
 		Table root = new Table();
 		root.setFillParent(true);
-		root.pad(h * 0.06f);
+		root.pad(18);
+		root.setBackground(skin.getDrawable("windowBackground10Patch"));
 
-		// Chapter / title header
 		Label chapterLabel = new Label(level.getChapter(), skin, "default");
-		chapterLabel.setColor(new Color(0.7f, 0.6f, 0.2f, 1f));
+		chapterLabel.setColor(new Color(0.83f, 0.67f, 0.19f, 1f));
 		chapterLabel.setAlignment(Align.center);
 
-		Label titleLabel = new Label(level.getName(), skin, "bigFont");
+		Label titleLabel = new Label(ascii(level.getName()), skin, "bigFont");
 		titleLabel.setAlignment(Align.center);
 		titleLabel.setWrap(true);
 
-		Label subtitleLabel = new Label(level.getSubtitle(), skin, "default");
-		subtitleLabel.setColor(new Color(0.8f, 0.8f, 0.8f, 0.85f));
+		Label subtitleLabel = new Label(ascii(level.getSubtitle()), skin, "default");
+		subtitleLabel.setColor(new Color(0.94f, 0.91f, 0.82f, 0.85f));
 		subtitleLabel.setAlignment(Align.center);
+		subtitleLabel.setWrap(true);
 
-		// Story body
 		String bodyText = storyType == StoryType.INTRO ? level.getIntroText() : level.getOutroText();
-		Label storyLabel = new Label(bodyText, skin, "default");
+		Label storyLabel = new Label(ascii(bodyText), skin, "default");
 		storyLabel.setWrap(true);
 		storyLabel.setAlignment(Align.topLeft);
 
@@ -97,7 +95,6 @@ public class StoryScreen extends GameScreen {
 		scroll.setScrollingDisabled(true, false);
 		scroll.setFadeScrollBars(false);
 
-		// Continue button
 		String buttonText = (storyType == StoryType.INTRO) ? "Battle!" : "Continue";
 		TextButton continueButton = new TextButton(buttonText, skin, "lumos30");
 
@@ -109,13 +106,20 @@ public class StoryScreen extends GameScreen {
 			}
 		});
 
-		root.add(chapterLabel).colspan(1).padBottom(h * 0.005f).row();
-		root.add(titleLabel).width(w * 0.6f).padBottom(h * 0.005f).row();
-		root.add(subtitleLabel).padBottom(h * 0.03f).row();
-		root.add(scroll).width(w * 0.62f).height(h * 0.48f).padBottom(h * 0.04f).row();
-		root.add(continueButton).width(w * 0.22f).height(h * 0.08f);
+		root.add(chapterLabel).padBottom(4).row();
+		root.add(titleLabel).width(400).padBottom(4).row();
+		root.add(subtitleLabel).width(400).padBottom(10).row();
+		root.add(scroll).width(400).height(220).padBottom(10).row();
+		root.add(continueButton).width(180).height(32);
 
 		stage.addActor(root);
+	}
+
+	private static String ascii(String text) {
+		if (text == null) {
+			return "";
+		}
+		return text.replace('\u2014', '-').replace('\u2013', '-').replace('\u2026', '.');
 	}
 
 	private void onContinue() {
@@ -143,22 +147,23 @@ public class StoryScreen extends GameScreen {
 		totalTime += delta;
 		Gdx.gl.glClearColor(0.04f, 0.02f, 0.08f, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		PixelViewport.beginFullScreen();
 
-		// Parallax background (very slow scroll)
 		batch.begin();
 		parallaxBackground.draw(parallaxCamera, batch);
 		batch.end();
 		parallaxCamera.translate(delta * 20f, 0, 0);
 
-		// Dark overlay vignette
 		Gdx.gl.glEnable(GL20.GL_BLEND);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		shapeRenderer.setProjectionMatrix(parallaxCamera.combined);
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-		shapeRenderer.setColor(0f, 0f, 0f, 0.55f);
+		shapeRenderer.setColor(0.04f, 0.02f, 0.08f, 0.55f);
 		shapeRenderer.rect(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		shapeRenderer.end();
 		Gdx.gl.glDisable(GL20.GL_BLEND);
 
+		stage.getViewport().apply();
 		stage.act(delta);
 		stage.draw();
 	}

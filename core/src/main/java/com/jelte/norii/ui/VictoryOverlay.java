@@ -16,9 +16,9 @@ import com.badlogic.gdx.utils.Disposable;
 import com.jelte.norii.utility.AssetManagerUtility;
 
 public class VictoryOverlay extends Table implements Disposable {
-	private static final Color VICTORY_COLOR = new Color(1f, 0.84f, 0.1f, 1f);
-	private static final Color DEFEAT_COLOR = new Color(0.9f, 0.25f, 0.2f, 1f);
-	private static final Color SUBTITLE_COLOR = new Color(0.85f, 0.82f, 0.78f, 1f);
+	private static final Color VICTORY_COLOR = new Color(0.95f, 0.78f, 0.28f, 1f);
+	private static final Color DEFEAT_COLOR = new Color(0.86f, 0.32f, 0.24f, 1f);
+	private static final Color SUBTITLE_COLOR = new Color(0.94f, 0.91f, 0.82f, 1f);
 
 	private final Label titleLabel;
 	private final Label subtitleLabel;

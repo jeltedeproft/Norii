@@ -43,15 +43,13 @@ public class LoginWidget {
 	}
 
 	private void fillWindow() {
-		mainTable.add(usernameLabel);
-		mainTable.add(usernameField);
-		mainTable.row();
-		mainTable.add(passwordLabel);
-		mainTable.add(passwordField);
-		mainTable.row();
-		mainTable.add(loginTextButton);
-		mainTable.row();
-		mainTable.add(createAccountLabel);
+		mainTable.pad(8);
+		mainTable.add(usernameLabel).left().padRight(8);
+		mainTable.add(usernameField).width(160).height(28).row();
+		mainTable.add(passwordLabel).left().padRight(8).padTop(6);
+		mainTable.add(passwordField).width(160).height(28).padTop(6).row();
+		mainTable.add(loginTextButton).colspan(2).width(140).height(30).padTop(10).row();
+		mainTable.add(createAccountLabel).colspan(2).padTop(6);
 		window.add(mainTable);
 	}
 

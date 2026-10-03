@@ -11,12 +11,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.jelte.norii.ui.PixelViewport;
 import com.jelte.norii.campaign.CampaignData;
 import com.jelte.norii.campaign.CampaignFileReader;
 import com.jelte.norii.campaign.CampaignManager;
@@ -44,14 +45,14 @@ public class CampaignScreen extends GameScreen {
 	private int selectedLevel = -1;
 	private float totalTime = 0f;
 
-	private static final Color COLOR_COMPLETED = new Color(0.2f, 0.75f, 0.3f, 1f);
-	private static final Color COLOR_UNLOCKED = new Color(0.85f, 0.75f, 0.2f, 1f);
-	private static final Color COLOR_LOCKED = new Color(0.4f, 0.4f, 0.5f, 0.7f);
+	private static final Color COLOR_COMPLETED = new Color(0.45f, 0.58f, 0.40f, 1f);
+	private static final Color COLOR_UNLOCKED = new Color(0.83f, 0.67f, 0.19f, 1f);
+	private static final Color COLOR_LOCKED = new Color(0.45f, 0.44f, 0.52f, 0.7f);
 
 	public CampaignScreen() {
 		batch = new SpriteBatch();
 		shapeRenderer = new ShapeRenderer();
-		stage = new Stage(new ScreenViewport(), batch);
+		stage = new Stage(new PixelViewport(), batch);
 		parallaxCamera = new OrthographicCamera();
 		parallaxCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		buildBackground();
@@ -74,25 +75,20 @@ public class CampaignScreen extends GameScreen {
 
 	private void buildUI() {
 		Skin skin = AssetManagerUtility.getSkin();
-		int w = Gdx.graphics.getWidth();
-		int h = Gdx.graphics.getHeight();
 
 		Table root = new Table();
 		root.setFillParent(true);
-		root.pad(h * 0.04f);
+		root.pad(12);
 
-		// Title
-		Label title = new Label("The Shadow Chronicles", skin, "bigFont");
+		Label title = new Label("The Shadow\nChronicles", skin, "bigFont");
 		title.setAlignment(Align.center);
-		root.add(title).colspan(2).padBottom(h * 0.03f).row();
+		root.add(title).colspan(2).padBottom(10).row();
 
-		// Left column: level nodes
 		Table levelsColumn = new Table();
 		for (int i = 0; i < CampaignFileReader.getLevelCount(); i++) {
-			levelsColumn.add(buildLevelButton(skin, i)).width(w * 0.32f).height(h * 0.09f).padBottom(h * 0.012f).row();
+			levelsColumn.add(buildLevelButton(skin, i)).width(248).height(50).padBottom(4).row();
 		}
-		// Back button
-		TextButton backButton = new TextButton("< Main Menu", skin, "lumos30");
+		TextButton backButton = new TextButton("Main Menu", skin, "lumos30");
 		backButton.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -100,37 +96,34 @@ public class CampaignScreen extends GameScreen {
 				return true;
 			}
 		});
-		levelsColumn.add(backButton).width(w * 0.22f).height(h * 0.06f).padTop(h * 0.02f);
+		levelsColumn.add(backButton).width(180).height(30).padTop(8);
 
-		// Right column: info panel
 		infoPanel = new Table();
 		infoPanel.setBackground(skin.getDrawable("windowBackground10Patch"));
-		infoPanel.pad(h * 0.025f);
+		infoPanel.pad(12);
 		infoPanel.align(Align.top);
 
 		infoPanelChapter = new Label("", skin, "default");
-		infoPanelChapter.setColor(new Color(0.8f, 0.7f, 0.2f, 1f));
+		infoPanelChapter.setColor(new Color(0.83f, 0.67f, 0.19f, 1f));
 		infoPanelChapter.setAlignment(Align.center);
 
-		infoPanelTitle = new Label("", skin, "bigFont");
+		infoPanelTitle = new Label("", skin, "default");
 		infoPanelTitle.setAlignment(Align.center);
 		infoPanelTitle.setWrap(true);
 
 		infoPanelSubtitle = new Label("", skin, "default");
-		infoPanelSubtitle.setColor(new Color(0.75f, 0.75f, 0.85f, 1f));
+		infoPanelSubtitle.setColor(new Color(0.94f, 0.91f, 0.82f, 1f));
 		infoPanelSubtitle.setAlignment(Align.center);
 		infoPanelSubtitle.setWrap(true);
 
-		Label divider = new Label("━━━━━━━━━━━━━━━━━", skin, "default");
-		divider.setColor(new Color(0.4f, 0.35f, 0.2f, 0.8f));
-		divider.setAlignment(Align.center);
+		Image divider = new Image(skin.getDrawable("rule"));
 
 		infoPanelPreview = new Label("", skin, "default");
 		infoPanelPreview.setWrap(true);
 		infoPanelPreview.setAlignment(Align.topLeft);
 
 		infoPanelReward = new Label("", skin, "default");
-		infoPanelReward.setColor(new Color(0.6f, 0.9f, 0.5f, 1f));
+		infoPanelReward.setColor(new Color(0.45f, 0.58f, 0.40f, 1f));
 		infoPanelReward.setAlignment(Align.center);
 
 		playButton = new TextButton("Begin Battle", skin, "lumos30");
@@ -144,16 +137,16 @@ public class CampaignScreen extends GameScreen {
 			}
 		});
 
-		infoPanel.add(infoPanelChapter).padBottom(h * 0.005f).row();
-		infoPanel.add(infoPanelTitle).width(w * 0.38f).padBottom(h * 0.005f).row();
-		infoPanel.add(infoPanelSubtitle).width(w * 0.36f).padBottom(h * 0.012f).row();
-		infoPanel.add(divider).padBottom(h * 0.015f).row();
-		infoPanel.add(infoPanelPreview).width(w * 0.36f).height(h * 0.28f).padBottom(h * 0.015f).row();
-		infoPanel.add(infoPanelReward).width(w * 0.36f).padBottom(h * 0.02f).row();
-		infoPanel.add(playButton).width(w * 0.22f).height(h * 0.07f);
+		infoPanel.add(infoPanelChapter).padBottom(4).row();
+		infoPanel.add(infoPanelTitle).width(168).padBottom(4).row();
+		infoPanel.add(infoPanelSubtitle).width(168).padBottom(8).row();
+		infoPanel.add(divider).width(150).height(4).padBottom(8).row();
+		infoPanel.add(infoPanelPreview).width(168).height(120).padBottom(8).row();
+		infoPanel.add(infoPanelReward).width(168).padBottom(8).row();
+		infoPanel.add(playButton).width(160).height(32);
 
-		root.add(levelsColumn).top().width(w * 0.35f);
-		root.add(infoPanel).top().width(w * 0.42f).padLeft(w * 0.04f);
+		root.add(levelsColumn).top().width(248);
+		root.add(infoPanel).top().width(196).padLeft(8).expandY().fillY();
 
 		stage.addActor(root);
 	}
@@ -163,10 +156,12 @@ public class CampaignScreen extends GameScreen {
 		boolean completed = CampaignManager.getInstance().isLevelCompleted(index);
 		boolean unlocked = CampaignManager.getInstance().isLevelUnlocked(index);
 
-		String prefix = completed ? "[✓] " : (unlocked ? "[ ] " : "[🔒] ");
-		String label = prefix + data.getChapter() + ": " + data.getName();
+		String mark = completed ? "+  " : (unlocked ? ">  " : "x  ");
+		String label = mark + data.getName();
 
 		TextButton btn = new TextButton(label, skin, "lumos30");
+		btn.getLabel().setWrap(true);
+		btn.getLabel().setAlignment(Align.center);
 		if (completed) {
 			btn.getLabel().setColor(COLOR_COMPLETED);
 		} else if (unlocked) {
@@ -192,10 +187,10 @@ public class CampaignScreen extends GameScreen {
 		CampaignData data = CampaignFileReader.getLevel(index);
 		infoPanelChapter.setText(data.getChapter());
 		infoPanelTitle.setText(data.getName());
-		infoPanelSubtitle.setText(data.getSubtitle());
+		infoPanelSubtitle.setText(ascii(data.getSubtitle()));
 		// Show a preview of the intro text (first 200 chars)
-		String intro = data.getIntroText();
-		String preview = intro.length() > 220 ? intro.substring(0, 220) + "..." : intro;
+		String intro = ascii(data.getIntroText());
+		String preview = intro.length() > 180 ? intro.substring(0, 180) + "..." : intro;
 		infoPanelPreview.setText(preview);
 		// Reward info
 		String reward = data.getRewardUnit();
@@ -206,6 +201,13 @@ public class CampaignScreen extends GameScreen {
 		}
 		boolean completed = CampaignManager.getInstance().isLevelCompleted(index);
 		playButton.setText(completed ? "Play Again" : "Begin Battle");
+	}
+
+	private static String ascii(String text) {
+		if (text == null) {
+			return "";
+		}
+		return text.replace('\u2014', '-').replace('\u2013', '-').replace('\u2026', '.');
 	}
 
 	private void startLevel(int index) {
@@ -225,21 +227,23 @@ public class CampaignScreen extends GameScreen {
 		totalTime += delta;
 		Gdx.gl.glClearColor(0.04f, 0.02f, 0.08f, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		PixelViewport.beginFullScreen();
 
 		batch.begin();
 		parallaxBackground.draw(parallaxCamera, batch);
 		batch.end();
 		parallaxCamera.translate(delta * 30f, 0, 0);
 
-		// Dark overlay
 		Gdx.gl.glEnable(GL20.GL_BLEND);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		shapeRenderer.setProjectionMatrix(parallaxCamera.combined);
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-		shapeRenderer.setColor(0f, 0f, 0f, 0.45f);
+		shapeRenderer.setColor(0.04f, 0.02f, 0.08f, 0.45f);
 		shapeRenderer.rect(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		shapeRenderer.end();
 		Gdx.gl.glDisable(GL20.GL_BLEND);
 
+		stage.getViewport().apply();
 		stage.act(delta);
 		stage.draw();
 	}

@@ -15,7 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.jelte.norii.ui.PixelViewport;
 import com.jelte.norii.entities.Player;
 import com.jelte.norii.entities.UnitOwner;
 import com.jelte.norii.map.MapFactory.MapType;
@@ -30,25 +30,13 @@ import com.jelte.norii.utility.parallax.ParallaxUtils.WH;
 import com.jelte.norii.utility.parallax.TextureRegionParallaxLayer;
 
 public class MultiplayerScreen extends GameScreen {
-	private static final int TITLE_COLSPAN = 10;
-	private static final int SEARCH_TEXT_BUTTON_WIDTH_FACTOR = 10;
-	private static final int SEARCH_TEXT_BUTTON_HEIGHT_FACTOR = 5;
-	private static final int TITLE_WIDTH_FACTOR = 25;
-	private static final int TITLE_HEIGHT_FACTOR = 10;
-	private static final int TITLE_SPACE_BOTTOM_FACTOR = 5;
 	private static final String TITLE_FONT = "bigFont";
-	private static final String TITLE = "MULTIPLAYER";
-	private static final String EXIT = "exit";
-	private static final String SEARCH = "search";
+	private static final String TITLE = "Multiplayer";
+	private static final String EXIT = "Exit";
+	private static final String SEARCH = "Search";
 	private static final String PROPERTIES = "properties";
-	private static final int MULTIPLAYER_LABEL_HEIGHT_FACTOR = 5;
-	private static final int MULTIPLAYER_LABEL_WIDTH_FACTOR = 15;
-	private static final int EXIT_WIDTH_FACTOR = 15;
-	private static final int EXIT_HEIGHT_FACTOR = 5;
-	private static final int EXIT_SPACE_TOP_FACTOR = 5;
 
 	private Label titleLabel;
-	private Label multiplayerLabel;
 	private TextButton searchTextButton;
 	private TextButton exitTextButton;
 	private Stage stage;
@@ -56,11 +44,6 @@ public class MultiplayerScreen extends GameScreen {
 	private OrthographicCamera parallaxCamera;
 	private ParallaxBackground parallaxBackground;
 	private SpriteBatch backgroundbatch;
-
-	private int screenWidth;
-	private int screenHeight;
-	private int widthPercent;
-	private int heightPercent;
 
 	public MultiplayerScreen() {
 		initializeVariables();
@@ -71,14 +54,12 @@ public class MultiplayerScreen extends GameScreen {
 	}
 
 	private void initializeVariables() {
-		screenWidth = Gdx.graphics.getWidth();
-		screenHeight = Gdx.graphics.getHeight();
-		widthPercent = screenWidth / 100;
-		heightPercent = screenHeight / 100;
+		int windowWidth = Gdx.graphics.getWidth();
+		int windowHeight = Gdx.graphics.getHeight();
 		backgroundbatch = new SpriteBatch();
-		stage = new Stage(new FitViewport(screenWidth, screenHeight), backgroundbatch);
+		stage = new Stage(new PixelViewport(), backgroundbatch);
 		parallaxCamera = new OrthographicCamera();
-		parallaxCamera.setToOrtho(false, screenWidth, screenHeight);
+		parallaxCamera.setToOrtho(false, windowWidth, windowHeight);
 		parallaxCamera.update();
 		table = new Table();
 		table.setFillParent(true);
@@ -88,16 +69,17 @@ public class MultiplayerScreen extends GameScreen {
 		final TextureAtlas atlas = AssetManagerUtility.getTextureAtlas(AssetManagerUtility.SPRITES_ATLAS_PATH);
 
 		final TextureRegion backTrees = atlas.findRegion("background-back-trees");
-		final TextureRegionParallaxLayer backTreesLayer = new TextureRegionParallaxLayer(backTrees, screenHeight, new Vector2(.3f, .3f), WH.HEIGHT);
+		int windowHeight = Gdx.graphics.getHeight();
+		final TextureRegionParallaxLayer backTreesLayer = new TextureRegionParallaxLayer(backTrees, windowHeight, new Vector2(.3f, .3f), WH.HEIGHT);
 
 		final TextureRegion lights = atlas.findRegion("background-light");
-		final TextureRegionParallaxLayer lightsLayer = new TextureRegionParallaxLayer(lights, screenHeight, new Vector2(.6f, .6f), WH.HEIGHT);
+		final TextureRegionParallaxLayer lightsLayer = new TextureRegionParallaxLayer(lights, windowHeight, new Vector2(.6f, .6f), WH.HEIGHT);
 
 		final TextureRegion middleTrees = atlas.findRegion("background-middle-trees");
-		final TextureRegionParallaxLayer middleTreesLayer = new TextureRegionParallaxLayer(middleTrees, screenHeight, new Vector2(.75f, .75f), WH.HEIGHT);
+		final TextureRegionParallaxLayer middleTreesLayer = new TextureRegionParallaxLayer(middleTrees, windowHeight, new Vector2(.75f, .75f), WH.HEIGHT);
 
 		final TextureRegion frontTrees = atlas.findRegion("foreground");
-		final TextureRegionParallaxLayer frontTreesLayer = new TextureRegionParallaxLayer(frontTrees, screenHeight, new Vector2(.6f, .6f), WH.HEIGHT);
+		final TextureRegionParallaxLayer frontTreesLayer = new TextureRegionParallaxLayer(frontTrees, windowHeight, new Vector2(.6f, .6f), WH.HEIGHT);
 
 		parallaxBackground = new ParallaxBackground();
 		parallaxBackground.addLayers(backTreesLayer, lightsLayer, middleTreesLayer, frontTreesLayer);
@@ -107,19 +89,16 @@ public class MultiplayerScreen extends GameScreen {
 		final Skin statusUISkin = AssetManagerUtility.getSkin();
 
 		titleLabel = new Label(TITLE, statusUISkin, TITLE_FONT);
-		titleLabel.setAlignment(Align.top);
+		titleLabel.setAlignment(Align.center);
 
 		searchTextButton = new TextButton(SEARCH, statusUISkin);
 		exitTextButton = new TextButton(EXIT, statusUISkin);
 	}
 
 	private void addButtons() {
-		table.add(titleLabel).expandX().colspan(TITLE_COLSPAN).spaceBottom(TITLE_SPACE_BOTTOM_FACTOR * heightPercent).height(TITLE_HEIGHT_FACTOR * heightPercent).width(TITLE_WIDTH_FACTOR * widthPercent).row();
-		table.add(searchTextButton).height(SEARCH_TEXT_BUTTON_HEIGHT_FACTOR * heightPercent).width(SEARCH_TEXT_BUTTON_WIDTH_FACTOR * widthPercent).row();
-		table.add(multiplayerLabel).height(MULTIPLAYER_LABEL_HEIGHT_FACTOR * heightPercent).width(MULTIPLAYER_LABEL_WIDTH_FACTOR * widthPercent).row();
-		table.add(multiplayerLabel).height(MULTIPLAYER_LABEL_HEIGHT_FACTOR * heightPercent).width(MULTIPLAYER_LABEL_WIDTH_FACTOR * widthPercent).row();
-		table.add(multiplayerLabel).height(MULTIPLAYER_LABEL_HEIGHT_FACTOR * heightPercent).width(MULTIPLAYER_LABEL_WIDTH_FACTOR * widthPercent);
-		table.add(exitTextButton).spaceTop(EXIT_SPACE_TOP_FACTOR * heightPercent).height(EXIT_HEIGHT_FACTOR * heightPercent).width(EXIT_WIDTH_FACTOR * widthPercent).row();
+		table.add(titleLabel).padBottom(16).row();
+		table.add(searchTextButton).width(200).height(32).padBottom(10).row();
+		table.add(exitTextButton).width(160).height(32).row();
 
 		stage.addActor(table);
 	}
@@ -152,9 +131,11 @@ public class MultiplayerScreen extends GameScreen {
 
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClearColor(0.04f, 0.02f, 0.08f, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		PixelViewport.beginFullScreen();
 		updatebg();
+		stage.getViewport().apply();
 		stage.act(delta);
 		stage.draw();
 		checkForStartGame();
@@ -182,7 +163,8 @@ public class MultiplayerScreen extends GameScreen {
 
 	@Override
 	public void resize(int width, int height) {
-		stage.getViewport().update(width, height, false);
+		stage.getViewport().update(width, height, true);
+		parallaxCamera.setToOrtho(false, width, height);
 	}
 
 	@Override
